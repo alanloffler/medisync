@@ -5,79 +5,59 @@ import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/core/components/ui/dropdown-menu';
 import { Input } from '@/core/components/ui/input';
+// App components
+import { ProfessionalsDataTable } from './components/ProfessionalsDataTable';
 // App
+import { ChangeEvent, MouseEvent, useState } from 'react';
+import { ColumnDef } from '@tanstack/react-table';
 import { IBreadcrumb } from '../core/components/common/interfaces/breadcrumb.interface';
+import { IProfessional } from './interfaces/professional.interface';
+import { Link, useNavigate } from 'react-router-dom';
 import { PROF_CONFIG } from './config/professionals.config';
 import { PageHeader } from '@/core/components/common/PageHeader';
-import { MouseEvent, useEffect, useState } from 'react';
-import { ProfessionalApiService } from './services/professional-api.service';
-import { IProfessional } from './interfaces/professional.interface';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
-import { ColumnDef } from '@tanstack/react-table';
-import { ProfessionalsDataTable } from './components/ProfessionalsDataTable';
-import { Link, useNavigate } from 'react-router-dom';
+import { useDebounce } from '@/core/hooks/useDebounce';
 import { useHeaderMenuStore } from '@/layout/stores/header-menu.service';
-import { useNotificationsStore } from '@/core/stores/notifications.store';
-
+// Constants
+const DEBOUNCE_TIME: number = 500;
 // React component
 export default function Professionals() {
-  const [professionals, setProfessionals] = useState<IProfessional[]>([]);
-  const [loadData, setLoadData] = useState<number>(0);
-  const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
+  const [search, setSearch] = useState<string>('');
   const capitalize = useCapitalize();
+  const debouncedSearch = useDebounce<string>(search, DEBOUNCE_TIME); // load data
+  // const itemsPerPage: number = 5; // Pagination (get this from config or db)
   const navigate = useNavigate();
-
-  const addNotification = useNotificationsStore((state) => state.addNotification);
-  // TODO THIS, GET DIRECTLY
-  const pageTitle: string = 'Profesionales';
-
+  const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
   const breadcrumb: IBreadcrumb[] = [
     { id: 1, name: 'Inicio', path: '/' },
     { id: 2, name: 'Profesionales', path: '/professionals' },
   ];
 
-  useEffect(() => {
-    // setItemSelected(2);
-    ProfessionalApiService.findAll().then((response) => {
-      // console.log('data loaded', response);
-      if (!response.statusCode) {
-        setProfessionals(response);
-      }
-      if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
-      if (response instanceof Error) addNotification({ type: 'error', message: 'Internal Server Error' });
-    });
-  }, [addNotification, loadData]);
-
-  // function handleFilter() {
-  //   const nd = new Date();
-  //   const _nd = nd.toLocaleString('es-AR', { hour: '2-digit', minute: '2-digit', hourCycle: 'h24' });
-  //   addNotification({
-  //     date: _nd,
-  //     type: 'error',
-  //     message: 'Los cambios han sido guardados exitosamente en la base de datos',
-  //   });
-  // }
   function handleNavigation(event: MouseEvent<HTMLAnchorElement>, path: string) {
     event.preventDefault();
     setItemSelected(2);
     navigate(path);
   }
 
+  function handleSearch(event: ChangeEvent<HTMLInputElement>) {
+    setSearch(event.target.value);
+  }
+  // #region Table
   const columns: ColumnDef<IProfessional>[] = [
-    {
-      accessorKey: 'index',
-      size: 50,
-      header: () => {
-        return <div className='text-center'>#</div>;
-      },
-      cell: ({ row }) => {
-        return <div className='text-center text-sm'>{row.index + 1}</div>;
-      },
-    },
+    // {
+    //   accessorKey: 'index',
+    //   size: 50,
+    //   header: () => {
+    //     return <div className='text-center'>#</div>;
+    //   },
+    //   cell: ({ row }) => {
+    //     return <div className='text-center text-sm'>{row.index + 1}</div>;
+    //   },
+    // },
     {
       accessorKey: 'lastName',
-      size: 150,
-      minSize: 150,
+      // size: 150,
+      // minSize: 150,
       header: ({ column }) => {
         return (
           <div className='text-left'>
@@ -106,7 +86,7 @@ export default function Professionals() {
         );
       },
       cell: ({ row }) => {
-        return <div className='text-left'>{capitalize(row.original.area?.name)}</div>;
+        return <div className='text-left'>{capitalize(row.original.area.name)}</div>;
       },
     },
     {
@@ -123,7 +103,7 @@ export default function Professionals() {
         );
       },
       cell: ({ row }) => {
-        return <div className='text-left text-sm'>{capitalize(row.original.specialization?.name)}</div>;
+        return <div className='text-left text-sm'>{capitalize(row.original.specialization.name)}</div>;
       },
     },
     {
@@ -171,19 +151,16 @@ export default function Professionals() {
       },
     },
   ];
-
+  // #endregion
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
       {/* Page Header */}
       <div className='flex items-center justify-between'>
-        <PageHeader title={pageTitle} breadcrumb={breadcrumb} />
+        <PageHeader title={PROF_CONFIG.title} breadcrumb={breadcrumb} />
       </div>
       {/* Page content */}
       <div className='grid gap-6 md:grid-cols-4 md:gap-8 lg:grid-cols-4 xl:grid-cols-4'>
         <Card className='col-span-1 border-none bg-slate-200 bg-transparent shadow-none md:col-span-4 lg:col-span-1 xl:col-span-1'>
-          {/* <CardHeader className='flex flex-row items-center'>
-            <CardTitle>Título acá?</CardTitle>
-          </CardHeader> */}
           <CardContent className='p-0'>
             <div className='flex flex-col gap-6'>
               <Link to={`/professionals/create`}>
@@ -194,7 +171,7 @@ export default function Professionals() {
               </Link>
               <div className='relative flex'>
                 <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
-                <Input type='search' placeholder={PROF_CONFIG.search.placeholder} className='w-fit grow bg-background pl-9 shadow-sm' />
+                <Input onChange={handleSearch} type='search' placeholder={PROF_CONFIG.search.placeholder} className='w-fit grow bg-background pl-9 shadow-sm' />
               </div>
             </div>
           </CardContent>
@@ -204,7 +181,7 @@ export default function Professionals() {
           <CardHeader>
             <div className='grid gap-2'>
               <CardTitle className='flex items-center justify-between'>
-                <div className='flex items-center gap-2'>
+                <div className='flex items-center gap-3.5 px-2'>
                   <List className='h-4 w-4' strokeWidth={2} />
                   {PROF_CONFIG.table.title}
                 </div>
@@ -226,7 +203,7 @@ export default function Professionals() {
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
-                  <Button variant={'tableHeader'} size={'miniIcon'} onClick={() => setLoadData(Math.random())}>
+                  <Button variant={'tableHeader'} size={'miniIcon'}>
                     <ListRestart className='h-4 w-4' strokeWidth={2} />
                   </Button>
                   <Button variant={'tableHeaderPrimary'} size={'miniIcon'}>
@@ -237,7 +214,7 @@ export default function Professionals() {
             </div>
           </CardHeader>
           <CardContent>
-            <ProfessionalsDataTable columns={columns} data={professionals} rowsPerPage={15} />
+            <ProfessionalsDataTable columns={columns} search={debouncedSearch} />
           </CardContent>
         </Card>
       </div>
