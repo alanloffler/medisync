@@ -14,7 +14,7 @@ export interface IProfessionalForm {
 }
 
 export interface IProfessional {
-  id: string;
+  _id: string;
   area: IArea;
   available: number;
   email: string;
@@ -23,5 +23,4 @@ export interface IProfessional {
   phone: number;
   specialization: ISpecialization;
   titleAbbreviation: string;
-  // [key: string]: any;
 }
