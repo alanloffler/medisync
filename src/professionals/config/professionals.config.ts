@@ -13,6 +13,7 @@ export const PROF_CONFIG = {
     headers: ['Nombre', 'Área', 'Espec.', 'Disp.', 'Acciones'],
     noResults: 'No hay resultados',
   },
+  title: 'Profesionales'
 };
 
 export const PROF_CREATE_CONFIG = {
