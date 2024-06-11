@@ -5,9 +5,10 @@ import { ProfessionalUtils } from './professional.utils';
 export class ProfessionalApiService {
   private static readonly API_URL = import.meta.env.VITE_API_URL;
 
-  public static async findAll() {
+  public static async findAll(search: string, skip: number, limit: number) {
+    const query: string = `${this.API_URL}/professionals?search=${search}&skip=${skip}&limit=${limit}`;
     try {
-      const fetchData = await fetch(`${this.API_URL}/professionals`, {
+      const fetchData = await fetch(query, {
         method: 'GET',
         headers: {
           'content-type': 'application/json;charset=UTF-8',
@@ -21,9 +22,10 @@ export class ProfessionalApiService {
 
   public static async create(data: IProfessionalForm) {
     const transformedData = ProfessionalUtils.lowercaseFormItems(data);
-
+    const query: string = `${this.API_URL}/professionals`;
+    
     try {
-      const fetchData = await fetch(`${this.API_URL}/professionals`, {
+      const fetchData = await fetch(query, {
         method: 'POST',
         headers: {
           'content-type': 'application/json;charset=UTF-8',
