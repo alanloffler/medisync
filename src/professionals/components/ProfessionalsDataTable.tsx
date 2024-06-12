@@ -12,6 +12,7 @@ import { PROF_CONFIG } from '../config/professionals.config';
 import { ProfessionalApiService } from '../services/professional-api.service';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 import { useTruncateText } from '@/core/hooks/useTruncateText';
 // Table interfaces
@@ -39,6 +40,7 @@ export function ProfessionalsDataTable({ search, reload, setErrorMessage }: Data
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const firstUpdate = useRef(true);
+  const navigate = useNavigate();
   const truncate = useTruncateText();
   // #region Table columns
   const tableColumns: ColumnDef<IProfessional>[] = [
@@ -108,9 +110,9 @@ export function ProfessionalsDataTable({ search, reload, setErrorMessage }: Data
       accessorKey: 'actions',
       size: 100,
       header: () => <div className='text-center'>{PROF_CONFIG.table.headers[4]}</div>,
-      cell: () => (
+      cell: ({ row }) => (
         <div className='flex flex-row items-center justify-center space-x-4'>
-          <Button variant={'ghost'} size={'miniIcon'} className=''>
+          <Button variant={'ghost'} size={'miniIcon'} onClick={() => navigate(`/professionals/update/${row.original._id}`)}>
             <FileText className='h-4 w-4' />
           </Button>
           <Button variant={'ghost'} size={'miniIcon'}>
