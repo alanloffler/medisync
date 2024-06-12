@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { SortingState } from '@tanstack/react-table';
 import { IProfessionalForm } from '../interfaces/professional.interface';
 import { ProfessionalUtils } from './professional.utils';
 
 export class ProfessionalApiService {
   private static readonly API_URL = import.meta.env.VITE_API_URL;
 
-  public static async findAll(search: string, skip: number, limit: number) {
-    const query: string = `${this.API_URL}/professionals?search=${search}&skip=${skip}&limit=${limit}`;
+  public static async findAll(search: string, sorting: SortingState, skip: number, limit: number) {
+    const query: string = `${this.API_URL}/professionals?search=${search}&skip=${skip}&limit=${limit}&sk=${sorting[0].id}&sv=${sorting[0].desc ? 'desc' : 'asc'}`;
     try {
       const fetchData = await fetch(query, {
         method: 'GET',
