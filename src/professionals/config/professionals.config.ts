@@ -6,14 +6,23 @@ export const PROF_CONFIG = {
     title: 'Filtrar',
   },
   search: {
-    placeholder: 'Buscar profesional',
+    placeholder: 'Buscar profesional o especialización',
   },
   table: {
-    title: 'Listado de Profesionales',
+    defaultPageSize: 10,
+    defaultSortingId: 'lastName',
+    defaultSortingType: false, // desc: true | false
     headers: ['Nombre', 'Área', 'Espec.', 'Disp.', 'Acciones'],
+    itemsPerPage: [5, 10, 20],
     noResults: 'No hay resultados',
+    pagination: {
+      page: 'Página',
+      of: 'de',
+    },
+    rowsPerPage: 'Filas por página',
+    title: 'Listado de Profesionales',
   },
-  title: 'Profesionales'
+  title: 'Profesionales',
 };
 
 export const PROF_CREATE_CONFIG = {
