@@ -150,7 +150,7 @@ export default function CreateProfessional() {
                             field.onChange(event);
                             handleChangeArea(event);
                           }}
-                          value={field.value} 
+                          value={field.value}
                         >
                           <FormControl>
                             <SelectTrigger className={`focus:red h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
