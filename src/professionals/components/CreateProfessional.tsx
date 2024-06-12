@@ -33,21 +33,20 @@ export default function CreateProfessional() {
   const [specializations, setSpecializations] = useState<ISpecialization[]>([]);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
-
   const [showProfessionalCard, setShowProfessionalCard] = useState<boolean>(false);
 
-  // #region Load data
   useEffect(() => {
     AreaService.findAll().then((response) => {
       if (!response.statusCode) {
         setAreas(response);
         setDisabledSpec(false);
         addNotification({ type: 'success', message: 'Areas y especialidades cargadas' });
-      } 
+      }
       if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
       if (response instanceof Error) addNotification({ type: 'error', message: 'Error en el servidor buscando areas' });
     });
-  }, [addNotification]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // #endregion
   // #region Form config and actions
@@ -86,7 +85,7 @@ export default function CreateProfessional() {
     });
   }
 
-  function handleCancel(event: MouseEvent<HTMLButtonElement>) {
+  function handleCancel(event: MouseEvent<HTMLButtonElement | HTMLDivElement | HTMLInputElement>) {
     event.preventDefault();
     createForm.reset(defaultValues);
     setDisabledSpec(true);
@@ -122,8 +121,12 @@ export default function CreateProfessional() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className='w-fit' align='center'>
-                  <DropdownMenuItem><Link to='/'>Agregar área</Link></DropdownMenuItem>
-                  <DropdownMenuItem><Link to='/'>Agregar especialidad</Link></DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link to='/'>Agregar área</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link to='/'>Agregar especialidad</Link>
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </CardTitle>
@@ -133,7 +136,7 @@ export default function CreateProfessional() {
             <Form {...createForm}>
               <form onSubmit={createForm.handleSubmit(handleCreateProfessional)} className='space-y-4'>
                 {/* Form fields: area and specialization */}
-                <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
+                <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                   <FormField
                     control={createForm.control}
                     name='area'
@@ -142,25 +145,26 @@ export default function CreateProfessional() {
                         <FormLabel>{PC_CONFIG.labels.area}</FormLabel>
                         <Select
                           defaultValue={field.value}
-                          disabled={disabledSpec || areas.length < 1}
+                          disabled={areas.length < 1}
                           onValueChange={(event) => {
                             field.onChange(event);
                             handleChangeArea(event);
                           }}
-                          value={field.value}
+                          value={field.value} 
                         >
                           <FormControl>
-                            <SelectTrigger className={`h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
+                            <SelectTrigger className={`focus:red h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
                               <SelectValue placeholder={PC_CONFIG.placeholders.area} />
                             </SelectTrigger>
                           </FormControl>
                           <FormMessage />
                           <SelectContent>
-                            {areas.length > 0 && areas.map((el) => (
-                              <SelectItem key={el._id} value={el._id} className='text-sm'>
-                                {capitalize(el.name)}
-                              </SelectItem>
-                            ))}
+                            {areas.length > 0 &&
+                              areas.map((el) => (
+                                <SelectItem key={el._id} value={el._id} className='text-sm'>
+                                  {capitalize(el.name)}
+                                </SelectItem>
+                              ))}
                           </SelectContent>
                         </Select>
                       </FormItem>
@@ -172,11 +176,7 @@ export default function CreateProfessional() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>{PC_CONFIG.labels.specialization}</FormLabel>
-                        <Select 
-                          defaultValue={field.value} 
-                          disabled={disabledSpec || specializations.length < 1} 
-                          onValueChange={(event) => field.onChange(event)} value={field.value}
-                        >
+                        <Select defaultValue={field.value} disabled={disabledSpec || specializations.length < 1} onValueChange={(event) => field.onChange(event)} value={field.value}>
                           <FormControl>
                             <SelectTrigger className={`h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
                               <SelectValue placeholder={PC_CONFIG.placeholders.specialization} />
@@ -196,7 +196,7 @@ export default function CreateProfessional() {
                   />
                 </div>
                 {/* Form fields: titleAbbreviation and available */}
-                <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
+                <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                   <FormField
                     control={createForm.control}
                     name='titleAbbreviation'
@@ -228,7 +228,7 @@ export default function CreateProfessional() {
                   />
                 </div>
                 {/* Form fields: lastName and firstName */}
-                <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
+                <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                   <FormField
                     control={createForm.control}
                     name='lastName'
@@ -257,7 +257,7 @@ export default function CreateProfessional() {
                   />
                 </div>
                 {/* Form fields: email and phone */}
-                <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
+                <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                   <FormField
                     control={createForm.control}
                     name='email'
@@ -303,7 +303,7 @@ export default function CreateProfessional() {
             <div className='mx-auto flex h-full items-center justify-center'>
               <Card className='w-full md:w-2/3 lg:w-2/3'>
                 <CardHeader>
-                  <div className='flex justify-center text-3xl font-semibold leading-none tracking-tight p-4'>
+                  <div className='flex justify-center p-4 text-3xl font-semibold leading-none tracking-tight'>
                     {createForm.watch('titleAbbreviation')} {createForm.watch('lastName')} {createForm.watch('firstName')}
                   </div>
                   <CardContent className='space-y-2 px-6 py-0 pt-2 text-lg'>
@@ -313,18 +313,25 @@ export default function CreateProfessional() {
                         {createForm.watch('email')}
                       </div>
                     )}
-                    {createForm.watch('phone') !== undefined && (
+                    {createForm.watch('phone') !== 0 && (
                       <div className='flex items-center gap-4'>
                         <Phone className='h-4 w-4' />
                         {createForm.watch('phone')}
                       </div>
                     )}
-                    </CardContent>
-                    <div className='flex justify-end space-x-4 pt-4'>
-                      {createForm.watch('area') !== '' && <Badge variant={'secondary'} className='animate-fadeIn'>{capitalize(areas.find((area) => area._id === createForm.watch('area'))?.name)}</Badge>}
-                      {createForm.watch('specialization') !== '' && <Badge variant={'secondary'} className='animate-fadeIn'>{capitalize(areas.find((area) => area._id === createForm.watch('area'))?.specializations.find((spec) => spec._id === createForm.watch('specialization'))?.name || '')}</Badge>}
-                    </div>
-                  
+                  </CardContent>
+                  <div className='flex justify-end space-x-4 pt-4'>
+                    {createForm.watch('area') !== '' && (
+                      <Badge variant={'secondary'} className='animate-fadeIn'>
+                        {capitalize(areas.find((area) => area._id === createForm.watch('area'))?.name)}
+                      </Badge>
+                    )}
+                    {createForm.watch('specialization') !== '' && (
+                      <Badge variant={'secondary'} className='animate-fadeIn'>
+                        {capitalize(areas.find((area) => area._id === createForm.watch('area'))?.specializations.find((spec) => spec._id === createForm.watch('specialization'))?.name || '')}
+                      </Badge>
+                    )}
+                  </div>
                 </CardHeader>
               </Card>
             </div>
