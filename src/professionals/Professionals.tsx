@@ -12,7 +12,7 @@ import { AreaService } from '@/core/services/area.service';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { IArea } from '@/core/interfaces/area.interface';
 import { IBreadcrumb } from '../core/components/common/interfaces/breadcrumb.interface';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { PROF_CONFIG } from './config/professionals.config';
 import { PageHeader } from '@/core/components/common/PageHeader';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
@@ -29,6 +29,7 @@ export default function Professionals() {
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const debouncedSearch = useDebounce<string>(search, DEBOUNCE_TIME); // load data
+  const navigate = useNavigate();
 
   const breadcrumb: IBreadcrumb[] = [
     { id: 1, name: 'Inicio', path: '/' },
@@ -119,7 +120,7 @@ export default function Professionals() {
                   <Button variant={'tableHeader'} size={'miniIcon'} onClick={handleReload}>
                     <ListRestart className='h-4 w-4' strokeWidth={2} />
                   </Button>
-                  <Button variant={'tableHeaderPrimary'} size={'miniIcon'}>
+                  <Button variant={'tableHeaderPrimary'} size={'miniIcon'} onClick={() => navigate('/professionals/create')}>
                     <CirclePlus className='h-4 w-4' strokeWidth={2} />
                   </Button>
                 </div>
