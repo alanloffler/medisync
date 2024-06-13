@@ -1,4 +1,4 @@
-export const PROF_CREATE_SCHEMA = {
+export const PROF_SCHEMA = {
   areaMessage: 'Debes seleccionar un área',
   availableMessage: 'Debes seleccionar una disponibilidad',
   emailMessage: 'Debes ingresar un e-mail válido',
