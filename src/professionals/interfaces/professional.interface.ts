@@ -4,7 +4,7 @@ import { ISpecialization } from "@/core/interfaces/specialization.interface";
 
 export interface IProfessionalForm {
   area: string;
-  available: number;
+  available: boolean;
   email: string;
   firstName: string;
   lastName: string;
@@ -16,7 +16,7 @@ export interface IProfessionalForm {
 export interface IProfessional {
   _id: string;
   area: IArea;
-  available: number;
+  available: boolean;
   email: string;
   firstName: string;
   lastName: string;
