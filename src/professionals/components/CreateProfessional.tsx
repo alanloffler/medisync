@@ -18,7 +18,7 @@ import { IArea } from '@/core/interfaces/area.interface';
 import { ISpecialization } from '@/core/interfaces/specialization.interface';
 import { PROF_CREATE_CONFIG as PC_CONFIG } from '../config/professionals.config';
 import { ProfessionalApiService } from '../services/professional-api.service';
-import { createSchema } from '../schemas/create.schema';
+import { professionalSchema } from '../schemas/professional.schema';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useEffect, useState, MouseEvent } from 'react';
 import { useForm } from 'react-hook-form';
@@ -52,7 +52,7 @@ export default function CreateProfessional() {
   // #region Form config and actions
   const defaultValues = {
     area: '',
-    available: 1,
+    available: true,
     email: '',
     firstName: '',
     lastName: '',
@@ -61,8 +61,8 @@ export default function CreateProfessional() {
     titleAbbreviation: '',
   };
 
-  const createForm = useForm<z.infer<typeof createSchema>>({
-    resolver: zodResolver(createSchema),
+  const createForm = useForm<z.infer<typeof professionalSchema>>({
+    resolver: zodResolver(professionalSchema),
     defaultValues: defaultValues,
   });
 
@@ -72,7 +72,7 @@ export default function CreateProfessional() {
     if (!isDirty) setShowProfessionalCard(false);
   }, [createForm.formState.isDirty, showProfessionalCard]);
 
-  function handleCreateProfessional(data: z.infer<typeof createSchema>) {
+  function handleCreateProfessional(data: z.infer<typeof professionalSchema>) {
     ProfessionalApiService.create(data).then((response) => {
       if (response.statusCode === 200) {
         setDisabledSpec(true);
@@ -176,7 +176,11 @@ export default function CreateProfessional() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>{PC_CONFIG.labels.specialization}</FormLabel>
-                        <Select defaultValue={field.value} disabled={disabledSpec || specializations.length < 1} onValueChange={(event) => field.onChange(event)} value={field.value}>
+                        <Select 
+                          defaultValue={field.value} 
+                          disabled={disabledSpec || specializations.length < 1} 
+                          onValueChange={(event) => field.onChange(event)} 
+                          value={field.value}>
                           <FormControl>
                             <SelectTrigger className={`h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
                               <SelectValue placeholder={PC_CONFIG.placeholders.specialization} />
