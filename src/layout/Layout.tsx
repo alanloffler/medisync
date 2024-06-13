@@ -5,7 +5,7 @@ import { Outlet } from 'react-router-dom';
 // React component
 export default function Layout() {
   return (
-    <div className='flex h-full min-h-screen w-full flex-col bg-muted/50'>
+    <div className='flex min-h-screen w-full flex-col bg-muted/50'>
       <div className='mb-12'>
         <Header />
         <Outlet />
