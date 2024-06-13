@@ -8,7 +8,7 @@ export class ProfessionalApiService {
 
   public static async findAll(search: string, sorting: SortingState, skip: number, limit: number) {
     const url: string = `${this.API_URL}/professionals?search=${search}&skip=${skip}&limit=${limit}&sk=${sorting[0].id}&sv=${sorting[0].desc ? 'desc' : 'asc'}`;
-    
+
     try {
       const query: Response = await fetch(url, {
         method: 'GET',
@@ -51,6 +51,24 @@ export class ProfessionalApiService {
         headers: {
           'content-type': 'application/json;charset=UTF-8',
         },
+      });
+
+      return await query.json();
+    } catch (e) {
+      return e;
+    }
+  }
+
+  public static async update(id: string, data: IProfessionalForm) {
+    const url: string = `${this.API_URL}/professionals/${id}`;
+
+    try {
+      const query: Response = await fetch(url, {
+        method: 'PATCH',
+        headers: {
+          'content-type': 'application/json;charset=UTF-8',
+        },
+        body: JSON.stringify(data),
       });
 
       return await query.json();
