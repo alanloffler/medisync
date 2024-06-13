@@ -11,7 +11,7 @@ import { ProfessionalsDataTable } from './components/ProfessionalsDataTable';
 import { AreaService } from '@/core/services/area.service';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { IArea } from '@/core/interfaces/area.interface';
-import { IBreadcrumb } from '../core/components/common/interfaces/breadcrumb.interface';
+import { IBreadcrumb } from '../../core/components/common/interfaces/breadcrumb.interface';
 import { Link, useNavigate } from 'react-router-dom';
 import { PROF_CONFIG } from './config/professionals.config';
 import { PageHeader } from '@/core/components/common/PageHeader';

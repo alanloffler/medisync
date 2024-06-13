@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { FilePlus, Mail, Menu, Phone } from 'lucide-react';
+import { ArrowLeft, FilePlus, Mail, Menu, Phone } from 'lucide-react';
 // Components: https://ui.shadcn.com/docs/components
 import { Badge } from '@/core/components/ui/badge';
 import { Button } from '@/core/components/ui/button';
@@ -16,6 +16,8 @@ import { PageHeader } from '@/core/components/common/PageHeader';
 import { AreaService } from '@/core/services/area.service';
 import { IArea } from '@/core/interfaces/area.interface';
 import { ISpecialization } from '@/core/interfaces/specialization.interface';
+import { Link, useNavigate } from 'react-router-dom';
+import { Loading } from '@/core/components/common/Loading';
 import { PROF_CREATE_CONFIG as PC_CONFIG } from '../config/professionals.config';
 import { ProfessionalApiService } from '../services/professional-api.service';
 import { professionalSchema } from '../schemas/professional.schema';
@@ -25,17 +27,20 @@ import { useForm } from 'react-hook-form';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Link } from 'react-router-dom';
 
 export default function CreateProfessional() {
   const [areas, setAreas] = useState<IArea[]>([]);
   const [disabledSpec, setDisabledSpec] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [showProfessionalCard, setShowProfessionalCard] = useState<boolean>(false);
   const [specializations, setSpecializations] = useState<ISpecialization[]>([]);
+  
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
-  const [showProfessionalCard, setShowProfessionalCard] = useState<boolean>(false);
-
+  const navigate = useNavigate();
+  // #region Load data
   useEffect(() => {
+    setIsLoading(true);
     AreaService.findAll().then((response) => {
       if (!response.statusCode) {
         setAreas(response);
@@ -44,10 +49,11 @@ export default function CreateProfessional() {
       }
       if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
       if (response instanceof Error) addNotification({ type: 'error', message: 'Error en el servidor buscando areas' });
+      setIsLoading(false);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+  // #endregion
   // #endregion
   // #region Form config and actions
   const defaultValues = {
@@ -104,8 +110,13 @@ export default function CreateProfessional() {
       {/* Page Header */}
       <div className='flex items-center justify-between'>
         <PageHeader title={''} breadcrumb={PC_CONFIG.breadcrumb} />
+        <Button variant={'outline'} size={'sm'} className='gap-2' onClick={() => navigate(-1)}>
+          <ArrowLeft className='h-4 w-4' />
+          Volver
+        </Button>
       </div>
-      <div className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-2 lg:gap-6'>
+      {isLoading && <Loading text='Bajando datos' size={30} duration={0.35} className='gap-8 bg-background fill-indigo-500 p-8' />}
+      {!isLoading && <div className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-2 lg:gap-6'>
         <Card className='w-full md:grid-cols-2'>
           <CardHeader>
             <CardTitle className='flex items-center justify-between'>
@@ -341,7 +352,7 @@ export default function CreateProfessional() {
             </div>
           </div>
         )}
-      </div>
+      </div>}
     </main>
   );
 }

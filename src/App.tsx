@@ -3,11 +3,11 @@ import Layout from './layout/Layout';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 // Lazy loaded components
-const Appointments = lazy(() => import('./appointments/Appointments'));
-const Dashboard = lazy(() => import('./dashboard/Dashboard'));
-const Professionals = lazy(() => import('./professionals/Professionals'));
-const CreateProfessional = lazy(() => import('./professionals/components/CreateProfessional'));
-const UpdateProfessional = lazy(() => import('./professionals/components/UpdateProfessional'));
+const Appointments = lazy(() => import('./pages/appointments/Appointments'));
+const Dashboard = lazy(() => import('./pages/dashboard/Dashboard'));
+const Professionals = lazy(() => import('./pages/professionals/Professionals'));
+const CreateProfessional = lazy(() => import('./pages/professionals/components/CreateProfessional'));
+const UpdateProfessional = lazy(() => import('./pages/professionals/components/UpdateProfessional'));
 // React component
 export default function App() {
   const router = createBrowserRouter([
