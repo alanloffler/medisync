@@ -15,6 +15,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 import { useTruncateText } from '@/core/hooks/useTruncateText';
+
+import { useMediaQuery } from '@uidotdev/usehooks';
 // Table interfaces
 interface DataTableProps {
   search: string;
@@ -112,10 +114,10 @@ export function ProfessionalsDataTable({ search, reload, setErrorMessage }: Data
       header: () => <div className='text-center'>{PROF_CONFIG.table.headers[4]}</div>,
       cell: ({ row }) => (
         <div className='flex flex-row items-center justify-center space-x-4'>
-          <Button variant={'ghost'} size={'miniIcon'} onClick={() => navigate(`/professionals/update/${row.original._id}`)}>
+          <Button variant={'ghost'} size={'miniIcon'}>
             <FileText className='h-4 w-4' />
           </Button>
-          <Button variant={'ghost'} size={'miniIcon'}>
+          <Button variant={'ghost'} size={'miniIcon'} onClick={() => navigate(`/professionals/update/${row.original._id}`)}>
             <FilePen className='h-4 w-4' />
           </Button>
           <Button variant={'ghost'} size={'miniIcon'}>
@@ -127,6 +129,19 @@ export function ProfessionalsDataTable({ search, reload, setErrorMessage }: Data
   ];
   // #endregion
   // #region Table constructor
+  const isSmallDevice = useMediaQuery('only screen and (max-width : 639px)');
+  const isMediumDevice = useMediaQuery('only screen and (min-width : 640px) and (max-width : 767px)');
+  const isLargeDevice = useMediaQuery('only screen and (min-width : 768px) and (max-width : 1023px)');
+  const isExtraLargeDevice = useMediaQuery('only screen and (min-width : 1024px)');
+
+  const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>({
+    index: !isSmallDevice,
+    lastName: true,
+    area: false,
+    specialization: true,
+    available: false,
+  });
+
   const table = useReactTable({
     columns: columns,
     data: data,
@@ -142,8 +157,11 @@ export function ProfessionalsDataTable({ search, reload, setErrorMessage }: Data
     state: {
       sorting,
       pagination,
+      columnVisibility,
     },
+    onColumnVisibilityChange: setColumnVisibility,
   });
+
   // #endregion
   // #region Load data, pagination and sorting
   useEffect(() => {
@@ -184,6 +202,32 @@ export function ProfessionalsDataTable({ search, reload, setErrorMessage }: Data
   // #endregion
   return (
     <>
+    <div>
+    <section>
+      <h1>useMediaQuery</h1>
+      Resize your browser windows to see changes.
+      <article>
+        <figure className={isSmallDevice ? "bg-red-400" : ""}>
+          phone
+          <figcaption>Small</figcaption>
+        </figure>
+        <figure className={isMediumDevice ? "bg-red-400" : ""}>
+          tablet
+          <figcaption>Medium</figcaption>
+        </figure>
+        <figure className={isLargeDevice ? "bg-red-400" : ""}>
+          laptop
+          <figcaption>Large</figcaption>
+        </figure>
+        <figure className={isExtraLargeDevice ? "bg-red-400" : ""}>
+          desktop
+          <figcaption>Extra Large</figcaption>
+        </figure>
+      </article>
+    </section>
+    </div>
+
+
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
