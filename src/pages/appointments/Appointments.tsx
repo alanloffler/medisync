@@ -62,7 +62,7 @@ export default function Appointments() {
           {/* prettier-ignore */}
           <Calendar 
             captionLayout={'dropdown-buttons'}
-            className='rounded-lg border bg-card text-card-foreground shadow-sm h-fit' 
+            className='rounded-lg bg-card text-card-foreground shadow-sm h-fit' 
             disabled={[
               { dayOfWeek: [0, 6] }, 
               { before: new Date() }, 
