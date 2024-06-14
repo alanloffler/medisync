@@ -32,7 +32,7 @@ export const useNotificationsStore = create<States & Actions>()(
       addNotification: (notification: INotification) => {
         const nd = new Date();
         notification.date = nd.toLocaleString('es-AR', { hour: '2-digit', minute: '2-digit', hourCycle: 'h24' });
-        set((state) => ({ notifications: [...state.notifications, notification] }));
+        set((state) => ({ notifications: [notification, ...state.notifications]}));
       },
       reset: () => set(initialState),
     }),
