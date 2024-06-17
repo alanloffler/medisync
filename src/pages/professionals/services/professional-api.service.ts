@@ -8,7 +8,7 @@ export class ProfessionalApiService {
 
   public static async findAll(search: string, sorting: SortingState, skip: number, limit: number) {
     const url: string = `${this.API_URL}/professionals?search=${search}&skip=${skip}&limit=${limit}&sk=${sorting[0].id}&sv=${sorting[0].desc ? 'desc' : 'asc'}`;
-
+    console.log(url);
     try {
       const query: Response = await fetch(url, {
         method: 'GET',
