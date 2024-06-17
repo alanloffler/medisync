@@ -47,10 +47,10 @@ export function Footer() {
             <>
               {notifications[notifications.length - 1] && (
                 <div className={`flex items-center space-x-2 py-1`}>
-                  {notifications[notifications.length - 1].type === 'success' ? <div className='rounded-full bg-green-500 p-1.5'></div> : <div className='rounded-full bg-red-500 p-1.5'></div>}
+                  {notifications[0].type === 'success' ? <div className='rounded-full bg-green-500 p-1.5'></div> : <div className='rounded-full bg-red-500 p-1.5'></div>}
                   <div className='flex select-none space-x-1 text-nowrap py-3 text-xs'>
-                    <span className='font-medium text-slate-500'>{`[${notifications[notifications.length - 1].date}]`}</span>
-                    <span className='text-slate-500'>{`> ${notifications[notifications.length - 1].message}`}</span>
+                    <span className='font-medium text-slate-500'>{`[${notifications[0].date}]`}</span>
+                    <span className='text-slate-500'>{`> ${notifications[0].message}`}</span>
                   </div>
                 </div>
               )}
