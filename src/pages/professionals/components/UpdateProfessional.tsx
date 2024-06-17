@@ -5,6 +5,7 @@ import { useEffect, useState, MouseEvent, useRef } from 'react';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/core/components/ui/form';
 import { PageHeader } from '@/core/components/common/PageHeader';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/core/components/ui/card';
+import { Separator } from '@/core/components/ui/separator';
 import { Input } from '@/core/components/ui/input';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/core/components/ui/dropdown-menu';
 import { Label } from '@/core/components/ui/label';
@@ -29,6 +30,7 @@ export default function UpdateProfessional() {
   const [areas, setAreas] = useState<IArea[]>([]);
   const [areasLoading, setAreasLoading] = useState<boolean>(true);
   const [disabledSpec, setDisabledSpec] = useState<boolean>(true);
+  const [disabledSaveButton, setDisabledSaveButton] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [professional, setProfessional] = useState<IProfessional>({} as IProfessional);
   const [professionalLoading, setProfessionalLoading] = useState<boolean>(true);
@@ -51,6 +53,10 @@ export default function UpdateProfessional() {
     specialization: '',
     titleAbbreviation: '',
     _id: '',
+    scheduleTimeInit: '',
+    scheduleTimeEnd: '',
+    timeSlotUnavailableInit: '',
+    timeSlotUnavailableEnd: '',
   };
 
   const createForm = useForm<z.infer<typeof professionalSchema>>({
@@ -65,7 +71,6 @@ export default function UpdateProfessional() {
       if (!response.statusCode) {
         setAreas(response);
         setAreasLoading(false);
-        addNotification({ type: 'success', message: 'Areas y especialidades cargadas' });
         console.log('Areas charged', response);
       }
       if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
@@ -81,6 +86,7 @@ export default function UpdateProfessional() {
         setProfessionalLoading(false);
         console.log('professional data loaded', response);
         setIsLoading(false);
+        setDisabledSaveButton(false);
       });
     }
   }, [areasLoading, id]);
@@ -99,6 +105,10 @@ export default function UpdateProfessional() {
       createForm.setValue('email', professional.email);
       createForm.setValue('phone', professional.phone);
       createForm.setValue('available', professional.available);
+      createForm.setValue('configuration.scheduleTimeInit', professional.configuration.scheduleTimeInit);
+      createForm.setValue('configuration.scheduleTimeEnd', professional.configuration.scheduleTimeEnd);
+      createForm.setValue('configuration.timeSlotUnavailableInit', professional.configuration.timeSlotUnavailableInit);
+      createForm.setValue('configuration.timeSlotUnavailableEnd', professional.configuration.timeSlotUnavailableEnd);
       valuesRef.current = createForm.getValues();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -115,7 +125,10 @@ export default function UpdateProfessional() {
   function handleUpdateProfessional(data: z.infer<typeof professionalSchema>) {
     if (id) {
       ProfessionalApiService.update(id, data).then((response) => {
-        if (response.statusCode === 200) addNotification({ type: 'success', message: response.message });
+        if (response.statusCode === 200) {
+          setDisabledSaveButton(true);
+          addNotification({ type: 'success', message: response.message });
+        }
         if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
         if (response instanceof Error) addNotification({ type: 'error', message: 'Internal Server Error' });
       });
@@ -322,9 +335,70 @@ export default function UpdateProfessional() {
                       )}
                     />
                   </div>
+                  {/* Schedule*/}
+                  <div className='flex flex-row pt-4'>
+                    <Separator />
+                  </div>
+                  <div className='flex flex-row font-semibold'>Configuración de agenda</div>
+                  <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                    <FormField
+                      control={createForm.control}
+                      name='configuration.scheduleTimeInit'
+                      render={({ field }) => (
+                        <FormItem className=''>
+                          <FormLabel>{PU_CONFIG.labels.scheduleTimeInit}</FormLabel>
+                          <FormControl className='h-9'>
+                            <Input placeholder={PU_CONFIG.placeholders.scheduleTimeInit} {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={createForm.control}
+                      name='configuration.scheduleTimeEnd'
+                      render={({ field }) => (
+                        <FormItem className=''>
+                          <FormLabel>{PU_CONFIG.labels.scheduleTimeEnd}</FormLabel>
+                          <FormControl className='h-9'>
+                            <Input placeholder={PU_CONFIG.placeholders.scheduleTimeEnd} {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                    <FormField
+                      control={createForm.control}
+                      name='configuration.timeSlotUnavailableInit'
+                      render={({ field }) => (
+                        <FormItem className=''>
+                          <FormLabel>{PU_CONFIG.labels.timeSlotUnavailableInit}</FormLabel>
+                          <FormControl className='h-9'>
+                            <Input placeholder={PU_CONFIG.placeholders.timeSlotUnavailableInit} {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={createForm.control}
+                      name='configuration.timeSlotUnavailableEnd'
+                      render={({ field }) => (
+                        <FormItem className=''>
+                          <FormLabel>{PU_CONFIG.labels.timeSlotUnavailableEnd}</FormLabel>
+                          <FormControl className='h-9'>
+                            <Input placeholder={PU_CONFIG.placeholders.timeSlotUnavailableEnd} {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                   {/* Buttons */}
-                  <div className='grid grid-cols-1 space-y-2 pt-2 md:flex md:justify-end md:gap-6 md:space-y-0'>
-                    <Button type='submit' className='order-1 md:order-2 lg:order-2'>
+                  <div className='grid grid-cols-1 space-y-2 pt-4 md:flex md:justify-end md:gap-6 md:space-y-0'>
+                    <Button type='submit' className='order-1 md:order-2 lg:order-2' disabled={disabledSaveButton}>
                       {PU_CONFIG.buttons.create}
                     </Button>
                     <Button variant={'ghost'} onClick={handleCancel} className='order-2 md:order-1 lg:order-1'>
