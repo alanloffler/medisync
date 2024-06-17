@@ -8,6 +8,7 @@ const Dashboard = lazy(() => import('./pages/dashboard/Dashboard'));
 const Professionals = lazy(() => import('./pages/professionals/Professionals'));
 const CreateProfessional = lazy(() => import('./pages/professionals/components/CreateProfessional'));
 const UpdateProfessional = lazy(() => import('./pages/professionals/components/UpdateProfessional'));
+const WhatsApp = lazy(() => import('./pages/whatsapp/WhatsApp'));
 // React component
 export default function App() {
   const router = createBrowserRouter([
@@ -56,6 +57,14 @@ export default function App() {
           element: (
             <Suspense fallback={<>Loading...</>}>
               <UpdateProfessional />
+            </Suspense>
+          ),
+        },
+        {
+          path: '/whatsapp/:id',
+          element: (
+            <Suspense fallback={<>Loading...</>}>
+              <WhatsApp />
             </Suspense>
           ),
         },
