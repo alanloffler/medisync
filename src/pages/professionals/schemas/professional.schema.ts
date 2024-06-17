@@ -10,4 +10,10 @@ export const professionalSchema = z.object({
   lastName: z.string().min(1, { message: PROF_SCHEMA.lastNameMessage }),
   email: z.string().email({ message: PROF_SCHEMA.emailMessage }),
   phone: z.union([z.coerce.number().min(1, { message: PROF_SCHEMA.phoneMessage }), z.string()]),
+  configuration: z.object({
+    scheduleTimeInit: z.string().min(2, { message: PROF_SCHEMA.scheduleTimeInitMessage }),
+    scheduleTimeEnd: z.string().min(2, { message: PROF_SCHEMA.scheduleTimeEndMessage }),
+    timeSlotUnavailableInit: z.string().min(2, { message: PROF_SCHEMA.timeSlotUnavailableInitMessage }),
+    timeSlotUnavailableEnd: z.string().min(2, { message: PROF_SCHEMA.timeSlotUnavailableEndMessage }),
+  }),
 });
