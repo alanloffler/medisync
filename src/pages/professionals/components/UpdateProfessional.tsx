@@ -1,31 +1,34 @@
-// App
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { ProfessionalApiService } from '../services/professional-api.service';
-import { useEffect, useState, MouseEvent, useRef } from 'react';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/core/components/ui/form';
-import { PageHeader } from '@/core/components/common/PageHeader';
+// Icons: https://lucide.dev/icons/
+import { ArrowLeft, FilePlus, Menu } from 'lucide-react';
+// Components: https://ui.shadcn.com/docs/components
+import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/core/components/ui/card';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/core/components/ui/dropdown-menu';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/core/components/ui/form';
 import { Separator } from '@/core/components/ui/separator';
 import { Input } from '@/core/components/ui/input';
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/core/components/ui/dropdown-menu';
 import { Label } from '@/core/components/ui/label';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/core/components/ui/select';
 import { Switch } from '@/core/components/ui/switch';
-import { ArrowLeft, FilePlus, Menu } from 'lucide-react';
-import { Button } from '@/core/components/ui/button';
-import { PROF_UPDATE_CONFIG as PU_CONFIG } from '../config/update-professional.config';
+// App components
+import { Loading } from '@/core/components/common/Loading';
+import { PageHeader } from '@/core/components/common/PageHeader';
+// App
 import { AreaService } from '@/core/services/area.service';
 import { IArea } from '@/core/interfaces/area.interface';
-import { useNotificationsStore } from '@/core/stores/notifications.store';
+import { IProfessional, IProfessionalForm } from '../interfaces/professional.interface';
+import { ISpecialization } from '@/core/interfaces/specialization.interface';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { PROF_UPDATE_CONFIG as PU_CONFIG } from '../config/update-professional.config';
+import { ProfessionalApiService } from '../services/professional-api.service';
+import { professionalSchema } from '../schemas/professional.schema';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
+import { useEffect, useState, MouseEvent, useRef } from 'react';
 import { useForm } from 'react-hook-form';
+import { useNotificationsStore } from '@/core/stores/notifications.store';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { professionalSchema } from '../schemas/professional.schema';
-import { ISpecialization } from '@/core/interfaces/specialization.interface';
-import { IProfessional, IProfessionalForm } from '../interfaces/professional.interface';
-import { Loading } from '@/core/components/common/Loading';
-
+// React component
 export default function UpdateProfessional() {
   const [areas, setAreas] = useState<IArea[]>([]);
   const [areasLoading, setAreasLoading] = useState<boolean>(true);
@@ -44,22 +47,24 @@ export default function UpdateProfessional() {
   const valuesRef = useRef<IProfessionalForm>({} as IProfessionalForm); // Used to reset form to stored values on db
   // #region Form config and actions
   const defaultValues = {
+    _id: '',
     area: '',
     available: true,
+    configuration: {
+      scheduleTimeInit: '',
+      scheduleTimeEnd: '',
+      timeSlotUnavailableEnd: '',
+      timeSlotUnavailableInit: '',
+    },
     email: '',
     firstName: '',
     lastName: '',
     phone: '',
     specialization: '',
     titleAbbreviation: '',
-    _id: '',
-    scheduleTimeInit: '',
-    scheduleTimeEnd: '',
-    timeSlotUnavailableInit: '',
-    timeSlotUnavailableEnd: '',
   };
 
-  const createForm = useForm<z.infer<typeof professionalSchema>>({
+  const updateForm = useForm<z.infer<typeof professionalSchema>>({
     resolver: zodResolver(professionalSchema),
     defaultValues: defaultValues,
   });
@@ -71,7 +76,7 @@ export default function UpdateProfessional() {
       if (!response.statusCode) {
         setAreas(response);
         setAreasLoading(false);
-        console.log('Areas charged', response);
+        // console.log('Areas charged', response);
       }
       if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
       if (response instanceof Error) addNotification({ type: 'error', message: 'Error en el servidor buscando areas' });
@@ -84,7 +89,7 @@ export default function UpdateProfessional() {
       ProfessionalApiService.findOne(id).then((response) => {
         setProfessional(response);
         setProfessionalLoading(false);
-        console.log('professional data loaded', response);
+        // console.log('professional data loaded', response);
         setIsLoading(false);
         setDisabledSaveButton(false);
       });
@@ -93,23 +98,23 @@ export default function UpdateProfessional() {
 
   useEffect(() => {
     if (!areasLoading && !professionalLoading) {
-      console.log('areas and professional data loaded, then do something');
+      // console.log('areas and professional data loaded, then do something');
       // set area value, update specs for select then force specs select re-render
-      createForm.setValue('area', professional.area._id);
+      updateForm.setValue('area', professional.area._id);
       handleChangeArea(professional.area._id);
       setSpecKey(crypto.randomUUID());
-      createForm.setValue('specialization', professional.specialization._id);
-      createForm.setValue('titleAbbreviation', capitalize(professional.titleAbbreviation) || '');
-      createForm.setValue('firstName', capitalize(professional.firstName) || '');
-      createForm.setValue('lastName', capitalize(professional.lastName) || '');
-      createForm.setValue('email', professional.email);
-      createForm.setValue('phone', professional.phone);
-      createForm.setValue('available', professional.available);
-      createForm.setValue('configuration.scheduleTimeInit', professional.configuration.scheduleTimeInit);
-      createForm.setValue('configuration.scheduleTimeEnd', professional.configuration.scheduleTimeEnd);
-      createForm.setValue('configuration.timeSlotUnavailableInit', professional.configuration.timeSlotUnavailableInit);
-      createForm.setValue('configuration.timeSlotUnavailableEnd', professional.configuration.timeSlotUnavailableEnd);
-      valuesRef.current = createForm.getValues();
+      updateForm.setValue('specialization', professional.specialization._id);
+      updateForm.setValue('titleAbbreviation', capitalize(professional.titleAbbreviation) || '');
+      updateForm.setValue('firstName', capitalize(professional.firstName) || '');
+      updateForm.setValue('lastName', capitalize(professional.lastName) || '');
+      updateForm.setValue('email', professional.email);
+      updateForm.setValue('phone', professional.phone);
+      updateForm.setValue('available', professional.available);
+      updateForm.setValue('configuration.scheduleTimeInit', professional.configuration?.scheduleTimeInit || '');
+      updateForm.setValue('configuration.scheduleTimeEnd', professional.configuration?.scheduleTimeEnd || '');
+      updateForm.setValue('configuration.timeSlotUnavailableInit', professional.configuration?.timeSlotUnavailableInit || '');
+      updateForm.setValue('configuration.timeSlotUnavailableEnd', professional.configuration?.timeSlotUnavailableEnd || '');
+      valuesRef.current = updateForm.getValues();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [areasLoading, professionalLoading]);
@@ -118,7 +123,7 @@ export default function UpdateProfessional() {
     const specializations = areas.find((area) => area._id === event)?.specializations || [];
     setSpecializations(specializations);
     setDisabledSpec(false);
-    createForm.setValue('specialization', '');
+    updateForm.setValue('specialization', '');
   }
   // #endregion
   // #region Form actions
@@ -137,8 +142,9 @@ export default function UpdateProfessional() {
 
   function handleCancel(event: MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
-    createForm.reset(valuesRef.current);
+    updateForm.reset(valuesRef.current);
     setDisabledSpec(true);
+    setDisabledSaveButton(false);
   }
   // #endregion
   return (
@@ -181,12 +187,12 @@ export default function UpdateProfessional() {
               <CardDescription>{PU_CONFIG.formDescription}</CardDescription>
             </CardHeader>
             <CardContent>
-              <Form {...createForm}>
-                <form onSubmit={createForm.handleSubmit(handleUpdateProfessional)} className='space-y-4'>
+              <Form {...updateForm}>
+                <form onSubmit={updateForm.handleSubmit(handleUpdateProfessional)} className='space-y-4'>
                   {/* Form fields: area and specialization */}
                   <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
-                      control={createForm.control}
+                      control={updateForm.control}
                       name='area'
                       render={({ field }) => (
                         <FormItem>
@@ -219,7 +225,7 @@ export default function UpdateProfessional() {
                       )}
                     />
                     <FormField
-                      control={createForm.control}
+                      control={updateForm.control}
                       name='specialization'
                       render={({ field }) => (
                         <FormItem>
@@ -248,7 +254,7 @@ export default function UpdateProfessional() {
                   {/* Form fields: titleAbbreviation and available */}
                   <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
-                      control={createForm.control}
+                      control={updateForm.control}
                       name='titleAbbreviation'
                       render={({ field }) => (
                         <FormItem className=''>
@@ -261,7 +267,7 @@ export default function UpdateProfessional() {
                       )}
                     />
                     <FormField
-                      control={createForm.control}
+                      control={updateForm.control}
                       name='available'
                       render={({ field }) => (
                         <FormItem className=''>
@@ -280,7 +286,7 @@ export default function UpdateProfessional() {
                   {/* Form fields: lastName and firstName */}
                   <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
-                      control={createForm.control}
+                      control={updateForm.control}
                       name='lastName'
                       render={({ field }) => (
                         <FormItem className=''>
@@ -293,7 +299,7 @@ export default function UpdateProfessional() {
                       )}
                     />
                     <FormField
-                      control={createForm.control}
+                      control={updateForm.control}
                       name='firstName'
                       render={({ field }) => (
                         <FormItem className=''>
@@ -309,7 +315,7 @@ export default function UpdateProfessional() {
                   {/* Form fields: email and phone */}
                   <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
-                      control={createForm.control}
+                      control={updateForm.control}
                       name='email'
                       render={({ field }) => (
                         <FormItem className=''>
@@ -322,7 +328,7 @@ export default function UpdateProfessional() {
                       )}
                     />
                     <FormField
-                      control={createForm.control}
+                      control={updateForm.control}
                       name='phone'
                       render={({ field }) => (
                         <FormItem>
@@ -342,7 +348,7 @@ export default function UpdateProfessional() {
                   <div className='flex flex-row font-semibold'>Configuración de agenda</div>
                   <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
-                      control={createForm.control}
+                      control={updateForm.control}
                       name='configuration.scheduleTimeInit'
                       render={({ field }) => (
                         <FormItem className=''>
@@ -355,7 +361,7 @@ export default function UpdateProfessional() {
                       )}
                     />
                     <FormField
-                      control={createForm.control}
+                      control={updateForm.control}
                       name='configuration.scheduleTimeEnd'
                       render={({ field }) => (
                         <FormItem className=''>
@@ -370,7 +376,7 @@ export default function UpdateProfessional() {
                   </div>
                   <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
-                      control={createForm.control}
+                      control={updateForm.control}
                       name='configuration.timeSlotUnavailableInit'
                       render={({ field }) => (
                         <FormItem className=''>
@@ -383,7 +389,7 @@ export default function UpdateProfessional() {
                       )}
                     />
                     <FormField
-                      control={createForm.control}
+                      control={updateForm.control}
                       name='configuration.timeSlotUnavailableEnd'
                       render={({ field }) => (
                         <FormItem className=''>
