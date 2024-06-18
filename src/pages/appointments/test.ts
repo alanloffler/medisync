@@ -25,9 +25,6 @@ export class AppoSchedule {
   private appoMinutes: number;
   private unavailableRanges: ITimeRange[];
   public timeSlots: ITimeSlot[];
-  private slots: ITimeSlot[] = [];
-  private counter: number = 0;
-
 
   constructor(
     name: string, 
@@ -45,16 +42,16 @@ export class AppoSchedule {
   }
 
   public generateTimeSlots(): ITimeSlot[] {
-    // const slots: ITimeSlot[] = [];
+    const slots: ITimeSlot[] = [];
     let currentTime = this.startDayHour;
-    // let counter = 0;
+    let counter = 0;
 
     while (currentTime < this.endDayHour) {
-      const id = this.counter;
+      const id = counter;
       const nextTime = this.addMinutes(new Date(currentTime), this.appoMinutes);
       const available = this.isTimeSlotAvailable(currentTime, nextTime, this.unavailableRanges);
 
-      this.slots.push({
+      slots.push({
         id,
         begin: this.formatTime(currentTime),
         end: this.formatTime(nextTime),
@@ -62,9 +59,9 @@ export class AppoSchedule {
       });
 
       currentTime = nextTime;
-      this.counter++;
+      counter++;
     }
-    return this.slots;
+    return slots;
   }
 
   public insertAppointments(appointments: IAppointment[]): void {
