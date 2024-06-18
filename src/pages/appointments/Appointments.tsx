@@ -18,8 +18,8 @@ import { CalendarDays } from 'lucide-react';
 
   // Citas, esto va a venir de la base de datos
   const appointments: IAppointment[] = [
-    { date: '2024-05-17', turn: 1, name: 'Alan Löffler', professional: 1 },
-    { date: '2024-05-17', turn: 3, name: 'Alan Löffler', professional: 1 },
+    { date: '2024-05-18', turn: 1, name: 'Alan Löffler', professional: 1 },
+    { date: '2024-05-18', turn: 3, name: 'Alan Löffler', professional: 1 },
     { date: '2024-05-19', turn: 8, name: 'Antonio Muller', professional: 1 },
   ];
 
@@ -34,6 +34,8 @@ export default function Appointments() {
   const [selectedYear, setSelectedYear] = useState<string>('');
   const [showTimeSlots, setShowTimeSlots] = useState<boolean>(false);
   const [timeSlots, setTimeSlots] = useState<ITimeSlot[]>([] as ITimeSlot[]);
+
+  const [ND, setND] = useState<number>(0);
 
   const capitalize = useCapitalize();
   // combobox
@@ -104,6 +106,8 @@ export default function Appointments() {
     console.log(schedule.name)
     schedule.insertAppointments(appointments);
     setActualSchedule(schedule);
+
+    setND(parseInt(data.configuration.timeSlotUnavailableEnd) - parseInt(data.configuration.timeSlotUnavailableInit));
   }
 
   return (
@@ -123,7 +127,7 @@ export default function Appointments() {
               { dayOfWeek: [0, 6] }, 
               { before: new Date() }, 
               { from: new Date(2024, 5, 5) },
-              { from: new Date(2024, 5, 18) },
+              { from: new Date(2024, 5, 21) },
             ]}
             
             footer={<div className="flex justify-start text-xs text-slate-500 p-2">Selecciona el día</div>}
@@ -169,9 +173,9 @@ export default function Appointments() {
                     {slot.available ?
                       (
                         <div className='flex flex-row justify-between items-center'>
-                          <div className='flex space-x-4'>
-                            <div className='w-28'>{slot.begin} - {slot.end}</div>
-                            <div className='text-indigo-500'>Turno {index}</div>
+                          <div className='flex space-x-4 items-center'>
+                            <div className='text-sm font-semibold'>T{index}</div>
+                            <div className='w-28'>{slot.begin} hs</div>
                             <div>{slot.appointment?.name}</div>
                           </div>
                           <div className='flex space-x-4'>
@@ -180,7 +184,10 @@ export default function Appointments() {
                           </div>
                         </div>
                       ):(
-                        <>{slot.begin} - {slot.end}</>
+                        <div className='flex flex-row gap-4'>
+                        <div className=' text-sm font-semibold'>ND</div>  
+                          <div className='w-28'>{slot.begin} hs</div>
+                        </div>
                       )
                     }
                   </li>
