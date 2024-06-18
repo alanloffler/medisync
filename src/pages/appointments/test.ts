@@ -4,12 +4,13 @@ interface ITimeRange {
 }
 
 export interface IAppointment {
+  date: string;
   turn: number;
   professional: number;
   name: string;
 }
 
-interface ITimeSlot {
+export interface ITimeSlot {
   begin: string;
   end: string;
   available: boolean;
@@ -24,6 +25,9 @@ export class AppoSchedule {
   private appoMinutes: number;
   private unavailableRanges: ITimeRange[];
   public timeSlots: ITimeSlot[];
+  private slots: ITimeSlot[] = [];
+  private counter: number = 0;
+
 
   constructor(
     name: string, 
@@ -41,16 +45,16 @@ export class AppoSchedule {
   }
 
   public generateTimeSlots(): ITimeSlot[] {
-    const slots: ITimeSlot[] = [];
+    // const slots: ITimeSlot[] = [];
     let currentTime = this.startDayHour;
-    let counter = 0;
+    // let counter = 0;
 
     while (currentTime < this.endDayHour) {
-      const id = counter;
+      const id = this.counter;
       const nextTime = this.addMinutes(new Date(currentTime), this.appoMinutes);
       const available = this.isTimeSlotAvailable(currentTime, nextTime, this.unavailableRanges);
 
-      slots.push({
+      this.slots.push({
         id,
         begin: this.formatTime(currentTime),
         end: this.formatTime(nextTime),
@@ -58,9 +62,9 @@ export class AppoSchedule {
       });
 
       currentTime = nextTime;
-      counter++;
+      this.counter++;
     }
-    return slots;
+    return this.slots;
   }
 
   public insertAppointments(appointments: IAppointment[]): void {
