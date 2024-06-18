@@ -30,6 +30,7 @@ export interface IProfessional {
 interface IProfessionalConfiguration {
   scheduleTimeInit: string;
   scheduleTimeEnd: string;
+  slotDuration: number;
   timeSlotUnavailableInit: string;
   timeSlotUnavailableEnd: string;
 }
