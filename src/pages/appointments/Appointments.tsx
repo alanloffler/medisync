@@ -1,54 +1,41 @@
 // Icons: https://lucide.dev/icons
-// import { Check, ChevronsUpDown } from 'lucide-react';
+import { CalendarDays } from 'lucide-react';
 // Components: https://ui.shadcn.com/docs/components
+import { Button } from '@/core/components/ui/button';
 import { Calendar } from '@/core/components/ui/calendar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
+// App components
+import { Steps } from '@/core/components/common/Steps';
 // App
-import { es } from 'date-fns/locale';
-import { useEffect, useState } from 'react';
-import { useCapitalize } from '@/core/hooks/useCapitalize';
-// import useTimeSlots from './hooks/useGenerateTimeSlots';
-import { Button } from '@/core/components/ui/button';
-
 import { AppoSchedule, IAppointment, ITimeSlot } from './test';
+import { AppointmentApiService } from './services/appointment.service';
 import { IProfessional } from '../professionals/interfaces/professional.interface';
 import { ProfessionalsCombobox } from '../professionals/components/ProfessionalsCombobox';
-import { Steps } from '@/core/components/common/Steps';
-import { CalendarDays, Check } from 'lucide-react';
-import { useDateToString, useLegibleDate } from '@/core/hooks/useDateToString';
 import { cn } from '@/lib/utils';
-
-// Citas, esto va a venir de la base de datos
-const appointments: IAppointment[] = [
-  { date: '2024-06-18', turn: 1, name: 'Alan Löffler', professional: 1 },
-  { date: '2024-06-18', turn: 3, name: 'Alan Löffler', professional: 1 },
-  { date: '2024-06-19', turn: 8, name: 'Antonio Muller', professional: 1 },
-];
-
+import { es } from 'date-fns/locale';
+import { useCapitalize } from '@/core/hooks/useCapitalize';
+import { useDateToString, useLegibleDate } from '@/core/hooks/useDateToString';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useNotificationsStore } from '@/core/stores/notifications.store';
 // React component
 export default function Appointments() {
-  const [professionalSelected, setProfessionalSelected] = useState<IProfessional>({} as IProfessional);
-  const [actualSchedule, setActualSchedule] = useState<AppoSchedule>({} as AppoSchedule);
+  const [appointments, setAppointments] = useState<IAppointment[]>([] as IAppointment[]);
   const [date, setDate] = useState<Date | undefined>(new Date());
-  // const [selectedDay, setSelectedDay] = useState<string>('');
-  // const [selectedMonth, setSelectedMonth] = useState<string>('');
-  // const [selectedWeekDay, setSelectedWeekDay] = useState<string>('');
-  // const [selectedYear, setSelectedYear] = useState<string>('');
+  const [professionalSelected, setProfessionalSelected] = useState<IProfessional>({} as IProfessional);
+  const [selectedLegibleDate, setSelectedLegibleDate] = useState<string>('');
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [showTimeSlots, setShowTimeSlots] = useState<boolean>(false);
   const [timeSlots, setTimeSlots] = useState<ITimeSlot[]>([] as ITimeSlot[]);
 
-  const [ND, setND] = useState<number>(0);
-
+  const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const dateToString = useDateToString();
   const legibleDate = useLegibleDate();
-  const [selectedLegibleDate, setSelectedLegibleDate] = useState<string>('');
+  const navigate = useNavigate();
 
   // Initial load
   useEffect(() => {
-    // const date = dateToString(new Date());
-    // console.log('from hook', date);
     setSelectedLegibleDate(legibleDate(new Date()));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -60,8 +47,7 @@ export default function Appointments() {
       setSelectedLegibleDate(legibleDate(event));
       // Convert date to string for schedule
       const selectedDate = dateToString(event);
-      // Reset schedule and time slots
-      setActualSchedule({} as AppoSchedule);
+      // Reset time slots
       setTimeSlots([]);
       // Schedule creation
       // prettier-ignore
@@ -75,9 +61,17 @@ export default function Appointments() {
           end: new Date(`${selectedDate}T${professionalSelected.configuration.timeSlotUnavailableEnd}`)
         }]
       );
-      setActualSchedule(schedule);
+      // setActualSchedule(schedule);
       setTimeSlots(schedule.timeSlots);
-      schedule.insertAppointments(appointments.filter((appo) => appo.date === `${selectedDate}`));
+      // Get appointments by professional selected
+      AppointmentApiService.findAllByProfessional(professionalSelected._id, selectedDate).then((response) => {
+        if (!response.statusCode) {
+          setAppointments(response);
+          schedule.insertAppointments(response);
+        }
+        if (response.statusCode) addNotification({ type: 'error', message: response.message });
+        if (response instanceof Error) addNotification({ type: 'error', message: 'Error en el servidor' });
+      });
     }
   }
 
@@ -99,25 +93,49 @@ export default function Appointments() {
           end: new Date(`${selectedDate}T${data.configuration.timeSlotUnavailableEnd}`)
         }]
       );
-      //
-      setActualSchedule(schedule);
+      // Set time slots and show them, also show calendar
       setTimeSlots(schedule.timeSlots);
       setShowTimeSlots(true);
-      // Show calendar
       setShowCalendar(true);
-      // TODO: Filter by date (this must come filtered from the database)
-      const appos = appointments.filter((appo) => appo.date === selectedDate);
-      schedule.insertAppointments(appos);
-      // TODO this doesn't work
-      setND(parseInt(data.configuration.timeSlotUnavailableEnd) - parseInt(data.configuration.timeSlotUnavailableInit));
+      // Get appointments by professional selected
+      // prettier-ignore
+      AppointmentApiService
+      .findAllByProfessional(data._id, selectedDate)
+      .then((response) => {
+        console.log(response);
+        setAppointments(response);
+        schedule.insertAppointments(response);
+      });
     }
+  }
+
+  async function handleReserveAppointment(timeSlot: ITimeSlot) {
+    if (timeSlot) {
+      // console.log(timeSlot);
+      const newAppo = await AppointmentApiService.create({
+        slot: timeSlot.id,
+        professional: professionalSelected._id,
+        day: dateToString(date ?? new Date()),
+        hour: timeSlot.begin,
+        user: 'Noelia Skiba'
+      });
+
+      if (!newAppo.statusCode) {
+        addNotification({ type: 'success', message: newAppo.message });
+        // TODO this is not working, must load again the appointments!
+        setProfessionalSelected(professionalSelected);
+      }
+      if (newAppo.statusCode) addNotification({ type: 'error', message: newAppo.message });
+      if (newAppo instanceof Error) addNotification({ type: 'error', message: 'Error en el servidor' });
+    }
+    if (!timeSlot) console.log('timeSlot undefined');
   }
 
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8'>
       <div className='flex flex-col gap-4 overflow-x-auto md:flex-row lg:flex-row'>
         <div className='flex h-fit flex-col gap-6 md:mx-auto md:w-1/3 lg:mx-auto lg:w-1/3'>
-          <div className='flex flex-col space-y-4 w-fit'>
+          <div className='flex w-fit flex-col space-y-4'>
             <Steps text='Seleccionar profesional' step='1' className='bg-indigo-200 text-indigo-500' />
             <ProfessionalsCombobox onSelectProfessional={handleSelectedProfessional} />
           </div>
@@ -159,7 +177,7 @@ export default function Appointments() {
                   {professionalSelected._id && <h1>{`${capitalize(professionalSelected?.titleAbbreviation)} ${capitalize(professionalSelected?.lastName)}, ${capitalize(professionalSelected?.firstName)}`}</h1>}
                 </div>
               </CardTitle>
-              <div className='text-base font-semibold text-indigo-500 text-center'>{selectedLegibleDate}</div>
+              <div className='text-center text-base font-semibold text-indigo-500'>{selectedLegibleDate}</div>
             </CardHeader>
             {showTimeSlots && (
               <CardContent>
@@ -180,11 +198,12 @@ export default function Appointments() {
                           <div className='flex space-x-4 items-center'>
                             <div className='text-sm font-semibold'>T{index}</div>
                             <div className='w-28'>{slot.begin} hs</div>
-                            <div>{slot.appointment?.name}</div>
+                            <div>{slot.appointment?.user}</div>
                           </div>
                           <div className='flex space-x-4'>
-                            {!slot.appointment?.name && <Button variant={'outline'} size={'sm'} className='h-7'>Reservar</Button>}
-                            <Button variant={'outline'} size={'sm'} className='h-7'>Ver</Button>
+                            {!slot.appointment?.user && <Button onClick={() => handleReserveAppointment(slot)} variant={'outline'} size={'sm'} className='h-7'>Reservar</Button>}
+                            {/* {true && <Button onClick={() => handleReserveAppointment(slot)} variant={'outline'} size={'sm'} className='h-7'>Reservar</Button>} */}
+                            {slot.appointment?.user && <Button onClick={() => navigate(`/appointments/${slot.appointment?._id}`)} variant={'outline'} size={'sm'} className='h-7'>Ver</Button>}
                           </div>
                         </div>
                       ):(
