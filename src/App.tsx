@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 // Lazy loaded components
 const Appointments = lazy(() => import('./pages/appointments/Appointments'));
+const ViewAppointment = lazy(() => import('./pages/appointments/components/ViewAppointment'));
 const Dashboard = lazy(() => import('./pages/dashboard/Dashboard'));
 const Professionals = lazy(() => import('./pages/professionals/Professionals'));
 const CreateProfessional = lazy(() => import('./pages/professionals/components/CreateProfessional'));
@@ -35,6 +36,14 @@ export default function App() {
           //     const { Appointments } = await import('./appointments/Appointments');
           //     return { Component: Appointments };
           //   }
+        },
+        {
+          path: '/appointments/:id',
+          element: (
+            <Suspense fallback={<>Loading...</>}>
+              <ViewAppointment />
+            </Suspense>
+          ),
         },
         {
           path: '/professionals',
