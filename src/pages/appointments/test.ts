@@ -3,13 +3,32 @@ interface ITimeRange {
   end: Date;
 }
 
-export interface IAppointment {
-  date: string;
-  turn: number;
-  professional: number;
-  name: string;
+export interface IAppointmentForm {
+  day: string;
+  hour: string;
+  professional: string;
+  slot: number;
+  user: string;
 }
 
+export interface IAppointment extends IAppointmentForm {
+  _id: string;
+}
+
+export interface IAppointmentView {
+  _id: string;
+  day: string;
+  hour: string;
+  professional: Prof;
+  slot: number;
+  user: string;
+}
+interface Prof {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  titleAbbreviation: string;
+}
 export interface ITimeSlot {
   begin: string;
   end: string;
@@ -26,13 +45,7 @@ export class AppoSchedule {
   private unavailableRanges: ITimeRange[];
   public timeSlots: ITimeSlot[];
 
-  constructor(
-    name: string, 
-    startDayHour: Date, 
-    endDayHour: Date, 
-    appoMinutes: number, 
-    unavailableRanges: ITimeRange[]
-  ) {
+  constructor(name: string, startDayHour: Date, endDayHour: Date, appoMinutes: number, unavailableRanges: ITimeRange[]) {
     this.name = name;
     this.startDayHour = startDayHour;
     this.endDayHour = endDayHour;
@@ -66,11 +79,11 @@ export class AppoSchedule {
 
   public insertAppointments(appointments: IAppointment[]): void {
     for (const appointment of appointments) {
-      const matchingTimeSlotIndex = this.timeSlots.findIndex(timeSlot => timeSlot.id === appointment.turn);
+      const matchingTimeSlotIndex = this.timeSlots.findIndex((timeSlot) => timeSlot.id === appointment.slot);
       if (matchingTimeSlotIndex !== -1) {
-        this.timeSlots[matchingTimeSlotIndex] = { 
-          ...this.timeSlots[matchingTimeSlotIndex], 
-          appointment: { ...appointment } 
+        this.timeSlots[matchingTimeSlotIndex] = {
+          ...this.timeSlots[matchingTimeSlotIndex],
+          appointment: { ...appointment },
         };
       }
     }
@@ -96,38 +109,37 @@ export class AppoSchedule {
   }
 }
 
-  // for (const appointment of appointments) {
-  //   const matchingTimeSlotIndex = timeSlots.findIndex(timeSlot => timeSlot.id === appointment.turn);
-  //   if (matchingTimeSlotIndex !== -1) {
-  //     timeSlots[matchingTimeSlotIndex] = { ...timeSlots[matchingTimeSlotIndex], appointment: {...appointment} };
-  //   }
-  // }
-  
-  // console.log(timeSlots);
-  // Test for the class for schedule creation
-  // const testHours = new Date();
-  // const testMin = new Date();
-  // const beginHour = new Date();
-  // const endHour = new Date();
-  // testHours.setHours(8, 0);
-  // testMin.setHours(18, 0);
-  // beginHour.setHours(12, 0);
-  // endHour.setHours(13, 0);
+// for (const appointment of appointments) {
+//   const matchingTimeSlotIndex = timeSlots.findIndex(timeSlot => timeSlot.id === appointment.turn);
+//   if (matchingTimeSlotIndex !== -1) {
+//     timeSlots[matchingTimeSlotIndex] = { ...timeSlots[matchingTimeSlotIndex], appointment: {...appointment} };
+//   }
+// }
 
+// console.log(timeSlots);
+// Test for the class for schedule creation
+// const testHours = new Date();
+// const testMin = new Date();
+// const beginHour = new Date();
+// const endHour = new Date();
+// testHours.setHours(8, 0);
+// testMin.setHours(18, 0);
+// beginHour.setHours(12, 0);
+// endHour.setHours(13, 0);
 
-  // const appoSchedule = new AppoSchedule('Alan Schedule', testHours, testMin, 30, [{ begin: beginHour, end: endHour }]);
-  // console.log('Here!', appoSchedule.generateTimeSlots());
-  // const timeSlots = appoSchedule.generateTimeSlots();
-  // const full = appoSchedule.insertAppointments(appointments);
-  // console.log(full);
+// const appoSchedule = new AppoSchedule('Alan Schedule', testHours, testMin, 30, [{ begin: beginHour, end: endHour }]);
+// console.log('Here!', appoSchedule.generateTimeSlots());
+// const timeSlots = appoSchedule.generateTimeSlots();
+// const full = appoSchedule.insertAppointments(appointments);
+// console.log(full);
 
-    // const startDayHour = new Date();
-  // startDayHour.setHours(8, 0);
-  // const endDayHour = new Date();
-  // endDayHour.setHours(18, 0);
-  // const intervalMinutes = 60;
+// const startDayHour = new Date();
+// startDayHour.setHours(8, 0);
+// const endDayHour = new Date();
+// endDayHour.setHours(18, 0);
+// const intervalMinutes = 60;
 
-  // // Rangos no disponibles, pueden ser varios
-  // const unavailableRanges = [
-  //   { begin: '12:00', end: '16:00' },
-  // ];
+// // Rangos no disponibles, pueden ser varios
+// const unavailableRanges = [
+//   { begin: '12:00', end: '16:00' },
+// ];
