@@ -13,6 +13,7 @@ import * as htmlToImage from 'html-to-image';
 export default function ViewAppointment() {
   const [appointment, setAppointment] = useState<IAppointmentView>({} as IAppointmentView);
   const [date, setDate] = useState<string>('');
+  const [email, setEmail] = useState({});
   const { id } = useParams();
   const capitalize = useCapitalize();
   const legibleDate = useLegibleDate();
@@ -26,9 +27,15 @@ export default function ViewAppointment() {
         setAppointment(response);
         console.log(appointment.day);
         setDate(legibleDate(new Date(appointment.day)));
+        // E-mail object
+        setEmail({
+          to: response.user.email || 'alanmatiasloffler@gmail.com',
+          subject: `Tu turno para ${capitalize(response.professional.titleAbbreviation)} ${capitalize(response.professional.firstName)} ${capitalize(response.professional.lastName)}`,
+          body: 'Este es el mensaje de tu turno'
+        });
       });
     }
-  }, [appointment.day, id, legibleDate]);
+  }, [appointment.day, capitalize, id, legibleDate]);
 
   function downloadPDF() {
     const input = pdfRef.current;
@@ -49,7 +56,7 @@ export default function ViewAppointment() {
   }
 
   return (
-    <main ref={pdfRef}  className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8'>
+    <main ref={pdfRef} className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8'>
       <Card className='mx-auto w-full md:w-1/2 lg:w-1/2'>
         <CardHeader>
           <CardTitle className='px-3 text-base'>
@@ -81,9 +88,9 @@ export default function ViewAppointment() {
             <button className='transition-colors hover:text-indigo-500' onClick={downloadPDF}>
               <Printer className='h-5 w-5' strokeWidth={2} />
             </button>
-            <button className='transition-colors hover:text-indigo-500'>
+            <a href={`https://mail.google.com/mail/?view=cm&to=${email.to}&su=${email.subject}&body=${email.body}`} target='_blank' className='transition-colors hover:text-indigo-500'>
               <Send className='h-5 w-5' strokeWidth={2} />
-            </button>
+            </a>
             <button className='transition-colors hover:fill-indigo-500'>
               <svg width='100' height='100' viewBox='0 0 464 488' className='h-5 w-5'>
                 <path d='M462 228q0 93-66 159t-160 66q-56 0-109-28L2 464l40-120q-32-54-32-116q0-93 66-158.5T236 4t160 65.5T462 228zM236 39q-79 0-134.5 55.5T46 228q0 62 36 111l-24 70l74-23q49 31 104 31q79 0 134.5-55.5T426 228T370.5 94.5T236 39zm114 241q-1-1-10-7q-3-1-19-8.5t-19-8.5q-9-3-13 2q-1 3-4.5 7.5t-7.5 9t-5 5.5q-4 6-12 1q-34-17-45-27q-7-7-13.5-15t-12-15t-5.5-8q-3-7 3-11q4-6 8-10l6-9q2-5-1-10q-4-13-17-41q-3-9-12-9h-11q-9 0-15 7q-19 19-19 45q0 24 22 57l2 3q2 3 4.5 6.5t7 9t9 10.5t10.5 11.5t13 12.5t14.5 11.5t16.5 10t18 8.5q16 6 27.5 10t18 5t9.5 1t7-1t5-1q9-1 21.5-9t15.5-17q8-21 3-26z' />
