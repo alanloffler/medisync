@@ -20,6 +20,7 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         tableHeader: 'rounded-full bg-slate-300 hover:bg-slate-300/80',
         tableHeaderPrimary: 'rounded-full bg-primary text-primary-foreground hover:bg-primary/80',
+        table: 'bg-slate-200 hover:bg-slate-200/80 shadow-sm text-primary-background text-sm',
       },
       size: {
         default: "h-10 px-4 py-2",
@@ -27,6 +28,7 @@ const buttonVariants = cva(
         lg: "h-11 rounded-md px-8",
         icon: "h-10 w-10",
         miniIcon: "h-7 w-7",
+        xs: 'px-2 py-1',
       },
     },
     defaultVariants: {
