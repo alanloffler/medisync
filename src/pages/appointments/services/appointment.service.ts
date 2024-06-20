@@ -1,5 +1,4 @@
-import { IAppointmentForm } from "../test";
-
+import { IAppointmentForm } from '../test';
 
 export class AppointmentApiService {
   private static readonly API_URL = import.meta.env.VITE_API_URL;
@@ -45,6 +44,23 @@ export class AppointmentApiService {
     try {
       const query: Response = await fetch(url, {
         method: 'GET',
+        headers: {
+          'content-type': 'application/json;charset=UTF-8',
+        },
+      });
+
+      return await query.json();
+    } catch (e) {
+      return e;
+    }
+  }
+
+  public static async remove(id: string) {
+    const url: string = `${this.API_URL}/appointments/${id}`;
+
+    try {
+      const query: Response = await fetch(url, {
+        method: 'DELETE',
         headers: {
           'content-type': 'application/json;charset=UTF-8',
         },
