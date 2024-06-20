@@ -14,7 +14,8 @@
     --popover-foreground: 222.2 84% 4.9%;
 
     /* --primary: 222.2 47.4% 11.2%; */
-    --primary: 239 84% 67%; /* indigo-500 */
+    /* --primary: 239 84% 67%; indigo-500 */
+    --primary: 160.12 84.08% 39.41%; /* 239 84% 67%; /* emerald indigo-500 */
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
