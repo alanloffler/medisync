@@ -5,36 +5,13 @@ import { Button } from '@/core/components/ui/button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/core/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/core/components/ui/popover';
 // App
-import { cn } from '@/lib/utils';
-import { useEffect, useState } from 'react';
-import { ProfessionalApiService } from '../services/professional-api.service';
 import { IProfessional } from '../interfaces/professional.interface';
+import { ProfessionalApiService } from '../services/professional-api.service';
+import { cn } from '@/lib/utils';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
-
-// const data = [
-//   {
-//     value: 'next.js',
-//     label: 'Next.js',
-//   },
-//   {
-//     value: 'sveltekit',
-//     label: 'SvelteKit',
-//   },
-//   {
-//     value: 'nuxt.js',
-//     label: 'Nuxt.js',
-//   },
-//   {
-//     value: 'remix',
-//     label: 'Remix',
-//   },
-//   {
-//     value: 'astro',
-//     label: 'Astro',
-//   },
-// ];
+import { useEffect, useState } from 'react';
 // React component
-export function ProfessionalsCombobox({ onSelectProfessional }: { onSelectProfessional: (professional: IProfessional) => void }) {
+export function ProfessionalsCombobox({ onSelectProfessional, placeholder, searchText }: { onSelectProfessional: (professional: IProfessional) => void; placeholder: string; searchText: string }) {
   const [professionals, setProfessionals] = useState<IProfessional[]>([]);
   const [openCombobox, setOpenCombobox] = useState<boolean>(false);
   const [value, setValue] = useState<string>('');
@@ -52,13 +29,13 @@ export function ProfessionalsCombobox({ onSelectProfessional }: { onSelectProfes
     <Popover open={openCombobox} onOpenChange={setOpenCombobox}>
       <PopoverTrigger asChild>
         <Button role='combobox' aria-expanded={openCombobox} className='w-full justify-between bg-white text-foreground shadow-sm hover:bg-white'>
-          {value ? capitalize(value) : 'Seleccionar profesional...'}
+          {value ? capitalize(value) : placeholder}
           <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
         </Button>
       </PopoverTrigger>
       <PopoverContent className='w-full p-0'>
         <Command>
-          <CommandInput placeholder='Buscar profesional...' />
+          <CommandInput placeholder={searchText} />
           <CommandList>
             <CommandEmpty>Profesional no encontrado</CommandEmpty>
             <CommandGroup>
