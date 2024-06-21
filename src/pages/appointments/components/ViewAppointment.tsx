@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
-import { IAppointmentView } from '../test';
+import { IAppointmentView } from '../services/schedule.service';
 import { useEffect, useRef, useState } from 'react';
 import { AppointmentApiService } from '../services/appointment.service';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
