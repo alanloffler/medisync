@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Steps } from '@/core/components/common/Steps';
 // App
 import { APPO_CONFIG } from './config/appointment.config';
-import { AppoSchedule, IAppointment, ITimeSlot } from './test';
+import { AppoSchedule, IAppointment, ITimeSlot } from './services/schedule.service';
 import { AppointmentApiService } from './services/appointment.service';
 import { IProfessional } from '../professionals/interfaces/professional.interface';
 import { ProfessionalsCombobox } from '../professionals/components/ProfessionalsCombobox';
