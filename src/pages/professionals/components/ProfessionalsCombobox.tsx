@@ -11,7 +11,19 @@ import { cn } from '@/lib/utils';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useEffect, useState } from 'react';
 // React component
-export function ProfessionalsCombobox({ onSelectProfessional, placeholder, searchText }: { onSelectProfessional: (professional: IProfessional) => void; placeholder: string; searchText: string }) {
+export function ProfessionalsCombobox(
+  { 
+    onSelectProfessional,
+    notFoundText, 
+    placeholder, 
+    searchText 
+  }: { 
+    onSelectProfessional: (professional: IProfessional) => void; 
+    notFoundText: string;
+    placeholder: string; 
+    searchText: string 
+  }
+) {
   const [professionals, setProfessionals] = useState<IProfessional[]>([]);
   const [openCombobox, setOpenCombobox] = useState<boolean>(false);
   const [value, setValue] = useState<string>('');
@@ -37,20 +49,20 @@ export function ProfessionalsCombobox({ onSelectProfessional, placeholder, searc
         <Command>
           <CommandInput placeholder={searchText} />
           <CommandList>
-            <CommandEmpty>Profesional no encontrado</CommandEmpty>
+            <CommandEmpty>{notFoundText}</CommandEmpty>
             <CommandGroup>
               {professionals.map((professional) => (
                 <CommandItem
                   key={professional._id}
-                  value={[professional.lastName, professional.firstName].join(', ')}
+                  value={`${professional.titleAbbreviation} ${[professional.lastName, professional.firstName].join(', ')}`}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? '' : currentValue);
                     setOpenCombobox(false);
                     onSelectProfessional(professional);
                   }}
                 >
-                  <Check className={cn('mr-2 h-4 w-4', value === professional._id ? 'opacity-100' : 'opacity-0')} />
-                  {`${capitalize(professional.lastName)}, ${capitalize(professional.firstName)}`}
+                  <Check className={cn('mr-2 h-4 w-4', value === `${professional.titleAbbreviation} ${[professional.lastName, professional.firstName].join(', ')}` ? 'opacity-100' : 'opacity-0')} />
+                  {`${capitalize(professional.titleAbbreviation)} ${capitalize(professional.lastName)}, ${capitalize(professional.firstName)}`}
                 </CommandItem>
               ))}
             </CommandGroup>
