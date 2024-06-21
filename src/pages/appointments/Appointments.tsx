@@ -4,6 +4,7 @@ import { CalendarDays, FileWarning } from 'lucide-react';
 import { Button } from '@/core/components/ui/button';
 import { Calendar } from '@/core/components/ui/calendar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/core/components/ui/dialog';
 // App components
 import { Steps } from '@/core/components/common/Steps';
 // App
@@ -19,18 +20,24 @@ import { useDateToString, useLegibleDate } from '@/core/hooks/useDateToString';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
+import { IDialog } from '@/core/interfaces/dialog.interface';
+import { Input } from '@/core/components/ui/input';
 // React component
 export default function Appointments() {
   const [appointments, setAppointments] = useState<IAppointment[]>([] as IAppointment[]);
   const [date, setDate] = useState<Date | undefined>(new Date());
+  const [dialogContent, setDialogContent] = useState<IDialog>({} as IDialog);
   const [errorMessage, setErrorMessage] = useState<string>();
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [professionalSelected, setProfessionalSelected] = useState<IProfessional>();
   const [refreshAppos, setRefreshAppos] = useState<string>('');
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [selectedLegibleDate, setSelectedLegibleDate] = useState<string>('');
+  const [selectedSlot, setSelectedSlot] = useState<ITimeSlot>({} as ITimeSlot);
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [showTimeSlots, setShowTimeSlots] = useState<boolean>(false);
   const [timeSlots, setTimeSlots] = useState<ITimeSlot[]>([] as ITimeSlot[]);
+  const [timeSlotsAvailable, setTimeSlotsAvailable] = useState<number>(0);
 
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
@@ -38,6 +45,11 @@ export default function Appointments() {
   const legibleDate = useLegibleDate();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    setSelectedDate(new Date());
+  }, [professionalSelected]);
+  // #region Load data
+  // Appointments schedule creation, time slots generation and appointments insertion.
   useEffect(() => {
     if (professionalSelected) {
       if (!professionalSelected.configuration) {
@@ -52,6 +64,7 @@ export default function Appointments() {
           setTimeSlots([]); // Reset time slots
           setAppointments([]); // Reset appointments
           setErrorMessage(''); // Reset error message
+          setTimeSlotsAvailable(0); // Reset amount of time slots available
         }
         setSelectedLegibleDate(legibleDate(selectedDate)); // Set legible date for table header
         const scheduleDate = dateToString(selectedDate); // Convert date to string for schedule
@@ -79,11 +92,21 @@ export default function Appointments() {
           if (response.statusCode) addNotification({ type: 'error', message: response.message });
           if (response instanceof Error) addNotification({ type: 'error', message: 'Error en el servidor' });
         });
+        setTimeSlotsAvailable(
+          schedule.timeSlots.reduce((acc, item) => {
+            // Set amount of time slots available
+            if (item.available) {
+              return acc + 1;
+            } else {
+              return acc;
+            }
+          }, 0),
+        );
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [professionalSelected, selectedDate, refreshAppos]);
-
+  }, [selectedDate, refreshAppos]);
+  // #endregion
   async function handleReserveAppointment(timeSlot: ITimeSlot | undefined) {
     if (timeSlot && professionalSelected && selectedDate !== undefined) {
       // TODO: data from form
@@ -92,12 +115,13 @@ export default function Appointments() {
         professional: professionalSelected?._id || '',
         day: dateToString(date ?? new Date()),
         hour: timeSlot.begin,
-        user: 'Noelia Skiba',
+        user: user,
       });
 
       if (newAppo.statusCode === 200) {
         addNotification({ type: 'success', message: newAppo.message });
-        setRefreshAppos(crypto.randomUUID());
+        setRefreshAppos(crypto.randomUUID()); // Refresh the appointments to show the new one status
+        setOpenDialog(false); // Close dialog when appointment is created
       }
       if (newAppo.statusCode) addNotification({ type: 'error', message: newAppo.message });
       if (newAppo instanceof Error) addNotification({ type: 'error', message: 'Error en el servidor' });
@@ -105,13 +129,14 @@ export default function Appointments() {
     if (!timeSlot) console.log('timeSlot undefined');
   }
 
-  function handleCancelAppointment(id: string | undefined) {
-    if (id) {
-      console.log('Appo id', id);
-      AppointmentApiService.remove(id).then((response) => {
+  async function handleCancelAppointment(slot: ITimeSlot) {
+    if (slot.appointment?._id) {
+      console.log('Appo id', slot);
+      AppointmentApiService.remove(slot.appointment._id).then((response) => {
         if (response.statusCode === 200) {
           addNotification({ type: 'success', message: response.message });
-          setRefreshAppos(crypto.randomUUID());
+          setRefreshAppos(crypto.randomUUID()); // Refresh the appointments to show the new one status
+          setOpenDialog(false); // Close dialog when appointment is removed
         }
         if (response.statusCode) addNotification({ type: 'error', message: response.message });
         if (response instanceof Error) addNotification({ type: 'error', message: 'Error en el servidor' });
@@ -120,114 +145,178 @@ export default function Appointments() {
       console.log('Appo id undefined');
     }
   }
-
-  return (
-    <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8'>
-      <div className='flex flex-col gap-4 overflow-x-auto md:flex-row lg:flex-row'>
-        <div className='flex h-fit flex-col gap-6 md:mx-auto md:w-1/3 lg:mx-auto lg:w-1/3'>
-          <div className='flex w-fit flex-col space-y-4'>
-            <Steps text={APPO_CONFIG.steps.text1} step='1' className='bg-primary/20 text-primary' />
-            {/* prettier-ignore */}
-            <ProfessionalsCombobox 
-              onSelectProfessional={(professional) => setProfessionalSelected(professional)} 
-              placeholder={APPO_CONFIG.combobox.placeholder} 
-              searchText={APPO_CONFIG.combobox.searchText} 
-            />
-          </div>
-          <div className={cn('flex flex-col space-y-4', showCalendar ? 'pointer-events-auto' : 'pointer-events-none')}>
-            <Steps text={APPO_CONFIG.steps.text2} step='2' className='bg-primary/20 text-primary' />
-            {/* prettier-ignore */}
-            <Calendar
-              captionLayout={'dropdown-buttons'}
-              className='rounded-lg bg-card text-card-foreground shadow-sm h-fit flex-row w-fit' 
-              disabled={[
-                { dayOfWeek: [0, 6] }, 
-                { before: new Date() }, 
-                { from: new Date(2024, 5, 5) },
-                // { from: new Date(2024, 5, 21) },
-              ]}
-              locale={APPO_CONFIG.calendar.language === 'es' ? es : enUS}
-              mode='single'
-              modifiersClassNames={{
-                today: 'bg-primary/30 text-primary',
-                selected: 'bg-primary text-white',
-              }}
-              onSelect={(event) => setSelectedDate(event)} 
-              selected={date}
-              showOutsideDays={false}
-            />
-          </div>
-        </div>
-        <div className='flex flex-col gap-4 md:w-2/3 lg:w-2/3'>
-          <Steps text={APPO_CONFIG.steps.text3} step='3' className='bg-primary/30 text-primary' />
-          <Card className='w-full'>
-            <CardHeader>
-              <CardTitle className='px-3 text-base'>
-                <div className='flex flex-row justify-between'>
-                  <div className='flex flex-row items-center gap-2'>
-                    <CalendarDays className='h-4 w-4' />
-                    <span>{APPO_CONFIG.table.title}</span>
-                  </div>
-                  {professionalSelected?._id && <h1>{`${capitalize(professionalSelected?.titleAbbreviation)} ${capitalize(professionalSelected?.lastName)}, ${capitalize(professionalSelected?.firstName)}`}</h1>}
-                </div>
-              </CardTitle>
-              {!errorMessage && <div className='text-center text-base font-semibold text-primary'>{selectedLegibleDate}</div>}
-              {!errorMessage && <div className='text-center text-base font-semibold text-primary'>{timeSlots.reduce((acc, item) => {
-    if (item.available) {
-        return acc + 1;
-    } else {
-        return acc;
-    }
-}, 0) - appointments.length} de {timeSlots.length} disponibles</div>}
-            </CardHeader>
-            {errorMessage && (
-              <div className='flex items-center justify-center px-4 py-0 text-rose-500 space-x-2'>
-                <FileWarning className='h-5 w-5' strokeWidth={2} />
-                <span className='text-center font-medium'>{errorMessage}</span>
-              </div>
-            )}
-            {showTimeSlots && (
-              <CardContent>
-                {/* prettier-ignore */}
-                <ul>
-                {timeSlots.map((slot, index) => (
-                  <li 
-                    key={index} 
-                    className={
-                      `p-1 text-base
-                      ${slot.available ? 'text-foreground' : 'text-muted-foreground/50'} 
-                      ${index === timeSlots.length - 1 ? 'border-none' : 'border-b'}`
-                    }
-                  >
-                    {slot.available ?
-                      (
-                        <div className='flex flex-row justify-between items-center'>
-                          <div className='flex space-x-4 items-center'>
-                            <div className='text-sm font-semibold'>T{index}</div>
-                            <div className='w-28'>{slot.begin} {APPO_CONFIG.words.hours}</div>
-                            <div>{slot.appointment?.user}</div>
-                          </div>
-                          <div className='flex space-x-4'>
-                            {!slot.appointment?.user && <Button onClick={() => handleReserveAppointment(slot)} variant={'default'} size={'xs'}>{APPO_CONFIG.buttons.addAppointment}</Button>}
-                            {slot.appointment?.user && <Button onClick={() => navigate(`/appointments/${slot.appointment?._id}`)} variant={'table'} size={'xs'} className='text-primary bg-slate-100'>{APPO_CONFIG.buttons.viewAppointment}</Button>}
-                            {slot.appointment?.user && <Button onClick={() => handleCancelAppointment(slot.appointment?._id)} variant={'table'} size={'xs'} className='text-primary bg-slate-100'>{APPO_CONFIG.buttons.cancelAppointment}</Button>}
-                          </div>
-                        </div>
-                      ):(
-                        <div className='flex flex-row gap-4'>
-                        <div className=' text-sm font-semibold'>ND</div>  
-                          <div className='w-28'>{slot.begin} hs</div>
-                        </div>
-                      )
-                    }
-                  </li>
-                ))}
-              </ul>
-              </CardContent>
-            )}
-          </Card>
-        </div>
+  const [user, setUser] = useState<string>('');
+  // #region Dialog
+  const reserveDialogContent: IDialog = {
+    action: 'reserve',
+    title: APPO_CONFIG.dialog.reserve.title,
+    description: APPO_CONFIG.dialog.reserve.description,
+    content: (
+      <div className='pt-4'>
+        <Input type='text' onChange={(e) => setUser(e.target.value)} />
+        <span>{user}</span>
       </div>
-    </main>
+    ),
+  };
+
+  function handleDialog(action: 'reserve' | 'cancel', slot: ITimeSlot) {
+    setOpenDialog(true);
+    setSelectedSlot(slot);
+
+    if (action === 'reserve') setDialogContent(reserveDialogContent);
+    if (action === 'cancel') {
+      const cancelDialogContent: IDialog = {
+        action: 'cancel',
+        content: (
+          <div className='space-y-2 pt-4'>
+            <div>
+              {APPO_CONFIG.dialog.cancel.contentText}
+              <span className='font-semibold'>{slot.appointment?.user}</span>
+            </div>
+            <div className='italic'>
+              {legibleDate(selectedDate as Date)} - {slot.appointment?.hour} {APPO_CONFIG.words.hours}
+            </div>
+          </div>
+        ),
+        description: APPO_CONFIG.dialog.cancel.description,
+        title: APPO_CONFIG.dialog.cancel.title,
+      };
+      setDialogContent(cancelDialogContent);
+    }
+  }
+  // #endregion
+  return (
+    <>
+      <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8'>
+        <div className='flex flex-col gap-4 overflow-x-auto md:flex-row lg:flex-row'>
+          <div className='flex h-fit flex-col gap-6 md:mx-auto md:w-1/3 lg:mx-auto lg:w-1/3'>
+            <div className='flex w-fit flex-col space-y-4'>
+              <Steps text={APPO_CONFIG.steps.text1} step='1' className='bg-primary/20 text-primary' />
+              {/* prettier-ignore */}
+              <ProfessionalsCombobox 
+                onSelectProfessional={(professional) => setProfessionalSelected(professional)} 
+                placeholder={APPO_CONFIG.combobox.placeholder} 
+                searchText={APPO_CONFIG.combobox.searchText} 
+                notFoundText={APPO_CONFIG.combobox.notFoundText}
+              />
+            </div>
+            <div className={cn('flex flex-col space-y-4', showCalendar ? 'pointer-events-auto' : 'pointer-events-none')}>
+              <Steps text={APPO_CONFIG.steps.text2} step='2' className='bg-primary/20 text-primary' />
+              {/* prettier-ignore */}
+              <Calendar
+                captionLayout={'dropdown-buttons'}
+                className='rounded-lg bg-card text-card-foreground shadow-sm h-fit flex-row w-fit' 
+                disabled={[
+                  { dayOfWeek: [0, 6] }, 
+                  { before: new Date() }, 
+                  { from: new Date(2024, 5, 5) },
+                  // { from: new Date(2024, 5, 21) },
+                ]}
+                locale={APPO_CONFIG.calendar.language === 'es' ? es : enUS}
+                mode='single'
+                modifiersClassNames={{
+                  today: 'bg-primary/30 text-primary',
+                  selected: 'bg-primary text-white',
+                }}
+                onSelect={(event) => setSelectedDate(event)} 
+                selected={date}
+                showOutsideDays={false}
+              />
+            </div>
+          </div>
+          <div className='flex flex-col gap-4 md:w-2/3 lg:w-2/3'>
+            <Steps text={APPO_CONFIG.steps.text3} step='3' className='bg-primary/30 text-primary' />
+            <Card className='w-full'>
+              <CardHeader>
+                <CardTitle className='px-3 text-base'>
+                  <div className='flex flex-row justify-between'>
+                    <div className='flex flex-row items-center gap-2'>
+                      <CalendarDays className='h-4 w-4' />
+                      <span>{APPO_CONFIG.table.title}</span>
+                    </div>
+                    {professionalSelected?._id && <h1>{`${capitalize(professionalSelected?.titleAbbreviation)} ${capitalize(professionalSelected?.lastName)}, ${capitalize(professionalSelected?.firstName)}`}</h1>}
+                  </div>
+                </CardTitle>
+                {!errorMessage && <div className='py-2 text-center text-base font-semibold text-primary'>{selectedLegibleDate}</div>}
+                {!errorMessage && (
+                  <div className='mx-4 w-fit rounded-full bg-primary/30 px-2 py-1 text-sm font-semibold'>
+                    {timeSlotsAvailable - appointments.length} {APPO_CONFIG.phrases.availableAppointments}
+                  </div>
+                )}
+              </CardHeader>
+              {errorMessage && (
+                <div className='flex items-center justify-center space-x-2 px-4 py-0 text-rose-500'>
+                  <FileWarning className='h-5 w-5' strokeWidth={2} />
+                  <span className='text-center font-medium'>{errorMessage}</span>
+                </div>
+              )}
+              {showTimeSlots && (
+                <CardContent>
+                  {/* prettier-ignore */}
+                  <ul>
+                    {timeSlots.map((slot, index) => (
+                      <li 
+                        key={index} 
+                        className={
+                          `p-1 text-base
+                          ${slot.available ? 'text-foreground' : 'text-muted-foreground/50'} 
+                          ${index === timeSlots.length - 1 ? 'border-none' : 'border-b'}`
+                        }
+                      >
+                        {slot.available ?
+                          (
+                            <div className='flex flex-row justify-between items-center'>
+                              <div className='flex space-x-4 items-center'>
+                                <div className='text-sm font-semibold'>T{index}</div>
+                                <div className='w-28'>{slot.begin} {APPO_CONFIG.words.hours}</div>
+                                <div>{slot.appointment?.user}</div>
+                              </div>
+                              <div className='flex space-x-4'>
+                                {!slot.appointment?.user && <Button onClick={() => handleDialog('reserve', slot)} variant={'default'} size={'xs'}>{APPO_CONFIG.buttons.addAppointment}</Button>}
+                                {slot.appointment?.user && <Button onClick={() => navigate(`/appointments/${slot.appointment?._id}`)} variant={'table'} size={'xs'} className='text-primary bg-slate-100'>{APPO_CONFIG.buttons.viewAppointment}</Button>}
+                                {slot.appointment?.user && <Button onClick={() => handleDialog('cancel', slot)} variant={'table'} size={'xs'} className='text-primary bg-slate-100'>{APPO_CONFIG.buttons.cancelAppointment}</Button>}
+                              </div>
+                            </div>
+                          ):(
+                            <div className='flex flex-row gap-4'>
+                            <div className=' text-sm font-semibold'>ND</div>  
+                              <div className='w-28'>{slot.begin} hs</div>
+                            </div>
+                          )
+                        }
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              )}
+            </Card>
+          </div>
+        </div>
+      </main>
+      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className='text-xl'>{dialogContent.title}</DialogTitle>
+            <DialogDescription>{dialogContent.description}</DialogDescription>
+            <>{dialogContent.content}</>
+            <div className='flex justify-end gap-6 pt-4'>
+              <Button variant={'secondary'} size={'default'} onClick={() => setOpenDialog(false)}>
+                {APPO_CONFIG.buttons.cancelAppointment}
+              </Button>
+              {dialogContent.action === 'reserve' && (
+                <Button variant={'default'} size={'default'} onClick={() => handleReserveAppointment(selectedSlot)}>
+                  {APPO_CONFIG.dialog.reserve.buttons.save}
+                </Button>
+              )}
+              {dialogContent.action === 'cancel' && (
+                <Button variant={'default'} size={'default'} onClick={() => handleCancelAppointment(selectedSlot)}>
+                  {APPO_CONFIG.dialog.cancel.buttons.save}
+                </Button>
+              )}
+            </div>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
