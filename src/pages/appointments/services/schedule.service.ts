@@ -108,38 +108,3 @@ export class AppoSchedule {
     return true;
   }
 }
-
-// for (const appointment of appointments) {
-//   const matchingTimeSlotIndex = timeSlots.findIndex(timeSlot => timeSlot.id === appointment.turn);
-//   if (matchingTimeSlotIndex !== -1) {
-//     timeSlots[matchingTimeSlotIndex] = { ...timeSlots[matchingTimeSlotIndex], appointment: {...appointment} };
-//   }
-// }
-
-// console.log(timeSlots);
-// Test for the class for schedule creation
-// const testHours = new Date();
-// const testMin = new Date();
-// const beginHour = new Date();
-// const endHour = new Date();
-// testHours.setHours(8, 0);
-// testMin.setHours(18, 0);
-// beginHour.setHours(12, 0);
-// endHour.setHours(13, 0);
-
-// const appoSchedule = new AppoSchedule('Alan Schedule', testHours, testMin, 30, [{ begin: beginHour, end: endHour }]);
-// console.log('Here!', appoSchedule.generateTimeSlots());
-// const timeSlots = appoSchedule.generateTimeSlots();
-// const full = appoSchedule.insertAppointments(appointments);
-// console.log(full);
-
-// const startDayHour = new Date();
-// startDayHour.setHours(8, 0);
-// const endDayHour = new Date();
-// endDayHour.setHours(18, 0);
-// const intervalMinutes = 60;
-
-// // Rangos no disponibles, pueden ser varios
-// const unavailableRanges = [
-//   { begin: '12:00', end: '16:00' },
-// ];
