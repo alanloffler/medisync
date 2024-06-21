@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/c
 // App components
 import { Steps } from '@/core/components/common/Steps';
 // App
-import { AppoSchedule, IAppointment, ITimeSlot } from './test';
+import { AppoSchedule, IAppointment, ITimeSlot } from './services/schedule.service';
 import { AppointmentApiService } from './services/appointment.service';
 import { IProfessional } from '../professionals/interfaces/professional.interface';
 import { ProfessionalsCombobox } from '../professionals/components/ProfessionalsCombobox';
