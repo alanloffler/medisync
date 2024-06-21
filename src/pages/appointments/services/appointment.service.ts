@@ -1,4 +1,4 @@
-import { IAppointmentForm } from '../test';
+import { IAppointmentForm } from './schedule.service';
 
 export class AppointmentApiService {
   private static readonly API_URL = import.meta.env.VITE_API_URL;
