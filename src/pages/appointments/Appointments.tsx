@@ -238,7 +238,7 @@ export default function Appointments() {
                   </div>
                 </CardTitle>
                 {!errorMessage && <div className='py-2 text-center text-base font-semibold text-primary'>{selectedLegibleDate}</div>}
-                {!errorMessage && (
+                {showTimeSlots && (
                   <div className='mx-4 w-fit rounded-full bg-primary/30 px-2 py-1 text-sm font-semibold'>
                     {timeSlotsAvailable - appointments.length} {APPO_CONFIG.phrases.availableAppointments}
                   </div>
