@@ -3,11 +3,12 @@ import { Package2, Menu } from 'lucide-react';
 // Components: https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/core/components/ui/sheet';
-import { MouseEvent } from 'react';
-import { Link } from 'react-router-dom';
+// App components
+import { useHeaderMenuStore } from '../stores/header-menu.service';
 // App
 import { HEADER_CONFIG } from '@/layout/config/header.config';
-import { useHeaderMenuStore } from '../stores/header-menu.service';
+import { Link } from 'react-router-dom';
+import { MouseEvent } from 'react';
 // React component
 export function HeaderMenu() {
   const itemSelected = useHeaderMenuStore((state) => state.headerMenuSelected);
@@ -27,7 +28,6 @@ export function HeaderMenu() {
         {HEADER_CONFIG.headerMenu.map((item) => (
           <Link id={`${item.id}`} key={item.id} to={item.path} onClick={(e) => handleMenuItem(e)} className={`${itemSelected === item.id ? 'text-primary' : 'text-muted-foreground'} transition-colors hover:text-foreground`}>
             <span className='text-base'>{item.title}</span>
-            {/* <div className={`${itemSelected === item.id ? 'bg-indigo-500 transition-all' : 'bg-none'} h-0.5 w-full p-0`}></div> */}
           </Link>
         ))}
       </nav>
