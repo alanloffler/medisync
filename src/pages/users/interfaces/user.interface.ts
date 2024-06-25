@@ -1,9 +1,9 @@
 export interface IUserForm {
-  dni: string;
+  dni: number;
   email: string;
   firstName: string;
   lastName: string;
-  phone: string;
+  phone: number;
 }
 
 export interface IUser extends IUserForm {
