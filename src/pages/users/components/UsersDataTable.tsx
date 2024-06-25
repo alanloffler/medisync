@@ -73,7 +73,7 @@ export function UsersDataTable({ search, reload, setErrorMessage }: DataTablePro
           </button>
         </div>
       ),
-      cell: ({ row }) => <div className='text-left'>{capitalize(row.original.dni)}</div>,
+      cell: ({ row }) => <div className='text-left'>{row.original.dni}</div>,
     },
     {
       accessorKey: 'phone',
@@ -86,7 +86,7 @@ export function UsersDataTable({ search, reload, setErrorMessage }: DataTablePro
           </button>
         </div>
       ),
-      cell: ({ row }) => <div className='text-left text-sm'>{capitalize(row.original.phone)}</div>,
+      cell: ({ row }) => <div className='text-left text-sm'>{row.original.phone}</div>,
     },
     {
       accessorKey: 'actions',
