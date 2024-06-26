@@ -1,3 +1,5 @@
+import { IUser } from "@/pages/users/interfaces/user.interface";
+
 interface ITimeRange {
   begin: Date;
   end: Date;
@@ -21,7 +23,7 @@ export interface IAppointmentView {
   hour: string;
   professional: Prof;
   slot: number;
-  user: string;
+  user: IUser;
 }
 interface Prof {
   _id: string;
@@ -34,7 +36,7 @@ export interface ITimeSlot {
   end: string;
   available: boolean;
   id: number;
-  appointment?: IAppointment;
+  appointment?: IAppointmentView;
 }
 
 export class AppoSchedule {
@@ -77,7 +79,7 @@ export class AppoSchedule {
     return slots;
   }
 
-  public insertAppointments(appointments: IAppointment[]): void {
+  public insertAppointments(appointments: IAppointmentView[]): void {//not view
     for (const appointment of appointments) {
       const matchingTimeSlotIndex = this.timeSlots.findIndex((timeSlot) => timeSlot.id === appointment.slot);
       if (matchingTimeSlotIndex !== -1) {
