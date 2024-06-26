@@ -23,18 +23,18 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { USER_SCHEMA } from '@/config/schemas/user.schema';
 // React component
 export default function CreateUser() {
-  const [showProfessionalCard, setShowProfessionalCard] = useState<boolean>(false);
+  const [showUserCard, setShowUserCard] = useState<boolean>(false);
 
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const navigate = useNavigate();
   // #region Form config and actions
   const defaultValues = {
-    dni: 0,
+    dni: '',
     email: '',
     firstName: '',
     lastName: '',
-    phone: 0,
+    phone: '',
   };
 
   const createForm = useForm<z.infer<typeof userSchema>>({
@@ -44,9 +44,9 @@ export default function CreateUser() {
 
   useEffect(() => {
     const isDirty = createForm.formState.isDirty;
-    if (isDirty) setShowProfessionalCard(true);
-    if (!isDirty) setShowProfessionalCard(false);
-  }, [createForm.formState.isDirty, showProfessionalCard]);
+    if (isDirty) setShowUserCard(true);
+    if (!isDirty) setShowUserCard(false);
+  }, [createForm.formState.isDirty, showUserCard]);
 
   function handleCreateUser(data: z.infer<typeof userSchema>) {
     UserApiService.create(data).then((response) => {
@@ -56,14 +56,14 @@ export default function CreateUser() {
       if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
       if (response instanceof Error) addNotification({ type: 'error', message: 'Error en el servidor creando el usuario' });
       createForm.reset();
-      setShowProfessionalCard(false);
+      setShowUserCard(false);
     });
   }
 
   function handleCancel(event: MouseEvent<HTMLButtonElement | HTMLDivElement | HTMLInputElement>) {
     event.preventDefault();
     createForm.reset();
-    setShowProfessionalCard(false);
+    setShowUserCard(false);
   }
   // const dniRef = useMask({ mask: '+549 (____) ______', replacement: { _: /\d/ } });
   // #endregion
@@ -184,7 +184,7 @@ export default function CreateUser() {
             </Form>
           </CardContent>
         </Card>
-        {showProfessionalCard && (
+        {showUserCard && (
           <div className='mx-auto w-full animate-fadeIn justify-items-center md:grid-cols-1 lg:grid-cols-1'>
             <div className='mx-auto flex h-full items-center justify-center'>
               <Card className='w-full md:w-2/3 lg:w-2/3'>
@@ -193,7 +193,7 @@ export default function CreateUser() {
                     {capitalize(createForm.watch('lastName'))} {capitalize(createForm.watch('firstName'))}
                   </div>
                   <CardContent className='space-y-2 px-6 py-0 pt-2 text-lg'>
-                    {createForm.watch('dni') !== undefined && (
+                    {createForm.watch('dni') !== '' && (
                       <div className='flex items-center gap-4'>
                         <BookUser className='h-4 w-4' strokeWidth={2} />
                         {createForm.watch('dni')}
@@ -205,7 +205,7 @@ export default function CreateUser() {
                         {createForm.watch('email')}
                       </div>
                     )}
-                    {createForm.watch('phone') !== undefined && (
+                    {createForm.watch('phone') !== '' && (
                       <div className='flex items-center gap-4'>
                         <Phone className='h-4 w-4' />
                         {createForm.watch('phone')}
