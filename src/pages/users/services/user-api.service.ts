@@ -21,6 +21,23 @@ export class UserApiService {
       return error;
     }
   }
+  // Find all users by DNI (many users with partial DNI search)
+  public static async findAllByDNI(search: string, sorting: SortingState, skip: number, limit: number) {
+    const url: string = `${this.API_URL}/users/byDNI?search=${search}&skip=${skip}&limit=${limit}&sk=${sorting[0].id}&sv=${sorting[0].desc ? 'desc' : 'asc'}`;
+
+    try {
+      const query: Response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json;charset=UTF-8',
+        },
+      });
+
+      return await query.json();
+    } catch (error) {
+      return error;
+    }
+  }
 
   public static async create(data: IUserForm) {
     const transformedData = UserUtils.lowercaseFormItems(data);
