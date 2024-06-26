@@ -71,7 +71,7 @@ export default function ViewAppointment() {
         </CardHeader>
         <CardContent className='mt-4 space-y-4'>
           <h1 className='flex items-center justify-center gap-2 text-center text-2xl font-semibold'>
-            <span>{appointment.user}</span>
+            <span>{`${capitalize(appointment.user?.lastName)}, ${capitalize(appointment.user?.firstName)}`}</span>
             <Link to={`/`}>
               <LinkIcon className='h-3.5 w-3.5' strokeWidth={2} />
             </Link>
