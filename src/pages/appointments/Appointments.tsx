@@ -5,6 +5,7 @@ import { Button } from '@/core/components/ui/button';
 import { Calendar } from '@/core/components/ui/calendar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/core/components/ui/dialog';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/core/components/ui/hover-card';
 // App components
 import { Steps } from '@/core/components/common/Steps';
 import { UsersCombo } from '../users/components/UsersCombo';
@@ -271,11 +272,25 @@ export default function Appointments() {
                               <div className='flex space-x-4 items-center'>
                                 <div className='text-sm font-semibold'>T{index}</div>
                                 <div className='w-28'>{slot.begin} {APPO_CONFIG.words.hours}</div>
-                                {slot.appointment?.user && <div className='text-base font-medium'>{`${capitalize(slot.appointment.user.lastName)}, ${capitalize(slot.appointment.user.firstName)}`}</div>}
+                                {slot.appointment?.user && <div className='text-base font-medium'>
+                                  {`${capitalize(slot.appointment.user.lastName)}, ${capitalize(slot.appointment.user.firstName)}`}
+                                </div>}
                               </div>
                               <div className='flex space-x-4'>
                                 {!slot.appointment?.user && <Button onClick={() => handleDialog('reserve', slot)} variant={'default'} size={'xs'}>{APPO_CONFIG.buttons.addAppointment}</Button>}
-                                {slot.appointment?.user && <Button onClick={() => navigate(`/appointments/${slot.appointment?._id}`)} variant={'table'} size={'xs'} className='text-primary bg-slate-100'>{APPO_CONFIG.buttons.viewAppointment}</Button>}
+                                {slot.appointment?.user && (
+                                  <Button 
+                                    onClick={() => navigate(`/appointments/${slot.appointment?._id}`)} 
+                                    variant={'table'} 
+                                    size={'xs'} 
+                                    className='text-primary bg-slate-100'
+                                  >
+                                    <HoverCard>
+                                      <HoverCardTrigger>{APPO_CONFIG.buttons.viewAppointment}</HoverCardTrigger>
+                                      <HoverCardContent dir='ltr'>{`${capitalize(slot.appointment.user.lastName)}, ${capitalize(slot.appointment.user.firstName)}`}</HoverCardContent>
+                                    </HoverCard>
+                                  </Button>
+                                )}
                                 {slot.appointment?.user && <Button onClick={() => handleDialog('cancel', slot)} variant={'table'} size={'xs'} className='text-primary bg-slate-100'>{APPO_CONFIG.buttons.cancelAppointment}</Button>}
                               </div>
                             </div>
