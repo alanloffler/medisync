@@ -15,6 +15,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 import { useTruncateText } from '@/core/hooks/useTruncateText';
+import { useIsNumericString } from '@/core/hooks/useIsNumericString';
+import { useDelimiter } from '@/core/hooks/useDelimiter';
 // Table interfaces
 interface DataTableProps {
   search: string;
@@ -42,6 +44,8 @@ export function UsersDataTable({ search, reload, setErrorMessage }: DataTablePro
   const firstUpdate = useRef(true);
   const navigate = useNavigate();
   const truncate = useTruncateText();
+  const isNumericString = useIsNumericString();
+  const delimiter = useDelimiter();
   // #region Table columns
   const tableColumns: ColumnDef<IUser>[] = [
     {
@@ -73,7 +77,7 @@ export function UsersDataTable({ search, reload, setErrorMessage }: DataTablePro
           </button>
         </div>
       ),
-      cell: ({ row }) => <div className='text-left'>{row.original.dni}</div>,
+      cell: ({ row }) => <div className='text-left'>{delimiter(row.original.dni, '.', 3)}</div>,
     },
     {
       accessorKey: 'phone',
@@ -86,7 +90,7 @@ export function UsersDataTable({ search, reload, setErrorMessage }: DataTablePro
           </button>
         </div>
       ),
-      cell: ({ row }) => <div className='text-left text-sm'>{row.original.phone}</div>,
+      cell: ({ row }) => <div className='text-left text-sm'>{delimiter(row.original.phone, '-', 6)}</div>,
     },
     {
       accessorKey: 'actions',
@@ -94,6 +98,7 @@ export function UsersDataTable({ search, reload, setErrorMessage }: DataTablePro
       header: () => <div className='text-center'>{USER_CONFIG.table.headers[3]}</div>,
       cell: ({ row }) => (
         <div className='flex flex-row items-center justify-center space-x-4'>
+          
           <Button variant={'ghost'} size={'miniIcon'}>
             <FileText className='h-4 w-4' />
           </Button>
@@ -153,23 +158,39 @@ export function UsersDataTable({ search, reload, setErrorMessage }: DataTablePro
 
   useEffect(() => {
     const fetchData = (search: string, sorting: SortingState, skipItems: number, itemsPerPage: number) => {
-      // prettier-ignore
-      UserApiService
-      .findAll(search, sorting, skipItems, itemsPerPage)
-      .then((response) => {
-        console.log(response.data.data);
-        if (response.statusCode === 200) {
-          setData(response.data.data);
-          setColumns(tableColumns);
-          setTotalItems(response.data.count);
-          setErrorMessage('');
-        }
-        if (response.statusCode > 399) {
-          setErrorMessage(response.message);
-          addNotification({ type: 'error', message: response.message });
-        }
-        if (response instanceof Error) addNotification({ type: 'error', message: 'Internal Server Error' });
-      });
+      if (!isNumericString(search)) {
+        console.log('is not numeric', search);
+        UserApiService.findAll(search, sorting, skipItems, itemsPerPage).then((response) => {
+          console.log(response.data.data);
+          if (response.statusCode === 200) {
+            setData(response.data.data);
+            setColumns(tableColumns);
+            setTotalItems(response.data.count);
+            setErrorMessage('');
+          }
+          if (response.statusCode > 399) {
+            setErrorMessage(response.message);
+            addNotification({ type: 'error', message: response.message });
+          }
+          if (response instanceof Error) addNotification({ type: 'error', message: 'Internal Server Error' });
+        });
+      } else {
+        console.log('is numeric', search);
+        UserApiService.findAllByDNI(search, sorting, skipItems, itemsPerPage).then((response) => {
+          console.log(response.data.data);
+          if (response.statusCode === 200) {
+            setData(response.data.data);
+            setColumns(tableColumns);
+            setTotalItems(response.data.count);
+            setErrorMessage('');
+          }
+          if (response.statusCode > 399) {
+            setErrorMessage(response.message);
+            addNotification({ type: 'error', message: response.message });
+          }
+          if (response instanceof Error) addNotification({ type: 'error', message: 'Internal Server Error' });
+        });
+      }
     };
     fetchData(search, tableManager.sorting, tableManager.pagination.pageIndex * tableManager.pagination.pageSize, tableManager.pagination.pageSize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
