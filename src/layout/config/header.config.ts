@@ -5,7 +5,7 @@ export const HEADER_CONFIG = {
     { id: 1, title: 'Tablero', path: '/dashboard' },
     { id: 2, title: 'Turnos', path: '/' },
     { id: 3, title: 'Profesionales', path: '/professionals' },
-    { id: 4, title: 'Usuarios', path: '/users' },
+    { id: 4, title: 'Pacientes', path: '/users' },
   ],
   search: {
     placeholder: 'Buscar turnos',
