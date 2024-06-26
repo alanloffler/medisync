@@ -1,13 +1,24 @@
 export const USER_CONFIG = {
   breadcrumb: [
     { id: 1, name: 'Inicio', path: '/' },
-    { id: 2, name: 'Usuarios', path: '/users' },
+    { id: 2, name: 'Pacientes', path: '/users' },
   ],
   buttons: {
-    addUser: 'Agregar usuario'
+    createUser: 'Agregar paciente'
+  },
+  search: {
+    debounceTime: 500,
+    label: {
+      name: 'Buscar por nombre o apellido',
+      dni: 'Buscar por DNI',
+    },
+    placeholder: {
+      name: 'Buscar paciente',
+      dni: 'Buscar por DNI',
+    },
   },
   table: {
-    defaultPageSize: 5,
+    defaultPageSize: 10,
     defaultSortingId: 'lastName',
     defaultSortingType: false, // desc: true | false
     headers: ['Apellido y Nombre', 'DNI', 'Teléfono', 'Acciones'],
@@ -18,9 +29,14 @@ export const USER_CONFIG = {
       of: 'de',
     },
     rowsPerPage: 'Filas por página',
-    title: 'Listado de Usuarios',
+    title: 'Listado de Pacientes',
   },
-  title: 'Usuarios',
+  title: 'Pacientes',
+  tooltip: {
+    createUser: 'Agregar paciente',
+    reload: 'Recargar',
+    sort: 'Ordernar',
+  }
 };
 
 export const USER_CREATE_CONFIG = {
