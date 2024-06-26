@@ -1,3 +1,4 @@
+// import { IUser } from '@/pages/users/interfaces/user.interface';
 import { useState, useEffect } from 'react';
 
 // Definición de tipos
@@ -12,7 +13,7 @@ interface ITimeSlot extends ITimeRange {
   appointment?: {
     turn: number;
     professional: number;
-    name: string;
+    user: string;
   }
 }
 
