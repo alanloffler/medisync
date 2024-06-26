@@ -7,11 +7,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/c
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/core/components/ui/dialog';
 // App components
 import { Steps } from '@/core/components/common/Steps';
+import { UsersCombo } from '../users/components/UsersCombo';
 // App
 import { APPO_CONFIG } from './config/appointment.config';
 import { AppoSchedule, IAppointment, ITimeSlot } from './services/schedule.service';
 import { AppointmentApiService } from './services/appointment.service';
+import { IDialog } from '@/core/interfaces/dialog.interface';
 import { IProfessional } from '../professionals/interfaces/professional.interface';
+import { IUser } from '../users/interfaces/user.interface';
 import { ProfessionalsCombobox } from '../professionals/components/ProfessionalsCombobox';
 import { cn } from '@/lib/utils';
 import { es, enUS } from 'date-fns/locale';
@@ -20,8 +23,6 @@ import { useDateToString, useLegibleDate } from '@/core/hooks/useDateToString';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
-import { IDialog } from '@/core/interfaces/dialog.interface';
-import { Input } from '@/core/components/ui/input';
 // React component
 export default function Appointments() {
   const [appointments, setAppointments] = useState<IAppointment[]>([] as IAppointment[]);
@@ -38,6 +39,7 @@ export default function Appointments() {
   const [showTimeSlots, setShowTimeSlots] = useState<boolean>(false);
   const [timeSlots, setTimeSlots] = useState<ITimeSlot[]>([] as ITimeSlot[]);
   const [timeSlotsAvailable, setTimeSlotsAvailable] = useState<number>(0);
+  const [userSelected, setUserSelected] = useState<IUser>({} as IUser);
 
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
@@ -115,7 +117,7 @@ export default function Appointments() {
         professional: professionalSelected?._id || '',
         day: dateToString(date ?? new Date()),
         hour: timeSlot.begin,
-        user: user,
+        user: userSelected._id,
       });
 
       if (newAppo.statusCode === 200) {
@@ -131,7 +133,6 @@ export default function Appointments() {
 
   async function handleCancelAppointment(slot: ITimeSlot) {
     if (slot.appointment?._id) {
-      console.log('Appo id', slot);
       AppointmentApiService.remove(slot.appointment._id).then((response) => {
         if (response.statusCode === 200) {
           addNotification({ type: 'success', message: response.message });
@@ -145,25 +146,20 @@ export default function Appointments() {
       console.log('Appo id undefined');
     }
   }
-  const [user, setUser] = useState<string>('');
   // #region Dialog
-  const reserveDialogContent: IDialog = {
-    action: 'reserve',
-    title: APPO_CONFIG.dialog.reserve.title,
-    description: APPO_CONFIG.dialog.reserve.description,
-    content: (
-      <div className='pt-4'>
-        <Input type='text' onChange={(e) => setUser(e.target.value)} />
-        <span>{user}</span>
-      </div>
-    ),
-  };
-
   function handleDialog(action: 'reserve' | 'cancel', slot: ITimeSlot) {
     setOpenDialog(true);
     setSelectedSlot(slot);
 
-    if (action === 'reserve') setDialogContent(reserveDialogContent);
+    if (action === 'reserve') {
+      const reserveDialogContent: IDialog = {
+        action: 'reserve',
+        title: APPO_CONFIG.dialog.reserve.title,
+        description: APPO_CONFIG.dialog.reserve.description,
+        content: '',
+      };
+      setDialogContent(reserveDialogContent);
+    }
     if (action === 'cancel') {
       const cancelDialogContent: IDialog = {
         action: 'cancel',
@@ -171,7 +167,9 @@ export default function Appointments() {
           <div className='space-y-2 pt-4'>
             <div>
               {APPO_CONFIG.dialog.cancel.contentText}
-              <span className='font-semibold'>{slot.appointment?.user}</span>
+              <span className='font-semibold'>
+                {slot.appointment?.user.lastName} {slot.appointment?.user.firstName}
+              </span>
             </div>
             <div className='italic'>
               {legibleDate(selectedDate as Date)} - {slot.appointment?.hour} {APPO_CONFIG.words.hours}
@@ -185,6 +183,10 @@ export default function Appointments() {
     }
   }
   // #endregion
+  function handleCancelAnyAction() {
+    setOpenDialog(false);
+    setUserSelected({} as IUser);
+  }
   return (
     <>
       <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8'>
@@ -269,7 +271,7 @@ export default function Appointments() {
                               <div className='flex space-x-4 items-center'>
                                 <div className='text-sm font-semibold'>T{index}</div>
                                 <div className='w-28'>{slot.begin} {APPO_CONFIG.words.hours}</div>
-                                <div>{slot.appointment?.user}</div>
+                                {slot.appointment?.user && <div className='text-base font-medium'>{`${capitalize(slot.appointment.user.lastName)}, ${capitalize(slot.appointment.user.firstName)}`}</div>}
                               </div>
                               <div className='flex space-x-4'>
                                 {!slot.appointment?.user && <Button onClick={() => handleDialog('reserve', slot)} variant={'default'} size={'xs'}>{APPO_CONFIG.buttons.addAppointment}</Button>}
@@ -298,9 +300,25 @@ export default function Appointments() {
           <DialogHeader>
             <DialogTitle className='text-xl'>{dialogContent.title}</DialogTitle>
             <DialogDescription>{dialogContent.description}</DialogDescription>
-            <>{dialogContent.content}</>
+            {dialogContent.action === 'reserve' && (
+              <div className='pt-4'>
+                <div className='pt-4'>
+                  <UsersCombo searchBy='dni' searchResult={(e) => setUserSelected(e)} placeholder={'Buscar por nombre'} />
+                  {userSelected._id && (
+                    <>
+                      <div className='py-4'>
+                        Reserva de turno para <span className='font-bold'>{`${capitalize(userSelected.lastName)}, ${capitalize(userSelected.firstName)}`}</span>
+                      </div>
+                      <div>El día {selectedLegibleDate}</div>
+                      <div>A las {selectedSlot.begin}</div>
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
+            {/* <>{dialogContent.content}</> */}
             <div className='flex justify-end gap-6 pt-4'>
-              <Button variant={'secondary'} size={'default'} onClick={() => setOpenDialog(false)}>
+              <Button variant={'secondary'} size={'default'} onClick={() => handleCancelAnyAction()}>
                 {APPO_CONFIG.buttons.cancelAppointment}
               </Button>
               {dialogContent.action === 'reserve' && (
