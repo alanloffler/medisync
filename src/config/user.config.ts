@@ -4,17 +4,15 @@ export const USER_CONFIG = {
     { id: 2, name: 'Pacientes', path: '/users' },
   ],
   buttons: {
-    createUser: 'Agregar paciente'
+    createUser: 'Agregar paciente',
+    activateHelp: 'Activar ayuda',
   },
   search: {
     debounceTime: 500,
-    label: {
-      name: 'Buscar por nombre o apellido',
-      dni: 'Buscar por DNI',
-    },
+    label: 'Búsqueda',
     placeholder: {
-      name: 'Buscar paciente',
-      dni: 'Buscar por DNI',
+      name: 'Apellido y/o nombre',
+      dni: 'DNI',
     },
   },
   table: {
@@ -33,16 +31,29 @@ export const USER_CONFIG = {
   },
   title: 'Pacientes',
   tooltip: {
+    enabled: false,
+    actions: {
+      removeUser: 'Eliminar paciente',
+      sendWhatsAppMessage: 'Enviar WhatsApp',
+      updateUser: 'Editar paciente',
+      viewUser: 'Ver paciente',
+    },
     createUser: 'Agregar paciente',
+    pagination: {
+      firstPage: 'Primera página',
+      lastPage: 'Última página',
+      nextPage: 'Siguiente página',
+      prevPage: 'Anterior página',
+    },
     reload: 'Recargar',
     sort: 'Ordernar',
-  }
+  },
 };
 
 export const USER_CREATE_CONFIG = {
   breadcrumb: [
     { id: 1, name: 'Inicio', path: '/' },
-    { id: 2, name: 'Usuarios', path: '/users' },
+    { id: 2, name: 'Pacientes', path: '/users' },
     { id: 3, name: 'Crear', path: '/create' },
   ],
   buttons: {
@@ -66,4 +77,4 @@ export const USER_CREATE_CONFIG = {
     lastName: 'Ingresá el apellido',
     phone: 'Ingresá el teléfono',
   },
-}
+};
