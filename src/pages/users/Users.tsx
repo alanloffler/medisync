@@ -14,9 +14,11 @@ import { ChangeEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { USER_CONFIG } from '@/config/user.config';
 import { useDebounce } from '@/core/hooks/useDebounce';
+import { Switch } from '@/core/components/ui/switch';
 // React component
 export default function Users() {
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [helpChecked, setHelpChecked] = useState<boolean>(false); // TODO: value must be stored on db
   const [reload, setReload] = useState<number>(0);
   const [searchByName, setSearchByName] = useState<string>('');
   const [searchByDNI, setSearchByDNI] = useState<string>('');
@@ -55,25 +57,33 @@ export default function Users() {
                   {USER_CONFIG.buttons.createUser}
                 </Button>
               </Link>
-              {/* Search by firstname or lastname */}
+              {/* Search by DNI */}
               <div className='flex flex-col space-y-4'>
-                <Label>{USER_CONFIG.search.label.name}</Label>
+                <h1 className='text-lg font-semibold'>{USER_CONFIG.search.label}</h1>
                 <div className='relative w-full items-center'>
                   <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
-                  <Input onClick={() => setSearchByDNI('')} onChange={handleSearchByName} value={searchByName} type='text' placeholder={USER_CONFIG.search.placeholder.name} className='bg-background pl-9 shadow-sm' />
-                  <button onClick={() => setSearchByName('')} className='absolute right-3 top-3 text-muted-foreground'><X className='h-4 w-4' /></button>
+                  <Input onClick={() => setSearchByName('')} onChange={handleSearchByDNI} value={searchByDNI} type='number' placeholder={USER_CONFIG.search.placeholder.dni} className='bg-background pl-10 shadow-sm' />
+                  <button onClick={() => setSearchByDNI('')} className='absolute right-3 top-3 text-muted-foreground'>
+                    <X className='h-4 w-4' />
+                  </button>
                 </div>
                 {errorMessage && <div className='flex flex-row items-center text-xs font-medium text-rose-400'>{errorMessage}</div>}
               </div>
-              {/* Search by DNI */}
+              {/* Search by firstname or lastname */}
               <div className='flex flex-col space-y-4'>
-                <Label>{USER_CONFIG.search.label.dni}</Label>
                 <div className='relative w-full items-center'>
                   <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
-                  <Input onClick={() => setSearchByName('')} onChange={handleSearchByDNI} value={searchByDNI} type='number' placeholder={USER_CONFIG.search.placeholder.dni} className='bg-background pl-9 shadow-sm' />
-                  <button onClick={() => setSearchByDNI('')} className='absolute right-3 top-3 text-muted-foreground'><X className='h-4 w-4' /></button>
+                  <Input onClick={() => setSearchByDNI('')} onChange={handleSearchByName} value={searchByName} type='text' placeholder={USER_CONFIG.search.placeholder.name} className='bg-background pl-10 shadow-sm' />
+                  <button onClick={() => setSearchByName('')} className='absolute right-3 top-3 text-muted-foreground'>
+                    <X className='h-4 w-4' />
+                  </button>
                 </div>
                 {errorMessage && <div className='flex flex-row items-center text-xs font-medium text-rose-400'>{errorMessage}</div>}
+              </div>
+              {/* Enable tooltips */}
+              <div className='flex flex-row items-center space-x-2'>
+                <Switch id='tooltips' size={4} checked={helpChecked} onCheckedChange={() => setHelpChecked(!helpChecked)} />
+                <Label htmlFor='tooltips'>{USER_CONFIG.buttons.activateHelp}</Label>
               </div>
             </div>
           </CardContent>
@@ -89,44 +99,62 @@ export default function Users() {
                 </div>
                 <div className='flex items-center gap-2'>
                   {/* Sort */}
-                  <TooltipProvider delayDuration={0.3}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button variant={'tableHeader'} size={'miniIcon'} className='flex items-center'>
-                          <ListFilter className='h-4 w-4' strokeWidth={2} />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p className='text-xs font-medium'>{USER_CONFIG.tooltip.sort}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  {helpChecked ? (
+                    <TooltipProvider delayDuration={0.3}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button variant={'tableHeader'} size={'miniIcon'} className='flex items-center'>
+                            <ListFilter className='h-4 w-4' strokeWidth={2} />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className='text-xs font-medium'>{USER_CONFIG.tooltip.sort}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  ) : (
+                    <Button variant={'tableHeader'} size={'miniIcon'} className='flex items-center'>
+                      <ListFilter className='h-4 w-4' strokeWidth={2} />
+                    </Button>
+                  )}
                   {/* Reload */}
-                  <TooltipProvider delayDuration={0.3}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button variant={'tableHeader'} size={'miniIcon'} onClick={handleReload}>
-                          <ListRestart className='h-4 w-4' strokeWidth={2} />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p className='text-xs font-medium'>{USER_CONFIG.tooltip.reload}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  {helpChecked ? (
+                    <TooltipProvider delayDuration={0.3}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button variant={'tableHeader'} size={'miniIcon'} onClick={handleReload}>
+                            <ListRestart className='h-4 w-4' strokeWidth={2} />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className='text-xs font-medium'>{USER_CONFIG.tooltip.reload}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  ) : (
+                    <Button variant={'tableHeader'} size={'miniIcon'} onClick={handleReload}>
+                      <ListRestart className='h-4 w-4' strokeWidth={2} />
+                    </Button>
+                  )}
                   {/* Create user */}
-                  <TooltipProvider delayDuration={0.3}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button variant={'tableHeaderPrimary'} size={'miniIcon'} onClick={() => navigate('/users/create')}>
-                          <CirclePlus className='h-4 w-4' strokeWidth={2} />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p className='text-xs font-medium'>{USER_CONFIG.tooltip.createUser}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  {helpChecked ? (
+                    <TooltipProvider delayDuration={0.3}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button variant={'tableHeaderPrimary'} size={'miniIcon'} onClick={() => navigate('/users/create')}>
+                            <CirclePlus className='h-4 w-4' strokeWidth={2} />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className='text-xs font-medium'>{USER_CONFIG.tooltip.createUser}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  ) : (
+                    <Button variant={'tableHeaderPrimary'} size={'miniIcon'} onClick={() => navigate('/users/create')}>
+                      <CirclePlus className='h-4 w-4' strokeWidth={2} />
+                    </Button>
+                  )}
                 </div>
               </CardTitle>
             </div>
