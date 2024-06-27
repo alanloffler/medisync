@@ -233,7 +233,7 @@ export default function CreateProfessional() {
                         {/* <FormLabel>{}</FormLabel> */}
                         <FormControl className='h-9'>
                           <div className='flex h-full items-center space-x-4 pb-2 pt-4 md:place-content-center md:pb-0 md:pt-8 lg:place-content-center lg:pb-0 lg:pt-8'>
-                            <Switch id='available' defaultChecked={true} onCheckedChange={field.onChange} />
+                            <Switch id='available' defaultChecked={true} onCheckedChange={field.onChange} size={5} />
                             <Label htmlFor='available'>{PC_CONFIG.labels.available}</Label>
                           </div>
                         </FormControl>
