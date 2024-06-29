@@ -23,6 +23,7 @@ interface DataTableProps {
   search: string;
   reload: number;
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+  help: boolean;
 }
 
 interface TableManager {
@@ -33,7 +34,7 @@ interface TableManager {
 const defaultSorting = [{ id: USER_CONFIG.table.defaultSortingId, desc: USER_CONFIG.table.defaultSortingType }];
 const defaultPagination = { pageIndex: 0, pageSize: USER_CONFIG.table.defaultPageSize };
 // React component
-export function UsersDataTable({ search, reload, setErrorMessage }: DataTableProps) {
+export function UsersDataTable({ search, reload, setErrorMessage, help }: DataTableProps) {
   const [columns, setColumns] = useState<ColumnDef<IUser>[]>([]);
   const [data, setData] = useState([]);
   const [pagination, setPagination] = useState<PaginationState>(defaultPagination);
@@ -42,11 +43,11 @@ export function UsersDataTable({ search, reload, setErrorMessage }: DataTablePro
   const [totalItems, setTotalItems] = useState<number>(0);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
+  const delimiter = useDelimiter();
   const firstUpdate = useRef(true);
+  const isNumericString = useIsNumericString();
   const navigate = useNavigate();
   const truncate = useTruncateText();
-  const isNumericString = useIsNumericString();
-  const delimiter = useDelimiter();
   // #region Table columns
   const tableColumns: ColumnDef<IUser>[] = [
     {
@@ -99,60 +100,81 @@ export function UsersDataTable({ search, reload, setErrorMessage }: DataTablePro
       header: () => <div className='text-center'>{USER_CONFIG.table.headers[3]}</div>,
       cell: ({ row }) => (
         <div className='flex flex-row items-center justify-center space-x-2'>
-          {/* View User */}
-          <TooltipProvider delayDuration={0.3}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant={'ghost'} size={'miniIcon'} className='hover:bg-transparent hover:text-fuchsia-500'>
-                  <FileText className='h-4 w-4' />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p className='text-xs font-medium'>{USER_CONFIG.tooltip.actions.viewUser}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          {/* Update User */}
-          <TooltipProvider delayDuration={0.3}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant={'ghost'} size={'miniIcon'} onClick={() => navigate(`/users/update/${row.original._id}`)} className='hover:bg-transparent hover:text-indigo-500'>
-                  <FilePen className='h-4 w-4' />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p className='text-xs font-medium'>{USER_CONFIG.tooltip.actions.updateUser}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          {/* Delete User */}
-          <TooltipProvider delayDuration={0.3}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant={'ghost'} size={'miniIcon'} className='hover:bg-transparent hover:text-red-500'>
-                  <Trash2 className='h-4 w-4' />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p className='text-xs font-medium'>{USER_CONFIG.tooltip.actions.removeUser}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          {/* Send WhatsApp message */}
-          <TooltipProvider delayDuration={0.3}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button disabled={!row.original.phone} variant={'ghost'} size={'miniIcon'} className='fill-current hover:bg-transparent hover:fill-green-500' onClick={() => navigate(`/whatsapp/${row.original._id}`)}>
-                  <svg width='100' height='100' viewBox='0 0 464 488' className='h-4 w-4'>
-                    <path d='M462 228q0 93-66 159t-160 66q-56 0-109-28L2 464l40-120q-32-54-32-116q0-93 66-158.5T236 4t160 65.5T462 228zM236 39q-79 0-134.5 55.5T46 228q0 62 36 111l-24 70l74-23q49 31 104 31q79 0 134.5-55.5T426 228T370.5 94.5T236 39zm114 241q-1-1-10-7q-3-1-19-8.5t-19-8.5q-9-3-13 2q-1 3-4.5 7.5t-7.5 9t-5 5.5q-4 6-12 1q-34-17-45-27q-7-7-13.5-15t-12-15t-5.5-8q-3-7 3-11q4-6 8-10l6-9q2-5-1-10q-4-13-17-41q-3-9-12-9h-11q-9 0-15 7q-19 19-19 45q0 24 22 57l2 3q2 3 4.5 6.5t7 9t9 10.5t10.5 11.5t13 12.5t14.5 11.5t16.5 10t18 8.5q16 6 27.5 10t18 5t9.5 1t7-1t5-1q9-1 21.5-9t15.5-17q8-21 3-26z' />
-                  </svg>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p className='text-xs font-medium'>{USER_CONFIG.tooltip.actions.sendWhatsAppMessage}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          {help ? (
+            <>
+              {/* View User */}
+              <TooltipProvider delayDuration={0.3}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant={'ghost'} size={'miniIcon'} className='hover:bg-transparent hover:text-fuchsia-500'>
+                      <FileText className='h-4 w-4' />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className='text-xs font-medium'>{USER_CONFIG.tooltip.actions.viewUser}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              {/* Update User */}
+              <TooltipProvider delayDuration={0.3}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant={'ghost'} size={'miniIcon'} onClick={() => navigate(`/users/update/${row.original._id}`)} className='hover:bg-transparent hover:text-indigo-500'>
+                      <FilePen className='h-4 w-4' />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className='text-xs font-medium'>{USER_CONFIG.tooltip.actions.updateUser}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              {/* Delete User */}
+              <TooltipProvider delayDuration={0.3}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant={'ghost'} size={'miniIcon'} className='hover:bg-transparent hover:text-red-500'>
+                      <Trash2 className='h-4 w-4' />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className='text-xs font-medium'>{USER_CONFIG.tooltip.actions.removeUser}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              {/* Send WhatsApp message */}
+              <TooltipProvider delayDuration={0.3}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button disabled={!row.original.phone} variant={'ghost'} size={'miniIcon'} className='fill-current hover:bg-transparent hover:fill-green-500' onClick={() => navigate(`/whatsapp/${row.original._id}`)}>
+                      <svg width='100' height='100' viewBox='0 0 464 488' className='h-4 w-4'>
+                        <path d='M462 228q0 93-66 159t-160 66q-56 0-109-28L2 464l40-120q-32-54-32-116q0-93 66-158.5T236 4t160 65.5T462 228zM236 39q-79 0-134.5 55.5T46 228q0 62 36 111l-24 70l74-23q49 31 104 31q79 0 134.5-55.5T426 228T370.5 94.5T236 39zm114 241q-1-1-10-7q-3-1-19-8.5t-19-8.5q-9-3-13 2q-1 3-4.5 7.5t-7.5 9t-5 5.5q-4 6-12 1q-34-17-45-27q-7-7-13.5-15t-12-15t-5.5-8q-3-7 3-11q4-6 8-10l6-9q2-5-1-10q-4-13-17-41q-3-9-12-9h-11q-9 0-15 7q-19 19-19 45q0 24 22 57l2 3q2 3 4.5 6.5t7 9t9 10.5t10.5 11.5t13 12.5t14.5 11.5t16.5 10t18 8.5q16 6 27.5 10t18 5t9.5 1t7-1t5-1q9-1 21.5-9t15.5-17q8-21 3-26z' />
+                      </svg>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className='text-xs font-medium'>{USER_CONFIG.tooltip.actions.sendWhatsAppMessage}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </>
+          ) : (
+            <>
+              <Button variant={'ghost'} size={'miniIcon'} className='hover:bg-transparent hover:text-fuchsia-500'>
+                <FileText className='h-4 w-4' />
+              </Button>
+              <Button variant={'ghost'} size={'miniIcon'} onClick={() => navigate(`/users/update/${row.original._id}`)} className='hover:bg-transparent hover:text-indigo-500'>
+                <FilePen className='h-4 w-4' />
+              </Button>
+              <Button variant={'ghost'} size={'miniIcon'} className='hover:bg-transparent hover:text-red-500'>
+                <Trash2 className='h-4 w-4' />
+              </Button>
+              <Button disabled={!row.original.phone} variant={'ghost'} size={'miniIcon'} className='fill-current hover:bg-transparent hover:fill-green-500' onClick={() => navigate(`/whatsapp/${row.original._id}`)}>
+                <svg width='100' height='100' viewBox='0 0 464 488' className='h-4 w-4'>
+                  <path d='M462 228q0 93-66 159t-160 66q-56 0-109-28L2 464l40-120q-32-54-32-116q0-93 66-158.5T236 4t160 65.5T462 228zM236 39q-79 0-134.5 55.5T46 228q0 62 36 111l-24 70l74-23q49 31 104 31q79 0 134.5-55.5T426 228T370.5 94.5T236 39zm114 241q-1-1-10-7q-3-1-19-8.5t-19-8.5q-9-3-13 2q-1 3-4.5 7.5t-7.5 9t-5 5.5q-4 6-12 1q-34-17-45-27q-7-7-13.5-15t-12-15t-5.5-8q-3-7 3-11q4-6 8-10l6-9q2-5-1-10q-4-13-17-41q-3-9-12-9h-11q-9 0-15 7q-19 19-19 45q0 24 22 57l2 3q2 3 4.5 6.5t7 9t9 10.5t10.5 11.5t13 12.5t14.5 11.5t16.5 10t18 8.5q16 6 27.5 10t18 5t9.5 1t7-1t5-1q9-1 21.5-9t15.5-17q8-21 3-26z' />
+                </svg>
+              </Button>
+            </>
+          )}
         </div>
       ),
     },
@@ -227,7 +249,7 @@ export function UsersDataTable({ search, reload, setErrorMessage }: DataTablePro
     };
     fetchData(search, tableManager.sorting, tableManager.pagination.pageIndex * tableManager.pagination.pageSize, tableManager.pagination.pageSize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search, tableManager]);
+  }, [search, tableManager, help]);
   // #endregion
   return (
     <>
