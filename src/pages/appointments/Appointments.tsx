@@ -69,7 +69,7 @@ export default function Appointments() {
           setErrorMessage(''); // Reset error message
           setTimeSlotsAvailable(0); // Reset amount of time slots available
         }
-        setSelectedLegibleDate(legibleDate(selectedDate)); // Set legible date for table header
+        setSelectedLegibleDate(legibleDate(selectedDate, 'long')); // Set legible date for table header
         const scheduleDate = dateToString(selectedDate); // Convert date to string for schedule
         setDate(selectedDate); // Set calendar selected date
         // prettier-ignore
@@ -173,7 +173,7 @@ export default function Appointments() {
               </span>
             </div>
             <div className='italic'>
-              {legibleDate(selectedDate as Date)} - {slot.appointment?.hour} {APPO_CONFIG.words.hours}
+              {legibleDate(selectedDate as Date, 'long')} - {slot.appointment?.hour} {APPO_CONFIG.words.hours}
             </div>
           </div>
         ),
