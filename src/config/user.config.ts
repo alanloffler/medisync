@@ -79,3 +79,19 @@ export const USER_CREATE_CONFIG = {
     phone: 'Ingresá el teléfono',
   },
 };
+
+export const USER_VIEW_CONFIG = {
+  breadcrumb: [
+    { id: 1, name: 'Inicio', path: '/' },
+    { id: 2, name: 'Pacientes', path: '/users' },
+    { id: 3, name: 'Detalles', path: '/ussers' },
+  ],
+  buttons: {
+    back: 'Volver',
+  },
+  dropdownMenu: [{ id: 1, name: 'Enviar e-mail' }, { id: 2, name: 'Enviar WhatsApp' }],
+  phrase: {
+    userSince: 'Paciente desde el',
+  },
+  title: 'Detalles de paciente',
+};
