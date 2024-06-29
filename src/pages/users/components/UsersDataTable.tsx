@@ -289,16 +289,40 @@ export function UsersDataTable({ search, reload, setErrorMessage, help }: DataTa
         <div className='flex items-center space-x-2'>
           <p className='text-xs font-normal text-slate-400'>{USER_CONFIG.table.rowsPerPage}</p>
           <Select value={`${table.getState().pagination.pageSize}`} onValueChange={(e) => setPagination({ pageIndex: 0, pageSize: parseInt(e) })}>
-            <SelectTrigger className='h-8 w-[65px] text-xs font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring/40 focus-visible:ring-offset-0'>
-              <SelectValue placeholder={table.getState().pagination.pageSize} />
-            </SelectTrigger>
-            <SelectContent side='top' className='min-w-[4rem]'>
-              {USER_CONFIG.table.itemsPerPage.map((pageSize) => (
-                <SelectItem key={pageSize} value={`${pageSize}`} className='text-xs'>
-                  {pageSize}
-                </SelectItem>
-              ))}
-            </SelectContent>
+            {help ? (
+              <TooltipProvider delayDuration={0.3}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <SelectTrigger className='h-8 w-[65px] text-xs font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring/40 focus-visible:ring-offset-0'>
+                      <SelectValue placeholder={table.getState().pagination.pageSize} />
+                    </SelectTrigger>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className='text-xs font-medium'>{USER_CONFIG.tooltip.pagination.pageSize}</p>
+                  </TooltipContent>
+                  <SelectContent side='top' className='min-w-[4rem]'>
+                    {USER_CONFIG.table.itemsPerPage.map((pageSize) => (
+                      <SelectItem key={pageSize} value={`${pageSize}`} className='text-xs'>
+                        {pageSize}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Tooltip>
+              </TooltipProvider>
+            ) : (
+              <>
+                <SelectTrigger className='h-8 w-[65px] text-xs font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring/40 focus-visible:ring-offset-0'>
+                  <SelectValue placeholder={table.getState().pagination.pageSize} />
+                </SelectTrigger>
+                <SelectContent side='top' className='min-w-[4rem]'>
+                  {USER_CONFIG.table.itemsPerPage.map((pageSize) => (
+                    <SelectItem key={pageSize} value={`${pageSize}`} className='text-xs'>
+                      {pageSize}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </>
+            )}
           </Select>
         </div>
         <div className='flex w-[100px] items-center justify-center text-xs font-normal text-slate-400'>
@@ -306,58 +330,77 @@ export function UsersDataTable({ search, reload, setErrorMessage, help }: DataTa
         </div>
         {table.getPageCount() > 1 && (
           <div className='flex items-center space-x-2'>
-            {/* First page */}
-            <TooltipProvider delayDuration={0.3}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant='ghost' className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800' onClick={() => table.setPageIndex(0)} disabled={!table.getCanPreviousPage()}>
-                    <ArrowLeftIcon className='h-4 w-4' />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p className='text-xs font-medium'>{USER_CONFIG.tooltip.pagination.firstPage}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            {/* Previous page */}
-            <TooltipProvider delayDuration={0.3}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant='ghost' className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 dark:bg-neutral-950 dark:hover:bg-neutral-800' onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
-                    <ChevronLeftIcon className='h-4 w-4' />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p className='text-xs font-medium'>{USER_CONFIG.tooltip.pagination.prevPage}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            {/* Next page */}
-            <TooltipProvider delayDuration={0.3}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant='ghost' className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 dark:bg-neutral-950 dark:hover:bg-neutral-800' onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
-                    <ChevronRightIcon className='h-4 w-4' />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p className='text-xs font-medium'>{USER_CONFIG.tooltip.pagination.nextPage}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            {/* Last page */}
-            <TooltipProvider delayDuration={0.3}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant='ghost' className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800' onClick={() => table.setPageIndex(table.getPageCount() - 1)} disabled={!table.getCanNextPage()}>
-                    <ArrowRightIcon className='h-4 w-4' />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p className='text-xs font-medium'>{USER_CONFIG.tooltip.pagination.lastPage}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            {help ? (
+              <>
+                {/* First page */}
+                <TooltipProvider delayDuration={0.3}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant='ghost' className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800' onClick={() => table.setPageIndex(0)} disabled={!table.getCanPreviousPage()}>
+                        <ArrowLeftIcon className='h-4 w-4' />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className='text-xs font-medium'>{USER_CONFIG.tooltip.pagination.firstPage}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                {/* Previous page */}
+                <TooltipProvider delayDuration={0.3}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant='ghost' className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 dark:bg-neutral-950 dark:hover:bg-neutral-800' onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
+                        <ChevronLeftIcon className='h-4 w-4' />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className='text-xs font-medium'>{USER_CONFIG.tooltip.pagination.prevPage}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                {/* Next page */}
+                <TooltipProvider delayDuration={0.3}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant='ghost' className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 dark:bg-neutral-950 dark:hover:bg-neutral-800' onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
+                        <ChevronRightIcon className='h-4 w-4' />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className='text-xs font-medium'>{USER_CONFIG.tooltip.pagination.nextPage}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                {/* Last page */}
+                <TooltipProvider delayDuration={0.3}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant='ghost' className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800' onClick={() => table.setPageIndex(table.getPageCount() - 1)} disabled={!table.getCanNextPage()}>
+                        <ArrowRightIcon className='h-4 w-4' />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className='text-xs font-medium'>{USER_CONFIG.tooltip.pagination.lastPage}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </>
+            ) : (
+              <>
+                <Button variant='ghost' className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800' onClick={() => table.setPageIndex(0)} disabled={!table.getCanPreviousPage()}>
+                  <ArrowLeftIcon className='h-4 w-4' />
+                </Button>
+                <Button variant='ghost' className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 dark:bg-neutral-950 dark:hover:bg-neutral-800' onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
+                  <ChevronLeftIcon className='h-4 w-4' />
+                </Button>
+                <Button variant='ghost' className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 dark:bg-neutral-950 dark:hover:bg-neutral-800' onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
+                  <ChevronRightIcon className='h-4 w-4' />
+                </Button>
+                <Button variant='ghost' className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800' onClick={() => table.setPageIndex(table.getPageCount() - 1)} disabled={!table.getCanNextPage()}>
+                  <ArrowRightIcon className='h-4 w-4' />
+                </Button>
+              </>
+            )}
           </div>
         )}
       </div>
