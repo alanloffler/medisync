@@ -86,7 +86,7 @@ export default function Users() {
               {errorMessage && <div className='flex flex-row items-center text-xs font-medium text-rose-400'>{errorMessage}</div>}
               {/* Enable tooltips */}
               <div className='flex flex-row items-center space-x-2'>
-                <Switch id='tooltips' size={4} checked={helpChecked} onCheckedChange={() => setHelpChecked(!helpChecked)} />
+                <Switch id='tooltips' size={4} onCheckedChange={() => setHelpChecked(!helpChecked)} />
                 <Label htmlFor='tooltips'>{USER_CONFIG.buttons.activateHelp}</Label>
               </div>
             </div>
@@ -165,7 +165,13 @@ export default function Users() {
           </CardHeader>
           {/* Table */}
           <CardContent>
-            <UsersDataTable search={debouncedSearch || debouncedSearch2} reload={reload} setErrorMessage={setErrorMessage} />
+            {/* prettier-ignore */}
+            <UsersDataTable 
+              search={debouncedSearch || debouncedSearch2} 
+              reload={reload} 
+              setErrorMessage={setErrorMessage} 
+              help={helpChecked} 
+            />
           </CardContent>
         </Card>
       </div>
