@@ -17,22 +17,29 @@ export function useDateToString(): (date: Date) => string {
   }, []);
 }
 
-export function useLegibleDate(): (date: Date) => string {
+export function useLegibleDate(): (date: Date, type: 'long' | 'short') => string {
   const capitalize = useCapitalize();
 
-  return useCallback((date: Date) => {
-    if (date === undefined) return 'Invalid date';
+  return useCallback(
+    (date: Date, type: 'long' | 'short') => {
+      if (date === undefined) return 'Invalid date';
+      if (type === undefined) return 'Invalid type';
 
-    const _day = date.getDate();
-    const _month = date.getMonth();
-    const _year = date.getFullYear();
-    const newDate = new Date(_year, _month, _day);
+      const _day = date.getDate();
+      const _month = date.getMonth();
+      const _year = date.getFullYear();
+      const newDate = new Date(_year, _month, _day);
 
-    const weekDay = capitalize(newDate.toLocaleString('es', { weekday: 'long' }));
-    const day = newDate.toLocaleString('es', { day: 'numeric' });
-    const month = capitalize(date.toLocaleString('es', { month: 'long' })) || '';
-    const year = date.toLocaleString('es', { year: 'numeric' });
+      const weekDay = capitalize(newDate.toLocaleString('es', { weekday: 'long' }));
+      const day = newDate.toLocaleString('es', { day: 'numeric' });
+      const month = capitalize(date.toLocaleString('es', { month: 'long' })) || '';
+      const year = date.toLocaleString('es', { year: 'numeric' });
 
-    return `${weekDay}, ${day} de ${month} de ${year}`;
-  }, [capitalize]);
+      if (type === 'long') return `${weekDay}, ${day} de ${month} de ${year}`;
+      if (type === 'short') return `${day} de ${month} de ${year}`;
+
+      return '';
+    },
+    [capitalize],
+  );
 }
