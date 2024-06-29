@@ -38,6 +38,23 @@ export class UserApiService {
       return error;
     }
   }
+  
+  public static async findOne(id: string) {
+    const url: string = `${this.API_URL}/users/${id}`;
+
+    try {
+      const query: Response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json;charset=UTF-8',
+        },
+      });
+
+      return await query.json();
+    } catch (error) {
+      return error;
+    }
+  }
 
   public static async create(data: IUserForm) {
     const transformedData = UserUtils.lowercaseFormItems(data);
