@@ -35,6 +35,7 @@ export default function Users() {
   }
 
   function handleReload(): void {
+    setSearchByDNI('');
     setSearchByName('');
     setReload(Math.random());
   }
@@ -63,23 +64,26 @@ export default function Users() {
                 <div className='relative w-full items-center'>
                   <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
                   <Input onClick={() => setSearchByName('')} onChange={handleSearchByDNI} value={searchByDNI} type='number' placeholder={USER_CONFIG.search.placeholder.dni} className='bg-background pl-10 shadow-sm' />
-                  <button onClick={() => setSearchByDNI('')} className='absolute right-3 top-3 text-muted-foreground'>
-                    <X className='h-4 w-4' />
-                  </button>
+                  {searchByDNI && (
+                    <button onClick={() => setSearchByDNI('')} className='absolute right-3 top-3 text-muted-foreground'>
+                      <X className='h-4 w-4' />
+                    </button>
+                  )}
                 </div>
-                {errorMessage && <div className='flex flex-row items-center text-xs font-medium text-rose-400'>{errorMessage}</div>}
               </div>
               {/* Search by firstname or lastname */}
               <div className='flex flex-col space-y-4'>
                 <div className='relative w-full items-center'>
                   <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
                   <Input onClick={() => setSearchByDNI('')} onChange={handleSearchByName} value={searchByName} type='text' placeholder={USER_CONFIG.search.placeholder.name} className='bg-background pl-10 shadow-sm' />
-                  <button onClick={() => setSearchByName('')} className='absolute right-3 top-3 text-muted-foreground'>
-                    <X className='h-4 w-4' />
-                  </button>
+                  {searchByName && (
+                    <button onClick={() => setSearchByName('')} className='absolute right-3 top-3 text-muted-foreground'>
+                      <X className='h-4 w-4' />
+                    </button>
+                  )}
                 </div>
-                {errorMessage && <div className='flex flex-row items-center text-xs font-medium text-rose-400'>{errorMessage}</div>}
               </div>
+              {errorMessage && <div className='flex flex-row items-center text-xs font-medium text-rose-400'>{errorMessage}</div>}
               {/* Enable tooltips */}
               <div className='flex flex-row items-center space-x-2'>
                 <Switch id='tooltips' size={4} checked={helpChecked} onCheckedChange={() => setHelpChecked(!helpChecked)} />
