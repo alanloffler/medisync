@@ -13,6 +13,8 @@ const UpdateProfessional = lazy(() => import('./pages/professionals/components/U
 
 const Users = lazy(() => import('./pages/users/Users'));
 const CreateUser = lazy(() => import('./pages/users/components/CreateUser'));
+const UpdateUser = lazy(() => import('./pages/users/components/UpdateUser'));
+const ViewUser = lazy(() => import('./pages/users/components/ViewUser'));
 
 const WhatsApp = lazy(() => import('./pages/whatsapp/WhatsApp'));
 // React component
@@ -28,7 +30,9 @@ export default function App() {
         { path: '/professionals/create', element: (<Suspense fallback={<>Loading...</>}><CreateProfessional /></Suspense>) },
         { path: '/professionals/update/:id', element: (<Suspense fallback={<>Loading...</>}><UpdateProfessional /></Suspense>) },
         { path: '/users', element: (<Suspense fallback={<>Loading...</>}><Users /></Suspense>) },
+        { path: '/users/:id', element: (<Suspense fallback={<>Loading...</>}><ViewUser /></Suspense>) },
         { path: '/users/create', element: (<Suspense fallback={<>Loading...</>}><CreateUser /></Suspense>) },
+        { path: '/users/update/:id', element: (<Suspense fallback={<>Loading...</>}><UpdateUser /></Suspense>) },
         { path: '/whatsapp/:id',  element: (<Suspense fallback={<>Loading...</>}><WhatsApp /></Suspense>) },
         { path: '*', element: <>Not found 404</> },
       ],
