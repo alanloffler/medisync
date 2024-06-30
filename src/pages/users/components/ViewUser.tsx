@@ -16,8 +16,10 @@ import { useEffect, useState } from 'react';
 import { useLegibleDate } from '@/core/hooks/useDateToString';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
+import { InfoCard } from '@/core/components/common/InfoCard';
 // React component
 export default function ViewUser() {
+  const [infoCard, setInfoCard] = useState<{ title: string; description: string; type: 'error' | 'success' | 'warning' }>({ title: '', description: '', type: 'success' });
   const [showCard, setShowCard] = useState<boolean>(false);
   const [user, setUser] = useState<IUser>({} as IUser);
   const addNotification = useNotificationsStore((state) => state.addNotification);
@@ -34,8 +36,14 @@ export default function ViewUser() {
           setUser(response.data);
           setShowCard(true);
         }
-        if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
-        if (response instanceof Error) addNotification({ type: 'error', message: 'Internal Server Error' });
+        if (response.statusCode > 399) {
+          addNotification({ type: 'error', message: response.message });
+          setInfoCard({ title: `Error ${response.statusCode}`, description: response.message, type: 'error' });
+        }
+        if (response instanceof Error) {
+          addNotification({ type: 'error', message: 'Internal Server Error' });
+          setInfoCard({ title: 'Error 500', description: 'Internal Server Error', type: 'error' });
+        }
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -52,50 +60,64 @@ export default function ViewUser() {
         </Button>
       </div>
       {/* Page Content */}
-      <div className='mx-auto mt-4 flex w-1/2 flex-row'>
-        {showCard && (
-          <Card className='w-full'>
-            <CardHeader>
-              <CardTitle>
-                <div className='relative flex items-center justify-center'>
-                  <h1 className='text-center text-2xl font-bold'>
-                    {capitalize(user.lastName)}, {capitalize(user.firstName)}
-                  </h1>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant={'tableHeader'} size={'miniIcon'} className='absolute right-1 flex items-center'>
-                        <Menu className='h-4 w-4' strokeWidth={2} />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className='w-fit' align='end'>
-                      <DropdownMenuGroup>
-                        {/* TODO: add actions */}
-                        <DropdownMenuItem onClick={() => console.log('Send email')}>{UV_CONFIG.dropdownMenu[0].name}</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => console.log('Send whatsapp')}>{UV_CONFIG.dropdownMenu[1].name}</DropdownMenuItem>
-                      </DropdownMenuGroup>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+      {showCard && (
+        <div className='mx-auto mt-4 flex w-full flex-row px-2 md:w-[500px]'>
+          {showCard && (
+            <Card className='w-full'>
+              <CardHeader>
+                <CardTitle>
+                  <div className='relative flex items-center justify-center'>
+                    <h1 className='text-center text-2xl font-bold'>
+                      {capitalize(user.lastName)}, {capitalize(user.firstName)}
+                    </h1>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant={'tableHeader'} size={'miniIcon'} className='absolute right-1 flex items-center'>
+                          <Menu className='h-4 w-4' strokeWidth={2} />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className='w-fit' align='end'>
+                        <DropdownMenuGroup>
+                          {/* TODO: add actions */}
+                          <DropdownMenuItem onClick={() => console.log('Send email')}>{UV_CONFIG.dropdownMenu[0].name}</DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => console.log('Send whatsapp')}>{UV_CONFIG.dropdownMenu[1].name}</DropdownMenuItem>
+                        </DropdownMenuGroup>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className='mt-3 space-y-3'>
+                <div className='flex items-center space-x-4'>
+                  <CreditCard className='h-6 w-6' strokeWidth={2} />
+                  <span className='text-lg font-medium'>{delimiter(user.dni, '.', 3)}</span>
                 </div>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className='mt-3 space-y-3'>
-              <div className='flex items-center space-x-4'>
-                <CreditCard />
-                <span className='text-lg font-medium'>{delimiter(user.dni, '.', 3)}</span>
-              </div>
-              <div className='flex items-center space-x-4'>
-                <Smartphone />
-                <span className='text-lg font-medium'>{delimiter(user.phone, '-', 6)}</span>
-              </div>
-              <div className='flex items-center space-x-4'>
-                <Mail />
-                <span className='text-lg font-medium'>{user.email}</span>
-              </div>
-              <div className='flex justify-end pt-2 text-base leading-none text-slate-500'>{`${UV_CONFIG.phrase.userSince} ${legibleDate(new Date(user.createdAt), 'short')}`}</div>
-            </CardContent>
-          </Card>
-        )}
-      </div>
+                <div className='flex items-center space-x-4'>
+                  <Smartphone className='h-6 w-6' strokeWidth={2} />
+                  <span className='text-lg font-medium'>{delimiter(user.phone, '-', 6)}</span>
+                </div>
+                <div className='flex items-center space-x-4'>
+                  <Mail className='h-6 w-6' strokeWidth={2} />
+                  <span className='text-lg font-medium'>{user.email}</span>
+                </div>
+                <div className='flex justify-end pt-2 text-base leading-none text-slate-500'>{`${UV_CONFIG.phrase.userSince} ${legibleDate(new Date(user.createdAt), 'short')}`}</div>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      )}
+      {/* Info Card */}
+      {!showCard && (
+        <div className='mx-auto mt-4 flex w-full flex-row px-2 md:w-1/2 md:px-0'>
+          {/* prettier-ignore */}
+          <InfoCard 
+          title={infoCard.title} 
+          description={infoCard.description} 
+          type={infoCard.type}
+          className='border border-slate-50 w-full'
+        />
+        </div>
+      )}
     </main>
   );
 }
