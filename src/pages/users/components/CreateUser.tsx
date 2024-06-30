@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { ArrowLeft, BookUser, FilePlus, Mail, Menu, Phone } from 'lucide-react';
+import { ArrowLeft, CreditCard, FilePlus, Mail, Menu, Smartphone } from 'lucide-react';
 // Components: https://ui.shadcn.com/docs/components
 // import { Badge } from '@/core/components/ui/badge';
 import { Button } from '@/core/components/ui/button';
@@ -21,12 +21,14 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { USER_SCHEMA } from '@/config/schemas/user.schema';
+import { useDelimiter } from '@/core/hooks/useDelimiter';
 // React component
 export default function CreateUser() {
   const [showUserCard, setShowUserCard] = useState<boolean>(false);
 
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
+  const delimiter = useDelimiter();
   const navigate = useNavigate();
   // #region Form config and actions
   const defaultValues = {
@@ -188,43 +190,37 @@ export default function CreateUser() {
           <div className='mx-auto w-full animate-fadeIn justify-items-center md:grid-cols-1 lg:grid-cols-1'>
             <div className='mx-auto flex h-full items-center justify-center'>
               <Card className='w-full md:w-2/3 lg:w-2/3'>
-                <CardHeader>
-                  <div className='flex justify-center p-4 text-3xl font-semibold leading-none tracking-tight'>
-                    {capitalize(createForm.watch('lastName'))} {capitalize(createForm.watch('firstName'))}
-                  </div>
-                  <CardContent className='space-y-2 px-6 py-0 pt-2 text-lg'>
-                    {createForm.watch('dni') !== '' && (
-                      <div className='flex items-center gap-4'>
-                        <BookUser className='h-4 w-4' strokeWidth={2} />
-                        {createForm.watch('dni')}
+                {createForm.watch('lastName') !== '' || createForm.watch('firstName') !== '' ? (
+                  <CardHeader>
+                    <CardTitle>
+                      <div className='relative flex items-center justify-center'>
+                        <h1 className='text-center text-2xl font-bold'>
+                          {capitalize(createForm.watch('lastName'))}, {capitalize(createForm.watch('firstName'))}
+                        </h1>
                       </div>
-                    )}
-                    {createForm.watch('email') !== '' && (
-                      <div className='flex animate-fadeIn items-center gap-4 italic'>
-                        <Mail className='h-4 w-4' />
-                        {createForm.watch('email')}
-                      </div>
-                    )}
-                    {createForm.watch('phone') !== '' && (
-                      <div className='flex items-center gap-4'>
-                        <Phone className='h-4 w-4' />
-                        {createForm.watch('phone')}
-                      </div>
-                    )}
-                  </CardContent>
-                  <div className='flex justify-end space-x-4 pt-4'>
-                    {/* {createForm.watch('area') !== '' && (
-                      <Badge variant={'secondary'} className='animate-fadeIn'>
-                        {capitalize(areas.find((area) => area._id === createForm.watch('area'))?.name)}
-                      </Badge>
-                    )}
-                    {createForm.watch('specialization') !== '' && (
-                      <Badge variant={'secondary'} className='animate-fadeIn'>
-                        {capitalize(areas.find((area) => area._id === createForm.watch('area'))?.specializations.find((spec) => spec._id === createForm.watch('specialization'))?.name || '')}
-                      </Badge>
-                    )} */}
-                  </div>
-                </CardHeader>
+                    </CardTitle>
+                  </CardHeader>
+                ) : null}
+                <CardContent className='mt-3 space-y-3'>
+                  {createForm.watch('dni') !== '' && (
+                    <div className='flex items-center space-x-4'>
+                      <CreditCard className='h-6 w-6' strokeWidth={2} />
+                      <span className='text-lg font-medium'>{delimiter(createForm.watch('dni'), '.', 3)}</span>
+                    </div>
+                  )}
+                  {createForm.watch('phone') !== '' && (
+                    <div className='flex items-center gap-4'>
+                      <Smartphone className='h-6 w-6' strokeWidth={2} />
+                      <span className='text-lg font-medium'>{delimiter(createForm.watch('phone'), '-', 6)}</span>
+                    </div>
+                  )}
+                  {createForm.watch('email') !== '' && (
+                    <div className='flex items-center space-x-4'>
+                      <Mail className='h-6 w-6' strokeWidth={2} />
+                      <span className='text-lg font-medium'>{createForm.watch('email')}</span>
+                    </div>
+                  )}
+                </CardContent>
               </Card>
             </div>
           </div>
