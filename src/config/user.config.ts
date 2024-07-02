@@ -93,5 +93,12 @@ export const USER_VIEW_CONFIG = {
   phrase: {
     userSince: 'Paciente desde el',
   },
+  email: {
+    subject: 'Asunto',
+    body: 'Cuerpo',
+  },
   title: 'Detalles de paciente',
+  tooltip: {
+    dropdown: 'Acciones'
+  }
 };
