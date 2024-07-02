@@ -4,6 +4,7 @@ import { ArrowLeft, CreditCard, Mail, Menu, Smartphone } from 'lucide-react';
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '@/core/components/ui/dropdown-menu';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/core/components/ui/tooltip';
 // App components
 import { PageHeader } from '@/core/components/common/PageHeader';
 // App
@@ -17,8 +18,10 @@ import { useLegibleDate } from '@/core/hooks/useDateToString';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 import { InfoCard } from '@/core/components/common/InfoCard';
+import { IEmail } from '@/core/interfaces/email.interface';
 // React component
 export default function ViewUser() {
+  const [emailObject, setEmailObject] = useState<IEmail>({} as IEmail);
   const [infoCard, setInfoCard] = useState<{ title: string; description: string; type: 'error' | 'success' | 'warning' }>({ title: '', description: '', type: 'success' });
   const [showCard, setShowCard] = useState<boolean>(false);
   const [user, setUser] = useState<IUser>({} as IUser);
@@ -35,6 +38,11 @@ export default function ViewUser() {
         if (response.statusCode === 200) {
           setUser(response.data);
           setShowCard(true);
+          setEmailObject({
+            to: response.data.email,
+            subject: 'MediSync - Turnos médicos',
+            body: `Hola ${capitalize(response.data?.firstName)},`,
+          });
         }
         if (response.statusCode > 399) {
           addNotification({ type: 'error', message: response.message });
@@ -70,20 +78,34 @@ export default function ViewUser() {
                     <h1 className='text-center text-2xl font-bold'>
                       {capitalize(user.lastName)}, {capitalize(user.firstName)}
                     </h1>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant={'tableHeader'} size={'miniIcon'} className='absolute right-1 flex items-center'>
-                          <Menu className='h-4 w-4' strokeWidth={2} />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent className='w-fit' align='end'>
-                        <DropdownMenuGroup>
-                          {/* TODO: add actions */}
-                          <DropdownMenuItem onClick={() => console.log('Send email')}>{UV_CONFIG.dropdownMenu[0].name}</DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => console.log('Send whatsapp')}>{UV_CONFIG.dropdownMenu[1].name}</DropdownMenuItem>
-                        </DropdownMenuGroup>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    <TooltipProvider delayDuration={0.3}>
+                      <Tooltip>
+                        <DropdownMenu>
+                          <TooltipTrigger asChild>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant={'tableHeader'} size={'miniIcon'} className='absolute right-1 flex items-center'>
+                                <Menu className='h-4 w-4' strokeWidth={2} />
+                              </Button>
+                            </DropdownMenuTrigger>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p className='text-xs font-medium'>{UV_CONFIG.tooltip.dropdown}</p>
+                          </TooltipContent>
+                          <DropdownMenuContent className='w-fit' align='end'>
+                            <DropdownMenuGroup>
+                              {/* Send email */}
+                              <DropdownMenuItem onClick={() => console.log('Send email')}>
+                                <a href={`https://mail.google.com/mail/?view=cm&to=${emailObject.to}&su=${emailObject.subject}&body=${emailObject.body}`} target='_blank' className='transition-colors hover:text-indigo-500'>
+                                  {UV_CONFIG.dropdownMenu[0].name}
+                                </a>
+                              </DropdownMenuItem>
+                              {/* TODO: add action to whatsapp */}
+                              <DropdownMenuItem onClick={() => console.log('Send whatsapp')}>{UV_CONFIG.dropdownMenu[1].name}</DropdownMenuItem>
+                            </DropdownMenuGroup>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </Tooltip>
+                    </TooltipProvider>
                   </div>
                 </CardTitle>
               </CardHeader>
