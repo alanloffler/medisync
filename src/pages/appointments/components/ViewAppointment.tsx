@@ -1,11 +1,15 @@
-import { useParams, Link } from 'react-router-dom';
-import { IAppointmentView } from '../services/schedule.service';
-import { useEffect, useRef, useState } from 'react';
-import { AppointmentApiService } from '../services/appointment.service';
-import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
+// Icons: https://lucide.dev/icons
 import { CalendarDays, Clock, Link as LinkIcon, Printer, Send } from 'lucide-react';
-import { useLegibleDate } from '@/core/hooks/useDateToString';
+// Components: https://ui.shadcn.com/docs/components
+import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
+// App
+import { AppointmentApiService } from '../services/appointment.service';
+import { IAppointmentView } from '../services/schedule.service';
+import { IEmail } from '@/core/interfaces/email.interface';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
+import { useEffect, useRef, useState } from 'react';
+import { useLegibleDate } from '@/core/hooks/useDateToString';
+import { useParams, Link } from 'react-router-dom';
 // pdf
 import jsPDF from 'jspdf';
 import * as htmlToImage from 'html-to-image';
@@ -13,20 +17,20 @@ import * as htmlToImage from 'html-to-image';
 export default function ViewAppointment() {
   const [appointment, setAppointment] = useState<IAppointmentView>({} as IAppointmentView);
   const [date, setDate] = useState<string>('');
-  const [email, setEmail] = useState({});
-  const { id } = useParams();
+  const [email, setEmail] = useState<IEmail>({} as IEmail);
   const capitalize = useCapitalize();
   const legibleDate = useLegibleDate();
+  const { id } = useParams();
   // pdf
   const pdfRef = useRef<HTMLDivElement>(null);
-
+  // TODO: dynamic data for email object
   useEffect(() => {
     if (id) {
       AppointmentApiService.findOne(id).then((response) => {
         console.log(response);
         setAppointment(response);
         console.log(appointment.day);
-        setDate(legibleDate(new Date(appointment.day)));
+        setDate(legibleDate(new Date(appointment.day), 'long'));
         // E-mail object
         setEmail({
           to: response.user.email || 'alanmatiasloffler@gmail.com',
