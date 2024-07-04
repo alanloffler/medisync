@@ -37,7 +37,7 @@ export default function Users() {
   function handleReload(): void {
     setSearchByDNI('');
     setSearchByName('');
-    setReload(Math.random());
+    setReload(new Date().getTime());
   }
 
   return (
@@ -167,6 +167,8 @@ export default function Users() {
           <CardContent>
             {/* prettier-ignore */}
             <UsersDataTable 
+              key={reload}
+              setReload={setReload} 
               search={debouncedSearch || debouncedSearch2} 
               reload={reload} 
               setErrorMessage={setErrorMessage} 
