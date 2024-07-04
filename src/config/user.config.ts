@@ -4,8 +4,21 @@ export const USER_CONFIG = {
     { id: 2, name: 'Pacientes', path: '/users' },
   ],
   buttons: {
-    createUser: 'Agregar paciente',
     activateHelp: 'Activar ayuda',
+    cancel: 'Cancelar',
+    createUser: 'Agregar paciente',
+    remove: 'Eliminar paciente',
+  },
+  dbUsers: 'pacientes en la base de datos',
+  dialog: {
+    remove: {
+      content: {
+        dni: 'DNI',
+        title: 'Vas a eliminar de la base de datos al paciente:',
+      },
+      subtitle: '¿Estas seguro de querer eliminar el paciente? Esta acción es irreversible.',
+      title: 'Eliminar paciente',
+    },
   },
   search: {
     debounceTime: 500,
