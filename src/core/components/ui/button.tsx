@@ -21,6 +21,7 @@ const buttonVariants = cva(
         tableHeader: 'rounded-full bg-slate-300 hover:bg-slate-300/80',
         tableHeaderPrimary: 'rounded-full bg-primary text-primary-foreground hover:bg-primary/80',
         table: 'bg-slate-200 hover:bg-slate-200/80 shadow-sm text-primary-background text-sm',
+        remove: 'bg-red-500 hover:bg-red-500/80 text-white',
       },
       size: {
         default: "h-10 px-4 py-2",
