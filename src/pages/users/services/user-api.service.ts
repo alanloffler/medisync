@@ -74,4 +74,21 @@ export class UserApiService {
       return error;
     }
   }
+
+  public static async remove(id: string) {
+    const url: string = `${this.API_URL}/users/${id}`;
+
+    try {
+      const query = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          'content-type': 'application/json;charset=UTF-8',
+        },
+      });
+
+      return await query.json();
+    } catch (error) {
+      return error;
+    }
+  }
 }
