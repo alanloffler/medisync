@@ -2,6 +2,7 @@
 import { ArrowDownUp, ArrowLeftIcon, ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon, FilePen, FileText, Trash2 } from 'lucide-react';
 // Components: https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/core/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/core/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/core/components/ui/table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/core/components/ui/tooltip';
@@ -22,6 +23,7 @@ import { useDelimiter } from '@/core/hooks/useDelimiter';
 interface DataTableProps {
   search: string;
   reload: number;
+  setReload: React.Dispatch<React.SetStateAction<number>>;
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
   help: boolean;
 }
@@ -34,13 +36,15 @@ interface TableManager {
 const defaultSorting = [{ id: USER_CONFIG.table.defaultSortingId, desc: USER_CONFIG.table.defaultSortingType }];
 const defaultPagination = { pageIndex: 0, pageSize: USER_CONFIG.table.defaultPageSize };
 // React component
-export function UsersDataTable({ search, reload, setErrorMessage, help }: DataTableProps) {
+export function UsersDataTable({ search, reload, setReload, setErrorMessage, help }: DataTableProps) {
   const [columns, setColumns] = useState<ColumnDef<IUser>[]>([]);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<IUser[]>([]);
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [pagination, setPagination] = useState<PaginationState>(defaultPagination);
   const [sorting, setSorting] = useState<SortingState>(defaultSorting);
   const [tableManager, setTableManager] = useState<TableManager>({ sorting, pagination });
   const [totalItems, setTotalItems] = useState<number>(0);
+  const [userSelected, setUserSelected] = useState<IUser>({} as IUser);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const delimiter = useDelimiter();
@@ -165,7 +169,7 @@ export function UsersDataTable({ search, reload, setErrorMessage, help }: DataTa
               <Button variant={'ghost'} size={'miniIcon'} onClick={() => navigate(`/users/update/${row.original._id}`)} className='hover:bg-transparent hover:text-indigo-500'>
                 <FilePen className='h-4 w-4' />
               </Button>
-              <Button variant={'ghost'} size={'miniIcon'} className='hover:bg-transparent hover:text-red-500'>
+              <Button variant={'ghost'} size={'miniIcon'} onClick={() => handleRemoveUserDialog(row.original)} className='hover:bg-transparent hover:text-red-500'>
                 <Trash2 className='h-4 w-4' />
               </Button>
               <Button disabled={!row.original.phone} variant={'ghost'} size={'miniIcon'} className='fill-current hover:bg-transparent hover:fill-green-500' onClick={() => navigate(`/whatsapp/${row.original._id}`)}>
@@ -251,8 +255,29 @@ export function UsersDataTable({ search, reload, setErrorMessage, help }: DataTa
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search, tableManager, help]);
   // #endregion
+  // #region Table actions
+  function handleRemoveUserDialog(user: IUser): void {
+    setOpenDialog(true);
+    setUserSelected(user);
+  }
+
+  function handleRemoveUserDatabase(id: string): void {
+    UserApiService.remove(id).then((response) => {
+      if (response.statusCode === 200) {
+        addNotification({ type: 'success', message: response.message });
+        setOpenDialog(false);
+        setUserSelected({} as IUser);
+        setReload(new Date().getTime());
+      }
+      // TODO show error in dialog or toast?
+      if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
+      if (response instanceof Error) addNotification({ type: 'error', message: 'Internal Server Error' });
+    });
+  }
+  // #endregion
   return (
     <>
+      <div className='flex items-center justify-end text-sm font-medium text-slate-400'>{`${totalItems} ${USER_CONFIG.dbUsers}`}</div>
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -404,6 +429,24 @@ export function UsersDataTable({ search, reload, setErrorMessage, help }: DataTa
           </div>
         )}
       </div>
+      {/* Dialog */}
+      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className='text-xl'>{USER_CONFIG.dialog.remove.title}</DialogTitle>
+            <DialogDescription>{USER_CONFIG.dialog.remove.subtitle}</DialogDescription>
+            <div className='pt-2 flex flex-col'>
+              <span className=''>{USER_CONFIG.dialog.remove.content.title}</span>
+              <span className='mt-1 font-semibold text-lg'>{`${capitalize(userSelected.lastName)}, ${capitalize(userSelected.firstName)}`}</span>
+              <span className='font-medium'>{`${USER_CONFIG.dialog.remove.content.dni}: ${delimiter(userSelected.dni, '.', 3)}`}</span>
+              <div className='flex mt-5 space-x-4 justify-end'>
+                <Button variant={'secondary'} size={'sm'} onClick={() => setOpenDialog(false)}>{USER_CONFIG.buttons.cancel}</Button>
+                <Button variant={'remove'} size={'sm'} onClick={() => handleRemoveUserDatabase(userSelected._id)}>{USER_CONFIG.buttons.remove}</Button>
+              </div>
+            </div>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
