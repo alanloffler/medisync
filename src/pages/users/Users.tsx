@@ -93,7 +93,7 @@ export default function Users() {
           </CardContent>
         </Card>
         {/* Right side content */}
-        <Card className='col-span-1 overflow-y-auto md:col-span-4 lg:col-span-3 xl:col-span-3'>
+        <Card className='col-span-1 overflow-y-auto md:col-span-4 lg:col-span-3 xl:col-span-3 h-fit'>
           <CardHeader>
             <div className='grid gap-2'>
               <CardTitle className='flex items-center justify-between'>
@@ -164,7 +164,7 @@ export default function Users() {
             </div>
           </CardHeader>
           {/* Table */}
-          <CardContent>
+          <CardContent className='px-3'>
             {/* prettier-ignore */}
             <UsersDataTable 
               key={reload}
