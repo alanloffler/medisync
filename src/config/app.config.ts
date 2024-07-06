@@ -1,4 +1,7 @@
 export const APP_CONFIG = {
+  error: {
+    server: 'Error interno del servidor'
+  },
   loading: {
     duration: 0.5,
     size: 45,
