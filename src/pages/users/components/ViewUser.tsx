@@ -103,7 +103,7 @@ export default function ViewUser() {
                             <Link to={`https://mail.google.com/mail/?view=cm&to=${emailObject.to}&su=${emailObject.subject}&body=${emailObject.body}`} target='_blank' className='transition-colors hover:text-indigo-500'>
                               <DropdownMenuItem>{UV_CONFIG.dropdownMenu[0].name}</DropdownMenuItem>
                             </Link>
-                            {/* TODO: add action to whatsapp */}
+                            {/* Send whatsapp */}
                             <Link to={`/whatsapp/${user._id}`}>
                               <DropdownMenuItem>{UV_CONFIG.dropdownMenu[1].name}</DropdownMenuItem>
                             </Link>
