@@ -1,12 +1,8 @@
-// Components
+// Icons: https://lucide.dev/icons/
 import { CircleAlert, CircleCheck, CircleX } from 'lucide-react';
+// App
+import { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
 import { cn } from '@/lib/utils';
-// Interface
-interface IInfoCard {
-  text: string;
-  type: 'error' | 'success' | 'warning';
-  className?: string;
-}
 // React component
 export function InfoCard({ text, type, className }: IInfoCard) {
   const strokeColor = type === 'error' ? 'stroke-red-400' : type === 'success' ? 'stroke-green-400' : 'stroke-yellow-400';
