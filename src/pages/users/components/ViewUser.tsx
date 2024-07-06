@@ -6,23 +6,27 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/c
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '@/core/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/core/components/ui/tooltip';
 // App components
+import { InfoCard } from '@/core/components/common/InfoCard';
+import { LoadingDB } from '@/core/components/common/LoadingDB';
 import { PageHeader } from '@/core/components/common/PageHeader';
 // App
-import { IUser } from '../interfaces/user.interface';
+import { APP_CONFIG } from '@/config/app.config';
+import { IEmail } from '@/core/interfaces/email.interface';
+import { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
+import { IUser } from '@/pages/users/interfaces/user.interface';
 import { USER_VIEW_CONFIG as UV_CONFIG } from '@/config/user.config';
-import { UserApiService } from '../services/user-api.service';
+import { UserApiService } from '@/pages/users/services/user-api.service';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useDelimiter } from '@/core/hooks/useDelimiter';
 import { useEffect, useState } from 'react';
 import { useLegibleDate } from '@/core/hooks/useDateToString';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
-import { InfoCard } from '@/core/components/common/InfoCard';
-import { IEmail } from '@/core/interfaces/email.interface';
 // React component
 export default function ViewUser() {
   const [emailObject, setEmailObject] = useState<IEmail>({} as IEmail);
-  const [infoCard, setInfoCard] = useState<{ title: string; description: string; type: 'error' | 'success' | 'warning' }>({ title: '', description: '', type: 'success' });
+  const [infoCard, setInfoCard] = useState<IInfoCard>({} as IInfoCard);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showCard, setShowCard] = useState<boolean>(false);
   const [user, setUser] = useState<IUser>({} as IUser);
   const addNotification = useNotificationsStore((state) => state.addNotification);
@@ -34,24 +38,27 @@ export default function ViewUser() {
 
   useEffect(() => {
     if (id) {
+      setIsLoading(true);
+
       UserApiService.findOne(id).then((response) => {
         if (response.statusCode === 200) {
           setUser(response.data);
           setShowCard(true);
           setEmailObject({
             to: response.data.email,
-            subject: 'MediSync - Turnos médicos',
-            body: `Hola ${capitalize(response.data?.firstName)},`,
+            subject: UV_CONFIG.email.subject,
+            body: `${UV_CONFIG.email.body[0]} ${capitalize(response.data?.firstName)}${UV_CONFIG.email.body[1]}`,
           });
         }
         if (response.statusCode > 399) {
           addNotification({ type: 'error', message: response.message });
-          setInfoCard({ title: `Error ${response.statusCode}`, description: response.message, type: 'error' });
+          setInfoCard({ text: response.message, type: 'warning' });
         }
         if (response instanceof Error) {
-          addNotification({ type: 'error', message: 'Internal Server Error' });
-          setInfoCard({ title: 'Error 500', description: 'Internal Server Error', type: 'error' });
+          addNotification({ type: 'error', message: APP_CONFIG.error.server });
+          setInfoCard({ text: APP_CONFIG.error.server, type: 'error' });
         }
+        setIsLoading(false);
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -68,47 +75,53 @@ export default function ViewUser() {
         </Button>
       </div>
       {/* Page Content */}
-      {showCard && (
-        <div className='mx-auto mt-4 flex w-full flex-row px-2 md:w-[500px]'>
-          {showCard && (
-            <Card className='w-full'>
-              <CardHeader>
-                <CardTitle>
-                  <div className='relative flex items-center justify-center'>
-                    <h1 className='text-center text-2xl font-bold'>
-                      {capitalize(user.lastName)}, {capitalize(user.firstName)}
-                    </h1>
-                    <TooltipProvider delayDuration={0.3}>
-                      <Tooltip>
-                        <DropdownMenu>
-                          <TooltipTrigger asChild>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant={'tableHeader'} size={'miniIcon'} className='absolute right-1 flex items-center'>
-                                <Menu className='h-4 w-4' strokeWidth={2} />
-                              </Button>
-                            </DropdownMenuTrigger>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p className='text-xs font-medium'>{UV_CONFIG.tooltip.dropdown}</p>
-                          </TooltipContent>
-                          <DropdownMenuContent className='w-fit' align='end'>
-                            <DropdownMenuGroup>
-                              {/* Send email */}
-                              <DropdownMenuItem onClick={() => console.log('Send email')}>
-                                <a href={`https://mail.google.com/mail/?view=cm&to=${emailObject.to}&su=${emailObject.subject}&body=${emailObject.body}`} target='_blank' className='transition-colors hover:text-indigo-500'>
-                                  {UV_CONFIG.dropdownMenu[0].name}
-                                </a>
-                              </DropdownMenuItem>
-                              {/* TODO: add action to whatsapp */}
-                              <DropdownMenuItem onClick={() => console.log('Send whatsapp')}>{UV_CONFIG.dropdownMenu[1].name}</DropdownMenuItem>
-                            </DropdownMenuGroup>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
-                </CardTitle>
-              </CardHeader>
+      <div className='mx-auto mt-4 flex w-full flex-row px-2 md:w-[500px]'>
+        <Card className='w-full'>
+          {showCard ? (
+            <CardHeader>
+              <CardTitle>
+                <div className='relative flex items-center justify-center'>
+                  <h1 className='text-center text-2xl font-bold'>
+                    {capitalize(user.lastName)}, {capitalize(user.firstName)}
+                  </h1>
+                  <TooltipProvider delayDuration={0.3}>
+                    <Tooltip>
+                      <DropdownMenu>
+                        <TooltipTrigger asChild>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant={'tableHeader'} size={'miniIcon'} className='absolute right-1 flex items-center'>
+                              <Menu className='h-4 w-4' strokeWidth={2} />
+                            </Button>
+                          </DropdownMenuTrigger>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className='text-xs font-medium'>{UV_CONFIG.tooltip.dropdown}</p>
+                        </TooltipContent>
+                        <DropdownMenuContent className='w-fit' align='end'>
+                          <DropdownMenuGroup>
+                            {/* Send email */}
+                            <Link to={`https://mail.google.com/mail/?view=cm&to=${emailObject.to}&su=${emailObject.subject}&body=${emailObject.body}`} target='_blank' className='transition-colors hover:text-indigo-500'>
+                              <DropdownMenuItem>{UV_CONFIG.dropdownMenu[0].name}</DropdownMenuItem>
+                            </Link>
+                            {/* TODO: add action to whatsapp */}
+                            <Link to={`/whatsapp/${user._id}`}>
+                              <DropdownMenuItem>{UV_CONFIG.dropdownMenu[1].name}</DropdownMenuItem>
+                            </Link>
+                          </DropdownMenuGroup>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              </CardTitle>
+            </CardHeader>
+          ) : (
+            <InfoCard text={infoCard.text} type={infoCard.type} className='py-6' />
+          )}
+          {isLoading ? (
+            <LoadingDB text={APP_CONFIG.loadingDB.findOneUser} className='-mt-12 py-6' />
+          ) : (
+            showCard && (
               <CardContent className='mt-3 space-y-3'>
                 <div className='flex items-center space-x-4'>
                   <CreditCard className='h-6 w-6' strokeWidth={2} />
@@ -124,22 +137,10 @@ export default function ViewUser() {
                 </div>
                 <div className='flex justify-end pt-2 text-base leading-none text-slate-500'>{`${UV_CONFIG.phrase.userSince} ${legibleDate(new Date(user.createdAt), 'short')}`}</div>
               </CardContent>
-            </Card>
+            )
           )}
-        </div>
-      )}
-      {/* Info Card */}
-      {!showCard && (
-        <div className='mx-auto mt-4 flex w-full flex-row px-2 md:w-1/2 md:px-0'>
-          {/* prettier-ignore */}
-          <InfoCard 
-          title={infoCard.title} 
-          description={infoCard.description} 
-          type={infoCard.type}
-          className='border border-slate-50 w-full'
-        />
-        </div>
-      )}
+        </Card>
+      </div>
     </main>
   );
 }
