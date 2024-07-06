@@ -14,13 +14,13 @@ import { APP_CONFIG } from '@/config/app.config';
 import { IEmail } from '@/core/interfaces/email.interface';
 import { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
 import { IUser } from '@/pages/users/interfaces/user.interface';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { USER_VIEW_CONFIG as UV_CONFIG } from '@/config/user.config';
 import { UserApiService } from '@/pages/users/services/user-api.service';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useDelimiter } from '@/core/hooks/useDelimiter';
 import { useEffect, useState } from 'react';
 import { useLegibleDate } from '@/core/hooks/useDateToString';
-import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 // React component
 export default function ViewUser() {
