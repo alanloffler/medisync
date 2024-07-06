@@ -107,8 +107,8 @@ export const USER_VIEW_CONFIG = {
     userSince: 'Paciente desde el',
   },
   email: {
-    subject: 'Asunto',
-    body: 'Cuerpo',
+    subject: 'MediSync - Turnos médicos',
+    body: ['Hola', ','], 
   },
   title: 'Detalles de paciente',
   tooltip: {
