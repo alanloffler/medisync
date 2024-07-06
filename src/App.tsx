@@ -1,5 +1,6 @@
 // App
 import Layout from './layout/Layout';
+import { Loading } from './core/components/common/Loading';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 // Lazy loaded components
@@ -23,17 +24,17 @@ export default function App() {
   const router = createBrowserRouter([
     { path: '/', element: <Layout />, children: 
       [
-        { path: '/dashboard', element: (<Suspense fallback={<>Loading...</>}><Dashboard /></Suspense>) },
-        { path: '/', element: (<Suspense fallback={<>Loading...</>}><Appointments /></Suspense>) },
-        { path: '/appointments/:id', element: (<Suspense fallback={<>Loading...</>}><ViewAppointment /></Suspense>) },
-        { path: '/professionals', element: (<Suspense fallback={<>Loading...</>}><Professionals /></Suspense>) },
-        { path: '/professionals/create', element: (<Suspense fallback={<>Loading...</>}><CreateProfessional /></Suspense>) },
-        { path: '/professionals/update/:id', element: (<Suspense fallback={<>Loading...</>}><UpdateProfessional /></Suspense>) },
-        { path: '/users', element: (<Suspense fallback={<>Loading...</>}><Users /></Suspense>) },
-        { path: '/users/:id', element: (<Suspense fallback={<>Loading...</>}><ViewUser /></Suspense>) },
-        { path: '/users/create', element: (<Suspense fallback={<>Loading...</>}><CreateUser /></Suspense>) },
-        { path: '/users/update/:id', element: (<Suspense fallback={<>Loading...</>}><UpdateUser /></Suspense>) },
-        { path: '/whatsapp/:id',  element: (<Suspense fallback={<>Loading...</>}><WhatsApp /></Suspense>) },
+        { path: '/dashboard', element: (<Suspense fallback={<Loading />}><Dashboard /></Suspense>) },
+        { path: '/', element: (<Suspense fallback={<Loading />}><Appointments /></Suspense>) },
+        { path: '/appointments/:id', element: (<Suspense fallback={<Loading />}><ViewAppointment /></Suspense>) },
+        { path: '/professionals', element: (<Suspense fallback={<Loading />}><Professionals /></Suspense>) },
+        { path: '/professionals/create', element: (<Suspense fallback={<Loading />}><CreateProfessional /></Suspense>) },
+        { path: '/professionals/update/:id', element: (<Suspense fallback={<Loading />}><UpdateProfessional /></Suspense>) },
+        { path: '/users', element: (<Suspense fallback={<Loading />}><Users /></Suspense>) },
+        { path: '/users/:id', element: (<Suspense fallback={<Loading />}><ViewUser /></Suspense>) },
+        { path: '/users/create', element: (<Suspense fallback={<Loading />}><CreateUser /></Suspense>) },
+        { path: '/users/update/:id', element: (<Suspense fallback={<Loading />}><UpdateUser /></Suspense>) },
+        { path: '/whatsapp/:id',  element: (<Suspense fallback={<Loading />}><WhatsApp /></Suspense>) },
         { path: '*', element: <>Not found 404</> },
       ],
     },
