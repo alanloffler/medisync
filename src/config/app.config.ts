@@ -10,6 +10,7 @@ export const APP_CONFIG = {
   loadingDB: {
     defaultText: 'Cargando información de la base de datos',
     findUsers: 'Cargando pacientes',
+    findOneUser: 'Cargando información del paciente',
     settings: {
       duration: 0.4,
       size: 18,
