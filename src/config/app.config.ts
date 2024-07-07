@@ -9,6 +9,7 @@ export const APP_CONFIG = {
   },
   loadingDB: {
     defaultText: 'Cargando información de la base de datos',
+    findProfesionals: 'Cargando profesionales',
     findUsers: 'Cargando pacientes',
     findOneUser: 'Cargando información del paciente',
     settings: {
