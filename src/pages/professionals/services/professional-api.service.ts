@@ -75,7 +75,7 @@ export class ProfessionalApiService {
       return e;
     }
   }
-
+  // TODO FORMATTED DATA TO LOWER CASE INPUTS
   public static async update(id: string, data: IProfessionalForm) {
     const url: string = `${this.API_URL}/professionals/${id}`;
 
