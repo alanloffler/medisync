@@ -102,7 +102,11 @@ export const USER_VIEW_CONFIG = {
   buttons: {
     back: 'Volver',
   },
-  dropdownMenu: [{ id: 1, name: 'Enviar e-mail' }, { id: 2, name: 'Enviar WhatsApp' }],
+  dropdownMenu: [
+    { id: 1, name: 'Enviar e-mail' }, 
+    { id: 2, name: 'Enviar WhatsApp' },
+    { id: 3, name: 'Editar paciente' },
+  ],
   phrase: {
     userSince: 'Paciente desde el',
   },
@@ -113,5 +117,25 @@ export const USER_VIEW_CONFIG = {
   title: 'Detalles de paciente',
   tooltip: {
     dropdown: 'Acciones'
+  }
+};
+
+export const USER_UPDATE_CONFIG = {
+  breadcrumb: [
+    { id: 1, name: 'Inicio', path: '/' },
+    { id: 2, name: 'Pacientes', path: '/users' },
+    { id: 3, name: 'Actualizar', path: '/users/update/:id' },
+  ],
+  buttons: {
+    back: 'Volver',
+    cancel: 'Cancelar',
+  },
+  formDescription: 'Editá los datos para actualizar el paciente',
+  formTitle: 'Actualización de paciente',
+  label: {
+    dni: 'DNI',
+  },
+  placeholder: {
+    dni: 'Ingresá el DNI',
   }
 };
