@@ -126,16 +126,25 @@ export const USER_UPDATE_CONFIG = {
     { id: 2, name: 'Pacientes', path: '/users' },
     { id: 3, name: 'Actualizar', path: '/users/update/:id' },
   ],
-  buttons: {
+  button: {
     back: 'Volver',
     cancel: 'Cancelar',
+    update: 'Actualizar',
   },
   formDescription: 'Editá los datos para actualizar el paciente',
   formTitle: 'Actualización de paciente',
   label: {
     dni: 'DNI',
+    email: 'Correo electrónico',
+    firstName: 'Nombre',
+    lastName: 'Apellido',
+    phone: 'Teléfono',
   },
   placeholder: {
     dni: 'Ingresá el DNI',
+    email: 'Ingresá el correo electrónico',
+    firstName: 'Ingresá el nombre',
+    lastName: 'Ingresá el apellido',
+    phone: 'Ingresá el teléfono',
   }
 };
