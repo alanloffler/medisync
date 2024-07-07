@@ -1,4 +1,8 @@
 export const PROF_CONFIG = {
+  breadcrumb: [
+    { id: 1, name: 'Inicio', path: '/' },
+    { id: 2, name: 'Profesionales', path: '/professionals' },
+  ],
   buttons: {
     addProfessional: 'Agregar profesional',
   },
