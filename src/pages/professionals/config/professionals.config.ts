@@ -2,6 +2,7 @@ export const PROF_CONFIG = {
   buttons: {
     addProfessional: 'Agregar profesional',
   },
+  dbProfessionals: 'profesionales en la base de datos',
   filter: {
     title: 'Filtrar',
   },
