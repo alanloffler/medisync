@@ -257,7 +257,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
           }
           if (response.statusCode > 399) {
             setErrorMessage(response.message);
-            addNotification({ type: 'error', message: response.message });
+            addNotification({ type: 'warning', message: response.message });
             setInfoCardText(response.message);
           }
           if (response instanceof Error) {
