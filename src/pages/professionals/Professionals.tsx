@@ -6,15 +6,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/c
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '@/core/components/ui/dropdown-menu';
 import { Input } from '@/core/components/ui/input';
 // App components
+import { PageHeader } from '@/core/components/common/PageHeader';
 import { ProfessionalsDataTable } from './components/ProfessionalsDataTable';
 // App
 import { AreaService } from '@/core/services/area.service';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { IArea } from '@/core/interfaces/area.interface';
-import { IBreadcrumb } from '../../core/components/common/interfaces/breadcrumb.interface';
+import { IBreadcrumb } from '@/core/components/common/interfaces/breadcrumb.interface';
 import { Link, useNavigate } from 'react-router-dom';
 import { PROF_CONFIG } from './config/professionals.config';
-import { PageHeader } from '@/core/components/common/PageHeader';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useDebounce } from '@/core/hooks/useDebounce';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
@@ -28,7 +28,7 @@ export default function Professionals() {
   const [search, setSearch] = useState<string>('');
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
-  const debouncedSearch = useDebounce<string>(search, DEBOUNCE_TIME); // load data
+  const debouncedSearch = useDebounce<string>(search, DEBOUNCE_TIME);
   const navigate = useNavigate();
 
   const breadcrumb: IBreadcrumb[] = [
@@ -99,7 +99,7 @@ export default function Professionals() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className='w-fit' align='center'>
-                      {areas.map((area) => (
+                      {areas.length > 0 && areas.map((area) => (
                         <DropdownMenuSub key={area._id}>
                           <DropdownMenuSubTrigger>
                             <span>{capitalize(area.name)}</span>
