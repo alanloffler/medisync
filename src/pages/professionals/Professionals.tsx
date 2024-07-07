@@ -7,14 +7,14 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal
 import { Input } from '@/core/components/ui/input';
 // App components
 import { PageHeader } from '@/core/components/common/PageHeader';
-import { ProfessionalsDataTable } from './components/ProfessionalsDataTable';
+import { ProfessionalsDataTable } from '@/pages/professionals/components/ProfessionalsDataTable';
 // App
+import { APP_CONFIG } from '@/config/app.config';
 import { AreaService } from '@/core/services/area.service';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { IArea } from '@/core/interfaces/area.interface';
-import { IBreadcrumb } from '@/core/components/common/interfaces/breadcrumb.interface';
 import { Link, useNavigate } from 'react-router-dom';
-import { PROF_CONFIG } from './config/professionals.config';
+import { PROF_CONFIG } from '@/config/professionals.config';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useDebounce } from '@/core/hooks/useDebounce';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
@@ -31,11 +31,6 @@ export default function Professionals() {
   const debouncedSearch = useDebounce<string>(search, DEBOUNCE_TIME);
   const navigate = useNavigate();
 
-  const breadcrumb: IBreadcrumb[] = [
-    { id: 1, name: 'Inicio', path: '/' },
-    { id: 2, name: 'Profesionales', path: '/professionals' },
-  ];
-
   function handleSearch(event: ChangeEvent<HTMLInputElement>): void {
     setSearch(event.target.value);
   }
@@ -47,11 +42,11 @@ export default function Professionals() {
 
   useEffect(() => {
     AreaService.findAll().then((response) => {
-      if (!response.statusCode) {
-        setAreas(response);
+      if (response.statusCode === 200) {
+        setAreas(response.data);
       }
       if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
-      if (response instanceof Error) addNotification({ type: 'error', message: 'Internal Server Error' });
+      if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
     });
   }, [addNotification]);
 
@@ -60,7 +55,7 @@ export default function Professionals() {
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
       {/* Page Header */}
       <div className='flex items-center justify-between'>
-        <PageHeader title={PROF_CONFIG.title} breadcrumb={breadcrumb} />
+        <PageHeader title={PROF_CONFIG.title} breadcrumb={PROF_CONFIG.breadcrumb} />
       </div>
       {/* Page content */}
       <div className='grid gap-6 md:grid-cols-4 md:gap-8 lg:grid-cols-4 xl:grid-cols-4'>
@@ -127,7 +122,7 @@ export default function Professionals() {
               </CardTitle>
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className='px-3'>
             <ProfessionalsDataTable search={debouncedSearch} reload={reload} setErrorMessage={setErrorMessage} />
           </CardContent>
         </Card>
