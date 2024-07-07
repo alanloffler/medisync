@@ -10,7 +10,7 @@ import { PageHeader } from '@/core/components/common/PageHeader';
 import { IUser } from '@/pages/users/interfaces/user.interface';
 import { USER_UPDATE_CONFIG as UU_CONFIG } from '@/config/user.config';
 import { UserApiService } from '@/pages/users/services/user-api.service';
-import { useEffect, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { userSchema } from '@/pages/users/schemas/user.schema';
@@ -44,10 +44,26 @@ export default function UpdateUser() {
 
   function handleUpdateUser(data: z.infer<typeof userSchema>): void {
     console.log(data);
+    UserApiService
+      .update(user._id, data)
+      .then((response) => {
+        if (response.statusCode === 200) {
+          //addNotification({ type: 'success', message: response.message });
+        }
+        //if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
+        //if (response instanceof Error) addNotification({ type: 'error', message: 'Error en el servidor actualizando el usuario' });
+        navigate('/users');
+      });
   }
 
-  function handleCancel(): void {
-    console.log('Cancel');
+  function handleCancel(event: MouseEvent<HTMLButtonElement>): void {
+    event.preventDefault();
+    updateForm.reset();
+    updateForm.setValue('dni', user.dni);
+    updateForm.setValue('email', user.email);
+    updateForm.setValue('firstName', capitalize(user.firstName) || '');
+    updateForm.setValue('lastName', capitalize(user.lastName) || '');
+    updateForm.setValue('phone', user.phone);
   }
   // #endregion
   // #region Load user data
@@ -58,7 +74,6 @@ export default function UpdateUser() {
       UserApiService
         .findOne(id)
         .then((response) => {
-          console.log(response);
           setUser(response.data);
           setIsLoading(false);
 
@@ -72,7 +87,6 @@ export default function UpdateUser() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
   // #endregion
-
   return (
     <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
       {/* Page Header */}
