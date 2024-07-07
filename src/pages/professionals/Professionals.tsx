@@ -88,7 +88,7 @@ export default function Professionals() {
                 </div>
                 <div className='flex items-center gap-2'>
                   <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
+                    <DropdownMenuTrigger disabled={!areas.length} asChild>
                       <Button variant={'tableHeader'} size={'miniIcon'} className='flex items-center'>
                         <ListFilter className='h-4 w-4' strokeWidth={2} />
                       </Button>
