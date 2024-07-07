@@ -73,8 +73,8 @@ export default function UpdateProfessional() {
   useEffect(() => {
     setIsLoading(true);
     AreaService.findAll().then((response) => {
-      if (!response.statusCode) {
-        setAreas(response);
+      if (response.statusCode === 200) {
+        setAreas(response.data);
         setAreasLoading(false);
         // console.log('Areas charged', response);
       }
@@ -157,7 +157,8 @@ export default function UpdateProfessional() {
           Volver
         </Button>
       </div>
-      {isLoading && <Loading text='Bajando datos' size={30} duration={0.35} className='gap-8 bg-background fill-indigo-500 p-8' />}
+      {/* TODO: add loading for database data */}
+      {isLoading && <Loading className='' />}
       {!isLoading && (
         <div className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-2 lg:gap-6'>
           <Card className='w-full md:grid-cols-2'>
