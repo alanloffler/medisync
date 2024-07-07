@@ -210,7 +210,7 @@ export function ProfessionalsDataTable({ search, reload, setErrorMessage }: Data
           setInfoCard({ text: response.message, type: 'warning' });
         }
         if (response instanceof Error) {
-          addNotification({ type: 'error', message: 'Internal Server Error' });
+          addNotification({ type: 'error', message: APP_CONFIG.error.server });
           setInfoCard({ text: APP_CONFIG.error.server, type: 'error' });
         }
         setIsLoading(false);
