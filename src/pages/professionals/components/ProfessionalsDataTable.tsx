@@ -119,7 +119,7 @@ export function ProfessionalsDataTable({ search, reload, setErrorMessage }: Data
       size: 100,
       header: () => <div className='text-center'>{PROF_CONFIG.table.headers[4]}</div>,
       cell: ({ row }) => (
-        <div className='flex flex-row items-center justify-center space-x-4'>
+        <div className='flex flex-row items-center justify-center space-x-2'>
           <Button variant={'ghost'} size={'miniIcon'}>
             <FileText className='h-4 w-4' />
           </Button>
