@@ -107,6 +107,10 @@ export default function ViewUser() {
                             <Link to={`/whatsapp/${user._id}`}>
                               <DropdownMenuItem>{UV_CONFIG.dropdownMenu[1].name}</DropdownMenuItem>
                             </Link>
+                            {/* Edit user */}
+                            <Link to={`/users/update/${user._id}`}>
+                              <DropdownMenuItem>{UV_CONFIG.dropdownMenu[2].name}</DropdownMenuItem>
+                            </Link>
                           </DropdownMenuGroup>
                         </DropdownMenuContent>
                       </DropdownMenu>
