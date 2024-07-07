@@ -76,7 +76,6 @@ export default function UpdateProfessional() {
       if (response.statusCode === 200) {
         setAreas(response.data);
         setAreasLoading(false);
-        // console.log('Areas charged', response);
       }
       if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
       if (response instanceof Error) addNotification({ type: 'error', message: 'Error en el servidor buscando areas' });
@@ -89,7 +88,6 @@ export default function UpdateProfessional() {
       ProfessionalApiService.findOne(id).then((response) => {
         setProfessional(response);
         setProfessionalLoading(false);
-        // console.log('professional data loaded', response);
         setIsLoading(false);
         setDisabledSaveButton(false);
       });
