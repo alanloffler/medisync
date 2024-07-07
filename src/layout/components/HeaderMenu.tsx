@@ -26,7 +26,7 @@ export function HeaderMenu() {
           <span>{HEADER_CONFIG.appName}</span>
         </Link>
         {HEADER_CONFIG.headerMenu.map((item) => (
-          <Link id={`${item.id}`} key={item.id} to={item.path} onClick={(e) => handleMenuItem(e)} className={`${itemSelected === item.id ? 'text-primary' : 'text-muted-foreground'} transition-colors hover:text-foreground`}>
+          <Link id={`${item.id}`} key={item.id} to={item.path} onClick={(e) => handleMenuItem(e)} className={`${itemSelected === item.id ? 'text-primary' : 'text-muted-foreground'} transition-colors hover:text-primary`}>
             <span className='text-base'>{item.title}</span>
           </Link>
         ))}
@@ -46,7 +46,7 @@ export function HeaderMenu() {
               <span>{HEADER_CONFIG.appName}</span>
             </Link>
             {HEADER_CONFIG.headerMenu.map((item) => (
-              <Link id={`${item.id}`} key={item.id} to={item.path} onClick={(e) => handleMenuItem(e)} className={`${itemSelected === item.id ? 'text-foreground' : 'text-muted-foreground'} transition-colors hover:text-foreground`}>
+              <Link id={`${item.id}`} key={item.id} to={item.path} onClick={(e) => handleMenuItem(e)} className={`${itemSelected === item.id ? 'text-primary' : 'text-muted-foreground'} transition-colors hover:text-primary`}>
                 {item.title}
               </Link>
             ))}
