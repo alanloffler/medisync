@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { ArrowLeft, CreditCard, FilePlus, Mail, Menu, Smartphone } from 'lucide-react';
+import { ArrowLeft, CreditCard, FilePlus2, Mail, Menu, Smartphone } from 'lucide-react';
 // Components: https://ui.shadcn.com/docs/components
 // import { Badge } from '@/core/components/ui/badge';
 import { Button } from '@/core/components/ui/button';
@@ -85,7 +85,7 @@ export default function CreateUser() {
           <CardHeader>
             <CardTitle className='flex items-center justify-between'>
               <div className='flex items-center gap-2'>
-                <FilePlus className='h-4 w-4' strokeWidth={2} />
+                <FilePlus2 className='h-4 w-4' strokeWidth={2} />
                 <span>{UC_CONFIG.formTitle}</span>
               </div>
               {/* Dropdown menu */}
