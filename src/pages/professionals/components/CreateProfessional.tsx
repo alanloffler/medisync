@@ -18,7 +18,7 @@ import { IArea } from '@/core/interfaces/area.interface';
 import { ISpecialization } from '@/core/interfaces/specialization.interface';
 import { Link, useNavigate } from 'react-router-dom';
 import { Loading } from '@/core/components/common/Loading';
-import { PROF_CREATE_CONFIG as PC_CONFIG } from '../config/professionals.config';
+import { PROF_CREATE_CONFIG as PC_CONFIG } from '../../../config/professionals.config';
 import { ProfessionalApiService } from '../services/professional-api.service';
 import { professionalSchema } from '../schemas/professional.schema';
 import { useCapitalize } from '@/core/hooks/useCapitalize';

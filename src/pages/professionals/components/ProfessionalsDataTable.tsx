@@ -12,7 +12,7 @@ import { IInfoCard } from '@/core/components/common/interfaces/infocard.interfac
 import { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
 import { InfoCard } from '@/core/components/common/InfoCard';
 import { LoadingDB } from '@/core/components/common/LoadingDB';
-import { PROF_CONFIG } from '@/pages/professionals/config/professionals.config';
+import { PROF_CONFIG } from '@/config/professionals.config';
 import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useEffect, useRef, useState } from 'react';
