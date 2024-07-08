@@ -1,10 +1,11 @@
 // Icons: https://lucide.dev/icons/
-import { CirclePlus, List, ListFilter, ListRestart, PlusCircle, Search, X } from 'lucide-react';
+import { CirclePlus, List, ListRestart, PlusCircle, Search, X } from 'lucide-react';
 // Components: https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { Input } from '@/core/components/ui/input';
 import { Label } from '@/core/components/ui/label';
+import { Switch } from '@/core/components/ui/switch';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/core/components/ui/tooltip';
 // App components
 import { PageHeader } from '@/core/components/common/PageHeader';
@@ -14,23 +15,24 @@ import { ChangeEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { USER_CONFIG } from '@/config/user.config';
 import { useDebounce } from '@/core/hooks/useDebounce';
-import { Switch } from '@/core/components/ui/switch';
 // React component
 export default function Users() {
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const [helpChecked, setHelpChecked] = useState<boolean>(false); // TODO: value must be stored on db
+  const [helpChecked, setHelpChecked] = useState<boolean>(false); // TODO: value must be stored on db and be global
   const [reload, setReload] = useState<number>(0);
   const [searchByName, setSearchByName] = useState<string>('');
   const [searchByDNI, setSearchByDNI] = useState<string>('');
-  const debouncedSearch = useDebounce<string>(searchByName, USER_CONFIG.search.debounceTime);
-  const debouncedSearch2 = useDebounce<string>(searchByDNI, USER_CONFIG.search.debounceTime);
+  const debouncedSearchByName = useDebounce<string>(searchByName, USER_CONFIG.search.debounceTime);
+  const debouncedSearchByDNI = useDebounce<string>(searchByDNI, USER_CONFIG.search.debounceTime);
   const navigate = useNavigate();
 
   function handleSearchByName(event: ChangeEvent<HTMLInputElement>): void {
+    setReload(new Date().getTime());
     setSearchByName(event.target.value);
   }
 
   function handleSearchByDNI(event: ChangeEvent<HTMLInputElement>): void {
+    setReload(new Date().getTime());
     setSearchByDNI(event.target.value);
   }
 
@@ -93,7 +95,7 @@ export default function Users() {
           </CardContent>
         </Card>
         {/* Right side content */}
-        <Card className='col-span-1 overflow-y-auto md:col-span-4 lg:col-span-3 xl:col-span-3 h-fit'>
+        <Card className='col-span-1 h-fit overflow-y-auto md:col-span-4 lg:col-span-3 xl:col-span-3'>
           <CardHeader>
             <div className='grid gap-2'>
               <CardTitle className='flex items-center justify-between'>
@@ -169,7 +171,7 @@ export default function Users() {
             <UsersDataTable 
               key={reload}
               setReload={setReload} 
-              search={debouncedSearch || debouncedSearch2} 
+              search={debouncedSearchByName || debouncedSearchByDNI} 
               reload={reload} 
               setErrorMessage={setErrorMessage} 
               help={helpChecked} 
@@ -179,31 +181,4 @@ export default function Users() {
       </div>
     </main>
   );
-}
-{
-  /* <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant={'tableHeader'} size={'miniIcon'} className='flex items-center'>
-                        <ListFilter className='h-4 w-4' strokeWidth={2} />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className='w-fit' align='center'>
-                      {areas.map((area) => (
-                        <DropdownMenuSub key={area._id}>
-                          <DropdownMenuSubTrigger>
-                            <span>{capitalize(area.name)}</span>
-                          </DropdownMenuSubTrigger>
-                          <DropdownMenuPortal>
-                            <DropdownMenuSubContent>
-                              {area.specializations.map((spec) => (
-                                <DropdownMenuItem key={spec._id} onClick={() => setSearch(spec.name)}>
-                                  <span>{capitalize(spec.name)}</span>
-                                </DropdownMenuItem>
-                              ))}
-                            </DropdownMenuSubContent>
-                          </DropdownMenuPortal>
-                        </DropdownMenuSub>
-                      ))} 
-                    </DropdownMenuContent>
-                  </DropdownMenu> */
 }
