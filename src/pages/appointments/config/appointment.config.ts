@@ -8,6 +8,7 @@ export const APPO_CONFIG = {
     language: 'es',
   },
   combobox: {
+    loadingText: 'Cargando profesionales',
     notFoundText: 'Profesional no encontrado',
     placeholder: 'Profesional...',
     searchText: 'Buscar...',
@@ -19,6 +20,9 @@ export const APPO_CONFIG = {
         save: 'Confirmar reserva',
       },
       description: 'Al confirmar, vas a realizar una reserva de turno',
+      search: {
+        placeholder: 'Buscar por DNI',
+      },
       title: 'Reserva de turno',
     },
     cancel: {
