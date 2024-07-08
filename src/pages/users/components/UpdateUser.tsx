@@ -4,15 +4,16 @@ import { ArrowLeft, FilePen, Menu } from 'lucide-react';
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { Form, FormField, FormControl, FormItem, FormLabel, FormMessage } from '@/core/components/ui/form';
+import { Input } from '@/core/components/ui/input';
 // App components
+import { InfoCard } from '@/core/components/common/InfoCard';
+import { LoadingDB } from '@/core/components/common/LoadingDB';
 import { PageHeader } from '@/core/components/common/PageHeader';
 // App
 import { APP_CONFIG } from '@/config/app.config';
 import { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
+import { IResponse } from '@/core/interfaces/response.interface';
 import { IUser } from '@/pages/users/interfaces/user.interface';
-import { InfoCard } from '@/core/components/common/InfoCard';
-import { Input } from '@/core/components/ui/input';
-import { LoadingDB } from '@/core/components/common/LoadingDB';
 import { MouseEvent, useEffect, useState } from 'react';
 import { USER_SCHEMA } from '@/config/schemas/user.schema';
 import { USER_UPDATE_CONFIG as UU_CONFIG } from '@/config/user.config';
@@ -20,11 +21,10 @@ import { UserApiService } from '@/pages/users/services/user-api.service';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useNotificationsStore } from '@/core/stores/notifications.store';
 import { userSchema } from '@/pages/users/schemas/user.schema';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNotificationsStore } from '@/core/stores/notifications.store';
-import { IResponse } from '@/core/interfaces/response.interface';
 // React component
 export default function UpdateUser() {
   const [error, setError] = useState<boolean>(false);
