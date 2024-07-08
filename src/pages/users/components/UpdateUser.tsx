@@ -7,24 +7,30 @@ import { Form, FormField, FormControl, FormItem, FormLabel, FormMessage } from '
 // App components
 import { PageHeader } from '@/core/components/common/PageHeader';
 // App
+import { APP_CONFIG } from '@/config/app.config';
+import { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
 import { IUser } from '@/pages/users/interfaces/user.interface';
+import { InfoCard } from '@/core/components/common/InfoCard';
+import { Input } from '@/core/components/ui/input';
+import { LoadingDB } from '@/core/components/common/LoadingDB';
+import { MouseEvent, useEffect, useState } from 'react';
+import { USER_SCHEMA } from '@/config/schemas/user.schema';
 import { USER_UPDATE_CONFIG as UU_CONFIG } from '@/config/user.config';
 import { UserApiService } from '@/pages/users/services/user-api.service';
-import { MouseEvent, useEffect, useState } from 'react';
+import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { userSchema } from '@/pages/users/schemas/user.schema';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Input } from '@/core/components/ui/input';
-import { USER_SCHEMA } from '@/config/schemas/user.schema';
-import { LoadingDB } from '@/core/components/common/LoadingDB';
-import { APP_CONFIG } from '@/config/app.config';
-import { useCapitalize } from '@/core/hooks/useCapitalize';
+import { useNotificationsStore } from '@/core/stores/notifications.store';
 // React component
 export default function UpdateUser() {
+  const [error, setError] = useState<boolean>(false);
+  const [infoCard, setInfoCard] = useState<IInfoCard>({ text: '', type: 'error' });
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [user, setUser] = useState<IUser>({} as IUser);
+  const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -43,16 +49,24 @@ export default function UpdateUser() {
   });
 
   function handleUpdateUser(data: z.infer<typeof userSchema>): void {
-    console.log(data);
+    // prettier-ignore
     UserApiService
       .update(user._id, data)
       .then((response) => {
         if (response.statusCode === 200) {
-          //addNotification({ type: 'success', message: response.message });
+          addNotification({ type: 'success', message: response.message });
+          navigate('/users');
         }
-        //if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
-        //if (response instanceof Error) addNotification({ type: 'error', message: 'Error en el servidor actualizando el usuario' });
-        navigate('/users');
+        if (response.statusCode > 399) {
+          addNotification({ type: 'error', message: response.message });
+          setInfoCard({ text: response.message, type: 'warning' });
+          setError(true);
+        }
+        if (response instanceof Error) {
+          addNotification({ type: 'error', message: APP_CONFIG.error.server });
+          setInfoCard({ text: APP_CONFIG.error.server, type: 'error' });
+          setError(true);
+        }
       });
   }
 
@@ -74,14 +88,25 @@ export default function UpdateUser() {
       UserApiService
         .findOne(id)
         .then((response) => {
-          setUser(response.data);
+          if (response.statusCode === 200) {
+            setUser(response.data);
+            updateForm.setValue('dni', response.data.dni);
+            updateForm.setValue('email', response.data.email);
+            updateForm.setValue('firstName', capitalize(response.data.firstName) || '');
+            updateForm.setValue('lastName', capitalize(response.data.lastName) || '');
+            updateForm.setValue('phone', response.data.phone);
+          }
+          if (response.statusCode > 399) {
+            setInfoCard({ text: response.message, type: 'warning' });
+            setError(true);
+            addNotification({ type: 'error', message: response.message });
+          }
+          if (response instanceof Error) {
+            setInfoCard({ text: APP_CONFIG.error.server, type: 'error' });
+            setError(true);
+            addNotification({ type: 'error', message: APP_CONFIG.error.server });
+          }
           setIsLoading(false);
-
-          updateForm.setValue('dni', response.data.dni);
-          updateForm.setValue('email', response.data.email);
-          updateForm.setValue('firstName', capitalize(response.data.firstName) || '');
-          updateForm.setValue('lastName', capitalize(response.data.lastName) || '');
-          updateForm.setValue('phone', response.data.phone);
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -111,11 +136,13 @@ export default function UpdateUser() {
                 <Menu className='h-4 w-4' strokeWidth={2} />
               </Button>
             </CardTitle>
-            {!isLoading && <CardDescription>{UU_CONFIG.formDescription}</CardDescription>}
+            {(!isLoading && !error) && <CardDescription>{UU_CONFIG.formDescription}</CardDescription>}
           </CardHeader>
           <CardContent>
             {isLoading ? (
               <LoadingDB text={APP_CONFIG.loadingDB.findOneUser} className='mt-3' />
+            ) : error ? (
+              <InfoCard text={infoCard.text} type={infoCard.type} className='mt-3' />
             ) : (
               <Form {...updateForm}>
                 <form onSubmit={updateForm.handleSubmit(handleUpdateUser)} className='space-y-4'>
