@@ -7,11 +7,16 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/core/components/ui/po
 // App components
 import { LoadingDB } from '@/core/components/common/LoadingDB';
 // App
+import { APP_CONFIG } from '@/config/app.config';
 import { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
+import { IResponse } from '@/core/interfaces/response.interface';
+import { InfoCard } from '@/core/components/common/InfoCard';
 import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
 import { cn } from '@/lib/utils';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useEffect, useState } from 'react';
+import { useNotificationsStore } from '@/core/stores/notifications.store';
+import { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
 // Interface
 interface IProfessionalsCombobox {
   onSelectProfessional: (professional: IProfessional) => void;
@@ -24,10 +29,13 @@ interface IProfessionalsCombobox {
 }
 // React component
 export function ProfessionalsCombobox({ onSelectProfessional, options }: IProfessionalsCombobox) {
+  const [error, setError] = useState<boolean>(false);
+  const [infoCard, setInfoCard] = useState<IInfoCard>({} as IInfoCard);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [openCombobox, setOpenCombobox] = useState<boolean>(false);
   const [professionals, setProfessionals] = useState<IProfessional[]>([] as IProfessional[]);
   const [value, setValue] = useState<string>('');
+  const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const { loadingText, notFoundText, placeholder, searchText } = options;
 
@@ -36,44 +44,62 @@ export function ProfessionalsCombobox({ onSelectProfessional, options }: IProfes
     // prettier-ignore
     ProfessionalApiService
     .findAllActive()
-    .then((response) => {
+    .then((response: IResponse) => {
       // TODO: handle errors!
-      // TODO: change response from database IResponse
-      if (!response.statusCode) {
-        setProfessionals(response);
+      if (response.statusCode === 200) {
+        setProfessionals(response.data);
       }
-      setIsLoading(true);
+      if (response.statusCode > 399) {
+        addNotification({ type: 'warning', message: response.message });
+        setInfoCard({ text: response.message, type: 'warning' });
+        setError(true);
+      }
+      if (response instanceof Error) {
+        addNotification({ type: 'error', message: APP_CONFIG.error.server });
+        setInfoCard({ text: APP_CONFIG.error.server, type: 'error' });
+        setError(true);
+      }
+      setIsLoading(false);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <Popover open={openCombobox} onOpenChange={setOpenCombobox}>
       <PopoverTrigger asChild>
-        <Button role='combobox' aria-expanded={openCombobox} className='w-full justify-between bg-white text-foreground shadow-sm hover:bg-white'>
+        <Button role='combobox' aria-expanded={openCombobox} className='w-full justify-between bg-white font-normal text-foreground shadow-sm hover:bg-white'>
           {isLoading ? <LoadingDB text={loadingText} /> : value ? capitalize(value) : placeholder}
           <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className='w-full p-0'>
+      <PopoverContent className='w-full p-0' align='start'>
         <Command>
-          <CommandInput placeholder={searchText} />
+          {!error && <CommandInput placeholder={searchText} />}
           <CommandList>
-            <CommandEmpty>{notFoundText}</CommandEmpty>
+            {!error && <CommandEmpty>{notFoundText}</CommandEmpty>}
             <CommandGroup>
-              {professionals.map((professional) => (
-                <CommandItem
-                  key={professional._id}
-                  value={`${professional.titleAbbreviation} ${[professional.lastName, professional.firstName].join(', ')}`}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? '' : currentValue);
-                    setOpenCombobox(false);
-                    onSelectProfessional(professional);
-                  }}
-                >
-                  <Check className={cn('mr-2 h-4 w-4', value === `${professional.titleAbbreviation} ${[professional.lastName, professional.firstName].join(',')}` ? 'opacity-100' : 'opacity-0')} />
-                  {`${capitalize(professional.titleAbbreviation)} ${capitalize(professional.lastName)}, ${capitalize(professional.firstName)}`}
-                </CommandItem>
-              ))}
+              {error ? (
+                <div className='max-w-[300px] relative left-0'>
+                  <InfoCard type={infoCard.type} text={infoCard.text} />
+                </div>
+              ) : (
+                <>
+                  {professionals.map((professional) => (
+                    <CommandItem
+                      key={professional._id}
+                      value={`${professional.titleAbbreviation} ${[professional.lastName, professional.firstName].join(', ')}`}
+                      onSelect={(currentValue) => {
+                        setValue(currentValue === value ? '' : currentValue);
+                        setOpenCombobox(false);
+                        onSelectProfessional(professional);
+                      }}
+                    >
+                      <Check className={cn('mr-2 h-4 w-4', value === `${professional.titleAbbreviation} ${[professional.lastName, professional.firstName].join(',')}` ? 'opacity-100' : 'opacity-0')} />
+                      {`${capitalize(professional.titleAbbreviation)} ${capitalize(professional.lastName)}, ${capitalize(professional.firstName)}`}
+                    </CommandItem>
+                  ))}
+                </>
+              )}
             </CommandGroup>
           </CommandList>
         </Command>
