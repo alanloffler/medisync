@@ -24,6 +24,7 @@ import { userSchema } from '@/pages/users/schemas/user.schema';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
+import { IResponse } from '@/core/interfaces/response.interface';
 // React component
 export default function UpdateUser() {
   const [error, setError] = useState<boolean>(false);
@@ -36,11 +37,11 @@ export default function UpdateUser() {
   const { id } = useParams();
   // #region Form actions
   const defaultValues = {
-    dni: 0,
+    dni: undefined,
     email: '',
     firstName: '',
     lastName: '',
-    phone: 0,
+    phone: undefined,
   };
 
   const updateForm = useForm<z.infer<typeof userSchema>>({
@@ -52,7 +53,7 @@ export default function UpdateUser() {
     // prettier-ignore
     UserApiService
       .update(user._id, data)
-      .then((response) => {
+      .then((response: IResponse) => {
         if (response.statusCode === 200) {
           addNotification({ type: 'success', message: response.message });
           navigate('/users');
@@ -87,7 +88,7 @@ export default function UpdateUser() {
       setIsLoading(true);
       UserApiService
         .findOne(id)
-        .then((response) => {
+        .then((response: IResponse) => {
           if (response.statusCode === 200) {
             setUser(response.data);
             updateForm.setValue('dni', response.data.dni);
