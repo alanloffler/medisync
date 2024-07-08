@@ -32,11 +32,11 @@ export default function CreateUser() {
   const navigate = useNavigate();
   // #region Form config and actions
   const defaultValues = {
-    dni: '',
+    dni: '' as unknown as number,
     email: '',
     firstName: '',
     lastName: '',
-    phone: '',
+    phone: '' as unknown as number,
   };
 
   const createForm = useForm<z.infer<typeof userSchema>>({
@@ -202,13 +202,13 @@ export default function CreateUser() {
                   </CardHeader>
                 ) : null}
                 <CardContent className='mt-3 space-y-3'>
-                  {createForm.watch('dni') !== '' && (
+                  {createForm.watch('dni') !== undefined && (
                     <div className='flex items-center space-x-4'>
                       <CreditCard className='h-6 w-6' strokeWidth={2} />
                       <span className='text-lg font-medium'>{delimiter(createForm.watch('dni'), '.', 3)}</span>
                     </div>
                   )}
-                  {createForm.watch('phone') !== '' && (
+                  {createForm.watch('phone') !== undefined && (
                     <div className='flex items-center gap-4'>
                       <Smartphone className='h-6 w-6' strokeWidth={2} />
                       <span className='text-lg font-medium'>{delimiter(createForm.watch('phone'), '-', 6)}</span>
