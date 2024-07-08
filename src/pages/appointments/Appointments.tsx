@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons
-import { CalendarDays, FileWarning } from 'lucide-react';
+import { BriefcaseMedical, CalendarCheck, CalendarDays, ClipboardCheck, Clock, FileWarning } from 'lucide-react';
 // Components: https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
 import { Calendar } from '@/core/components/ui/calendar';
@@ -198,9 +198,12 @@ export default function Appointments() {
               {/* prettier-ignore */}
               <ProfessionalsCombobox 
                 onSelectProfessional={(professional) => setProfessionalSelected(professional)} 
-                placeholder={APPO_CONFIG.combobox.placeholder} 
-                searchText={APPO_CONFIG.combobox.searchText} 
-                notFoundText={APPO_CONFIG.combobox.notFoundText}
+                options={{
+                  loadingText: APPO_CONFIG.combobox.loadingText,
+                  notFoundText: APPO_CONFIG.combobox.notFoundText,
+                  placeholder: APPO_CONFIG.combobox.placeholder,
+                  searchText: APPO_CONFIG.combobox.searchText,
+                }}
               />
             </div>
             <div className={cn('flex flex-col space-y-4', showCalendar ? 'pointer-events-auto' : 'pointer-events-none')}>
@@ -228,7 +231,7 @@ export default function Appointments() {
             </div>
           </div>
           <div className='flex flex-col gap-4 md:w-2/3 lg:w-2/3'>
-            <Steps text={APPO_CONFIG.steps.text3} step='3' className='bg-primary/30 text-primary' />
+            <Steps text={APPO_CONFIG.steps.text3} step='3' className='bg-primary/20 text-primary' />
             <Card className='w-full'>
               <CardHeader>
                 <CardTitle className='px-3 text-base'>
@@ -310,6 +313,7 @@ export default function Appointments() {
           </div>
         </div>
       </main>
+      {/* Dialog */}
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent>
           <DialogHeader>
@@ -318,14 +322,27 @@ export default function Appointments() {
             {dialogContent.action === 'reserve' && (
               <div className='pt-4'>
                 <div className='pt-4'>
-                  <UsersCombo searchBy='dni' searchResult={(e) => setUserSelected(e)} placeholder={'Buscar por nombre'} />
+                  <UsersCombo searchBy='dni' searchResult={(e) => setUserSelected(e)} placeholder={APPO_CONFIG.dialog.reserve.search.placeholder} />
                   {userSelected._id && (
                     <>
-                      <div className='py-4'>
-                        Reserva de turno para <span className='font-bold'>{`${capitalize(userSelected.lastName)}, ${capitalize(userSelected.firstName)}`}</span>
+                      <div className='flex py-4 space-x-2 items-center'>
+                        <ClipboardCheck className='h-5 w-5' strokeWidth={2} />
+                        <span>
+                          Reserva de turno para <span className='font-bold'>{`${capitalize(userSelected.lastName)}, ${capitalize(userSelected.firstName)}`}</span>
+                        </span>
                       </div>
-                      <div>El día {selectedLegibleDate}</div>
-                      <div>A las {selectedSlot.begin}</div>
+                      <div className='flex space-x-2 items-center'>
+                        <CalendarCheck className='h-5 w-5' strokeWidth={2} />
+                        <span>El día {selectedLegibleDate}</span>
+                      </div>
+                      <div className='flex space-x-2 items-center'>
+                        <Clock className='h-5 w-5' strokeWidth={2} />
+                        <span>A las {selectedSlot.begin}</span>
+                      </div>
+                      <div className='flex space-x-2 items-center'>
+                        <BriefcaseMedical className='h-5 w-5' strokeWidth={2} />
+                        <span className='font-semibold'>{`${capitalize(professionalSelected?.titleAbbreviation)} ${capitalize(professionalSelected?.lastName)}, ${capitalize(professionalSelected?.firstName)}`}</span>
+                      </div>
                     </>
                   )}
                 </div>
