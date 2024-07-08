@@ -103,7 +103,7 @@ export default function Users() {
                 </div>
                 <div className='flex items-center gap-2'>
                   {/* Sort */}
-                  {helpChecked ? (
+                  {/* {helpChecked ? (
                     <TooltipProvider delayDuration={0.3}>
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -120,7 +120,7 @@ export default function Users() {
                     <Button variant={'tableHeader'} size={'miniIcon'} className='flex items-center'>
                       <ListFilter className='h-4 w-4' strokeWidth={2} />
                     </Button>
-                  )}
+                  )} */}
                   {/* Reload */}
                   {helpChecked ? (
                     <TooltipProvider delayDuration={0.3}>
