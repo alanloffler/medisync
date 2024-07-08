@@ -28,7 +28,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 // React component
 export default function UpdateUser() {
   const [error, setError] = useState<boolean>(false);
-  const [infoCard, setInfoCard] = useState<IInfoCard>({ text: '', type: 'error' });
+  const [infoCard, setInfoCard] = useState<IInfoCard>({} as IInfoCard);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [user, setUser] = useState<IUser>({} as IUser);
   const addNotification = useNotificationsStore((state) => state.addNotification);
