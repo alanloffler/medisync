@@ -10,7 +10,7 @@ export const APPO_CONFIG = {
   combobox: {
     loadingText: 'Cargando profesionales',
     notFoundText: 'Profesional no encontrado',
-    placeholder: 'Profesional...',
+    placeholder: 'Profesionales',
     searchText: 'Buscar...',
   },
   dialog: {
