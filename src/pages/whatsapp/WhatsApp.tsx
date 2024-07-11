@@ -9,23 +9,25 @@ import { Textarea } from '@/core/components/ui/textarea';
 // App components
 import { PageHeader } from '@/core/components/common/PageHeader';
 // App
+import { APP_CONFIG } from '@/config/app.config';
 import { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
 import { IResponse } from '@/core/interfaces/response.interface';
+import { IUser } from '@/pages/users/interfaces/user.interface';
+import { LoadingDB } from '@/core/components/common/LoadingDB';
+import { MouseEvent, useEffect, useState } from 'react';
+import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
 import { UserApiService } from '@/pages/users/services/user-api.service';
 import { WHATSAPP_CONFIG } from '@/config/whatsapp.config';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
-import { MouseEvent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { LoadingDB } from '@/core/components/common/LoadingDB';
-import { APP_CONFIG } from '@/config/app.config';
 // React component
 export default function WhatsApp() {
+  const [addressee, setAddressee] = useState<IProfessional | IUser>({} as IProfessional | IUser);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loadingMessage, setLoadingMessage] = useState<string>('');
-  const [professional, setProfessional] = useState<IProfessional>({} as IProfessional);
   const capitalize = useCapitalize();
   const navigate = useNavigate();
   const { id, type } = useParams();
@@ -33,7 +35,7 @@ export default function WhatsApp() {
   useEffect(() => {
     if (id) {
       setIsLoading(true);
-
+      // TODO: manage errors
       if (type === 'user') {
         setLoadingMessage(APP_CONFIG.loadingDB.findOneUser);
         // prettier-ignore
@@ -41,16 +43,24 @@ export default function WhatsApp() {
         .findOne(id)
         .then((response: IResponse) => {
           if (response.statusCode === 200) {
-            setProfessional(response.data);
-            // console.log(response);
+            setAddressee(response.data);
             whatsappForm.setValue('phone', response.data.phone);
-            // setIsLoading(false);
+            setIsLoading(false);
           }
         });
       }
       if (type === 'professional') {
         setLoadingMessage(APP_CONFIG.loadingDB.findOneProfessional);
-        // TODO: get professional
+        // prettier-ignore
+        ProfessionalApiService
+        .findOne(id)
+        .then((response: IResponse) => {
+          if (response.statusCode === 200) {
+            setAddressee(response.data);
+            whatsappForm.setValue('phone', response.data.phone);
+            setIsLoading(false);
+          }
+        });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -110,7 +120,7 @@ export default function WhatsApp() {
               <>
                 <div className='mt-1 text-base'>
                   {WHATSAPP_CONFIG.subtitle}
-                  <span className='font-bold'>{` ${capitalize(professional.firstName)} ${capitalize(professional.lastName)}`}</span>.
+                  <span className='font-bold'>{` ${capitalize(addressee.firstName)} ${capitalize(addressee.lastName)}`}</span>.
                 </div>
                 <Form {...whatsappForm}>
                   <form onSubmit={whatsappForm.handleSubmit(sendMessage)} className='mt-4 flex flex-col gap-4'>
