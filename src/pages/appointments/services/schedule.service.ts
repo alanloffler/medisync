@@ -1,9 +1,5 @@
-import { IUser } from "@/pages/users/interfaces/user.interface";
-
-interface ITimeRange {
-  begin: Date;
-  end: Date;
-}
+import { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
+import { IUser } from '@/pages/users/interfaces/user.interface';
 
 export interface IAppointmentForm {
   day: string;
@@ -21,22 +17,27 @@ export interface IAppointmentView {
   _id: string;
   day: string;
   hour: string;
-  professional: Prof;
+  professional: IProfessional;
   slot: number;
   user: IUser;
 }
-interface Prof {
-  _id: string;
-  firstName: string;
-  lastName: string;
-  titleAbbreviation: string;
+
+interface ITimeRange {
+  begin: Date;
+  end: Date;
 }
-export interface ITimeSlot {
+
+interface ITimeRangeString {
   begin: string;
   end: string;
-  available: boolean;
-  id: number;
+}
+
+export interface ITimeSlot {
   appointment?: IAppointmentView;
+  available: boolean;
+  begin: string;
+  end: string;
+  id: number;
 }
 
 export class AppoSchedule {
@@ -58,30 +59,47 @@ export class AppoSchedule {
 
   public generateTimeSlots(): ITimeSlot[] {
     const slots: ITimeSlot[] = [];
+    const notAvailableSlots: ITimeSlot[] = [];
     let currentTime = this.startDayHour;
-    let counter = 0;
+    let counter = 1;
 
     while (currentTime < this.endDayHour) {
-      const id = counter;
       const nextTime = this.addMinutes(new Date(currentTime), this.appoMinutes);
       const available = this.isTimeSlotAvailable(currentTime, nextTime, this.unavailableRanges);
 
-      slots.push({
-        id,
-        begin: this.formatTime(currentTime),
-        end: this.formatTime(nextTime),
-        available,
-      });
-
+      if (available) {
+        slots.push({
+          id: counter,
+          begin: this.formatTime(currentTime),
+          end: this.formatTime(nextTime),
+          available,
+        });
+        counter++;
+      } else {
+        notAvailableSlots.push({
+          id: -1,
+          begin: this.formatTime(currentTime),
+          end: this.formatTime(nextTime),
+          available,
+        });
+      }
       currentTime = nextTime;
-      counter++;
     }
+
+    const notAvailableSlot: ITimeRangeString = {
+      begin: notAvailableSlots[0].begin,
+      end: notAvailableSlots[notAvailableSlots.length - 1].end,
+    };
+
+    this.insertNotAvailableSlot(slots, notAvailableSlot);
+
     return slots;
   }
 
-  public insertAppointments(appointments: IAppointmentView[]): void {//not view
+  public insertAppointments(appointments: IAppointmentView[]): void {
     for (const appointment of appointments) {
       const matchingTimeSlotIndex = this.timeSlots.findIndex((timeSlot) => timeSlot.id === appointment.slot);
+
       if (matchingTimeSlotIndex !== -1) {
         this.timeSlots[matchingTimeSlotIndex] = {
           ...this.timeSlots[matchingTimeSlotIndex],
@@ -103,10 +121,21 @@ export class AppoSchedule {
 
   private isTimeSlotAvailable(begin: Date, end: Date, unavailableRanges: ITimeRange[]): boolean {
     for (const range of unavailableRanges) {
-      if (begin < range.end && end > range.begin) {
-        return false;
-      }
+      if (begin < range.end && end > range.begin) return false;
     }
     return true;
+  }
+
+  private insertNotAvailableSlot(slots: ITimeSlot[], newSlot: ITimeRangeString): void {
+    let insertIndex = 0;
+
+    while (insertIndex < slots.length && slots[insertIndex].begin < newSlot.begin) insertIndex++;
+
+    slots.splice(insertIndex, 0, {
+      id: -1,
+      begin: newSlot.begin,
+      end: newSlot.end,
+      available: false,
+    });
   }
 }
