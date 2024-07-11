@@ -24,19 +24,20 @@ export default function WhatsApp() {
   const [professional, setProfessional] = useState<IProfessional>({} as IProfessional);
   const capitalize = useCapitalize();
   const navigate = useNavigate();
-  const params = useParams();
-  const { id } = params;
-  
+  const { id, type } = useParams();
+
   useEffect(() => {
-
-    console.log(params);
-
     if (id) {
-      UserApiService.findOne(id).then((response: IResponse) => {
-        setProfessional(response.data);
-        console.log(response);
-        whatsappForm.setValue('phone', response.data.phone);
-      });
+      if (type === 'user') {
+        UserApiService.findOne(id).then((response: IResponse) => {
+          setProfessional(response.data);
+          console.log(response);
+          whatsappForm.setValue('phone', response.data.phone);
+        });
+      }
+      if (type === 'professional') {
+        // TODO: get professional
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
