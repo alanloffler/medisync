@@ -31,7 +31,7 @@ export default function WhatsApp() {
   const capitalize = useCapitalize();
   const navigate = useNavigate();
   const { id, type } = useParams();
-
+  // #region Load data
   useEffect(() => {
     if (id) {
       setIsLoading(true);
@@ -65,6 +65,7 @@ export default function WhatsApp() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+  // #endregion
   // #region Form
   const whatsappSchema = z.object({
     phone: z.coerce.number(),
