@@ -11,6 +11,7 @@ export const APP_CONFIG = {
     defaultText: 'Cargando información de la base de datos',
     findProfesionals: 'Cargando profesionales',
     findUsers: 'Cargando pacientes',
+    findOneProfessional: 'Cargando información del profesional',
     findOneUser: 'Cargando información del paciente',
     settings: {
       duration: 0.4,
