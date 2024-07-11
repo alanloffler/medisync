@@ -34,7 +34,7 @@ export default function App() {
         { path: '/users/:id', element: (<Suspense fallback={<Loading />}><ViewUser /></Suspense>) },
         { path: '/users/create', element: (<Suspense fallback={<Loading />}><CreateUser /></Suspense>) },
         { path: '/users/update/:id', element: (<Suspense fallback={<Loading />}><UpdateUser /></Suspense>) },
-        { path: '/whatsapp/:id',  element: (<Suspense fallback={<Loading />}><WhatsApp /></Suspense>) },
+        { path: '/whatsapp/:type/:id',  element: (<Suspense fallback={<Loading />}><WhatsApp /></Suspense>) },
         { path: '*', element: <>Not found 404</> },
       ],
     },
