@@ -5,10 +5,13 @@ export const WHATSAPP_CONFIG = {
   ],
   button: {
     back: 'Volver',
+    cancel: 'Cancelar',
     sendMessage: 'Enviar mensaje',
   },
   label: {
+    message: 'Mensaje',
     phone: 'Teléfono',
   },
+  subtitle: 'Vas a enviar un mensaje de texto de WhatsApp al teléfono celular de',
   title: 'Enviar mensaje de WhatsApp',
 };
