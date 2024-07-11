@@ -273,7 +273,7 @@ export default function Appointments() {
                           (
                             <div className='flex flex-row justify-between items-center'>
                               <div className='flex space-x-4 items-center'>
-                                <div className='text-sm font-semibold'>T{index}</div>
+                                <div className='text-sm font-semibold'>T{slot.id}</div>
                                 <div className='w-28'>{slot.begin} {APPO_CONFIG.words.hours}</div>
                                 {slot.appointment?.user && <div className='text-base font-medium'>
                                   {`${capitalize(slot.appointment.user.lastName)}, ${capitalize(slot.appointment.user.firstName)}`}
@@ -300,7 +300,7 @@ export default function Appointments() {
                           ):(
                             <div className='flex flex-row gap-4'>
                             <div className=' text-sm font-semibold'>ND</div>  
-                              <div className='w-28'>{slot.begin} hs</div>
+                              <div className='w-32'>{slot.available ? slot.begin : slot.begin + ' - ' + slot.end} hs</div>
                             </div>
                           )
                         }
