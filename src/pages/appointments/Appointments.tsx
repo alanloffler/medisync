@@ -5,18 +5,18 @@ import { Button } from '@/core/components/ui/button';
 import { Calendar } from '@/core/components/ui/calendar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/core/components/ui/dialog';
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/core/components/ui/hover-card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/core/components/ui/table';
 // App components
+import { ProfessionalsCombobox } from '@/pages/professionals/components/ProfessionalsCombobox';
 import { Steps } from '@/core/components/common/Steps';
-import { UsersCombo } from '../users/components/UsersCombo';
+import { UsersCombo } from '@/pages/users/components/UsersCombo';
 // App
-import { APPO_CONFIG } from './config/appointment.config';
-import { AppoSchedule, IAppointment, ITimeSlot } from './services/schedule.service';
-import { AppointmentApiService } from './services/appointment.service';
+import { APPO_CONFIG } from '@/pages/appointments/config/appointment.config';
+import { AppoSchedule, IAppointment, ITimeSlot } from '@/pages/appointments/services/schedule.service';
+import { AppointmentApiService } from '@/pages/appointments/services/appointment.service';
 import { IDialog } from '@/core/interfaces/dialog.interface';
-import { IProfessional } from '../professionals/interfaces/professional.interface';
-import { IUser } from '../users/interfaces/user.interface';
-import { ProfessionalsCombobox } from '../professionals/components/ProfessionalsCombobox';
+import { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
+import { IUser } from '@/pages/users/interfaces/user.interface';
 import { cn } from '@/lib/utils';
 import { es, enUS } from 'date-fns/locale';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
@@ -123,8 +123,8 @@ export default function Appointments() {
 
       if (newAppo.statusCode === 200) {
         addNotification({ type: 'success', message: newAppo.message });
-        setRefreshAppos(crypto.randomUUID()); // Refresh the appointments to show the new one status
-        setOpenDialog(false); // Close dialog when appointment is created
+        setRefreshAppos(crypto.randomUUID());
+        setOpenDialog(false);
       }
       if (newAppo.statusCode) addNotification({ type: 'error', message: newAppo.message });
       if (newAppo instanceof Error) addNotification({ type: 'error', message: 'Error en el servidor' });
@@ -137,8 +137,8 @@ export default function Appointments() {
       AppointmentApiService.remove(slot.appointment._id).then((response) => {
         if (response.statusCode === 200) {
           addNotification({ type: 'success', message: response.message });
-          setRefreshAppos(crypto.randomUUID()); // Refresh the appointments to show the new one status
-          setOpenDialog(false); // Close dialog when appointment is removed
+          setRefreshAppos(crypto.randomUUID());
+          setOpenDialog(false);
         }
         if (response.statusCode) addNotification({ type: 'error', message: response.message });
         if (response instanceof Error) addNotification({ type: 'error', message: 'Error en el servidor' });
@@ -258,55 +258,55 @@ export default function Appointments() {
               )}
               {showTimeSlots && (
                 <CardContent>
-                  {/* prettier-ignore */}
-                  <ul>
-                    {timeSlots.map((slot, index) => (
-                      <li 
-                        key={index} 
-                        className={
-                          `p-1 text-base
-                          ${slot.available ? 'text-foreground' : 'text-muted-foreground/50'} 
-                          ${index === timeSlots.length - 1 ? 'border-none' : 'border-b'}`
-                        }
-                      >
-                        {slot.available ?
-                          (
-                            <div className='flex flex-row justify-between items-center'>
-                              <div className='flex space-x-4 items-center'>
-                                <div className='text-sm font-semibold'>T{slot.id}</div>
-                                <div className='w-28'>{slot.begin} {APPO_CONFIG.words.hours}</div>
-                                {slot.appointment?.user && <div className='text-base font-medium'>
-                                  {`${capitalize(slot.appointment.user.lastName)}, ${capitalize(slot.appointment.user.firstName)}`}
-                                </div>}
-                              </div>
-                              <div className='flex space-x-4'>
-                                {!slot.appointment?.user && <Button onClick={() => handleDialog('reserve', slot)} variant={'default'} size={'xs'}>{APPO_CONFIG.buttons.addAppointment}</Button>}
-                                {slot.appointment?.user && (
-                                  <Button 
-                                    onClick={() => navigate(`/appointments/${slot.appointment?._id}`)} 
-                                    variant={'table'} 
-                                    size={'xs'} 
-                                    className='text-primary bg-slate-100'
-                                  >
-                                    <HoverCard>
-                                      <HoverCardTrigger>{APPO_CONFIG.buttons.viewAppointment}</HoverCardTrigger>
-                                      <HoverCardContent dir='ltr'>{`${capitalize(slot.appointment.user.lastName)}, ${capitalize(slot.appointment.user.firstName)}`}</HoverCardContent>
-                                    </HoverCard>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className='w-[60px] text-center font-semibold'>Turno</TableHead>
+                        <TableHead className='w-[135px] px-2 text-left font-semibold'>Hora</TableHead>
+                        <TableHead className='px-2 text-left font-semibold'>Paciente</TableHead>
+                        <TableHead className='w-[140px] px-2 text-center font-semibold'>Acciones</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {timeSlots.map((slot, index) => (
+                        <TableRow key={index} className={`text-base ${slot.available ? 'text-foreground' : 'bg-slate-100 text-slate-400'} ${index === timeSlots.length - 1 ? 'border-none' : 'border-b'}`}>
+                          {slot.available ? (
+                            <>
+                              <TableCell className='p-1.5 text-center text-sm font-light'>T{slot.id}</TableCell>
+                              <TableCell className='p-1.5 text-left text-sm font-light'>
+                                {slot.begin} {APPO_CONFIG.words.hours}
+                              </TableCell>
+                              {slot.appointment?.user ? <TableCell className='p-1.5 text-base font-medium'>{`${capitalize(slot.appointment.user.lastName)}, ${capitalize(slot.appointment.user.firstName)}`}</TableCell> : <TableCell className='p-1.5 text-base font-medium'></TableCell>}
+                              <TableCell className='flex items-center justify-end space-x-4 p-1.5'>
+                                {!slot.appointment?.user && (
+                                  <Button onClick={() => handleDialog('reserve', slot)} variant={'default'} size={'xs'}>
+                                    {APPO_CONFIG.buttons.addAppointment}
                                   </Button>
                                 )}
-                                {slot.appointment?.user && <Button onClick={() => handleDialog('cancel', slot)} variant={'table'} size={'xs'} className='text-primary bg-slate-100'>{APPO_CONFIG.buttons.cancelAppointment}</Button>}
-                              </div>
-                            </div>
-                          ):(
-                            <div className='flex flex-row gap-4'>
-                            <div className=' text-sm font-semibold'>ND</div>  
-                              <div className='w-32'>{slot.available ? slot.begin : slot.begin + ' - ' + slot.end} hs</div>
-                            </div>
-                          )
-                        }
-                      </li>
-                    ))}
-                  </ul>
+                                {slot.appointment?.user && (
+                                  <Button onClick={() => navigate(`/appointments/${slot.appointment?._id}`)} variant={'table'} size={'xs'} className='bg-slate-100 text-primary'>
+                                    {APPO_CONFIG.buttons.viewAppointment}
+                                  </Button>
+                                )}
+                                {slot.appointment?.user && (
+                                  <Button onClick={() => handleDialog('cancel', slot)} variant={'table'} size={'xs'} className='bg-slate-100 text-primary'>
+                                    {APPO_CONFIG.buttons.cancelAppointment}
+                                  </Button>
+                                )}
+                              </TableCell>
+                            </>
+                          ) : (
+                            <>
+                              <TableCell className='p-1.5 text-center text-sm font-semibold'>-</TableCell>
+                              <TableCell className='p-1.5 text-left text-sm'>{slot.available ? slot.begin : slot.begin + ' - ' + slot.end} hs</TableCell>
+                              <TableCell className='p-1.5'></TableCell>
+                              <TableCell className='p-1.5'></TableCell>
+                            </>
+                          )}
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
                 </CardContent>
               )}
             </Card>
@@ -325,21 +325,21 @@ export default function Appointments() {
                   <UsersCombo searchBy='dni' searchResult={(e) => setUserSelected(e)} placeholder={APPO_CONFIG.dialog.reserve.search.placeholder} />
                   {userSelected._id && (
                     <>
-                      <div className='flex py-4 space-x-2 items-center'>
+                      <div className='flex items-center space-x-2 py-4'>
                         <ClipboardCheck className='h-5 w-5' strokeWidth={2} />
                         <span>
                           Reserva de turno para <span className='font-bold'>{`${capitalize(userSelected.lastName)}, ${capitalize(userSelected.firstName)}`}</span>
                         </span>
                       </div>
-                      <div className='flex space-x-2 items-center'>
+                      <div className='flex items-center space-x-2'>
                         <CalendarCheck className='h-5 w-5' strokeWidth={2} />
                         <span>El día {selectedLegibleDate}</span>
                       </div>
-                      <div className='flex space-x-2 items-center'>
+                      <div className='flex items-center space-x-2'>
                         <Clock className='h-5 w-5' strokeWidth={2} />
                         <span>A las {selectedSlot.begin}</span>
                       </div>
-                      <div className='flex space-x-2 items-center'>
+                      <div className='flex items-center space-x-2'>
                         <BriefcaseMedical className='h-5 w-5' strokeWidth={2} />
                         <span className='font-semibold'>{`${capitalize(professionalSelected?.titleAbbreviation)} ${capitalize(professionalSelected?.lastName)}, ${capitalize(professionalSelected?.firstName)}`}</span>
                       </div>
