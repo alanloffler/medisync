@@ -19,8 +19,12 @@ import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { LoadingDB } from '@/core/components/common/LoadingDB';
+import { APP_CONFIG } from '@/config/app.config';
 // React component
 export default function WhatsApp() {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [loadingMessage, setLoadingMessage] = useState<string>('');
   const [professional, setProfessional] = useState<IProfessional>({} as IProfessional);
   const capitalize = useCapitalize();
   const navigate = useNavigate();
@@ -28,14 +32,24 @@ export default function WhatsApp() {
 
   useEffect(() => {
     if (id) {
+      setIsLoading(true);
+
       if (type === 'user') {
-        UserApiService.findOne(id).then((response: IResponse) => {
-          setProfessional(response.data);
-          console.log(response);
-          whatsappForm.setValue('phone', response.data.phone);
+        setLoadingMessage(APP_CONFIG.loadingDB.findOneUser);
+        // prettier-ignore
+        UserApiService
+        .findOne(id)
+        .then((response: IResponse) => {
+          if (response.statusCode === 200) {
+            setProfessional(response.data);
+            // console.log(response);
+            whatsappForm.setValue('phone', response.data.phone);
+            // setIsLoading(false);
+          }
         });
       }
       if (type === 'professional') {
+        setLoadingMessage(APP_CONFIG.loadingDB.findOneProfessional);
         // TODO: get professional
       }
     }
@@ -57,7 +71,6 @@ export default function WhatsApp() {
   // #region Buttons actions
   function sendMessage(e: z.infer<typeof whatsappSchema>) {
     console.log(e);
-    //console.log(e.target[0].value, e.target[1].value);
   }
 
   function handleCancel(event: MouseEvent<HTMLButtonElement>): void {
@@ -87,49 +100,56 @@ export default function WhatsApp() {
               </div>
             </CardTitle>
           </CardHeader>
+
           <CardContent>
-            <div className='mt-1 text-base'>
-              {WHATSAPP_CONFIG.subtitle}
-              <span className='font-bold'>{` ${capitalize(professional.firstName)} ${capitalize(professional.lastName)}`}</span>.
-            </div>
-            <Form {...whatsappForm}>
-              <form onSubmit={whatsappForm.handleSubmit(sendMessage)} className='mt-4 flex flex-col gap-4'>
-                <FormField
-                  control={whatsappForm.control}
-                  name='phone'
-                  render={({ field }) => (
-                    <FormItem className=''>
-                      <FormLabel>{WHATSAPP_CONFIG.label.phone}</FormLabel>
-                      <FormControl className='h-9'>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={whatsappForm.control}
-                  name='message'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{WHATSAPP_CONFIG.label.message}</FormLabel>
-                      <FormControl>
-                        <Textarea {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div className='grid grid-cols-1 space-y-2 pt-2 md:flex md:justify-end md:gap-6 md:space-y-0'>
-                  <Button type='submit' variant={'default'} className='order-1 md:order-2 lg:order-2'>
-                    {WHATSAPP_CONFIG.button.sendMessage}
-                  </Button>
-                  <Button variant={'ghost'} onClick={handleCancel} className='order-2 md:order-1 lg:order-1'>
-                    {WHATSAPP_CONFIG.button.cancel}
-                  </Button>
+            {isLoading ? (
+              <LoadingDB text={loadingMessage} className='mt-3' />
+            ) : (
+              <>
+                <div className='mt-1 text-base'>
+                  {WHATSAPP_CONFIG.subtitle}
+                  <span className='font-bold'>{` ${capitalize(professional.firstName)} ${capitalize(professional.lastName)}`}</span>.
                 </div>
-              </form>
-            </Form>
+                <Form {...whatsappForm}>
+                  <form onSubmit={whatsappForm.handleSubmit(sendMessage)} className='mt-4 flex flex-col gap-4'>
+                    <FormField
+                      control={whatsappForm.control}
+                      name='phone'
+                      render={({ field }) => (
+                        <FormItem className=''>
+                          <FormLabel>{WHATSAPP_CONFIG.label.phone}</FormLabel>
+                          <FormControl className='h-9'>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={whatsappForm.control}
+                      name='message'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{WHATSAPP_CONFIG.label.message}</FormLabel>
+                          <FormControl>
+                            <Textarea {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <div className='grid grid-cols-1 space-y-2 pt-2 md:flex md:justify-end md:gap-6 md:space-y-0'>
+                      <Button type='submit' variant={'default'} className='order-1 md:order-2 lg:order-2'>
+                        {WHATSAPP_CONFIG.button.sendMessage}
+                      </Button>
+                      <Button variant={'ghost'} onClick={handleCancel} className='order-2 md:order-1 lg:order-1'>
+                        {WHATSAPP_CONFIG.button.cancel}
+                      </Button>
+                    </div>
+                  </form>
+                </Form>
+              </>
+            )}
           </CardContent>
         </Card>
       </div>
