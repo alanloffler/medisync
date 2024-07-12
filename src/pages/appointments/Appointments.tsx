@@ -289,6 +289,7 @@ export default function Appointments() {
                               {slot.appointment?.user ? <TableCell className='p-1.5 text-base font-medium'>{`${capitalize(slot.appointment.user.lastName)}, ${capitalize(slot.appointment.user.firstName)}`}</TableCell> : <TableCell className='p-1.5 text-base font-medium'></TableCell>}
                               <TableCell className='flex items-center justify-end space-x-4 p-1.5'>
                                 {/* TODO: button should only be shown if the date is in the future and the time is in the future */}
+                                {/* TODO: this partially works, need some tests and usage, the hour is not sure it is working properly */}
                                 <span>{selectedDate && selectedDate.getDate() + ' - ' + new Date().getDate()}</span>
                                 {selectedDate && selectedDate?.getDate() >= new Date().getDate() && selectedDate?.getTime() >= new Date().getTime() ? <>Show button</> :<>Do not show button</>}
                                 {!slot.appointment?.user && (
