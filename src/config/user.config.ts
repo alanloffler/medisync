@@ -97,7 +97,7 @@ export const USER_VIEW_CONFIG = {
   breadcrumb: [
     { id: 1, name: 'Inicio', path: '/' },
     { id: 2, name: 'Pacientes', path: '/users' },
-    { id: 3, name: 'Detalles', path: '/ussers' },
+    { id: 3, name: 'Detalles', path: '/users' },
   ],
   buttons: {
     back: 'Volver',
@@ -114,7 +114,7 @@ export const USER_VIEW_CONFIG = {
     subject: 'MediSync - Turnos médicos',
     body: ['Hola', ','], 
   },
-  title: 'Detalles de paciente',
+  title: 'Detalles del paciente',
   tooltip: {
     dropdown: 'Acciones'
   }
