@@ -86,7 +86,7 @@ export default function UpdateProfessional() {
   useEffect(() => {
     if (id && !areasLoading) {
       ProfessionalApiService.findOne(id).then((response) => {
-        setProfessional(response);
+        setProfessional(response.data);
         setProfessionalLoading(false);
         setIsLoading(false);
         setDisabledSaveButton(false);
