@@ -11,6 +11,7 @@ const Dashboard = lazy(() => import('./pages/dashboard/Dashboard'));
 const Professionals = lazy(() => import('./pages/professionals/Professionals'));
 const CreateProfessional = lazy(() => import('./pages/professionals/components/CreateProfessional'));
 const UpdateProfessional = lazy(() => import('./pages/professionals/components/UpdateProfessional'));
+const ViewProfessional = lazy(() => import('./pages/professionals/components/ViewProfessional')); 
 
 const Users = lazy(() => import('./pages/users/Users'));
 const CreateUser = lazy(() => import('./pages/users/components/CreateUser'));
@@ -28,6 +29,7 @@ export default function App() {
         { path: '/', element: (<Suspense fallback={<Loading />}><Appointments /></Suspense>) },
         { path: '/appointments/:id', element: (<Suspense fallback={<Loading />}><ViewAppointment /></Suspense>) },
         { path: '/professionals', element: (<Suspense fallback={<Loading />}><Professionals /></Suspense>) },
+        { path: '/professionals/:id', element: (<Suspense fallback={<Loading />}><ViewProfessional /></Suspense>) },
         { path: '/professionals/create', element: (<Suspense fallback={<Loading />}><CreateProfessional /></Suspense>) },
         { path: '/professionals/update/:id', element: (<Suspense fallback={<Loading />}><UpdateProfessional /></Suspense>) },
         { path: '/users', element: (<Suspense fallback={<Loading />}><Users /></Suspense>) },
