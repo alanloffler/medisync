@@ -107,12 +107,12 @@ export const USER_VIEW_CONFIG = {
     { id: 2, name: 'Enviar WhatsApp' },
     { id: 3, name: 'Editar paciente' },
   ],
-  phrase: {
-    userSince: 'Paciente desde el',
-  },
   email: {
     subject: 'MediSync - Turnos médicos',
     body: ['Hola', ','], 
+  },
+  phrase: {
+    userSince: 'Paciente desde el',
   },
   title: 'Detalles del paciente',
   tooltip: {

@@ -73,5 +73,17 @@ export const PROF_VIEW_CONFIG = {
   button: {
     back: 'Volver',
   },
+  dropdownMenu: [
+    { id: 1, name: 'Enviar e-mail' }, 
+    { id: 2, name: 'Enviar WhatsApp' },
+    { id: 3, name: 'Editar paciente' },
+  ],
+  email: {
+    subject: 'MediSync - Turnos médicos',
+    body: ['Hola', ','], 
+  },
   title: 'Detalles del profesional',
+  tooltip: {
+    dropdown: 'Acciones'
+  }
 }
