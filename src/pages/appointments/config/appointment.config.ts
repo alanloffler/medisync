@@ -44,9 +44,13 @@ export const APPO_CONFIG = {
     text3: 'Seleccionar turno',
   },
   table: {
+    headers: ['Turno', 'Horario', 'Nombre del paciente', 'Acciones'],
     title: 'Turnos diarios',
   },
   words: {
     hours: 'hs.',
+    hoursSeparator: '-',
+    shiftPrefix: 'T',
+    unavailable: '-',
   },
 };
