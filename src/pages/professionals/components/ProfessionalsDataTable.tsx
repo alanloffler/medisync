@@ -120,7 +120,7 @@ export function ProfessionalsDataTable({ search, reload, setErrorMessage }: Data
       header: () => <div className='text-center'>{PROF_CONFIG.table.headers[4]}</div>,
       cell: ({ row }) => (
         <div className='flex flex-row items-center justify-center space-x-2'>
-          <Button variant={'ghost'} size={'miniIcon'} className='hover:bg-transparent hover:text-fuchsia-500'>
+          <Button variant={'ghost'} size={'miniIcon'} onClick={() => navigate(`/professionals/${row.original._id}`)} className='hover:bg-transparent hover:text-fuchsia-500'>
             <FileText className='h-4 w-4' />
           </Button>
           <Button variant={'ghost'} size={'miniIcon'} onClick={() => navigate(`/professionals/update/${row.original._id}`)} className='hover:bg-transparent hover:text-indigo-500'>
