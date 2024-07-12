@@ -63,3 +63,15 @@ export const PROF_CREATE_CONFIG = {
   },
   title: 'Crear un nuevo profesional',
 };
+
+export const PROF_VIEW_CONFIG = {
+  breadcrumb: [
+    { id: 1, name: 'Inicio', path: '/' },
+    { id: 2, name: 'Profesionales', path: '/professionals' },
+    { id: 3, name: 'Detalles', path: '/professionals/:id' },
+  ],
+  button: {
+    back: 'Volver',
+  },
+  title: 'Detalles del profesional',
+}
