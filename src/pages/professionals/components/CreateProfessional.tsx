@@ -17,7 +17,6 @@ import { AreaService } from '@/core/services/area.service';
 import { IArea } from '@/core/interfaces/area.interface';
 import { ISpecialization } from '@/core/interfaces/specialization.interface';
 import { Link, useNavigate } from 'react-router-dom';
-import { Loading } from '@/core/components/common/Loading';
 import { PROF_CREATE_CONFIG as PC_CONFIG } from '../../../config/professionals.config';
 import { ProfessionalApiService } from '../services/professional-api.service';
 import { professionalSchema } from '../schemas/professional.schema';
@@ -115,7 +114,7 @@ export default function CreateProfessional() {
           Volver
         </Button>
       </div>
-      {isLoading && <Loading text='Bajando datos' size={30} duration={0.35} className='gap-8 bg-background fill-indigo-500 p-8' />}
+
       {!isLoading && <div className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-2 lg:gap-6'>
         <Card className='w-full md:grid-cols-2'>
           <CardHeader>
@@ -233,7 +232,7 @@ export default function CreateProfessional() {
                         {/* <FormLabel>{}</FormLabel> */}
                         <FormControl className='h-9'>
                           <div className='flex h-full items-center space-x-4 pb-2 pt-4 md:place-content-center md:pb-0 md:pt-8 lg:place-content-center lg:pb-0 lg:pt-8'>
-                            <Switch id='available' defaultChecked={true} onCheckedChange={field.onChange} size={5} />
+                            <Switch id='available' defaultChecked={true} onCheckedChange={field.onChange} size={5} translate='translate-x-5' />
                             <Label htmlFor='available'>{PC_CONFIG.labels.available}</Label>
                           </div>
                         </FormControl>
