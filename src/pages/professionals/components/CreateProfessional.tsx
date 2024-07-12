@@ -17,23 +17,22 @@ import { AreaService } from '@/core/services/area.service';
 import { IArea } from '@/core/interfaces/area.interface';
 import { ISpecialization } from '@/core/interfaces/specialization.interface';
 import { Link, useNavigate } from 'react-router-dom';
-import { PROF_CREATE_CONFIG as PC_CONFIG } from '../../../config/professionals.config';
-import { ProfessionalApiService } from '../services/professional-api.service';
-import { professionalSchema } from '../schemas/professional.schema';
+import { PROF_CREATE_CONFIG as PC_CONFIG } from '@/config/professionals.config';
+import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
+import { professionalSchema } from '@/pages/professionals/schemas/professional.schema';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useEffect, useState, MouseEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-
+// React component
 export default function CreateProfessional() {
   const [areas, setAreas] = useState<IArea[]>([]);
   const [disabledSpec, setDisabledSpec] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showProfessionalCard, setShowProfessionalCard] = useState<boolean>(false);
-  const [specializations, setSpecializations] = useState<ISpecialization[]>([]);
-  
+  const [specializations, setSpecializations] = useState<ISpecialization[]>([]);  
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const navigate = useNavigate();
