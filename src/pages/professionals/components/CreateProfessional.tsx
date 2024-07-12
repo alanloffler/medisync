@@ -77,7 +77,10 @@ export default function CreateProfessional() {
   }, [createForm.formState.isDirty, showProfessionalCard]);
 
   function handleCreateProfessional(data: z.infer<typeof professionalSchema>) {
-    ProfessionalApiService.create(data).then((response) => {
+    // TODO: validation error here
+    ProfessionalApiService
+    .create(data)
+    .then((response) => {
       if (response.statusCode === 200) {
         setDisabledSpec(true);
         addNotification({ type: 'success', message: response.message });
@@ -231,7 +234,7 @@ export default function CreateProfessional() {
                         {/* <FormLabel>{}</FormLabel> */}
                         <FormControl className='h-9'>
                           <div className='flex h-full items-center space-x-4 pb-2 pt-4 md:place-content-center md:pb-0 md:pt-8 lg:place-content-center lg:pb-0 lg:pt-8'>
-                            <Switch id='available' defaultChecked={true} onCheckedChange={field.onChange} size={5} translate='translate-x-5' />
+                            <Switch id='available' defaultChecked={true} onCheckedChange={field.onChange} />
                             <Label htmlFor='available'>{PC_CONFIG.labels.available}</Label>
                           </div>
                         </FormControl>

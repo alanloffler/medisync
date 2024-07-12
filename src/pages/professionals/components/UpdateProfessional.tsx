@@ -273,7 +273,7 @@ export default function UpdateProfessional() {
                           {/* <FormLabel>{}</FormLabel> */}
                           <FormControl className='h-9'>
                             <div className='flex h-full items-center space-x-4 pb-2 pt-4 md:place-content-center md:pb-0 md:pt-8 lg:place-content-center lg:pb-0 lg:pt-8'>
-                              <Switch size={4} id='available' checked={field.value} onCheckedChange={field.onChange} />
+                              <Switch id='available' checked={field.value} onCheckedChange={field.onChange} />
                               <Label htmlFor='available'>{PU_CONFIG.labels.available}</Label>
                             </div>
                           </FormControl>
