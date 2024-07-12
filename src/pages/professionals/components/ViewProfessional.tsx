@@ -9,7 +9,11 @@ import { IResponse } from '@/core/interfaces/response.interface';
 import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { PageHeader } from '@/core/components/common/PageHeader';
+import { ArrowLeft } from 'lucide-react';
+import { Button } from '@/core/components/ui/button';
+import { PROF_VIEW_CONFIG as PV_CONFIG } from '@/config/professionals.config';
 // React component
 export default function ViewProfessional() {
   const [infoCard, setInfoCard] = useState<IInfoCard>({} as IInfoCard);
@@ -17,6 +21,7 @@ export default function ViewProfessional() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [professional, setProfessional] = useState<IProfessional>({} as IProfessional);
   const capitalize = useCapitalize();
+  const navigate = useNavigate();
   const { id } = useParams();
 
   useEffect(() => {
@@ -44,7 +49,16 @@ export default function ViewProfessional() {
   }, [id]);
 
   return (
-    <div>
+    
+          <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
+      {/* Page Header */}
+      <div className='flex items-center justify-between'>
+        <PageHeader title={PV_CONFIG.title} breadcrumb={PV_CONFIG.breadcrumb} />
+        <Button variant={'outline'} size={'sm'} className='gap-2' onClick={() => navigate(-1)}>
+          <ArrowLeft className='h-4 w-4' />
+          {PV_CONFIG.button.back}
+        </Button>
+      </div>
       {isLoading ? (
         <LoadingDB text={APP_CONFIG.loadingDB.findOneProfessional} />
       ) : isError ? (
@@ -55,6 +69,6 @@ export default function ViewProfessional() {
           <div>{capitalize(professional.lastName)}</div>
         </>
       )}
-    </div>
+    </main>
   );
 }
