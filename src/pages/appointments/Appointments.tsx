@@ -41,6 +41,9 @@ export default function Appointments() {
   const [timeSlots, setTimeSlots] = useState<ITimeSlot[]>([] as ITimeSlot[]);
   const [timeSlotsAvailable, setTimeSlotsAvailable] = useState<number>(0);
   const [userSelected, setUserSelected] = useState<IUser>({} as IUser);
+  // this must be setted by language setting?
+  const [now, setNow] = useState<string[]>([]);
+  const [sameDay, setSameDay] = useState<boolean>(false);
 
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
@@ -50,6 +53,12 @@ export default function Appointments() {
 
   useEffect(() => {
     setSelectedDate(new Date());
+    setNow(new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }).split(':'));
+    setSameDay(selectedDate ? selectedDate?.getFullYear() >= new Date().getFullYear() && selectedDate?.getMonth() >= new Date().getMonth() && selectedDate?.getDate() >= new Date().getDate() : false);
+    console.log('sameDay', sameDay);
+    // const notHourYet = selectedDate?.getHours() < new Date().getHours() || (selectedDate?.getHours() === new Date().getHours() && selectedDate?.getMinutes() < new Date().getMinutes());
+    // console.log('notHourYet', notHourYet);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [professionalSelected]);
   // #region Load data
   // Appointments schedule creation, time slots generation and appointments insertion.
@@ -214,7 +223,7 @@ export default function Appointments() {
                 className='rounded-lg bg-card text-card-foreground shadow-sm h-fit flex-row w-fit' 
                 disabled={[
                   { dayOfWeek: [0, 6] }, 
-                  { before: new Date() }, 
+                  // { before: new Date() }, // uncomment this after show reserve button works!
                   { from: new Date(2024, 5, 5) },
                   // { from: new Date(2024, 5, 21) },
                 ]}
@@ -224,9 +233,10 @@ export default function Appointments() {
                   today: 'bg-primary/30 text-primary',
                   selected: 'bg-primary text-white',
                 }}
-                onSelect={(event) => setSelectedDate(event)} 
+                // onSelect={(event) => setSelectedDate(event)} // Replaced with onDayClick, see how it works!
                 selected={date}
                 showOutsideDays={false}
+                onDayClick={(event) => setSelectedDate(event)}
               />
             </div>
           </div>
@@ -261,10 +271,10 @@ export default function Appointments() {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead className='w-[60px] text-center font-semibold'>Turno</TableHead>
-                        <TableHead className='w-[135px] px-2 text-left font-semibold'>Hora</TableHead>
-                        <TableHead className='px-2 text-left font-semibold'>Paciente</TableHead>
-                        <TableHead className='w-[140px] px-2 text-center font-semibold'>Acciones</TableHead>
+                        <TableHead className='w-[60px] text-center font-semibold'>{APPO_CONFIG.table.headers[0]}</TableHead>
+                        <TableHead className='w-[135px] px-2 text-left font-semibold'>{APPO_CONFIG.table.headers[1]}</TableHead>
+                        <TableHead className='px-2 text-left font-semibold'>{APPO_CONFIG.table.headers[2]}</TableHead>
+                        <TableHead className='w-[140px] px-2 text-center font-semibold'>{APPO_CONFIG.table.headers[3]}</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -272,12 +282,15 @@ export default function Appointments() {
                         <TableRow key={index} className={`text-base ${slot.available ? 'text-foreground' : 'bg-slate-100 text-slate-400'} ${index === timeSlots.length - 1 ? 'border-none' : 'border-b'}`}>
                           {slot.available ? (
                             <>
-                              <TableCell className='p-1.5 text-center text-sm font-light'>T{slot.id}</TableCell>
+                              <TableCell className='p-1.5 text-center text-sm font-light'>{APPO_CONFIG.words.shiftPrefix + slot.id}</TableCell>
                               <TableCell className='p-1.5 text-left text-sm font-light'>
                                 {slot.begin} {APPO_CONFIG.words.hours}
                               </TableCell>
                               {slot.appointment?.user ? <TableCell className='p-1.5 text-base font-medium'>{`${capitalize(slot.appointment.user.lastName)}, ${capitalize(slot.appointment.user.firstName)}`}</TableCell> : <TableCell className='p-1.5 text-base font-medium'></TableCell>}
                               <TableCell className='flex items-center justify-end space-x-4 p-1.5'>
+                                {/* TODO: button should only be shown if the date is in the future and the time is in the future */}
+                                <span>{selectedDate && selectedDate.getDate() + ' - ' + new Date().getDate()}</span>
+                                {selectedDate && selectedDate?.getDate() >= new Date().getDate() && selectedDate?.getTime() >= new Date().getTime() ? <>Show button</> :<>Do not show button</>}
                                 {!slot.appointment?.user && (
                                   <Button onClick={() => handleDialog('reserve', slot)} variant={'default'} size={'xs'}>
                                     {APPO_CONFIG.buttons.addAppointment}
@@ -297,8 +310,8 @@ export default function Appointments() {
                             </>
                           ) : (
                             <>
-                              <TableCell className='p-1.5 text-center text-sm font-semibold'>-</TableCell>
-                              <TableCell className='p-1.5 text-left text-sm'>{slot.available ? slot.begin : slot.begin + ' - ' + slot.end} hs</TableCell>
+                              <TableCell className='p-1.5 text-center text-sm font-semibold'>{APPO_CONFIG.words.unavailable}</TableCell>
+                              <TableCell className='p-1.5 text-left text-sm'>{slot.available ? slot.begin : `${slot.begin} ${APPO_CONFIG.words.hoursSeparator} ${slot.end}`} {APPO_CONFIG.words.hours}</TableCell>
                               <TableCell className='p-1.5'></TableCell>
                               <TableCell className='p-1.5'></TableCell>
                             </>
