@@ -78,7 +78,7 @@ export default function ViewProfessional() {
               <CardTitle>
                 <div className='relative flex items-center justify-center'>
                   <h1 className='text-center text-2xl font-bold'>
-                    {capitalize(professional.lastName)}, {capitalize(professional.firstName)}
+                    {`${capitalize(professional.titleAbbreviation)} ${capitalize(professional.lastName)}, ${capitalize(professional.firstName)}`}
                   </h1>
                   <TooltipProvider delayDuration={0.3}>
                     <Tooltip>
