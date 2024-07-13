@@ -100,7 +100,7 @@ export default function ViewProfessional() {
                               <DropdownMenuItem>{PV_CONFIG.dropdownMenu[0].name}</DropdownMenuItem>
                             </Link>
                             {/* Send whatsapp */}
-                            <Link to={`/whatsapp/${professional._id}`}>
+                            <Link to={`/whatsapp/professional/${professional._id}`}>
                               <DropdownMenuItem>{PV_CONFIG.dropdownMenu[1].name}</DropdownMenuItem>
                             </Link>
                             {/* Edit user */}
