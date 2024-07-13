@@ -33,4 +33,5 @@ interface IProfessionalConfiguration {
   slotDuration: number;
   timeSlotUnavailableInit: string;
   timeSlotUnavailableEnd: string;
+  workingDays: number[];
 }
