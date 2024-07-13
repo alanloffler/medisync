@@ -105,7 +105,7 @@ export default function ViewProfessional() {
                               <DropdownMenuItem>{PV_CONFIG.dropdownMenu[1].name}</DropdownMenuItem>
                             </Link>
                             {/* Edit user */}
-                            <Link to={`/users/update/${professional._id}`}>
+                            <Link to={`/professionals/update/${professional._id}`}>
                               <DropdownMenuItem>{PV_CONFIG.dropdownMenu[2].name}</DropdownMenuItem>
                             </Link>
                           </DropdownMenuGroup>
