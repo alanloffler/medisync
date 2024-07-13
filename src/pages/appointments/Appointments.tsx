@@ -12,6 +12,7 @@ import { Steps } from '@/core/components/common/Steps';
 import { UsersCombo } from '@/pages/users/components/UsersCombo';
 // App
 import { APPO_CONFIG } from '@/pages/appointments/config/appointment.config';
+import { APP_CONFIG } from '@/config/app.config';
 import { AppoSchedule, IAppointment, ITimeSlot } from '@/pages/appointments/services/schedule.service';
 import { AppointmentApiService } from '@/pages/appointments/services/appointment.service';
 import { IDialog } from '@/core/interfaces/dialog.interface';
@@ -102,7 +103,7 @@ export default function Appointments() {
             schedule.insertAppointments(response);
           }
           if (response.statusCode) addNotification({ type: 'error', message: response.message });
-          if (response instanceof Error) addNotification({ type: 'error', message: 'Error en el servidor' });
+          if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
         });
         setTimeSlotsAvailable(
           schedule.timeSlots.reduce((acc, item) => {
@@ -136,7 +137,7 @@ export default function Appointments() {
         setOpenDialog(false);
       }
       if (newAppo.statusCode) addNotification({ type: 'error', message: newAppo.message });
-      if (newAppo instanceof Error) addNotification({ type: 'error', message: 'Error en el servidor' });
+      if (newAppo instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
     }
     if (!timeSlot) console.log('timeSlot undefined');
   }
@@ -150,7 +151,7 @@ export default function Appointments() {
           setOpenDialog(false);
         }
         if (response.statusCode) addNotification({ type: 'error', message: response.message });
-        if (response instanceof Error) addNotification({ type: 'error', message: 'Error en el servidor' });
+        if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
       });
     } else {
       console.log('Appo id undefined');
