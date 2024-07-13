@@ -11,4 +11,5 @@ export const PROF_SCHEMA = {
   timeSlotUnavailableInitMessage: 'Debes ingresar una hora de inicio',
   timeSlotUnavailableEndMessage: 'Debes ingresar una hora de fin',
   titleAbbreviationMessage: 'Debes ingresar una abreviación de título',
+  workingDaysMessage: 'Debes seleccionar los días laborales',
 };
