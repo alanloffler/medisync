@@ -1,8 +1,8 @@
 // Icons: https://lucide.dev/icons/
-import { ArrowLeft, Menu } from 'lucide-react';
+import { ArrowLeft, Calendar, Mail, Menu, Smartphone } from 'lucide-react';
 // Components: https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
-import { Card, CardHeader, CardTitle } from '@/core/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem } from '@/core/components/ui/dropdown-menu';
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@/core/components/ui/tooltip';
 // App components
@@ -20,14 +20,17 @@ import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { IEmail } from '@/core/interfaces/email.interface';
+import { useDelimiter } from '@/core/hooks/useDelimiter';
+import { Badge } from '@/core/components/ui/badge';
 // React component
 export default function ViewProfessional() {
   const [emailObject, setEmailObject] = useState<IEmail>({} as IEmail);
   const [infoCard, setInfoCard] = useState<IInfoCard>({} as IInfoCard);
-  const [isError, setIsError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [professional, setProfessional] = useState<IProfessional>({} as IProfessional);
+  const [showCard, setShowCard] = useState<boolean>(false);
   const capitalize = useCapitalize();
+  const delimiter = useDelimiter();
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -46,19 +49,18 @@ export default function ViewProfessional() {
             subject: PV_CONFIG.email.subject,
             body: `${PV_CONFIG.email.body[0]} ${capitalize(response.data?.firstName)}${PV_CONFIG.email.body[1]}`,
           });
+          setShowCard(true);
         }
         if (response.statusCode > 399) {
           setInfoCard({ text: response.message, type: 'warning' });
-          setIsError(true);
         }
         if (response instanceof Error) {
           setInfoCard({ text: APP_CONFIG.error.server, type: 'error' });
-          setIsError(true);
         }
       })
       .finally(() => setIsLoading(false));
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   return (
@@ -74,12 +76,11 @@ export default function ViewProfessional() {
       {/* Page content */}
       <div className='mx-auto mt-4 flex w-full flex-row px-2 md:w-[500px]'>
         <Card className='w-full'>
-        <CardHeader>
+          {showCard ? (
+            <CardHeader>
               <CardTitle>
                 <div className='relative flex items-center justify-center'>
-                  <h1 className='text-center text-2xl font-bold'>
-                    {`${capitalize(professional.titleAbbreviation)} ${capitalize(professional.lastName)}, ${capitalize(professional.firstName)}`}
-                  </h1>
+                  <h1 className='text-center text-2xl font-bold'>{`${capitalize(professional.titleAbbreviation)} ${capitalize(professional.lastName)}, ${capitalize(professional.firstName)}`}</h1>
                   <TooltipProvider delayDuration={0.3}>
                     <Tooltip>
                       <DropdownMenu>
@@ -115,18 +116,36 @@ export default function ViewProfessional() {
                 </div>
               </CardTitle>
             </CardHeader>
+          ) : (
+            <InfoCard text={infoCard.text} type={infoCard.type} className='py-6' />
+          )}
+          {isLoading ? (
+            <LoadingDB text={APP_CONFIG.loadingDB.findOneUser} className='-mt-12 py-6' />
+          ) : (
+            showCard && (
+              <CardContent className='mt-3 space-y-3'>
+                {' '}
+                <div className='flex items-center space-x-4'>
+                  <Calendar className='h-6 w-6' strokeWidth={2} />
+                  <span className='text-lg font-medium'>{professional.configuration.scheduleTimeInit + ' - ' + professional.configuration.timeSlotUnavailableInit + ' / ' + professional.configuration.timeSlotUnavailableEnd + ' - ' + professional.configuration.scheduleTimeEnd }</span>
+                </div>
+                <div className='flex items-center space-x-4'>
+                  <Smartphone className='h-6 w-6' strokeWidth={2} />
+                  <span className='text-lg font-medium'>{delimiter(professional.phone, '-', 6)}</span>
+                </div>
+                <div className='flex items-center space-x-4'>
+                  <Mail className='h-6 w-6' strokeWidth={2} />
+                  <span className='text-lg font-medium'>{professional.email}</span>
+                </div>
+                <div className='pt-2 space-x-4'>
+                  <Badge className='text-base'>{capitalize(professional.area.name)}</Badge>
+                  <Badge className='text-base'>{capitalize(professional.specialization.name)}</Badge>
+                </div>
+              </CardContent>
+            )
+          )}
         </Card>
       </div>
-      {isLoading ? (
-        <LoadingDB text={APP_CONFIG.loadingDB.findOneProfessional} />
-      ) : isError ? (
-        <InfoCard text={infoCard.text} type={infoCard.type} />
-      ) : (
-        <>
-          <div>ViewProfessional {id}</div>
-          <div>{capitalize(professional.lastName)}</div>
-        </>
-      )}
     </main>
   );
 }
