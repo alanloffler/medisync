@@ -348,7 +348,7 @@ export default function UpdateProfessional() {
                   {/* TODO: dynamic from settings! */}
                   <div className='flex flex-row font-semibold'>Configuración de agenda</div>
                   <div className='flex flex-row pt-2'>
-                    <BusinessDays />
+                    <BusinessDays label='Días laborales' />
                   </div>
                   <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
