@@ -15,13 +15,14 @@ import { Loading } from '@/core/components/common/Loading';
 import { PageHeader } from '@/core/components/common/PageHeader';
 // App
 import { AreaService } from '@/core/services/area.service';
+import { BusinessDays } from '@/pages/professionals/components/BusinessDays';
 import { IArea } from '@/core/interfaces/area.interface';
-import { IProfessional, IProfessionalForm } from '../interfaces/professional.interface';
+import { IProfessional, IProfessionalForm } from '@/pages/professionals/interfaces/professional.interface';
 import { ISpecialization } from '@/core/interfaces/specialization.interface';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { PROF_UPDATE_CONFIG as PU_CONFIG } from '../config/update-professional.config';
-import { ProfessionalApiService } from '../services/professional-api.service';
-import { professionalSchema } from '../schemas/professional.schema';
+import { PROF_UPDATE_CONFIG as PU_CONFIG } from '@/pages/professionals/config/update-professional.config';
+import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
+import { professionalSchema } from '@/pages/professionals/schemas/professional.schema';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useEffect, useState, MouseEvent, useRef } from 'react';
 import { useForm } from 'react-hook-form';
@@ -344,7 +345,11 @@ export default function UpdateProfessional() {
                   <div className='flex flex-row pt-4'>
                     <Separator />
                   </div>
+                  {/* TODO: dynamic from settings! */}
                   <div className='flex flex-row font-semibold'>Configuración de agenda</div>
+                  <div className='flex flex-row pt-2'>
+                    <BusinessDays />
+                  </div>
                   <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
                       control={updateForm.control}
