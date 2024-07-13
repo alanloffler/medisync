@@ -15,5 +15,6 @@ export const professionalSchema = z.object({
     scheduleTimeEnd: z.string().min(2, { message: PROF_SCHEMA.scheduleTimeEndMessage }),
     timeSlotUnavailableInit: z.string().min(2, { message: PROF_SCHEMA.timeSlotUnavailableInitMessage }),
     timeSlotUnavailableEnd: z.string().min(2, { message: PROF_SCHEMA.timeSlotUnavailableEndMessage }),
+    workingDays: z.array(z.coerce.number().min(1, { message: PROF_SCHEMA.workingDaysMessage })),
   }),
 });
