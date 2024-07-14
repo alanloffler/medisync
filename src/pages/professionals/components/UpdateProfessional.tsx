@@ -11,11 +11,12 @@ import { Label } from '@/core/components/ui/label';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/core/components/ui/select';
 import { Switch } from '@/core/components/ui/switch';
 // App components
+import { BusinessDays } from '@/pages/professionals/components/BusinessDays';
 import { Loading } from '@/core/components/common/Loading';
 import { PageHeader } from '@/core/components/common/PageHeader';
 // App
+import { APP_CONFIG } from '@/config/app.config';
 import { AreaService } from '@/core/services/area.service';
-import { BusinessDays } from '@/pages/professionals/components/BusinessDays';
 import { IArea } from '@/core/interfaces/area.interface';
 import { IProfessional, IProfessionalForm } from '@/pages/professionals/interfaces/professional.interface';
 import { ISpecialization } from '@/core/interfaces/specialization.interface';
@@ -84,7 +85,7 @@ export default function UpdateProfessional() {
         setAreasLoading(false);
       }
       if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
-      if (response instanceof Error) addNotification({ type: 'error', message: 'Error en el servidor buscando areas' });
+      if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
