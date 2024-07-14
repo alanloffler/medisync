@@ -7,6 +7,7 @@ export const PROF_SCHEMA = {
   phoneMessage: 'Debes ingresar un número de teléfono',
   scheduleTimeInitMessage: 'Debes ingresar una hora de inicio',
   scheduleTimeEndMessage: 'Debes ingresar una hora de fin',
+  slotDurationMessage: 'Debes ingresar la duración de los turnos',
   specializationMessage: 'Debes seleccionar una especialización',
   timeSlotUnavailableInitMessage: 'Debes ingresar una hora de inicio',
   timeSlotUnavailableEndMessage: 'Debes ingresar una hora de fin',
