@@ -29,7 +29,6 @@ export function BusinessDays({ label, bdValues, setBdValues }: BusinessDaysProps
       updatedValues.value = checked;
       setBdValues([...bdValues]); // Actualizar los valores en el estado con la copia updatedValues);
     }
-
     console.log('updatesValues', updatedValues);
     // console.log(bdValues);
   }
@@ -38,7 +37,7 @@ export function BusinessDays({ label, bdValues, setBdValues }: BusinessDaysProps
     <div className='flex w-full flex-col space-y-3'>
       <Label className=''>{label}</Label>
       <div className='flex w-full flex-row items-center justify-start gap-2'>
-        {bdValues.map((day, index) => (
+        {bdValues.map((_, index) => (
           <div key={index} className='flex flex-col items-center'>
             <Checkbox
               
