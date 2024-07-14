@@ -141,20 +141,18 @@ export default function UpdateProfessional() {
   function handleUpdateProfessional(data: z.infer<typeof professionalSchema>) {
     if (id) {
       console.log('checkboxes', workingDaysValues);
-
-      
       console.log(data);
-      // ProfessionalApiService
-      // .update(id, data)
-      // .then((response) => {
-      //   if (response.statusCode === 200) {
-      //     setDisabledSaveButton(true);
-      //     addNotification({ type: 'success', message: response.message });
-      //     console.log('data', data);
-      //   }
-      //   if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
-      //   if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
-      // });
+      // prettier-ignore
+      ProfessionalApiService
+      .update(id, data)
+      .then((response) => {
+        if (response.statusCode === 200) {
+          setDisabledSaveButton(true);
+          addNotification({ type: 'success', message: response.message });
+        }
+        if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
+        if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
+      });
     }
   }
 
@@ -295,7 +293,6 @@ export default function UpdateProfessional() {
                       name='available'
                       render={({ field }) => (
                         <FormItem className=''>
-                          {/* <FormLabel>{}</FormLabel> */}
                           <FormControl className='h-9'>
                             <div className='flex h-full items-center space-x-4 pb-2 pt-4 md:place-content-center md:pb-0 md:pt-8 lg:place-content-center lg:pb-0 lg:pt-8'>
                               <Switch id='available' checked={field.value} onCheckedChange={field.onChange} />
