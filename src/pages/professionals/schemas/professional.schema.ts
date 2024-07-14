@@ -1,9 +1,9 @@
 import { z } from 'zod';
-import { PROF_SCHEMA } from '../config/schemas.config';
+import { PROF_SCHEMA } from '@/pages/professionals/config/schemas.config';
 
 const workingDaySchema = z.object({
   day: z.number(),
-  value: z.boolean()
+  value: z.boolean(),
 });
 
 export const professionalSchema = z.object({
@@ -20,13 +20,11 @@ export const professionalSchema = z.object({
     scheduleTimeEnd: z.string().min(2, { message: PROF_SCHEMA.scheduleTimeEndMessage }),
     timeSlotUnavailableInit: z.string().min(2, { message: PROF_SCHEMA.timeSlotUnavailableInitMessage }),
     timeSlotUnavailableEnd: z.string().min(2, { message: PROF_SCHEMA.timeSlotUnavailableEndMessage }),
-    // workingDays: z.array(z.coerce.number()).nonempty().min(1, { message: PROF_SCHEMA.workingDaysMessage }),
-    
-    workingDays: z.array(workingDaySchema).refine((days) => {
-      // Comprobar que al menos un objeto tiene value: true
-      return days.some(day => day.value === true);
-    }, {
-      message: "At least one day must have value as true"
-    })
+    workingDays: z.array(workingDaySchema).refine(
+      (days) => {
+        return days.some((day) => day.value === true);
+      },
+      { message: PROF_SCHEMA.workingDaysMessage },
+    ),
   }),
 });
