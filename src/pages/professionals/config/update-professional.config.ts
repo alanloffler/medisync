@@ -24,6 +24,7 @@ export const PROF_UPDATE_CONFIG = {
     timeSlotUnavailableInit: 'Inicio de descanso',
     timeSlotUnavailableEnd: 'Fin de descanso',
     titleAbbreviation: 'Título',
+    workingDays: 'Días laborables',
   },
   placeholders: {
     area: 'Ingresá el área',
