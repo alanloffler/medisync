@@ -29,6 +29,7 @@ import { useForm } from 'react-hook-form';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { APP_CONFIG } from '@/config/app.config';
 // React component
 export default function UpdateProfessional() {
   const [areas, setAreas] = useState<IArea[]>([]);
@@ -56,6 +57,7 @@ export default function UpdateProfessional() {
       scheduleTimeEnd: '',
       timeSlotUnavailableEnd: '',
       timeSlotUnavailableInit: '',
+      workingDays: [],
     },
     email: '',
     firstName: '',
@@ -91,6 +93,7 @@ export default function UpdateProfessional() {
         setProfessionalLoading(false);
         setIsLoading(false);
         setDisabledSaveButton(false);
+        console.log('response.data', response.data);
       });
     }
   }, [areasLoading, id]);
@@ -113,6 +116,9 @@ export default function UpdateProfessional() {
       updateForm.setValue('configuration.scheduleTimeEnd', professional.configuration?.scheduleTimeEnd || '');
       updateForm.setValue('configuration.timeSlotUnavailableInit', professional.configuration?.timeSlotUnavailableInit || '');
       updateForm.setValue('configuration.timeSlotUnavailableEnd', professional.configuration?.timeSlotUnavailableEnd || '');
+
+      // updateForm.setValue('configuration.workingDays', professional.configuration?.workingDays || []);
+      updateForm.setValue('configuration.workingDays', bdValues);
       valuesRef.current = updateForm.getValues();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -128,14 +134,19 @@ export default function UpdateProfessional() {
   // #region Form actions
   function handleUpdateProfessional(data: z.infer<typeof professionalSchema>) {
     if (id) {
-      ProfessionalApiService.update(id, data).then((response) => {
-        if (response.statusCode === 200) {
-          setDisabledSaveButton(true);
-          addNotification({ type: 'success', message: response.message });
-        }
-        if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
-        if (response instanceof Error) addNotification({ type: 'error', message: 'Internal Server Error' });
-      });
+      console.log('checkboxes', bdValues)
+      console.log(data);
+      // ProfessionalApiService
+      // .update(id, data)
+      // .then((response) => {
+      //   if (response.statusCode === 200) {
+      //     setDisabledSaveButton(true);
+      //     addNotification({ type: 'success', message: response.message });
+      //     console.log('data', data);
+      //   }
+      //   if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
+      //   if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
+      // });
     }
   }
 
@@ -146,6 +157,7 @@ export default function UpdateProfessional() {
     setDisabledSaveButton(false);
   }
   // #endregion
+  const [bdValues, setBdValues] = useState([{ day: 0, value: true }, { day: 1, value: true }, { day: 2, value: false }, { day: 3, value: true }, { day: 4, value: true }, {day: 5, value: false }]);
   return (
     <main className='flex flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
       {/* Page Header */}
@@ -348,7 +360,19 @@ export default function UpdateProfessional() {
                   {/* TODO: dynamic from settings! */}
                   <div className='flex flex-row font-semibold'>Configuración de agenda</div>
                   <div className='flex flex-row pt-2'>
-                    <BusinessDays label='Días laborales' />
+                    <FormField
+                      control={updateForm.control}
+                      name='configuration.workingDays'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl className='h-9'>
+                            <BusinessDays label='Días laborales' bdValues={field.value} setBdValues={setBdValues} />
+                          </FormControl>
+                            {JSON.stringify(bdValues)}
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </div>
                   <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
