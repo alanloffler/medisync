@@ -57,8 +57,9 @@ export default function UpdateProfessional() {
     area: '',
     available: true,
     configuration: {
-      scheduleTimeInit: '',
       scheduleTimeEnd: '',
+      scheduleTimeInit: '',
+      slotDuration: 0,
       timeSlotUnavailableEnd: '',
       timeSlotUnavailableInit: '',
       workingDays: [],
@@ -106,26 +107,25 @@ export default function UpdateProfessional() {
 
   useEffect(() => {
     if (!areasLoading && !professionalLoading) {
-      // console.log('areas and professional data loaded, then do something');
       // set area value, update specs for select then force specs select re-render
       updateForm.setValue('area', professional.area._id);
       handleChangeArea(professional.area._id);
       setSpecKey(crypto.randomUUID());
-      updateForm.setValue('specialization', professional.specialization._id);
-      updateForm.setValue('titleAbbreviation', capitalize(professional.titleAbbreviation) || '');
+      updateForm.setValue('available', professional.available);
+      updateForm.setValue('configuration.scheduleTimeEnd', professional.configuration?.scheduleTimeEnd || '');
+      updateForm.setValue('configuration.scheduleTimeInit', professional.configuration?.scheduleTimeInit || '');
+      updateForm.setValue('configuration.slotDuration', professional.configuration?.slotDuration || 0);
+      updateForm.setValue('configuration.timeSlotUnavailableEnd', professional.configuration?.timeSlotUnavailableEnd || '');
+      updateForm.setValue('configuration.timeSlotUnavailableInit', professional.configuration?.timeSlotUnavailableInit || '');
+      updateForm.setValue('configuration.workingDays', workingDaysValues);
+      updateForm.setValue('email', professional.email);
       updateForm.setValue('firstName', capitalize(professional.firstName) || '');
       updateForm.setValue('lastName', capitalize(professional.lastName) || '');
-      updateForm.setValue('email', professional.email);
       updateForm.setValue('phone', professional.phone);
-      updateForm.setValue('available', professional.available);
-      updateForm.setValue('configuration.scheduleTimeInit', professional.configuration?.scheduleTimeInit || '');
-      updateForm.setValue('configuration.scheduleTimeEnd', professional.configuration?.scheduleTimeEnd || '');
-      updateForm.setValue('configuration.timeSlotUnavailableInit', professional.configuration?.timeSlotUnavailableInit || '');
-      updateForm.setValue('configuration.timeSlotUnavailableEnd', professional.configuration?.timeSlotUnavailableEnd || '');
-      
+      updateForm.setValue('specialization', professional.specialization._id);
+      updateForm.setValue('titleAbbreviation', capitalize(professional.titleAbbreviation) || '');
+      // Save form values for reset
       valuesRef.current = updateForm.getValues();
-      // WIP - Business days
-      updateForm.setValue('configuration.workingDays', workingDaysValues);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [areasLoading, professionalLoading]);
