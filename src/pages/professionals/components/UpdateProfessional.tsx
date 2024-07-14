@@ -29,7 +29,6 @@ import { useForm } from 'react-hook-form';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { APP_CONFIG } from '@/config/app.config';
 // React component
 export default function UpdateProfessional() {
   const [areas, setAreas] = useState<IArea[]>([]);
@@ -47,6 +46,16 @@ export default function UpdateProfessional() {
   const capitalize = useCapitalize();
   const navigate = useNavigate();
   const valuesRef = useRef<IProfessionalForm>({} as IProfessionalForm); // Used to reset form to stored values on db
+
+  const [bdValues, setBdValues] = useState([
+    { day: 0, value: true },
+    { day: 1, value: true },
+    { day: 2, value: false },
+    { day: 3, value: true },
+    { day: 4, value: true },
+    { day: 5, value: false },
+  ]);
+
   // #region Form config and actions
   const defaultValues = {
     _id: '',
@@ -118,7 +127,7 @@ export default function UpdateProfessional() {
       updateForm.setValue('configuration.timeSlotUnavailableEnd', professional.configuration?.timeSlotUnavailableEnd || '');
 
       // updateForm.setValue('configuration.workingDays', professional.configuration?.workingDays || []);
-      updateForm.setValue('configuration.workingDays', bdValues);
+      updateForm.setValue('configuration.workingDays', professional.configuration?.workingDays || []);
       valuesRef.current = updateForm.getValues();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -134,7 +143,9 @@ export default function UpdateProfessional() {
   // #region Form actions
   function handleUpdateProfessional(data: z.infer<typeof professionalSchema>) {
     if (id) {
-      console.log('checkboxes', bdValues)
+      console.log('checkboxes', bdValues);
+
+      // professionalSchema.parse(data);
       console.log(data);
       // ProfessionalApiService
       // .update(id, data)
@@ -157,7 +168,6 @@ export default function UpdateProfessional() {
     setDisabledSaveButton(false);
   }
   // #endregion
-  const [bdValues, setBdValues] = useState([{ day: 0, value: true }, { day: 1, value: true }, { day: 2, value: false }, { day: 3, value: true }, { day: 4, value: true }, {day: 5, value: false }]);
   return (
     <main className='flex flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
       {/* Page Header */}
@@ -366,9 +376,10 @@ export default function UpdateProfessional() {
                       render={({ field }) => (
                         <FormItem>
                           <FormControl className='h-9'>
+                            {/* here make a function inside setBdValues and before put value on field.value */}
                             <BusinessDays label='Días laborales' bdValues={field.value} setBdValues={setBdValues} />
                           </FormControl>
-                            {JSON.stringify(bdValues)}
+                          {/* {JSON.stringify(bdValues)} */}
                           <FormMessage />
                         </FormItem>
                       )}
