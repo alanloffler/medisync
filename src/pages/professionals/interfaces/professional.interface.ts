@@ -1,17 +1,17 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { IArea } from '@/core/interfaces/area.interface';
 import { ISpecialization } from '@/core/interfaces/specialization.interface';
+import { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
 
 export interface IProfessionalForm {
   area: string;
   available: boolean;
+  configuration: IProfessionalConfiguration;
   email: string;
   firstName: string;
   lastName: string;
   phone: number | string;
   specialization: string;
   titleAbbreviation: string;
-  configuration: IProfessionalConfiguration;
 }
 
 export interface IProfessional {
@@ -28,15 +28,10 @@ export interface IProfessional {
 }
 
 interface IProfessionalConfiguration {
-  scheduleTimeInit: string;
   scheduleTimeEnd: string;
+  scheduleTimeInit: string;
   slotDuration: number;
-  timeSlotUnavailableInit: string;
   timeSlotUnavailableEnd: string;
-  workingDays: wd[];
-}
-
-interface wd {
-  day: number;
-  value: boolean;
+  timeSlotUnavailableInit: string;
+  workingDays: IWorkingDay[];
 }
