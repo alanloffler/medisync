@@ -19,6 +19,7 @@ import { BusinessDays } from '@/pages/professionals/components/BusinessDays';
 import { IArea } from '@/core/interfaces/area.interface';
 import { IProfessional, IProfessionalForm } from '@/pages/professionals/interfaces/professional.interface';
 import { ISpecialization } from '@/core/interfaces/specialization.interface';
+import { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { PROF_UPDATE_CONFIG as PU_CONFIG } from '@/pages/professionals/config/update-professional.config';
 import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
@@ -46,15 +47,8 @@ export default function UpdateProfessional() {
   const capitalize = useCapitalize();
   const navigate = useNavigate();
   const valuesRef = useRef<IProfessionalForm>({} as IProfessionalForm); // Used to reset form to stored values on db
-
-  const [bdValues, setBdValues] = useState([
-    { day: 0, value: true },
-    { day: 1, value: true },
-    { day: 2, value: false },
-    { day: 3, value: true },
-    { day: 4, value: true },
-    { day: 5, value: false },
-  ]);
+  // WIP - Business days
+  const [workingDaysValues, setWorkingDaysValues] = useState<IWorkingDay[]>([] as IWorkingDay[]);
 
   // #region Form config and actions
   const defaultValues = {
@@ -102,6 +96,8 @@ export default function UpdateProfessional() {
         setProfessionalLoading(false);
         setIsLoading(false);
         setDisabledSaveButton(false);
+        // WIP - Business days
+        setWorkingDaysValues(response.data.configuration.workingDays);
         console.log('response.data', response.data);
       });
     }
@@ -125,10 +121,10 @@ export default function UpdateProfessional() {
       updateForm.setValue('configuration.scheduleTimeEnd', professional.configuration?.scheduleTimeEnd || '');
       updateForm.setValue('configuration.timeSlotUnavailableInit', professional.configuration?.timeSlotUnavailableInit || '');
       updateForm.setValue('configuration.timeSlotUnavailableEnd', professional.configuration?.timeSlotUnavailableEnd || '');
-
-      // updateForm.setValue('configuration.workingDays', professional.configuration?.workingDays || []);
-      updateForm.setValue('configuration.workingDays', professional.configuration?.workingDays || []);
+      
       valuesRef.current = updateForm.getValues();
+      // WIP - Business days
+      updateForm.setValue('configuration.workingDays', workingDaysValues);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [areasLoading, professionalLoading]);
@@ -143,9 +139,9 @@ export default function UpdateProfessional() {
   // #region Form actions
   function handleUpdateProfessional(data: z.infer<typeof professionalSchema>) {
     if (id) {
-      console.log('checkboxes', bdValues);
+      console.log('checkboxes', workingDaysValues);
 
-      // professionalSchema.parse(data);
+      
       console.log(data);
       // ProfessionalApiService
       // .update(id, data)
@@ -166,6 +162,11 @@ export default function UpdateProfessional() {
     updateForm.reset(valuesRef.current);
     setDisabledSpec(true);
     setDisabledSaveButton(false);
+  }
+  // WIP - Business days
+  function handleWorkingDaysValues(data: IWorkingDay[]) {
+    setWorkingDaysValues(data);
+    updateForm.setValue('configuration.workingDays', data);
   }
   // #endregion
   return (
@@ -374,12 +375,15 @@ export default function UpdateProfessional() {
                       control={updateForm.control}
                       name='configuration.workingDays'
                       render={({ field }) => (
-                        <FormItem>
-                          <FormControl className='h-9'>
-                            {/* here make a function inside setBdValues and before put value on field.value */}
-                            <BusinessDays label='Días laborales' bdValues={field.value} setBdValues={setBdValues} />
+                        <FormItem className='w-full'>
+                          <FormControl>
+                            {/* prettier-ignore */}
+                            <BusinessDays 
+                              label={PU_CONFIG.labels.workingDays} 
+                              data={field.value} 
+                              handleWorkingDaysValues={handleWorkingDaysValues} 
+                            />
                           </FormControl>
-                          {/* {JSON.stringify(bdValues)} */}
                           <FormMessage />
                         </FormItem>
                       )}
