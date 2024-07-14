@@ -11,7 +11,7 @@ import { Label } from '@/core/components/ui/label';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/core/components/ui/select';
 import { Switch } from '@/core/components/ui/switch';
 // App components
-import { BusinessDays } from '@/pages/professionals/components/BusinessDays';
+import { WorkingDays } from '@/pages/professionals/components/common/WorkingDays';
 import { Loading } from '@/core/components/common/Loading';
 import { PageHeader } from '@/core/components/common/PageHeader';
 // App
@@ -379,7 +379,7 @@ export default function UpdateProfessional() {
                         <FormItem className='w-full'>
                           <FormControl>
                             {/* prettier-ignore */}
-                            <BusinessDays 
+                            <WorkingDays 
                               label={PU_CONFIG.labels.workingDays} 
                               data={field.value} 
                               handleWorkingDaysValues={handleWorkingDaysValues} 
