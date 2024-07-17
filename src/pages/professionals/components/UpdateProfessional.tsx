@@ -367,7 +367,7 @@ export default function UpdateProfessional() {
                     <Separator />
                   </div>
                   <div className='flex flex-row font-semibold'>{PU_CONFIG.formSubtitle}</div>
-                  {/* Working Days */}
+                  {/* Schedule working days */}
                   <div className='flex flex-row pt-2'>
                     <FormField
                       control={updateForm.control}
