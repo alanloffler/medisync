@@ -387,6 +387,10 @@ export default function UpdateProfessional() {
                       )}
                     />
                   </div>
+                  {/* Time slot duration */}
+                  <div className='flex flex-row pt-2'>
+                    Time slot duration here
+                  </div>
                   {/* Schedule time init and end */}
                   <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
