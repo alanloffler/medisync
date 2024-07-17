@@ -388,8 +388,20 @@ export default function UpdateProfessional() {
                     />
                   </div>
                   {/* Time slot duration */}
-                  <div className='flex flex-row pt-2'>
-                    Time slot duration here
+                  <div className='grid grid-cols-2 gap-6 pt-2'>
+                    <FormField
+                      control={updateForm.control}
+                      name='configuration.slotDuration'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{PU_CONFIG.labels.slotDuration}</FormLabel>
+                          <FormControl className='h-9 w-1/2'>
+                            <Input type='number' placeholder={PU_CONFIG.placeholders.slotDuration} {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </div>
                   {/* Schedule time init and end */}
                   <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
