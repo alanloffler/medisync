@@ -20,7 +20,7 @@ export const PROF_UPDATE_CONFIG = {
     phone: 'Teléfono',
     scheduleTimeEnd: 'Fin de turnos',
     scheduleTimeInit: 'Inicio de turnos',
-    slotDuration: 'Duración del turno',
+    slotDuration: 'Duración del turno (min)',
     specialization: 'Especialidad',
     timeSlotUnavailableEnd: 'Fin de descanso',
     timeSlotUnavailableInit: 'Inicio de descanso',
