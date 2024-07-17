@@ -26,6 +26,7 @@ import { useForm } from 'react-hook-form';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { IResponse } from '@/core/interfaces/response.interface';
 // React component
 export default function CreateProfessional() {
   const [areas, setAreas] = useState<IArea[]>([]);
@@ -39,9 +40,9 @@ export default function CreateProfessional() {
   // #region Load data
   useEffect(() => {
     setIsLoading(true);
-    AreaService.findAll().then((response) => {
-      if (!response.statusCode) {
-        setAreas(response);
+    AreaService.findAll().then((response: IResponse) => {
+      if (response.statusCode === 200) {
+        setAreas(response.data);
         setDisabledSpec(false);
         addNotification({ type: 'success', message: 'Areas y especialidades cargadas' });
       }
