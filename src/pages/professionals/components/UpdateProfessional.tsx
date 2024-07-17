@@ -117,7 +117,8 @@ export default function UpdateProfessional() {
       updateForm.setValue('configuration.slotDuration', professional.configuration?.slotDuration || 0);
       updateForm.setValue('configuration.timeSlotUnavailableEnd', professional.configuration?.timeSlotUnavailableEnd || '');
       updateForm.setValue('configuration.timeSlotUnavailableInit', professional.configuration?.timeSlotUnavailableInit || '');
-      updateForm.setValue('configuration.workingDays', workingDaysValues);
+      // updateForm.setValue('configuration.workingDays', workingDaysValues);
+      updateForm.setValue('configuration.workingDays', professional.configuration?.workingDays);
       updateForm.setValue('email', professional.email);
       updateForm.setValue('firstName', capitalize(professional.firstName) || '');
       updateForm.setValue('lastName', capitalize(professional.lastName) || '');
