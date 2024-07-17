@@ -387,7 +387,7 @@ export default function UpdateProfessional() {
                       )}
                     />
                   </div>
-                  {/* Time slot duration */}
+                  {/* Schedule time slot duration */}
                   <div className='grid grid-cols-1 md:grid-cols-2 gap-6 pt-2'>
                     <FormField
                       control={updateForm.control}
@@ -432,7 +432,7 @@ export default function UpdateProfessional() {
                       )}
                     />
                   </div>
-                  {/* Time slot unavailable init and end */}
+                  {/* Schedule time slot unavailable init and end */}
                   <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
                       control={updateForm.control}
