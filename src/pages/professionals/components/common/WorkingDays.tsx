@@ -3,10 +3,16 @@ import { Checkbox } from '@/core/components/ui/checkbox';
 import { Label } from '@/core/components/ui/label';
 // App
 import { IWorkingDaysProps } from '@/pages/professionals/interfaces/working-days.interface';
+import { useEffect } from 'react';
 // React component
 export function WorkingDays({ label, data, handleWorkingDaysValues }: IWorkingDaysProps) {
   // TODO: get this data from another editable way
   const DAYS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+  
+  useEffect(() => {
+    if (data.length === 0) handleWorkingDaysValues(DAYS.map((_, index) => ({ day: index, value: false })));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   // Actions when checkbox checked changes
   function handleCheckedChange(dayIndex: number, checked: boolean) {
     const updatedValues = data.find((value) => value.day === dayIndex);
