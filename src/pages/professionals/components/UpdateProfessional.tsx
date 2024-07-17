@@ -366,8 +366,7 @@ export default function UpdateProfessional() {
                   <div className='flex flex-row pt-4'>
                     <Separator />
                   </div>
-                  {/* TODO: dynamic from settings! */}
-                  <div className='flex flex-row font-semibold'>Configuración de agenda</div>
+                  <div className='flex flex-row font-semibold'>{PU_CONFIG.formSubtitle}</div>
                   <div className='flex flex-row pt-2'>
                     <FormField
                       control={updateForm.control}
