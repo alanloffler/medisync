@@ -362,11 +362,12 @@ export default function UpdateProfessional() {
                       )}
                     />
                   </div>
-                  {/* Schedule*/}
+                  {/* FORM SECTION: Schedule */}
                   <div className='flex flex-row pt-4'>
                     <Separator />
                   </div>
                   <div className='flex flex-row font-semibold'>{PU_CONFIG.formSubtitle}</div>
+                  {/* Working Days */}
                   <div className='flex flex-row pt-2'>
                     <FormField
                       control={updateForm.control}
@@ -386,6 +387,7 @@ export default function UpdateProfessional() {
                       )}
                     />
                   </div>
+                  {/* Schedule time init and end */}
                   <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
                       control={updateForm.control}
@@ -414,6 +416,7 @@ export default function UpdateProfessional() {
                       )}
                     />
                   </div>
+                  {/* Time slot unavailable init and end */}
                   <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
                       control={updateForm.control}
