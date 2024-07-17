@@ -388,7 +388,7 @@ export default function UpdateProfessional() {
                     />
                   </div>
                   {/* Time slot duration */}
-                  <div className='grid grid-cols-2 gap-6 pt-2'>
+                  <div className='grid grid-cols-1 md:grid-cols-2 gap-6 pt-2'>
                     <FormField
                       control={updateForm.control}
                       name='configuration.slotDuration'
