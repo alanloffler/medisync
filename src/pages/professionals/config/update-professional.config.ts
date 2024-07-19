@@ -4,10 +4,15 @@ export const PROF_UPDATE_CONFIG = {
     { id: 2, name: 'Profesionales', path: '/professionals' },
     { id: 3, name: 'Actualizar', path: '/update' },
   ],
-  buttons: {
+  button: {
+    back: 'Volver',
     cancel: 'Cancelar',
     create: 'Actualizar profesional',
   },
+  dropdownMenu: [
+    { id: 1, name: 'Agregar área', path: '/' },
+    { id: 2, name: 'Agregar especialidad', path: '/' },
+  ],
   formDescription: 'Modificá los datos para actualizar a un profesional',
   formSubtitle: 'Configuración de agenda',
   formTitle: 'Formulario de actualización',
