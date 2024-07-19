@@ -88,5 +88,7 @@ export const PROF_VIEW_CONFIG = {
   },
   words: {
     and: 'y',
+    hoursSeparator: 'a',
+    slotsSeparator: '-',
   }
 }
