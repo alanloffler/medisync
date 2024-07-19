@@ -117,7 +117,6 @@ export default function UpdateProfessional() {
       updateForm.setValue('configuration.slotDuration', professional.configuration?.slotDuration || 0);
       updateForm.setValue('configuration.timeSlotUnavailableEnd', professional.configuration?.timeSlotUnavailableEnd || '');
       updateForm.setValue('configuration.timeSlotUnavailableInit', professional.configuration?.timeSlotUnavailableInit || '');
-      // updateForm.setValue('configuration.workingDays', workingDaysValues);
       updateForm.setValue('configuration.workingDays', professional.configuration?.workingDays);
       updateForm.setValue('email', professional.email);
       updateForm.setValue('firstName', capitalize(professional.firstName) || '');
@@ -158,8 +157,12 @@ export default function UpdateProfessional() {
   }
 
   function handleCancel(event: MouseEvent<HTMLButtonElement>) {
+    // TODO reset to db values Working days array!
+    console.log('ref', valuesRef.current);
+    console.log(valuesRef.current.configuration.workingDays);
     event.preventDefault();
     updateForm.reset(valuesRef.current);
+    updateForm.setValue('configuration.workingDays', workingDaysValues);
     setDisabledSpec(true);
     setDisabledSaveButton(false);
   }
