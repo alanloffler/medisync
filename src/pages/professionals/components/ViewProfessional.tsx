@@ -167,7 +167,7 @@ export default function ViewProfessional() {
                 </div>
                 <div className='flex items-center space-x-4'>
                   <CalendarClock className='h-6 w-6' strokeWidth={2} />
-                  <span className='text-base font-medium'>{professional.configuration.scheduleTimeInit + ' - ' + professional.configuration.timeSlotUnavailableInit + ' / ' + professional.configuration.timeSlotUnavailableEnd + ' - ' + professional.configuration.scheduleTimeEnd}</span>
+                  <span className='text-base font-medium'>{`${professional.configuration.scheduleTimeInit} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.timeSlotUnavailableInit} ${PV_CONFIG.words.slotsSeparator} ${professional.configuration.timeSlotUnavailableEnd} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.scheduleTimeEnd}`}</span>
                 </div>
                 <div className='flex items-center space-x-4'>
                   <Smartphone className='h-6 w-6' strokeWidth={2} />
