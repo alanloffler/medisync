@@ -2,12 +2,12 @@
 import { Checkbox } from '@/core/components/ui/checkbox';
 import { Label } from '@/core/components/ui/label';
 // App
+import { APP_CONFIG } from '@/config/app.config';
 import { IWorkingDaysProps } from '@/pages/professionals/interfaces/working-days.interface';
 // React component
 export function WorkingDays({ label, data, handleWorkingDaysValues }: IWorkingDaysProps) {
-  // TODO: get this data from another editable way
-  const DAYS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-  // Actions when checkbox checked changes
+  const DAYS = APP_CONFIG.daysofWeek.long;
+
   function handleCheckedChange(dayIndex: number, checked: boolean) {
     const updatedValues = data.find((value) => value.day === dayIndex);
     if (updatedValues) {
