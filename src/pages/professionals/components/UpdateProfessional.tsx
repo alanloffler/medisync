@@ -5,15 +5,15 @@ import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/core/components/ui/dropdown-menu';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/core/components/ui/form';
-import { Separator } from '@/core/components/ui/separator';
 import { Input } from '@/core/components/ui/input';
 import { Label } from '@/core/components/ui/label';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/core/components/ui/select';
+import { Separator } from '@/core/components/ui/separator';
 import { Switch } from '@/core/components/ui/switch';
 // App components
-import { WorkingDays } from '@/pages/professionals/components/common/WorkingDays';
 import { Loading } from '@/core/components/common/Loading';
 import { PageHeader } from '@/core/components/common/PageHeader';
+import { WorkingDays } from '@/pages/professionals/components/common/WorkingDays';
 // App
 import { APP_CONFIG } from '@/config/app.config';
 import { AreaService } from '@/core/services/area.service';
@@ -36,21 +36,18 @@ export default function UpdateProfessional() {
   const [areas, setAreas] = useState<IArea[]>([]);
   const [areasLoading, setAreasLoading] = useState<boolean>(true);
   const [disabledSpec, setDisabledSpec] = useState<boolean>(true);
-  const [disabledSaveButton, setDisabledSaveButton] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [professional, setProfessional] = useState<IProfessional>({} as IProfessional);
   const [professionalLoading, setProfessionalLoading] = useState<boolean>(true);
   const [specKey, setSpecKey] = useState<string>('');
   const [specializations, setSpecializations] = useState<ISpecialization[]>();
-
+  const [workingDaysKey, setWorkingDaysKey] = useState<string>('');
+  const [workingDaysValuesRef, setWorkingDaysValuesRef] = useState<IWorkingDay[]>([] as IWorkingDay[]);
   const { id } = useParams();
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const navigate = useNavigate();
   const valuesRef = useRef<IProfessionalForm>({} as IProfessionalForm); // Used to reset form to stored values on db
-  // WIP - Business days
-  const [workingDaysValues, setWorkingDaysValues] = useState<IWorkingDay[]>([] as IWorkingDay[]);
-
   // #region Form config and actions
   const defaultValues = {
     _id: '',
@@ -97,10 +94,7 @@ export default function UpdateProfessional() {
         setProfessional(response.data);
         setProfessionalLoading(false);
         setIsLoading(false);
-        setDisabledSaveButton(false);
-        // WIP - Business days
-        setWorkingDaysValues(response.data.configuration.workingDays);
-        console.log('response.data', response.data);
+        setWorkingDaysValuesRef(response.data.configuration?.workingDays || []);
       });
     }
   }, [areasLoading, id]);
@@ -112,11 +106,11 @@ export default function UpdateProfessional() {
       handleChangeArea(professional.area._id);
       setSpecKey(crypto.randomUUID());
       updateForm.setValue('available', professional.available);
-      updateForm.setValue('configuration.scheduleTimeEnd', professional.configuration?.scheduleTimeEnd || '');
-      updateForm.setValue('configuration.scheduleTimeInit', professional.configuration?.scheduleTimeInit || '');
-      updateForm.setValue('configuration.slotDuration', professional.configuration?.slotDuration || 0);
-      updateForm.setValue('configuration.timeSlotUnavailableEnd', professional.configuration?.timeSlotUnavailableEnd || '');
-      updateForm.setValue('configuration.timeSlotUnavailableInit', professional.configuration?.timeSlotUnavailableInit || '');
+      updateForm.setValue('configuration.scheduleTimeEnd', professional.configuration?.scheduleTimeEnd);
+      updateForm.setValue('configuration.scheduleTimeInit', professional.configuration?.scheduleTimeInit);
+      updateForm.setValue('configuration.slotDuration', professional.configuration?.slotDuration);
+      updateForm.setValue('configuration.timeSlotUnavailableEnd', professional.configuration?.timeSlotUnavailableEnd);
+      updateForm.setValue('configuration.timeSlotUnavailableInit', professional.configuration?.timeSlotUnavailableInit);
       updateForm.setValue('configuration.workingDays', professional.configuration?.workingDays);
       updateForm.setValue('email', professional.email);
       updateForm.setValue('firstName', capitalize(professional.firstName) || '');
@@ -124,30 +118,28 @@ export default function UpdateProfessional() {
       updateForm.setValue('phone', professional.phone);
       updateForm.setValue('specialization', professional.specialization._id);
       updateForm.setValue('titleAbbreviation', capitalize(professional.titleAbbreviation) || '');
-      // Save form values for reset
+      
       valuesRef.current = updateForm.getValues();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [areasLoading, professionalLoading]);
 
+  // #endregion
+  // #region Form actions
   function handleChangeArea(event: string) {
     const specializations = areas.find((area) => area._id === event)?.specializations || [];
     setSpecializations(specializations);
     setDisabledSpec(false);
     updateForm.setValue('specialization', '');
   }
-  // #endregion
-  // #region Form actions
+  
   function handleUpdateProfessional(data: z.infer<typeof professionalSchema>) {
     if (id) {
-      console.log('checkboxes', workingDaysValues);
-      console.log(data);
       // prettier-ignore
       ProfessionalApiService
       .update(id, data)
       .then((response) => {
         if (response.statusCode === 200) {
-          setDisabledSaveButton(true);
           addNotification({ type: 'success', message: response.message });
         }
         if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
@@ -157,18 +149,14 @@ export default function UpdateProfessional() {
   }
 
   function handleCancel(event: MouseEvent<HTMLButtonElement>) {
-    // TODO reset to db values Working days array!
-    console.log('ref', valuesRef.current);
-    console.log(valuesRef.current.configuration.workingDays);
     event.preventDefault();
     updateForm.reset(valuesRef.current);
-    updateForm.setValue('configuration.workingDays', workingDaysValues);
+    updateForm.setValue('configuration.workingDays', workingDaysValuesRef);
+    setWorkingDaysKey(crypto.randomUUID());
     setDisabledSpec(true);
-    setDisabledSaveButton(false);
   }
-  // WIP - Business days
+  
   function handleWorkingDaysValues(data: IWorkingDay[]) {
-    setWorkingDaysValues(data);
     updateForm.setValue('configuration.workingDays', data);
   }
   // #endregion
@@ -381,6 +369,7 @@ export default function UpdateProfessional() {
                           <FormControl>
                             {/* prettier-ignore */}
                             <WorkingDays 
+                              key={workingDaysKey} 
                               label={PU_CONFIG.labels.workingDays} 
                               data={field.value} 
                               handleWorkingDaysValues={handleWorkingDaysValues} 
@@ -467,7 +456,7 @@ export default function UpdateProfessional() {
                   </div>
                   {/* Buttons */}
                   <div className='grid grid-cols-1 space-y-2 pt-4 md:flex md:justify-end md:gap-6 md:space-y-0'>
-                    <Button type='submit' className='order-1 md:order-2 lg:order-2' disabled={disabledSaveButton}>
+                    <Button type='submit' className='order-1 md:order-2 lg:order-2'>
                       {PU_CONFIG.buttons.create}
                     </Button>
                     <Button variant={'ghost'} onClick={handleCancel} className='order-2 md:order-1 lg:order-1'>
