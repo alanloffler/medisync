@@ -52,7 +52,19 @@ export default function Appointments() {
   const legibleDate = useLegibleDate();
   const navigate = useNavigate();
 
+  //wip
+  const [professionalWorkingDays, setProfessionalWorkingDays] = useState<number[]>([]);
+
+
   useEffect(() => {
+    // wip put this in external function
+    const allDays = [0,1,2,3,4,5,6];
+    const daysOfWeekString = professionalSelected?.configuration.workingDays.filter((day) => day.value === true).map((day) => day.day + 1);
+    console.log(daysOfWeekString);
+    const daysNotInDaysOfWeekString = allDays.filter(day => !daysOfWeekString?.includes(day));
+    setProfessionalWorkingDays(daysNotInDaysOfWeekString as number[]);
+    console.log(daysNotInDaysOfWeekString);
+
     setSelectedDate(new Date());
     setNow(new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }).split(':'));
     setSameDay(selectedDate ? selectedDate?.getFullYear() >= new Date().getFullYear() && selectedDate?.getMonth() >= new Date().getMonth() && selectedDate?.getDate() >= new Date().getDate() : false);
@@ -219,12 +231,13 @@ export default function Appointments() {
             <div className={cn('flex flex-col space-y-4', showCalendar ? 'pointer-events-auto' : 'pointer-events-none')}>
               <Steps text={APPO_CONFIG.steps.text2} step='2' className='bg-primary/20 text-primary' />
               {/* prettier-ignore */}
-              <Calendar
+              {JSON.stringify(professionalWorkingDays)}
+              {professionalWorkingDays?.length > 0 && <Calendar
                 captionLayout={'dropdown-buttons'}
                 className='rounded-lg bg-card text-card-foreground shadow-sm h-fit flex-row w-fit' 
-                disabled={[
-                  { dayOfWeek: [0, 6] }, 
-                  // { before: new Date() }, // uncomment this after show reserve button works!
+                disabled={[ 
+                  { dayOfWeek: professionalWorkingDays }, 
+                  { before: new Date() }, // uncomment this after show reserve button works!
                   { from: new Date(2024, 5, 5) },
                   // { from: new Date(2024, 5, 21) },
                 ]}
@@ -238,7 +251,7 @@ export default function Appointments() {
                 selected={date}
                 showOutsideDays={false}
                 onDayClick={(event) => setSelectedDate(event)}
-              />
+              />}
             </div>
           </div>
           <div className='flex flex-col gap-4 md:w-2/3 lg:w-2/3'>
