@@ -67,6 +67,8 @@ export default function ViewProfessional() {
   function getWorkingDays(days: IWorkingDay[]) {
     const daysOfWeek: string[] = APP_CONFIG.daysofWeek.long;
 
+    if (!days) return;
+
     const daysArray = days
       .map((day: IWorkingDay) => {
         if (day.value === true) return day.day;
@@ -157,29 +159,39 @@ export default function ViewProfessional() {
           ) : (
             showCard && (
               <CardContent className='mt-3 space-y-3'>
-                <div className='space-x-4 pb-2'>
-                  <Badge className='text-base'>{capitalize(professional.area.name)}</Badge>
-                  <Badge className='text-base'>{capitalize(professional.specialization.name)}</Badge>
-                </div>
-                <div className='flex items-center space-x-4'>
-                  <CalendarDays className='h-6 w-6' strokeWidth={2} />
-                  <span className='text-base font-medium'>{getWorkingDays(professional.configuration.workingDays)}</span>
-                </div>
-                <div className='flex items-center space-x-4'>
-                  <CalendarClock className='h-6 w-6' strokeWidth={2} />
-                  <span className='text-base font-medium'>{`${professional.configuration.scheduleTimeInit} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.timeSlotUnavailableInit} ${PV_CONFIG.words.slotsSeparator} ${professional.configuration.timeSlotUnavailableEnd} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.scheduleTimeEnd}`}</span>
-                </div>
-                <div className='flex items-center space-x-4'>
-                  <Smartphone className='h-6 w-6' strokeWidth={2} />
-                  <span className='text-base font-medium'>{delimiter(professional.phone, '-', 6)}</span>
-                </div>
-                <div className='flex items-center space-x-4'>
-                  <Mail className='h-6 w-6' strokeWidth={2} />
-                  <span className='text-base font-medium'>{professional.email}</span>
-                </div>
-                <div>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae magnam culpa repudiandae impedit fuga illum suscipit. Recusandae architecto ab eius, quas ex, dolore quos ratione eligendi id, aut distinctio neque?
-                </div>
+                {professional.area && professional.specialization && (
+                  <div className='space-x-4 pb-2'>
+                    <Badge className='text-base'>{capitalize(professional.area.name)}</Badge>
+                    <Badge className='text-base'>{capitalize(professional.specialization.name)}</Badge>
+                  </div>
+                )}
+                {professional.configuration?.workingDays && (
+                  <div className='flex items-center space-x-4'>
+                    <CalendarDays className='h-6 w-6' strokeWidth={2} />
+                    <span className='text-base font-medium'>{getWorkingDays(professional.configuration.workingDays)}</span>
+                  </div>
+                )}
+                {professional.configuration?.scheduleTimeInit && professional.configuration?.timeSlotUnavailableInit && professional.configuration?.timeSlotUnavailableEnd && professional.configuration?.scheduleTimeEnd && (
+                  <div className='flex items-center space-x-4'>
+                    <CalendarClock className='h-6 w-6' strokeWidth={2} />
+                    <span className='text-base font-medium'>
+                      {`${professional.configuration.scheduleTimeInit} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.timeSlotUnavailableInit} ${PV_CONFIG.words.slotsSeparator} ${professional.configuration.timeSlotUnavailableEnd} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.scheduleTimeEnd}`}
+                    </span>
+                  </div>
+                )}
+                {professional.phone && (
+                  <div className='flex items-center space-x-4'>
+                    <Smartphone className='h-6 w-6' strokeWidth={2} />
+                    <span className='text-base font-medium'>{delimiter(professional.phone, '-', 6)}</span>
+                  </div>
+                )}
+                {professional.email && (
+                  <div className='flex items-center space-x-4'>
+                    <Mail className='h-6 w-6' strokeWidth={2} />
+                    <span className='text-base font-medium'>{professional.email}</span>
+                  </div>
+                )}
+                <div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae magnam culpa repudiandae impedit fuga illum suscipit. Recusandae architecto ab eius, quas ex, dolore quos ratione eligendi id, aut distinctio neque?</div>
               </CardContent>
             )
           )}
