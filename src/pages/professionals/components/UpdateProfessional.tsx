@@ -47,7 +47,7 @@ export default function UpdateProfessional() {
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const navigate = useNavigate();
-  const valuesRef = useRef<IProfessionalForm>({} as IProfessionalForm); // Used to reset form to stored values on db
+  const valuesRef = useRef<IProfessionalForm>({} as IProfessionalForm);
   // #region Form config and actions
   const defaultValues = {
     _id: '',
@@ -77,7 +77,10 @@ export default function UpdateProfessional() {
   // #region Load data
   useEffect(() => {
     setIsLoading(true);
-    AreaService.findAll().then((response) => {
+    // prettier-ignore
+    AreaService
+    .findAll()
+    .then((response) => {
       if (response.statusCode === 200) {
         setAreas(response.data);
         setAreasLoading(false);
@@ -90,7 +93,10 @@ export default function UpdateProfessional() {
 
   useEffect(() => {
     if (id && !areasLoading) {
-      ProfessionalApiService.findOne(id).then((response) => {
+      // prettier-ignore
+      ProfessionalApiService
+      .findOne(id)
+      .then((response) => {
         setProfessional(response.data);
         setProfessionalLoading(false);
         setIsLoading(false);
@@ -118,7 +124,7 @@ export default function UpdateProfessional() {
       updateForm.setValue('phone', professional.phone);
       updateForm.setValue('specialization', professional.specialization._id);
       updateForm.setValue('titleAbbreviation', capitalize(professional.titleAbbreviation) || '');
-      
+
       valuesRef.current = updateForm.getValues();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -132,7 +138,7 @@ export default function UpdateProfessional() {
     setDisabledSpec(false);
     updateForm.setValue('specialization', '');
   }
-  
+
   function handleUpdateProfessional(data: z.infer<typeof professionalSchema>) {
     if (id) {
       // prettier-ignore
@@ -155,7 +161,7 @@ export default function UpdateProfessional() {
     setWorkingDaysKey(crypto.randomUUID());
     setDisabledSpec(true);
   }
-  
+
   function handleWorkingDaysValues(data: IWorkingDay[]) {
     updateForm.setValue('configuration.workingDays', data);
   }
@@ -167,7 +173,7 @@ export default function UpdateProfessional() {
         <PageHeader title={''} breadcrumb={PU_CONFIG.breadcrumb} />
         <Button variant={'outline'} size={'sm'} className='gap-2' onClick={() => navigate(-1)}>
           <ArrowLeft className='h-4 w-4' />
-          Volver
+          {PU_CONFIG.button.back}
         </Button>
       </div>
       {/* TODO: add loading for database data */}
@@ -189,12 +195,11 @@ export default function UpdateProfessional() {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className='w-fit' align='center'>
-                    <DropdownMenuItem>
-                      <Link to='/'>Agregar área</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Link to='/'>Agregar especialidad</Link>
-                    </DropdownMenuItem>
+                    {PU_CONFIG.dropdownMenu.map((item) => (
+                      <DropdownMenuItem key={item.id}>
+                        <Link to={item.path}>{item.name}</Link>
+                      </DropdownMenuItem>
+                    ))}
                   </DropdownMenuContent>
                 </DropdownMenu>
               </CardTitle>
@@ -381,7 +386,7 @@ export default function UpdateProfessional() {
                     />
                   </div>
                   {/* Schedule time slot duration */}
-                  <div className='grid grid-cols-1 md:grid-cols-2 gap-6 pt-2'>
+                  <div className='grid grid-cols-1 gap-6 pt-2 md:grid-cols-2'>
                     <FormField
                       control={updateForm.control}
                       name='configuration.slotDuration'
@@ -457,10 +462,10 @@ export default function UpdateProfessional() {
                   {/* Buttons */}
                   <div className='grid grid-cols-1 space-y-2 pt-4 md:flex md:justify-end md:gap-6 md:space-y-0'>
                     <Button type='submit' className='order-1 md:order-2 lg:order-2'>
-                      {PU_CONFIG.buttons.create}
+                      {PU_CONFIG.button.create}
                     </Button>
                     <Button variant={'ghost'} onClick={handleCancel} className='order-2 md:order-1 lg:order-1'>
-                      {PU_CONFIG.buttons.cancel}
+                      {PU_CONFIG.button.cancel}
                     </Button>
                   </div>
                 </form>
