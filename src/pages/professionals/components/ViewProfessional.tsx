@@ -1,6 +1,7 @@
 // Icons: https://lucide.dev/icons/
-import { ArrowLeft, Calendar, Mail, Menu, Smartphone } from 'lucide-react';
+import { ArrowLeft, CalendarClock, CalendarDays, Mail, Menu, Smartphone } from 'lucide-react';
 // Components: https://ui.shadcn.com/docs/components
+import { Badge } from '@/core/components/ui/badge';
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem } from '@/core/components/ui/dropdown-menu';
@@ -11,17 +12,17 @@ import { LoadingDB } from '@/core/components/common/LoadingDB';
 import { PageHeader } from '@/core/components/common/PageHeader';
 // App
 import { APP_CONFIG } from '@/config/app.config';
+import { IEmail } from '@/core/interfaces/email.interface';
 import { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
 import { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
 import { IResponse } from '@/core/interfaces/response.interface';
+import { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { PROF_VIEW_CONFIG as PV_CONFIG } from '@/config/professionals.config';
 import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
-import { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { IEmail } from '@/core/interfaces/email.interface';
 import { useDelimiter } from '@/core/hooks/useDelimiter';
-import { Badge } from '@/core/components/ui/badge';
+import { useEffect, useState } from 'react';
 // React component
 export default function ViewProfessional() {
   const [emailObject, setEmailObject] = useState<IEmail>({} as IEmail);
@@ -41,7 +42,6 @@ export default function ViewProfessional() {
       ProfessionalApiService
       .findOne(id)
       .then((response: IResponse) => {
-        console.log(response);
         if (response.statusCode === 200) {
           setProfessional(response.data);
           setEmailObject({
@@ -50,6 +50,7 @@ export default function ViewProfessional() {
             body: `${PV_CONFIG.email.body[0]} ${capitalize(response.data?.firstName)}${PV_CONFIG.email.body[1]}`,
           });
           setShowCard(true);
+          getWorkingDays(response.data.configuration.workingDays);
         }
         if (response.statusCode > 399) {
           setInfoCard({ text: response.message, type: 'warning' });
@@ -62,6 +63,38 @@ export default function ViewProfessional() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  function getWorkingDays(days: IWorkingDay[]) {
+    const daysOfWeek: string[] = APP_CONFIG.daysofWeek.long;
+
+    const daysArray = days
+      .map((day: IWorkingDay) => {
+        if (day.value === true) return day.day;
+      })
+      .map((value) => {
+        if (typeof value === 'number' && value >= 0 && value < daysOfWeek.length) {
+          return daysOfWeek[value];
+        }
+        return value;
+      })
+      .filter((value) => typeof value === 'string');
+
+    return formattedWorkingDays(daysArray);
+  }
+
+  function formattedWorkingDays(daysArray: (string | number | undefined | null)[]) {
+    return daysArray
+      .map((item, index, arr) => {
+        if (arr.length === 1) {
+          return item;
+        } else {
+          if (index === arr.length - 1) return `${PV_CONFIG.words.and} ${item}`;
+          if (index === arr.length - 2) return `${item}`;
+          return `${item},`;
+        }
+      })
+      .join(' ');
+  }
 
   return (
     <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
@@ -124,22 +157,28 @@ export default function ViewProfessional() {
           ) : (
             showCard && (
               <CardContent className='mt-3 space-y-3'>
-                {' '}
+                <div className='space-x-4 pb-2'>
+                  <Badge className='text-base'>{capitalize(professional.area.name)}</Badge>
+                  <Badge className='text-base'>{capitalize(professional.specialization.name)}</Badge>
+                </div>
                 <div className='flex items-center space-x-4'>
-                  <Calendar className='h-6 w-6' strokeWidth={2} />
-                  <span className='text-lg font-medium'>{professional.configuration.scheduleTimeInit + ' - ' + professional.configuration.timeSlotUnavailableInit + ' / ' + professional.configuration.timeSlotUnavailableEnd + ' - ' + professional.configuration.scheduleTimeEnd }</span>
+                  <CalendarDays className='h-6 w-6' strokeWidth={2} />
+                  <span className='text-base font-medium'>{getWorkingDays(professional.configuration.workingDays)}</span>
+                </div>
+                <div className='flex items-center space-x-4'>
+                  <CalendarClock className='h-6 w-6' strokeWidth={2} />
+                  <span className='text-base font-medium'>{professional.configuration.scheduleTimeInit + ' - ' + professional.configuration.timeSlotUnavailableInit + ' / ' + professional.configuration.timeSlotUnavailableEnd + ' - ' + professional.configuration.scheduleTimeEnd}</span>
                 </div>
                 <div className='flex items-center space-x-4'>
                   <Smartphone className='h-6 w-6' strokeWidth={2} />
-                  <span className='text-lg font-medium'>{delimiter(professional.phone, '-', 6)}</span>
+                  <span className='text-base font-medium'>{delimiter(professional.phone, '-', 6)}</span>
                 </div>
                 <div className='flex items-center space-x-4'>
                   <Mail className='h-6 w-6' strokeWidth={2} />
-                  <span className='text-lg font-medium'>{professional.email}</span>
+                  <span className='text-base font-medium'>{professional.email}</span>
                 </div>
-                <div className='pt-2 space-x-4'>
-                  <Badge className='text-base'>{capitalize(professional.area.name)}</Badge>
-                  <Badge className='text-base'>{capitalize(professional.specialization.name)}</Badge>
+                <div>
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae magnam culpa repudiandae impedit fuga illum suscipit. Recusandae architecto ab eius, quas ex, dolore quos ratione eligendi id, aut distinctio neque?
                 </div>
               </CardContent>
             )
