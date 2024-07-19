@@ -85,5 +85,8 @@ export const PROF_VIEW_CONFIG = {
   title: 'Detalles del profesional',
   tooltip: {
     dropdown: 'Acciones'
+  },
+  words: {
+    and: 'y',
   }
 }
