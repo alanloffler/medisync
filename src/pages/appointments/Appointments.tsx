@@ -165,9 +165,9 @@ export default function Appointments() {
     if (action === 'reserve') {
       const reserveDialogContent: IDialog = {
         action: 'reserve',
-        title: APPO_CONFIG.dialog.reserve.title,
-        description: APPO_CONFIG.dialog.reserve.description,
         content: '',
+        description: APPO_CONFIG.dialog.reserve.description,
+        title: APPO_CONFIG.dialog.reserve.title,
       };
       setDialogContent(reserveDialogContent);
     }
