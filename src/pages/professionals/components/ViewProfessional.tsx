@@ -4,7 +4,8 @@ import { ArrowLeft, CalendarClock, CalendarDays, Mail, Menu, Smartphone } from '
 import { Badge } from '@/core/components/ui/badge';
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem } from '@/core/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '@/core/components/ui/dropdown-menu';
+import { Separator } from '@/core/components/ui/separator';
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@/core/components/ui/tooltip';
 // App components
 import { InfoCard } from '@/core/components/common/InfoCard';
@@ -140,6 +141,7 @@ export default function ViewProfessional() {
                               <DropdownMenuItem>{PV_CONFIG.dropdownMenu[1].name}</DropdownMenuItem>
                             </Link>
                             {/* Edit user */}
+                            <Separator />
                             <Link to={`/professionals/update/${professional._id}`}>
                               <DropdownMenuItem>{PV_CONFIG.dropdownMenu[2].name}</DropdownMenuItem>
                             </Link>
