@@ -1,4 +1,10 @@
 export const APP_CONFIG = {
+  daysofWeek: {
+      // long: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+      // short: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+      long: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+      short: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+  },
   error: {
     server: 'Error interno del servidor'
   },
