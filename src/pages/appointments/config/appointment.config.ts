@@ -35,6 +35,9 @@ export const APPO_CONFIG = {
       title: 'Cancelación de turno',
     }
   },
+  errors: {
+    configurationUnavailable: 'El profesional no tiene configuración de agenda',
+  },
   phrases: {
     availableAppointments: 'turnos disponibles',
     availableDays: 'Días de atención',
