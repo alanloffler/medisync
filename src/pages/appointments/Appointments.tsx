@@ -19,7 +19,6 @@ import { CalendarService } from '@/pages/appointments/services/calendar.service'
 import { IDialog } from '@/core/interfaces/dialog.interface';
 import { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
 import { IUser } from '@/pages/users/interfaces/user.interface';
-import { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
 import { cn } from '@/lib/utils';
 import { es, enUS } from 'date-fns/locale';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
@@ -120,6 +119,7 @@ export default function Appointments() {
           if (response.statusCode) addNotification({ type: 'error', message: response.message });
           if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
         });
+
         setTimeSlotsAvailable(
           schedule.timeSlots.reduce((acc, item) => {
             // Set amount of time slots available
@@ -213,6 +213,7 @@ export default function Appointments() {
     setOpenDialog(false);
     setUserSelected({} as IUser);
   }
+
   return (
     <>
       <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8'>
@@ -243,7 +244,6 @@ export default function Appointments() {
                       { dayOfWeek: professionalWorkingDays },
                       { before: new Date() }, // uncomment this after show reserve button works!
                       { from: new Date(2024, 5, 5) },
-                      // { from: new Date(2024, 5, 21) },
                     ]}
                     locale={APPO_CONFIG.calendar.language === 'es' ? es : enUS}
                     mode='single'
