@@ -119,21 +119,9 @@ export default function Appointments() {
           if (response.statusCode) addNotification({ type: 'error', message: response.message });
           if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
         });
-
         // Get amount of time slots available
         const totalAvailableSlots = schedule.totalAvailableSlots(schedule.timeSlots);
         setTotalAvailableSlots(totalAvailableSlots);
-        // TODO function from class AppoSchedule
-        // setTimeSlotsAvailable(
-        //   schedule.timeSlots.reduce((acc, item) => {
-        //     // Set amount of time slots available
-        //     if (item.available) {
-        //       return acc + 1;
-        //     } else {
-        //       return acc;
-        //     }
-        //   }, 0),
-        // );
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -237,16 +225,16 @@ export default function Appointments() {
               />
             </div>
             <div className={cn('flex flex-col space-y-4', showCalendar ? 'pointer-events-auto' : 'pointer-events-none')}>
-              <Steps text={APPO_CONFIG.steps.text2} step='2' className='bg-primary/20 text-primary' />
-              {/* prettier-ignore */}
               {professionalSelected && (
                 <>
+                <Steps text={APPO_CONFIG.steps.text2} step='2' className='bg-primary/20 text-primary' />
+                  {/* prettier-ignore */}
                   <Calendar
                     captionLayout={'dropdown-buttons'}
                     className='h-fit w-fit flex-row rounded-lg bg-card text-card-foreground shadow-sm'
                     disabled={[
                       { dayOfWeek: disabledDays },
-                      { before: new Date() }, // uncomment this after show reserve button works!
+                      //{ before: new Date() }, // uncomment this after show reserve button works!
                       { from: new Date(2024, 5, 5) },
                     ]}
                     locale={APPO_CONFIG.calendar.language === 'es' ? es : enUS}
@@ -255,7 +243,6 @@ export default function Appointments() {
                       today: 'bg-primary/30 text-primary',
                       selected: 'bg-primary text-white',
                     }}
-                    // onSelect={(event) => setSelectedDate(event)} // Replaced with onDayClick, see how it works!
                     selected={date}
                     showOutsideDays={false}
                     onDayClick={(event) => setSelectedDate(event)}
