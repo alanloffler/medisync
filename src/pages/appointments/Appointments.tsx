@@ -15,6 +15,7 @@ import { APPO_CONFIG } from '@/pages/appointments/config/appointment.config';
 import { APP_CONFIG } from '@/config/app.config';
 import { AppoSchedule, IAppointment, ITimeSlot } from '@/pages/appointments/services/schedule.service';
 import { AppointmentApiService } from '@/pages/appointments/services/appointment.service';
+import { CalendarService } from '@/pages/appointments/services/calendar.service';
 import { IDialog } from '@/core/interfaces/dialog.interface';
 import { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
 import { IUser } from '@/pages/users/interfaces/user.interface';
@@ -35,7 +36,7 @@ export default function Appointments() {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [professionalSelected, setProfessionalSelected] = useState<IProfessional>();
   const [refreshAppos, setRefreshAppos] = useState<string>('');
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedLegibleDate, setSelectedLegibleDate] = useState<string>('');
   const [selectedSlot, setSelectedSlot] = useState<ITimeSlot>({} as ITimeSlot);
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
@@ -55,35 +56,27 @@ export default function Appointments() {
 
   //wip
   const [professionalWorkingDays, setProfessionalWorkingDays] = useState<number[]>([]);
-
+  const [professionalStringWorkingDays, setProfessionalStringWorkingDays] = useState<string>('');
 
   useEffect(() => {
     // Set disabled calendar days based on professional working days
-    getCalendarDisabledDays(professionalSelected?.configuration.workingDays);
+    const calendarDisabledDays = CalendarService.getDisabledDays(professionalSelected?.configuration?.workingDays);
+    setProfessionalWorkingDays(calendarDisabledDays || []);
+    // WIP here legible days calendar bottom
+    const legibleWorkingDays = CalendarService.getLegibleWorkingDays(professionalSelected?.configuration?.workingDays);
+    setProfessionalStringWorkingDays(legibleWorkingDays as string);
+    console.log('legibleWorkingDays', legibleWorkingDays);
 
-    setSelectedDate(new Date());
+    setSelectedDate(undefined);
+    setShowCalendar(true);
     setNow(new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }).split(':'));
     setSameDay(selectedDate ? selectedDate?.getFullYear() >= new Date().getFullYear() && selectedDate?.getMonth() >= new Date().getMonth() && selectedDate?.getDate() >= new Date().getDate() : false);
     console.log('sameDay', sameDay);
     // const notHourYet = selectedDate?.getHours() < new Date().getHours() || (selectedDate?.getHours() === new Date().getHours() && selectedDate?.getMinutes() < new Date().getMinutes());
     // console.log('notHourYet', notHourYet);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [professionalSelected]);
 
-  function getCalendarDisabledDays(professionalWorkingDays: IWorkingDay[] | undefined): void {
-    if (!professionalWorkingDays) return;
-
-    const days = [0,1,2,3,4,5,6];
-
-    const professionalWorkingDaysNumbers = professionalWorkingDays
-      .filter((day) => day.value === true)
-      .map((day) => day.day + 1);
-
-      const professionalNotWorkingDaysNumbers = days
-      .filter((day) => !professionalWorkingDaysNumbers.includes(day));
-
-    setProfessionalWorkingDays(professionalNotWorkingDaysNumbers);
-  }
   // #region Load data
   // Appointments schedule creation, time slots generation and appointments insertion.
   useEffect(() => {
@@ -242,30 +235,38 @@ export default function Appointments() {
             <div className={cn('flex flex-col space-y-4', showCalendar ? 'pointer-events-auto' : 'pointer-events-none')}>
               <Steps text={APPO_CONFIG.steps.text2} step='2' className='bg-primary/20 text-primary' />
               {/* prettier-ignore */}
-              <Calendar
-                captionLayout={'dropdown-buttons'}
-                className='rounded-lg bg-card text-card-foreground shadow-sm h-fit flex-row w-fit' 
-                disabled={[ 
-                  { dayOfWeek: professionalWorkingDays }, 
-                  { before: new Date() }, // uncomment this after show reserve button works!
-                  { from: new Date(2024, 5, 5) },
-                  // { from: new Date(2024, 5, 21) },
-                ]}
-                locale={APPO_CONFIG.calendar.language === 'es' ? es : enUS}
-                mode='single'
-                modifiersClassNames={{
-                  today: 'bg-primary/30 text-primary',
-                  selected: 'bg-primary text-white',
-                }}
-                // onSelect={(event) => setSelectedDate(event)} // Replaced with onDayClick, see how it works!
-                selected={date}
-                showOutsideDays={false}
-                onDayClick={(event) => setSelectedDate(event)}
-              />
-              <div>{`Professional working days here`}</div>
+              {professionalSelected && (
+                <>
+                  <Calendar
+                    captionLayout={'dropdown-buttons'}
+                    className='h-fit w-fit flex-row rounded-lg bg-card text-card-foreground shadow-sm'
+                    disabled={[
+                      { dayOfWeek: professionalWorkingDays },
+                      { before: new Date() }, // uncomment this after show reserve button works!
+                      { from: new Date(2024, 5, 5) },
+                      // { from: new Date(2024, 5, 21) },
+                    ]}
+                    locale={APPO_CONFIG.calendar.language === 'es' ? es : enUS}
+                    mode='single'
+                    modifiersClassNames={{
+                      today: 'bg-primary/30 text-primary',
+                      selected: 'bg-primary text-white',
+                    }}
+                    // onSelect={(event) => setSelectedDate(event)} // Replaced with onDayClick, see how it works!
+                    selected={date}
+                    showOutsideDays={false}
+                    onDayClick={(event) => setSelectedDate(event)}
+                  />
+                  <div className='mt-2 flex flex-col text-slate-500'>
+                    <span className='text-base font-semibold'>{APPO_CONFIG.phrases.availableDays}</span>
+                    <span className='text-sm font-medium'>{professionalStringWorkingDays}</span>
+                  </div>
+                </>
+              )}
             </div>
           </div>
           <div className='flex flex-col gap-4 md:w-2/3 lg:w-2/3'>
+          {selectedDate && <>
             <Steps text={APPO_CONFIG.steps.text3} step='3' className='bg-primary/20 text-primary' />
             <Card className='w-full'>
               <CardHeader>
@@ -316,7 +317,7 @@ export default function Appointments() {
                                 {/* TODO: button should only be shown if the date is in the future and the time is in the future */}
                                 {/* TODO: this partially works, need some tests and usage, the hour is not sure it is working properly */}
                                 <span>{selectedDate && selectedDate.getDate() + ' - ' + new Date().getDate()}</span>
-                                {selectedDate && selectedDate?.getDate() >= new Date().getDate() && selectedDate?.getTime() >= new Date().getTime() ? <>Show button</> :<>Do not show button</>}
+                                {selectedDate && selectedDate?.getDate() >= new Date().getDate() && selectedDate?.getTime() >= new Date().getTime() ? <>Show button</> : <>Do not show button</>}
                                 {!slot.appointment?.user && (
                                   <Button onClick={() => handleDialog('reserve', slot)} variant={'default'} size={'xs'}>
                                     {APPO_CONFIG.buttons.addAppointment}
@@ -337,7 +338,9 @@ export default function Appointments() {
                           ) : (
                             <>
                               <TableCell className='p-1.5 text-center text-sm font-semibold'>{APPO_CONFIG.words.unavailable}</TableCell>
-                              <TableCell className='p-1.5 text-left text-sm'>{slot.available ? slot.begin : `${slot.begin} ${APPO_CONFIG.words.hoursSeparator} ${slot.end}`} {APPO_CONFIG.words.hours}</TableCell>
+                              <TableCell className='p-1.5 text-left text-sm'>
+                                {slot.available ? slot.begin : `${slot.begin} ${APPO_CONFIG.words.hoursSeparator} ${slot.end}`} {APPO_CONFIG.words.hours}
+                              </TableCell>
                               <TableCell className='p-1.5'></TableCell>
                               <TableCell className='p-1.5'></TableCell>
                             </>
@@ -348,7 +351,7 @@ export default function Appointments() {
                   </Table>
                 </CardContent>
               )}
-            </Card>
+            </Card></>}
           </div>
         </div>
       </main>
