@@ -5,8 +5,8 @@ import { PROF_VIEW_CONFIG as PV_CONFIG } from '@/config/professionals.config';
 export class CalendarService {
   private static days: number[] = [0, 1, 2, 3, 4, 5, 6];
 
-  public static getDisabledDays(professionalWorkingDays: IWorkingDay[] | undefined): number[] | undefined {
-    if (!professionalWorkingDays) return;
+  public static getDisabledDays(professionalWorkingDays: IWorkingDay[]): number[] {
+    if (!professionalWorkingDays) return [];
 
     const professionalWorkingDaysNumbers = professionalWorkingDays.filter((day) => day.value === true).map((day) => day.day + 1);
     const professionalNotWorkingDaysNumbers = CalendarService.days.filter((day) => !professionalWorkingDaysNumbers.includes(day));
@@ -14,10 +14,11 @@ export class CalendarService {
     return professionalNotWorkingDaysNumbers;
   }
 
-  public static getLegibleWorkingDays(daysArray: IWorkingDay[] | undefined) {
+  public static getLegibleWorkingDays(daysArray: IWorkingDay[]): string {
     const stringDays = this.getStringWorkingDays(daysArray);
-    if (!stringDays) return;
-    return stringDays
+    if (!stringDays) return '';
+    
+    const legibleDays: string = stringDays
       .map((item, index, arr) => {
         if (arr.length === 1) {
           return item;
@@ -28,10 +29,12 @@ export class CalendarService {
         }
       })
       .join(' ');
+
+    return legibleDays;
   }
   
-  private static getStringWorkingDays(days: IWorkingDay[] | undefined) {
-    if (!days) return;
+  private static getStringWorkingDays(days: IWorkingDay[]): string[] {
+    if (!days) return [];
     
     const daysOfWeek: string[] = APP_CONFIG.daysofWeek.long;
 
@@ -47,6 +50,6 @@ export class CalendarService {
       })
       .filter((value) => typeof value === 'string');
 
-    return daysArray;
+    return daysArray as string[];
   }
 }
