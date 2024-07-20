@@ -31,10 +31,13 @@ export default function Appointments() {
   const [appointments, setAppointments] = useState<IAppointment[]>([] as IAppointment[]);
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [dialogContent, setDialogContent] = useState<IDialog>({} as IDialog);
+  const [disabledDays, setDisabledDays] = useState<number[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>();
+  const [legibleWorkingDays, setLegibleWorkingDays] = useState<string>('');
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [professionalSelected, setProfessionalSelected] = useState<IProfessional>();
   const [refreshAppos, setRefreshAppos] = useState<string>('');
+  const [sameDay, setSameDay] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedLegibleDate, setSelectedLegibleDate] = useState<string>('');
   const [selectedSlot, setSelectedSlot] = useState<ITimeSlot>({} as ITimeSlot);
@@ -43,33 +46,25 @@ export default function Appointments() {
   const [timeSlots, setTimeSlots] = useState<ITimeSlot[]>([] as ITimeSlot[]);
   const [timeSlotsAvailable, setTimeSlotsAvailable] = useState<number>(0);
   const [userSelected, setUserSelected] = useState<IUser>({} as IUser);
-  // this must be setted by language setting?
-  const [now, setNow] = useState<string[]>([]);
-  const [sameDay, setSameDay] = useState<boolean>(false);
-
+  // const [now, setNow] = useState<string[]>([]);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const dateToString = useDateToString();
   const legibleDate = useLegibleDate();
   const navigate = useNavigate();
 
-  //wip
-  const [professionalWorkingDays, setProfessionalWorkingDays] = useState<number[]>([]);
-  const [professionalStringWorkingDays, setProfessionalStringWorkingDays] = useState<string>('');
-
   useEffect(() => {
     if (professionalSelected) {
-      // Disabled calendar days based on professional working days
       const calendarDisabledDays = CalendarService.getDisabledDays(professionalSelected.configuration.workingDays);
-      setProfessionalWorkingDays(calendarDisabledDays);
-      // Calendar legible days based on professional working days
+      setDisabledDays(calendarDisabledDays);
       const legibleWorkingDays = CalendarService.getLegibleWorkingDays(professionalSelected.configuration.workingDays);
-      setProfessionalStringWorkingDays(legibleWorkingDays as string);
+      setLegibleWorkingDays(legibleWorkingDays);
     }
 
     setSelectedDate(undefined);
     setShowCalendar(true);
-    setNow(new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }).split(':'));
+    // WIP & TODO disabled time slots selection by day and hour
+    // setNow(new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }).split(':'));
     setSameDay(selectedDate ? selectedDate?.getFullYear() >= new Date().getFullYear() && selectedDate?.getMonth() >= new Date().getMonth() && selectedDate?.getDate() >= new Date().getDate() : false);
     console.log('sameDay', sameDay);
     // const notHourYet = selectedDate?.getHours() < new Date().getHours() || (selectedDate?.getHours() === new Date().getHours() && selectedDate?.getMinutes() < new Date().getMinutes());
@@ -90,14 +85,15 @@ export default function Appointments() {
       }
       if (selectedDate) {
         if (selectedDate !== date) {
-          setTimeSlots([]); // Reset time slots
-          setAppointments([]); // Reset appointments
-          setErrorMessage(''); // Reset error message
-          setTimeSlotsAvailable(0); // Reset amount of time slots available
+          setTimeSlots([]);
+          setAppointments([]);
+          setErrorMessage('');
+          setTimeSlotsAvailable(0);
         }
-        setSelectedLegibleDate(legibleDate(selectedDate, 'long')); // Set legible date for table header
-        const scheduleDate = dateToString(selectedDate); // Convert date to string for schedule
-        setDate(selectedDate); // Set calendar selected date
+
+        setSelectedLegibleDate(legibleDate(selectedDate, 'long'));
+        const scheduleDate = dateToString(selectedDate);
+        setDate(selectedDate);
         // prettier-ignore
         const schedule = new AppoSchedule(
           `Schedule ${scheduleDate}`, 
@@ -243,7 +239,7 @@ export default function Appointments() {
                     captionLayout={'dropdown-buttons'}
                     className='h-fit w-fit flex-row rounded-lg bg-card text-card-foreground shadow-sm'
                     disabled={[
-                      { dayOfWeek: professionalWorkingDays },
+                      { dayOfWeek: disabledDays },
                       { before: new Date() }, // uncomment this after show reserve button works!
                       { from: new Date(2024, 5, 5) },
                     ]}
@@ -260,7 +256,7 @@ export default function Appointments() {
                   />
                   <div className='mt-2 flex flex-col text-slate-500'>
                     <span className='text-base font-semibold'>{APPO_CONFIG.phrases.availableDays}</span>
-                    <span className='text-sm font-medium'>{professionalStringWorkingDays}</span>
+                    <span className='text-sm font-medium'>{legibleWorkingDays}</span>
                   </div>
                 </>
               )}
