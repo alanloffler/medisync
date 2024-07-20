@@ -59,13 +59,12 @@ export default function Appointments() {
   const [professionalStringWorkingDays, setProfessionalStringWorkingDays] = useState<string>('');
 
   useEffect(() => {
-    // Set disabled calendar days based on professional working days
+    // Disabled calendar days based on professional working days
     const calendarDisabledDays = CalendarService.getDisabledDays(professionalSelected?.configuration?.workingDays);
     setProfessionalWorkingDays(calendarDisabledDays || []);
-    // WIP here legible days calendar bottom
+    // Calendar legible days based on professional working days
     const legibleWorkingDays = CalendarService.getLegibleWorkingDays(professionalSelected?.configuration?.workingDays);
     setProfessionalStringWorkingDays(legibleWorkingDays as string);
-    console.log('legibleWorkingDays', legibleWorkingDays);
 
     setSelectedDate(undefined);
     setShowCalendar(true);
