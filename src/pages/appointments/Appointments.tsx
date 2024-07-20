@@ -77,12 +77,11 @@ export default function Appointments() {
   useEffect(() => {
     if (professionalSelected) {
       if (!professionalSelected.configuration) {
-        // TODO: messages from config file really this can't be becaus
-        // in professional form creation the configuration must be required
         addNotification({ type: 'error', message: APPO_CONFIG.errors.configurationUnavailable });
         setErrorMessage(APPO_CONFIG.errors.configurationUnavailable);
         return;
       }
+
       if (selectedDate) {
         if (selectedDate !== date) {
           setTimeSlots([]);
@@ -109,7 +108,10 @@ export default function Appointments() {
         setShowCalendar(true); // Show calendar
         setShowTimeSlots(true); // Show time slots
         // Get appointments from database
-        AppointmentApiService.findAllByProfessional(professionalSelected._id, scheduleDate).then((response) => {
+        AppointmentApiService
+        .findAllByProfessional(professionalSelected._id, scheduleDate)
+        .then((response) => {
+          // Backend response IResponse TODO
           if (!response.statusCode) {
             setAppointments(response);
             schedule.insertAppointments(response);
@@ -118,6 +120,7 @@ export default function Appointments() {
           if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
         });
 
+        // TODO function from class AppoSchedule
         setTimeSlotsAvailable(
           schedule.timeSlots.reduce((acc, item) => {
             // Set amount of time slots available
