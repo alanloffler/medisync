@@ -44,7 +44,7 @@ export default function Appointments() {
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [showTimeSlots, setShowTimeSlots] = useState<boolean>(false);
   const [timeSlots, setTimeSlots] = useState<ITimeSlot[]>([] as ITimeSlot[]);
-  const [timeSlotsAvailable, setTimeSlotsAvailable] = useState<number>(0);
+  const [totalAvailableSlots, setTotalAvailableSlots] = useState<number>(0);
   const [userSelected, setUserSelected] = useState<IUser>({} as IUser);
   // const [now, setNow] = useState<string[]>([]);
   const addNotification = useNotificationsStore((state) => state.addNotification);
@@ -87,7 +87,7 @@ export default function Appointments() {
           setTimeSlots([]);
           setAppointments([]);
           setErrorMessage('');
-          setTimeSlotsAvailable(0);
+          setTotalAvailableSlots(0);
         }
 
         setSelectedLegibleDate(legibleDate(selectedDate, 'long'));
@@ -120,17 +120,20 @@ export default function Appointments() {
           if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
         });
 
+        // Get amount of time slots available
+        const totalAvailableSlots = schedule.totalAvailableSlots(schedule.timeSlots);
+        setTotalAvailableSlots(totalAvailableSlots);
         // TODO function from class AppoSchedule
-        setTimeSlotsAvailable(
-          schedule.timeSlots.reduce((acc, item) => {
-            // Set amount of time slots available
-            if (item.available) {
-              return acc + 1;
-            } else {
-              return acc;
-            }
-          }, 0),
-        );
+        // setTimeSlotsAvailable(
+        //   schedule.timeSlots.reduce((acc, item) => {
+        //     // Set amount of time slots available
+        //     if (item.available) {
+        //       return acc + 1;
+        //     } else {
+        //       return acc;
+        //     }
+        //   }, 0),
+        // );
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -282,7 +285,7 @@ export default function Appointments() {
                 {!errorMessage && <div className='py-2 text-center text-base font-semibold text-primary'>{selectedLegibleDate}</div>}
                 {showTimeSlots && (
                   <div className='mx-4 w-fit rounded-full bg-primary/30 px-2 py-1 text-sm font-semibold'>
-                    {timeSlotsAvailable - appointments.length} {APPO_CONFIG.phrases.availableAppointments}
+                    {`${totalAvailableSlots - appointments.length} ${APPO_CONFIG.phrases.availableAppointments}`}
                   </div>
                 )}
               </CardHeader>
