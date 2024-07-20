@@ -18,6 +18,7 @@ import { AppointmentApiService } from '@/pages/appointments/services/appointment
 import { IDialog } from '@/core/interfaces/dialog.interface';
 import { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
 import { IUser } from '@/pages/users/interfaces/user.interface';
+import { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
 import { cn } from '@/lib/utils';
 import { es, enUS } from 'date-fns/locale';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
@@ -57,13 +58,8 @@ export default function Appointments() {
 
 
   useEffect(() => {
-    // wip put this in external function
-    const allDays = [0,1,2,3,4,5,6];
-    const daysOfWeekString = professionalSelected?.configuration.workingDays.filter((day) => day.value === true).map((day) => day.day + 1);
-    console.log(daysOfWeekString);
-    const daysNotInDaysOfWeekString = allDays.filter(day => !daysOfWeekString?.includes(day));
-    setProfessionalWorkingDays(daysNotInDaysOfWeekString as number[]);
-    console.log(daysNotInDaysOfWeekString);
+    // Set disabled calendar days based on professional working days
+    getCalendarDisabledDays(professionalSelected?.configuration.workingDays);
 
     setSelectedDate(new Date());
     setNow(new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }).split(':'));
@@ -73,6 +69,21 @@ export default function Appointments() {
     // console.log('notHourYet', notHourYet);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [professionalSelected]);
+
+  function getCalendarDisabledDays(professionalWorkingDays: IWorkingDay[] | undefined): void {
+    if (!professionalWorkingDays) return;
+
+    const days = [0,1,2,3,4,5,6];
+
+    const professionalWorkingDaysNumbers = professionalWorkingDays
+      .filter((day) => day.value === true)
+      .map((day) => day.day + 1);
+
+      const professionalNotWorkingDaysNumbers = days
+      .filter((day) => !professionalWorkingDaysNumbers.includes(day));
+
+    setProfessionalWorkingDays(professionalNotWorkingDaysNumbers);
+  }
   // #region Load data
   // Appointments schedule creation, time slots generation and appointments insertion.
   useEffect(() => {
@@ -231,8 +242,7 @@ export default function Appointments() {
             <div className={cn('flex flex-col space-y-4', showCalendar ? 'pointer-events-auto' : 'pointer-events-none')}>
               <Steps text={APPO_CONFIG.steps.text2} step='2' className='bg-primary/20 text-primary' />
               {/* prettier-ignore */}
-              {JSON.stringify(professionalWorkingDays)}
-              {professionalWorkingDays?.length > 0 && <Calendar
+              <Calendar
                 captionLayout={'dropdown-buttons'}
                 className='rounded-lg bg-card text-card-foreground shadow-sm h-fit flex-row w-fit' 
                 disabled={[ 
@@ -251,7 +261,8 @@ export default function Appointments() {
                 selected={date}
                 showOutsideDays={false}
                 onDayClick={(event) => setSelectedDate(event)}
-              />}
+              />
+              <div>{`Professional working days here`}</div>
             </div>
           </div>
           <div className='flex flex-col gap-4 md:w-2/3 lg:w-2/3'>
