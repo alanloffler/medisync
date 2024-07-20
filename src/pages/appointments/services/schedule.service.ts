@@ -109,6 +109,18 @@ export class AppoSchedule {
     }
   }
 
+  public totalAvailableSlots(slots: ITimeSlot[]): number {
+    const totalAvailableSlots: number = slots.reduce((acc, item) => {
+      if (item.available) {
+        return acc + 1;
+      } else {
+        return acc;
+      }
+    }, 0);
+
+    return totalAvailableSlots;
+  }
+
   private formatTime(date: Date): string {
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
