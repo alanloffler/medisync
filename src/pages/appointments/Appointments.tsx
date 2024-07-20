@@ -58,12 +58,14 @@ export default function Appointments() {
   const [professionalStringWorkingDays, setProfessionalStringWorkingDays] = useState<string>('');
 
   useEffect(() => {
-    // Disabled calendar days based on professional working days
-    const calendarDisabledDays = CalendarService.getDisabledDays(professionalSelected?.configuration?.workingDays);
-    setProfessionalWorkingDays(calendarDisabledDays || []);
-    // Calendar legible days based on professional working days
-    const legibleWorkingDays = CalendarService.getLegibleWorkingDays(professionalSelected?.configuration?.workingDays);
-    setProfessionalStringWorkingDays(legibleWorkingDays as string);
+    if (professionalSelected) {
+      // Disabled calendar days based on professional working days
+      const calendarDisabledDays = CalendarService.getDisabledDays(professionalSelected.configuration.workingDays);
+      setProfessionalWorkingDays(calendarDisabledDays);
+      // Calendar legible days based on professional working days
+      const legibleWorkingDays = CalendarService.getLegibleWorkingDays(professionalSelected.configuration.workingDays);
+      setProfessionalStringWorkingDays(legibleWorkingDays as string);
+    }
 
     setSelectedDate(undefined);
     setShowCalendar(true);
@@ -82,8 +84,8 @@ export default function Appointments() {
       if (!professionalSelected.configuration) {
         // TODO: messages from config file really this can't be becaus
         // in professional form creation the configuration must be required
-        addNotification({ type: 'error', message: 'El profesional no tiene configuración de agenda' });
-        setErrorMessage('El profesional no tiene configuración de agenda');
+        addNotification({ type: 'error', message: APPO_CONFIG.errors.configurationUnavailable });
+        setErrorMessage(APPO_CONFIG.errors.configurationUnavailable);
         return;
       }
       if (selectedDate) {
