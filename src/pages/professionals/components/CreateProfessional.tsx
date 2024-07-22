@@ -27,6 +27,7 @@ import { useForm } from 'react-hook-form';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { APP_CONFIG } from '@/config/app.config';
 // React component
 export default function CreateProfessional() {
   const [areas, setAreas] = useState<IArea[]>([]);
@@ -47,7 +48,7 @@ export default function CreateProfessional() {
         addNotification({ type: 'success', message: 'Areas y especialidades cargadas' });
       }
       if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
-      if (response instanceof Error) addNotification({ type: 'error', message: 'Error en el servidor buscando areas' });
+      if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
       setIsLoading(false);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -88,7 +89,7 @@ export default function CreateProfessional() {
         addNotification({ type: 'success', message: response.message });
       }
       if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
-      if (response instanceof Error) addNotification({ type: 'error', message: 'Error en el servidor creando el profesional' });
+      if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
       createForm.reset(defaultValues);
       setShowProfessionalCard(false);
     });
