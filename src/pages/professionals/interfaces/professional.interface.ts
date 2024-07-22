@@ -7,7 +7,7 @@ export interface IProfessionalForm {
   available: boolean;
   configuration: IProfessionalConfiguration;
   description: string;
-  dni: number;
+  dni: number | string;
   email: string;
   firstName: string;
   lastName: string;
