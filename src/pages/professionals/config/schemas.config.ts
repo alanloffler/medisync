@@ -1,6 +1,8 @@
 export const PROF_SCHEMA = {
   areaMessage: 'Debes seleccionar un área',
   availableMessage: 'Debes seleccionar una disponibilidad',
+  descriptionMessage: 'Debes ingresar una descripción',
+  dniMessage: 'Debes ingresar un DNI',
   emailMessage: 'Debes ingresar un e-mail válido',
   firstNameMessage: 'Debes ingresar un nombre',
   lastNameMessage: 'Debes ingresar un apellido',
