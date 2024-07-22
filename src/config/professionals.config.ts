@@ -50,6 +50,8 @@ export const PROF_CREATE_CONFIG = {
   labels: {
     area: 'Área',
     available: 'Disponible',
+    description: 'Descripción',
+    dni: 'DNI',
     email: 'Correo electrónico',
     firstName: 'Nombre',
     lastName: 'Apellido',
@@ -59,6 +61,8 @@ export const PROF_CREATE_CONFIG = {
   },
   placeholders: {
     area: 'Ingresá el área',
+    description: 'Ingresá la descripción',
+    dni: 'Ingresá el DNI',
     email: 'Ingresá el correo electrónico',
     firstName: 'Ingresá el nombre',
     lastName: 'Ingresá el apellido',
