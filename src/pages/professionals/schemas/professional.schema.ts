@@ -13,6 +13,8 @@ export const professionalSchema = z.object({
   titleAbbreviation: z.string().min(1, { message: PROF_SCHEMA.titleAbbreviationMessage }),
   firstName: z.string().min(1, { message: PROF_SCHEMA.firstNameMessage }),
   lastName: z.string().min(1, { message: PROF_SCHEMA.lastNameMessage }),
+  description: z.string().min(1, { message: PROF_SCHEMA.descriptionMessage }),
+  dni: z.union([z.coerce.number().min(1, { message: PROF_SCHEMA.dniMessage }), z.string()]),
   email: z.string().email({ message: PROF_SCHEMA.emailMessage }),
   phone: z.union([z.coerce.number().min(1, { message: PROF_SCHEMA.phoneMessage }), z.string()]),
   configuration: z.object({
