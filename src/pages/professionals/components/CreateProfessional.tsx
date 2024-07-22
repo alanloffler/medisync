@@ -15,6 +15,7 @@ import { PageHeader } from '@/core/components/common/PageHeader';
 // App
 import { AreaService } from '@/core/services/area.service';
 import { IArea } from '@/core/interfaces/area.interface';
+import { IResponse } from '@/core/interfaces/response.interface';
 import { ISpecialization } from '@/core/interfaces/specialization.interface';
 import { Link, useNavigate } from 'react-router-dom';
 import { PROF_CREATE_CONFIG as PC_CONFIG } from '@/config/professionals.config';
@@ -26,7 +27,6 @@ import { useForm } from 'react-hook-form';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { IResponse } from '@/core/interfaces/response.interface';
 // React component
 export default function CreateProfessional() {
   const [areas, setAreas] = useState<IArea[]>([]);
@@ -53,11 +53,12 @@ export default function CreateProfessional() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   // #endregion
-  // #endregion
   // #region Form config and actions
   const defaultValues = {
     area: '',
     available: true,
+    description: '',
+    dni: '',
     email: '',
     firstName: '',
     lastName: '',
@@ -117,7 +118,6 @@ export default function CreateProfessional() {
           Volver
         </Button>
       </div>
-
       {!isLoading && <div className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-2 lg:gap-6'>
         <Card className='w-full md:grid-cols-2'>
           <CardHeader>
