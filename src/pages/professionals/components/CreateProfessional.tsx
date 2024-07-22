@@ -10,6 +10,7 @@ import { Input } from '@/core/components/ui/input';
 import { Label } from '@/core/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/core/components/ui/select';
 import { Switch } from '@/core/components/ui/switch';
+import { Textarea } from '@/core/components/ui/textarea';
 // App components
 import { PageHeader } from '@/core/components/common/PageHeader';
 // App
@@ -81,8 +82,8 @@ export default function CreateProfessional() {
   }, [createForm.formState.isDirty, showProfessionalCard]);
 
   function handleCreateProfessional(data: z.infer<typeof professionalSchema>) {
-    // TODO: validation error here
     ProfessionalApiService.create(data).then((response) => {
+      console.log('create professional');
       if (response.statusCode === 200) {
         setDisabledSpec(true);
         addNotification({ type: 'success', message: response.message });
@@ -136,8 +137,8 @@ export default function CreateProfessional() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className='w-fit' align='center'>
                     {PC_CONFIG.dropdownMenu.map((item) => (
-                      <DropdownMenuItem>
-                        <Link key={item.id} to={item.path}>
+                      <DropdownMenuItem key={item.id}>
+                        <Link to={item.path}>
                           {item.name}
                         </Link>
                       </DropdownMenuItem>
@@ -270,6 +271,22 @@ export default function CreateProfessional() {
                       )}
                     />
                   </div>
+                  {/* Form fields: dni */}
+                  <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                    <FormField
+                      control={createForm.control}
+                      name='dni'
+                      render={({ field }) => (
+                        <FormItem className=''>
+                          <FormLabel>{PC_CONFIG.labels.dni}</FormLabel>
+                          <FormControl className='h-9'>
+                            <Input type='number' placeholder={PC_CONFIG.placeholders.dni} {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                   {/* Form fields: email and phone */}
                   <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
@@ -293,6 +310,22 @@ export default function CreateProfessional() {
                           <FormLabel>{PC_CONFIG.labels.phone}</FormLabel>
                           <FormControl className='h-9'>
                             <Input type='number' placeholder={PC_CONFIG.placeholders.phone} {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  {/* Form fields: description */}
+                  <div className='grid grid-cols-1 gap-6 md:grid-cols-1'>
+                    <FormField
+                      control={createForm.control}
+                      name='description'
+                      render={({ field }) => (
+                        <FormItem className=''>
+                          <FormLabel>{PC_CONFIG.labels.description}</FormLabel>
+                          <FormControl className='h-9'>
+                            <Textarea placeholder={PC_CONFIG.placeholders.description} {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
