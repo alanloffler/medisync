@@ -6,6 +6,8 @@ export interface IProfessionalForm {
   area: string;
   available: boolean;
   configuration: IProfessionalConfiguration;
+  description: string;
+  dni: number;
   email: string;
   firstName: string;
   lastName: string;
@@ -19,6 +21,8 @@ export interface IProfessional {
   area: IArea;
   available: boolean;
   configuration: IProfessionalConfiguration;
+  description: string;
+  dni: number;
   email: string;
   firstName: string;
   lastName: string;
