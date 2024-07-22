@@ -37,9 +37,14 @@ export const PROF_CREATE_CONFIG = {
     { id: 3, name: 'Crear', path: '/professionals/create' },
   ],
   buttons: {
+    back: 'Volver',
     cancel: 'Cancelar',
     create: 'Crear profesional',
   },
+  dropdownMenu: [
+    { id: 1, name: 'Agregar área', path: '/' },
+    { id: 2, name: 'Agregar especialidad', path: '/' },
+  ],
   formDescription: 'Ingresá los datos para dar de alta a un nuevo profesional',
   formTitle: 'Formulario de creación',
   labels: {
@@ -74,21 +79,21 @@ export const PROF_VIEW_CONFIG = {
     back: 'Volver',
   },
   dropdownMenu: [
-    { id: 1, name: 'Enviar e-mail' }, 
+    { id: 1, name: 'Enviar e-mail' },
     { id: 2, name: 'Enviar WhatsApp' },
     { id: 3, name: 'Editar profesional' },
   ],
   email: {
     subject: 'MediSync - Turnos médicos',
-    body: ['Hola', ','], 
+    body: ['Hola', ','],
   },
   title: 'Detalles del profesional',
   tooltip: {
-    dropdown: 'Acciones'
+    dropdown: 'Acciones',
   },
   words: {
     and: 'y',
     hoursSeparator: 'a',
     slotsSeparator: '-',
-  }
-}
+  },
+};
