@@ -171,6 +171,7 @@ export default function UpdateProfessional() {
     updateForm.setValue('configuration.workingDays', data);
   }
   // #endregion
+  // TODO: copy form with 2 columns like create
   return (
     <main className='flex flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
       {/* Page Header */}
