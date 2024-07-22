@@ -193,8 +193,7 @@ export default function ViewProfessional() {
                     <span className='text-base font-medium'>{professional.email}</span>
                   </div>
                 )}
-                {/* TODO: Add professional description on backend first, the this dynamic and conditional rendering */}
-                <div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae magnam culpa repudiandae impedit fuga illum suscipit. Recusandae architecto ab eius, quas ex, dolore quos ratione eligendi id, aut distinctio neque?</div>
+                {professional.description && <div className='text-pretty pt-2 text-base'>{professional.description}</div>}
               </CardContent>
             )
           )}
