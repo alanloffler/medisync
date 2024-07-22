@@ -10,6 +10,7 @@ import { Label } from '@/core/components/ui/label';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/core/components/ui/select';
 import { Separator } from '@/core/components/ui/separator';
 import { Switch } from '@/core/components/ui/switch';
+import { Textarea } from '@/core/components/ui/textarea';
 // App components
 import { Loading } from '@/core/components/common/Loading';
 import { PageHeader } from '@/core/components/common/PageHeader';
@@ -61,6 +62,8 @@ export default function UpdateProfessional() {
       timeSlotUnavailableInit: '',
       workingDays: [],
     },
+    description: '',
+    dni: '',
     email: '',
     firstName: '',
     lastName: '',
@@ -118,6 +121,8 @@ export default function UpdateProfessional() {
       updateForm.setValue('configuration.timeSlotUnavailableEnd', professional.configuration?.timeSlotUnavailableEnd);
       updateForm.setValue('configuration.timeSlotUnavailableInit', professional.configuration?.timeSlotUnavailableInit);
       updateForm.setValue('configuration.workingDays', professional.configuration?.workingDays);
+      updateForm.setValue('description', professional.description);
+      updateForm.setValue('dni', professional.dni);
       updateForm.setValue('email', professional.email);
       updateForm.setValue('firstName', capitalize(professional.firstName) || '');
       updateForm.setValue('lastName', capitalize(professional.lastName) || '');
@@ -330,6 +335,22 @@ export default function UpdateProfessional() {
                       )}
                     />
                   </div>
+                  {/* Form fields: dni */}
+                  <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                    <FormField
+                      control={updateForm.control}
+                      name='dni'
+                      render={({ field }) => (
+                        <FormItem className=''>
+                          <FormLabel>{PU_CONFIG.labels.dni}</FormLabel>
+                          <FormControl className='h-9'>
+                            <Input type='number' placeholder={PU_CONFIG.placeholders.dni} {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                   {/* Form fields: email and phone */}
                   <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
@@ -353,6 +374,22 @@ export default function UpdateProfessional() {
                           <FormLabel>{PU_CONFIG.labels.phone}</FormLabel>
                           <FormControl className='h-9'>
                             <Input type='number' placeholder={PU_CONFIG.placeholders.phone} {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  {/* Form fields: description */}
+                  <div className='grid grid-cols-1 gap-6 md:grid-cols-1'>
+                    <FormField
+                      control={updateForm.control}
+                      name='description'
+                      render={({ field }) => (
+                        <FormItem className=''>
+                          <FormLabel>{PU_CONFIG.labels.description}</FormLabel>
+                          <FormControl className='h-9'>
+                            <Textarea placeholder={PU_CONFIG.placeholders.description} {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
