@@ -14,9 +14,9 @@ export const professionalSchema = z.object({
   firstName: z.string().min(1, { message: PROF_SCHEMA.firstNameMessage }),
   lastName: z.string().min(1, { message: PROF_SCHEMA.lastNameMessage }),
   description: z.string().min(1, { message: PROF_SCHEMA.descriptionMessage }),
-  dni: z.union([z.coerce.number().min(1, { message: PROF_SCHEMA.dniMessage }), z.string()]),
+  dni: z.union([z.coerce.number().min(1, { message: PROF_SCHEMA.dniMessage }), z.string().min(1, { message: PROF_SCHEMA.dniMessage })]),
   email: z.string().email({ message: PROF_SCHEMA.emailMessage }),
-  phone: z.union([z.coerce.number().min(1, { message: PROF_SCHEMA.phoneMessage }), z.string()]),
+  phone: z.union([z.coerce.number().min(1, { message: PROF_SCHEMA.phoneMessage }), z.string().min(1, { message: PROF_SCHEMA.phoneMessage })]),
   configuration: z.object({
     scheduleTimeInit: z.string().min(2, { message: PROF_SCHEMA.scheduleTimeInitMessage }),
     scheduleTimeEnd: z.string().min(2, { message: PROF_SCHEMA.scheduleTimeEndMessage }),
