@@ -18,11 +18,11 @@ export const professionalSchema = z.object({
   email: z.string().email({ message: PROF_SCHEMA.emailMessage }),
   phone: z.union([z.coerce.number().min(1, { message: PROF_SCHEMA.phoneMessage }), z.string().min(1, { message: PROF_SCHEMA.phoneMessage })]),
   configuration: z.object({
-    scheduleTimeInit: z.string().min(2, { message: PROF_SCHEMA.scheduleTimeInitMessage }),
-    scheduleTimeEnd: z.string().min(2, { message: PROF_SCHEMA.scheduleTimeEndMessage }),
+    scheduleTimeInit: z.string().min(5, { message: PROF_SCHEMA.scheduleTimeInitMessage }),
+    scheduleTimeEnd: z.string().min(5, { message: PROF_SCHEMA.scheduleTimeEndMessage }),
     slotDuration: z.union([z.coerce.number().min(1, { message: PROF_SCHEMA.slotDurationMessage }), z.string().min(1, { message: PROF_SCHEMA.slotDurationMessage })]),
-    timeSlotUnavailableInit: z.string().min(2, { message: PROF_SCHEMA.timeSlotUnavailableInitMessage }),
-    timeSlotUnavailableEnd: z.string().min(2, { message: PROF_SCHEMA.timeSlotUnavailableEndMessage }),
+    timeSlotUnavailableInit: z.string().min(5, { message: PROF_SCHEMA.timeSlotUnavailableInitMessage }),
+    timeSlotUnavailableEnd: z.string().min(5, { message: PROF_SCHEMA.timeSlotUnavailableEndMessage }),
     workingDays: z.array(workingDaySchema).refine(
       (days) => {
         return days.some((day) => day.value === true);
