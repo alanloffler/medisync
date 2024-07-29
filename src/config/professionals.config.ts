@@ -55,7 +55,11 @@ export const PROF_CREATE_CONFIG = {
     area: 'Área',
     available: 'Disponible',
     configuration: {
+      scheduleTimeEnd: 'Fin de turnos',
+      scheduleTimeInit: 'Inicio de turnos',
       slotDuration: 'Duración del turno (min)',
+      timeSlotUnavailableEnd: 'Fin de descanso',
+      timeSlotUnavailableInit: 'Inicio de descanso',
     },
     description: 'Descripción',
     dni: 'DNI',
@@ -70,7 +74,11 @@ export const PROF_CREATE_CONFIG = {
   placeholders: {
     area: 'Ingresá el área',
     configuration: {
+      scheduleTimeEnd: 'Ingresá la hora de finalización',
+      scheduleTimeInit: 'Ingresá la hora de inicio',
       slotDuration: 'Ingresá la duración del turno',
+      timeSlotUnavailableEnd: 'Ingresá la hora de finalización',
+      timeSlotUnavailableInit: 'Ingresá la hora de inicio',
     },
     description: 'Ingresá la descripción',
     dni: 'Ingresá el DNI',
