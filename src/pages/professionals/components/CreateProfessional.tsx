@@ -24,6 +24,7 @@ import { IWorkingDay } from '@/pages/professionals/interfaces/working-days.inter
 import { Link, useNavigate } from 'react-router-dom';
 import { PROF_CREATE_CONFIG as PC_CONFIG } from '@/config/professionals.config';
 import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
+import { ScheduleService } from '@/pages/settings/services/schedule.service';
 import { professionalSchema } from '@/pages/professionals/schemas/professional.schema';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useEffect, useState, MouseEvent } from 'react';
@@ -37,7 +38,9 @@ export default function CreateProfessional() {
   const [disabledSpec, setDisabledSpec] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showProfessionalCard, setShowProfessionalCard] = useState<boolean>(false);
+  const [slotDurationValues, setSlotDurationValues] = useState<number[]>([]);
   const [specializations, setSpecializations] = useState<ISpecialization[]>([]);
+  const [workingDays, setWorkingDays] = useState<IWorkingDay[]>([]);
   const [workingDaysKey, setWorkingDaysKey] = useState<string>('');
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
@@ -55,6 +58,14 @@ export default function CreateProfessional() {
       if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
       if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
       setIsLoading(false);
+    });
+
+    ScheduleService.findAllSlotDuration().then((response: number[]) => {
+      setSlotDurationValues(response);
+    });
+
+    ScheduleService.findAllWorkingDays().then((response: IWorkingDay[]) => {
+      setWorkingDays(response);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -93,6 +104,7 @@ export default function CreateProfessional() {
   }, [createForm.formState.isDirty, showProfessionalCard]);
 
   function handleCreateProfessional(data: z.infer<typeof professionalSchema>): void {
+    console.log(data);
     ProfessionalApiService.create(data).then((response) => {
       console.log('create professional');
       if (response.statusCode === 200) {
@@ -122,7 +134,7 @@ export default function CreateProfessional() {
   }
 
   function handleWorkingDaysValues(data: IWorkingDay[]): void {
-    console.log(data);
+    createForm.setValue('configuration.workingDays', data);
   }
   // #endregion
   return (
@@ -366,7 +378,7 @@ export default function CreateProfessional() {
                               <WorkingDays 
                                 key={workingDaysKey} 
                                 label={PC_CONFIG.labels.workingDays} 
-                                data={undefined} 
+                                data={workingDays} 
                                 handleWorkingDaysValues={handleWorkingDaysValues} 
                               />
                             </FormControl>
@@ -384,7 +396,30 @@ export default function CreateProfessional() {
                           <FormItem className='space-y-1'>
                             <FormLabel>{PC_CONFIG.labels.configuration.slotDuration}</FormLabel>
                             <FormControl className='h-9'>
-                              <Input type='number' placeholder={PC_CONFIG.placeholders.configuration.slotDuration} {...field} />
+                              {/* <Input type='number' placeholder={PC_CONFIG.placeholders.configuration.slotDuration} {...field} /> */}
+                              <Select
+                                disabled={areas.length < 1}
+                                onValueChange={(event) => {
+                                  field.onChange(event);
+                                  handleChangeArea(event);
+                                }}
+                                value={field.value.toString()}
+                              >
+                                <FormControl>
+                                  <SelectTrigger className={`focus:red h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
+                                    <SelectValue placeholder={PC_CONFIG.placeholders.configuration.slotDuration} />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <FormMessage />
+                                <SelectContent>
+                                  {slotDurationValues.length > 0 &&
+                                    slotDurationValues.map((el) => (
+                                      <SelectItem key={el} value={el.toString()} className='text-sm'>
+                                        {el}
+                                      </SelectItem>
+                                    ))}
+                                </SelectContent>
+                              </Select>
                             </FormControl>
                             <FormMessage />
                           </FormItem>
