@@ -45,8 +45,12 @@ export const PROF_CREATE_CONFIG = {
     { id: 1, name: 'Agregar área', path: '/' },
     { id: 2, name: 'Agregar especialidad', path: '/' },
   ],
-  formDescription: 'Ingresá los datos para dar de alta a un nuevo profesional',
-  formTitle: 'Formulario de creación',
+  formTitle: {
+    description: 'Ingresá los datos para dar de alta a un nuevo profesional',
+    header: 'Formulario de creación',
+    professional: 'Datos del profesional',
+    schedule: 'Configuración de la agenda',
+  },
   labels: {
     area: 'Área',
     available: 'Disponible',
