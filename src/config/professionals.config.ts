@@ -54,6 +54,9 @@ export const PROF_CREATE_CONFIG = {
   labels: {
     area: 'Área',
     available: 'Disponible',
+    configuration: {
+      slotDuration: 'Duración del turno (min)',
+    },
     description: 'Descripción',
     dni: 'DNI',
     email: 'Correo electrónico',
@@ -66,6 +69,9 @@ export const PROF_CREATE_CONFIG = {
   },
   placeholders: {
     area: 'Ingresá el área',
+    configuration: {
+      slotDuration: 'Ingresá la duración del turno',
+    },
     description: 'Ingresá la descripción',
     dni: 'Ingresá el DNI',
     email: 'Ingresá el correo electrónico',
