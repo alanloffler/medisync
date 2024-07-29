@@ -13,12 +13,14 @@ import { Switch } from '@/core/components/ui/switch';
 import { Textarea } from '@/core/components/ui/textarea';
 // App components
 import { PageHeader } from '@/core/components/common/PageHeader';
+import { WorkingDays } from '@/pages/professionals/components/common/WorkingDays';
 // App
 import { APP_CONFIG } from '@/config/app.config';
 import { AreaService } from '@/core/services/area.service';
 import { IArea } from '@/core/interfaces/area.interface';
 import { IResponse } from '@/core/interfaces/response.interface';
 import { ISpecialization } from '@/core/interfaces/specialization.interface';
+import { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
 import { Link, useNavigate } from 'react-router-dom';
 import { PROF_CREATE_CONFIG as PC_CONFIG } from '@/config/professionals.config';
 import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
@@ -36,6 +38,7 @@ export default function CreateProfessional() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showProfessionalCard, setShowProfessionalCard] = useState<boolean>(false);
   const [specializations, setSpecializations] = useState<ISpecialization[]>([]);
+  const [workingDaysKey, setWorkingDaysKey] = useState<string>('');
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const navigate = useNavigate();
@@ -60,6 +63,14 @@ export default function CreateProfessional() {
   const defaultValues = {
     area: '',
     available: true,
+    configuration: {
+      // scheduleTimeEnd: '',
+      // scheduleTimeInit: '',
+      // slotDuration: 0,
+      // timeSlotUnavailableEnd: '',
+      // timeSlotUnavailableInit: '',
+      workingDays: [],
+    },
     description: '',
     dni: '',
     email: '',
@@ -81,7 +92,7 @@ export default function CreateProfessional() {
     if (!isDirty) setShowProfessionalCard(false);
   }, [createForm.formState.isDirty, showProfessionalCard]);
 
-  function handleCreateProfessional(data: z.infer<typeof professionalSchema>) {
+  function handleCreateProfessional(data: z.infer<typeof professionalSchema>): void {
     ProfessionalApiService.create(data).then((response) => {
       console.log('create professional');
       if (response.statusCode === 200) {
@@ -95,18 +106,22 @@ export default function CreateProfessional() {
     });
   }
 
-  function handleCancel(event: MouseEvent<HTMLButtonElement | HTMLDivElement | HTMLInputElement>) {
+  function handleCancel(event: MouseEvent<HTMLButtonElement | HTMLDivElement | HTMLInputElement>): void {
     event.preventDefault();
     createForm.reset(defaultValues);
     setDisabledSpec(true);
     setShowProfessionalCard(false);
   }
 
-  function handleChangeArea(event: string) {
+  function handleChangeArea(event: string): void {
     const specializations = areas.find((area) => area._id === event)?.specializations || [];
     setSpecializations(specializations);
     setDisabledSpec(false);
     createForm.setValue('specialization', '');
+  }
+
+  function handleWorkingDaysValues(data: IWorkingDay[]): void {
+    console.log(data);
   }
   // #endregion
   return (
@@ -336,6 +351,27 @@ export default function CreateProfessional() {
                   </div>
                   <div className='flex flex-col border-l pl-6'>
                     <h1 className='mb-3 rounded-sm bg-slate-200/50 px-2 py-1 font-semibold text-slate-700'>{PC_CONFIG.formTitle.schedule}</h1>
+                    {/* Schedule working days */}
+                    <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                      <FormField
+                        control={createForm.control}
+                        name='configuration.workingDays'
+                        render={() => (
+                          <FormItem className='w-full'>
+                            <FormControl>
+                              {/* prettier-ignore */}
+                              <WorkingDays 
+                                key={workingDaysKey} 
+                                label={PC_CONFIG.labels.workingDays} 
+                                data={undefined} 
+                                handleWorkingDaysValues={handleWorkingDaysValues} 
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                   </div>
                 </div>
                 {/* Buttons */}
