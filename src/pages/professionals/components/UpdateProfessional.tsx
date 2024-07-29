@@ -57,7 +57,7 @@ export default function UpdateProfessional() {
     configuration: {
       scheduleTimeEnd: '',
       scheduleTimeInit: '',
-      slotDuration: 0,
+      slotDuration: '',
       timeSlotUnavailableEnd: '',
       timeSlotUnavailableInit: '',
       workingDays: [],
