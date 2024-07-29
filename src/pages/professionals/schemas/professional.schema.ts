@@ -20,7 +20,7 @@ export const professionalSchema = z.object({
   configuration: z.object({
     scheduleTimeInit: z.string().min(2, { message: PROF_SCHEMA.scheduleTimeInitMessage }),
     scheduleTimeEnd: z.string().min(2, { message: PROF_SCHEMA.scheduleTimeEndMessage }),
-    slotDuration: z.coerce.number().min(1, { message: PROF_SCHEMA.slotDurationMessage }),
+    slotDuration: z.union([z.coerce.number().min(1, { message: PROF_SCHEMA.slotDurationMessage }), z.string().min(1, { message: PROF_SCHEMA.slotDurationMessage })]),
     timeSlotUnavailableInit: z.string().min(2, { message: PROF_SCHEMA.timeSlotUnavailableInitMessage }),
     timeSlotUnavailableEnd: z.string().min(2, { message: PROF_SCHEMA.timeSlotUnavailableEndMessage }),
     workingDays: z.array(workingDaySchema).refine(
