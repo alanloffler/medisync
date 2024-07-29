@@ -24,7 +24,7 @@ import { IWorkingDay } from '@/pages/professionals/interfaces/working-days.inter
 import { Link, useNavigate } from 'react-router-dom';
 import { PROF_CREATE_CONFIG as PC_CONFIG } from '@/config/professionals.config';
 import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
-import { ScheduleService } from '@/pages/settings/services/schedule.service';
+import { IProfTitle, ScheduleService } from '@/pages/settings/services/schedule-settings.service';
 import { professionalSchema } from '@/pages/professionals/schemas/professional.schema';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useEffect, useState, MouseEvent } from 'react';
@@ -37,6 +37,7 @@ export default function CreateProfessional() {
   const [areas, setAreas] = useState<IArea[]>([]);
   const [disabledSpec, setDisabledSpec] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [professionalTitles, setProfessionalTitles] = useState<IProfTitle[]>([]);
   const [showProfessionalCard, setShowProfessionalCard] = useState<boolean>(false);
   const [slotDurationValues, setSlotDurationValues] = useState<number[]>([]);
   const [specializations, setSpecializations] = useState<ISpecialization[]>([]);
@@ -60,12 +61,16 @@ export default function CreateProfessional() {
       setIsLoading(false);
     });
 
-    ScheduleService.findAllSlotDuration().then((response: number[]) => {
+    ScheduleService.findAllSlotDurations().then((response: number[]) => {
       setSlotDurationValues(response);
     });
 
     ScheduleService.findAllWorkingDays().then((response: IWorkingDay[]) => {
       setWorkingDays(response);
+    });
+
+    ScheduleService.findAllProfessionalTitles().then((response: IProfTitle[]) => {
+      setProfessionalTitles(response);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -249,10 +254,29 @@ export default function CreateProfessional() {
                         render={({ field }) => (
                           <FormItem className=''>
                             <FormLabel>{PC_CONFIG.labels.titleAbbreviation}</FormLabel>
-                            <FormControl className='h-9'>
-                              <Input placeholder={PC_CONFIG.placeholders.titleAbbreviation} {...field} />
-                            </FormControl>
-                            <FormMessage />
+                            <Select
+                              disabled={areas.length < 1}
+                              onValueChange={(event) => {
+                                field.onChange(event);
+                                handleChangeArea(event);
+                              }}
+                              value={field.value.toString()}
+                            >
+                              <FormControl>
+                                <SelectTrigger className={`focus:red h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
+                                  <SelectValue placeholder={PC_CONFIG.placeholders.titleAbbreviation} />
+                                </SelectTrigger>
+                              </FormControl>
+                              <FormMessage />
+                              <SelectContent>
+                                {professionalTitles.length > 0 &&
+                                  professionalTitles.map((el) => (
+                                    <SelectItem key={el.id} value={el.id} className='text-sm'>
+                                      {el.title}
+                                    </SelectItem>
+                                  ))}
+                              </SelectContent>
+                            </Select>
                           </FormItem>
                         )}
                       />
@@ -395,33 +419,31 @@ export default function CreateProfessional() {
                         render={({ field }) => (
                           <FormItem className='space-y-1'>
                             <FormLabel>{PC_CONFIG.labels.configuration.slotDuration}</FormLabel>
-                            <FormControl className='h-9'>
-                              {/* <Input type='number' placeholder={PC_CONFIG.placeholders.configuration.slotDuration} {...field} /> */}
-                              <Select
-                                disabled={areas.length < 1}
-                                onValueChange={(event) => {
-                                  field.onChange(event);
-                                  handleChangeArea(event);
-                                }}
-                                value={field.value.toString()}
-                              >
-                                <FormControl>
-                                  <SelectTrigger className={`focus:red h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
-                                    <SelectValue placeholder={PC_CONFIG.placeholders.configuration.slotDuration} />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <FormMessage />
-                                <SelectContent>
-                                  {slotDurationValues.length > 0 &&
-                                    slotDurationValues.map((el) => (
-                                      <SelectItem key={el} value={el.toString()} className='text-sm'>
-                                        {el}
-                                      </SelectItem>
-                                    ))}
-                                </SelectContent>
-                              </Select>
-                            </FormControl>
-                            <FormMessage />
+
+                            {/* <Input type='number' placeholder={PC_CONFIG.placeholders.configuration.slotDuration} {...field} /> */}
+                            <Select
+                              disabled={areas.length < 1}
+                              onValueChange={(event) => {
+                                field.onChange(event);
+                                handleChangeArea(event);
+                              }}
+                              value={field.value.toString()}
+                            >
+                              <FormControl>
+                                <SelectTrigger className={`focus:red h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
+                                  <SelectValue placeholder={PC_CONFIG.placeholders.configuration.slotDuration} />
+                                </SelectTrigger>
+                              </FormControl>
+                              <FormMessage />
+                              <SelectContent>
+                                {slotDurationValues.length > 0 &&
+                                  slotDurationValues.map((el) => (
+                                    <SelectItem key={el} value={el.toString()} className='text-sm'>
+                                      {el}
+                                    </SelectItem>
+                                  ))}
+                              </SelectContent>
+                            </Select>
                           </FormItem>
                         )}
                       />
