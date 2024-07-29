@@ -4,7 +4,7 @@ export interface IWorkingDay {
 }
 
 export interface IWorkingDaysProps {
-  data: IWorkingDay[];
+  data?: IWorkingDay[] | undefined;
   handleWorkingDaysValues: (data: IWorkingDay[]) => void;
   label: string;
 }
