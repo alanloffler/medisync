@@ -62,6 +62,7 @@ export const PROF_CREATE_CONFIG = {
     phone: 'Teléfono',
     specialization: 'Especialidad',
     titleAbbreviation: 'Título',
+    workingDays: 'Días laborales',
   },
   placeholders: {
     area: 'Ingresá el área',
