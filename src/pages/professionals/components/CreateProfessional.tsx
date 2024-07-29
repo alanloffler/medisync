@@ -125,7 +125,7 @@ export default function CreateProfessional() {
             <CardTitle className='flex flex-row items-center justify-between'>
               <div className='flex items-center gap-2'>
                 <FilePlus className='h-4 w-4' strokeWidth={2} />
-                <span>{PC_CONFIG.formTitle}</span>
+                <span>{PC_CONFIG.formTitle.header}</span>
               </div>
               {/* Dropdown menu */}
               <DropdownMenu>
@@ -143,7 +143,7 @@ export default function CreateProfessional() {
                 </DropdownMenuContent>
               </DropdownMenu>
             </CardTitle>
-            <CardDescription className='flex w-full flex-row'>{PC_CONFIG.formDescription}</CardDescription>
+            <CardDescription className='flex w-full flex-row'>{PC_CONFIG.formTitle.description}</CardDescription>
           </CardHeader>
           <CardContent className='pt-1'>
             <Form {...createForm}>
@@ -151,7 +151,7 @@ export default function CreateProfessional() {
                 {/* Form fields */}
                 <div className='grid grid-cols-1 md:grid-cols-2'>
                   <div className='flex flex-col pr-6'>
-                    <h1 className='text-slate-700 font-semibold mb-3 bg-slate-200/50 px-2 py-1 rounded-sm'>Datos del profesional</h1>
+                    <h1 className='mb-3 rounded-sm bg-slate-200/50 px-2 py-1 font-semibold text-slate-700'>{PC_CONFIG.formTitle.professional}</h1>
                     {/* Form fields: area and specialization */}
                     <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                       <FormField
@@ -335,7 +335,7 @@ export default function CreateProfessional() {
                     </div>
                   </div>
                   <div className='flex flex-col border-l pl-6'>
-                    <h1 className='text-slate-700 font-semibold mb-3 bg-slate-200/50 px-2 py-1 rounded-sm'>Configuración de la agenda</h1>
+                    <h1 className='mb-3 rounded-sm bg-slate-200/50 px-2 py-1 font-semibold text-slate-700'>{PC_CONFIG.formTitle.schedule}</h1>
                   </div>
                 </div>
                 {/* Buttons */}
