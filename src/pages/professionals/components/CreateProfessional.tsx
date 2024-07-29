@@ -66,7 +66,7 @@ export default function CreateProfessional() {
     configuration: {
       // scheduleTimeEnd: '',
       // scheduleTimeInit: '',
-      // slotDuration: 0,
+      slotDuration: '',
       // timeSlotUnavailableEnd: '',
       // timeSlotUnavailableInit: '',
       workingDays: [],
@@ -111,6 +111,7 @@ export default function CreateProfessional() {
     createForm.reset(defaultValues);
     setDisabledSpec(true);
     setShowProfessionalCard(false);
+    setWorkingDaysKey(crypto.randomUUID());
   }
 
   function handleChangeArea(event: string): void {
@@ -165,7 +166,8 @@ export default function CreateProfessional() {
               <form onSubmit={createForm.handleSubmit(handleCreateProfessional)}>
                 {/* Form fields */}
                 <div className='grid grid-cols-1 md:grid-cols-2'>
-                  <div className='flex flex-col pr-6'>
+                  {/* SECTION: Professional data (left side) */}
+                  <div className='flex flex-col pr-6 gap-4'>
                     <h1 className='mb-3 rounded-sm bg-slate-200/50 px-2 py-1 font-semibold text-slate-700'>{PC_CONFIG.formTitle.professional}</h1>
                     {/* Form fields: area and specialization */}
                     <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
@@ -349,7 +351,8 @@ export default function CreateProfessional() {
                       />
                     </div>
                   </div>
-                  <div className='flex flex-col border-l pl-6'>
+                  {/* SECTION: Schedule (right side) */}
+                  <div className='flex flex-col border-l pl-6 gap-4'>
                     <h1 className='mb-3 rounded-sm bg-slate-200/50 px-2 py-1 font-semibold text-slate-700'>{PC_CONFIG.formTitle.schedule}</h1>
                     {/* Schedule working days */}
                     <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
@@ -366,6 +369,22 @@ export default function CreateProfessional() {
                                 data={undefined} 
                                 handleWorkingDaysValues={handleWorkingDaysValues} 
                               />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    {/* Schedule time slot duration */}
+                    <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                      <FormField
+                        control={createForm.control}
+                        name='configuration.slotDuration'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{PC_CONFIG.labels.configuration.slotDuration}</FormLabel>
+                            <FormControl className='h-9'>
+                              <Input type='number' placeholder={PC_CONFIG.placeholders.configuration.slotDuration} {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
