@@ -76,7 +76,7 @@ export const PROF_CREATE_CONFIG = {
     configuration: {
       scheduleTimeEnd: 'Ingresá la hora de finalización',
       scheduleTimeInit: 'Ingresá la hora de inicio',
-      slotDuration: 'Ingresá la duración del turno',
+      slotDuration: 'Ingresá la duración',
       timeSlotUnavailableEnd: 'Ingresá la hora de finalización',
       timeSlotUnavailableInit: 'Ingresá la hora de inicio',
     },
