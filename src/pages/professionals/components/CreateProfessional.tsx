@@ -64,11 +64,11 @@ export default function CreateProfessional() {
     area: '',
     available: true,
     configuration: {
-      // scheduleTimeEnd: '',
-      // scheduleTimeInit: '',
+      scheduleTimeEnd: '',
+      scheduleTimeInit: '',
       slotDuration: '',
-      // timeSlotUnavailableEnd: '',
-      // timeSlotUnavailableInit: '',
+      timeSlotUnavailableEnd: '',
+      timeSlotUnavailableInit: '',
       workingDays: [],
     },
     description: '',
@@ -167,7 +167,7 @@ export default function CreateProfessional() {
                 {/* Form fields */}
                 <div className='grid grid-cols-1 md:grid-cols-2'>
                   {/* SECTION: Professional data (left side) */}
-                  <div className='flex flex-col pr-6 gap-4'>
+                  <div className='flex flex-col gap-4 pr-6'>
                     <h1 className='mb-3 rounded-sm bg-slate-200/50 px-2 py-1 font-semibold text-slate-700'>{PC_CONFIG.formTitle.professional}</h1>
                     {/* Form fields: area and specialization */}
                     <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
@@ -352,7 +352,7 @@ export default function CreateProfessional() {
                     </div>
                   </div>
                   {/* SECTION: Schedule (right side) */}
-                  <div className='flex flex-col border-l pl-6 gap-4'>
+                  <div className='flex flex-col gap-4 border-l pl-6'>
                     <h1 className='mb-3 rounded-sm bg-slate-200/50 px-2 py-1 font-semibold text-slate-700'>{PC_CONFIG.formTitle.schedule}</h1>
                     {/* Schedule working days */}
                     <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
@@ -381,10 +381,68 @@ export default function CreateProfessional() {
                         control={createForm.control}
                         name='configuration.slotDuration'
                         render={({ field }) => (
-                          <FormItem>
+                          <FormItem className='space-y-1'>
                             <FormLabel>{PC_CONFIG.labels.configuration.slotDuration}</FormLabel>
                             <FormControl className='h-9'>
                               <Input type='number' placeholder={PC_CONFIG.placeholders.configuration.slotDuration} {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    {/* Schedule time init and end */}
+                    <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                      <FormField
+                        control={createForm.control}
+                        name='configuration.scheduleTimeInit'
+                        render={({ field }) => (
+                          <FormItem className='space-y-1'>
+                            <FormLabel>{PC_CONFIG.labels.configuration.scheduleTimeInit}</FormLabel>
+                            <FormControl className='h-9'>
+                              <Input placeholder={PC_CONFIG.placeholders.configuration.scheduleTimeInit} {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={createForm.control}
+                        name='configuration.scheduleTimeEnd'
+                        render={({ field }) => (
+                          <FormItem className='space-y-1'>
+                            <FormLabel>{PC_CONFIG.labels.configuration.scheduleTimeEnd}</FormLabel>
+                            <FormControl className='h-9'>
+                              <Input placeholder={PC_CONFIG.placeholders.configuration.scheduleTimeEnd} {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    {/* Schedule time slot unavailable init and end */}
+                    <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                      <FormField
+                        control={createForm.control}
+                        name='configuration.timeSlotUnavailableInit'
+                        render={({ field }) => (
+                          <FormItem className=''>
+                            <FormLabel>{PC_CONFIG.labels.configuration.timeSlotUnavailableInit}</FormLabel>
+                            <FormControl className='h-9'>
+                              <Input placeholder={PC_CONFIG.placeholders.configuration.timeSlotUnavailableInit} {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={createForm.control}
+                        name='configuration.timeSlotUnavailableEnd'
+                        render={({ field }) => (
+                          <FormItem className=''>
+                            <FormLabel>{PC_CONFIG.labels.configuration.timeSlotUnavailableEnd}</FormLabel>
+                            <FormControl className='h-9'>
+                              <Input placeholder={PC_CONFIG.placeholders.configuration.timeSlotUnavailableEnd} {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
