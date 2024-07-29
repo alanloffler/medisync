@@ -1,7 +1,6 @@
 // Icons: https://lucide.dev/icons/
-import { ArrowLeft, FilePlus, Mail, Menu, Phone } from 'lucide-react';
+import { ArrowLeft, FilePlus, Menu } from 'lucide-react';
 // Components: https://ui.shadcn.com/docs/components
-import { Badge } from '@/core/components/ui/badge';
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/core/components/ui/dropdown-menu';
@@ -38,7 +37,6 @@ export default function CreateProfessional() {
   const [disabledSpec, setDisabledSpec] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [professionalTitles, setProfessionalTitles] = useState<IProfTitle[]>([]);
-  const [showProfessionalCard, setShowProfessionalCard] = useState<boolean>(false);
   const [slotDurationValues, setSlotDurationValues] = useState<number[]>([]);
   const [specializations, setSpecializations] = useState<ISpecialization[]>([]);
   const [workingDays, setWorkingDays] = useState<IWorkingDay[]>([]);
@@ -102,12 +100,6 @@ export default function CreateProfessional() {
     defaultValues: defaultValues,
   });
 
-  useEffect(() => {
-    const isDirty = createForm.formState.isDirty;
-    if (isDirty) setShowProfessionalCard(true);
-    if (!isDirty) setShowProfessionalCard(false);
-  }, [createForm.formState.isDirty, showProfessionalCard]);
-
   function handleCreateProfessional(data: z.infer<typeof professionalSchema>): void {
     console.log(data);
     ProfessionalApiService.create(data).then((response) => {
@@ -119,7 +111,6 @@ export default function CreateProfessional() {
       if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
       if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
       createForm.reset(defaultValues);
-      setShowProfessionalCard(false);
     });
   }
 
@@ -127,7 +118,6 @@ export default function CreateProfessional() {
     event.preventDefault();
     createForm.reset(defaultValues);
     setDisabledSpec(true);
-    setShowProfessionalCard(false);
     setWorkingDaysKey(crypto.randomUUID());
   }
 
@@ -521,45 +511,6 @@ export default function CreateProfessional() {
             </Form>
           </CardContent>
         </Card>
-      )}
-      {showProfessionalCard && (
-        <div className='mx-auto w-full animate-fadeIn justify-items-center md:grid-cols-1 lg:grid-cols-1'>
-          <div className='mx-auto flex h-full items-center justify-center'>
-            <Card className='w-full md:w-2/3 lg:w-2/3'>
-              <CardHeader>
-                <div className='flex justify-center p-4 text-3xl font-semibold leading-none tracking-tight'>
-                  {createForm.watch('titleAbbreviation')} {createForm.watch('lastName')} {createForm.watch('firstName')}
-                </div>
-                <CardContent className='space-y-2 px-6 py-0 pt-2 text-lg'>
-                  {createForm.watch('email') !== '' && (
-                    <div className='flex animate-fadeIn items-center gap-4 italic'>
-                      <Mail className='h-4 w-4' />
-                      {createForm.watch('email')}
-                    </div>
-                  )}
-                  {createForm.watch('phone') !== 0 && (
-                    <div className='flex items-center gap-4'>
-                      <Phone className='h-4 w-4' />
-                      {createForm.watch('phone')}
-                    </div>
-                  )}
-                </CardContent>
-                <div className='flex justify-end space-x-4 pt-4'>
-                  {createForm.watch('area') !== '' && (
-                    <Badge variant={'secondary'} className='animate-fadeIn'>
-                      {capitalize(areas.find((area) => area._id === createForm.watch('area'))?.name)}
-                    </Badge>
-                  )}
-                  {createForm.watch('specialization') !== '' && (
-                    <Badge variant={'secondary'} className='animate-fadeIn'>
-                      {capitalize(areas.find((area) => area._id === createForm.watch('area'))?.specializations.find((spec) => spec._id === createForm.watch('specialization'))?.name || '')}
-                    </Badge>
-                  )}
-                </div>
-              </CardHeader>
-            </Card>
-          </div>
-        </div>
       )}
     </main>
   );
