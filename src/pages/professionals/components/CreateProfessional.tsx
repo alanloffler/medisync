@@ -131,6 +131,7 @@ export default function CreateProfessional() {
 
   function handleWorkingDaysValues(data: IWorkingDay[]): void {
     createForm.setValue('configuration.workingDays', data);
+    createForm.clearErrors('configuration.workingDays');
   }
 
   function handleSlotInput(data: string): void {
