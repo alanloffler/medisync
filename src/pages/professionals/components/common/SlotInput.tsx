@@ -2,7 +2,8 @@
 import { Input } from '@/core/components/ui/input';
 import { PatternFormat } from 'react-number-format';
 
-export function SlotInput() {
+export function SlotInput({ handleSlotInput }: { handleSlotInput: (slot: string) => void }) {
+
   const isAllowed = (values: { formattedValue: string; floatValue: number | undefined }) => {
     const { formattedValue, floatValue } = values;
     if (floatValue === undefined) return true;
@@ -33,8 +34,15 @@ export function SlotInput() {
     }
   };
 
+  function handleChange(value: string) {
+    console.log('value', value);
+    handleSlotInput(value);
+  }
+
   return (
     <PatternFormat
+      onChange={(e) => handleChange(e.target.value)}
+      // onValueChange={(value) => handleSlotInput(value.formattedValue)}
       customInput={Input}
       placeholder='00:00'
       format='##:##'
@@ -43,7 +51,6 @@ export function SlotInput() {
       mask='-'
       isAllowed={isAllowed}
       className='text-muted-foreground focus-visible:text-black h-9'
-      // className='flex h-10 w-full rounded-md bg-slate-100/70 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50'
     />
   );
 }
