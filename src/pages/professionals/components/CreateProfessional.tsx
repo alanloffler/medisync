@@ -20,11 +20,13 @@ import { AreaService } from '@/core/services/area.service';
 import { IArea } from '@/core/interfaces/area.interface';
 import { IResponse } from '@/core/interfaces/response.interface';
 import { ISpecialization } from '@/core/interfaces/specialization.interface';
+import { ITitle } from '@/core/interfaces/title.interface';
 import { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
 import { Link, useNavigate } from 'react-router-dom';
 import { PROF_CREATE_CONFIG as PC_CONFIG } from '@/config/professionals.config';
 import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
-import { IProfTitle, ScheduleService } from '@/pages/settings/services/schedule-settings.service';
+import { ScheduleService } from '@/pages/settings/services/schedule-settings.service';
+import { TitleService } from '@/core/services/title.service';
 import { professionalSchema } from '@/pages/professionals/schemas/professional.schema';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useEffect, useState, MouseEvent } from 'react';
@@ -37,9 +39,9 @@ export default function CreateProfessional() {
   const [areas, setAreas] = useState<IArea[]>([]);
   const [disabledSpec, setDisabledSpec] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [professionalTitles, setProfessionalTitles] = useState<IProfTitle[]>([]);
   const [slotDurationValues, setSlotDurationValues] = useState<number[]>([]);
   const [specializations, setSpecializations] = useState<ISpecialization[]>([]);
+  const [titles, setTitles] = useState<ITitle[]>([]);
   const [workingDays, setWorkingDays] = useState<IWorkingDay[]>([]);
   const [workingDaysKey, setWorkingDaysKey] = useState<string>('');
   const addNotification = useNotificationsStore((state) => state.addNotification);
@@ -60,16 +62,18 @@ export default function CreateProfessional() {
       setIsLoading(false);
     });
 
+    TitleService.findAll().then((response: IResponse) => {
+      if (response.statusCode === 200) {
+        setTitles(response.data)
+      }
+    });
+
     ScheduleService.findAllSlotDurations().then((response: number[]) => {
       setSlotDurationValues(response);
     });
 
     ScheduleService.findAllWorkingDays().then((response: IWorkingDay[]) => {
       setWorkingDays(response);
-    });
-
-    ScheduleService.findAllProfessionalTitles().then((response: IProfTitle[]) => {
-      setProfessionalTitles(response);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -252,12 +256,13 @@ export default function CreateProfessional() {
                           <FormItem className=''>
                             <FormLabel>{PC_CONFIG.labels.titleAbbreviation}</FormLabel>
                             <Select
-                              disabled={areas.length < 1}
+                              // disabled={titles.length < 1}
                               onValueChange={(event) => {
                                 field.onChange(event);
+                                // TODO MALE FUNC FOR THIS
                                 handleChangeArea(event);
                               }}
-                              value={field.value.toString()}
+                              value={field.value}
                             >
                               <FormControl>
                                 <SelectTrigger className={`focus:red h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
@@ -266,10 +271,10 @@ export default function CreateProfessional() {
                               </FormControl>
                               <FormMessage />
                               <SelectContent>
-                                {professionalTitles.length > 0 &&
-                                  professionalTitles.map((el) => (
+                                {titles.length > 0 &&
+                                  titles.map((el) => (
                                     <SelectItem key={el.id} value={el.id} className='text-sm'>
-                                      {el.title}
+                                      {capitalize(el.name)}
                                     </SelectItem>
                                   ))}
                               </SelectContent>
