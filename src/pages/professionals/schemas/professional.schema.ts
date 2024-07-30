@@ -18,13 +18,7 @@ export const professionalSchema = z.object({
   email: z.string().email({ message: PROF_SCHEMA.emailMessage }),
   phone: z.union([z.coerce.number().min(1, { message: PROF_SCHEMA.phoneMessage }), z.string().min(1, { message: PROF_SCHEMA.phoneMessage })]),
   configuration: z.object({
-    // scheduleTimeInit: z.string().min(5, { message: PROF_SCHEMA.scheduleTimeInitMessage }),
-    scheduleTimeInit:z.string().refine(value => {
-      const regex = /^([01]\d|2[0-3]):([0-5]\d)$/;
-      return regex.test(value);
-    }, {
-      message: 'Invalid time format, must be "HH:MM"',
-    }),
+    scheduleTimeInit: z.string().refine((value) => validateSlot(value), { message: PROF_SCHEMA.scheduleTimeInitMessage }),
     scheduleTimeEnd: z.string().min(5, { message: PROF_SCHEMA.scheduleTimeEndMessage }),
     slotDuration: z.union([z.coerce.number().min(1, { message: PROF_SCHEMA.slotDurationMessage }), z.string().min(1, { message: PROF_SCHEMA.slotDurationMessage })]),
     timeSlotUnavailableInit: z.string().min(5, { message: PROF_SCHEMA.timeSlotUnavailableInitMessage }),
@@ -37,3 +31,11 @@ export const professionalSchema = z.object({
     ),
   }),
 });
+
+function validateSlot(value: string): boolean {
+  const regex = /^([01]\d|2[0-3]):([0-5]\d)$/;
+  const slotFormat: boolean = regex.test(value);
+  const hour: boolean = parseInt(value.split(':')[0]) >= 0 && parseInt(value.split(':')[0]) <= 23;
+  const minutes: boolean = parseInt(value.split(':')[1]) >= 0 && parseInt(value.split(':')[1]) <= 59;
+  return slotFormat && hour && minutes;
+}
