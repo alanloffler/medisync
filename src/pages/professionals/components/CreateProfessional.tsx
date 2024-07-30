@@ -12,6 +12,7 @@ import { Switch } from '@/core/components/ui/switch';
 import { Textarea } from '@/core/components/ui/textarea';
 // App components
 import { PageHeader } from '@/core/components/common/PageHeader';
+import { SlotInput } from '@/pages/professionals/components/common/SlotInput';
 import { WorkingDays } from '@/pages/professionals/components/common/WorkingDays';
 // App
 import { APP_CONFIG } from '@/config/app.config';
@@ -440,6 +441,7 @@ export default function CreateProfessional() {
                     </div>
                     {/* Schedule time init and end */}
                     <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                      <SlotInput />
                       <FormField
                         control={createForm.control}
                         name='configuration.scheduleTimeInit'
