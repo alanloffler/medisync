@@ -100,7 +100,6 @@ export default function CreateProfessional() {
     resolver: zodResolver(professionalSchema),
     defaultValues: defaultValues,
   });
-  const { register, clearErrors } = createForm;
 
   function handleCreateProfessional(data: z.infer<typeof professionalSchema>): void {
     console.log(data);
@@ -137,7 +136,7 @@ export default function CreateProfessional() {
   function handleSlotInput(data: string): void {
     console.log('slot data', data);
     createForm.setValue('configuration.scheduleTimeInit', data);
-    clearErrors('configuration.scheduleTimeInit');
+    createForm.clearErrors('configuration.scheduleTimeInit');
   }
   // #endregion
   return (
