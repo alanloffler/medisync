@@ -255,7 +255,7 @@ export default function CreateProfessional() {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>{PC_CONFIG.labels.titleAbbreviation}</FormLabel>
-                            // TODO maybe make a func for value change and set value el.id
+                            {/* TODO maybe make a func for value change and set value el.id */}
                             <Select
                               defaultValue={field.value}
                               disabled={titles.length < 1}
