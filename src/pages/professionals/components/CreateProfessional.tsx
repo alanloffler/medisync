@@ -103,16 +103,16 @@ export default function CreateProfessional() {
 
   function handleCreateProfessional(data: z.infer<typeof professionalSchema>): void {
     console.log(data);
-    // ProfessionalApiService.create(data).then((response) => {
-    //   console.log('create professional');
-    //   if (response.statusCode === 200) {
-    //     setDisabledSpec(true);
-    //     addNotification({ type: 'success', message: response.message });
-    //   }
-    //   if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
-    //   if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
-    //   createForm.reset(defaultValues);
-    // });
+    ProfessionalApiService.create(data).then((response) => {
+      console.log('create professional');
+      if (response.statusCode === 200) {
+        setDisabledSpec(true);
+        addNotification({ type: 'success', message: response.message });
+      }
+      if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
+      if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
+      createForm.reset(defaultValues);
+    });
   }
 
   function handleCancel(event: MouseEvent<HTMLButtonElement | HTMLDivElement | HTMLInputElement>): void {
@@ -458,7 +458,19 @@ export default function CreateProfessional() {
                           </FormItem>
                         )}
                       />
-
+                      <FormField
+                        control={createForm.control}
+                        name='configuration.scheduleTimeEnd'
+                        render={({ field }) => (
+                          <FormItem className='space-y-1'>
+                            <FormLabel>{PC_CONFIG.labels.configuration.scheduleTimeEnd}</FormLabel>
+                            <FormControl className='h-9'>
+                              <SlotInput handleSlotInput={(data) => handleSlotInput(data, 'configuration.scheduleTimeEnd')} {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                       {/* <FormField
                         control={createForm.control}
                         name='configuration.scheduleTimeInit'
@@ -472,7 +484,7 @@ export default function CreateProfessional() {
                           </FormItem>
                         )}
                       /> */}
-                      <FormField
+                      {/* <FormField
                         control={createForm.control}
                         name='configuration.scheduleTimeEnd'
                         render={({ field }) => (
@@ -484,7 +496,7 @@ export default function CreateProfessional() {
                             <FormMessage />
                           </FormItem>
                         )}
-                      />
+                      /> */}
                     </div>
                     {/* Schedule time slot unavailable init and end */}
                     <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
@@ -495,7 +507,8 @@ export default function CreateProfessional() {
                           <FormItem className=''>
                             <FormLabel>{PC_CONFIG.labels.configuration.timeSlotUnavailableInit}</FormLabel>
                             <FormControl className='h-9'>
-                              <Input placeholder={PC_CONFIG.placeholders.configuration.timeSlotUnavailableInit} {...field} />
+                              {/* <Input placeholder={PC_CONFIG.placeholders.configuration.timeSlotUnavailableInit} {...field} /> */}
+                              <SlotInput handleSlotInput={(data) => handleSlotInput(data, 'configuration.timeSlotUnavailableInit')} {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -508,7 +521,8 @@ export default function CreateProfessional() {
                           <FormItem className=''>
                             <FormLabel>{PC_CONFIG.labels.configuration.timeSlotUnavailableEnd}</FormLabel>
                             <FormControl className='h-9'>
-                              <Input placeholder={PC_CONFIG.placeholders.configuration.timeSlotUnavailableEnd} {...field} />
+                              {/* <Input placeholder={PC_CONFIG.placeholders.configuration.timeSlotUnavailableEnd} {...field} /> */}
+                              <SlotInput handleSlotInput={(data) => handleSlotInput(data, 'configuration.timeSlotUnavailableEnd')} {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
