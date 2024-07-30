@@ -64,7 +64,7 @@ export default function CreateProfessional() {
 
     TitleService.findAll().then((response: IResponse) => {
       if (response.statusCode === 200) {
-        setTitles(response.data)
+        setTitles(response.data);
       }
     });
 
@@ -253,14 +253,14 @@ export default function CreateProfessional() {
                         control={createForm.control}
                         name='titleAbbreviation'
                         render={({ field }) => (
-                          <FormItem className=''>
+                          <FormItem>
                             <FormLabel>{PC_CONFIG.labels.titleAbbreviation}</FormLabel>
+                            // TODO maybe make a func for value change and set value el.id
                             <Select
-                              // disabled={titles.length < 1}
+                              defaultValue={field.value}
+                              disabled={titles.length < 1}
                               onValueChange={(event) => {
                                 field.onChange(event);
-                                // TODO MALE FUNC FOR THIS
-                                handleChangeArea(event);
                               }}
                               value={field.value}
                             >
@@ -273,7 +273,7 @@ export default function CreateProfessional() {
                               <SelectContent>
                                 {titles.length > 0 &&
                                   titles.map((el) => (
-                                    <SelectItem key={el.id} value={el.id} className='text-sm'>
+                                    <SelectItem key={el.id} value={el.name} className='text-sm'>
                                       {capitalize(el.name)}
                                     </SelectItem>
                                   ))}
