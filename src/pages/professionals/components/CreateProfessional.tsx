@@ -61,7 +61,7 @@ export default function CreateProfessional() {
       if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
       setIsLoading(false);
     });
-
+    // TODO: manage errors from here to the end of the useEffect
     TitleService.findAll().then((response: IResponse) => {
       if (response.statusCode === 200) {
         setTitles(response.data);
