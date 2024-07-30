@@ -134,10 +134,9 @@ export default function CreateProfessional() {
     createForm.clearErrors('configuration.workingDays');
   }
 
-  function handleSlotInput(data: string): void {
-    console.log('slot data', data);
-    createForm.setValue('configuration.scheduleTimeInit', data);
-    createForm.clearErrors('configuration.scheduleTimeInit');
+  function handleSlotInput(data: string, fieldName: string): void {
+    createForm.setValue(fieldName as keyof z.infer<typeof professionalSchema>, data);
+    createForm.clearErrors(fieldName as keyof z.infer<typeof professionalSchema>);
   }
   // #endregion
   return (
@@ -417,8 +416,6 @@ export default function CreateProfessional() {
                         render={({ field }) => (
                           <FormItem className='space-y-1'>
                             <FormLabel>{PC_CONFIG.labels.configuration.slotDuration}</FormLabel>
-
-                            {/* <Input type='number' placeholder={PC_CONFIG.placeholders.configuration.slotDuration} {...field} /> */}
                             <Select
                               disabled={areas.length < 1}
                               onValueChange={(event) => {
@@ -455,10 +452,7 @@ export default function CreateProfessional() {
                           <FormItem className='space-y-1'>
                             <FormLabel>{PC_CONFIG.labels.configuration.scheduleTimeInit}</FormLabel>
                             <FormControl className='h-9'>
-                              <>
-                                This is the component
-                                <SlotInput handleSlotInput={handleSlotInput} {...field} />
-                              </>
+                              <SlotInput handleSlotInput={(data) => handleSlotInput(data, 'configuration.scheduleTimeInit')} {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
