@@ -100,19 +100,20 @@ export default function CreateProfessional() {
     resolver: zodResolver(professionalSchema),
     defaultValues: defaultValues,
   });
+  const { register, clearErrors } = createForm;
 
   function handleCreateProfessional(data: z.infer<typeof professionalSchema>): void {
     console.log(data);
-    ProfessionalApiService.create(data).then((response) => {
-      console.log('create professional');
-      if (response.statusCode === 200) {
-        setDisabledSpec(true);
-        addNotification({ type: 'success', message: response.message });
-      }
-      if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
-      if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
-      createForm.reset(defaultValues);
-    });
+    // ProfessionalApiService.create(data).then((response) => {
+    //   console.log('create professional');
+    //   if (response.statusCode === 200) {
+    //     setDisabledSpec(true);
+    //     addNotification({ type: 'success', message: response.message });
+    //   }
+    //   if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
+    //   if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
+    //   createForm.reset(defaultValues);
+    // });
   }
 
   function handleCancel(event: MouseEvent<HTMLButtonElement | HTMLDivElement | HTMLInputElement>): void {
@@ -131,6 +132,12 @@ export default function CreateProfessional() {
 
   function handleWorkingDaysValues(data: IWorkingDay[]): void {
     createForm.setValue('configuration.workingDays', data);
+  }
+
+  function handleSlotInput(data: string): void {
+    console.log('slot data', data);
+    createForm.setValue('configuration.scheduleTimeInit', data);
+    clearErrors('configuration.scheduleTimeInit');
   }
   // #endregion
   return (
@@ -441,8 +448,24 @@ export default function CreateProfessional() {
                     </div>
                     {/* Schedule time init and end */}
                     <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
-                      <SlotInput />
                       <FormField
+                        control={createForm.control}
+                        name='configuration.scheduleTimeInit'
+                        render={({ field }) => (
+                          <FormItem className='space-y-1'>
+                            <FormLabel>{PC_CONFIG.labels.configuration.scheduleTimeInit}</FormLabel>
+                            <FormControl className='h-9'>
+                              <>
+                                This is the component
+                                <SlotInput handleSlotInput={handleSlotInput} {...field} />
+                              </>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      {/* <FormField
                         control={createForm.control}
                         name='configuration.scheduleTimeInit'
                         render={({ field }) => (
@@ -454,7 +477,7 @@ export default function CreateProfessional() {
                             <FormMessage />
                           </FormItem>
                         )}
-                      />
+                      /> */}
                       <FormField
                         control={createForm.control}
                         name='configuration.scheduleTimeEnd'
