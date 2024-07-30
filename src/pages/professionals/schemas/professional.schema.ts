@@ -18,7 +18,13 @@ export const professionalSchema = z.object({
   email: z.string().email({ message: PROF_SCHEMA.emailMessage }),
   phone: z.union([z.coerce.number().min(1, { message: PROF_SCHEMA.phoneMessage }), z.string().min(1, { message: PROF_SCHEMA.phoneMessage })]),
   configuration: z.object({
-    scheduleTimeInit: z.string().min(5, { message: PROF_SCHEMA.scheduleTimeInitMessage }),
+    // scheduleTimeInit: z.string().min(5, { message: PROF_SCHEMA.scheduleTimeInitMessage }),
+    scheduleTimeInit:z.string().refine(value => {
+      const regex = /^([01]\d|2[0-3]):([0-5]\d)$/;
+      return regex.test(value);
+    }, {
+      message: 'Invalid time format, must be "HH:MM"',
+    }),
     scheduleTimeEnd: z.string().min(5, { message: PROF_SCHEMA.scheduleTimeEndMessage }),
     slotDuration: z.union([z.coerce.number().min(1, { message: PROF_SCHEMA.slotDurationMessage }), z.string().min(1, { message: PROF_SCHEMA.slotDurationMessage })]),
     timeSlotUnavailableInit: z.string().min(5, { message: PROF_SCHEMA.timeSlotUnavailableInitMessage }),
