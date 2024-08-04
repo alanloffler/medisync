@@ -1,5 +1,5 @@
 export interface ITitle {
+  _id: string;
   abbreviation: string;
-  id: string;
   name: string;
 }
