@@ -212,8 +212,8 @@ export default function CreateProfessional() {
                               <FormMessage />
                               <SelectContent>
                                 {areas.length > 0 &&
-                                  areas.map((el) => (
-                                    <SelectItem key={el._id} value={el._id} className='text-sm'>
+                                  areas.map((el, index) => (
+                                    <SelectItem key={index} value={el._id} className='text-sm'>
                                       {capitalize(el.name)}
                                     </SelectItem>
                                   ))}
@@ -273,7 +273,7 @@ export default function CreateProfessional() {
                               <SelectContent>
                                 {titles.length > 0 &&
                                   titles.map((el) => (
-                                    <SelectItem key={el.id} value={el.name} className='text-sm'>
+                                    <SelectItem key={el._id} value={el.name} className='text-sm'>
                                       {capitalize(el.name)}
                                     </SelectItem>
                                   ))}
@@ -470,7 +470,7 @@ export default function CreateProfessional() {
                           <FormItem className='space-y-1'>
                             <FormLabel>{PC_CONFIG.labels.configuration.scheduleTimeEnd}</FormLabel>
                             <FormControl className='h-9'>
-                              <SlotInput handleSlotInput={(data) => handleSlotInput(data, 'configuration.scheduleTimeEnd')} {...field} />
+                             <SlotInput handleSlotInput={(data) => handleSlotInput(data, 'configuration.scheduleTimeEnd')} {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
