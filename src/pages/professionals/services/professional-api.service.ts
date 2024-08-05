@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { SortingState } from '@tanstack/react-table';
 import { IProfessionalForm } from '../interfaces/professional.interface';
 import { ProfessionalUtils } from './professional.utils';
+import { SortingState } from '@tanstack/react-table';
 
 export class ProfessionalApiService {
   private static readonly API_URL = import.meta.env.VITE_API_URL;
@@ -91,6 +91,22 @@ export class ProfessionalApiService {
       return await query.json();
     } catch (e) {
       return e;
+    }
+  }
+
+  public static async remove(id: string) {
+    const url: string = `${this.API_URL}/professionals/${id}`;
+    try {
+      const query: Response = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          'content-type': 'application/json;charset=UTF-8',
+        },
+      });
+
+      return await query.json();
+    } catch (error) {
+      return error;
     }
   }
 }
