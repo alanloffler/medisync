@@ -5,10 +5,22 @@ export const PROF_CONFIG = {
   ],
   buttons: {
     addProfessional: 'Agregar profesional',
+    cancel: 'Cancelar',
+    remove: 'Eliminar profesional',
   },
   dbProfessionals: 'profesionales en la base de datos',
   filter: {
     title: 'Filtrar',
+  },
+  dialog: {
+    remove: {
+      content: {
+        dni: 'DNI',
+        title: 'Vas a eliminar de la base de datos al profesional:',
+      },
+      subtitle: '¿Estas seguro de querer eliminar el profesional? Esta acción es irreversible.',
+      title: 'Eliminar profesional',
+    },
   },
   search: {
     placeholder: 'Buscar profesional o especialización',
