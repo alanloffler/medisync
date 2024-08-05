@@ -154,7 +154,7 @@ export default function CreateProfessional() {
         </Button>
       </div>
       {!isLoading && (
-        <Card className='flex w-full flex-col'>
+        <Card className='flex w-full flex-col mt-4'>
           <CardHeader className='flex flex-col'>
             <CardTitle className='flex flex-row items-center justify-between'>
               <div className='flex items-center gap-2'>
