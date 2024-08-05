@@ -13,6 +13,7 @@ import { LoadingDB } from '@/core/components/common/LoadingDB';
 import { APP_CONFIG } from '@/config/app.config';
 import { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
 import { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
+import { IResponse } from '@/core/interfaces/response.interface';
 import { PROF_CONFIG } from '@/config/professionals.config';
 import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
@@ -126,7 +127,7 @@ export function ProfessionalsDataTable({ search, reload, setErrorMessage }: Data
           <Button variant={'ghost'} size={'miniIcon'} onClick={() => navigate(`/professionals/update/${row.original._id}`)} className='hover:bg-transparent hover:text-indigo-500'>
             <FilePen className='h-4 w-4' />
           </Button>
-          <Button variant={'ghost'} size={'miniIcon'} className='hover:bg-transparent hover:text-red-500'>
+          <Button variant={'ghost'} size={'miniIcon'} onClick={() => removeProfessional(row.original._id)} className='hover:bg-transparent hover:text-red-500'>
             <Trash2 className='h-4 w-4' />
           </Button>
           <Button disabled={!row.original.phone} variant={'ghost'} size={'miniIcon'} className='fill-current hover:bg-transparent hover:fill-green-500' onClick={() => navigate(`/whatsapp/professional/${row.original._id}`)}>
@@ -217,6 +218,22 @@ export function ProfessionalsDataTable({ search, reload, setErrorMessage }: Data
     fetchData(search, tableManager.sorting, tableManager.pagination.pageIndex * tableManager.pagination.pageSize, tableManager.pagination.pageSize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search, tableManager]);
+  // #endregion
+  // #region Remove professional
+  function removeProfessional(id: string): void {
+    if (id) {
+      ProfessionalApiService
+      .remove(id)
+      .then((response: IResponse) => {
+        if (response.statusCode === 200) {
+          console.log('Professional removed from database');
+          console.log('Refresh data then');
+        }
+        if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
+        if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
+      });
+    }
+  }
   // #endregion
   return (
     <>
