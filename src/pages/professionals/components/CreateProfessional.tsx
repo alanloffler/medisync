@@ -12,7 +12,7 @@ import { Switch } from '@/core/components/ui/switch';
 import { Textarea } from '@/core/components/ui/textarea';
 // App components
 import { PageHeader } from '@/core/components/common/PageHeader';
-import { SlotInput } from '@/pages/professionals/components/common/SlotInput';
+// import { SlotInput } from '@/pages/professionals/components/common/SlotInput';
 import { WorkingDays } from '@/pages/professionals/components/common/WorkingDays';
 // App
 import { APP_CONFIG } from '@/config/app.config';
@@ -34,8 +34,9 @@ import { useForm } from 'react-hook-form';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+// import { InputMask} from 'react-input-mask';
+import InputMask from 'react-input-mask';
 
-import InputMask from "react-input-mask";
 // React component
 export default function CreateProfessional() {
   const [areas, setAreas] = useState<IArea[]>([]);
@@ -122,12 +123,10 @@ export default function CreateProfessional() {
 
   function handleCancel(event: MouseEvent<HTMLButtonElement | HTMLDivElement | HTMLInputElement>): void {
     event.preventDefault();
-    console.log('timeInit',createForm.getValues('configuration.scheduleTimeInit'));
     createForm.reset(defaultValues);
     setDisabledSpec(true);
     setWorkingDays([]);
     setWorkingDaysKey(crypto.randomUUID());
-    // Slot times
   }
 
   function handleChangeArea(event: string): void {
@@ -140,11 +139,6 @@ export default function CreateProfessional() {
   function handleWorkingDaysValues(data: IWorkingDay[]): void {
     createForm.setValue('configuration.workingDays', data);
     createForm.clearErrors('configuration.workingDays');
-  }
-
-  function handleSlotInput(data: string, fieldName: string): void {
-    createForm.setValue(fieldName as keyof z.infer<typeof professionalSchema>, data);
-    createForm.clearErrors(fieldName as keyof z.infer<typeof professionalSchema>);
   }
   // #endregion
   return (
@@ -460,10 +454,9 @@ export default function CreateProfessional() {
                           <FormItem className='space-y-1'>
                             <FormLabel>{PC_CONFIG.labels.configuration.scheduleTimeInit}</FormLabel>
                             <FormControl className='h-9'>
-                              <InputMask mask="99:99" maskPlaceholder="00:00" {...field} placeholder={'00:00'}>
+                              <InputMask mask="99:99" maskPlaceholder="00:00" alwaysShowMask={false} {...field} placeholder={'00:00'}>
                                 <Input />
                               </InputMask>
-                              {/* <SlotInput handleSlotInput={(data) => handleSlotInput(data, 'configuration.scheduleTimeInit')} {...field} /> */}
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -476,7 +469,9 @@ export default function CreateProfessional() {
                           <FormItem className='space-y-1'>
                             <FormLabel>{PC_CONFIG.labels.configuration.scheduleTimeEnd}</FormLabel>
                             <FormControl className='h-9'>
-                              <SlotInput handleSlotInput={(data) => handleSlotInput(data, 'configuration.scheduleTimeEnd')} {...field} />
+                              <InputMask mask="99:99" maskPlaceholder="00:00" alwaysShowMask={false} {...field} placeholder={'00:00'}>
+                                <Input />
+                              </InputMask>
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -518,8 +513,9 @@ export default function CreateProfessional() {
                           <FormItem className=''>
                             <FormLabel>{PC_CONFIG.labels.configuration.timeSlotUnavailableInit}</FormLabel>
                             <FormControl className='h-9'>
-                              {/* <Input placeholder={PC_CONFIG.placeholders.configuration.timeSlotUnavailableInit} {...field} /> */}
-                              <SlotInput handleSlotInput={(data) => handleSlotInput(data, 'configuration.timeSlotUnavailableInit')} {...field} />
+                              <InputMask mask="99:99" maskPlaceholder="00:00" alwaysShowMask={false} {...field} placeholder={'00:00'}>
+                                <Input />
+                              </InputMask>
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -532,8 +528,9 @@ export default function CreateProfessional() {
                           <FormItem className=''>
                             <FormLabel>{PC_CONFIG.labels.configuration.timeSlotUnavailableEnd}</FormLabel>
                             <FormControl className='h-9'>
-                              {/* <Input placeholder={PC_CONFIG.placeholders.configuration.timeSlotUnavailableEnd} {...field} /> */}
-                              <SlotInput handleSlotInput={(data) => handleSlotInput(data, 'configuration.timeSlotUnavailableEnd')} {...field} />
+                              <InputMask mask="99:99" maskPlaceholder="00:00" alwaysShowMask={false} {...field} placeholder={'00:00'}>
+                                <Input />
+                              </InputMask>
                             </FormControl>
                             <FormMessage />
                           </FormItem>
