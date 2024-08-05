@@ -2,6 +2,7 @@
 import { ArrowDownUp, ArrowLeftIcon, ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon, FilePen, FileText, Trash2 } from 'lucide-react';
 // Components: https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/core/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/core/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/core/components/ui/table';
 // Tanstack Data Table: https://tanstack.com/table/latest
@@ -42,7 +43,9 @@ export function ProfessionalsDataTable({ search, reload, setErrorMessage }: Data
   const [data, setData] = useState([]);
   const [infoCard, setInfoCard] = useState<IInfoCard>({ text: '', type: 'error' });
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [pagination, setPagination] = useState<PaginationState>(defaultPagination);
+  const [professionalSelected, setProfessionalSelected] = useState<IProfessional>({} as IProfessional);
   const [sorting, setSorting] = useState<SortingState>(defaultSorting);
   const [tableManager, setTableManager] = useState<TableManager>({ sorting, pagination });
   const [totalItems, setTotalItems] = useState<number>(0);
@@ -127,7 +130,7 @@ export function ProfessionalsDataTable({ search, reload, setErrorMessage }: Data
           <Button variant={'ghost'} size={'miniIcon'} onClick={() => navigate(`/professionals/update/${row.original._id}`)} className='hover:bg-transparent hover:text-indigo-500'>
             <FilePen className='h-4 w-4' />
           </Button>
-          <Button variant={'ghost'} size={'miniIcon'} onClick={() => removeProfessional(row.original._id)} className='hover:bg-transparent hover:text-red-500'>
+          <Button variant={'ghost'} size={'miniIcon'} onClick={() => handleRemoveDialog(row.original)} className='hover:bg-transparent hover:text-red-500'>
             <Trash2 className='h-4 w-4' />
           </Button>
           <Button disabled={!row.original.phone} variant={'ghost'} size={'miniIcon'} className='fill-current hover:bg-transparent hover:fill-green-500' onClick={() => navigate(`/whatsapp/professional/${row.original._id}`)}>
@@ -220,11 +223,14 @@ export function ProfessionalsDataTable({ search, reload, setErrorMessage }: Data
   }, [search, tableManager]);
   // #endregion
   // #region Remove professional
+  function handleRemoveDialog(professional: IProfessional): void {
+    setProfessionalSelected(professional);
+    setOpenDialog(true);
+  }
+
   function removeProfessional(id: string): void {
     if (id) {
-      ProfessionalApiService
-      .remove(id)
-      .then((response: IResponse) => {
+      ProfessionalApiService.remove(id).then((response: IResponse) => {
         if (response.statusCode === 200) {
           console.log('Professional removed from database');
           console.log('Refresh data then');
@@ -310,6 +316,28 @@ export function ProfessionalsDataTable({ search, reload, setErrorMessage }: Data
       ) : (
         <InfoCard text={infoCard.text} type={infoCard.type} className='mt-3' />
       )}
+      {/* Dialog */}
+      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className='text-xl'>{PROF_CONFIG.dialog.remove.title}</DialogTitle>
+            <DialogDescription>{PROF_CONFIG.dialog.remove.subtitle}</DialogDescription>
+            <div className='flex flex-col pt-2'>
+              <span className=''>{PROF_CONFIG.dialog.remove.content.title}</span>
+              <span className='mt-1 text-lg font-semibold'>{`${capitalize(professionalSelected.titleAbbreviation)} ${capitalize(professionalSelected.lastName)}, ${capitalize(professionalSelected.firstName)}`}</span>
+              {/* <span className='font-medium'>{`${}`}</span> */}
+              <div className='mt-5 flex justify-end space-x-4'>
+                <Button variant={'secondary'} size={'sm'} onClick={() => setOpenDialog(false)}>
+                  {PROF_CONFIG.buttons.cancel}
+                </Button>
+                <Button variant={'remove'} size={'sm'} onClick={() => removeProfessional(professionalSelected._id)}>
+                  {PROF_CONFIG.buttons.remove}
+                </Button>
+              </div>
+            </div>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
