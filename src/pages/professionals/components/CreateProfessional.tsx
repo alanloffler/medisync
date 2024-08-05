@@ -34,6 +34,8 @@ import { useForm } from 'react-hook-form';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+
+import InputMask from "react-input-mask";
 // React component
 export default function CreateProfessional() {
   const [areas, setAreas] = useState<IArea[]>([]);
@@ -120,10 +122,12 @@ export default function CreateProfessional() {
 
   function handleCancel(event: MouseEvent<HTMLButtonElement | HTMLDivElement | HTMLInputElement>): void {
     event.preventDefault();
+    console.log('timeInit',createForm.getValues('configuration.scheduleTimeInit'));
     createForm.reset(defaultValues);
     setDisabledSpec(true);
     setWorkingDays([]);
     setWorkingDaysKey(crypto.randomUUID());
+    // Slot times
   }
 
   function handleChangeArea(event: string): void {
@@ -456,7 +460,10 @@ export default function CreateProfessional() {
                           <FormItem className='space-y-1'>
                             <FormLabel>{PC_CONFIG.labels.configuration.scheduleTimeInit}</FormLabel>
                             <FormControl className='h-9'>
-                              <SlotInput handleSlotInput={(data) => handleSlotInput(data, 'configuration.scheduleTimeInit')} {...field} />
+                              <InputMask mask="99:99" maskPlaceholder="00:00" {...field} placeholder={'00:00'}>
+                                <Input />
+                              </InputMask>
+                              {/* <SlotInput handleSlotInput={(data) => handleSlotInput(data, 'configuration.scheduleTimeInit')} {...field} /> */}
                             </FormControl>
                             <FormMessage />
                           </FormItem>
