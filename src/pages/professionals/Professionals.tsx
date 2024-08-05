@@ -123,7 +123,14 @@ export default function Professionals() {
             </div>
           </CardHeader>
           <CardContent className='px-3'>
-            <ProfessionalsDataTable search={debouncedSearch} reload={reload} setErrorMessage={setErrorMessage} />
+            {/* prettier-ignore */}
+            <ProfessionalsDataTable 
+              key={reload}
+              reload={reload} 
+              search={debouncedSearch} 
+              setErrorMessage={setErrorMessage} 
+              setReload={setReload}
+            />
           </CardContent>
         </Card>
       </div>
