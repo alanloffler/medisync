@@ -27,6 +27,7 @@ import { useTruncateText } from '@/core/hooks/useTruncateText';
 interface DataTableProps {
   search: string;
   reload: number;
+  setReload: React.Dispatch<React.SetStateAction<number>>;
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
 }
 
@@ -38,7 +39,7 @@ interface TableManager {
 const defaultSorting = [{ id: PROF_CONFIG.table.defaultSortingId, desc: PROF_CONFIG.table.defaultSortingType }];
 const defaultPagination = { pageIndex: 0, pageSize: PROF_CONFIG.table.defaultPageSize };
 // React component
-export function ProfessionalsDataTable({ search, reload, setErrorMessage }: DataTableProps) {
+export function ProfessionalsDataTable({ search, reload, setReload, setErrorMessage }: DataTableProps) {
   const [columns, setColumns] = useState<ColumnDef<IProfessional>[]>([]);
   const [data, setData] = useState([]);
   const [infoCard, setInfoCard] = useState<IInfoCard>({ text: '', type: 'error' });
@@ -232,8 +233,10 @@ export function ProfessionalsDataTable({ search, reload, setErrorMessage }: Data
     if (id) {
       ProfessionalApiService.remove(id).then((response: IResponse) => {
         if (response.statusCode === 200) {
-          console.log('Professional removed from database');
-          console.log('Refresh data then');
+          addNotification({ type: 'success', message: response.message });
+          setOpenDialog(false);
+          setProfessionalSelected({} as IProfessional);
+          setReload(new Date().getTime());
         }
         if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
         if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
