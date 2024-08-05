@@ -6,12 +6,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/core/components/ui/table';
 // Tanstack Data Table: https://tanstack.com/table/latest
 import { ColumnDef, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, PaginationState, SortingState, useReactTable } from '@tanstack/react-table';
+// App components
+import { InfoCard } from '@/core/components/common/InfoCard';
+import { LoadingDB } from '@/core/components/common/LoadingDB';
 // App
 import { APP_CONFIG } from '@/config/app.config';
 import { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
 import { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
-import { InfoCard } from '@/core/components/common/InfoCard';
-import { LoadingDB } from '@/core/components/common/LoadingDB';
 import { PROF_CONFIG } from '@/config/professionals.config';
 import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
@@ -19,7 +20,6 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 import { useTruncateText } from '@/core/hooks/useTruncateText';
-
 // import { useMediaQuery } from '@uidotdev/usehooks';
 // Table interfaces
 interface DataTableProps {
