@@ -106,7 +106,6 @@ export default function CreateProfessional() {
   });
 
   function handleCreateProfessional(data: z.infer<typeof professionalSchema>): void {
-    console.log(data);
     ProfessionalApiService.create(data).then((response) => {
       console.log('create professional');
       if (response.statusCode === 200) {
@@ -123,6 +122,7 @@ export default function CreateProfessional() {
     event.preventDefault();
     createForm.reset(defaultValues);
     setDisabledSpec(true);
+    setWorkingDays([]);
     setWorkingDaysKey(crypto.randomUUID());
   }
 
