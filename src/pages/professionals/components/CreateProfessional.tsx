@@ -154,7 +154,7 @@ export default function CreateProfessional() {
         </Button>
       </div>
       {!isLoading && (
-        <Card className='flex w-full flex-col mt-4'>
+        <Card className='mt-4 flex w-full flex-col'>
           <CardHeader className='flex flex-col'>
             <CardTitle className='flex flex-row items-center justify-between'>
               <div className='flex items-center gap-2'>
@@ -183,7 +183,7 @@ export default function CreateProfessional() {
             <Form {...createForm}>
               <form onSubmit={createForm.handleSubmit(handleCreateProfessional)}>
                 {/* Form fields */}
-                <div className='grid grid-cols-1 md:grid-cols-2 space-y-6 md:space-y-0'>
+                <div className='grid grid-cols-1 space-y-6 md:grid-cols-2 md:space-y-0'>
                   {/* SECTION: Professional data (left side) */}
                   <div className='flex flex-col gap-4 md:pr-6'>
                     <h1 className='mb-3 rounded-sm bg-slate-200/50 px-2 py-1 font-semibold text-slate-700'>{PC_CONFIG.formTitle.professional}</h1>
@@ -390,7 +390,7 @@ export default function CreateProfessional() {
                     </div>
                   </div>
                   {/* SECTION: Schedule (right side) */}
-                  <div className='flex flex-col gap-4 border-t pt-6 md:border-l md:pl-6 md:border-t-0 md:pt-0'>
+                  <div className='flex flex-col gap-4 border-t pt-6 md:border-l md:border-t-0 md:pl-6 md:pt-0'>
                     <h1 className='mb-3 rounded-sm bg-slate-200/50 px-2 py-1 font-semibold text-slate-700'>{PC_CONFIG.formTitle.schedule}</h1>
                     {/* Schedule working days */}
                     <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
@@ -425,7 +425,6 @@ export default function CreateProfessional() {
                               disabled={areas.length < 1}
                               onValueChange={(event) => {
                                 field.onChange(event);
-                                handleChangeArea(event);
                               }}
                               value={field.value.toString()}
                             >
@@ -470,7 +469,7 @@ export default function CreateProfessional() {
                           <FormItem className='space-y-1'>
                             <FormLabel>{PC_CONFIG.labels.configuration.scheduleTimeEnd}</FormLabel>
                             <FormControl className='h-9'>
-                             <SlotInput handleSlotInput={(data) => handleSlotInput(data, 'configuration.scheduleTimeEnd')} {...field} />
+                              <SlotInput handleSlotInput={(data) => handleSlotInput(data, 'configuration.scheduleTimeEnd')} {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
