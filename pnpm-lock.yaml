@@ -92,9 +92,9 @@ importers:
       react-hook-form:
         specifier: ^7.51.5
         version: 7.51.5(react@18.3.1)
-      react-input-mask:
-        specifier: 3.0.0-alpha.2
-        version: 3.0.0-alpha.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react-input-mask-next:
+        specifier: 3.0.0-alpha.12
+        version: 3.0.0-alpha.12(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-router-dom:
         specifier: ^6.23.1
         version: 6.23.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -123,9 +123,6 @@ importers:
       '@types/react-dom':
         specifier: ^18.2.22
         version: 18.3.0
-      '@types/react-input-mask':
-        specifier: ^3.0.5
-        version: 3.0.5
       '@typescript-eslint/eslint-plugin':
         specifier: ^7.2.0
         version: 7.11.0(@typescript-eslint/parser@7.11.0(eslint@8.57.0)(typescript@5.4.5))(eslint@8.57.0)(typescript@5.4.5)
@@ -1201,9 +1198,6 @@ packages:
   '@types/react-dom@18.3.0':
     resolution: {integrity: sha512-EhwApuTmMBmXuFOikhQLIBUn6uFg81SwLMOAUgodJF14SOBOCMdU04gDoYi0WOJJHD144TL32z4yDqCW3dnkQg==}
 
-  '@types/react-input-mask@3.0.5':
-    resolution: {integrity: sha512-vQ1x6ykwjDrDrJZq1zw5/uQ+nqGHUV6bWscsVZJ/qsNwNXWxZm7KRBHLJ5k6TQt3MHjhpoYHzPH6FwjVSZODHA==}
-
   '@types/react@18.3.3':
     resolution: {integrity: sha512-hti/R0pS0q1/xx+TsI73XIqk26eBsISZ2R0wUijXIngRK9R/e7Xw/cXVxQK7R5JjW+SV4zGcn5hXjudkN/pLIw==}
 
@@ -2016,11 +2010,11 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18
 
-  react-input-mask@3.0.0-alpha.2:
-    resolution: {integrity: sha512-9U7qL+mvDMOJcbOFPdt6Vj+zzmCMNnBjhhjGDrL8BGQmymgvMVKhu/oOVfAkl+5VWOsLr+G3EhZOmae5fBcAkA==}
+  react-input-mask-next@3.0.0-alpha.12:
+    resolution: {integrity: sha512-ATUbd4vigFCmGxTDCjjZ3tAaqzLrebfTR8/XbcYXp0yQSUB14vav1ggUTEGMSu5FnrKyMGxnn/iGx6CLziKwxQ==}
     peerDependencies:
-      react: '>=16.8'
-      react-dom: '>=16.8'
+      react: '>=18.0'
+      react-dom: '>=18.0'
 
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
@@ -3287,10 +3281,6 @@ snapshots:
     dependencies:
       '@types/react': 18.3.3
 
-  '@types/react-input-mask@3.0.5':
-    dependencies:
-      '@types/react': 18.3.3
-
   '@types/react@18.3.3':
     dependencies:
       '@types/prop-types': 15.7.12
@@ -4076,7 +4066,7 @@ snapshots:
     dependencies:
       react: 18.3.1
 
-  react-input-mask@3.0.0-alpha.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  react-input-mask-next@3.0.0-alpha.12(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       invariant: 2.2.4
       prop-types: 15.8.1
