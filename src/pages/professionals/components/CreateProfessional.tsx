@@ -34,8 +34,8 @@ import { useForm } from 'react-hook-form';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-// import { InputMask} from 'react-input-mask';
-import InputMask from 'react-input-mask';
+
+import InputMask, { InputState } from 'react-input-mask-next';
 
 // React component
 export default function CreateProfessional() {
@@ -139,6 +139,25 @@ export default function CreateProfessional() {
   function handleWorkingDaysValues(data: IWorkingDay[]): void {
     createForm.setValue('configuration.workingDays', data);
     createForm.clearErrors('configuration.workingDays');
+  }
+
+  // Trim trailing slashes
+  function beforeMaskedStateChange({ nextState }: { nextState: InputState }) {
+    let { value } = nextState;
+    if (value === '00:00') value = '';
+    // if (value.length === 5) {
+    //   const [hour, minutes] = value.split(':');
+    //   if (parseInt(hour) > 23) {
+    //     value = `00:${minutes}`;
+    //   }
+    //   if (parseInt(minutes) > 59) value = `${hour}:00`;
+    // }
+    
+    // console.log('value', value);
+    return {
+      ...nextState,
+      value,
+    };
   }
   // #endregion
   return (
@@ -454,7 +473,15 @@ export default function CreateProfessional() {
                           <FormItem className='space-y-1'>
                             <FormLabel>{PC_CONFIG.labels.configuration.scheduleTimeInit}</FormLabel>
                             <FormControl className='h-9'>
-                              <InputMask mask="99:99" maskPlaceholder="00:00" alwaysShowMask={false} {...field} placeholder={'00:00'}>
+                              {/* prettier-ignore */}
+                              <InputMask 
+                                mask='99:99' 
+                                maskPlaceholder='00:00' 
+                                alwaysShowMask={false} 
+                                placeholder={'00:00'} 
+                                beforeMaskedStateChange={beforeMaskedStateChange} 
+                                {...field} 
+                              >
                                 <Input />
                               </InputMask>
                             </FormControl>
@@ -469,7 +496,15 @@ export default function CreateProfessional() {
                           <FormItem className='space-y-1'>
                             <FormLabel>{PC_CONFIG.labels.configuration.scheduleTimeEnd}</FormLabel>
                             <FormControl className='h-9'>
-                              <InputMask mask="99:99" maskPlaceholder="00:00" alwaysShowMask={false} {...field} placeholder={'00:00'}>
+                              {/* prettier-ignore */}
+                              <InputMask 
+                                mask='99:99' 
+                                maskPlaceholder='00:00' 
+                                alwaysShowMask={false} 
+                                placeholder={'00:00'} 
+                                beforeMaskedStateChange={beforeMaskedStateChange} 
+                                {...field} 
+                              >
                                 <Input />
                               </InputMask>
                             </FormControl>
@@ -513,9 +548,9 @@ export default function CreateProfessional() {
                           <FormItem className=''>
                             <FormLabel>{PC_CONFIG.labels.configuration.timeSlotUnavailableInit}</FormLabel>
                             <FormControl className='h-9'>
-                              <InputMask mask="99:99" maskPlaceholder="00:00" alwaysShowMask={false} {...field} placeholder={'00:00'}>
+                              {/* <InputMask mask='99:99' maskPlaceholder='00:00' alwaysShowMask={false} {...field} placeholder={'00:00'}>
                                 <Input />
-                              </InputMask>
+                              </InputMask> */}
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -528,9 +563,9 @@ export default function CreateProfessional() {
                           <FormItem className=''>
                             <FormLabel>{PC_CONFIG.labels.configuration.timeSlotUnavailableEnd}</FormLabel>
                             <FormControl className='h-9'>
-                              <InputMask mask="99:99" maskPlaceholder="00:00" alwaysShowMask={false} {...field} placeholder={'00:00'}>
+                              {/* <InputMask mask='99:99' maskPlaceholder='00:00' alwaysShowMask={false} {...field} placeholder={'00:00'}>
                                 <Input />
-                              </InputMask>
+                              </InputMask> */}
                             </FormControl>
                             <FormMessage />
                           </FormItem>
