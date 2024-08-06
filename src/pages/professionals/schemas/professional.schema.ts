@@ -56,6 +56,6 @@ function validateSlot(value: string): boolean {
   const slotFormat: boolean = regex.test(value);
   const hour: boolean = parseInt(value.split(':')[0]) >= 0 && parseInt(value.split(':')[0]) <= 23;
   const minutes: boolean = parseInt(value.split(':')[1]) >= 0 && parseInt(value.split(':')[1]) <= 59;
-  if (hour === false) message = 'El rango de hora va desde 00 a 23'; //PROF_SCHEMA.scheduleTimeInitRangeMessage
+
   return slotFormat && hour && minutes;
 }
