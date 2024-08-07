@@ -142,19 +142,10 @@ export default function CreateProfessional() {
     createForm.clearErrors('configuration.workingDays');
   }
 
-  // Trim trailing slashes
+  // Input mask actions
   function beforeMaskedStateChange({ nextState }: { nextState: InputState }) {
-    let { value } = nextState;
-    if (value === '00:00') value = '';
-    // if (value.length === 5) {
-    //   const [hour, minutes] = value.split(':');
-    //   if (parseInt(hour) > 23) {
-    //     value = `00:${minutes}`;
-    //   }
-    //   if (parseInt(minutes) > 59) value = `${hour}:00`;
-    // }
-    
-    // console.log('value', value);
+    const { value } = nextState;
+
     return {
       ...nextState,
       value,
