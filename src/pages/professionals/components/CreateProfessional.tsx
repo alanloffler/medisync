@@ -109,6 +109,7 @@ export default function CreateProfessional() {
   });
 
   function handleCreateProfessional(data: z.infer<typeof professionalSchema>): void {
+    // console.log(data);
     ProfessionalApiService.create(data).then((response) => {
       console.log('create professional');
       if (response.statusCode === 200) {
@@ -272,7 +273,6 @@ export default function CreateProfessional() {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>{PC_CONFIG.labels.titleAbbreviation}</FormLabel>
-                            {/* TODO maybe make a func for value change and set value el.id */}
                             <Select
                               defaultValue={field.value}
                               disabled={titles.length < 1}
@@ -290,7 +290,7 @@ export default function CreateProfessional() {
                               <SelectContent>
                                 {titles.length > 0 &&
                                   titles.map((el) => (
-                                    <SelectItem key={el._id} value={el.name} className='text-sm'>
+                                    <SelectItem key={el._id} value={el._id} className='text-sm'>
                                       {capitalize(el.name)}
                                     </SelectItem>
                                   ))}
@@ -512,32 +512,6 @@ export default function CreateProfessional() {
                           </FormItem>
                         )}
                       />
-                      {/* <FormField
-                        control={createForm.control}
-                        name='configuration.scheduleTimeInit'
-                        render={({ field }) => (
-                          <FormItem className='space-y-1'>
-                            <FormLabel>{PC_CONFIG.labels.configuration.scheduleTimeInit}</FormLabel>
-                            <FormControl className='h-9'>
-                              <Input placeholder={PC_CONFIG.placeholders.configuration.scheduleTimeInit} {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      /> */}
-                      {/* <FormField
-                        control={createForm.control}
-                        name='configuration.scheduleTimeEnd'
-                        render={({ field }) => (
-                          <FormItem className='space-y-1'>
-                            <FormLabel>{PC_CONFIG.labels.configuration.scheduleTimeEnd}</FormLabel>
-                            <FormControl className='h-9'>
-                              <Input placeholder={PC_CONFIG.placeholders.configuration.scheduleTimeEnd} {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      /> */}
                     </div>
                     {/* Schedule time slot unavailable init and end */}
                     <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
@@ -548,9 +522,17 @@ export default function CreateProfessional() {
                           <FormItem className=''>
                             <FormLabel>{PC_CONFIG.labels.configuration.timeSlotUnavailableInit}</FormLabel>
                             <FormControl className='h-9'>
-                              {/* <InputMask mask='99:99' maskPlaceholder='00:00' alwaysShowMask={false} {...field} placeholder={'00:00'}>
+                              {/* prettier-ignore */}
+                              <InputMask 
+                                mask='99:99' 
+                                maskPlaceholder='00:00' 
+                                alwaysShowMask={false} 
+                                placeholder={'00:00'} 
+                                beforeMaskedStateChange={beforeMaskedStateChange} 
+                                {...field} 
+                              >
                                 <Input />
-                              </InputMask> */}
+                              </InputMask>
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -563,9 +545,17 @@ export default function CreateProfessional() {
                           <FormItem className=''>
                             <FormLabel>{PC_CONFIG.labels.configuration.timeSlotUnavailableEnd}</FormLabel>
                             <FormControl className='h-9'>
-                              {/* <InputMask mask='99:99' maskPlaceholder='00:00' alwaysShowMask={false} {...field} placeholder={'00:00'}>
+                              {/* prettier-ignore */}
+                              <InputMask 
+                                mask='99:99' 
+                                maskPlaceholder='00:00' 
+                                alwaysShowMask={false} 
+                                placeholder={'00:00'} 
+                                beforeMaskedStateChange={beforeMaskedStateChange} 
+                                {...field} 
+                              >
                                 <Input />
-                              </InputMask> */}
+                              </InputMask>
                             </FormControl>
                             <FormMessage />
                           </FormItem>
