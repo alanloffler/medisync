@@ -21,7 +21,20 @@ export const professionalSchema = z.object({
     scheduleTimeInit: z
       .string()
       .min(1, { message: PROF_SCHEMA.scheduleTimeInitMessage })
-      .refine((value) => validateSlot(value), { message: 'TODO message goes here' }),
+      .superRefine((data, ctx) => {
+        if (parseInt(data.split(':')[0]) > 23 || parseInt(data.split(':')[0]) < 0) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Rango de hora de 00 a 23",// TODO FROM CONFIG FILE
+          });
+        }
+        if (parseInt(data.split(':')[1]) > 59 || parseInt(data.split(':')[1]) < 0) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Rango de miutos de 00 a 59",// TODO FROM CONFIG FILE
+          });
+        }
+      }),
     scheduleTimeEnd: z
       .string()
       .min(1, { message: PROF_SCHEMA.scheduleTimeEndMessage })
