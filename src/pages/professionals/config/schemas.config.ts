@@ -16,4 +16,8 @@ export const PROF_SCHEMA = {
   timeSlotUnavailableEndMessage: 'Debes ingresar una hora de fin',
   titleAbbreviationMessage: 'Debes ingresar una abreviación de título',
   workingDaysMessage: 'Debes seleccionar al menos un día laboral',
+  inputMask: {
+    hourRange: 'Rango de hora de 00 a 23',
+    minutesRange: 'Rango de minutos de 00 a 59',
+  },
 };
