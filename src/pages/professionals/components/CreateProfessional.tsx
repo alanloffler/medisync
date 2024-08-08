@@ -146,16 +146,15 @@ export default function CreateProfessional() {
   function beforeMaskedStateChange({ nextState }: { nextState: InputState }): InputState {
     const { value } = nextState;
 
-    return {
-      ...nextState,
-      value,
-    };
+    return { ...nextState, value };
   }
 
   // Custom Slot times validations before call API
   function validateSlotTimesRange(timeInit: string, timeEnd: string): void {
     if (timeInit !== '' || timeEnd !== '') { 
       console.log(timeInit, timeEnd);
+      timeInit = timeInit.replace(/-/g, '0');
+      createForm.setValue('configuration.scheduleTimeInit', timeInit);
     } else {
       console.log('There is no time init or end data');
     }
@@ -479,8 +478,9 @@ export default function CreateProfessional() {
                                 maskPlaceholder='--:--' 
                                 alwaysShowMask={false} 
                                 placeholder={'00:00'} 
-                                beforeMaskedStateChange={beforeMaskedStateChange} 
+                                // beforeMaskedStateChange={beforeMaskedStateChange} 
                                 {...field} 
+                                onFocus={()=>field.value ='00:00'}
                               >
                                 <Input />
                               </InputMask>
