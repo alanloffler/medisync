@@ -112,13 +112,13 @@ export default function CreateProfessional() {
     // console.log(data);
     ProfessionalApiService.create(data).then((response) => {
       console.log('create professional');
-      if (response.statusCode === 200) {
-        setDisabledSpec(true);
-        addNotification({ type: 'success', message: response.message });
-      }
-      if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
-      if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
-      createForm.reset(defaultValues);
+      // if (response.statusCode === 200) {
+      //   setDisabledSpec(true);
+      //   addNotification({ type: 'success', message: response.message });
+      // }
+      // if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
+      // if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
+      // createForm.reset(defaultValues);
     });
   }
 
@@ -143,13 +143,22 @@ export default function CreateProfessional() {
   }
 
   // Input mask actions
-  function beforeMaskedStateChange({ nextState }: { nextState: InputState }) {
+  function beforeMaskedStateChange({ nextState }: { nextState: InputState }): InputState {
     const { value } = nextState;
 
     return {
       ...nextState,
       value,
     };
+  }
+
+  // Custom Slot times validations before call API
+  function validateSlotTimesRange(timeInit: string, timeEnd: string): void {
+    if (timeInit !== '' || timeEnd !== '') { 
+      console.log(timeInit, timeEnd);
+    } else {
+      console.log('There is no time init or end data');
+    }
   }
   // #endregion
   return (
@@ -467,7 +476,7 @@ export default function CreateProfessional() {
                               {/* prettier-ignore */}
                               <InputMask 
                                 mask='99:99' 
-                                maskPlaceholder='00:00' 
+                                maskPlaceholder='--:--' 
                                 alwaysShowMask={false} 
                                 placeholder={'00:00'} 
                                 beforeMaskedStateChange={beforeMaskedStateChange} 
@@ -490,7 +499,7 @@ export default function CreateProfessional() {
                               {/* prettier-ignore */}
                               <InputMask 
                                 mask='99:99' 
-                                maskPlaceholder='00:00' 
+                                maskPlaceholder='--:--' 
                                 alwaysShowMask={false} 
                                 placeholder={'00:00'} 
                                 beforeMaskedStateChange={beforeMaskedStateChange} 
@@ -516,7 +525,7 @@ export default function CreateProfessional() {
                               {/* prettier-ignore */}
                               <InputMask 
                                 mask='99:99' 
-                                maskPlaceholder='00:00' 
+                                maskPlaceholder='--:--' 
                                 alwaysShowMask={false} 
                                 placeholder={'00:00'} 
                                 beforeMaskedStateChange={beforeMaskedStateChange} 
@@ -539,7 +548,7 @@ export default function CreateProfessional() {
                               {/* prettier-ignore */}
                               <InputMask 
                                 mask='99:99' 
-                                maskPlaceholder='00:00' 
+                                maskPlaceholder='--:--' 
                                 alwaysShowMask={false} 
                                 placeholder={'00:00'} 
                                 beforeMaskedStateChange={beforeMaskedStateChange} 
@@ -553,6 +562,7 @@ export default function CreateProfessional() {
                         )}
                       />
                     </div>
+                    <Button onClick={(e) => {e.preventDefault(); validateSlotTimesRange(createForm.getValues().configuration.scheduleTimeInit, createForm.getValues().configuration.scheduleTimeEnd)}}>Validate</Button>
                   </div>
                 </div>
                 {/* Buttons */}
