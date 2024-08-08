@@ -22,16 +22,16 @@ export const professionalSchema = z.object({
       .string()
       .min(1, { message: PROF_SCHEMA.scheduleTimeInitMessage })
       .superRefine((data, ctx) => {
-        if (parseInt(data.split(':')[0]) > 23 || parseInt(data.split(':')[0]) < 0) {
+        if (parseInt(data.split(':')[0]) < 0 || parseInt(data.split(':')[0]) > 23) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: "Rango de hora de 00 a 23",// TODO FROM CONFIG FILE
+            message: PROF_SCHEMA.inputMask.hourRange,
           });
         }
-        if (parseInt(data.split(':')[1]) > 59 || parseInt(data.split(':')[1]) < 0) {
+        if (parseInt(data.split(':')[1]) < 0 || parseInt(data.split(':')[1]) > 59) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: "Rango de miutos de 00 a 59",// TODO FROM CONFIG FILE
+            message: PROF_SCHEMA.inputMask.minutesRange,
           });
         }
       }),
@@ -39,22 +39,54 @@ export const professionalSchema = z.object({
       .string()
       .min(1, { message: PROF_SCHEMA.scheduleTimeEndMessage })
       .superRefine((data, ctx) => {
-        if (parseInt(data.split(':')[0]) > 23 || parseInt(data.split(':')[0]) < 0) {
+        if (parseInt(data.split(':')[0]) < 0 || parseInt(data.split(':')[0]) > 23) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: "Rango de hora de 00 a 23",// TODO FROM CONFIG FILE
+            message: PROF_SCHEMA.inputMask.hourRange,
           });
         }
-        if (parseInt(data.split(':')[1]) > 59 || parseInt(data.split(':')[1]) < 0) {
+        if (parseInt(data.split(':')[1]) < 0 || parseInt(data.split(':')[1]) > 59) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: "Rango de miutos de 00 a 59",// TODO FROM CONFIG FILE
+            message: PROF_SCHEMA.inputMask.minutesRange,
           });
         }
       }),
     slotDuration: z.union([z.coerce.number().min(1, { message: PROF_SCHEMA.slotDurationMessage }), z.string().min(1, { message: PROF_SCHEMA.slotDurationMessage })]),
-    timeSlotUnavailableInit: z.string().min(5, { message: PROF_SCHEMA.timeSlotUnavailableInitMessage }),
-    timeSlotUnavailableEnd: z.string().min(5, { message: PROF_SCHEMA.timeSlotUnavailableEndMessage }),
+    timeSlotUnavailableInit: z
+      .string()
+      .min(1, { message: PROF_SCHEMA.timeSlotUnavailableInitMessage })
+      .superRefine((data, ctx) => {
+        if (parseInt(data.split(':')[0]) < 0 || parseInt(data.split(':')[0]) > 23) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: PROF_SCHEMA.inputMask.hourRange,
+          });
+        }
+        if (parseInt(data.split(':')[1]) < 0 || parseInt(data.split(':')[1]) > 59) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: PROF_SCHEMA.inputMask.minutesRange,
+          });
+        }
+      }),
+    timeSlotUnavailableEnd: z
+      .string()
+      .min(1, { message: PROF_SCHEMA.timeSlotUnavailableEndMessage })
+      .superRefine((data, ctx) => {
+        if (parseInt(data.split(':')[0]) < 0 || parseInt(data.split(':')[0]) > 23) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: PROF_SCHEMA.inputMask.hourRange,
+          });
+        }
+        if (parseInt(data.split(':')[1]) < 0 || parseInt(data.split(':')[1]) > 59) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: PROF_SCHEMA.inputMask.minutesRange,
+          });
+        }
+      }),
     workingDays: z.array(workingDaySchema).refine(
       (days) => {
         return days.some((day) => day.value === true);
@@ -64,11 +96,11 @@ export const professionalSchema = z.object({
   }),
 });
 
-function validateSlot(value: string): boolean {
-  const regex = /^([01]\d|2[0-3]):([0-5]\d)$/;
-  const slotFormat: boolean = regex.test(value);
-  const hour: boolean = parseInt(value.split(':')[0]) >= 0 && parseInt(value.split(':')[0]) <= 23;
-  const minutes: boolean = parseInt(value.split(':')[1]) >= 0 && parseInt(value.split(':')[1]) <= 59;
+// function validateSlot(value: string): boolean {
+//   const regex = /^([01]\d|2[0-3]):([0-5]\d)$/;
+//   const slotFormat: boolean = regex.test(value);
+//   const hour: boolean = parseInt(value.split(':')[0]) >= 0 && parseInt(value.split(':')[0]) <= 23;
+//   const minutes: boolean = parseInt(value.split(':')[1]) >= 0 && parseInt(value.split(':')[1]) <= 59;
 
-  return slotFormat && hour && minutes;
-}
+//   return slotFormat && hour && minutes;
+// }
