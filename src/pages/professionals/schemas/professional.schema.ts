@@ -76,6 +76,7 @@ export const professionalSchema = z.object({
       .min(1, { message: PROF_SCHEMA.timeSlotUnavailableInitMessage })
       .superRefine((data, ctx) => {
         const [hour, minutes] = data.split(':');
+
         if (parseInt(hour) < 0 || parseInt(hour) > 23 || hasHyphen(hour)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
@@ -88,13 +89,21 @@ export const professionalSchema = z.object({
             message: PROF_SCHEMA.inputMask.minutesRange,
           });
         }
-        console.log(timeInit, timeEnd)
+        // TODO: This is not working
+        console.log(timeInit, timeEnd);
+        if (timeToMinutes(data) > timeToMinutes(timeInit) && timeToMinutes(data) < timeToMinutes(timeEnd, slotDuration)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Inicio de descanso debe ser mayor a inicio de agenda',
+          });
+        }
       }),
     timeSlotUnavailableEnd: z
       .string()
       .min(1, { message: PROF_SCHEMA.timeSlotUnavailableEndMessage })
       .superRefine((data, ctx) => {
         const [hour, minutes] = data.split(':');
+
         if (parseInt(hour) < 0 || parseInt(hour) > 23 || hasHyphen(hour)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
