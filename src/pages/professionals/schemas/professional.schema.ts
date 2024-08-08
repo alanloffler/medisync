@@ -6,7 +6,8 @@ const workingDaySchema = z.object({
   value: z.boolean(),
 });
 
-let timeInit: string;
+let timeInit: string
+let timeEnd: string;
 let slotDuration: string;
 
 export const professionalSchema = z.object({
@@ -48,7 +49,9 @@ export const professionalSchema = z.object({
       .string()
       .min(1, { message: PROF_SCHEMA.scheduleTimeEndMessage })
       .superRefine((data, ctx) => {
+        timeEnd = data;
         const [hour, minutes] = data.split(':');
+
         if (parseInt(hour) < 0 || parseInt(hour) > 23 || hasHyphen(hour)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
@@ -85,6 +88,7 @@ export const professionalSchema = z.object({
             message: PROF_SCHEMA.inputMask.minutesRange,
           });
         }
+        console.log(timeInit, timeEnd)
       }),
     timeSlotUnavailableEnd: z
       .string()
