@@ -11,8 +11,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/core/components/ui/switch';
 import { Textarea } from '@/core/components/ui/textarea';
 // App components
+import InputMask from 'react-input-mask-next';
 import { PageHeader } from '@/core/components/common/PageHeader';
-// import { SlotInput } from '@/pages/professionals/components/common/SlotInput';
 import { WorkingDays } from '@/pages/professionals/components/common/WorkingDays';
 // App
 import { APP_CONFIG } from '@/config/app.config';
@@ -34,9 +34,6 @@ import { useForm } from 'react-hook-form';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-
-import InputMask, { InputState } from 'react-input-mask-next';
-
 // React component
 export default function CreateProfessional() {
   const [areas, setAreas] = useState<IArea[]>([]);
@@ -112,13 +109,13 @@ export default function CreateProfessional() {
     // console.log(data);
     ProfessionalApiService.create(data).then((response) => {
       console.log('create professional');
-      // if (response.statusCode === 200) {
-      //   setDisabledSpec(true);
-      //   addNotification({ type: 'success', message: response.message });
-      // }
-      // if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
-      // if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
-      // createForm.reset(defaultValues);
+      if (response.statusCode === 200) {
+        setDisabledSpec(true);
+        addNotification({ type: 'success', message: response.message });
+      }
+      if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
+      if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
+      createForm.reset(defaultValues);
     });
   }
 
@@ -461,7 +458,6 @@ export default function CreateProfessional() {
                                 alwaysShowMask={false} 
                                 placeholder={'00:00'} 
                                 {...field} 
-                                onFocus={()=>field.value ='00:00'}
                               >
                                 <Input />
                               </InputMask>
