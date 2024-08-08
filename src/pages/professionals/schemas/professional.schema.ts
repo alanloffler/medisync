@@ -6,6 +6,9 @@ const workingDaySchema = z.object({
   value: z.boolean(),
 });
 
+let timeInit: string;
+let slotDuration: string;
+
 export const professionalSchema = z.object({
   available: z.boolean({ message: PROF_SCHEMA.availableMessage }),
   area: z.string().min(1, { message: PROF_SCHEMA.areaMessage }),
@@ -18,17 +21,24 @@ export const professionalSchema = z.object({
   email: z.string().email({ message: PROF_SCHEMA.emailMessage }),
   phone: z.union([z.coerce.number().min(1, { message: PROF_SCHEMA.phoneMessage }), z.string().min(1, { message: PROF_SCHEMA.phoneMessage })]),
   configuration: z.object({
+    slotDuration: z
+    .union([z.coerce.number().min(1, { message: PROF_SCHEMA.slotDurationMessage }), z.string().min(1, { message: PROF_SCHEMA.slotDurationMessage })])
+    .superRefine((data) => {
+      slotDuration = String(data);
+    }),
     scheduleTimeInit: z
       .string()
       .min(1, { message: PROF_SCHEMA.scheduleTimeInitMessage })
       .superRefine((data, ctx) => {
-        if (parseInt(data.split(':')[0]) < 0 || parseInt(data.split(':')[0]) > 23) {
+        timeInit = data;
+        const [hour, minutes] = data.split(':');
+        if (parseInt(hour) < 0 || parseInt(hour) > 23 || hasHyphen(hour)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: PROF_SCHEMA.inputMask.hourRange,
           });
         }
-        if (parseInt(data.split(':')[1]) < 0 || parseInt(data.split(':')[1]) > 59) {
+        if (parseInt(minutes) < 0 || parseInt(minutes) > 59 || hasHyphen(minutes)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: PROF_SCHEMA.inputMask.minutesRange,
@@ -39,31 +49,41 @@ export const professionalSchema = z.object({
       .string()
       .min(1, { message: PROF_SCHEMA.scheduleTimeEndMessage })
       .superRefine((data, ctx) => {
-        if (parseInt(data.split(':')[0]) < 0 || parseInt(data.split(':')[0]) > 23) {
+        const [hour, minutes] = data.split(':');
+
+        if (parseInt(hour) < 0 || parseInt(hour) > 23 || hasHyphen(hour)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: PROF_SCHEMA.inputMask.hourRange,
           });
         }
-        if (parseInt(data.split(':')[1]) < 0 || parseInt(data.split(':')[1]) > 59) {
+        if (parseInt(minutes) < 0 || parseInt(minutes) > 59 || hasHyphen(minutes)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: PROF_SCHEMA.inputMask.minutesRange,
           });
         }
+        if (timeToMinutes(data) < timeToMinutes(timeInit) + parseInt(slotDuration)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Schedule time end must be greater than schedule time init',
+          });
+        }
       }),
-    slotDuration: z.union([z.coerce.number().min(1, { message: PROF_SCHEMA.slotDurationMessage }), z.string().min(1, { message: PROF_SCHEMA.slotDurationMessage })]),
+
+
     timeSlotUnavailableInit: z
       .string()
       .min(1, { message: PROF_SCHEMA.timeSlotUnavailableInitMessage })
       .superRefine((data, ctx) => {
-        if (parseInt(data.split(':')[0]) < 0 || parseInt(data.split(':')[0]) > 23) {
+        const [hour, minutes] = data.split(':');
+        if (parseInt(hour) < 0 || parseInt(hour) > 23 || hasHyphen(hour)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: PROF_SCHEMA.inputMask.hourRange,
           });
         }
-        if (parseInt(data.split(':')[1]) < 0 || parseInt(data.split(':')[1]) > 59) {
+        if (parseInt(minutes) < 0 || parseInt(minutes) > 59 || hasHyphen(minutes)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: PROF_SCHEMA.inputMask.minutesRange,
@@ -74,13 +94,14 @@ export const professionalSchema = z.object({
       .string()
       .min(1, { message: PROF_SCHEMA.timeSlotUnavailableEndMessage })
       .superRefine((data, ctx) => {
-        if (parseInt(data.split(':')[0]) < 0 || parseInt(data.split(':')[0]) > 23) {
+        const [hour, minutes] = data.split(':');
+        if (parseInt(hour) < 0 || parseInt(hour) > 23 || hasHyphen(hour)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: PROF_SCHEMA.inputMask.hourRange,
           });
         }
-        if (parseInt(data.split(':')[1]) < 0 || parseInt(data.split(':')[1]) > 59) {
+        if (parseInt(minutes) < 0 || parseInt(minutes) > 59 || hasHyphen(minutes)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: PROF_SCHEMA.inputMask.minutesRange,
@@ -96,11 +117,13 @@ export const professionalSchema = z.object({
   }),
 });
 
-// function validateSlot(value: string): boolean {
-//   const regex = /^([01]\d|2[0-3]):([0-5]\d)$/;
-//   const slotFormat: boolean = regex.test(value);
-//   const hour: boolean = parseInt(value.split(':')[0]) >= 0 && parseInt(value.split(':')[0]) <= 23;
-//   const minutes: boolean = parseInt(value.split(':')[1]) >= 0 && parseInt(value.split(':')[1]) <= 59;
+const timeToMinutes = (time: string) => {
+  const [hours, minutes] = time.split(':').map(Number);
+  return hours * 60 + minutes;
+};
 
-//   return slotFormat && hour && minutes;
-// }
+// Validation if hour or minutes are not valid (empty value if has hyphen)
+function hasHyphen(str: string): boolean {
+  if (!str) return false;
+  return str.includes('-');
+}
