@@ -141,24 +141,6 @@ export default function CreateProfessional() {
     createForm.setValue('configuration.workingDays', data);
     createForm.clearErrors('configuration.workingDays');
   }
-
-  // Input mask actions
-  function beforeMaskedStateChange({ nextState }: { nextState: InputState }): InputState {
-    const { value } = nextState;
-
-    return { ...nextState, value };
-  }
-
-  // Custom Slot times validations before call API
-  function validateSlotTimesRange(timeInit: string, timeEnd: string): void {
-    if (timeInit !== '' || timeEnd !== '') { 
-      console.log(timeInit, timeEnd);
-      timeInit = timeInit.replace(/-/g, '0');
-      createForm.setValue('configuration.scheduleTimeInit', timeInit);
-    } else {
-      console.log('There is no time init or end data');
-    }
-  }
   // #endregion
   return (
     <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
@@ -478,7 +460,6 @@ export default function CreateProfessional() {
                                 maskPlaceholder='--:--' 
                                 alwaysShowMask={false} 
                                 placeholder={'00:00'} 
-                                // beforeMaskedStateChange={beforeMaskedStateChange} 
                                 {...field} 
                                 onFocus={()=>field.value ='00:00'}
                               >
@@ -502,7 +483,6 @@ export default function CreateProfessional() {
                                 maskPlaceholder='--:--' 
                                 alwaysShowMask={false} 
                                 placeholder={'00:00'} 
-                                beforeMaskedStateChange={beforeMaskedStateChange} 
                                 {...field} 
                               >
                                 <Input />
@@ -528,7 +508,6 @@ export default function CreateProfessional() {
                                 maskPlaceholder='--:--' 
                                 alwaysShowMask={false} 
                                 placeholder={'00:00'} 
-                                beforeMaskedStateChange={beforeMaskedStateChange} 
                                 {...field} 
                               >
                                 <Input />
@@ -551,7 +530,6 @@ export default function CreateProfessional() {
                                 maskPlaceholder='--:--' 
                                 alwaysShowMask={false} 
                                 placeholder={'00:00'} 
-                                beforeMaskedStateChange={beforeMaskedStateChange} 
                                 {...field} 
                               >
                                 <Input />
@@ -562,7 +540,6 @@ export default function CreateProfessional() {
                         )}
                       />
                     </div>
-                    <Button onClick={(e) => {e.preventDefault(); validateSlotTimesRange(createForm.getValues().configuration.scheduleTimeInit, createForm.getValues().configuration.scheduleTimeEnd)}}>Validate</Button>
                   </div>
                 </div>
                 {/* Buttons */}
