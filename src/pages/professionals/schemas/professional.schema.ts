@@ -21,9 +21,7 @@ export const professionalSchema = z.object({
   email: z.string().email({ message: PROF_SCHEMA.emailMessage }),
   phone: z.union([z.coerce.number().min(1, { message: PROF_SCHEMA.phoneMessage }), z.string().min(1, { message: PROF_SCHEMA.phoneMessage })]),
   configuration: z.object({
-    slotDuration: z
-    .union([z.coerce.number().min(1, { message: PROF_SCHEMA.slotDurationMessage }), z.string().min(1, { message: PROF_SCHEMA.slotDurationMessage })])
-    .superRefine((data) => {
+    slotDuration: z.union([z.coerce.number().min(1, { message: PROF_SCHEMA.slotDurationMessage }), z.string().min(1, { message: PROF_SCHEMA.slotDurationMessage })]).superRefine((data) => {
       slotDuration = String(data);
     }),
     scheduleTimeInit: z
@@ -32,6 +30,7 @@ export const professionalSchema = z.object({
       .superRefine((data, ctx) => {
         timeInit = data;
         const [hour, minutes] = data.split(':');
+
         if (parseInt(hour) < 0 || parseInt(hour) > 23 || hasHyphen(hour)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
@@ -50,7 +49,6 @@ export const professionalSchema = z.object({
       .min(1, { message: PROF_SCHEMA.scheduleTimeEndMessage })
       .superRefine((data, ctx) => {
         const [hour, minutes] = data.split(':');
-
         if (parseInt(hour) < 0 || parseInt(hour) > 23 || hasHyphen(hour)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
@@ -63,15 +61,13 @@ export const professionalSchema = z.object({
             message: PROF_SCHEMA.inputMask.minutesRange,
           });
         }
-        if (timeToMinutes(data) < timeToMinutes(timeInit) + parseInt(slotDuration)) {
+        if (timeToMinutes(data) < timeToMinutes(timeInit, slotDuration)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: 'Schedule time end must be greater than schedule time init',
+            message: PROF_SCHEMA.inputMask.rangeError,
           });
         }
       }),
-
-
     timeSlotUnavailableInit: z
       .string()
       .min(1, { message: PROF_SCHEMA.timeSlotUnavailableInitMessage })
@@ -116,12 +112,15 @@ export const professionalSchema = z.object({
     ),
   }),
 });
-
-const timeToMinutes = (time: string) => {
+// Convert time to minutes for validation
+function timeToMinutes(time: string, slotDuration?: string): number {
   const [hours, minutes] = time.split(':').map(Number);
-  return hours * 60 + minutes;
-};
-
+  if (slotDuration) {
+    return hours * 60 + minutes + parseInt(slotDuration);
+  } else {
+    return hours * 60 + minutes;
+  }
+}
 // Validation if hour or minutes are not valid (empty value if has hyphen)
 function hasHyphen(str: string): boolean {
   if (!str) return false;
