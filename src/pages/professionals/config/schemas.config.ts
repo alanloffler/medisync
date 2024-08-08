@@ -19,5 +19,7 @@ export const PROF_SCHEMA = {
   inputMask: {
     hourRange: 'Rango de hora de 00 a 23',
     minutesRange: 'Rango de minutos de 00 a 59',
+    rangeError: 'La hora de fin no puede ser menor a la de inicio más la duración de al menos un turno',
+    rangeErrorUnavailable: 'Rango de descanso fuera del rango de turnos',
   },
 };
