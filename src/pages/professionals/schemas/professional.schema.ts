@@ -14,7 +14,7 @@ export const professionalSchema = z.object({
   available: z.boolean({ message: PROF_SCHEMA.availableMessage }),
   area: z.string().min(1, { message: PROF_SCHEMA.areaMessage }),
   specialization: z.string().min(1, { message: PROF_SCHEMA.specializationMessage }),
-  titleAbbreviation: z.string().min(1, { message: PROF_SCHEMA.titleAbbreviationMessage }),
+  title: z.string().min(1, { message: PROF_SCHEMA.titleAbbreviationMessage }),
   firstName: z.string().min(1, { message: PROF_SCHEMA.firstNameMessage }),
   lastName: z.string().min(1, { message: PROF_SCHEMA.lastNameMessage }),
   description: z.string().min(1, { message: PROF_SCHEMA.descriptionMessage }),

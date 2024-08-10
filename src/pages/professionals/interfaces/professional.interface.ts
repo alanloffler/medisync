@@ -1,5 +1,6 @@
 import { IArea } from '@/core/interfaces/area.interface';
 import { ISpecialization } from '@/core/interfaces/specialization.interface';
+import { ITitle } from '@/core/interfaces/title.interface';
 import { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
 
 export interface IProfessionalForm {
@@ -13,7 +14,7 @@ export interface IProfessionalForm {
   lastName: string;
   phone: number | string;
   specialization: string;
-  titleAbbreviation: string;
+  title: string;
 }
 
 export interface IProfessional {
@@ -28,7 +29,7 @@ export interface IProfessional {
   lastName: string;
   phone: number;
   specialization: ISpecialization;
-  titleAbbreviation: string;
+  title: ITitle;
 }
 
 interface IProfessionalConfiguration {

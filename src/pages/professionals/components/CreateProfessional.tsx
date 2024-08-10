@@ -97,7 +97,7 @@ export default function CreateProfessional() {
     lastName: '',
     phone: '',
     specialization: '',
-    titleAbbreviation: '',
+    title: '',
   };
 
   const createForm = useForm<z.infer<typeof professionalSchema>>({
@@ -246,7 +246,7 @@ export default function CreateProfessional() {
                     <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                       <FormField
                         control={createForm.control}
-                        name='titleAbbreviation'
+                        name='title'
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>{PC_CONFIG.labels.titleAbbreviation}</FormLabel>

@@ -73,7 +73,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
           </button>
         </div>
       ),
-      cell: ({ row }) => <div className='text-left font-medium'>{`${capitalize(row.original.titleAbbreviation)} ${capitalize(row.original.lastName)}, ${capitalize(row.original.firstName)}`}</div>,
+      cell: ({ row }) => <div className='text-left font-medium'>{`${capitalize(row.original.title.abbreviation)} ${capitalize(row.original.lastName)}, ${capitalize(row.original.firstName)}`}</div>,
     },
     {
       accessorKey: 'area',
@@ -327,8 +327,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
             <DialogDescription>{PROF_CONFIG.dialog.remove.subtitle}</DialogDescription>
             <div className='flex flex-col pt-2'>
               <span className=''>{PROF_CONFIG.dialog.remove.content.title}</span>
-              <span className='mt-1 text-lg font-semibold'>{`${capitalize(professionalSelected.titleAbbreviation)} ${capitalize(professionalSelected.lastName)}, ${capitalize(professionalSelected.firstName)}`}</span>
-              {/* <span className='font-medium'>{`${}`}</span> */}
+              <span className='mt-1 text-lg font-semibold'>{`${capitalize(professionalSelected.title?.abbreviation)} ${capitalize(professionalSelected.lastName)}, ${capitalize(professionalSelected.firstName)}`}</span>
               <div className='mt-5 flex justify-end space-x-4'>
                 <Button variant={'secondary'} size={'sm'} onClick={() => setOpenDialog(false)}>
                   {PROF_CONFIG.buttons.cancel}
