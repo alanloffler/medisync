@@ -90,8 +90,10 @@ export const professionalSchema = z.object({
           });
         }
         // TODO: This is not working
-        console.log(timeInit, timeEnd);
-        if (timeToMinutes(data) > timeToMinutes(timeInit) && timeToMinutes(data) < timeToMinutes(timeEnd, slotDuration)) {
+        // console.log(timeInit, timeEnd);
+        console.log('timeInit', timeToMinutes(timeInit));
+        console.log('unavailableInit', timeToMinutes(data));
+        if ((timeToMinutes(data) < timeToMinutes(timeInit)) && (timeToMinutes(data) > timeToMinutes(timeEnd, slotDuration))) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: 'Inicio de descanso debe ser mayor a inicio de agenda',
