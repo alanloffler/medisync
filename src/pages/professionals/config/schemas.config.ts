@@ -16,16 +16,24 @@ export const PROF_SCHEMA = {
   timeSlotUnavailableEndMessage: 'Debes ingresar una hora de fin',
   titleAbbreviationMessage: 'Debes ingresar una abreviación de título',
   workingDaysMessage: 'Debes seleccionar al menos un día laboral',
+
+  configuration: {
+    common: {
+      hourRange: 'Rango de hora de 00 a 23',
+      minutesRange: 'Rango de minutos de 00 a 59',
+    },
+    unavailableTimeInit: {
+      greaterThanTimeInit: 'Debe ser mayor a la hora de inicio de agenda, más la duración de un turno',
+      lessThanTimeEnd: 'Debe ser menor a la hora de fin de agenda, menos la duración de un turno',
+    },
+    unavailableTimeEnd: {
+      greaterThanTimeEnd: 'Debe ser mayor a la hora de fin de agenda, menos la duración de un turno',
+      lessThanTimeInit: 'Debe ser menor a la hora de inicio de agenda, más la duración de un turno',
+    },
+  },
+
   inputMask: {
-    hourRange: 'Rango de hora de 00 a 23',
-    minutesRange: 'Rango de minutos de 00 a 59',
     rangeError: 'La hora de fin no puede ser menor a la de inicio más la duración de al menos un turno',
     rangeErrorUnavailable: 'Rango de descanso fuera del rango de turnos',
   },
-  unavailableTimeInit: {
-    hourFormatError: 'Rango de hora de 00 a 23',
-    minutesFormatError: 'Rango de minutos de 00 a 59',
-    greaterThanTimeInit: 'Debe ser mayor a la hora de inicio de agenda, más la duración de un turno',
-    lessThanTimeEnd: 'Debe ser menor a la hora de fin de agenda, menos la duración de un turno',
-  }
 };
