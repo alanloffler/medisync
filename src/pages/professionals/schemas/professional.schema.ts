@@ -35,13 +35,13 @@ export const professionalSchema = z.object({
         if (parseInt(hour) < 0 || parseInt(hour) > 23 || hasHyphen(hour)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: PROF_SCHEMA.inputMask.hourRange,
+            message: PROF_SCHEMA.configuration.common.hourRange,
           });
         }
         if (parseInt(minutes) < 0 || parseInt(minutes) > 59 || hasHyphen(minutes)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: PROF_SCHEMA.inputMask.minutesRange,
+            message: PROF_SCHEMA.configuration.common.minutesRange,
           });
         }
       }),
@@ -55,13 +55,13 @@ export const professionalSchema = z.object({
         if (parseInt(hour) < 0 || parseInt(hour) > 23 || hasHyphen(hour)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: PROF_SCHEMA.inputMask.hourRange,
+            message: PROF_SCHEMA.configuration.common.hourRange,
           });
         }
         if (parseInt(minutes) < 0 || parseInt(minutes) > 59 || hasHyphen(minutes)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: PROF_SCHEMA.inputMask.minutesRange,
+            message: PROF_SCHEMA.configuration.common.minutesRange,
           });
         }
         if (timeToMinutes(data) < timeToMinutes(timeInit, slotDuration)) {
@@ -81,14 +81,14 @@ export const professionalSchema = z.object({
           if (parseInt(hour) < 0 || parseInt(hour) > 23 || hasHyphen(hour)) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
-              message: PROF_SCHEMA.unavailableTimeInit.hourFormatError,
+              message: PROF_SCHEMA.configuration.common.hourRange,
             });
           }
           // Minutes format validation (00-59)
           if (parseInt(minutes) < 0 || parseInt(minutes) > 59 || hasHyphen(minutes)) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
-              message: PROF_SCHEMA.unavailableTimeInit.minutesFormatError,
+              message: PROF_SCHEMA.configuration.common.minutesRange,
             });
           }
           // Slot time greater than schedule time init plus one slot duration
@@ -96,14 +96,14 @@ export const professionalSchema = z.object({
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
               // message: PROF_SCHEMA.unavailableTimeInit.formatError,
-              message: PROF_SCHEMA.unavailableTimeInit.greaterThanTimeInit,
+              message: PROF_SCHEMA.configuration.unavailableTimeInit.greaterThanTimeInit,
             });
           }
           // Slot time less than schedule time end minus one slot duration
           if (timeToMinutes(data) > timeToMinutesLess(timeEnd, slotDuration)) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
-              message: PROF_SCHEMA.unavailableTimeInit.lessThanTimeEnd,
+              message: PROF_SCHEMA.configuration.unavailableTimeInit.lessThanTimeEnd,
             });
           }
         }
@@ -113,7 +113,7 @@ export const professionalSchema = z.object({
       .min(1, { message: PROF_SCHEMA.timeSlotUnavailableEndMessage })
       .superRefine((data, ctx) => {
         const [hour, minutes] = data.split(':');
-        
+
         // console.log('--- timeEnd', timeToMinutes(timeEnd, slotDuration));
         // console.log('timeEnd less 1 slot', timeToMinutesLess(timeEnd, slotDuration));
         // console.log('unavailableEnd ---', timeToMinutes(data, slotDuration));
@@ -121,13 +121,13 @@ export const professionalSchema = z.object({
         if (parseInt(hour) < 0 || parseInt(hour) > 23 || hasHyphen(hour)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: PROF_SCHEMA.inputMask.hourRange,
+            message: PROF_SCHEMA.configuration.common.hourRange,
           });
         }
         if (parseInt(minutes) < 0 || parseInt(minutes) > 59 || hasHyphen(minutes)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: PROF_SCHEMA.inputMask.minutesRange,
+            message: PROF_SCHEMA.configuration.common.minutesRange,
           });
         }
       }),
