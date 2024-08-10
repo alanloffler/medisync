@@ -36,7 +36,7 @@ interface IProfessionalConfiguration {
   scheduleTimeEnd: string;
   scheduleTimeInit: string;
   slotDuration: number | string;
-  timeSlotUnavailableEnd: string;
-  timeSlotUnavailableInit: string;
+  timeSlotUnavailableEnd?: string;
+  timeSlotUnavailableInit?: string;
   workingDays: IWorkingDay[];
 }
