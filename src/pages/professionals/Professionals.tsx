@@ -18,6 +18,8 @@ import { PROF_CONFIG } from '@/config/professionals.config';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useDebounce } from '@/core/hooks/useDebounce';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
+
+import createTsMask from 'ts-simple-mask';
 // Constants
 const DEBOUNCE_TIME: number = 500;
 // React component
@@ -51,6 +53,19 @@ export default function Professionals() {
   }, [addNotification]);
 
   // #endregion
+
+  const [value, setValue] = useState("");
+  const TsMask = createTsMask();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { masked, unmasked } = TsMask.mask(e.target.value, '00:00');
+    if (e.target.value.length === 0) {
+      setValue(unmasked);
+    }
+    setValue(masked);
+  };
+
+
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
       {/* Page Header */}
@@ -138,6 +153,8 @@ export default function Professionals() {
             />
           </CardContent>
         </Card>
+        input here
+        <input type="text" value={value} onChange={handleChange} placeholder='00:00' />
       </div>
     </main>
   );
