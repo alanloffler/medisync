@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { CirclePlus, List, ListFilter, ListRestart, PlusCircle, Search } from 'lucide-react';
+import { CirclePlus, List, ListFilter, ListRestart, PlusCircle, Search, X } from 'lucide-react';
 // Components: https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
@@ -71,7 +71,12 @@ export default function Professionals() {
               <div className='flex flex-col space-y-2'>
                 <div className='relative w-full'>
                   <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
-                  <Input onChange={handleSearch} value={search} type='search' placeholder={PROF_CONFIG.search.placeholder} className='bg-background pl-9 shadow-sm' />
+                  <Input onChange={handleSearch} value={search} type='text' placeholder={PROF_CONFIG.search.placeholder} className='bg-background pl-9 shadow-sm' />
+                  {search && (
+                    <button onClick={() => setSearch('')} className='absolute right-3 top-3 text-muted-foreground hover:text-black'>
+                      <X className='h-4 w-4' />
+                    </button>
+                  )}
                 </div>
                 {errorMessage && <div className='flex flex-row items-center text-xs font-medium text-rose-400'>{errorMessage}</div>}
               </div>
