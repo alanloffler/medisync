@@ -67,10 +67,14 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
       accessorKey: 'lastName',
       header: ({ column }) => (
         <div className='text-left'>
-          <button className='flex items-center gap-2 hover:text-accent-foreground' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-            {PROF_CONFIG.table.headers[0]}
-            <ArrowDownUp className='h-3 w-3' />
-          </button>
+          {totalItems === 1 ? (
+            PROF_CONFIG.table.headers[0]
+          ) : (
+            <button className='flex items-center gap-2 hover:text-accent-foreground' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+              {PROF_CONFIG.table.headers[0]}
+              <ArrowDownUp className='h-3 w-3' />
+            </button>
+          )}
         </div>
       ),
       cell: ({ row }) => <div className='text-left font-medium'>{`${capitalize(row.original.title.abbreviation)} ${capitalize(row.original.lastName)}, ${capitalize(row.original.firstName)}`}</div>,
@@ -80,10 +84,14 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
       size: 80,
       header: ({ column }) => (
         <div className='text-left'>
-          <button className='flex items-center gap-2 hover:text-accent-foreground' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-            {PROF_CONFIG.table.headers[1]}
-            <ArrowDownUp className='h-3 w-3' />
-          </button>
+          {totalItems === 1 ? (
+            PROF_CONFIG.table.headers[1]
+          ) : (
+            <button className='flex items-center gap-2 hover:text-accent-foreground' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+              {PROF_CONFIG.table.headers[1]}
+              <ArrowDownUp className='h-3 w-3' />
+            </button>
+          )}
         </div>
       ),
       cell: ({ row }) => <div className='text-left'>{capitalize(row.original.area.name)}</div>,
@@ -93,10 +101,14 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
       size: 80,
       header: ({ column }) => (
         <div className='text-center'>
-          <button className='flex items-center gap-2 hover:text-accent-foreground' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-            {PROF_CONFIG.table.headers[2]}
-            <ArrowDownUp className='h-3 w-3' />
-          </button>
+          {totalItems === 1 ? (
+            PROF_CONFIG.table.headers[2]
+          ) : (
+            <button className='flex items-center gap-2 hover:text-accent-foreground' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+              {PROF_CONFIG.table.headers[2]}
+              <ArrowDownUp className='h-3 w-3' />
+            </button>
+          )}
         </div>
       ),
       cell: ({ row }) => <div className='text-left text-sm'>{capitalize(row.original.specialization.name)}</div>,
@@ -106,10 +118,14 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
       size: 50,
       header: ({ column }) => (
         <div className='text-center'>
-          <button className='flex items-center gap-2 hover:text-accent-foreground' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-            {PROF_CONFIG.table.headers[3]}
-            <ArrowDownUp className='h-3 w-3' />
-          </button>
+          {totalItems === 1 ? (
+            PROF_CONFIG.table.headers[3]
+          ) : (
+            <button className='flex items-center gap-2 hover:text-accent-foreground' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+              {PROF_CONFIG.table.headers[3]}
+              <ArrowDownUp className='h-3 w-3' />
+            </button>
+          )}
         </div>
       ),
       cell: ({ row }) => (
