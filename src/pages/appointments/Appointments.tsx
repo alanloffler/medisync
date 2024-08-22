@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/c
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/core/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/core/components/ui/table';
 // App components
-import { ProfessionalsCombobox } from '@/pages/professionals/components/ProfessionalsCombobox';
+import { ProfessionalsCombobox } from '@/pages/professionals/components/common/ProfessionalsCombobox';
 import { Steps } from '@/core/components/common/Steps';
 import { UsersCombo } from '@/pages/users/components/UsersCombo';
 // App
