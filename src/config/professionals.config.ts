@@ -8,7 +8,8 @@ export const PROF_CONFIG = {
     cancel: 'Cancelar',
     remove: 'Eliminar profesional',
   },
-  dbProfessionals: 'profesionales en la base de datos',
+  dbProfessionalPlural: 'profesionales en la base de datos',
+  dbProfessionalSingular: 'profesional en la base de datos',
   filter: {
     title: 'Filtrar',
   },
