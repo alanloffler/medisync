@@ -32,7 +32,7 @@ export interface IProfessional {
   title: ITitle;
   unavailableObject: TMP;
 }
-
+// TODO this implementation will be used only for the professional creation (validation schema)
 interface TMP {
   timeSlotUnavailableInit?: string;
   timeSlotUnavailableEnd?: string;
@@ -42,7 +42,7 @@ interface IProfessionalConfiguration {
   scheduleTimeEnd: string;
   scheduleTimeInit: string;
   slotDuration: number;
-  // timeSlotUnavailableEnd?: string;
-  // timeSlotUnavailableInit?: string;
+  timeSlotUnavailableEnd?: string;
+  timeSlotUnavailableInit?: string;
   workingDays: IWorkingDay[];
 }
