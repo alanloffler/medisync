@@ -100,8 +100,8 @@ export default function Appointments() {
           new Date(`${scheduleDate}T${professionalSelected.configuration.scheduleTimeEnd}`), 
           professionalSelected.configuration.slotDuration, 
           [{
-            begin: new Date(`${scheduleDate}T${professionalSelected.configuration.timeSlotUnavailableInit}`),
-            end: new Date(`${scheduleDate}T${professionalSelected.configuration.timeSlotUnavailableEnd}`),
+            begin: new Date(`${scheduleDate}T${professionalSelected.unavailableObject.timeSlotUnavailableInit}`),
+            end: new Date(`${scheduleDate}T${professionalSelected.unavailableObject.timeSlotUnavailableEnd}`),
           }]
         );
         setTimeSlots(schedule.timeSlots); // Set time slots for UI schedule table
