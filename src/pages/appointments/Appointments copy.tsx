@@ -10,7 +10,7 @@ import { Steps } from '@/core/components/common/Steps';
 import { AppoSchedule, IAppointment, ITimeSlot } from './services/schedule.service';
 import { AppointmentApiService } from './services/appointment.service';
 import { IProfessional } from '../professionals/interfaces/professional.interface';
-import { ProfessionalsCombobox } from '../professionals/components/ProfessionalsCombobox';
+import { ProfessionalsCombobox } from '../professionals/components/common/ProfessionalsCombobox';
 import { cn } from '@/lib/utils';
 import { es, enUS } from 'date-fns/locale';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
