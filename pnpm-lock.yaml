@@ -104,6 +104,9 @@ importers:
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.3)
+      ts-simple-mask:
+        specifier: ^0.5.1
+        version: 0.5.1
       useMediaQuery:
         specifier: link:@uidotdev/usehooks/useMediaQuery
         version: link:@uidotdev/usehooks/useMediaQuery
@@ -2216,6 +2219,9 @@ packages:
   ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
 
+  ts-simple-mask@0.5.1:
+    resolution: {integrity: sha512-AGL0IT4KYTX/BGR2LywJnHhIN+5eajjTUUS+Z1wOkb/UH1jNU3F3BVdlaaGh1ZBKkpVx/7GmiOTq78VeIxnbAg==}
+
   tslib@2.6.2:
     resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
 
@@ -4297,6 +4303,8 @@ snapshots:
       typescript: 5.4.5
 
   ts-interface-checker@0.1.13: {}
+
+  ts-simple-mask@0.5.1: {}
 
   tslib@2.6.2: {}
 
