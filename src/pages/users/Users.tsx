@@ -67,7 +67,7 @@ export default function Users() {
                   <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
                   <Input onClick={() => setSearchByName('')} onChange={handleSearchByDNI} value={searchByDNI} type='number' placeholder={USER_CONFIG.search.placeholder.dni} className='bg-background pl-10 shadow-sm' />
                   {searchByDNI && (
-                    <button onClick={() => setSearchByDNI('')} className='absolute right-3 top-3 text-muted-foreground'>
+                    <button onClick={() => setSearchByDNI('')} className='absolute right-3 top-3 text-muted-foreground hover:text-black'>
                       <X className='h-4 w-4' />
                     </button>
                   )}
@@ -79,7 +79,7 @@ export default function Users() {
                   <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
                   <Input onClick={() => setSearchByDNI('')} onChange={handleSearchByName} value={searchByName} type='text' placeholder={USER_CONFIG.search.placeholder.name} className='bg-background pl-10 shadow-sm' />
                   {searchByName && (
-                    <button onClick={() => setSearchByName('')} className='absolute right-3 top-3 text-muted-foreground'>
+                    <button onClick={() => setSearchByName('')} className='absolute right-3 top-3 text-muted-foreground hover:text-black'>
                       <X className='h-4 w-4' />
                     </button>
                   )}
