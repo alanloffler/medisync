@@ -30,13 +30,19 @@ export interface IProfessional {
   phone: number;
   specialization: ISpecialization;
   title: ITitle;
+  unavailableObject: TMP;
+}
+
+interface TMP {
+  timeSlotUnavailableInit?: string;
+  timeSlotUnavailableEnd?: string;
 }
 
 interface IProfessionalConfiguration {
   scheduleTimeEnd: string;
   scheduleTimeInit: string;
   slotDuration: number | string;
-  timeSlotUnavailableEnd?: string;
-  timeSlotUnavailableInit?: string;
+  // timeSlotUnavailableEnd?: string;
+  // timeSlotUnavailableInit?: string;
   workingDays: IWorkingDay[];
 }
