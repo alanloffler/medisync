@@ -41,7 +41,7 @@ interface TMP {
 interface IProfessionalConfiguration {
   scheduleTimeEnd: string;
   scheduleTimeInit: string;
-  slotDuration: number | string;
+  slotDuration: number;
   // timeSlotUnavailableEnd?: string;
   // timeSlotUnavailableInit?: string;
   workingDays: IWorkingDay[];
