@@ -266,7 +266,7 @@ export default function Appointments() {
                       <CalendarDays className='h-4 w-4' />
                       <span>{APPO_CONFIG.table.title}</span>
                     </div>
-                    {professionalSelected?._id && <h1>{`${capitalize(professionalSelected?.titleAbbreviation)} ${capitalize(professionalSelected?.lastName)}, ${capitalize(professionalSelected?.firstName)}`}</h1>}
+                    {professionalSelected?._id && <h1>{`${capitalize(professionalSelected?.title.abbreviation)} ${capitalize(professionalSelected?.lastName)}, ${capitalize(professionalSelected?.firstName)}`}</h1>}
                   </div>
                 </CardTitle>
                 {!errorMessage && <div className='py-2 text-center text-base font-semibold text-primary'>{selectedLegibleDate}</div>}
@@ -373,7 +373,7 @@ export default function Appointments() {
                       </div>
                       <div className='flex items-center space-x-2'>
                         <BriefcaseMedical className='h-5 w-5' strokeWidth={2} />
-                        <span className='font-semibold'>{`${capitalize(professionalSelected?.titleAbbreviation)} ${capitalize(professionalSelected?.lastName)}, ${capitalize(professionalSelected?.firstName)}`}</span>
+                        <span className='font-semibold'>{`${capitalize(professionalSelected?.title.abbreviation)} ${capitalize(professionalSelected?.lastName)}, ${capitalize(professionalSelected?.firstName)}`}</span>
                       </div>
                     </>
                   )}
