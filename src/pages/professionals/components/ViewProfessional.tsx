@@ -22,6 +22,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { PROF_VIEW_CONFIG as PV_CONFIG } from '@/config/professionals.config';
 import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
+import { useCapitalizeFirstLetter } from '@/core/hooks/useCapitalizeFirstLetter';
 import { useDelimiter } from '@/core/hooks/useDelimiter';
 import { useEffect, useState } from 'react';
 // React component
@@ -32,6 +33,7 @@ export default function ViewProfessional() {
   const [professional, setProfessional] = useState<IProfessional>({} as IProfessional);
   const [showCard, setShowCard] = useState<boolean>(false);
   const capitalize = useCapitalize();
+  const capitalizeFirstLetter = useCapitalizeFirstLetter();
   const delimiter = useDelimiter();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -193,7 +195,7 @@ export default function ViewProfessional() {
                     <span className='text-base font-medium'>{professional.email}</span>
                   </div>
                 )}
-                {professional.description && <div className='text-pretty pt-2 text-base'>{professional.description}</div>}
+                {professional.description && <div className='text-pretty pt-2 text-base'>{capitalizeFirstLetter(professional.description)}</div>}
               </CardContent>
             )
           )}
