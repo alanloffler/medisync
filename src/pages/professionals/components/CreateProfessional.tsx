@@ -86,10 +86,13 @@ export default function CreateProfessional() {
       scheduleTimeEnd: '',
       scheduleTimeInit: '',
       slotDuration: '',
-      timeSlotUnavailableEnd: '',
-      timeSlotUnavailableInit: '',
       workingDays: [],
     },
+    unavailableObject: {
+      timeSlotUnavailableEnd: '',
+      timeSlotUnavailableInit: '',
+    },
+
     description: '',
     dni: '',
     email: '',
@@ -492,7 +495,7 @@ export default function CreateProfessional() {
                     <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                       <FormField
                         control={createForm.control}
-                        name='configuration.timeSlotUnavailableInit'
+                        name='configuration.unavailableTimeSlot.timeSlotUnavailableInit'
                         render={({ field }) => (
                           <FormItem className=''>
                             <FormLabel>{PC_CONFIG.labels.configuration.timeSlotUnavailableInit}</FormLabel>
@@ -514,7 +517,7 @@ export default function CreateProfessional() {
                       />
                       <FormField
                         control={createForm.control}
-                        name='configuration.timeSlotUnavailableEnd'
+                        name='configuration.unavailableTimeSlot.timeSlotUnavailableEnd'
                         render={({ field }) => (
                           <FormItem className=''>
                             <FormLabel>{PC_CONFIG.labels.configuration.timeSlotUnavailableEnd}</FormLabel>
