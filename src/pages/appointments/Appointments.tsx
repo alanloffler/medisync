@@ -98,19 +98,17 @@ export default function Appointments() {
           `Schedule ${scheduleDate}`, 
           new Date(`${scheduleDate}T${professionalSelected.configuration.scheduleTimeInit}`), 
           new Date(`${scheduleDate}T${professionalSelected.configuration.scheduleTimeEnd}`), 
-          professionalSelected.configuration.slotDuration, 
+          Number(professionalSelected.configuration.slotDuration), 
           [{
-            begin: new Date(`${scheduleDate}T${professionalSelected.unavailableObject.timeSlotUnavailableInit}`),
-            end: new Date(`${scheduleDate}T${professionalSelected.unavailableObject.timeSlotUnavailableEnd}`),
+            begin: new Date(`${scheduleDate}T${professionalSelected.configuration.timeSlotUnavailableInit}`),
+            end: new Date(`${scheduleDate}T${professionalSelected.configuration.timeSlotUnavailableEnd}`),
           }]
         );
         setTimeSlots(schedule.timeSlots); // Set time slots for UI schedule table
         setShowCalendar(true); // Show calendar
         setShowTimeSlots(true); // Show time slots
         // Get appointments from database
-        AppointmentApiService
-        .findAllByProfessional(professionalSelected._id, scheduleDate)
-        .then((response) => {
+        AppointmentApiService.findAllByProfessional(professionalSelected._id, scheduleDate).then((response) => {
           // Backend response IResponse TODO
           if (!response.statusCode) {
             setAppointments(response);
@@ -211,7 +209,7 @@ export default function Appointments() {
       <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8'>
         <div className='flex flex-col gap-4 overflow-x-auto md:flex-row lg:flex-row'>
           <div className='flex h-fit flex-col gap-6 md:mx-auto md:w-1/3 lg:mx-auto lg:w-1/3'>
-            <div className='flex w-fit flex-col space-y-4'>
+            <div className='flex w-full flex-col space-y-4'>
               <Steps text={APPO_CONFIG.steps.text1} step='1' className='bg-primary/20 text-primary' />
               {/* prettier-ignore */}
               <ProfessionalsCombobox 
@@ -222,19 +220,30 @@ export default function Appointments() {
                   placeholder: APPO_CONFIG.combobox.placeholder,
                   searchText: APPO_CONFIG.combobox.searchText,
                 }}
+                className='w-1/2'
               />
+              <div className='mt-2 flex flex-col text-slate-500 w-full'>
+                <div className='flex flex-row items-center space-x-1'>
+                  <span className='text-sm font-semibold underline'>{APPO_CONFIG.phrases.availableDays}</span>
+                  <span className='text-sm font-medium'>{legibleWorkingDays}</span>
+                </div>
+                <div className='flex flex-row items-center space-x-1'>
+                  <span className='text-sm font-semibold underline'>{'Horarios:'}</span>
+                  <span className='text-sm font-medium'>{legibleWorkingDays}</span>
+                </div>
+              </div>
             </div>
             <div className={cn('flex flex-col space-y-4', showCalendar ? 'pointer-events-auto' : 'pointer-events-none')}>
               {professionalSelected && (
                 <>
-                <Steps text={APPO_CONFIG.steps.text2} step='2' className='bg-primary/20 text-primary' />
+                  <Steps text={APPO_CONFIG.steps.text2} step='2' className='bg-primary/20 text-primary' />
                   {/* prettier-ignore */}
                   <Calendar
                     captionLayout={'dropdown-buttons'}
                     className='h-fit w-fit flex-row rounded-lg bg-card text-card-foreground shadow-sm'
                     disabled={[
                       { dayOfWeek: disabledDays },
-                      //{ before: new Date() }, // uncomment this after show reserve button works!
+                      { before: new Date() }, // uncomment this after show reserve button works!
                       { from: new Date(2024, 5, 5) },
                     ]}
                     locale={APPO_CONFIG.calendar.language === 'es' ? es : enUS}
@@ -247,101 +256,96 @@ export default function Appointments() {
                     showOutsideDays={false}
                     onDayClick={(event) => setSelectedDate(event)}
                   />
-                  <div className='mt-2 flex flex-col text-slate-500'>
-                    <span className='text-base font-semibold'>{APPO_CONFIG.phrases.availableDays}</span>
-                    <span className='text-sm font-medium'>{legibleWorkingDays}</span>
-                  </div>
                 </>
               )}
             </div>
           </div>
           <div className='flex flex-col gap-4 md:w-2/3 lg:w-2/3'>
-          {selectedDate && <>
-            <Steps text={APPO_CONFIG.steps.text3} step='3' className='bg-primary/20 text-primary' />
-            <Card className='w-full'>
-              <CardHeader>
-                <CardTitle className='px-3 text-base'>
-                  <div className='flex flex-row justify-between'>
-                    <div className='flex flex-row items-center gap-2'>
-                      <CalendarDays className='h-4 w-4' />
-                      <span>{APPO_CONFIG.table.title}</span>
+            {selectedDate && (
+              <>
+                <Steps text={APPO_CONFIG.steps.text3} step='3' className='bg-primary/20 text-primary' />
+                <Card className='w-full'>
+                  <CardHeader>
+                    <CardTitle className='px-3 text-base'>
+                      <div className='flex flex-row justify-between'>
+                        <div className='flex flex-row items-center gap-2'>
+                          <CalendarDays className='h-4 w-4' />
+                          <span>{APPO_CONFIG.table.title}</span>
+                        </div>
+                        {professionalSelected?._id && <h1>{`${capitalize(professionalSelected?.title.abbreviation)} ${capitalize(professionalSelected?.lastName)}, ${capitalize(professionalSelected?.firstName)}`}</h1>}
+                      </div>
+                    </CardTitle>
+                    {!errorMessage && <div className='py-2 text-center text-base font-semibold text-primary'>{selectedLegibleDate}</div>}
+                    {showTimeSlots && <div className='mx-4 w-fit rounded-full bg-primary/30 px-2 py-1 text-sm font-semibold'>{`${totalAvailableSlots - appointments.length} ${APPO_CONFIG.phrases.availableAppointments}`}</div>}
+                  </CardHeader>
+                  {errorMessage && (
+                    <div className='flex items-center justify-center space-x-2 px-4 py-0 text-rose-500'>
+                      <FileWarning className='h-5 w-5' strokeWidth={2} />
+                      <span className='text-center font-medium'>{errorMessage}</span>
                     </div>
-                    {professionalSelected?._id && <h1>{`${capitalize(professionalSelected?.title.abbreviation)} ${capitalize(professionalSelected?.lastName)}, ${capitalize(professionalSelected?.firstName)}`}</h1>}
-                  </div>
-                </CardTitle>
-                {!errorMessage && <div className='py-2 text-center text-base font-semibold text-primary'>{selectedLegibleDate}</div>}
-                {showTimeSlots && (
-                  <div className='mx-4 w-fit rounded-full bg-primary/30 px-2 py-1 text-sm font-semibold'>
-                    {`${totalAvailableSlots - appointments.length} ${APPO_CONFIG.phrases.availableAppointments}`}
-                  </div>
-                )}
-              </CardHeader>
-              {errorMessage && (
-                <div className='flex items-center justify-center space-x-2 px-4 py-0 text-rose-500'>
-                  <FileWarning className='h-5 w-5' strokeWidth={2} />
-                  <span className='text-center font-medium'>{errorMessage}</span>
-                </div>
-              )}
-              {showTimeSlots && (
-                <CardContent>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className='w-[60px] text-center font-semibold'>{APPO_CONFIG.table.headers[0]}</TableHead>
-                        <TableHead className='w-[135px] px-2 text-left font-semibold'>{APPO_CONFIG.table.headers[1]}</TableHead>
-                        <TableHead className='px-2 text-left font-semibold'>{APPO_CONFIG.table.headers[2]}</TableHead>
-                        <TableHead className='w-[140px] px-2 text-center font-semibold'>{APPO_CONFIG.table.headers[3]}</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {timeSlots.map((slot, index) => (
-                        <TableRow key={index} className={`text-base ${slot.available ? 'text-foreground' : 'bg-slate-100 text-slate-400'} ${index === timeSlots.length - 1 ? 'border-none' : 'border-b'}`}>
-                          {slot.available ? (
-                            <>
-                              <TableCell className='p-1.5 text-center text-sm font-light'>{APPO_CONFIG.words.shiftPrefix + slot.id}</TableCell>
-                              <TableCell className='p-1.5 text-left text-sm font-light'>
-                                {slot.begin} {APPO_CONFIG.words.hours}
-                              </TableCell>
-                              {slot.appointment?.user ? <TableCell className='p-1.5 text-base font-medium'>{`${capitalize(slot.appointment.user.lastName)}, ${capitalize(slot.appointment.user.firstName)}`}</TableCell> : <TableCell className='p-1.5 text-base font-medium'></TableCell>}
-                              <TableCell className='flex items-center justify-end space-x-4 p-1.5'>
-                                {/* TODO: button should only be shown if the date is in the future and the time is in the future */}
-                                {/* TODO: this partially works, need some tests and usage, the hour is not sure it is working properly */}
-                                <span>{selectedDate && selectedDate.getDate() + ' - ' + new Date().getDate()}</span>
-                                {selectedDate && selectedDate?.getDate() >= new Date().getDate() && selectedDate?.getTime() >= new Date().getTime() ? <>Show button</> : <>Do not show button</>}
-                                {!slot.appointment?.user && (
-                                  <Button onClick={() => handleDialog('reserve', slot)} variant={'default'} size={'xs'}>
-                                    {APPO_CONFIG.buttons.addAppointment}
-                                  </Button>
-                                )}
-                                {slot.appointment?.user && (
-                                  <Button onClick={() => navigate(`/appointments/${slot.appointment?._id}`)} variant={'table'} size={'xs'} className='bg-slate-100 text-primary'>
-                                    {APPO_CONFIG.buttons.viewAppointment}
-                                  </Button>
-                                )}
-                                {slot.appointment?.user && (
-                                  <Button onClick={() => handleDialog('cancel', slot)} variant={'table'} size={'xs'} className='bg-slate-100 text-primary'>
-                                    {APPO_CONFIG.buttons.cancelAppointment}
-                                  </Button>
-                                )}
-                              </TableCell>
-                            </>
-                          ) : (
-                            <>
-                              <TableCell className='p-1.5 text-center text-sm font-semibold'>{APPO_CONFIG.words.unavailable}</TableCell>
-                              <TableCell className='p-1.5 text-left text-sm'>
-                                {slot.available ? slot.begin : `${slot.begin} ${APPO_CONFIG.words.hoursSeparator} ${slot.end}`} {APPO_CONFIG.words.hours}
-                              </TableCell>
-                              <TableCell className='p-1.5'></TableCell>
-                              <TableCell className='p-1.5'></TableCell>
-                            </>
-                          )}
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </CardContent>
-              )}
-            </Card></>}
+                  )}
+                  {showTimeSlots && (
+                    <CardContent>
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead className='w-[60px] text-center font-semibold'>{APPO_CONFIG.table.headers[0]}</TableHead>
+                            <TableHead className='w-[135px] px-2 text-left font-semibold'>{APPO_CONFIG.table.headers[1]}</TableHead>
+                            <TableHead className='px-2 text-left font-semibold'>{APPO_CONFIG.table.headers[2]}</TableHead>
+                            <TableHead className='w-[140px] px-2 text-center font-semibold'>{APPO_CONFIG.table.headers[3]}</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {timeSlots.map((slot, index) => (
+                            <TableRow key={index} className={`text-base ${slot.available ? 'text-foreground' : 'bg-slate-100 text-slate-400'} ${index === timeSlots.length - 1 ? 'border-none' : 'border-b'}`}>
+                              {slot.available ? (
+                                <>
+                                  <TableCell className='p-1.5 text-center text-sm font-light'>{APPO_CONFIG.words.shiftPrefix + slot.id}</TableCell>
+                                  <TableCell className='p-1.5 text-left text-sm font-light'>
+                                    {slot.begin} {APPO_CONFIG.words.hours}
+                                  </TableCell>
+                                  {slot.appointment?.user ? <TableCell className='p-1.5 text-base font-medium'>{`${capitalize(slot.appointment.user.lastName)}, ${capitalize(slot.appointment.user.firstName)}`}</TableCell> : <TableCell className='p-1.5 text-base font-medium'></TableCell>}
+                                  <TableCell className='flex items-center justify-end space-x-4 p-1.5'>
+                                    {/* TODO: button should only be shown if the date is in the future and the time is in the future */}
+                                    {/* TODO: this partially works, need some tests and usage, the hour is not sure it is working properly */}
+                                    <span>{selectedDate && selectedDate.getDate() + ' - ' + new Date().getDate()}</span>
+                                    {selectedDate && selectedDate?.getDate() >= new Date().getDate() && selectedDate?.getTime() >= new Date().getTime() ? <>Show button</> : <>Do not show button</>}
+                                    {!slot.appointment?.user && (
+                                      <Button onClick={() => handleDialog('reserve', slot)} variant={'default'} size={'xs'}>
+                                        {APPO_CONFIG.buttons.addAppointment}
+                                      </Button>
+                                    )}
+                                    {slot.appointment?.user && (
+                                      <Button onClick={() => navigate(`/appointments/${slot.appointment?._id}`)} variant={'table'} size={'xs'} className='bg-slate-100 text-primary'>
+                                        {APPO_CONFIG.buttons.viewAppointment}
+                                      </Button>
+                                    )}
+                                    {slot.appointment?.user && (
+                                      <Button onClick={() => handleDialog('cancel', slot)} variant={'table'} size={'xs'} className='bg-slate-100 text-primary'>
+                                        {APPO_CONFIG.buttons.cancelAppointment}
+                                      </Button>
+                                    )}
+                                  </TableCell>
+                                </>
+                              ) : (
+                                <>
+                                  <TableCell className='p-1.5 text-center text-sm font-semibold'>{APPO_CONFIG.words.unavailable}</TableCell>
+                                  <TableCell className='p-1.5 text-left text-sm'>
+                                    {slot.available ? slot.begin : `${slot.begin} ${APPO_CONFIG.words.hoursSeparator} ${slot.end}`} {APPO_CONFIG.words.hours}
+                                  </TableCell>
+                                  <TableCell className='p-1.5'></TableCell>
+                                  <TableCell className='p-1.5'></TableCell>
+                                </>
+                              )}
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </CardContent>
+                  )}
+                </Card>
+              </>
+            )}
           </div>
         </div>
       </main>
