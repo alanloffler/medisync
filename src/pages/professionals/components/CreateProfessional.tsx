@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/core/components/ui/switch';
 import { Textarea } from '@/core/components/ui/textarea';
 // App components
-import InputMask from 'react-input-mask-next';
+import InputMask2 from 'react-input-mask-next';
 import { PageHeader } from '@/core/components/common/PageHeader';
 import { WorkingDays } from '@/pages/professionals/components/common/WorkingDays';
 // App
@@ -454,7 +454,7 @@ export default function CreateProfessional() {
                             <FormLabel>{PC_CONFIG.labels.configuration.scheduleTimeInit}</FormLabel>
                             <FormControl className='h-9'>
                               {/* prettier-ignore */}
-                              <InputMask 
+                              <InputMask2 
                                 mask='99:99' 
                                 maskPlaceholder='--:--' 
                                 alwaysShowMask={false} 
@@ -462,7 +462,7 @@ export default function CreateProfessional() {
                                 {...field} 
                               >
                                 <Input />
-                              </InputMask>
+                              </InputMask2>
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -476,7 +476,7 @@ export default function CreateProfessional() {
                             <FormLabel>{PC_CONFIG.labels.configuration.scheduleTimeEnd}</FormLabel>
                             <FormControl className='h-9'>
                               {/* prettier-ignore */}
-                              <InputMask 
+                              <InputMask2 
                                 mask='99:99' 
                                 maskPlaceholder='--:--' 
                                 alwaysShowMask={false} 
@@ -484,7 +484,7 @@ export default function CreateProfessional() {
                                 {...field} 
                               >
                                 <Input />
-                              </InputMask>
+                              </InputMask2>
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -501,7 +501,7 @@ export default function CreateProfessional() {
                             <FormLabel>{PC_CONFIG.labels.configuration.timeSlotUnavailableInit}</FormLabel>
                             <FormControl className='h-9'>
                               {/* prettier-ignore */}
-                              <InputMask 
+                              <InputMask2 
                                 mask='99:99' 
                                 maskPlaceholder='--:--' 
                                 alwaysShowMask={false} 
@@ -509,7 +509,7 @@ export default function CreateProfessional() {
                                 {...field} 
                               >
                                 <Input />
-                              </InputMask>
+                              </InputMask2>
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -523,7 +523,7 @@ export default function CreateProfessional() {
                             <FormLabel>{PC_CONFIG.labels.configuration.timeSlotUnavailableEnd}</FormLabel>
                             <FormControl className='h-9'>
                               {/* prettier-ignore */}
-                              <InputMask 
+                              <InputMask2 
                                 mask='99:99' 
                                 maskPlaceholder='--:--' 
                                 alwaysShowMask={false} 
@@ -531,7 +531,7 @@ export default function CreateProfessional() {
                                 {...field} 
                               >
                                 <Input />
-                              </InputMask>
+                              </InputMask2>
                             </FormControl>
                             <FormMessage />
                           </FormItem>
