@@ -86,13 +86,12 @@ export default function CreateProfessional() {
       scheduleTimeEnd: '',
       scheduleTimeInit: '',
       slotDuration: '',
+      unavailableTimeSlot: {
+        timeSlotUnavailableEnd: '',
+        timeSlotUnavailableInit: '',
+      },
       workingDays: [],
     },
-    unavailableObject: {
-      timeSlotUnavailableEnd: '',
-      timeSlotUnavailableInit: '',
-    },
-
     description: '',
     dni: '',
     email: '',
@@ -109,8 +108,17 @@ export default function CreateProfessional() {
   });
 
   function handleCreateProfessional(data: z.infer<typeof professionalSchema>): void {
-    // console.log(data);
-    ProfessionalApiService.create(data).then((response) => {
+    const formattedData = {
+      ...data,
+      configuration: {
+        ...data.configuration,
+        timeSlotUnavailableEnd: data.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd,
+        timeSlotUnavailableInit: data.configuration.unavailableTimeSlot?.timeSlotUnavailableInit,
+      }
+    };
+    console.log(formattedData);
+
+    ProfessionalApiService.create(formattedData).then((response) => {
       if (response.statusCode === 200) {
         setDisabledSpec(true);
         addNotification({ type: 'success', message: response.message });
