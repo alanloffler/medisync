@@ -22,6 +22,11 @@ export const PROF_SCHEMA = {
       minutesRange: 'Rango de minutos de 00 a 59',
     },
     unavailableTimeSlot: {
+      common: {
+        different: 'Inicio y fin de descanso deben ser diferentes',
+        greaterThanUnavailableTimeInit: 'Fin de descanso debe ser mayor a inicio de descanso',
+        lessThanUnavailableTimeEnd: 'Inicio de descanso debe ser menor a fin de descanso',
+      },
       timeInit: {
         greaterThanTimeInit: 'Debe ser mayor a la hora de inicio de agenda, más la duración de un turno',
         lessThanTimeEnd: 'Debe ser menor a la hora de fin de agenda, menos la duración de un turno',
