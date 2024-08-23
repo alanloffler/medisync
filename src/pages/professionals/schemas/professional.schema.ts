@@ -10,6 +10,7 @@ let slotDuration: string;
 let timeInit: string;
 let timeEnd: string;
 let timeSlotUnavailableInit: string | undefined;
+let timeSlotUnavailableEnd: string | undefined;
 
 export const professionalSchema = z.object({
   available: z.boolean({ message: PROF_SCHEMA.availableMessage }),
@@ -75,70 +76,115 @@ export const professionalSchema = z.object({
     // Unavailable time slot
     unavailableTimeSlot: z
       .object({
-        timeSlotUnavailableInit: z
-          .string()
-          .optional()
-          .superRefine((data, ctx) => {
-            if (data) {
-              data === '--:--' ? (timeSlotUnavailableInit = undefined) : (timeSlotUnavailableInit = data);
-              const [hour, minutes] = data.split(':');
-              // Hour format validation (00-23)
-              if (parseInt(hour) < 0 || parseInt(hour) > 23 || hasHyphen(hour)) {
-                ctx.addIssue({
-                  code: z.ZodIssueCode.custom,
-                  message: PROF_SCHEMA.configuration.common.hourRange,
-                });
-              }
-              // Minutes format validation (00-59)
-              if (parseInt(minutes) < 0 || parseInt(minutes) > 59 || hasHyphen(minutes)) {
-                ctx.addIssue({
-                  code: z.ZodIssueCode.custom,
-                  message: PROF_SCHEMA.configuration.common.minutesRange,
-                });
-              }
-              // Slot time greater than schedule time init plus one slot duration
-              if (timeToMinutes(data) < timeToMinutes(timeInit, slotDuration)) {
-                ctx.addIssue({
-                  code: z.ZodIssueCode.custom,
-                  message: PROF_SCHEMA.configuration.unavailableTimeSlot.timeInit.greaterThanTimeInit,
-                });
-              }
-              // Slot time less than schedule time end minus one slot duration
-              if (timeToMinutes(data) > timeToMinutesLess(timeEnd, slotDuration)) {
-                ctx.addIssue({
-                  code: z.ZodIssueCode.custom,
-                  message: PROF_SCHEMA.configuration.unavailableTimeSlot.timeInit.lessThanTimeEnd,
-                });
-              }
+        timeSlotUnavailableInit: z.string().superRefine((data, ctx) => {
+          if (data) {
+            data === '--:--' ? (timeSlotUnavailableInit = undefined) : (timeSlotUnavailableInit = data);
+            const [hour, minutes] = data.split(':');
+            // Hour format validation (00-23)
+            if (parseInt(hour) < 0 || parseInt(hour) > 23 || hasHyphen(hour)) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: PROF_SCHEMA.configuration.common.hourRange,
+              });
             }
-          }),
-        timeSlotUnavailableEnd: z
-          .string()
-          .optional()
-          .superRefine((data, ctx) => {
-            if (data) {
-              data === '--:--' ? (timeSlotUnavailableInit = undefined) : (timeSlotUnavailableInit = data);
-              // Required if unavailable time init has a valid value
-              if (timeSlotUnavailableInit !== undefined && !data) {
-                ctx.addIssue({
-                  code: z.ZodIssueCode.custom,
-                  message: PROF_SCHEMA.configuration.unavailableTimeSlot.timeEnd.required,
-                });
-              }
+            // Minutes format validation (00-59)
+            if (parseInt(minutes) < 0 || parseInt(minutes) > 59 || hasHyphen(minutes)) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: PROF_SCHEMA.configuration.common.minutesRange,
+              });
             }
-          }),
+            // Slot time greater than schedule time init plus one slot duration
+            if (timeToMinutes(data) < timeToMinutes(timeInit, slotDuration)) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: PROF_SCHEMA.configuration.unavailableTimeSlot.timeInit.greaterThanTimeInit,
+              });
+            }
+            // Slot time less than schedule time end minus one slot duration
+            if (timeToMinutes(data) > timeToMinutesLess(timeEnd, slotDuration)) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: PROF_SCHEMA.configuration.unavailableTimeSlot.timeInit.lessThanTimeEnd,
+              });
+            }
+          }
+        }),
+        timeSlotUnavailableEnd: z.string().superRefine((data, ctx) => {
+          if (data) {
+            data === '--:--' ? (timeSlotUnavailableEnd = undefined) : (timeSlotUnavailableEnd = data);
+            const [hour, minutes] = data.split(':');
+            // Hour format validation (00-23)
+            if (parseInt(hour) < 0 || parseInt(hour) > 23 || hasHyphen(hour)) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: PROF_SCHEMA.configuration.common.hourRange,
+              });
+            }
+            // Minutes format validation (00-59)
+            if (parseInt(minutes) < 0 || parseInt(minutes) > 59 || hasHyphen(minutes)) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: PROF_SCHEMA.configuration.common.minutesRange,
+              });
+            }
+            // Slot time greater than schedule time init plus one slot duration
+            if (timeToMinutes(data) < timeToMinutes(timeInit, slotDuration)) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                //
+                message: PROF_SCHEMA.configuration.unavailableTimeSlot.timeInit.greaterThanTimeInit,
+              });
+            }
+            // Slot time less than schedule time end minus one slot duration
+            if (timeToMinutes(data) > timeToMinutesLess(timeEnd, slotDuration)) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: PROF_SCHEMA.configuration.unavailableTimeSlot.timeInit.lessThanTimeEnd,
+              });
+            }
+          } else {
+            if (timeSlotUnavailableInit !== undefined) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: PROF_SCHEMA.configuration.unavailableTimeSlot.timeEnd.required,
+              });
+            }
+          }
+        }),
       })
-      .superRefine((data, ctx) => {
-        // If unavailable time end has a value, then unavailable time init is required
-        if (timeSlotUnavailableInit === undefined && data) {
+      .optional()
+      .superRefine((_, ctx) => {
+        // Unavailable time init must be less than time end
+        if (timeSlotUnavailableEnd && timeSlotUnavailableInit && timeToMinutes(timeSlotUnavailableInit) > timeToMinutes(timeSlotUnavailableEnd)) {
           ctx.addIssue({
             path: ['timeSlotUnavailableInit'],
             code: z.ZodIssueCode.custom,
-            message: 'Debes ingresar una hora de inicio de descanso!',
+            message: PROF_SCHEMA.configuration.unavailableTimeSlot.common.lessThanUnavailableTimeEnd,
+          });
+        }
+        // Unavailable time end must be greater than time init
+        if (timeSlotUnavailableEnd && timeSlotUnavailableInit && timeToMinutes(timeSlotUnavailableEnd) < timeToMinutes(timeSlotUnavailableInit)) {
+          ctx.addIssue({
+            path: ['timeSlotUnavailableEnd'],
+            code: z.ZodIssueCode.custom,
+            message: PROF_SCHEMA.configuration.unavailableTimeSlot.common.greaterThanUnavailableTimeInit,
+          });
+        }
+        // Unavailable time init and unavailable time end must be different
+        if (timeSlotUnavailableEnd && timeSlotUnavailableInit && timeToMinutes(timeSlotUnavailableEnd) === timeToMinutes(timeSlotUnavailableInit)) {
+          ctx.addIssue({
+            path: ['timeSlotUnavailableEnd'],
+            code: z.ZodIssueCode.custom,
+            message: PROF_SCHEMA.configuration.unavailableTimeSlot.common.different,
+          });
+          ctx.addIssue({
+            path: ['timeSlotUnavailableInit'],
+            code: z.ZodIssueCode.custom,
+            message: PROF_SCHEMA.configuration.unavailableTimeSlot.common.different,
           });
         }
       }),
-
     workingDays: z.array(workingDaySchema).refine(
       (days) => {
         return days.some((day) => day.value === true);
