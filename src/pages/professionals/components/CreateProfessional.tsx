@@ -108,15 +108,17 @@ export default function CreateProfessional() {
   });
 
   function handleCreateProfessional(data: z.infer<typeof professionalSchema>): void {
+    const { configuration, ...formData } = data;
+    const { unavailableTimeSlot, ...configData } = configuration;
+
     const formattedData = {
-      ...data,
+      ...formData,
       configuration: {
-        ...data.configuration,
-        timeSlotUnavailableEnd: data.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd,
-        timeSlotUnavailableInit: data.configuration.unavailableTimeSlot?.timeSlotUnavailableInit,
+        ...configData,
+        timeSlotUnavailableEnd: unavailableTimeSlot?.timeSlotUnavailableEnd,
+        timeSlotUnavailableInit: unavailableTimeSlot?.timeSlotUnavailableInit,
       }
     };
-    console.log(formattedData);
 
     ProfessionalApiService.create(formattedData).then((response) => {
       if (response.statusCode === 200) {
