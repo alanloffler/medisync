@@ -40,7 +40,7 @@ export const APPO_CONFIG = {
   },
   phrases: {
     availableAppointments: 'turnos disponibles',
-    availableDays: 'Días de atención',
+    availableDays: 'Días de atención:',
   },
   steps: {
     text1: 'Seleccionar profesional',
