@@ -26,9 +26,10 @@ interface IProfessionalsCombobox {
     placeholder: string;
     searchText: string;
   };
+  className?: string;
 }
 // React component
-export function ProfessionalsCombobox({ onSelectProfessional, options }: IProfessionalsCombobox) {
+export function ProfessionalsCombobox({ onSelectProfessional, options, className }: IProfessionalsCombobox) {
   const [error, setError] = useState<boolean>(false);
   const [infoCard, setInfoCard] = useState<IInfoCard>({} as IInfoCard);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -67,7 +68,7 @@ export function ProfessionalsCombobox({ onSelectProfessional, options }: IProfes
   return (
     <Popover open={openCombobox} onOpenChange={setOpenCombobox}>
       <PopoverTrigger asChild>
-        <Button role='combobox' aria-expanded={openCombobox} className='w-full justify-between bg-white font-normal text-foreground shadow-sm hover:bg-white'>
+        <Button role='combobox' aria-expanded={openCombobox} className={cn('w-full justify-between bg-white font-normal text-foreground shadow-sm hover:bg-white', className)}>
           {isLoading ? <LoadingDB text={loadingText} /> : value ? capitalize(value) : placeholder}
           <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
         </Button>
