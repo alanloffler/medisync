@@ -9,7 +9,8 @@ export const USER_CONFIG = {
     createUser: 'Agregar paciente',
     remove: 'Eliminar paciente',
   },
-  dbUsers: 'pacientes en la base de datos',
+  dbUsersPlural: 'pacientes en la base de datos',
+  dbUsersSingular: 'paciente en la base de datos',
   dialog: {
     remove: {
       content: {
