@@ -54,6 +54,7 @@ export const APPO_CONFIG = {
   words: {
     hours: 'hs.',
     hoursSeparator: '-',
+    schedule: 'Horarios:',
     shiftPrefix: 'T',
     unavailable: '-',
   },
