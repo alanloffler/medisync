@@ -142,6 +142,7 @@ export default function Appointments() {
         // Get amount of time slots available
         // TODO: filter also by present hour
         const totalAvailableSlots = schedule.totalAvailableSlots(schedule.timeSlots);
+        console.log('totalAvailableSlots', totalAvailableSlots);
         setTotalAvailableSlots(totalAvailableSlots);
       }
     }
@@ -226,31 +227,6 @@ export default function Appointments() {
     setOpenDialog(false);
     setUserSelected({} as IUser);
   }
-
-  // TODO: Rename this for general use
-  // function displayReserveButton(time: string): boolean {
-  //   let today: string;
-  //   let selectedDay: string;
-
-  //   if (date) {
-  //     today = new Date().toISOString().split('T')[0];
-  //     selectedDay = new Date(date).toISOString().split('T')[0];
-
-  //     if (today === selectedDay) {
-  //       const hour: number = parseInt(time.split(':')[0]);
-  //       const actualHour: number = new Date().getHours();
-
-  //       if (hour < actualHour) return false;
-  //       if (
-  //         hour === actualHour &&
-  //         new Date().getMinutes() > parseInt(time.split(':')[1])
-  //       )
-  //         return false;
-  //       return true;
-  //     } else if (selectedDay < today) return false;
-  //     return true;
-  //   } else return false;
-  // }
 
   return (
     <>
