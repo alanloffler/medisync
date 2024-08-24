@@ -298,7 +298,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
         <LoadingDB text={APP_CONFIG.loadingDB.findUsers} className='mt-3' />
       ) : table.getRowModel().rows?.length > 0 ? (
         <>
-          <div className='flex items-center justify-end text-sm font-medium text-slate-400'>{`${totalItems} ${USER_CONFIG.dbUsers}`}</div>
+          <div className='flex items-center justify-end text-sm font-medium text-slate-400'>{totalItems === 1 ? `${totalItems} ${USER_CONFIG.dbUsersSingular}` : `${totalItems} ${USER_CONFIG.dbUsersPlural}`}</div>
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
