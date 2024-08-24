@@ -39,7 +39,7 @@ export default function Appointments() {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [professionalSelected, setProfessionalSelected] = useState<IProfessional>();
   const [refreshAppos, setRefreshAppos] = useState<string>('');
-  const [sameDay, setSameDay] = useState<boolean>(false);
+  // const [sameDay, setSameDay] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedLegibleDate, setSelectedLegibleDate] = useState<string>('');
   const [selectedSlot, setSelectedSlot] = useState<ITimeSlot>({} as ITimeSlot);
@@ -75,8 +75,13 @@ export default function Appointments() {
     setShowCalendar(true);
     // WIP & TODO disabled time slots selection by day and hour
     // setNow(new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }).split(':'));
-    setSameDay(selectedDate ? selectedDate?.getFullYear() >= new Date().getFullYear() && selectedDate?.getMonth() >= new Date().getMonth() && selectedDate?.getDate() >= new Date().getDate() : false);
-    console.log('sameDay', sameDay);
+    // setSameDay(
+    //   selectedDate
+    //     ? selectedDate?.getFullYear() >= new Date().getFullYear() &&
+    //         selectedDate?.getMonth() >= new Date().getMonth() &&
+    //         selectedDate?.getDate() >= new Date().getDate()
+    //     : false,
+    // );
     // const notHourYet = selectedDate?.getHours() < new Date().getHours() || (selectedDate?.getHours() === new Date().getHours() && selectedDate?.getMinutes() < new Date().getMinutes());
     // console.log('notHourYet', notHourYet);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -87,7 +92,10 @@ export default function Appointments() {
   useEffect(() => {
     if (professionalSelected) {
       if (!professionalSelected.configuration) {
-        addNotification({ type: 'error', message: APPO_CONFIG.errors.configurationUnavailable });
+        addNotification({
+          type: 'error',
+          message: APPO_CONFIG.errors.configurationUnavailable,
+        });
         setErrorMessage(APPO_CONFIG.errors.configurationUnavailable);
         return;
       }
@@ -125,9 +133,14 @@ export default function Appointments() {
             schedule.insertAppointments(response);
           }
           if (response.statusCode) addNotification({ type: 'error', message: response.message });
-          if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
+          if (response instanceof Error)
+            addNotification({
+              type: 'error',
+              message: APP_CONFIG.error.server,
+            });
         });
         // Get amount of time slots available
+        // TODO: filter also by present hour
         const totalAvailableSlots = schedule.totalAvailableSlots(schedule.timeSlots);
         setTotalAvailableSlots(totalAvailableSlots);
       }
@@ -214,25 +227,30 @@ export default function Appointments() {
     setUserSelected({} as IUser);
   }
 
-  function displayReserveButton(time: string): boolean {
-    let today: string;
-    let selectedDay: string;
+  // TODO: Rename this for general use
+  // function displayReserveButton(time: string): boolean {
+  //   let today: string;
+  //   let selectedDay: string;
 
-    if (date) {
-      today = new Date().toISOString().split('T')[0];
-      selectedDay = new Date(date).toISOString().split('T')[0];
+  //   if (date) {
+  //     today = new Date().toISOString().split('T')[0];
+  //     selectedDay = new Date(date).toISOString().split('T')[0];
 
-      if (today === selectedDay) {
-        const hour: number = parseInt(time.split(':')[0]);
-        const actualHour: number = new Date().getHours();
+  //     if (today === selectedDay) {
+  //       const hour: number = parseInt(time.split(':')[0]);
+  //       const actualHour: number = new Date().getHours();
 
-        if (hour < actualHour) return false;
-        if (hour === actualHour && new Date().getMinutes() > parseInt(time.split(':')[1])) return false;
-        return true;
-      } else if (selectedDay < today) return false;
-      return true;
-    } else return false;
-  }
+  //       if (hour < actualHour) return false;
+  //       if (
+  //         hour === actualHour &&
+  //         new Date().getMinutes() > parseInt(time.split(':')[1])
+  //       )
+  //         return false;
+  //       return true;
+  //     } else if (selectedDay < today) return false;
+  //     return true;
+  //   } else return false;
+  // }
 
   return (
     <>
@@ -241,9 +259,8 @@ export default function Appointments() {
           <div className='flex h-fit flex-col gap-5 md:mx-auto md:w-1/3 lg:mx-auto lg:w-1/3'>
             <div className='flex w-full flex-col space-y-4'>
               <Steps text={APPO_CONFIG.steps.text1} step='1' className='bg-primary/20 text-primary' />
-              {/* prettier-ignore */}
-              <ProfessionalsCombobox 
-                onSelectProfessional={(professional) => setProfessionalSelected(professional)} 
+              <ProfessionalsCombobox
+                onSelectProfessional={(professional) => setProfessionalSelected(professional)}
                 options={{
                   loadingText: APPO_CONFIG.combobox.loadingText,
                   notFoundText: APPO_CONFIG.combobox.notFoundText,
@@ -266,11 +283,12 @@ export default function Appointments() {
               )}
             </div>
             {professionalSelected && <Separator />}
-            <div className={cn('flex flex-col space-y-4', showCalendar ? 'pointer-events-auto' : 'pointer-events-none')}>
+            <div
+              className={cn('flex flex-col space-y-4', showCalendar ? 'pointer-events-auto' : 'pointer-events-none')}
+            >
               {professionalSelected && (
                 <>
                   <Steps text={APPO_CONFIG.steps.text2} step='2' className='bg-primary/20 text-primary' />
-                  {/* prettier-ignore */}
                   <Calendar
                     captionLayout={'dropdown-buttons'}
                     className='h-fit w-fit flex-row rounded-lg bg-card text-card-foreground shadow-sm'
@@ -305,11 +323,17 @@ export default function Appointments() {
                           <CalendarDays className='h-4 w-4' />
                           <span>{APPO_CONFIG.table.title}</span>
                         </div>
-                        {professionalSelected?._id && <h1>{`${capitalize(professionalSelected?.title.abbreviation)} ${capitalize(professionalSelected?.lastName)}, ${capitalize(professionalSelected?.firstName)}`}</h1>}
+                        {professionalSelected?._id && (
+                          <h1>{`${capitalize(professionalSelected?.title.abbreviation)} ${capitalize(professionalSelected?.lastName)}, ${capitalize(professionalSelected?.firstName)}`}</h1>
+                        )}
                       </div>
                     </CardTitle>
-                    {!errorMessage && <div className='py-2 text-center text-base font-semibold text-primary'>{selectedLegibleDate}</div>}
-                    {showTimeSlots && <div className='mx-4 w-fit rounded-full bg-primary/30 px-2 py-1 text-sm font-semibold'>{`${totalAvailableSlots - appointments.length} ${APPO_CONFIG.phrases.availableAppointments}`}</div>}
+                    {!errorMessage && (
+                      <div className='py-2 text-center text-base font-semibold text-primary'>{selectedLegibleDate}</div>
+                    )}
+                    {showTimeSlots && (
+                      <div className='mx-4 w-fit rounded-full bg-primary/25 px-2 py-1 text-sm font-semibold text-primary'>{`${totalAvailableSlots - appointments.length} ${APPO_CONFIG.phrases.availableAppointments}`}</div>
+                    )}
                   </CardHeader>
                   {errorMessage && (
                     <div className='flex items-center justify-center space-x-2 px-4 py-0 text-rose-500'>
@@ -322,26 +346,43 @@ export default function Appointments() {
                       <Table>
                         <TableHeader>
                           <TableRow>
-                            <TableHead className='w-[60px] text-center font-semibold'>{APPO_CONFIG.table.headers[0]}</TableHead>
-                            <TableHead className='w-[135px] px-2 text-left font-semibold'>{APPO_CONFIG.table.headers[1]}</TableHead>
-                            <TableHead className='px-2 text-left font-semibold'>{APPO_CONFIG.table.headers[2]}</TableHead>
-                            <TableHead className='w-[140px] px-2 text-center font-semibold'>{APPO_CONFIG.table.headers[3]}</TableHead>
+                            <TableHead className='w-[60px] text-center font-semibold'>
+                              {APPO_CONFIG.table.headers[0]}
+                            </TableHead>
+                            <TableHead className='w-[135px] px-2 text-left font-semibold'>
+                              {APPO_CONFIG.table.headers[1]}
+                            </TableHead>
+                            <TableHead className='px-2 text-left font-semibold'>
+                              {APPO_CONFIG.table.headers[2]}
+                            </TableHead>
+                            <TableHead className='w-[140px] px-2 text-center font-semibold'>
+                              {APPO_CONFIG.table.headers[3]}
+                            </TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
                           {timeSlots.map((slot, index) => (
-                            <TableRow key={index} className={`text-base ${slot.available ? 'text-foreground' : 'bg-slate-100 text-slate-400'} ${index === timeSlots.length - 1 ? 'border-none' : 'border-b'}`}>
+                            <TableRow
+                              key={index}
+                              className={`text-base ${slot.available ? 'text-foreground' : 'bg-slate-100 text-slate-400'} ${index === timeSlots.length - 1 ? 'border-none' : 'border-b'}`}
+                            >
                               {slot.available ? (
                                 <>
-                                  <TableCell className='p-1.5 text-center text-sm font-light'>{APPO_CONFIG.words.shiftPrefix + slot.id}</TableCell>
+                                  <TableCell className='p-1.5 text-center text-sm font-light'>
+                                    {APPO_CONFIG.words.shiftPrefix + slot.id}
+                                  </TableCell>
                                   <TableCell className='p-1.5 text-left text-sm font-light'>
                                     {slot.begin} {APPO_CONFIG.words.hours}
                                   </TableCell>
-                                  {slot.appointment?.user ? <TableCell className='p-1.5 text-base font-medium'>{`${capitalize(slot.appointment.user.lastName)}, ${capitalize(slot.appointment.user.firstName)}`}</TableCell> : <TableCell className='p-1.5 text-base font-medium'></TableCell>}
+                                  {slot.appointment?.user ? (
+                                    <TableCell className='p-1.5 text-base font-medium'>{`${capitalize(slot.appointment.user.lastName)}, ${capitalize(slot.appointment.user.firstName)}`}</TableCell>
+                                  ) : (
+                                    <TableCell className='p-1.5 text-base font-medium'></TableCell>
+                                  )}
                                   {/* prettier-ignore */}
                                   <TableCell className='flex items-center justify-end space-x-4 p-1.5'>
                                     {/* Time slot reserve button */}
-                                    {!slot.appointment?.user && displayReserveButton(slot.begin) && (
+                                    {!slot.appointment?.user && CalendarService.displayReserveButton(slot.begin, date) && (
                                       <Button 
                                         onClick={() => handleDialog('reserve', slot)} 
                                         variant='default' 
@@ -379,9 +420,14 @@ export default function Appointments() {
                                 </>
                               ) : (
                                 <>
-                                  <TableCell className='p-1.5 text-center text-sm font-semibold'>{APPO_CONFIG.words.unavailable}</TableCell>
+                                  <TableCell className='p-1.5 text-center text-sm font-semibold'>
+                                    {APPO_CONFIG.words.unavailable}
+                                  </TableCell>
                                   <TableCell className='p-1.5 text-left text-sm'>
-                                    {slot.available ? slot.begin : `${slot.begin} ${APPO_CONFIG.words.hoursSeparator} ${slot.end}`} {APPO_CONFIG.words.hours}
+                                    {slot.available
+                                      ? slot.begin
+                                      : `${slot.begin} ${APPO_CONFIG.words.hoursSeparator} ${slot.end}`}{' '}
+                                    {APPO_CONFIG.words.hours}
                                   </TableCell>
                                   <TableCell className='p-1.5'></TableCell>
                                   <TableCell className='p-1.5'></TableCell>
@@ -408,13 +454,18 @@ export default function Appointments() {
             {dialogContent.action === 'reserve' && (
               <div className='pt-4'>
                 <div className='pt-4'>
-                  <UsersCombo searchBy='dni' searchResult={(e) => setUserSelected(e)} placeholder={APPO_CONFIG.dialog.reserve.search.placeholder} />
+                  <UsersCombo
+                    searchBy='dni'
+                    searchResult={(e) => setUserSelected(e)}
+                    placeholder={APPO_CONFIG.dialog.reserve.search.placeholder}
+                  />
                   {userSelected._id && (
                     <>
                       <div className='flex items-center space-x-2 py-4'>
                         <ClipboardCheck className='h-5 w-5' strokeWidth={2} />
                         <span>
-                          Reserva de turno para <span className='font-bold'>{`${capitalize(userSelected.lastName)}, ${capitalize(userSelected.firstName)}`}</span>
+                          Reserva de turno para{' '}
+                          <span className='font-bold'>{`${capitalize(userSelected.lastName)}, ${capitalize(userSelected.firstName)}`}</span>
                         </span>
                       </div>
                       <div className='flex items-center space-x-2'>
