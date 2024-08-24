@@ -86,12 +86,14 @@ export class AppoSchedule {
       currentTime = nextTime;
     }
 
-    const notAvailableSlot: ITimeRangeString = {
-      begin: notAvailableSlots[0].begin,
-      end: notAvailableSlots[notAvailableSlots.length - 1].end,
-    };
-
-    this.insertNotAvailableSlot(slots, notAvailableSlot);
+    if (notAvailableSlots.length > 0 && notAvailableSlots[0].begin && notAvailableSlots[notAvailableSlots.length - 1].end) {
+      const notAvailableSlot: ITimeRangeString = {
+        begin: notAvailableSlots[0].begin,
+        end: notAvailableSlots[notAvailableSlots.length - 1].end,
+      };
+      
+      this.insertNotAvailableSlot(slots, notAvailableSlot);
+    }
 
     return slots;
   }
