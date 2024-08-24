@@ -141,7 +141,7 @@ export default function Appointments() {
         });
         // Get amount of time slots available
         // TODO: filter also by present hour
-        const totalAvailableSlots = schedule.totalAvailableSlots(schedule.timeSlots);
+        const totalAvailableSlots = schedule.totalAvailableSlots(schedule.timeSlots, selectedDate);
         console.log('totalAvailableSlots', totalAvailableSlots);
         setTotalAvailableSlots(totalAvailableSlots);
       }
@@ -358,7 +358,8 @@ export default function Appointments() {
                                   {/* prettier-ignore */}
                                   <TableCell className='flex items-center justify-end space-x-4 p-1.5'>
                                     {/* Time slot reserve button */}
-                                    {!slot.appointment?.user && CalendarService.displayReserveButton(slot.begin, date) && (
+                                    {/* {!slot.appointment?.user && CalendarService.displayReserveButton(slot.begin, date) && ( */}
+                                    {!slot.appointment?.user && (
                                       <Button 
                                         onClick={() => handleDialog('reserve', slot)} 
                                         variant='default' 
