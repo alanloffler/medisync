@@ -62,7 +62,12 @@ export default function Appointments() {
       const legibleWorkingDays = CalendarService.getLegibleWorkingDays(professionalSelected.configuration.workingDays);
       setLegibleWorkingDays(legibleWorkingDays);
 
-      const legibleSchedule = CalendarService.getLegibleSchedule(professionalSelected.configuration.scheduleTimeInit, professionalSelected.configuration.scheduleTimeEnd, professionalSelected.configuration.timeSlotUnavailableInit, professionalSelected.configuration.timeSlotUnavailableEnd);
+      const legibleSchedule = CalendarService.getLegibleSchedule(
+        professionalSelected.configuration.scheduleTimeInit,
+        professionalSelected.configuration.scheduleTimeEnd,
+        professionalSelected.configuration.timeSlotUnavailableInit || undefined,
+        professionalSelected.configuration.timeSlotUnavailableEnd || undefined,
+      );
       setLegibleSchedule(legibleSchedule);
     }
 
@@ -224,7 +229,8 @@ export default function Appointments() {
         if (hour < actualHour) return false;
         if (hour === actualHour && new Date().getMinutes() > parseInt(time.split(':')[1])) return false;
         return true;
-      } else return true;
+      } else if (selectedDay < today) return false;
+      return true;
     } else return false;
   }
 
@@ -270,7 +276,7 @@ export default function Appointments() {
                     className='h-fit w-fit flex-row rounded-lg bg-card text-card-foreground shadow-sm'
                     disabled={[
                       { dayOfWeek: disabledDays },
-                      { before: new Date() }, // uncomment this after show reserve button works!
+                      //{ before: new Date() }, // uncomment this after show reserve button works!
                       { from: new Date(2024, 5, 5) },
                     ]}
                     locale={APPO_CONFIG.calendar.language === 'es' ? es : enUS}
