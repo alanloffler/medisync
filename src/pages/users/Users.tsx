@@ -65,9 +65,19 @@ export default function Users() {
                 <h1 className='text-lg font-semibold'>{USER_CONFIG.search.label}</h1>
                 <div className='relative w-full items-center'>
                   <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
-                  <Input onClick={() => setSearchByName('')} onChange={handleSearchByDNI} value={searchByDNI} type='number' placeholder={USER_CONFIG.search.placeholder.dni} className='bg-background pl-10 shadow-sm' />
+                  <Input
+                    onClick={() => setSearchByName('')}
+                    onChange={handleSearchByDNI}
+                    value={searchByDNI}
+                    type='number'
+                    placeholder={USER_CONFIG.search.placeholder.dni}
+                    className='bg-background pl-10 shadow-sm'
+                  />
                   {searchByDNI && (
-                    <button onClick={() => setSearchByDNI('')} className='absolute right-3 top-3 text-muted-foreground hover:text-black'>
+                    <button
+                      onClick={() => setSearchByDNI('')}
+                      className='absolute right-3 top-3 text-muted-foreground hover:text-black'
+                    >
                       <X className='h-4 w-4' />
                     </button>
                   )}
@@ -77,15 +87,27 @@ export default function Users() {
               <div className='flex flex-col space-y-4'>
                 <div className='relative w-full items-center'>
                   <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
-                  <Input onClick={() => setSearchByDNI('')} onChange={handleSearchByName} value={searchByName} type='text' placeholder={USER_CONFIG.search.placeholder.name} className='bg-background pl-10 shadow-sm' />
+                  <Input
+                    onClick={() => setSearchByDNI('')}
+                    onChange={handleSearchByName}
+                    value={searchByName}
+                    type='text'
+                    placeholder={USER_CONFIG.search.placeholder.name}
+                    className='bg-background pl-10 shadow-sm'
+                  />
                   {searchByName && (
-                    <button onClick={() => setSearchByName('')} className='absolute right-3 top-3 text-muted-foreground hover:text-black'>
+                    <button
+                      onClick={() => setSearchByName('')}
+                      className='absolute right-3 top-3 text-muted-foreground hover:text-black'
+                    >
                       <X className='h-4 w-4' />
                     </button>
                   )}
                 </div>
               </div>
-              {errorMessage && <div className='flex flex-row items-center text-xs font-medium text-rose-400'>{errorMessage}</div>}
+              {errorMessage && (
+                <div className='flex flex-row items-center text-xs font-medium text-rose-400'>{errorMessage}</div>
+              )}
               {/* Enable tooltips */}
               <div className='flex flex-row items-center space-x-2'>
                 <Switch id='tooltips' checked={helpChecked} onCheckedChange={() => setHelpChecked(!helpChecked)} />
@@ -147,7 +169,11 @@ export default function Users() {
                     <TooltipProvider delayDuration={0.3}>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button variant={'tableHeaderPrimary'} size={'miniIcon'} onClick={() => navigate('/users/create')}>
+                          <Button
+                            variant={'tableHeaderPrimary'}
+                            size={'miniIcon'}
+                            onClick={() => navigate('/users/create')}
+                          >
                             <CirclePlus className='h-4 w-4' strokeWidth={2} />
                           </Button>
                         </TooltipTrigger>
@@ -167,14 +193,13 @@ export default function Users() {
           </CardHeader>
           {/* Table */}
           <CardContent className='px-3'>
-            {/* prettier-ignore */}
-            <UsersDataTable 
+            <UsersDataTable
               key={reload}
-              setReload={setReload} 
-              search={debouncedSearchByName || debouncedSearchByDNI} 
-              reload={reload} 
-              setErrorMessage={setErrorMessage} 
-              help={helpChecked} 
+              setReload={setReload}
+              search={debouncedSearchByName || debouncedSearchByDNI}
+              reload={reload}
+              setErrorMessage={setErrorMessage}
+              help={helpChecked}
             />
           </CardContent>
         </Card>
