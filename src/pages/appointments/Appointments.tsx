@@ -5,6 +5,7 @@ import { Button } from '@/core/components/ui/button';
 import { Calendar } from '@/core/components/ui/calendar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/core/components/ui/dialog';
+import { Separator } from '@/core/components/ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/core/components/ui/table';
 // App components
 import { ProfessionalsCombobox } from '@/pages/professionals/components/common/ProfessionalsCombobox';
@@ -33,6 +34,7 @@ export default function Appointments() {
   const [dialogContent, setDialogContent] = useState<IDialog>({} as IDialog);
   const [disabledDays, setDisabledDays] = useState<number[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>();
+  const [legibleSchedule, setLegibleSchedule] = useState<string>('');
   const [legibleWorkingDays, setLegibleWorkingDays] = useState<string>('');
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [professionalSelected, setProfessionalSelected] = useState<IProfessional>();
@@ -46,7 +48,6 @@ export default function Appointments() {
   const [timeSlots, setTimeSlots] = useState<ITimeSlot[]>([] as ITimeSlot[]);
   const [totalAvailableSlots, setTotalAvailableSlots] = useState<number>(0);
   const [userSelected, setUserSelected] = useState<IUser>({} as IUser);
-  // const [now, setNow] = useState<string[]>([]);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const dateToString = useDateToString();
@@ -57,8 +58,12 @@ export default function Appointments() {
     if (professionalSelected) {
       const calendarDisabledDays = CalendarService.getDisabledDays(professionalSelected.configuration.workingDays);
       setDisabledDays(calendarDisabledDays);
+
       const legibleWorkingDays = CalendarService.getLegibleWorkingDays(professionalSelected.configuration.workingDays);
       setLegibleWorkingDays(legibleWorkingDays);
+
+      const legibleSchedule = CalendarService.getLegibleSchedule(professionalSelected.configuration.scheduleTimeInit, professionalSelected.configuration.scheduleTimeEnd, professionalSelected.configuration.timeSlotUnavailableInit, professionalSelected.configuration.timeSlotUnavailableEnd);
+      setLegibleSchedule(legibleSchedule);
     }
 
     setSelectedDate(undefined);
@@ -206,9 +211,9 @@ export default function Appointments() {
 
   return (
     <>
-      <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8'>
+      <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6'>
         <div className='flex flex-col gap-4 overflow-x-auto md:flex-row lg:flex-row'>
-          <div className='flex h-fit flex-col gap-6 md:mx-auto md:w-1/3 lg:mx-auto lg:w-1/3'>
+          <div className='flex h-fit flex-col gap-5 md:mx-auto md:w-1/3 lg:mx-auto lg:w-1/3'>
             <div className='flex w-full flex-col space-y-4'>
               <Steps text={APPO_CONFIG.steps.text1} step='1' className='bg-primary/20 text-primary' />
               {/* prettier-ignore */}
@@ -220,19 +225,22 @@ export default function Appointments() {
                   placeholder: APPO_CONFIG.combobox.placeholder,
                   searchText: APPO_CONFIG.combobox.searchText,
                 }}
-                className='w-1/2'
+                className='w-fit'
               />
-              <div className='mt-2 flex flex-col text-slate-500 w-full'>
-                <div className='flex flex-row items-center space-x-1'>
-                  <span className='text-sm font-semibold underline'>{APPO_CONFIG.phrases.availableDays}</span>
-                  <span className='text-sm font-medium'>{legibleWorkingDays}</span>
+              {professionalSelected && (
+                <div className='mt-2 flex w-full flex-col text-slate-500'>
+                  <div className='flex flex-row items-center space-x-2'>
+                    <span className='text-sm font-semibold underline'>{APPO_CONFIG.phrases.availableDays}</span>
+                    <span className='text-sm font-normal'>{legibleWorkingDays}</span>
+                  </div>
+                  <div className='flex flex-row items-center space-x-2'>
+                    <span className='text-sm font-semibold underline'>{APPO_CONFIG.words.schedule}</span>
+                    <span className='text-sm font-normal'>{legibleSchedule}</span>
+                  </div>
                 </div>
-                <div className='flex flex-row items-center space-x-1'>
-                  <span className='text-sm font-semibold underline'>{'Horarios:'}</span>
-                  <span className='text-sm font-medium'>{legibleWorkingDays}</span>
-                </div>
-              </div>
+              )}
             </div>
+            {professionalSelected && <Separator />}
             <div className={cn('flex flex-col space-y-4', showCalendar ? 'pointer-events-auto' : 'pointer-events-none')}>
               {professionalSelected && (
                 <>
