@@ -73,6 +73,7 @@ export default function Appointments() {
 
     setSelectedDate(undefined);
     setShowCalendar(true);
+    setSelectedDate(new Date());
     // WIP & TODO disabled time slots selection by day and hour
     // setNow(new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }).split(':'));
     // setSameDay(
@@ -141,8 +142,7 @@ export default function Appointments() {
         });
         // Get amount of time slots available
         // TODO: filter also by present hour
-        const totalAvailableSlots = schedule.totalAvailableSlots(schedule.timeSlots, selectedDate);
-        console.log('totalAvailableSlots', totalAvailableSlots);
+        const totalAvailableSlots = schedule.totalAvailableSlots(schedule.timeSlots);
         setTotalAvailableSlots(totalAvailableSlots);
       }
     }
@@ -288,7 +288,7 @@ export default function Appointments() {
             </div>
           </div>
           <div className='flex flex-col gap-4 md:w-2/3 lg:w-2/3'>
-            {selectedDate && (
+            {professionalSelected && selectedDate && (
               <>
                 <Steps text={APPO_CONFIG.steps.text3} step='3' className='bg-primary/20 text-primary' />
                 <Card className='w-full'>
@@ -358,8 +358,7 @@ export default function Appointments() {
                                   {/* prettier-ignore */}
                                   <TableCell className='flex items-center justify-end space-x-4 p-1.5'>
                                     {/* Time slot reserve button */}
-                                    {/* {!slot.appointment?.user && CalendarService.displayReserveButton(slot.begin, date) && ( */}
-                                    {!slot.appointment?.user && (
+                                    {!slot.appointment?.user && CalendarService.displayReserveButton(slot.begin, date) && (
                                       <Button 
                                         onClick={() => handleDialog('reserve', slot)} 
                                         variant='default' 
