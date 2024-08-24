@@ -115,19 +115,20 @@ export default function CreateProfessional() {
       ...formData,
       configuration: {
         ...configData,
-        timeSlotUnavailableEnd: unavailableTimeSlot?.timeSlotUnavailableEnd,
-        timeSlotUnavailableInit: unavailableTimeSlot?.timeSlotUnavailableInit,
+        timeSlotUnavailableEnd: unavailableTimeSlot?.timeSlotUnavailableEnd === '' ? null : unavailableTimeSlot?.timeSlotUnavailableEnd,
+        timeSlotUnavailableInit: unavailableTimeSlot?.timeSlotUnavailableInit === '' ? null : unavailableTimeSlot?.timeSlotUnavailableInit,
       }
     };
-
+    
     ProfessionalApiService.create(formattedData).then((response) => {
       if (response.statusCode === 200) {
         setDisabledSpec(true);
         addNotification({ type: 'success', message: response.message });
+        createForm.reset(defaultValues);
+        navigate('/professionals');
       }
       if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
       if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
-      createForm.reset(defaultValues);
     });
   }
 
