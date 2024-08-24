@@ -17,7 +17,7 @@ export class CalendarService {
   public static getLegibleWorkingDays(daysArray: IWorkingDay[]): string {
     const stringDays = this.getStringWorkingDays(daysArray);
     if (!stringDays) return '';
-    
+
     const legibleDays: string = stringDays
       .map((item, index, arr) => {
         if (arr.length === 1) {
@@ -32,10 +32,10 @@ export class CalendarService {
 
     return legibleDays;
   }
-  
+
   private static getStringWorkingDays(days: IWorkingDay[]): string[] {
     if (!days) return [];
-    
+
     const daysOfWeek: string[] = APP_CONFIG.daysofWeek.long;
 
     const daysArray = days
@@ -51,5 +51,18 @@ export class CalendarService {
       .filter((value) => typeof value === 'string');
 
     return daysArray as string[];
+  }
+
+  public static getLegibleSchedule(
+    slotTimeInit: string, 
+    slotTimeEnd: string, 
+    slotUnavailableTimeInit: string | undefined, 
+    slotUnavailableTimeEnd: string | undefined
+  ): string {
+    if (slotUnavailableTimeInit && slotUnavailableTimeEnd) {
+      return `${slotTimeInit} ${PV_CONFIG.words.hoursSeparator} ${slotUnavailableTimeInit} ${PV_CONFIG.words.slotsSeparator} ${slotUnavailableTimeEnd} ${PV_CONFIG.words.hoursSeparator} ${slotTimeEnd}`;
+    } else {
+      return `${slotTimeInit} ${PV_CONFIG.words.hoursSeparator} ${slotTimeEnd}`;
+    }
   }
 }
