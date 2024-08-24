@@ -209,6 +209,25 @@ export default function Appointments() {
     setUserSelected({} as IUser);
   }
 
+  function displayReserveButton(time: string): boolean {
+    let today: string;
+    let selectedDay: string;
+
+    if (date) {
+      today = new Date().toISOString().split('T')[0];
+      selectedDay = new Date(date).toISOString().split('T')[0];
+
+      if (today === selectedDay) {
+        const hour: number = parseInt(time.split(':')[0]);
+        const actualHour: number = new Date().getHours();
+
+        if (hour < actualHour) return false;
+        if (hour === actualHour && new Date().getMinutes() > parseInt(time.split(':')[1])) return false;
+        return true;
+      } else return true;
+    } else return false;
+  }
+
   return (
     <>
       <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6'>
@@ -313,23 +332,40 @@ export default function Appointments() {
                                     {slot.begin} {APPO_CONFIG.words.hours}
                                   </TableCell>
                                   {slot.appointment?.user ? <TableCell className='p-1.5 text-base font-medium'>{`${capitalize(slot.appointment.user.lastName)}, ${capitalize(slot.appointment.user.firstName)}`}</TableCell> : <TableCell className='p-1.5 text-base font-medium'></TableCell>}
+                                  {/* prettier-ignore */}
                                   <TableCell className='flex items-center justify-end space-x-4 p-1.5'>
-                                    {/* TODO: button should only be shown if the date is in the future and the time is in the future */}
-                                    {/* TODO: this partially works, need some tests and usage, the hour is not sure it is working properly */}
-                                    <span>{selectedDate && selectedDate.getDate() + ' - ' + new Date().getDate()}</span>
-                                    {selectedDate && selectedDate?.getDate() >= new Date().getDate() && selectedDate?.getTime() >= new Date().getTime() ? <>Show button</> : <>Do not show button</>}
-                                    {!slot.appointment?.user && (
-                                      <Button onClick={() => handleDialog('reserve', slot)} variant={'default'} size={'xs'}>
+                                    {/* Time slot reserve button */}
+                                    {!slot.appointment?.user && displayReserveButton(slot.begin) && (
+                                      <Button 
+                                        onClick={() => handleDialog('reserve', slot)} 
+                                        variant='default' 
+                                        size='xs' 
+                                        className='border border-emerald-300/50 bg-emerald-200 px-2 py-1 text-xs text-emerald-700 shadow-none hover:bg-emerald-300'
+                                      >
                                         {APPO_CONFIG.buttons.addAppointment}
                                       </Button>
                                     )}
+                                    {/* Time slot view button */}
                                     {slot.appointment?.user && (
-                                      <Button onClick={() => navigate(`/appointments/${slot.appointment?._id}`)} variant={'table'} size={'xs'} className='bg-slate-100 text-primary'>
+                                      <Button 
+                                        onClick={() => navigate(`/appointments/${slot.appointment?._id}`)} 
+                                        variant='table' 
+                                        size='xs' 
+                                        className='border border-sky-300/50 bg-sky-200 px-2 py-1 text-xs text-sky-700 shadow-none hover:bg-sky-300'
+                                      >
                                         {APPO_CONFIG.buttons.viewAppointment}
                                       </Button>
                                     )}
+                                    {/* Time slot cancel button */}
+                                    {/* TODO: change disabled for non-visible ??? */}
                                     {slot.appointment?.user && (
-                                      <Button onClick={() => handleDialog('cancel', slot)} variant={'table'} size={'xs'} className='bg-slate-100 text-primary'>
+                                      <Button
+                                        // disabled={!displayReserveButton(slot.begin)}
+                                        onClick={() => handleDialog('cancel', slot)}
+                                        variant='table'
+                                        size='xs'
+                                        className='border border-rose-300/50 bg-rose-200 px-2 py-1 text-xs text-rose-700 shadow-none hover:bg-rose-300'
+                                      >
                                         {APPO_CONFIG.buttons.cancelAppointment}
                                       </Button>
                                     )}
