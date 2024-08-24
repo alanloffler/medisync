@@ -65,4 +65,28 @@ export class CalendarService {
       return `${slotTimeInit} ${PV_CONFIG.words.hoursSeparator} ${slotTimeEnd}`;
     }
   }
+
+  public static displayReserveButton(time: string, date: Date | undefined): boolean {
+    let today: string;
+    let selectedDay: string;
+
+    if (date) {
+      today = new Date().toISOString().split('T')[0];
+      selectedDay = new Date(date).toISOString().split('T')[0];
+
+      if (today === selectedDay) {
+        const hour: number = parseInt(time.split(':')[0]);
+        const actualHour: number = new Date().getHours();
+
+        if (hour < actualHour) return false;
+        if (
+          hour === actualHour &&
+          new Date().getMinutes() > parseInt(time.split(':')[1])
+        )
+          return false;
+        return true;
+      } else if (selectedDay < today) return false;
+      return true;
+    } else return false;
+  }
 }
