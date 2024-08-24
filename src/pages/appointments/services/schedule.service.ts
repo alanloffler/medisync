@@ -72,7 +72,7 @@ export class AppoSchedule {
           id: counter,
           begin: this.formatTime(currentTime),
           end: this.formatTime(nextTime),
-          available,
+          available: true,
         });
         counter++;
       } else {
@@ -80,7 +80,7 @@ export class AppoSchedule {
           id: -1,
           begin: this.formatTime(currentTime),
           end: this.formatTime(nextTime),
-          available,
+          available: false,
         });
       }
       currentTime = nextTime;
