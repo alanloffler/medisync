@@ -39,7 +39,6 @@ export default function Appointments() {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [professionalSelected, setProfessionalSelected] = useState<IProfessional>();
   const [refreshAppos, setRefreshAppos] = useState<string>('');
-  // const [sameDay, setSameDay] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedLegibleDate, setSelectedLegibleDate] = useState<string>('');
   const [selectedSlot, setSelectedSlot] = useState<ITimeSlot>({} as ITimeSlot);
@@ -74,17 +73,6 @@ export default function Appointments() {
     setSelectedDate(undefined);
     setShowCalendar(true);
     setSelectedDate(new Date());
-    // WIP & TODO disabled time slots selection by day and hour
-    // setNow(new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }).split(':'));
-    // setSameDay(
-    //   selectedDate
-    //     ? selectedDate?.getFullYear() >= new Date().getFullYear() &&
-    //         selectedDate?.getMonth() >= new Date().getMonth() &&
-    //         selectedDate?.getDate() >= new Date().getDate()
-    //     : false,
-    // );
-    // const notHourYet = selectedDate?.getHours() < new Date().getHours() || (selectedDate?.getHours() === new Date().getHours() && selectedDate?.getMinutes() < new Date().getMinutes());
-    // console.log('notHourYet', notHourYet);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [professionalSelected]);
 
