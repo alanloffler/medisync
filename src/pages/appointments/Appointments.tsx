@@ -163,8 +163,7 @@ export default function Appointments() {
 
       if (selectedDate < todayDate) result = 0;
       if (selectedDate > todayDate) result = availableSlots.filter((slot) => slot.available && !slot.appointment).length;
-      if (selectedDate === todayDate)
-        result = availableSlots.filter((slot) => slot.available && slot.begin >= todayTime && !slot.appointment).length;
+      if (selectedDate === todayDate) result = availableSlots.filter((slot) => slot.available && slot.begin >= todayTime && !slot.appointment).length;
 
       return result;
     } else return 'Error trying to set date in timeline';
@@ -326,9 +325,9 @@ export default function Appointments() {
                     </CardTitle>
                     {!errorMessage && <div className='py-2 text-center text-base font-semibold text-primary'>{selectedLegibleDate}</div>}
                     {showTimeSlots && (
-                      <div className='flex flex-row items-center justify-center space-x-2'>
-                        <div className='mx-4 w-fit rounded-full bg-primary/25 px-2 py-1 text-sm font-semibold text-primary'>{`${totalAvailableSlots} ${APPO_CONFIG.phrases.availableAppointments}`}</div>
-                        <div className='mx-4 w-fit rounded-full bg-slate-200 px-2 py-1 text-sm font-semibold text-slate-800'>{`${appointments.length} ${APPO_CONFIG.phrases.alreadyReserved}`}</div>
+                      <div className='flex flex-row items-center justify-start space-x-3'>
+                        <div className='w-fit rounded-sm bg-primary/15 border border-primary/20 px-2 py-1 text-sm font-semibold text-primary'>{`${totalAvailableSlots} ${APPO_CONFIG.phrases.availableAppointments}`}</div>
+                        <div className='w-fit rounded-sm bg-slate-100 border border-slate-200 px-2 py-1 text-sm font-semibold text-slate-700'>{`${appointments.length} ${APPO_CONFIG.phrases.alreadyReserved}`}</div>
                       </div>
                     )}
                   </CardHeader>
