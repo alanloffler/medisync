@@ -326,8 +326,10 @@ export default function Appointments() {
                     </CardTitle>
                     {!errorMessage && <div className='py-2 text-center text-base font-semibold text-primary'>{selectedLegibleDate}</div>}
                     {showTimeSlots && (
-                      // <div className='mx-4 w-fit rounded-full bg-primary/25 px-2 py-1 text-sm font-semibold text-primary'>{`${totalAvailableSlots - appointments.length} ${APPO_CONFIG.phrases.availableAppointments}`}</div>
-                      <div className='mx-4 w-fit rounded-full bg-primary/25 px-2 py-1 text-sm font-semibold text-primary'>{`${totalAvailableSlots} ${APPO_CONFIG.phrases.availableAppointments}`}</div>
+                      <div className='flex flex-row items-center justify-center space-x-2'>
+                        <div className='mx-4 w-fit rounded-full bg-primary/25 px-2 py-1 text-sm font-semibold text-primary'>{`${totalAvailableSlots} ${APPO_CONFIG.phrases.availableAppointments}`}</div>
+                        <div className='mx-4 w-fit rounded-full bg-slate-200 px-2 py-1 text-sm font-semibold text-slate-800'>{`${appointments.length} ${APPO_CONFIG.phrases.alreadyReserved}`}</div>
+                      </div>
                     )}
                   </CardHeader>
                   {errorMessage && (
