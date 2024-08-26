@@ -325,7 +325,7 @@ export default function Appointments() {
                     </CardTitle>
                     {!errorMessage && <div className='py-2 text-center text-base font-semibold text-primary'>{selectedLegibleDate}</div>}
                     {showTimeSlots && (
-                      <div className='flex flex-row items-center justify-start space-x-3'>
+                      <div className='flex flex-row items-center justify-start space-x-3 px-3 pb-3'>
                         <div className='w-fit rounded-sm bg-primary/15 border border-primary/20 px-2 py-1 text-sm font-semibold text-primary'>{`${totalAvailableSlots} ${APPO_CONFIG.phrases.availableAppointments}`}</div>
                         <div className='w-fit rounded-sm bg-slate-100 border border-slate-200 px-2 py-1 text-sm font-semibold text-slate-700'>{`${appointments.length} ${APPO_CONFIG.phrases.alreadyReserved}`}</div>
                       </div>
@@ -340,12 +340,12 @@ export default function Appointments() {
                   {showTimeSlots && (
                     <CardContent>
                       <Table>
-                        <TableHeader>
+                        <TableHeader className='bg-slate-100'>
                           <TableRow>
-                            <TableHead className='w-[60px] text-center font-semibold'>{APPO_CONFIG.table.headers[0]}</TableHead>
-                            <TableHead className='w-[135px] px-2 text-left font-semibold'>{APPO_CONFIG.table.headers[1]}</TableHead>
-                            <TableHead className='px-2 text-left font-semibold'>{APPO_CONFIG.table.headers[2]}</TableHead>
-                            <TableHead className='w-[140px] px-2 text-center font-semibold'>{APPO_CONFIG.table.headers[3]}</TableHead>
+                            <TableHead className='py-1 h-0 w-[60px] text-center font-semibold'>{APPO_CONFIG.table.headers[0]}</TableHead>
+                            <TableHead className='py-1 h-0 w-[100px] px-2 text-left font-semibold'>{APPO_CONFIG.table.headers[1]}</TableHead>
+                            <TableHead className='py-1 h-0 text-left font-semibold'>{APPO_CONFIG.table.headers[2]}</TableHead>
+                            <TableHead className='py-1 h-0 w-[140px] px-2 text-center font-semibold'>{APPO_CONFIG.table.headers[3]}</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -356,14 +356,14 @@ export default function Appointments() {
                             >
                               {slot.available ? (
                                 <>
-                                  <TableCell className='p-1.5 text-center text-sm font-light'>{APPO_CONFIG.words.shiftPrefix + slot.id}</TableCell>
-                                  <TableCell className='p-1.5 text-left text-sm font-light'>
+                                  <TableCell className='p-1.5 text-center text-sm font-normal'>{APPO_CONFIG.words.shiftPrefix + slot.id}</TableCell>
+                                  <TableCell className='p-1.5 text-left text-sm font-normal'>
                                     {slot.begin} {APPO_CONFIG.words.hours}
                                   </TableCell>
                                   {slot.appointment?.user ? (
-                                    <TableCell className='p-1.5 text-base font-medium'>{`${capitalize(slot.appointment.user.lastName)}, ${capitalize(slot.appointment.user.firstName)}`}</TableCell>
+                                    <TableCell className='p-1.5 text-base font-normal'>{`${capitalize(slot.appointment.user.lastName)}, ${capitalize(slot.appointment.user.firstName)}`}</TableCell>
                                   ) : (
-                                    <TableCell className='p-1.5 text-base font-medium'></TableCell>
+                                    <TableCell className='p-1.5 text-base font-normal'></TableCell>
                                   )}
                                   {/* prettier-ignore */}
                                   <TableCell className='flex items-center justify-end space-x-4 p-1.5'>
