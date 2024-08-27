@@ -31,8 +31,8 @@ export default function ViewAppointment() {
         setDate(legibleDate(new Date(appointment.day), 'long'));
 
         setEmail({
-          to: response.user.email || 'alanmatiasloffler@gmail.com',
-          subject: `${VIEW_APPOINTMENT_CONFIG.email.subject} ${capitalize(response.data.professional.titleAbbreviation)} ${capitalize(response.data.professional.firstName)} ${capitalize(response.data.professional.lastName)}`,
+          to: response.data.user.email || 'alanmatiasloffler@gmail.com',
+          subject: `${VIEW_APPOINTMENT_CONFIG.email.subject} ${capitalize(response.data.professional.title.abbreviation)} ${capitalize(response.data.professional.firstName)} ${capitalize(response.data.professional.lastName)}`,
           body: VIEW_APPOINTMENT_CONFIG.email.body,
         });
       });
@@ -76,7 +76,7 @@ export default function ViewAppointment() {
         <CardContent className='mt-4 space-y-4'>
           <h1 className='flex items-center justify-center gap-2 text-center text-2xl font-semibold'>
             <span>{`${capitalize(appointment.user?.lastName)}, ${capitalize(appointment.user?.firstName)}`}</span>
-            <Link to={`/`}>
+            <Link to={`/users/${appointment.user?._id}`}>
               <LinkIcon className='h-3.5 w-3.5' strokeWidth={2} />
             </Link>
           </h1>
