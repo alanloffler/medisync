@@ -62,3 +62,10 @@ export const APPO_CONFIG = {
     unavailable: '-',
   },
 };
+
+export const VIEW_APPOINTMENT_CONFIG = {
+  title: 'Turno',
+  words: {
+    hoursAbbreviation: 'hs.',
+  }
+};
