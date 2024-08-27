@@ -176,7 +176,7 @@ export default function Appointments() {
       if (newAppo.statusCode === 200) {
         addNotification({ type: 'success', message: newAppo.message });
         setRefreshAppos(crypto.randomUUID());
-        setOpenDialog(false);
+        handleCancelAnyAction();
       }
       if (newAppo.statusCode > 399) addNotification({ type: 'error', message: newAppo.message });
       if (newAppo instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
@@ -240,7 +240,8 @@ export default function Appointments() {
     }
   }
   // #endregion
-  function handleCancelAnyAction() {
+  // TODO: rename this something like handleDialogInitialState ???
+  function handleCancelAnyAction(): void {
     setOpenDialog(false);
     setUserSelected({} as IUser);
   }
