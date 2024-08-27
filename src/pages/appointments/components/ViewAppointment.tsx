@@ -3,9 +3,10 @@ import { CalendarDays, Clock, Link as LinkIcon, Printer, Send } from 'lucide-rea
 // Components: https://ui.shadcn.com/docs/components
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
 // App
-import { AppointmentApiService } from '../services/appointment.service';
-import { IAppointmentView } from '../services/schedule.service';
+import { AppointmentApiService } from '@/pages/appointments/services/appointment.service';
+import { IAppointmentView } from '@/pages/appointments/services/schedule.service';
 import { IEmail } from '@/core/interfaces/email.interface';
+import { VIEW_APPOINTMENT_CONFIG } from '../config/appointment.config';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useEffect, useRef, useState } from 'react';
 import { useLegibleDate } from '@/core/hooks/useDateToString';
@@ -27,14 +28,12 @@ export default function ViewAppointment() {
   useEffect(() => {
     if (id) {
       AppointmentApiService.findOne(id).then((response) => {
-        console.log(response);
-        setAppointment(response);
-        console.log(appointment.day);
+        setAppointment(response.data);
         setDate(legibleDate(new Date(appointment.day), 'long'));
         // E-mail object
         setEmail({
           to: response.user.email || 'alanmatiasloffler@gmail.com',
-          subject: `Tu turno para ${capitalize(response.professional.titleAbbreviation)} ${capitalize(response.professional.firstName)} ${capitalize(response.professional.lastName)}`,
+          subject: `Tu turno para ${capitalize(response.data.professional.titleAbbreviation)} ${capitalize(response.data.professional.firstName)} ${capitalize(response.data.professional.lastName)}`,
           body: 'Este es el mensaje de tu turno'
         });
       });
@@ -67,9 +66,9 @@ export default function ViewAppointment() {
             <div className='flex flex-row justify-between'>
               <div className='flex flex-row items-center gap-2'>
                 <CalendarDays className='h-4 w-4' />
-                <span>Turno</span>
+                <span>{VIEW_APPOINTMENT_CONFIG.title}</span>
               </div>
-              <div className='flex flex-row items-center'>{`${capitalize(appointment.professional?.titleAbbreviation)} ${capitalize(appointment.professional?.lastName)}, ${capitalize(appointment.professional?.firstName)}`}</div>
+              <div className='flex flex-row items-center'>{`${capitalize(appointment.professional?.title.abbreviation)} ${capitalize(appointment.professional?.lastName)}, ${capitalize(appointment.professional?.firstName)}`}</div>
             </div>
           </CardTitle>
         </CardHeader>
@@ -86,7 +85,7 @@ export default function ViewAppointment() {
           </h2>
           <h2 className='flex items-center gap-5 text-base font-medium'>
             <Clock className='h-5 w-5' strokeWidth={2} />
-            <span>{appointment.hour} hs.</span>
+            <span>{appointment.hour} {VIEW_APPOINTMENT_CONFIG.words.hoursAbbreviation}</span>
           </h2>
           <div className='flex justify-end space-x-5'>
             <button className='transition-colors hover:text-indigo-500' onClick={downloadPDF}>
