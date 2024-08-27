@@ -52,7 +52,7 @@ export default function Appointments() {
   const dateToString = useDateToString();
   const legibleDate = useLegibleDate();
   const navigate = useNavigate();
-
+  // #region professionalSelected actions
   useEffect(() => {
     if (professionalSelected) {
       const calendarDisabledDays: number[] = CalendarService.getDisabledDays(professionalSelected.configuration.workingDays);
@@ -74,16 +74,12 @@ export default function Appointments() {
     setShowCalendar(true);
     setSelectedDate(new Date());
   }, [professionalSelected]);
-
-  // #region Load data
-  // Appointments schedule creation, time slots generation and appointments insertion.
+  // #endregion
+  // #region Load data, schedule creation, time slots generation and appointments insertion.
   useEffect(() => {
     if (professionalSelected) {
       if (!professionalSelected.configuration) {
-        addNotification({
-          type: 'error',
-          message: APPO_CONFIG.errors.configurationUnavailable,
-        });
+        addNotification({ type: 'error',  message: APPO_CONFIG.errors.configurationUnavailable });
         setErrorMessage(APPO_CONFIG.errors.configurationUnavailable);
         return;
       }
@@ -97,10 +93,10 @@ export default function Appointments() {
         }
 
         setSelectedLegibleDate(legibleDate(selectedDate, 'long'));
-        const scheduleDate = dateToString(selectedDate);
+        const scheduleDate: string = dateToString(selectedDate);
         setDate(selectedDate);
 
-        const schedule = new AppoSchedule(
+        const schedule: AppoSchedule = new AppoSchedule(
           `Schedule ${scheduleDate}`,
           new Date(`${scheduleDate}T${professionalSelected.configuration.scheduleTimeInit}`),
           new Date(`${scheduleDate}T${professionalSelected.configuration.scheduleTimeEnd}`),
@@ -125,7 +121,8 @@ export default function Appointments() {
             schedule.insertAppointments(response.data);
             // Get amount of time slots available and set available slots amount on header
             // TODO: today date by hour, ALSO check if day is working day
-            const totalAvailableSlots = schedule.totalAvailableSlots(schedule.timeSlots);
+            // TODO: Move this function to calendar service
+            const totalAvailableSlots: number = schedule.totalAvailableSlots(schedule.timeSlots);
             setTotalAvailableSlots(totalAvailableSlots);
 
             const dateTime: number | string = selectedDateInTimeline(selectedDate, schedule.timeSlots);
@@ -134,7 +131,7 @@ export default function Appointments() {
           // TODO: Make this more generic for use in both cases status === 200 and stattus < 399
           if (response.statusCode > 399) {
             addNotification({ type: 'error', message: response.message });
-            const totalAvailableSlots = schedule.totalAvailableSlots(schedule.timeSlots);
+            const totalAvailableSlots: number = schedule.totalAvailableSlots(schedule.timeSlots);
             setTotalAvailableSlots(totalAvailableSlots);
 
             const dateTime: number | string = selectedDateInTimeline(selectedDate, schedule.timeSlots);
