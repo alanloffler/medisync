@@ -117,13 +117,13 @@ export default function Appointments() {
         setShowCalendar(true);
         setTimeSlots(schedule.timeSlots);
         setShowTimeSlots(true);
-        // Get appointments from database
-        AppointmentApiService.findAllByProfessional(professionalSelected._id, scheduleDate).then((response) => {
-          // Backend response IResponse TODO
-          if (!response.statusCode) {
-            setAppointments(response);
-            schedule.insertAppointments(response);
-
+        // prettier-ignore
+        AppointmentApiService
+        .findAllByProfessional(professionalSelected._id, scheduleDate)
+        .then((response) => {
+          if (response.statusCode === 200) {
+            setAppointments(response.data);
+            schedule.insertAppointments(response.data);
             // Get amount of time slots available and set available slots amount on header
             // TODO: today date by hour, ALSO check if day is working day
             const totalAvailableSlots = schedule.totalAvailableSlots(schedule.timeSlots);
@@ -133,7 +133,7 @@ export default function Appointments() {
             setTotalAvailableSlots(dateTime);
           }
           // TODO: Make this more generic for use in both cases status === 200 and stattus < 399
-          if (response.statusCode) {
+          if (response.statusCode > 399) {
             addNotification({ type: 'error', message: response.message });
             const totalAvailableSlots = schedule.totalAvailableSlots(schedule.timeSlots);
             setTotalAvailableSlots(totalAvailableSlots);
@@ -141,11 +141,7 @@ export default function Appointments() {
             const dateTime: number | string = selectedDateInTimeline(selectedDate, schedule.timeSlots);
             setTotalAvailableSlots(dateTime);
           }
-          if (response instanceof Error)
-            addNotification({
-              type: 'error',
-              message: APP_CONFIG.error.server,
-            });
+          if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
         });
       }
     }
@@ -326,8 +322,8 @@ export default function Appointments() {
                     {!errorMessage && <div className='py-2 text-center text-base font-semibold text-primary'>{selectedLegibleDate}</div>}
                     {showTimeSlots && (
                       <div className='flex flex-row items-center justify-start space-x-3 px-3 pb-3'>
-                        <div className='w-fit rounded-sm bg-primary/15 border border-primary/20 px-2 py-1 text-sm font-semibold text-primary'>{`${totalAvailableSlots} ${totalAvailableSlots === 1 ? APPO_CONFIG.phrases.availableAppointmentSingular : APPO_CONFIG.phrases.availableAppointmentPlural}`}</div>
-                        <div className='w-fit rounded-sm bg-slate-100 border border-slate-200 px-2 py-1 text-sm font-semibold text-slate-700'>{`${appointments.length} ${appointments.length === 1 ? APPO_CONFIG.phrases.alreadyReservedSingular : APPO_CONFIG.phrases.alreadyReservedPlural}`}</div>
+                        <div className='w-fit rounded-sm border border-primary/20 bg-primary/15 px-2 py-1 text-sm font-semibold text-primary'>{`${totalAvailableSlots} ${totalAvailableSlots === 1 ? APPO_CONFIG.phrases.availableAppointmentSingular : APPO_CONFIG.phrases.availableAppointmentPlural}`}</div>
+                        <div className='w-fit rounded-sm border border-slate-200 bg-slate-100 px-2 py-1 text-sm font-semibold text-slate-700'>{`${appointments.length} ${appointments.length === 1 ? APPO_CONFIG.phrases.alreadyReservedSingular : APPO_CONFIG.phrases.alreadyReservedPlural}`}</div>
                       </div>
                     )}
                   </CardHeader>
@@ -342,10 +338,10 @@ export default function Appointments() {
                       <Table>
                         <TableHeader className='bg-slate-100'>
                           <TableRow>
-                            <TableHead className='py-1 h-0 w-[60px] text-center font-semibold'>{APPO_CONFIG.table.headers[0]}</TableHead>
-                            <TableHead className='py-1 h-0 w-[100px] px-2 text-left font-semibold'>{APPO_CONFIG.table.headers[1]}</TableHead>
-                            <TableHead className='py-1 h-0 text-left font-semibold'>{APPO_CONFIG.table.headers[2]}</TableHead>
-                            <TableHead className='py-1 h-0 w-[140px] px-2 text-center font-semibold'>{APPO_CONFIG.table.headers[3]}</TableHead>
+                            <TableHead className='h-0 w-[60px] py-1 text-center font-semibold'>{APPO_CONFIG.table.headers[0]}</TableHead>
+                            <TableHead className='h-0 w-[100px] px-2 py-1 text-left font-semibold'>{APPO_CONFIG.table.headers[1]}</TableHead>
+                            <TableHead className='h-0 py-1 text-left font-semibold'>{APPO_CONFIG.table.headers[2]}</TableHead>
+                            <TableHead className='h-0 w-[140px] px-2 py-1 text-center font-semibold'>{APPO_CONFIG.table.headers[3]}</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
