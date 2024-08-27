@@ -178,7 +178,7 @@ export default function Appointments() {
         setRefreshAppos(crypto.randomUUID());
         setOpenDialog(false);
       }
-      if (newAppo.statusCode) addNotification({ type: 'error', message: newAppo.message });
+      if (newAppo.statusCode > 399) addNotification({ type: 'error', message: newAppo.message });
       if (newAppo instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
     }
     if (!timeSlot) console.log('timeSlot undefined');
