@@ -122,6 +122,7 @@ export default function Appointments() {
             // Get amount of time slots available and set available slots amount on header
             // TODO: today date by hour, ALSO check if day is working day
             // TODO: Move this function to calendar service
+            // TODO: this can be moved outside this response handler ???
             const totalAvailableSlots: number = schedule.totalAvailableSlots(schedule.timeSlots);
             setTotalAvailableSlots(totalAvailableSlots);
 
@@ -162,6 +163,7 @@ export default function Appointments() {
   }
 
   // #endregion
+  // #region Appointment actions (reserve and cancel)
   async function handleReserveAppointment(timeSlot: ITimeSlot | undefined): Promise<void> {
     if (timeSlot && professionalSelected && selectedDate !== undefined) {
       // TODO: data from form
@@ -203,6 +205,7 @@ export default function Appointments() {
       console.log('Appo id undefined');
     }
   }
+  // #endregion
   // #region Dialog
   function handleDialog(action: 'reserve' | 'cancel', slot: ITimeSlot): void {
     setOpenDialog(true);
@@ -215,7 +218,7 @@ export default function Appointments() {
         description: APPO_CONFIG.dialog.reserve.description,
         title: APPO_CONFIG.dialog.reserve.title,
       };
-      
+
       setDialogContent(reserveDialogContent);
     }
 
