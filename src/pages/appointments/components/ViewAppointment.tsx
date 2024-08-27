@@ -24,7 +24,7 @@ export default function ViewAppointment() {
   const { id } = useParams();
   // pdf
   const pdfRef = useRef<HTMLDivElement>(null);
-  // TODO: dynamic data for email object
+
   useEffect(() => {
     if (id) {
       AppointmentApiService.findOne(id).then((response) => {
@@ -33,8 +33,8 @@ export default function ViewAppointment() {
         // E-mail object
         setEmail({
           to: response.user.email || 'alanmatiasloffler@gmail.com',
-          subject: `Tu turno para ${capitalize(response.data.professional.titleAbbreviation)} ${capitalize(response.data.professional.firstName)} ${capitalize(response.data.professional.lastName)}`,
-          body: 'Este es el mensaje de tu turno'
+          subject: `${VIEW_APPOINTMENT_CONFIG.email.subject} ${capitalize(response.data.professional.titleAbbreviation)} ${capitalize(response.data.professional.firstName)} ${capitalize(response.data.professional.lastName)}`,
+          body: VIEW_APPOINTMENT_CONFIG.email.body,
         });
       });
     }
@@ -85,13 +85,19 @@ export default function ViewAppointment() {
           </h2>
           <h2 className='flex items-center gap-5 text-base font-medium'>
             <Clock className='h-5 w-5' strokeWidth={2} />
-            <span>{appointment.hour} {VIEW_APPOINTMENT_CONFIG.words.hoursAbbreviation}</span>
+            <span>
+              {appointment.hour} {VIEW_APPOINTMENT_CONFIG.words.hoursAbbreviation}
+            </span>
           </h2>
           <div className='flex justify-end space-x-5'>
             <button className='transition-colors hover:text-indigo-500' onClick={downloadPDF}>
               <Printer className='h-5 w-5' strokeWidth={2} />
             </button>
-            <a href={`https://mail.google.com/mail/?view=cm&to=${email.to}&su=${email.subject}&body=${email.body}`} target='_blank' className='transition-colors hover:text-indigo-500'>
+            <a
+              href={`https://mail.google.com/mail/?view=cm&to=${email.to}&su=${email.subject}&body=${email.body}`}
+              target='_blank'
+              className='transition-colors hover:text-indigo-500'
+            >
               <Send className='h-5 w-5' strokeWidth={2} />
             </a>
             <button className='transition-colors hover:fill-indigo-500'>
