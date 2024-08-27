@@ -79,7 +79,7 @@ export default function Appointments() {
   useEffect(() => {
     if (professionalSelected) {
       if (!professionalSelected.configuration) {
-        addNotification({ type: 'error',  message: APPO_CONFIG.errors.configurationUnavailable });
+        addNotification({ type: 'error', message: APPO_CONFIG.errors.configurationUnavailable });
         setErrorMessage(APPO_CONFIG.errors.configurationUnavailable);
         return;
       }
@@ -189,9 +189,7 @@ export default function Appointments() {
 
   async function handleCancelAppointment(slot: ITimeSlot): Promise<void> {
     if (slot.appointment?._id) {
-      AppointmentApiService
-      .remove(slot.appointment._id)
-      .then((response) => {
+      AppointmentApiService.remove(slot.appointment._id).then((response) => {
         if (response.statusCode === 200) {
           addNotification({ type: 'success', message: response.message });
           setRefreshAppos(crypto.randomUUID());
