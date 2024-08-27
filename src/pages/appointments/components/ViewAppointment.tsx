@@ -14,23 +14,22 @@ import { useParams, Link } from 'react-router-dom';
 // pdf
 import jsPDF from 'jspdf';
 import * as htmlToImage from 'html-to-image';
-// React component
+
 export default function ViewAppointment() {
   const [appointment, setAppointment] = useState<IAppointmentView>({} as IAppointmentView);
   const [date, setDate] = useState<string>('');
   const [email, setEmail] = useState<IEmail>({} as IEmail);
   const capitalize = useCapitalize();
   const legibleDate = useLegibleDate();
-  const { id } = useParams();
-  // pdf
   const pdfRef = useRef<HTMLDivElement>(null);
+  const { id } = useParams();
 
   useEffect(() => {
     if (id) {
       AppointmentApiService.findOne(id).then((response) => {
         setAppointment(response.data);
         setDate(legibleDate(new Date(appointment.day), 'long'));
-        // E-mail object
+
         setEmail({
           to: response.user.email || 'alanmatiasloffler@gmail.com',
           subject: `${VIEW_APPOINTMENT_CONFIG.email.subject} ${capitalize(response.data.professional.titleAbbreviation)} ${capitalize(response.data.professional.firstName)} ${capitalize(response.data.professional.lastName)}`,
@@ -42,6 +41,7 @@ export default function ViewAppointment() {
 
   function downloadPDF() {
     const input = pdfRef.current;
+
     if (input) {
       htmlToImage.toCanvas(input).then(function (canvas) {
         const pdf = new jsPDF('p', 'px', 'a4', false);
@@ -53,6 +53,7 @@ export default function ViewAppointment() {
         const imgX = (pdfWidth - imgWidth * ratio) / 2;
         const imgY = 0;
         pdf.addImage(canvas, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+        // TODO: rename pdf file generated with user name or email plus date to be unique
         pdf.save('turno.pdf');
       });
     }
