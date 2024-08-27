@@ -64,6 +64,10 @@ export const APPO_CONFIG = {
 };
 
 export const VIEW_APPOINTMENT_CONFIG = {
+  email: {
+    body: 'Este es el mensaje de tu turno',
+    subject: 'Tu turno para',
+  },
   title: 'Turno',
   words: {
     hoursAbbreviation: 'hs.',
