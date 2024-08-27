@@ -215,8 +215,10 @@ export default function Appointments() {
         description: APPO_CONFIG.dialog.reserve.description,
         title: APPO_CONFIG.dialog.reserve.title,
       };
+      
       setDialogContent(reserveDialogContent);
     }
+
     if (action === 'cancel') {
       const cancelDialogContent: IDialog = {
         action: 'cancel',
@@ -236,16 +238,16 @@ export default function Appointments() {
         description: APPO_CONFIG.dialog.cancel.description,
         title: APPO_CONFIG.dialog.cancel.title,
       };
+
       setDialogContent(cancelDialogContent);
     }
   }
-  // #endregion
   // TODO: rename this something like handleDialogInitialState ???
   function handleCancelAnyAction(): void {
     setOpenDialog(false);
     setUserSelected({} as IUser);
   }
-
+  // #endregion
   return (
     <>
       <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6'>
