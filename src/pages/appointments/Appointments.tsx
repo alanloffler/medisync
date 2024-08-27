@@ -119,7 +119,7 @@ export default function Appointments() {
           if (response.statusCode === 200) {
             setAppointments(response.data);
             schedule.insertAppointments(response.data);
-            // Get amount of time slots available and set available slots amount on header
+            // THIS IS A TEST ON ZED EDITOR
             // TODO: today date by hour, ALSO check if day is working day
             // TODO: Move this function to calendar service
             // TODO: this can be moved outside this response handler ???
@@ -371,10 +371,10 @@ export default function Appointments() {
                                   <TableCell className='flex items-center justify-end space-x-4 p-1.5'>
                                     {/* Time slot reserve button */}
                                     {!slot.appointment?.user && CalendarService.displayReserveButton(slot.begin, date) && (
-                                      <Button 
-                                        onClick={() => handleDialog('reserve', slot)} 
-                                        variant='default' 
-                                        size='xs' 
+                                      <Button
+                                        onClick={() => handleDialog('reserve', slot)}
+                                        variant='default'
+                                        size='xs'
                                         className='border border-emerald-300/50 bg-emerald-200 px-2 py-1 text-xs text-emerald-700 shadow-none hover:bg-emerald-300'
                                       >
                                         {APPO_CONFIG.buttons.addAppointment}
@@ -382,10 +382,10 @@ export default function Appointments() {
                                     )}
                                     {/* Time slot view button */}
                                     {slot.appointment?.user && (
-                                      <Button 
-                                        onClick={() => navigate(`/appointments/${slot.appointment?._id}`)} 
-                                        variant='table' 
-                                        size='xs' 
+                                      <Button
+                                        onClick={() => navigate(`/appointments/${slot.appointment?._id}`)}
+                                        variant='table'
+                                        size='xs'
                                         className='border border-sky-300/50 bg-sky-200 px-2 py-1 text-xs text-sky-700 shadow-none hover:bg-sky-300'
                                       >
                                         {APPO_CONFIG.buttons.viewAppointment}
