@@ -39,8 +39,10 @@ export const APPO_CONFIG = {
     configurationUnavailable: 'El profesional no tiene configuración de agenda',
   },
   phrases: {
-    alreadyReserved: 'turnos reservados',
-    availableAppointments: 'turnos disponibles',
+    alreadyReservedPlural: 'turnos reservados',
+    alreadyReservedSingular: 'turno reservado',
+    availableAppointmentPlural: 'turnos disponibles',
+    availableAppointmentSingular: 'turno disponible',
     availableDays: 'Días de atención:',
   },
   steps: {
