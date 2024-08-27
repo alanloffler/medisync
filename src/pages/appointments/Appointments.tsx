@@ -55,13 +55,13 @@ export default function Appointments() {
 
   useEffect(() => {
     if (professionalSelected) {
-      const calendarDisabledDays = CalendarService.getDisabledDays(professionalSelected.configuration.workingDays);
+      const calendarDisabledDays: number[] = CalendarService.getDisabledDays(professionalSelected.configuration.workingDays);
       setDisabledDays(calendarDisabledDays);
 
-      const legibleWorkingDays = CalendarService.getLegibleWorkingDays(professionalSelected.configuration.workingDays);
+      const legibleWorkingDays: string = CalendarService.getLegibleWorkingDays(professionalSelected.configuration.workingDays);
       setLegibleWorkingDays(legibleWorkingDays);
 
-      const legibleSchedule = CalendarService.getLegibleSchedule(
+      const legibleSchedule: string = CalendarService.getLegibleSchedule(
         professionalSelected.configuration.scheduleTimeInit,
         professionalSelected.configuration.scheduleTimeEnd,
         professionalSelected.configuration.timeSlotUnavailableInit || undefined,
@@ -73,7 +73,6 @@ export default function Appointments() {
     setSelectedDate(undefined);
     setShowCalendar(true);
     setSelectedDate(new Date());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [professionalSelected]);
 
   // #region Load data
