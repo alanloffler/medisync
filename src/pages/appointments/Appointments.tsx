@@ -162,7 +162,7 @@ export default function Appointments() {
   }
 
   // #endregion
-  async function handleReserveAppointment(timeSlot: ITimeSlot | undefined) {
+  async function handleReserveAppointment(timeSlot: ITimeSlot | undefined): Promise<void> {
     if (timeSlot && professionalSelected && selectedDate !== undefined) {
       // TODO: data from form
       const newAppo = await AppointmentApiService.create({
@@ -181,26 +181,30 @@ export default function Appointments() {
       if (newAppo.statusCode > 399) addNotification({ type: 'error', message: newAppo.message });
       if (newAppo instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
     }
+    // TODO: handle this error or show in UI in some way
     if (!timeSlot) console.log('timeSlot undefined');
   }
 
-  async function handleCancelAppointment(slot: ITimeSlot) {
+  async function handleCancelAppointment(slot: ITimeSlot): Promise<void> {
     if (slot.appointment?._id) {
-      AppointmentApiService.remove(slot.appointment._id).then((response) => {
+      AppointmentApiService
+      .remove(slot.appointment._id)
+      .then((response) => {
         if (response.statusCode === 200) {
           addNotification({ type: 'success', message: response.message });
           setRefreshAppos(crypto.randomUUID());
           setOpenDialog(false);
         }
-        if (response.statusCode) addNotification({ type: 'error', message: response.message });
+        if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
         if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
       });
     } else {
+      // TODO: handle this error on UI and notification
       console.log('Appo id undefined');
     }
   }
   // #region Dialog
-  function handleDialog(action: 'reserve' | 'cancel', slot: ITimeSlot) {
+  function handleDialog(action: 'reserve' | 'cancel', slot: ITimeSlot): void {
     setOpenDialog(true);
     setSelectedSlot(slot);
 
