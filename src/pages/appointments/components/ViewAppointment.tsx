@@ -1,16 +1,19 @@
 // Icons: https://lucide.dev/icons
-import { CalendarDays, Clock, Link as LinkIcon, Printer, Send } from 'lucide-react';
+import { ArrowLeft, CalendarDays, Clock, Link as LinkIcon, Printer, Send } from 'lucide-react';
 // Components: https://ui.shadcn.com/docs/components
+import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
+// App components
+import { PageHeader } from '@/core/components/common/PageHeader';
 // App
 import { AppointmentApiService } from '@/pages/appointments/services/appointment.service';
 import { IAppointmentView } from '@/pages/appointments/services/schedule.service';
 import { IEmail } from '@/core/interfaces/email.interface';
-import { VIEW_APPOINTMENT_CONFIG } from '../config/appointment.config';
+import { VIEW_APPOINTMENT_CONFIG } from '@/pages/appointments/config/appointment.config';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useEffect, useRef, useState } from 'react';
 import { useLegibleDate } from '@/core/hooks/useDateToString';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 // pdf
 import jsPDF from 'jspdf';
 import * as htmlToImage from 'html-to-image';
@@ -21,6 +24,7 @@ export default function ViewAppointment() {
   const [email, setEmail] = useState<IEmail>({} as IEmail);
   const capitalize = useCapitalize();
   const legibleDate = useLegibleDate();
+  const navigate = useNavigate();
   const pdfRef = useRef<HTMLDivElement>(null);
   const { id } = useParams();
 
@@ -61,13 +65,21 @@ export default function ViewAppointment() {
 
   return (
     <main ref={pdfRef} className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8'>
+      {/* Page Header */}
+      <div className='flex items-center justify-between'>
+        <PageHeader title={VIEW_APPOINTMENT_CONFIG.title} breadcrumb={VIEW_APPOINTMENT_CONFIG.breadcrumb} />
+        <Button variant={'outline'} size={'sm'} className='gap-2' onClick={() => navigate(-1)}>
+          <ArrowLeft className='h-4 w-4' />
+          {VIEW_APPOINTMENT_CONFIG.button.back}
+        </Button>
+      </div>
       <Card className='mx-auto w-full md:w-1/2 lg:w-1/2'>
         <CardHeader>
           <CardTitle className='px-3 text-base'>
             <div className='flex flex-row justify-between'>
               <div className='flex flex-row items-center gap-2'>
                 <CalendarDays className='h-4 w-4' />
-                <span>{VIEW_APPOINTMENT_CONFIG.title}</span>
+                <span>{VIEW_APPOINTMENT_CONFIG.cardTitle}</span>
               </div>
               <div className='flex flex-row items-center'>{`${capitalize(appointment.professional?.title.abbreviation)} ${capitalize(appointment.professional?.lastName)}, ${capitalize(appointment.professional?.firstName)}`}</div>
             </div>
