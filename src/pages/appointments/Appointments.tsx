@@ -365,7 +365,6 @@ export default function Appointments() {
                                   ) : (
                                     <TableCell className='p-1.5 text-base font-normal'></TableCell>
                                   )}
-                                  {/* prettier-ignore */}
                                   <TableCell className='flex items-center justify-end space-x-4 p-1.5'>
                                     {/* Time slot reserve button */}
                                     {!slot.appointment?.user && CalendarService.displayReserveButton(slot.begin, date) && (
@@ -391,7 +390,7 @@ export default function Appointments() {
                                     )}
                                     {/* Time slot cancel button */}
                                     {/* TODO: change disabled for non-visible ??? */}
-                                    {slot.appointment?.user && (
+                                    {slot.appointment?.user && CalendarService.displayReserveButton(slot.begin, date) && (
                                       <Button
                                         // disabled={!displayReserveButton(slot.begin)}
                                         onClick={() => handleDialog('cancel', slot)}
