@@ -178,7 +178,7 @@ export default function Appointments() {
       if (newAppo.statusCode === 200) {
         addNotification({ type: 'success', message: newAppo.message });
         setRefreshAppos(crypto.randomUUID());
-        handleCancelAnyAction();
+        handleResetDialog();
       }
       if (newAppo.statusCode > 399) addNotification({ type: 'error', message: newAppo.message });
       if (newAppo instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
@@ -243,8 +243,8 @@ export default function Appointments() {
       setDialogContent(cancelDialogContent);
     }
   }
-  // TODO: rename this something like handleDialogInitialState ???
-  function handleCancelAnyAction(): void {
+
+  function handleResetDialog(): void {
     setOpenDialog(false);
     setUserSelected({} as IUser);
   }
@@ -464,7 +464,7 @@ export default function Appointments() {
             )}
             {/* <>{dialogContent.content}</> */}
             <div className='flex justify-end gap-6 pt-4'>
-              <Button variant={'secondary'} size={'default'} onClick={() => handleCancelAnyAction()}>
+              <Button variant={'secondary'} size={'default'} onClick={() => handleResetDialog()}>
                 {APPO_CONFIG.buttons.cancelAppointment}
               </Button>
               {dialogContent.action === 'reserve' && (
