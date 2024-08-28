@@ -54,10 +54,10 @@ export class CalendarService {
   }
 
   public static getLegibleSchedule(
-    slotTimeInit: string, 
-    slotTimeEnd: string, 
-    slotUnavailableTimeInit: string | undefined, 
-    slotUnavailableTimeEnd: string | undefined
+    slotTimeInit: string,
+    slotTimeEnd: string,
+    slotUnavailableTimeInit: string | undefined,
+    slotUnavailableTimeEnd: string | undefined,
   ): string {
     if (slotUnavailableTimeInit && slotUnavailableTimeEnd) {
       return `${slotTimeInit} ${PV_CONFIG.words.hoursSeparator} ${slotUnavailableTimeInit} ${PV_CONFIG.words.slotsSeparator} ${slotUnavailableTimeEnd} ${PV_CONFIG.words.hoursSeparator} ${slotTimeEnd}`;
@@ -67,6 +67,7 @@ export class CalendarService {
   }
 
   public static displayReserveButton(time: string, date: Date | undefined): boolean {
+    console.log(time, date);
     let today: string;
     let selectedDay: string;
 
@@ -79,11 +80,7 @@ export class CalendarService {
         const actualHour: number = new Date().getHours();
 
         if (hour < actualHour) return false;
-        if (
-          hour === actualHour &&
-          new Date().getMinutes() > parseInt(time.split(':')[1])
-        )
-          return false;
+        if (hour === actualHour && new Date().getMinutes() > parseInt(time.split(':')[1])) return false;
         return true;
       } else if (selectedDay < today) return false;
       return true;
