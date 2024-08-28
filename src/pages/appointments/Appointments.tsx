@@ -389,10 +389,8 @@ export default function Appointments() {
                                       </Button>
                                     )}
                                     {/* Time slot cancel button */}
-                                    {/* TODO: change disabled for non-visible ??? */}
                                     {slot.appointment?.user && CalendarService.displayReserveButton(slot.begin, date) && (
-                                      <Button
-                                        // disabled={!displayReserveButton(slot.begin)}
+                                      <Button 
                                         onClick={() => handleDialog('cancel', slot)}
                                         variant='table'
                                         size='xs'
@@ -441,6 +439,7 @@ export default function Appointments() {
                       <div className='flex items-center space-x-2 py-4'>
                         <ClipboardCheck className='h-5 w-5' strokeWidth={2} />
                         <span>
+                          {/* TODO: make this message dynamic */}
                           Reserva de turno para{' '}
                           <span className='font-bold'>{`${capitalize(userSelected.lastName)}, ${capitalize(userSelected.firstName)}`}</span>
                         </span>
@@ -462,7 +461,6 @@ export default function Appointments() {
                 </div>
               </div>
             )}
-            {/* <>{dialogContent.content}</> */}
             <div className='flex justify-end gap-6 pt-4'>
               <Button variant={'secondary'} size={'default'} onClick={() => handleResetDialog()}>
                 {APPO_CONFIG.buttons.cancelAppointment}
