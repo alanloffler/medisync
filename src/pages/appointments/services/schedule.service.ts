@@ -1,5 +1,6 @@
 import { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
 import { IUser } from '@/pages/users/interfaces/user.interface';
+import { format } from '@formkit/tempo';
 
 export interface IAppointmentForm {
   day: string;
@@ -67,19 +68,21 @@ export class AppoSchedule {
       const nextTime = this.addMinutes(new Date(currentTime), this.appoMinutes);
       const available = this.isTimeSlotAvailable(currentTime, nextTime, this.unavailableRanges);
 
+      console.log(currentTime);
+
       if (available) {
         slots.push({
           id: counter,
-          begin: this.formatTime(currentTime),
-          end: this.formatTime(nextTime),
+          begin: format(currentTime, 'HH:mm'),
+          end: format(nextTime, 'HH:mm'),
           available: true,
         });
         counter++;
       } else {
         notAvailableSlots.push({
           id: -1,
-          begin: this.formatTime(currentTime),
-          end: this.formatTime(nextTime),
+          begin: format(currentTime, 'HH:mm'),
+          end: format(nextTime, 'HH:mm'),
           available: false,
         });
       }
@@ -121,12 +124,6 @@ export class AppoSchedule {
     }, 0);
 
     return totalAvailableSlots;
-  }
-
-  private formatTime(date: Date): string {
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    return `${hours}:${minutes}`;
   }
 
   private addMinutes(date: Date, minutes: number): Date {
