@@ -1,6 +1,6 @@
 import { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
 import { IUser } from '@/pages/users/interfaces/user.interface';
-import { format } from '@formkit/tempo';
+import { addMinute, format } from '@formkit/tempo';
 
 export interface IAppointmentForm {
   day: string;
@@ -65,10 +65,8 @@ export class AppoSchedule {
     let counter = 1;
 
     while (currentTime < this.endDayHour) {
-      const nextTime = this.addMinutes(new Date(currentTime), this.appoMinutes);
+      const nextTime = addMinute(currentTime, this.appoMinutes);
       const available = this.isTimeSlotAvailable(currentTime, nextTime, this.unavailableRanges);
-
-      console.log(currentTime);
 
       if (available) {
         slots.push({
@@ -124,10 +122,6 @@ export class AppoSchedule {
     }, 0);
 
     return totalAvailableSlots;
-  }
-
-  private addMinutes(date: Date, minutes: number): Date {
-    return new Date(date.getTime() + minutes * 60000);
   }
 
   private isTimeSlotAvailable(begin: Date, end: Date, unavailableRanges: ITimeRange[]): boolean {
