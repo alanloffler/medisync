@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@formkit/tempo':
+        specifier: ^0.1.2
+        version: 0.1.2
       '@hookform/resolvers':
         specifier: ^3.5.0
         version: 3.5.0(react-hook-form@7.51.5(react@18.3.1))
@@ -343,6 +346,9 @@ packages:
 
   '@floating-ui/utils@0.2.2':
     resolution: {integrity: sha512-J4yDIIthosAsRZ5CPYP/jQvUAQtlZTTD/4suA08/FEnlxqW3sKS9iAhgsa9VYLZ6vDHn/ixJgIqRQPotoBjxIw==}
+
+  '@formkit/tempo@0.1.2':
+    resolution: {integrity: sha512-jNPPbjL8oj7hK3eHX++CwbR6X4GKQt+x00/q4yeXkwynXHGKL27dylYhpEgwrmediPP4y7s0XtN1if/M/JYujg==}
 
   '@hookform/resolvers@3.5.0':
     resolution: {integrity: sha512-bgL8iT0/F+2Q7wB7vYSFu3H1c70C3yI2f9evVw0Td3yf6Fa9eBp6nw5L8mzVJV01EGN1Ky+FhlzGSIoZBOeHDA==}
@@ -2469,6 +2475,8 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
 
   '@floating-ui/utils@0.2.2': {}
+
+  '@formkit/tempo@0.1.2': {}
 
   '@hookform/resolvers@3.5.0(react-hook-form@7.51.5(react@18.3.1))':
     dependencies:
