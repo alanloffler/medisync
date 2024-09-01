@@ -61,12 +61,12 @@ export class AppoSchedule {
   public generateTimeSlots(): ITimeSlot[] {
     const slots: ITimeSlot[] = [];
     const notAvailableSlots: ITimeSlot[] = [];
-    let currentTime = this.startDayHour;
-    let counter = 1;
+    let currentTime: Date = this.startDayHour;
+    let counter: number = 1;
 
     while (currentTime < this.endDayHour) {
-      const nextTime = addMinute(currentTime, this.appoMinutes);
-      const available = this.isTimeSlotAvailable(currentTime, nextTime, this.unavailableRanges);
+      const nextTime: Date = addMinute(currentTime, this.appoMinutes);
+      const available: boolean = this.isTimeSlotAvailable(currentTime, nextTime, this.unavailableRanges);
 
       if (available) {
         slots.push({
@@ -92,7 +92,7 @@ export class AppoSchedule {
         begin: notAvailableSlots[0].begin,
         end: notAvailableSlots[notAvailableSlots.length - 1].end,
       };
-      
+
       this.insertNotAvailableSlot(slots, notAvailableSlot);
     }
 
@@ -101,7 +101,7 @@ export class AppoSchedule {
 
   public insertAppointments(appointments: IAppointmentView[]): void {
     for (const appointment of appointments) {
-      const matchingTimeSlotIndex = this.timeSlots.findIndex((timeSlot) => timeSlot.id === appointment.slot);
+      const matchingTimeSlotIndex: number = this.timeSlots.findIndex((timeSlot) => timeSlot.id === appointment.slot);
 
       if (matchingTimeSlotIndex !== -1) {
         this.timeSlots[matchingTimeSlotIndex] = {
