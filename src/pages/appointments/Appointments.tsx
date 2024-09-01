@@ -23,10 +23,14 @@ import { IUser } from '@/pages/users/interfaces/user.interface';
 import { cn } from '@/lib/utils';
 import { es, enUS } from 'date-fns/locale';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
-import { useDateToString, useLegibleDate } from '@/core/hooks/useDateToString';
+import { useLegibleDate } from '@/core/hooks/useDateToString';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
+
+
+import { format } from '@formkit/tempo';
+import { useCapitalizeFirstLetter } from '@/core/hooks/useCapitalizeFirstLetter';
 // React component
 export default function Appointments() {
   const [appointments, setAppointments] = useState<IAppointment[]>([] as IAppointment[]);
@@ -49,7 +53,8 @@ export default function Appointments() {
   const [userSelected, setUserSelected] = useState<IUser>({} as IUser);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
-  const dateToString = useDateToString();
+  const capitalizeFirstLetter = useCapitalizeFirstLetter();
+  // const dateToString = useDateToString(); removed, now use formkit/format
   const legibleDate = useLegibleDate();
   const navigate = useNavigate();
   // #region professionalSelected actions
@@ -92,8 +97,10 @@ export default function Appointments() {
           setTotalAvailableSlots(0);
         }
 
-        setSelectedLegibleDate(legibleDate(selectedDate, 'long'));
-        const scheduleDate: string = dateToString(selectedDate);
+        const legibleTodayDate: string = capitalizeFirstLetter(format(selectedDate, 'full')) || '';
+        setSelectedLegibleDate(legibleTodayDate);
+
+        const scheduleDate: string = format(selectedDate, 'YYYY-MM-DD');
         setDate(selectedDate);
 
         const schedule: AppoSchedule = new AppoSchedule(
@@ -170,7 +177,7 @@ export default function Appointments() {
       const newAppo = await AppointmentApiService.create({
         slot: timeSlot.id,
         professional: professionalSelected?._id || '',
-        day: dateToString(date ?? new Date()),
+        day: capitalizeFirstLetter(format(date ?? new Date(), 'full')) || '',
         hour: timeSlot.begin,
         user: userSelected._id,
       });
