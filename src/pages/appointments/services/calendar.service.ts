@@ -67,7 +67,7 @@ export class CalendarService {
   }
 
   public static displayReserveButton(time: string, date: Date | undefined): boolean {
-    console.log(time, date);
+    // console.log(time, date);
     let today: string;
     let selectedDay: string;
 
