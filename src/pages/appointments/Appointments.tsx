@@ -97,8 +97,8 @@ export default function Appointments() {
           setTotalAvailableSlots(0);
         }
 
-        const legibleTodayDate: string = capitalizeFirstLetter(format(selectedDate, 'full')) || '';
-        setSelectedLegibleDate(legibleTodayDate);
+        const legibleTodayDate: string = format(selectedDate, 'full');
+        setSelectedLegibleDate(capitalizeFirstLetter(legibleTodayDate) || '');
 
         const scheduleDate: string = format(selectedDate, 'YYYY-MM-DD');
         setDate(selectedDate);
