@@ -11,7 +11,7 @@ export class CalendarService {
   // Used in Appointments -> OK
   public static getDisabledDays(professionalWorkingDays: IWorkingDay[]): number[] {
     if (!professionalWorkingDays) return [];
-    const professionalWorkingDaysNumbers = professionalWorkingDays.filter((day) => day.value === true).map((day) => day.day + 1);
+    const professionalWorkingDaysNumbers = professionalWorkingDays.filter((day) => day.value === true).map((day) => day.day);
     const professionalNotWorkingDaysNumbers = CalendarService.days.filter((day) => !professionalWorkingDaysNumbers.includes(day));
 
     return professionalNotWorkingDaysNumbers;
@@ -19,6 +19,7 @@ export class CalendarService {
 
   public static getLegibleWorkingDays(daysArray: IWorkingDay[]): string {
     const stringDays = this.getStringWorkingDays(daysArray);
+    console.log('inside getLegibleWorkingDays', stringDays, daysArray);
     if (!stringDays) return '';
 
     const legibleDays: string = stringDays
@@ -26,8 +27,9 @@ export class CalendarService {
         if (arr.length === 1) {
           return item;
         } else {
-          if (index === arr.length - 1) return `${PV_CONFIG.words.and} ${item}`;
-          if (index === arr.length - 2) return `${item}`;
+          // TODO: when are 3 days make it words.and too (Silvana)
+          if (index === arr.length) return `${PV_CONFIG.words.and} ${item}`;
+          if (index === arr.length - 1) return `${item}`;
           return `${item},`;
         }
       })
