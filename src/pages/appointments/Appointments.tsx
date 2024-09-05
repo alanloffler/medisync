@@ -20,17 +20,16 @@ import { CalendarService } from '@/pages/appointments/services/calendar.service'
 import { IDialog } from '@/core/interfaces/dialog.interface';
 import { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
 import { IUser } from '@/pages/users/interfaces/user.interface';
+import { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
 import { cn } from '@/lib/utils';
 import { es, enUS } from 'date-fns/locale';
+import { format } from '@formkit/tempo';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
-import { useLegibleDate } from '@/core/hooks/useDateToString';
+import { useCapitalizeFirstLetter } from '@/core/hooks/useCapitalizeFirstLetter';
 import { useEffect, useState } from 'react';
+import { useLegibleDate } from '@/core/hooks/useDateToString';
 import { useNavigate } from 'react-router-dom';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
-
-import { format } from '@formkit/tempo';
-import { useCapitalizeFirstLetter } from '@/core/hooks/useCapitalizeFirstLetter';
-import { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
 // React component
 export default function Appointments() {
   const [appointments, setAppointments] = useState<IAppointment[]>([] as IAppointment[]);
