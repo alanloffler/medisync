@@ -86,4 +86,9 @@ export class CalendarService {
       return true;
     } else return false;
   }
+
+  // Used in Appointments
+  public static checkTodayIsWorkingDay(workingDays: IWorkingDay[], dayOfWeekSelected: number): boolean {
+    return (workingDays.some((day) => day.day === dayOfWeekSelected && day.value === true));
+  }
 }
