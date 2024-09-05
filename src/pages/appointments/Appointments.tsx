@@ -31,6 +31,7 @@ import { useNotificationsStore } from '@/core/stores/notifications.store';
 
 import { format } from '@formkit/tempo';
 import { useCapitalizeFirstLetter } from '@/core/hooks/useCapitalizeFirstLetter';
+import { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
 // React component
 export default function Appointments() {
   const [appointments, setAppointments] = useState<IAppointment[]>([] as IAppointment[]);
@@ -97,6 +98,14 @@ export default function Appointments() {
           setTotalAvailableSlots(0);
         }
 
+        // Check if today is professional working day
+        // TODO: move this function to calendar service and use it for conditional rendering the schedule
+        const dayOfWeekSelected: number = selectedDate.getDay() - 1;
+        const workingDays: IWorkingDay[] = professionalSelected.configuration.workingDays;
+        checkTodayIsWorkingDay(workingDays, dayOfWeekSelected);
+
+
+
         const legibleTodayDate: string = format(selectedDate, 'full');
         setSelectedLegibleDate(capitalizeFirstLetter(legibleTodayDate) || '');
 
@@ -151,6 +160,14 @@ export default function Appointments() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDate, refreshAppos]);
+
+  function checkTodayIsWorkingDay(workingDays: IWorkingDay[], dayOfWeekSelected: number): void {
+    if (workingDays.some((day) => day.day === dayOfWeekSelected && day.value === true)) {
+      console.log('today is working day');
+    } else {
+      console.log('today is not working day');
+    }
+  }
 
   function selectedDateInTimeline(date: Date, availableSlots: ITimeSlot[]): number | string {
     if (date) {
