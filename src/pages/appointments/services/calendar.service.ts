@@ -8,10 +8,9 @@ export class CalendarService {
   public static checkTodayIsWorkingDay(workingDays: IWorkingDay[], dayOfWeekSelected: number): boolean {
     return (workingDays.some((day) => day.day === dayOfWeekSelected && day.value === true));
   }
-
+  // Used in Appointments -> OK
   public static getDisabledDays(professionalWorkingDays: IWorkingDay[]): number[] {
     if (!professionalWorkingDays) return [];
-
     const professionalWorkingDaysNumbers = professionalWorkingDays.filter((day) => day.value === true).map((day) => day.day + 1);
     const professionalNotWorkingDaysNumbers = CalendarService.days.filter((day) => !professionalWorkingDaysNumbers.includes(day));
 
