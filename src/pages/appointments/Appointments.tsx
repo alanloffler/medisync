@@ -28,7 +28,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 
-
 import { format } from '@formkit/tempo';
 import { useCapitalizeFirstLetter } from '@/core/hooks/useCapitalizeFirstLetter';
 import { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
@@ -50,6 +49,7 @@ export default function Appointments() {
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [showTimeSlots, setShowTimeSlots] = useState<boolean>(false);
   const [timeSlots, setTimeSlots] = useState<ITimeSlot[]>([] as ITimeSlot[]);
+  const [todayIsWorkingDay, setTodayIsWorkingDay] = useState<boolean>(false);
   const [totalAvailableSlots, setTotalAvailableSlots] = useState<number | string>(0);
   const [userSelected, setUserSelected] = useState<IUser>({} as IUser);
   const addNotification = useNotificationsStore((state) => state.addNotification);
@@ -99,37 +99,36 @@ export default function Appointments() {
         }
 
         // Check if today is professional working day
-        // TODO: move this function to calendar service and use it for conditional rendering the schedule
         const dayOfWeekSelected: number = selectedDate.getDay() - 1;
         const workingDays: IWorkingDay[] = professionalSelected.configuration.workingDays;
-        checkTodayIsWorkingDay(workingDays, dayOfWeekSelected);
+        const todayIsWorkingDay: boolean = CalendarService.checkTodayIsWorkingDay(workingDays, dayOfWeekSelected);
+        setTodayIsWorkingDay(todayIsWorkingDay);
 
+        if (todayIsWorkingDay) {
+          const legibleTodayDate: string = format(selectedDate, 'full');
+          setSelectedLegibleDate(capitalizeFirstLetter(legibleTodayDate) || '');
 
+          const scheduleDate: string = format(selectedDate, 'YYYY-MM-DD');
+          setDate(selectedDate);
 
-        const legibleTodayDate: string = format(selectedDate, 'full');
-        setSelectedLegibleDate(capitalizeFirstLetter(legibleTodayDate) || '');
+          const schedule: AppoSchedule = new AppoSchedule(
+            `Schedule ${scheduleDate}`,
+            new Date(`${scheduleDate}T${professionalSelected.configuration.scheduleTimeInit}`),
+            new Date(`${scheduleDate}T${professionalSelected.configuration.scheduleTimeEnd}`),
+            Number(professionalSelected.configuration.slotDuration),
+            [
+              {
+                begin: new Date(`${scheduleDate}T${professionalSelected.configuration.timeSlotUnavailableInit}`),
+                end: new Date(`${scheduleDate}T${professionalSelected.configuration.timeSlotUnavailableEnd}`),
+              },
+            ],
+          );
 
-        const scheduleDate: string = format(selectedDate, 'YYYY-MM-DD');
-        setDate(selectedDate);
-
-        const schedule: AppoSchedule = new AppoSchedule(
-          `Schedule ${scheduleDate}`,
-          new Date(`${scheduleDate}T${professionalSelected.configuration.scheduleTimeInit}`),
-          new Date(`${scheduleDate}T${professionalSelected.configuration.scheduleTimeEnd}`),
-          Number(professionalSelected.configuration.slotDuration),
-          [
-            {
-              begin: new Date(`${scheduleDate}T${professionalSelected.configuration.timeSlotUnavailableInit}`),
-              end: new Date(`${scheduleDate}T${professionalSelected.configuration.timeSlotUnavailableEnd}`),
-            },
-          ],
-        );
-
-        setShowCalendar(true);
-        setTimeSlots(schedule.timeSlots);
-        setShowTimeSlots(true);
-        // prettier-ignore
-        AppointmentApiService
+          setShowCalendar(true);
+          setTimeSlots(schedule.timeSlots);
+          setShowTimeSlots(true);
+          // prettier-ignore
+          AppointmentApiService
         .findAllByProfessional(professionalSelected._id, scheduleDate)
         .then((response) => {
           if (response.statusCode === 200) {
@@ -156,18 +155,11 @@ export default function Appointments() {
           }
           if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
         });
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDate, refreshAppos]);
-
-  function checkTodayIsWorkingDay(workingDays: IWorkingDay[], dayOfWeekSelected: number): void {
-    if (workingDays.some((day) => day.day === dayOfWeekSelected && day.value === true)) {
-      console.log('today is working day');
-    } else {
-      console.log('today is not working day');
-    }
-  }
 
   function selectedDateInTimeline(date: Date, availableSlots: ITimeSlot[]): number | string {
     if (date) {
@@ -334,7 +326,7 @@ export default function Appointments() {
             {professionalSelected && selectedDate && (
               <>
                 <Steps text={APPO_CONFIG.steps.text3} step='3' className='bg-primary/20 text-primary' />
-                <Card className='w-full'>
+                {todayIsWorkingDay ? (<Card className='w-full'>
                   <CardHeader>
                     <CardTitle className='px-3 text-base'>
                       <div className='flex flex-row justify-between'>
@@ -347,7 +339,9 @@ export default function Appointments() {
                         )}
                       </div>
                     </CardTitle>
-                    {!errorMessage && <div className='py-2 text-center text-base font-semibold text-primary'>{selectedLegibleDate}</div>}
+                    {!errorMessage && (
+                      <div className='py-2 text-center text-base font-semibold text-primary'>{selectedLegibleDate}</div>
+                    )}
                     {showTimeSlots && (
                       <div className='flex flex-row items-center justify-start space-x-3 px-3 pb-3'>
                         <div className='w-fit rounded-sm border border-primary/20 bg-primary/15 px-2 py-1 text-sm font-semibold text-primary'>{`${totalAvailableSlots} ${totalAvailableSlots === 1 ? APPO_CONFIG.phrases.availableAppointmentSingular : APPO_CONFIG.phrases.availableAppointmentPlural}`}</div>
@@ -414,7 +408,7 @@ export default function Appointments() {
                                     )}
                                     {/* Time slot cancel button */}
                                     {slot.appointment?.user && CalendarService.displayReserveButton(slot.begin, date) && (
-                                      <Button 
+                                      <Button
                                         onClick={() => handleDialog('cancel', slot)}
                                         variant='table'
                                         size='xs'
@@ -442,7 +436,8 @@ export default function Appointments() {
                       </Table>
                     </CardContent>
                   )}
-                </Card>
+                  {/* TODO: make this a styled card */}
+                </Card>) : <>Selecciona un día laborable</>}
               </>
             )}
           </div>
