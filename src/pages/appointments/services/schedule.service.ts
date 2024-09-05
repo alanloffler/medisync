@@ -58,7 +58,7 @@ export class AppoSchedule {
     this.timeSlots = this.generateTimeSlots();
   }
 
-  public generateTimeSlots(): ITimeSlot[] {
+  private generateTimeSlots(): ITimeSlot[] {
     const slots: ITimeSlot[] = [];
     const notAvailableSlots: ITimeSlot[] = [];
     let currentTime: Date = this.startDayHour;
@@ -99,6 +99,26 @@ export class AppoSchedule {
     return slots;
   }
 
+  private isTimeSlotAvailable(begin: Date, end: Date, unavailableRanges: ITimeRange[]): boolean {
+    for (const range of unavailableRanges) {
+      if (begin < range.end && end > range.begin) return false;
+    }
+    return true;
+  }
+
+  private insertNotAvailableSlot(slots: ITimeSlot[], newSlot: ITimeRangeString): void {
+    let insertIndex = 0;
+
+    while (insertIndex < slots.length && slots[insertIndex].begin < newSlot.begin) insertIndex++;
+
+    slots.splice(insertIndex, 0, {
+      id: -1,
+      begin: newSlot.begin,
+      end: newSlot.end,
+      available: false,
+    });
+  }
+
   public insertAppointments(appointments: IAppointmentView[]): void {
     for (const appointment of appointments) {
       const matchingTimeSlotIndex: number = this.timeSlots.findIndex((timeSlot) => timeSlot.id === appointment.slot);
@@ -122,25 +142,5 @@ export class AppoSchedule {
     }, 0);
 
     return totalAvailableSlots;
-  }
-
-  private isTimeSlotAvailable(begin: Date, end: Date, unavailableRanges: ITimeRange[]): boolean {
-    for (const range of unavailableRanges) {
-      if (begin < range.end && end > range.begin) return false;
-    }
-    return true;
-  }
-
-  private insertNotAvailableSlot(slots: ITimeSlot[], newSlot: ITimeRangeString): void {
-    let insertIndex = 0;
-
-    while (insertIndex < slots.length && slots[insertIndex].begin < newSlot.begin) insertIndex++;
-
-    slots.splice(insertIndex, 0, {
-      id: -1,
-      begin: newSlot.begin,
-      end: newSlot.end,
-      available: false,
-    });
   }
 }
