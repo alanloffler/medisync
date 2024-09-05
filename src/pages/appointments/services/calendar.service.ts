@@ -4,6 +4,10 @@ import { PROF_VIEW_CONFIG as PV_CONFIG } from '@/config/professionals.config';
 
 export class CalendarService {
   private static days: number[] = [0, 1, 2, 3, 4, 5, 6];
+  // Used in Appointments -> OK
+  public static checkTodayIsWorkingDay(workingDays: IWorkingDay[], dayOfWeekSelected: number): boolean {
+    return (workingDays.some((day) => day.day === dayOfWeekSelected && day.value === true));
+  }
 
   public static getDisabledDays(professionalWorkingDays: IWorkingDay[]): number[] {
     if (!professionalWorkingDays) return [];
@@ -65,7 +69,7 @@ export class CalendarService {
       return `${slotTimeInit} ${PV_CONFIG.words.hoursSeparator} ${slotTimeEnd}`;
     }
   }
-
+  
   public static displayReserveButton(time: string, date: Date | undefined): boolean {
     // console.log(time, date);
     let today: string;
@@ -87,8 +91,4 @@ export class CalendarService {
     } else return false;
   }
 
-  // Used in Appointments
-  public static checkTodayIsWorkingDay(workingDays: IWorkingDay[], dayOfWeekSelected: number): boolean {
-    return (workingDays.some((day) => day.day === dayOfWeekSelected && day.value === true));
-  }
 }
