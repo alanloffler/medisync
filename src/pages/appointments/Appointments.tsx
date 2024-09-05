@@ -54,7 +54,6 @@ export default function Appointments() {
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const capitalizeFirstLetter = useCapitalizeFirstLetter();
-  // const dateToString = useDateToString(); removed, now use formkit/format
   const legibleDate = useLegibleDate();
   const navigate = useNavigate();
   // #region professionalSelected actions
