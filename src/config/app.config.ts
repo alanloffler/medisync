@@ -1,7 +1,4 @@
 export const APP_CONFIG = {
-  daysofWeek: {
-      short: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
-  },
   error: {
     server: 'Error interno del servidor'
   },
