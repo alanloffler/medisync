@@ -16,11 +16,11 @@ export class CalendarService {
 
     return professionalNotWorkingDaysNumbers;
   }
-
-  public static getLegibleWorkingDays(daysArray: IWorkingDay[]): string {
-    const stringDays = this.getStringWorkingDaysArray(daysArray);
+  // Used in Appointments -> OK, return 'Lunes y Miércoles'
+  public static getLegibleWorkingDays(daysArray: IWorkingDay[], capitalized: boolean): string {
+    const stringDays: string[] = this.getStringWorkingDaysArray(daysArray, capitalized);
     if (!stringDays) return '';
-
+    
     const legibleDays: string = stringDays
       .map((item, index, arr) => {
         if (arr.length === 1) {
@@ -36,11 +36,13 @@ export class CalendarService {
     return legibleDays;
   }
 
-  private static getStringWorkingDaysArray(days: IWorkingDay[]): string[] {
+  private static getStringWorkingDaysArray(days: IWorkingDay[], capitalized: boolean): string[] {
     if (!days) return [];
 
     // TODO: get language from database
-    const daysOfWeek: string[] = range('dddd', 'es');
+    let daysOfWeek: string[] = range('dddd', 'es');
+
+    if (capitalized) daysOfWeek = daysOfWeek.map((day) => day.charAt(0).toUpperCase() + day.slice(1));
     
     const daysArray = days
       .map((day: IWorkingDay) => {
@@ -60,8 +62,8 @@ export class CalendarService {
   public static getLegibleSchedule(
     slotTimeInit: string,
     slotTimeEnd: string,
-    slotUnavailableTimeInit: string | undefined,
-    slotUnavailableTimeEnd: string | undefined,
+    slotUnavailableTimeInit?: string,
+    slotUnavailableTimeEnd?: string,
   ): string {
     if (slotUnavailableTimeInit && slotUnavailableTimeEnd) {
       return `${slotTimeInit} ${PV_CONFIG.words.hoursSeparator} ${slotUnavailableTimeInit} ${PV_CONFIG.words.slotsSeparator} ${slotUnavailableTimeEnd} ${PV_CONFIG.words.hoursSeparator} ${slotTimeEnd}`;

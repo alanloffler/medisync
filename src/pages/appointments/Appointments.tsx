@@ -62,7 +62,7 @@ export default function Appointments() {
       const calendarDisabledDays: number[] = CalendarService.getDisabledDays(professionalSelected.configuration.workingDays);
       setDisabledDays(calendarDisabledDays);
 
-      const legibleWorkingDays: string = CalendarService.getLegibleWorkingDays(professionalSelected.configuration.workingDays);
+      const legibleWorkingDays: string = CalendarService.getLegibleWorkingDays(professionalSelected.configuration.workingDays, true);
       setLegibleWorkingDays(legibleWorkingDays);
 
       const legibleSchedule: string = CalendarService.getLegibleSchedule(
@@ -127,32 +127,32 @@ export default function Appointments() {
           setShowTimeSlots(true);
           // prettier-ignore
           AppointmentApiService
-        .findAllByProfessional(professionalSelected._id, scheduleDate)
-        .then((response) => {
-          if (response.statusCode === 200) {
-            setAppointments(response.data);
-            schedule.insertAppointments(response.data);
-            // THIS IS A TEST ON ZED EDITOR
-            // TODO: today date by hour, ALSO check if day is working day
-            // TODO: Move this function to calendar service
-            // TODO: this can be moved outside this response handler ???
-            const totalAvailableSlots: number = schedule.totalAvailableSlots(schedule.timeSlots);
-            setTotalAvailableSlots(totalAvailableSlots);
+          .findAllByProfessional(professionalSelected._id, scheduleDate)
+          .then((response) => {
+            if (response.statusCode === 200) {
+              setAppointments(response.data);
+              schedule.insertAppointments(response.data);
+              // THIS IS A TEST ON ZED EDITOR
+              // TODO: today date by hour, ALSO check if day is working day
+              // TODO: Move this function to calendar service
+              // TODO: this can be moved outside this response handler ???
+              const totalAvailableSlots: number = schedule.totalAvailableSlots(schedule.timeSlots);
+              setTotalAvailableSlots(totalAvailableSlots);
 
-            const dateTime: number | string = selectedDateInTimeline(selectedDate, schedule.timeSlots);
-            setTotalAvailableSlots(dateTime);
-          }
-          // TODO: Make this more generic for use in both cases status === 200 and stattus < 399
-          if (response.statusCode > 399) {
-            addNotification({ type: 'error', message: response.message });
-            const totalAvailableSlots: number = schedule.totalAvailableSlots(schedule.timeSlots);
-            setTotalAvailableSlots(totalAvailableSlots);
+              const dateTime: number | string = selectedDateInTimeline(selectedDate, schedule.timeSlots);
+              setTotalAvailableSlots(dateTime);
+            }
+            // TODO: Make this more generic for use in both cases status === 200 and stattus < 399
+            if (response.statusCode > 399) {
+              addNotification({ type: 'error', message: response.message });
+              const totalAvailableSlots: number = schedule.totalAvailableSlots(schedule.timeSlots);
+              setTotalAvailableSlots(totalAvailableSlots);
 
-            const dateTime: number | string = selectedDateInTimeline(selectedDate, schedule.timeSlots);
-            setTotalAvailableSlots(dateTime);
-          }
-          if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
-        });
+              const dateTime: number | string = selectedDateInTimeline(selectedDate, schedule.timeSlots);
+              setTotalAvailableSlots(dateTime);
+            }
+            if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
+          });
         }
       }
     }
