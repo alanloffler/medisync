@@ -1,6 +1,6 @@
-import { APP_CONFIG } from '@/config/app.config';
 import { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
 import { PROF_VIEW_CONFIG as PV_CONFIG } from '@/config/professionals.config';
+import { range } from '@formkit/tempo';
 
 export class CalendarService {
   private static days: number[] = [0, 1, 2, 3, 4, 5, 6];
@@ -18,7 +18,7 @@ export class CalendarService {
   }
 
   public static getLegibleWorkingDays(daysArray: IWorkingDay[]): string {
-    const stringDays = this.getStringWorkingDays(daysArray);
+    const stringDays = this.getStringWorkingDaysArray(daysArray);
     if (!stringDays) return '';
 
     const legibleDays: string = stringDays
@@ -36,11 +36,12 @@ export class CalendarService {
     return legibleDays;
   }
 
-  private static getStringWorkingDays(days: IWorkingDay[]): string[] {
+  private static getStringWorkingDaysArray(days: IWorkingDay[]): string[] {
     if (!days) return [];
 
-    const daysOfWeek: string[] = APP_CONFIG.daysofWeek.long;
-
+    // TODO: get language from database
+    const daysOfWeek: string[] = range('dddd', 'es');
+    
     const daysArray = days
       .map((day: IWorkingDay) => {
         if (day.value === true) return day.day;
