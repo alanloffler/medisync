@@ -19,7 +19,6 @@ export class CalendarService {
 
   public static getLegibleWorkingDays(daysArray: IWorkingDay[]): string {
     const stringDays = this.getStringWorkingDays(daysArray);
-    console.log('inside getLegibleWorkingDays', stringDays, daysArray);
     if (!stringDays) return '';
 
     const legibleDays: string = stringDays
@@ -27,9 +26,8 @@ export class CalendarService {
         if (arr.length === 1) {
           return item;
         } else {
-          // TODO: when are 3 days make it words.and too (Silvana)
-          if (index === arr.length) return `${PV_CONFIG.words.and} ${item}`;
-          if (index === arr.length - 1) return `${item}`;
+          if (index === arr.length - 1) return `${PV_CONFIG.words.and} ${item}`;
+          if (index === arr.length - 2) return `${item}`;
           return `${item},`;
         }
       })
