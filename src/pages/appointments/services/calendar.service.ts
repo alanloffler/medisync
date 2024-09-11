@@ -1,6 +1,6 @@
 import { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
 import { PROF_VIEW_CONFIG as PV_CONFIG } from '@/config/professionals.config';
-import { range } from '@formkit/tempo';
+import { isAfter, range } from '@formkit/tempo';
 
 export class CalendarService {
   private static days: number[] = [0, 1, 2, 3, 4, 5, 6];
@@ -35,7 +35,7 @@ export class CalendarService {
 
     return legibleDays;
   }
-
+  // Used in getLegibleWorkingDays -> OK
   private static getStringWorkingDaysArray(days: IWorkingDay[], capitalized: boolean): string[] {
     if (!days) return [];
 
@@ -49,7 +49,7 @@ export class CalendarService {
       .map((day) => daysOfWeek[day.day])
       .filter((day) => typeof day === 'string');
   }
-
+  // Used in Appointments -> OK
   public static getLegibleSchedule(
     slotTimeInit: string,
     slotTimeEnd: string,
@@ -63,8 +63,8 @@ export class CalendarService {
     }
   }
 
+  // TODO: This must be relocalized to the appo schedule class
   public static displayReserveButton(time: string, date: Date | undefined): boolean {
-    // console.log(time, date);
     let today: string;
     let selectedDay: string;
 
@@ -82,5 +82,18 @@ export class CalendarService {
       } else if (selectedDay < today) return false;
       return true;
     } else return false;
+  }
+
+  // WIP: function that will replace displayReserveButtons
+  // This function is working, make some tests of usavility before replace displayReserveButtons
+  // IDEA: maybe this can have a time of delay, like 5 minutes before datetime is not in future
+  public static isDatetimeInFuture(date: Date | undefined, time: string): boolean {
+    if (!date) return false;
+    
+    const today: Date = new Date();
+    const selectedDay: Date = new Date(date);
+    selectedDay.setHours(parseInt(time.split(':')[0]), parseInt(time.split(':')[1]), 0, 0);
+
+    return isAfter(selectedDay, today);
   }
 }

@@ -382,7 +382,10 @@ export default function Appointments() {
                                     )}
                                     <TableCell className='flex items-center justify-end space-x-4 p-1.5'>
                                       {/* Time slot reserve button */}
-                                      {!slot.appointment?.user && CalendarService.displayReserveButton(slot.begin, date) && (
+                                      {/* <>{CalendarService.displayReserveButton(slot.begin, date) ? 'true' : 'false'}</> */}
+                                      {/* <>{CalendarService.isDatetimeInFuture(slot.begin, date) ? 'true' : 'false'}</> */}
+                                      {/* {!slot.appointment?.user && CalendarService.displayReserveButton(slot.begin, date) && ( */}
+                                      {!slot.appointment?.user && CalendarService.isDatetimeInFuture(date, slot.begin) && (
                                         <Button
                                           onClick={() => handleDialog('reserve', slot)}
                                           variant='default'
@@ -404,7 +407,8 @@ export default function Appointments() {
                                         </Button>
                                       )}
                                       {/* Time slot cancel button */}
-                                      {slot.appointment?.user && CalendarService.displayReserveButton(slot.begin, date) && (
+                                      {/* {slot.appointment?.user && CalendarService.displayReserveButton(slot.begin, date) && ( */}
+                                      {slot.appointment?.user && CalendarService.isDatetimeInFuture(date, slot.begin) && (
                                         <Button
                                           onClick={() => handleDialog('cancel', slot)}
                                           variant='table'
