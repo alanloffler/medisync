@@ -67,7 +67,7 @@ export default function Appointments() {
 
       // TODO: implement this with Tempo library
       console.log('legibleWorkingDays', legibleWorkingDays);
-      console.log('dayOfWeek', 1);
+      console.log('dayOfWeek', 3);
       const stringDays = range('dddd', 'es');
       console.log('Tempo dayOfWeek', stringDays);
 
@@ -103,7 +103,7 @@ export default function Appointments() {
         }
 
         // Check if today is professional working day
-        const dayOfWeekSelected: number = selectedDate.getDay() - 1;
+        const dayOfWeekSelected: number = selectedDate.getDay();
         const workingDays: IWorkingDay[] = professionalSelected.configuration.workingDays;
         const todayIsWorkingDay: boolean = CalendarService.checkTodayIsWorkingDay(workingDays, dayOfWeekSelected);
         setTodayIsWorkingDay(todayIsWorkingDay);
