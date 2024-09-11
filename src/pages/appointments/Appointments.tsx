@@ -23,7 +23,7 @@ import { IUser } from '@/pages/users/interfaces/user.interface';
 import { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
 import { cn } from '@/lib/utils';
 import { es, enUS } from 'date-fns/locale';
-import { format, range } from '@formkit/tempo';
+import { format } from '@formkit/tempo';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useCapitalizeFirstLetter } from '@/core/hooks/useCapitalizeFirstLetter';
 import { useEffect, useState } from 'react';
@@ -64,12 +64,6 @@ export default function Appointments() {
 
       const legibleWorkingDays: string = CalendarService.getLegibleWorkingDays(professionalSelected.configuration.workingDays);
       setLegibleWorkingDays(legibleWorkingDays);
-
-      // TODO: implement this with Tempo library
-      console.log('legibleWorkingDays', legibleWorkingDays);
-      console.log('dayOfWeek', 3);
-      const stringDays = range('dddd', 'es');
-      console.log('Tempo dayOfWeek', stringDays);
 
       const legibleSchedule: string = CalendarService.getLegibleSchedule(
         professionalSelected.configuration.scheduleTimeInit,
