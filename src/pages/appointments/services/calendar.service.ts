@@ -6,7 +6,7 @@ export class CalendarService {
   private static days: number[] = [0, 1, 2, 3, 4, 5, 6];
   // Used in Appointments -> OK
   public static checkTodayIsWorkingDay(workingDays: IWorkingDay[], dayOfWeekSelected: number): boolean {
-    return (workingDays.some((day) => day.day === dayOfWeekSelected && day.value === true));
+    return workingDays.some((day) => day.day === dayOfWeekSelected && day.value === true);
   }
   // Used in Appointments -> OK
   public static getDisabledDays(professionalWorkingDays: IWorkingDay[]): number[] {
@@ -20,7 +20,7 @@ export class CalendarService {
   public static getLegibleWorkingDays(daysArray: IWorkingDay[], capitalized: boolean): string {
     const stringDays: string[] = this.getStringWorkingDaysArray(daysArray, capitalized);
     if (!stringDays) return '';
-    
+
     const legibleDays: string = stringDays
       .map((item, index, arr) => {
         if (arr.length === 1) {
@@ -44,19 +44,10 @@ export class CalendarService {
 
     if (capitalized) daysOfWeek = daysOfWeek.map((day) => day.charAt(0).toUpperCase() + day.slice(1));
     
-    const daysArray = days
-      .map((day: IWorkingDay) => {
-        if (day.value === true) return day.day;
-      })
-      .map((value) => {
-        if (typeof value === 'number' && value >= 0 && value < daysOfWeek.length) {
-          return daysOfWeek[value];
-        }
-        return value;
-      })
-      .filter((value) => typeof value === 'string');
-
-    return daysArray as string[];
+    return days
+      .filter((day) => day.value)
+      .map((day) => daysOfWeek[day.day])
+      .filter((day) => typeof day === 'string');
   }
 
   public static getLegibleSchedule(
@@ -71,7 +62,7 @@ export class CalendarService {
       return `${slotTimeInit} ${PV_CONFIG.words.hoursSeparator} ${slotTimeEnd}`;
     }
   }
-  
+
   public static displayReserveButton(time: string, date: Date | undefined): boolean {
     // console.log(time, date);
     let today: string;
@@ -92,5 +83,4 @@ export class CalendarService {
       return true;
     } else return false;
   }
-
 }
