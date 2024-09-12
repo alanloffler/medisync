@@ -133,9 +133,7 @@ export default function Appointments() {
             if (response.statusCode === 200) {
               setAppointments(response.data);
               schedule.insertAppointments(response.data);
-              // THIS IS A TEST ON ZED EDITOR
-              // TODO: today date by hour, ALSO check if day is working day
-              // TODO: Move this function to calendar service
+
               // TODO: this can be moved outside this response handler ???
               const totalAvailableSlots: number = schedule.totalAvailableSlots(schedule.timeSlots);
               setTotalAvailableSlots(totalAvailableSlots);
@@ -198,8 +196,6 @@ export default function Appointments() {
       if (newAppo.statusCode > 399) addNotification({ type: 'error', message: newAppo.message });
       if (newAppo instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
     }
-    // TODO: handle this error or show in UI in some way
-    if (!timeSlot) console.log('timeSlot undefined');
   }
 
   async function handleCancelAppointment(slot: ITimeSlot): Promise<void> {
@@ -213,9 +209,6 @@ export default function Appointments() {
         if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
         if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
       });
-    } else {
-      // TODO: handle this error on UI and notification
-      console.log('Appo id undefined');
     }
   }
   // #endregion
@@ -304,7 +297,7 @@ export default function Appointments() {
                     className='h-fit w-fit flex-row rounded-lg bg-card text-card-foreground shadow-sm'
                     disabled={[
                       { dayOfWeek: disabledDays },
-                      //{ before: new Date() }, // TODO: uncomment this after show reserve button works!
+                      // { before: new Date() }, // This is to disable past days
                       { from: new Date(2024, 5, 5) },
                     ]}
                     locale={APPO_CONFIG.calendar.language === 'es' ? es : enUS}
