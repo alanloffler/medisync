@@ -1,45 +1,6 @@
-import { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
-import { IUser } from '@/pages/users/interfaces/user.interface';
 import { addMinute, format, isAfter } from '@formkit/tempo';
-
-export interface IAppointmentForm {
-  day: string;
-  hour: string;
-  professional: string;
-  slot: number;
-  user: string;
-}
-
-export interface IAppointment extends IAppointmentForm {
-  _id: string;
-}
-
-export interface IAppointmentView {
-  _id: string;
-  day: string;
-  hour: string;
-  professional: IProfessional;
-  slot: number;
-  user: IUser;
-}
-
-interface ITimeRange {
-  begin: Date;
-  end: Date;
-}
-
-interface ITimeRangeString {
-  begin: string;
-  end: string;
-}
-
-export interface ITimeSlot {
-  appointment?: IAppointmentView;
-  available: boolean;
-  begin: string;
-  end: string;
-  id: number;
-}
+import { ITimeRange, ITimeRangeString, ITimeSlot } from '@/pages/appointments/interfaces/appointment.interface';
+import { IAppointmentView } from '@/pages/appointments/interfaces/appointment.interface';
 
 export class AppoSchedule {
   public name: string;
