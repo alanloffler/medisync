@@ -382,7 +382,7 @@ export default function Appointments() {
                                     )}
                                     <TableCell className='flex items-center justify-end space-x-4 p-1.5'>
                                       {/* Time slot reserve button */}
-                                      {!slot.appointment?.user && CalendarService.isDatetimeInFuture(date, slot.begin) && (
+                                      {!slot.appointment?.user && AppoSchedule.isDatetimeInFuture(date, slot.begin) && (
                                         <Button
                                           onClick={() => handleDialog('reserve', slot)}
                                           variant='default'
@@ -404,7 +404,7 @@ export default function Appointments() {
                                         </Button>
                                       )}
                                       {/* Time slot cancel button */}
-                                      {slot.appointment?.user && CalendarService.isDatetimeInFuture(date, slot.begin) && (
+                                      {slot.appointment?.user && AppoSchedule.isDatetimeInFuture(date, slot.begin) && (
                                         <Button
                                           onClick={() => handleDialog('cancel', slot)}
                                           variant='table'
