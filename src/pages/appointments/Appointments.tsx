@@ -28,7 +28,6 @@ import { format } from '@formkit/tempo';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useCapitalizeFirstLetter } from '@/core/hooks/useCapitalizeFirstLetter';
 import { useEffect, useState } from 'react';
-import { useLegibleDate } from '@/core/hooks/useDateToString';
 import { useNavigate } from 'react-router-dom';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 // React component
@@ -55,7 +54,6 @@ export default function Appointments() {
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const capitalizeFirstLetter = useCapitalizeFirstLetter();
-  const legibleDate = useLegibleDate();
   const navigate = useNavigate();
   // #region professionalSelected actions
   useEffect(() => {
@@ -144,10 +142,12 @@ export default function Appointments() {
             // TODO: Make this more generic for use in both cases status === 200 and stattus < 399
             if (response.statusCode > 399) {
               addNotification({ type: 'error', message: response.message });
+
               const totalAvailableSlots: number = schedule.totalAvailableSlots(schedule.timeSlots);
               setTotalAvailableSlots(totalAvailableSlots);
 
               const dateTime: number | string = selectedDateInTimeline(selectedDate, schedule.timeSlots);
+              console.log('dateTime', dateTime);
               setTotalAvailableSlots(dateTime);
             }
             if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
@@ -179,11 +179,10 @@ export default function Appointments() {
   // #region Appointment actions (reserve and cancel)
   async function handleReserveAppointment(timeSlot: ITimeSlot | undefined): Promise<void> {
     if (timeSlot && professionalSelected && selectedDate !== undefined) {
-      // TODO: data from form
       const newAppo = await AppointmentApiService.create({
         slot: timeSlot.id,
         professional: professionalSelected?._id || '',
-        day: capitalizeFirstLetter(format(date ?? new Date(), 'full')) || '',
+        day: format(date ?? new Date(), 'YYYY-MM-DD'),
         hour: timeSlot.begin,
         user: userSelected._id,
       });
@@ -236,11 +235,11 @@ export default function Appointments() {
             <div>
               {APPO_CONFIG.dialog.cancel.contentText}
               <span className='font-semibold'>
-                {slot.appointment?.user.lastName} {slot.appointment?.user.firstName}
+                {capitalize(slot.appointment?.user.lastName)}, {capitalize(slot.appointment?.user.firstName)}
               </span>
             </div>
             <div className='italic'>
-              {legibleDate(selectedDate as Date, 'long')} - {slot.appointment?.hour} {APPO_CONFIG.words.hours}
+              {`${capitalizeFirstLetter(format(slot.appointment?.day as string, 'full'))} - ${slot.appointment?.hour} ${APPO_CONFIG.words.hours}`}
             </div>
           </div>
         ),
@@ -473,6 +472,9 @@ export default function Appointments() {
                   )}
                 </div>
               </div>
+            )}
+            {dialogContent.action === 'cancel' && (
+              dialogContent.content
             )}
             <div className='flex justify-end gap-6 pt-4'>
               <Button variant={'secondary'} size={'default'} onClick={() => handleResetDialog()}>
