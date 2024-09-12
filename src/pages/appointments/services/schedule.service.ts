@@ -1,6 +1,6 @@
 import { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
 import { IUser } from '@/pages/users/interfaces/user.interface';
-import { addMinute, format } from '@formkit/tempo';
+import { addMinute, format, isAfter } from '@formkit/tempo';
 
 export interface IAppointmentForm {
   day: string;
@@ -142,5 +142,15 @@ export class AppoSchedule {
     }, 0);
 
     return totalAvailableSlots;
+  }
+
+  public static isDatetimeInFuture(date: Date | undefined, time: string): boolean {
+    if (!date) return false;
+    
+    const today: Date = new Date();
+    const selectedDay: Date = new Date(date);
+    selectedDay.setHours(parseInt(time.split(':')[0]), parseInt(time.split(':')[1]), 0, 0);
+
+    return isAfter(selectedDay, today);
   }
 }
