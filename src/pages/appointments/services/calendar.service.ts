@@ -62,31 +62,10 @@ export class CalendarService {
       return `${slotTimeInit} ${PV_CONFIG.words.hoursSeparator} ${slotTimeEnd}`;
     }
   }
-
-  // TODO: This must be relocalized to the appo schedule class
-  public static displayReserveButton(time: string, date: Date | undefined): boolean {
-    let today: string;
-    let selectedDay: string;
-
-    if (date) {
-      today = new Date().toISOString().split('T')[0];
-      selectedDay = new Date(date).toISOString().split('T')[0];
-
-      if (today === selectedDay) {
-        const hour: number = parseInt(time.split(':')[0]);
-        const actualHour: number = new Date().getHours();
-
-        if (hour < actualHour) return false;
-        if (hour === actualHour && new Date().getMinutes() > parseInt(time.split(':')[1])) return false;
-        return true;
-      } else if (selectedDay < today) return false;
-      return true;
-    } else return false;
-  }
-
   // WIP: function that will replace displayReserveButtons
   // This function is working, make some tests of usavility before replace displayReserveButtons
   // IDEA: maybe this can have a time of delay, like 5 minutes before datetime is not in future
+  // Relocate to appointments service
   public static isDatetimeInFuture(date: Date | undefined, time: string): boolean {
     if (!date) return false;
     
