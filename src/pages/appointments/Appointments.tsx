@@ -14,9 +14,10 @@ import { UsersCombo } from '@/pages/users/components/UsersCombo';
 // App
 import { APPO_CONFIG } from '@/pages/appointments/config/appointment.config';
 import { APP_CONFIG } from '@/config/app.config';
-import { AppoSchedule, IAppointment, ITimeSlot } from '@/pages/appointments/services/schedule.service';
+import { AppoSchedule } from '@/pages/appointments/services/schedule.service';
 import { AppointmentApiService } from '@/pages/appointments/services/appointment.service';
 import { CalendarService } from '@/pages/appointments/services/calendar.service';
+import { IAppointment, ITimeSlot } from '@/pages/appointments/interfaces/appointment.interface';
 import { IDialog } from '@/core/interfaces/dialog.interface';
 import { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
 import { IUser } from '@/pages/users/interfaces/user.interface';
