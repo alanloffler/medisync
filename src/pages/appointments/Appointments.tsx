@@ -9,6 +9,7 @@ import { Separator } from '@/core/components/ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/core/components/ui/table';
 // App components
 import { InfoCard } from '@/core/components/common/InfoCard';
+import { LoadingDB } from '@/core/components/common/LoadingDB';
 import { ProfessionalsCombobox } from '@/pages/professionals/components/common/ProfessionalsCombobox';
 import { Steps } from '@/core/components/common/Steps';
 import { UsersCombo } from '@/pages/users/components/UsersCombo';
@@ -41,6 +42,7 @@ export default function Appointments() {
   const [errorMessage, setErrorMessage] = useState<string>();
   const [legibleSchedule, setLegibleSchedule] = useState<string>('');
   const [legibleWorkingDays, setLegibleWorkingDays] = useState<string>('');
+  const [loadingAppointments, setLoadingAppointments] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [professionalSelected, setProfessionalSelected] = useState<IProfessional>();
   const [refreshAppos, setRefreshAppos] = useState<string>('');
@@ -125,6 +127,7 @@ export default function Appointments() {
           setShowCalendar(true);
           setTimeSlots(schedule.timeSlots);
           setShowTimeSlots(true);
+          setLoadingAppointments(true);
           // prettier-ignore
           AppointmentApiService
           .findAllByProfessional(professionalSelected._id, scheduleDate)
@@ -145,7 +148,8 @@ export default function Appointments() {
             }
 
             if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
-          });
+          })
+          .finally(() => setLoadingAppointments(false));
         }
       }
     }
@@ -294,115 +298,121 @@ export default function Appointments() {
               <>
                 <Steps text={APPO_CONFIG.steps.text3} step='3' className='bg-primary/20 text-primary' />
                 {todayIsWorkingDay ? (
-                  <Card className='w-full'>
-                    <CardHeader>
-                      <CardTitle className='px-3 text-base'>
-                        <div className='flex flex-row justify-between'>
-                          <div className='flex flex-row items-center gap-2'>
-                            <CalendarDays className='h-4 w-4' />
-                            <span>{APPO_CONFIG.table.title}</span>
+                  loadingAppointments ? (
+                    <LoadingDB text={'Cargando agenda'} variant='card' size='default' />
+                  ) : (
+                    <Card className='w-full'>
+                      <CardHeader>
+                        <CardTitle className='px-3 text-base'>
+                          <div className='flex flex-row justify-between'>
+                            <div className='flex flex-row items-center gap-2'>
+                              <CalendarDays className='h-4 w-4' />
+                              <span>{APPO_CONFIG.table.title}</span>
+                            </div>
+                            {professionalSelected?._id && (
+                              <h1>{`${capitalize(professionalSelected?.title.abbreviation)} ${capitalize(professionalSelected?.lastName)}, ${capitalize(professionalSelected?.firstName)}`}</h1>
+                            )}
                           </div>
-                          {professionalSelected?._id && (
-                            <h1>{`${capitalize(professionalSelected?.title.abbreviation)} ${capitalize(professionalSelected?.lastName)}, ${capitalize(professionalSelected?.firstName)}`}</h1>
-                          )}
-                        </div>
-                      </CardTitle>
-                      {!errorMessage && <div className='py-2 text-center text-base font-semibold text-primary'>{selectedLegibleDate}</div>}
-                      {showTimeSlots && (
-                        <div className='flex flex-row items-center justify-start space-x-3 px-3 pb-3'>
-                          <div className='w-fit rounded-sm border border-primary/20 bg-primary/15 px-2 py-1 text-sm font-semibold text-primary'>{`${availableSlotsToReserve} ${availableSlotsToReserve === 1 ? APPO_CONFIG.phrases.availableAppointmentSingular : APPO_CONFIG.phrases.availableAppointmentPlural}`}</div>
-                          <div className='w-fit rounded-sm border border-slate-200 bg-slate-100 px-2 py-1 text-sm font-semibold text-slate-700'>{`${appointments.length} ${appointments.length === 1 ? APPO_CONFIG.phrases.alreadyReservedSingular : APPO_CONFIG.phrases.alreadyReservedPlural}`}</div>
+                        </CardTitle>
+                        {!errorMessage && <div className='py-2 text-center text-base font-semibold text-primary'>{selectedLegibleDate}</div>}
+                        {showTimeSlots && (
+                          <div className='flex flex-row items-center justify-start space-x-3 px-3 pb-3'>
+                            <div className='w-fit rounded-sm border border-primary/20 bg-primary/15 px-2 py-1 text-sm font-semibold text-primary'>{`${availableSlotsToReserve} ${availableSlotsToReserve === 1 ? APPO_CONFIG.phrases.availableAppointmentSingular : APPO_CONFIG.phrases.availableAppointmentPlural}`}</div>
+                            <div className='w-fit rounded-sm border border-slate-200 bg-slate-100 px-2 py-1 text-sm font-semibold text-slate-700'>{`${appointments.length} ${appointments.length === 1 ? APPO_CONFIG.phrases.alreadyReservedSingular : APPO_CONFIG.phrases.alreadyReservedPlural}`}</div>
+                          </div>
+                        )}
+                      </CardHeader>
+                      {errorMessage && (
+                        <div className='flex items-center justify-center space-x-2 px-4 py-0 text-rose-500'>
+                          <FileWarning className='h-5 w-5' strokeWidth={2} />
+                          <span className='text-center font-medium'>{errorMessage}</span>
                         </div>
                       )}
-                    </CardHeader>
-                    {errorMessage && (
-                      <div className='flex items-center justify-center space-x-2 px-4 py-0 text-rose-500'>
-                        <FileWarning className='h-5 w-5' strokeWidth={2} />
-                        <span className='text-center font-medium'>{errorMessage}</span>
-                      </div>
-                    )}
-                    {showTimeSlots && (
-                      <CardContent>
-                        <Table>
-                          <TableHeader className='bg-slate-100'>
-                            <TableRow>
-                              <TableHead className='h-0 w-[60px] py-1 text-center font-semibold'>{APPO_CONFIG.table.headers[0]}</TableHead>
-                              <TableHead className='h-0 w-[100px] px-2 py-1 text-left font-semibold'>{APPO_CONFIG.table.headers[1]}</TableHead>
-                              <TableHead className='h-0 py-1 text-left font-semibold'>{APPO_CONFIG.table.headers[2]}</TableHead>
-                              <TableHead className='h-0 w-[140px] px-2 py-1 text-center font-semibold'>{APPO_CONFIG.table.headers[3]}</TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                            {timeSlots.map((slot, index) => (
-                              <TableRow
-                                key={index}
-                                className={`text-base ${slot.available ? 'text-foreground' : 'bg-slate-100 text-slate-400'} ${index === timeSlots.length - 1 ? 'border-none' : 'border-b'}`}
-                              >
-                                {slot.available ? (
-                                  <>
-                                    <TableCell className='p-1.5 text-center text-sm font-normal'>{APPO_CONFIG.words.shiftPrefix + slot.id}</TableCell>
-                                    <TableCell className='p-1.5 text-left text-sm font-normal'>
-                                      {slot.begin} {APPO_CONFIG.words.hours}
-                                    </TableCell>
-                                    {slot.appointment?.user ? (
-                                      <TableCell className='p-1.5 text-base font-normal'>{`${capitalize(slot.appointment.user.lastName)}, ${capitalize(slot.appointment.user.firstName)}`}</TableCell>
-                                    ) : (
-                                      <TableCell className='p-1.5 text-base font-normal'></TableCell>
-                                    )}
-                                    <TableCell className='flex items-center justify-end space-x-4 p-1.5'>
-                                      {/* Time slot reserve button */}
-                                      {!slot.appointment?.user && AppoSchedule.isDatetimeInFuture(date, slot.begin) && (
-                                        <Button
-                                          onClick={() => handleDialog('reserve', slot)}
-                                          variant='default'
-                                          size='xs'
-                                          className='border border-emerald-300/50 bg-emerald-200 px-2 py-1 text-xs text-emerald-700 shadow-none hover:bg-emerald-300'
-                                        >
-                                          {APPO_CONFIG.buttons.addAppointment}
-                                        </Button>
-                                      )}
-                                      {/* Time slot view button */}
-                                      {slot.appointment?.user && (
-                                        <Button
-                                          onClick={() => navigate(`/appointments/${slot.appointment?._id}`)}
-                                          variant='table'
-                                          size='xs'
-                                          className='border border-sky-300/50 bg-sky-200 px-2 py-1 text-xs text-sky-700 shadow-none hover:bg-sky-300'
-                                        >
-                                          {APPO_CONFIG.buttons.viewAppointment}
-                                        </Button>
-                                      )}
-                                      {/* Time slot cancel button */}
-                                      {slot.appointment?.user && AppoSchedule.isDatetimeInFuture(date, slot.begin) && (
-                                        <Button
-                                          onClick={() => handleDialog('cancel', slot)}
-                                          variant='table'
-                                          size='xs'
-                                          className='border border-rose-300/50 bg-rose-200 px-2 py-1 text-xs text-rose-700 shadow-none hover:bg-rose-300'
-                                        >
-                                          {APPO_CONFIG.buttons.cancelAppointment}
-                                        </Button>
-                                      )}
-                                    </TableCell>
-                                  </>
-                                ) : (
-                                  <>
-                                    <TableCell className='p-1.5 text-center text-sm font-semibold'>{APPO_CONFIG.words.unavailable}</TableCell>
-                                    <TableCell className='p-1.5 text-left text-sm'>
-                                      {slot.available ? slot.begin : `${slot.begin} ${APPO_CONFIG.words.hoursSeparator} ${slot.end}`}{' '}
-                                      {APPO_CONFIG.words.hours}
-                                    </TableCell>
-                                    <TableCell className='p-1.5'></TableCell>
-                                    <TableCell className='p-1.5'></TableCell>
-                                  </>
-                                )}
+                      {showTimeSlots && (
+                        <CardContent>
+                          <Table>
+                            <TableHeader className='bg-slate-100'>
+                              <TableRow>
+                                <TableHead className='h-0 w-[60px] py-1 text-center font-semibold'>{APPO_CONFIG.table.headers[0]}</TableHead>
+                                <TableHead className='h-0 w-[100px] px-2 py-1 text-left font-semibold'>{APPO_CONFIG.table.headers[1]}</TableHead>
+                                <TableHead className='h-0 py-1 text-left font-semibold'>{APPO_CONFIG.table.headers[2]}</TableHead>
+                                <TableHead className='h-0 w-[140px] px-2 py-1 text-center font-semibold'>{APPO_CONFIG.table.headers[3]}</TableHead>
                               </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </CardContent>
-                    )}
-                  </Card>
+                            </TableHeader>
+                            <TableBody>
+                              {timeSlots.map((slot, index) => (
+                                <TableRow
+                                  key={index}
+                                  className={`text-base ${slot.available ? 'text-foreground' : 'bg-slate-100 text-slate-400'} ${index === timeSlots.length - 1 ? 'border-none' : 'border-b'}`}
+                                >
+                                  {slot.available ? (
+                                    <>
+                                      <TableCell className='p-1.5 text-center text-sm font-normal'>
+                                        {APPO_CONFIG.words.shiftPrefix + slot.id}
+                                      </TableCell>
+                                      <TableCell className='p-1.5 text-left text-sm font-normal'>
+                                        {slot.begin} {APPO_CONFIG.words.hours}
+                                      </TableCell>
+                                      {slot.appointment?.user ? (
+                                        <TableCell className='p-1.5 text-base font-normal'>{`${capitalize(slot.appointment.user.lastName)}, ${capitalize(slot.appointment.user.firstName)}`}</TableCell>
+                                      ) : (
+                                        <TableCell className='p-1.5 text-base font-normal'></TableCell>
+                                      )}
+                                      <TableCell className='flex items-center justify-end space-x-4 p-1.5'>
+                                        {/* Time slot reserve button */}
+                                        {!slot.appointment?.user && AppoSchedule.isDatetimeInFuture(date, slot.begin) && (
+                                          <Button
+                                            onClick={() => handleDialog('reserve', slot)}
+                                            variant='default'
+                                            size='xs'
+                                            className='border border-emerald-300/50 bg-emerald-200 px-2 py-1 text-xs text-emerald-700 shadow-none hover:bg-emerald-300'
+                                          >
+                                            {APPO_CONFIG.buttons.addAppointment}
+                                          </Button>
+                                        )}
+                                        {/* Time slot view button */}
+                                        {slot.appointment?.user && (
+                                          <Button
+                                            onClick={() => navigate(`/appointments/${slot.appointment?._id}`)}
+                                            variant='table'
+                                            size='xs'
+                                            className='border border-sky-300/50 bg-sky-200 px-2 py-1 text-xs text-sky-700 shadow-none hover:bg-sky-300'
+                                          >
+                                            {APPO_CONFIG.buttons.viewAppointment}
+                                          </Button>
+                                        )}
+                                        {/* Time slot cancel button */}
+                                        {slot.appointment?.user && AppoSchedule.isDatetimeInFuture(date, slot.begin) && (
+                                          <Button
+                                            onClick={() => handleDialog('cancel', slot)}
+                                            variant='table'
+                                            size='xs'
+                                            className='border border-rose-300/50 bg-rose-200 px-2 py-1 text-xs text-rose-700 shadow-none hover:bg-rose-300'
+                                          >
+                                            {APPO_CONFIG.buttons.cancelAppointment}
+                                          </Button>
+                                        )}
+                                      </TableCell>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <TableCell className='p-1.5 text-center text-sm font-semibold'>{APPO_CONFIG.words.unavailable}</TableCell>
+                                      <TableCell className='p-1.5 text-left text-sm'>
+                                        {slot.available ? slot.begin : `${slot.begin} ${APPO_CONFIG.words.hoursSeparator} ${slot.end}`}{' '}
+                                        {APPO_CONFIG.words.hours}
+                                      </TableCell>
+                                      <TableCell className='p-1.5'></TableCell>
+                                      <TableCell className='p-1.5'></TableCell>
+                                    </>
+                                  )}
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </CardContent>
+                      )}
+                    </Card>
+                  )
                 ) : (
                   <Card>
                     <CardContent className='pt-6'>
