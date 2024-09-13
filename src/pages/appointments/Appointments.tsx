@@ -20,20 +20,21 @@ import { AppointmentApiService } from '@/pages/appointments/services/appointment
 import { CalendarService } from '@/pages/appointments/services/calendar.service';
 import { IAppointment, ITimeSlot } from '@/pages/appointments/interfaces/appointment.interface';
 import { IDialog } from '@/core/interfaces/dialog.interface';
+import { INotification, useNotificationsStore } from '@/core/stores/notifications.store';
 import { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
 import { IUser } from '@/pages/users/interfaces/user.interface';
 import { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { es, enUS } from 'date-fns/locale';
 import { format } from '@formkit/tempo';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useCapitalizeFirstLetter } from '@/core/hooks/useCapitalizeFirstLetter';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useNotificationsStore } from '@/core/stores/notifications.store';
 // React component
 export default function Appointments() {
   const [appointments, setAppointments] = useState<IAppointment[]>([] as IAppointment[]);
+  const [availableSlotsToReserve, setAvailableSlotsToReserve] = useState<number | string>(0);
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [dialogContent, setDialogContent] = useState<IDialog>({} as IDialog);
   const [disabledDays, setDisabledDays] = useState<number[]>([]);
@@ -50,12 +51,11 @@ export default function Appointments() {
   const [showTimeSlots, setShowTimeSlots] = useState<boolean>(false);
   const [timeSlots, setTimeSlots] = useState<ITimeSlot[]>([] as ITimeSlot[]);
   const [todayIsWorkingDay, setTodayIsWorkingDay] = useState<boolean>(false);
-  const [availableSlotsToReserve, setAvailableSlotsToReserve] = useState<number | string>(0);
   const [userSelected, setUserSelected] = useState<IUser>({} as IUser);
-  const addNotification = useNotificationsStore((state) => state.addNotification);
-  const capitalize = useCapitalize();
-  const capitalizeFirstLetter = useCapitalizeFirstLetter();
-  const navigate = useNavigate();
+  const addNotification: (notification: INotification) => void = useNotificationsStore((state) => state.addNotification);
+  const capitalize: (sentence: string | undefined) => string | undefined = useCapitalize();
+  const capitalizeFirstLetter: (sentence: string | undefined) => string | undefined = useCapitalizeFirstLetter();
+  const navigate: NavigateFunction = useNavigate();
   // #region professionalSelected actions
   useEffect(() => {
     if (professionalSelected) {
