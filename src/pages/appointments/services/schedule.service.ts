@@ -68,7 +68,7 @@ export class AppoSchedule {
   }
 
   private insertNotAvailableSlot(slots: ITimeSlot[], newSlot: ITimeRangeString): void {
-    let insertIndex = 0;
+    let insertIndex: number = 0;
 
     while (insertIndex < slots.length && slots[insertIndex].begin < newSlot.begin) insertIndex++;
 
