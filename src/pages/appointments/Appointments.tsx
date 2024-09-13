@@ -151,24 +151,6 @@ export default function Appointments() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDate, refreshAppos]);
-
-  // function selectedDateInTimeline(date: Date, availableSlots: ITimeSlot[]): number | string {
-  //   if (date) {
-  //     let result: number = 0;
-  //     const selected: Date = new Date(date);
-  //     const selectedDate: number = selected.getFullYear() + selected.getMonth() + selected.getDate();
-  //     const today: Date = new Date();
-  //     const todayDate: number = today.getFullYear() + today.getMonth() + today.getDate();
-  //     const todayTime: string = today.getHours() + ':' + today.getMinutes();
-
-  //     if (selectedDate < todayDate) result = 0;
-  //     if (selectedDate > todayDate) result = availableSlots.filter((slot) => slot.available && !slot.appointment).length;
-  //     if (selectedDate === todayDate) result = availableSlots.filter((slot) => slot.available && slot.begin >= todayTime && !slot.appointment).length;
-
-  //     return result;
-  //   } else return 'Error trying to set date in timeline';
-  // }
-
   // #endregion
   // #region Appointment actions (reserve and cancel)
   async function handleReserveAppointment(timeSlot: ITimeSlot | undefined): Promise<void> {
