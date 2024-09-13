@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Separator } from '@/core/components/ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/core/components/ui/table';
 // App components
+import { InfoCard } from '@/core/components/common/InfoCard';
 import { ProfessionalsCombobox } from '@/pages/professionals/components/common/ProfessionalsCombobox';
 import { Steps } from '@/core/components/common/Steps';
 import { UsersCombo } from '@/pages/users/components/UsersCombo';
@@ -426,10 +427,13 @@ export default function Appointments() {
                         </Table>
                       </CardContent>
                     )}
-                    {/* TODO: make this a styled card */}
                   </Card>
                 ) : (
-                  <>Selecciona un día laborable</>
+                  <Card>
+                    <CardContent className='pt-6'>
+                      <InfoCard type='warning' text={APPO_CONFIG.warning.selectWorkingDay} />
+                    </CardContent>
+                  </Card>
                 )}
               </>
             )}
@@ -473,9 +477,7 @@ export default function Appointments() {
                 </div>
               </div>
             )}
-            {dialogContent.action === 'cancel' && (
-              dialogContent.content
-            )}
+            {dialogContent.action === 'cancel' && dialogContent.content}
             <div className='flex justify-end gap-6 pt-4'>
               <Button variant={'secondary'} size={'default'} onClick={() => handleResetDialog()}>
                 {APPO_CONFIG.buttons.cancelAppointment}
