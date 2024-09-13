@@ -25,7 +25,7 @@ import { IUser } from '@/pages/users/interfaces/user.interface';
 import { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
 import { cn } from '@/lib/utils';
 import { es, enUS } from 'date-fns/locale';
-import { format } from '@formkit/tempo';
+import { format, isAfter } from '@formkit/tempo';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useCapitalizeFirstLetter } from '@/core/hooks/useCapitalizeFirstLetter';
 import { useEffect, useState } from 'react';
@@ -50,7 +50,7 @@ export default function Appointments() {
   const [showTimeSlots, setShowTimeSlots] = useState<boolean>(false);
   const [timeSlots, setTimeSlots] = useState<ITimeSlot[]>([] as ITimeSlot[]);
   const [todayIsWorkingDay, setTodayIsWorkingDay] = useState<boolean>(false);
-  const [totalAvailableSlots, setTotalAvailableSlots] = useState<number | string>(0);
+  const [availableSlotsToReserve, setAvailableSlotsToReserve] = useState<number | string>(0);
   const [userSelected, setUserSelected] = useState<IUser>({} as IUser);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
@@ -93,7 +93,7 @@ export default function Appointments() {
           setTimeSlots([]);
           setAppointments([]);
           setErrorMessage('');
-          setTotalAvailableSlots(0);
+          setAvailableSlotsToReserve(0);
         }
 
         // Check if today is professional working day
@@ -130,25 +130,21 @@ export default function Appointments() {
           .findAllByProfessional(professionalSelected._id, scheduleDate)
           .then((response) => {
             if (response.statusCode === 200) {
-              // TODO: this can be moved outside this response handler ???
-              const totalAvailableSlots: number = schedule.totalAvailableSlots(schedule.timeSlots);
-              setTotalAvailableSlots(totalAvailableSlots);
-
-              const dateTime: number | string = selectedDateInTimeline(selectedDate, schedule.timeSlots);
-              setTotalAvailableSlots(dateTime);
               setAppointments(response.data);
               schedule.insertAppointments(response.data);
 
+              const availableSlotsToReserve: number = schedule.availableSlotsToReserve(selectedDate, schedule.timeSlots, response.data.length);
+              setAvailableSlotsToReserve(availableSlotsToReserve);
             }
             // TODO: Make this more generic for use in both cases status === 200 and stattus < 399
             if (response.statusCode > 399) {
               addNotification({ type: 'error', message: response.message });
 
-              const totalAvailableSlots: number = schedule.totalAvailableSlots(schedule.timeSlots);
-              setTotalAvailableSlots(totalAvailableSlots);
-
-              const dateTime: number | string = selectedDateInTimeline(selectedDate, schedule.timeSlots);
-              setTotalAvailableSlots(dateTime);
+              const selectedDateInTimeline: boolean = isAfter(selectedDate, new Date());
+              if (selectedDateInTimeline) {
+                const availableSlotsToReserve: number = schedule.availableSlotsToReserve(selectedDate, schedule.timeSlots, 0);
+                setAvailableSlotsToReserve(availableSlotsToReserve);
+              }
             }
             if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
           });
@@ -158,22 +154,22 @@ export default function Appointments() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDate, refreshAppos]);
 
-  function selectedDateInTimeline(date: Date, availableSlots: ITimeSlot[]): number | string {
-    if (date) {
-      let result: number = 0;
-      const selected: Date = new Date(date);
-      const selectedDate: number = selected.getFullYear() + selected.getMonth() + selected.getDate();
-      const today: Date = new Date();
-      const todayDate: number = today.getFullYear() + today.getMonth() + today.getDate();
-      const todayTime: string = today.getHours() + ':' + today.getMinutes();
+  // function selectedDateInTimeline(date: Date, availableSlots: ITimeSlot[]): number | string {
+  //   if (date) {
+  //     let result: number = 0;
+  //     const selected: Date = new Date(date);
+  //     const selectedDate: number = selected.getFullYear() + selected.getMonth() + selected.getDate();
+  //     const today: Date = new Date();
+  //     const todayDate: number = today.getFullYear() + today.getMonth() + today.getDate();
+  //     const todayTime: string = today.getHours() + ':' + today.getMinutes();
 
-      if (selectedDate < todayDate) result = 0;
-      if (selectedDate > todayDate) result = availableSlots.filter((slot) => slot.available && !slot.appointment).length;
-      if (selectedDate === todayDate) result = availableSlots.filter((slot) => slot.available && slot.begin >= todayTime && !slot.appointment).length;
+  //     if (selectedDate < todayDate) result = 0;
+  //     if (selectedDate > todayDate) result = availableSlots.filter((slot) => slot.available && !slot.appointment).length;
+  //     if (selectedDate === todayDate) result = availableSlots.filter((slot) => slot.available && slot.begin >= todayTime && !slot.appointment).length;
 
-      return result;
-    } else return 'Error trying to set date in timeline';
-  }
+  //     return result;
+  //   } else return 'Error trying to set date in timeline';
+  // }
 
   // #endregion
   // #region Appointment actions (reserve and cancel)
@@ -334,7 +330,7 @@ export default function Appointments() {
                       {!errorMessage && <div className='py-2 text-center text-base font-semibold text-primary'>{selectedLegibleDate}</div>}
                       {showTimeSlots && (
                         <div className='flex flex-row items-center justify-start space-x-3 px-3 pb-3'>
-                          <div className='w-fit rounded-sm border border-primary/20 bg-primary/15 px-2 py-1 text-sm font-semibold text-primary'>{`${totalAvailableSlots} ${totalAvailableSlots === 1 ? APPO_CONFIG.phrases.availableAppointmentSingular : APPO_CONFIG.phrases.availableAppointmentPlural}`}</div>
+                          <div className='w-fit rounded-sm border border-primary/20 bg-primary/15 px-2 py-1 text-sm font-semibold text-primary'>{`${availableSlotsToReserve} ${availableSlotsToReserve === 1 ? APPO_CONFIG.phrases.availableAppointmentSingular : APPO_CONFIG.phrases.availableAppointmentPlural}`}</div>
                           <div className='w-fit rounded-sm border border-slate-200 bg-slate-100 px-2 py-1 text-sm font-semibold text-slate-700'>{`${appointments.length} ${appointments.length === 1 ? APPO_CONFIG.phrases.alreadyReservedSingular : APPO_CONFIG.phrases.alreadyReservedPlural}`}</div>
                         </div>
                       )}
