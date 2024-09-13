@@ -6,7 +6,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
-interface INotification {
+export interface INotification {
   date?: string;
   message: string;
   type: string;
