@@ -140,8 +140,8 @@ export default function Appointments() {
             if (response.statusCode > 399) {
               const availableSlotsToReserve: number = schedule.availableSlotsToReserve(selectedDate, schedule.timeSlots, 0);
               setAvailableSlotsToReserve(availableSlotsToReserve);
-
-              addNotification({ type: 'error', message: response.message });
+              // NOTE: Commented because of log filling up
+              // addNotification({ type: 'error', message: response.message });
             }
 
             if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
