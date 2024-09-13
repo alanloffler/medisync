@@ -9,7 +9,7 @@ import { PageHeader } from '@/core/components/common/PageHeader';
 import { AppointmentApiService } from '@/pages/appointments/services/appointment.service';
 import { IAppointmentView } from '@/pages/appointments/services/schedule.service';
 import { IEmail } from '@/core/interfaces/email.interface';
-import { VIEW_APPOINTMENT_CONFIG } from '@/pages/appointments/config/appointment.config';
+import { VIEW_APPOINTMENT_CONFIG } from '@/config/appointment.config';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useEffect, useRef, useState } from 'react';
 import { useLegibleDate } from '@/core/hooks/useDateToString';

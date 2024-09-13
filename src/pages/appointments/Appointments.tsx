@@ -13,7 +13,7 @@ import { ProfessionalsCombobox } from '@/pages/professionals/components/common/P
 import { Steps } from '@/core/components/common/Steps';
 import { UsersCombo } from '@/pages/users/components/UsersCombo';
 // App
-import { APPO_CONFIG } from '@/pages/appointments/config/appointment.config';
+import { APPO_CONFIG } from '@/config/appointment.config';
 import { APP_CONFIG } from '@/config/app.config';
 import { AppoSchedule } from '@/pages/appointments/services/schedule.service';
 import { AppointmentApiService } from '@/pages/appointments/services/appointment.service';
