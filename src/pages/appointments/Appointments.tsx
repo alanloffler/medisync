@@ -253,13 +253,13 @@ export default function Appointments() {
               />
               {professionalSelected && (
                 <div className='mt-2 flex w-full flex-col text-slate-500'>
-                  <div className='flex flex-row items-center space-x-2'>
+                  <div className='flex flex-row gap-2 text-sm font-normal'>
                     <span className='text-sm font-semibold underline'>{APPO_CONFIG.phrases.availableDays}</span>
-                    <span className='text-sm font-normal'>{legibleWorkingDays}</span>
+                    {legibleWorkingDays}
                   </div>
-                  <div className='flex flex-row items-center space-x-2'>
+                  <div className='flex flex-row gap-2 text-sm font-normal'>
                     <span className='text-sm font-semibold underline'>{APPO_CONFIG.words.schedule}</span>
-                    <span className='text-sm font-normal'>{legibleSchedule}</span>
+                    {legibleSchedule}
                   </div>
                 </div>
               )}
