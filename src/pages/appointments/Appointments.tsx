@@ -129,19 +129,27 @@ export default function Appointments() {
           AppointmentApiService
           .findAllByProfessional(professionalSelected._id, scheduleDate)
           .then((response) => {
-            // FIXME: this can be moved outside this response handler ???
-            const totalAvailableSlots: number = schedule.totalAvailableSlots(schedule.timeSlots);
-            setTotalAvailableSlots(totalAvailableSlots);
-
-            const dateTime: number | string = selectedDateInTimeline(selectedDate, schedule.timeSlots);
-            setTotalAvailableSlots(dateTime);
-            
             if (response.statusCode === 200) {
+              // TODO: this can be moved outside this response handler ???
+              const totalAvailableSlots: number = schedule.totalAvailableSlots(schedule.timeSlots);
+              setTotalAvailableSlots(totalAvailableSlots);
+
+              const dateTime: number | string = selectedDateInTimeline(selectedDate, schedule.timeSlots);
+              setTotalAvailableSlots(dateTime);
               setAppointments(response.data);
               schedule.insertAppointments(response.data);
-            }
 
-            if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
+            }
+            // TODO: Make this more generic for use in both cases status === 200 and stattus < 399
+            if (response.statusCode > 399) {
+              addNotification({ type: 'error', message: response.message });
+
+              const totalAvailableSlots: number = schedule.totalAvailableSlots(schedule.timeSlots);
+              setTotalAvailableSlots(totalAvailableSlots);
+
+              const dateTime: number | string = selectedDateInTimeline(selectedDate, schedule.timeSlots);
+              setTotalAvailableSlots(dateTime);
+            }
             if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
           });
         }
