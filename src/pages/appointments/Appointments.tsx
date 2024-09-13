@@ -25,7 +25,7 @@ import { IUser } from '@/pages/users/interfaces/user.interface';
 import { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
 import { cn } from '@/lib/utils';
 import { es, enUS } from 'date-fns/locale';
-import { format, isAfter } from '@formkit/tempo';
+import { format } from '@formkit/tempo';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useCapitalizeFirstLetter } from '@/core/hooks/useCapitalizeFirstLetter';
 import { useEffect, useState } from 'react';
@@ -136,16 +136,14 @@ export default function Appointments() {
               const availableSlotsToReserve: number = schedule.availableSlotsToReserve(selectedDate, schedule.timeSlots, response.data.length);
               setAvailableSlotsToReserve(availableSlotsToReserve);
             }
-            // TODO: Make this more generic for use in both cases status === 200 and stattus < 399
-            if (response.statusCode > 399) {
-              addNotification({ type: 'error', message: response.message });
 
-              const selectedDateInTimeline: boolean = isAfter(selectedDate, new Date());
-              if (selectedDateInTimeline) {
-                const availableSlotsToReserve: number = schedule.availableSlotsToReserve(selectedDate, schedule.timeSlots, 0);
-                setAvailableSlotsToReserve(availableSlotsToReserve);
-              }
+            if (response.statusCode > 399) {
+              const availableSlotsToReserve: number = schedule.availableSlotsToReserve(selectedDate, schedule.timeSlots, 0);
+              setAvailableSlotsToReserve(availableSlotsToReserve);
+
+              addNotification({ type: 'error', message: response.message });
             }
+
             if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
           });
         }
