@@ -1,6 +1,6 @@
-import { addMinute, format, isAfter } from '@formkit/tempo';
-import { ITimeRange, ITimeRangeString, ITimeSlot } from '@/pages/appointments/interfaces/appointment.interface';
 import { IAppointmentView } from '@/pages/appointments/interfaces/appointment.interface';
+import { ITimeRange, ITimeRangeString, ITimeSlot } from '@/pages/appointments/interfaces/appointment.interface';
+import { addMinute, format, isAfter, isEqual } from '@formkit/tempo';
 
 export class AppoSchedule {
   public name: string;
@@ -113,5 +113,24 @@ export class AppoSchedule {
     selectedDay.setHours(parseInt(time.split(':')[0]), parseInt(time.split(':')[1]), 0, 0);
 
     return isAfter(selectedDay, today);
+  }
+
+  public availableSlotsToReserve(date: Date, timeSlots: ITimeSlot[], appointments: number): number {
+    let result: number;
+
+    const dateIsInFuture: boolean = isAfter(date, new Date());
+    (dateIsInFuture) ? result = this.totalAvailableSlots(timeSlots) - appointments : result = 0;
+
+    const actualDay: string = format(new Date(), 'YYYY-MM-DD');
+    const selectedDay: string = format(date, 'YYYY-MM-DD');
+
+    if (isEqual(actualDay, selectedDay)) {
+      const actualTime: string = format(new Date(), 'HH:mm');
+      const timeSlotsToReserve: ITimeSlot[] = timeSlots.filter((timeSlot) => timeSlot.available && timeSlot.begin > actualTime);
+      
+      result = this.totalAvailableSlots(timeSlotsToReserve);
+    }
+
+    return result;
   }
 }
