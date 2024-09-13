@@ -5,7 +5,6 @@ import { Button } from '@/core/components/ui/button';
 import { Calendar } from '@/core/components/ui/calendar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/core/components/ui/dialog';
-import { Separator } from '@/core/components/ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/core/components/ui/table';
 // App components
 import { InfoCard } from '@/core/components/common/InfoCard';
@@ -264,7 +263,6 @@ export default function Appointments() {
                 </div>
               )}
             </div>
-            {professionalSelected && <Separator />}
             <div className={cn('flex flex-col space-y-4', showCalendar ? 'pointer-events-auto' : 'pointer-events-none')}>
               {professionalSelected && (
                 <>
