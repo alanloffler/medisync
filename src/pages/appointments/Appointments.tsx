@@ -422,6 +422,7 @@ export default function Appointments() {
         </div>
       </main>
       {/* Dialog */}
+      // TODO: make this dialog dynamic
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent>
           <DialogHeader>
