@@ -268,7 +268,7 @@ export default function Appointments() {
                 <>
                   <Steps text={APPO_CONFIG.steps.text2} step='2' className='bg-primary/20 text-primary' />
                   <Calendar
-                    captionLayout={'dropdown-buttons'}
+                    captionLayout={'buttons'}
                     className='h-fit w-fit flex-row rounded-lg bg-card text-card-foreground shadow-sm'
                     disabled={[
                       { dayOfWeek: disabledDays },
@@ -277,13 +277,11 @@ export default function Appointments() {
                     ]}
                     locale={APPO_CONFIG.calendar.language === 'es' ? es : enUS}
                     mode='single'
-                    modifiersClassNames={{
-                      today: 'bg-primary/30 text-primary',
-                      selected: 'bg-primary text-white',
-                    }}
                     selected={date}
                     showOutsideDays={false}
                     onDayClick={(event) => setSelectedDate(event)}
+                    // TODO: add select for month and year, see how it works
+                    footer={<div className='text-xs'>Footer</div>}
                   />
                 </>
               )}
