@@ -268,7 +268,9 @@ export default function Appointments() {
                 <>
                   <Steps text={APPO_CONFIG.steps.text2} step='2' className='bg-primary/20 text-primary' />
                   <Calendar
-                    captionLayout={'buttons'}
+                    // captionLayout={'dropdown'}
+                    // fromYear={2023}
+                    // toYear={2025}
                     className='h-fit w-fit flex-row rounded-lg bg-card text-card-foreground shadow-sm'
                     disabled={[
                       { dayOfWeek: disabledDays },
