@@ -2,30 +2,28 @@
 import { Checkbox } from '@/core/components/ui/checkbox';
 import { Label } from '@/core/components/ui/label';
 // App
-import { APP_CONFIG } from '@/config/app.config';
 import { IWorkingDay, IWorkingDaysProps } from '@/pages/professionals/interfaces/working-days.interface';
+import { generateWeekOfWorkingDays } from '@/pages/professionals/utils/week-working-days.util';
+import { range } from '@formkit/tempo';
+import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useEffect, useState } from 'react';
 // React component
 export function WorkingDays({ label, data, handleWorkingDaysValues }: IWorkingDaysProps) {
-  const DAYS = APP_CONFIG.daysofWeek.long;
   const [daysData, setDaysData] = useState<IWorkingDay[]>([]);
+  const capitalize: (text: string | undefined) => string | undefined = useCapitalize();
+  const DAYS: (string | undefined)[] = range('dddd', 'es').map((day) => capitalize(day));
 
   useEffect(() => {
-    // TODO: get this value from database
-    const defaultWorkingDaysValues: IWorkingDay[] = [
-      { day: 0, value: false },
-      { day: 1, value: false },
-      { day: 2, value: false },
-      { day: 3, value: false },
-      { day: 4, value: false },
-      { day: 5, value: false },
-    ];
+    const defaultWorkingDaysValues: IWorkingDay[] = generateWeekOfWorkingDays();
+
     !data || data === undefined || data.length === 0 ? setDaysData(defaultWorkingDaysValues) : setDaysData(data);
   }, [data]);
 
   function handleCheckedChange(dayIndex: number, checked: boolean) {
     if (!daysData) return;
+    
     const updatedValues = daysData.find((value) => value.day === dayIndex);
+    
     if (updatedValues) {
       updatedValues.value = checked;
       handleWorkingDaysValues([...daysData]);
@@ -39,10 +37,9 @@ export function WorkingDays({ label, data, handleWorkingDaysValues }: IWorkingDa
         {daysData &&
           daysData.map((_, index) => (
             <div key={index} className='flex flex-col items-center'>
-              {/* prettier-ignore */}
-              <Checkbox 
-                defaultChecked={daysData.find((value) => value.day === index)?.value || false} 
-                onCheckedChange={(checked) => handleCheckedChange(index, checked as boolean)} 
+              <Checkbox
+                defaultChecked={daysData.find((value) => value.day === index)?.value || false}
+                onCheckedChange={(checked) => handleCheckedChange(index, checked as boolean)}
               />
               <span className='text-xs font-medium'>{DAYS[index]}</span>
             </div>

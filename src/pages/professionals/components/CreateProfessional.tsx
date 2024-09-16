@@ -27,6 +27,7 @@ import { PROF_CREATE_CONFIG as PC_CONFIG } from '@/config/professionals.config';
 import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
 import { ScheduleService } from '@/pages/settings/services/schedule-settings.service';
 import { TitleService } from '@/core/services/title.service';
+import { generateWeekOfWorkingDays } from '@/pages/professionals/utils/week-working-days.util';
 import { professionalSchema } from '@/pages/professionals/schemas/professional.schema';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useEffect, useState, MouseEvent } from 'react';
@@ -50,6 +51,7 @@ export default function CreateProfessional() {
   // #region Load data
   useEffect(() => {
     setIsLoading(true);
+
     AreaService.findAll().then((response: IResponse) => {
       if (response.statusCode === 200) {
         setAreas(response.data);
@@ -71,10 +73,9 @@ export default function CreateProfessional() {
     ScheduleService.findAllSlotDurations().then((response: number[]) => {
       setSlotDurationValues(response);
     });
-
-    ScheduleService.findAllWorkingDays().then((response: IWorkingDay[]) => {
-      setWorkingDays(response);
-    });
+    
+    const daysOfWeek: IWorkingDay[] = generateWeekOfWorkingDays();
+    setWorkingDays(daysOfWeek);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   // #endregion
