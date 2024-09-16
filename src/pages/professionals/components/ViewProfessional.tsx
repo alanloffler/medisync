@@ -13,11 +13,11 @@ import { LoadingDB } from '@/core/components/common/LoadingDB';
 import { PageHeader } from '@/core/components/common/PageHeader';
 // App
 import { APP_CONFIG } from '@/config/app.config';
+import { CalendarService } from '@/pages/appointments/services/calendar.service';
 import { IEmail } from '@/core/interfaces/email.interface';
 import { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
 import { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
 import { IResponse } from '@/core/interfaces/response.interface';
-import { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { PROF_VIEW_CONFIG as PV_CONFIG } from '@/config/professionals.config';
 import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
@@ -30,6 +30,7 @@ export default function ViewProfessional() {
   const [emailObject, setEmailObject] = useState<IEmail>({} as IEmail);
   const [infoCard, setInfoCard] = useState<IInfoCard>({} as IInfoCard);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [legibleWorkingDays, setLegibleWorkingDays] = useState<string>('');
   const [professional, setProfessional] = useState<IProfessional>({} as IProfessional);
   const [showCard, setShowCard] = useState<boolean>(false);
   const capitalize = useCapitalize();
@@ -37,11 +38,11 @@ export default function ViewProfessional() {
   const delimiter = useDelimiter();
   const navigate = useNavigate();
   const { id } = useParams();
-
+  // #region Load professional data
   useEffect(() => {
     if (id) {
       setIsLoading(true);
-      // prettier-ignore
+
       ProfessionalApiService
       .findOne(id)
       .then((response: IResponse) => {
@@ -53,7 +54,9 @@ export default function ViewProfessional() {
             body: `${PV_CONFIG.email.body[0]} ${capitalize(response.data?.firstName)}${PV_CONFIG.email.body[1]}`,
           });
           setShowCard(true);
-          getWorkingDays(response.data.configuration.workingDays);
+
+          const legibleWorkingDays: string = CalendarService.getLegibleWorkingDays(response.data.configuration.workingDays, true);
+          setLegibleWorkingDays(legibleWorkingDays);
         }
         if (response.statusCode > 399) {
           setInfoCard({ text: response.message, type: 'warning' });
@@ -66,41 +69,7 @@ export default function ViewProfessional() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
-
-  function getWorkingDays(days: IWorkingDay[]) {
-    const daysOfWeek: string[] = APP_CONFIG.daysofWeek.long;
-
-    if (!days) return;
-
-    const daysArray = days
-      .map((day: IWorkingDay) => {
-        if (day.value === true) return day.day;
-      })
-      .map((value) => {
-        if (typeof value === 'number' && value >= 0 && value < daysOfWeek.length) {
-          return daysOfWeek[value];
-        }
-        return value;
-      })
-      .filter((value) => typeof value === 'string');
-
-    return formattedWorkingDays(daysArray);
-  }
-
-  function formattedWorkingDays(daysArray: (string | number | undefined | null)[]) {
-    return daysArray
-      .map((item, index, arr) => {
-        if (arr.length === 1) {
-          return item;
-        } else {
-          if (index === arr.length - 1) return `${PV_CONFIG.words.and} ${item}`;
-          if (index === arr.length - 2) return `${item}`;
-          return `${item},`;
-        }
-      })
-      .join(' ');
-  }
-
+  // #endregion
   return (
     <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
       {/* Page Header */}
@@ -135,7 +104,11 @@ export default function ViewProfessional() {
                         <DropdownMenuContent className='w-fit' align='end'>
                           <DropdownMenuGroup>
                             {/* Send email */}
-                            <Link to={`https://mail.google.com/mail/?view=cm&to=${emailObject.to}&su=${emailObject.subject}&body=${emailObject.body}`} target='_blank' className='transition-colors hover:text-indigo-500'>
+                            <Link
+                              to={`https://mail.google.com/mail/?view=cm&to=${emailObject.to}&su=${emailObject.subject}&body=${emailObject.body}`}
+                              target='_blank'
+                              className='transition-colors hover:text-indigo-500'
+                            >
                               <DropdownMenuItem>{PV_CONFIG.dropdownMenu[0].name}</DropdownMenuItem>
                             </Link>
                             {/* Send whatsapp */}
@@ -172,17 +145,20 @@ export default function ViewProfessional() {
                 {professional.configuration?.workingDays && (
                   <div className='flex items-center space-x-4'>
                     <CalendarDays className='h-6 w-6' strokeWidth={2} />
-                    <span className='text-base font-medium'>{getWorkingDays(professional.configuration.workingDays)}</span>
+                    <span className='text-base font-medium'>{legibleWorkingDays}</span>
                   </div>
                 )}
-                {professional.configuration?.scheduleTimeInit && professional.configuration?.timeSlotUnavailableInit && professional.configuration?.timeSlotUnavailableEnd && professional.configuration?.scheduleTimeEnd && (
-                  <div className='flex items-center space-x-4'>
-                    <CalendarClock className='h-6 w-6' strokeWidth={2} />
-                    <span className='text-base font-medium'>
-                      {`${professional.configuration.scheduleTimeInit} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.timeSlotUnavailableInit} ${PV_CONFIG.words.slotsSeparator} ${professional.configuration.timeSlotUnavailableEnd} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.scheduleTimeEnd}`}
-                    </span>
-                  </div>
-                )}
+                {professional.configuration?.scheduleTimeInit &&
+                  professional.configuration?.timeSlotUnavailableInit &&
+                  professional.configuration?.timeSlotUnavailableEnd &&
+                  professional.configuration?.scheduleTimeEnd && (
+                    <div className='flex items-center space-x-4'>
+                      <CalendarClock className='h-6 w-6' strokeWidth={2} />
+                      <span className='text-base font-medium'>
+                        {`${professional.configuration.scheduleTimeInit} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.timeSlotUnavailableInit} ${PV_CONFIG.words.slotsSeparator} ${professional.configuration.timeSlotUnavailableEnd} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.scheduleTimeEnd}`}
+                      </span>
+                    </div>
+                  )}
                 {professional.phone && (
                   <div className='flex items-center space-x-4'>
                     <Smartphone className='h-6 w-6' strokeWidth={2} />
