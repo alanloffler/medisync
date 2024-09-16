@@ -268,11 +268,9 @@ export default function Appointments() {
                 <>
                   <Steps text={APPO_CONFIG.steps.text2} step='2' className='bg-primary/20 text-primary' />
                   <Calendar
-                    // captionLayout={'dropdown'}
-                    // fromYear={2023}
-                    // toYear={2025}
                     className='h-fit w-fit flex-row rounded-lg bg-card text-card-foreground shadow-sm'
                     disabled={[
+                      new Date(2024,8,17), new Date(2024,8,18),
                       { dayOfWeek: disabledDays },
                       // { before: new Date() }, // This is to disable past days
                       { from: new Date(2024, 5, 5) },
@@ -283,6 +281,10 @@ export default function Appointments() {
                     showOutsideDays={false}
                     onDayClick={(event) => setSelectedDate(event)}
                     // TODO: add select for month and year, see how it works
+                    // Replacing the code below ->
+                    // captionLayout={'dropdown'}
+                    // fromYear={2023}
+                    // toYear={2025}
                     footer={<div className='text-xs'>Footer</div>}
                   />
                 </>
@@ -422,7 +424,7 @@ export default function Appointments() {
         </div>
       </main>
       {/* Dialog */}
-      // TODO: make this dialog dynamic
+      {/* TODO: make this dialog dynamic */}
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent>
           <DialogHeader>
