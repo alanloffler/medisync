@@ -69,7 +69,7 @@ export default function UpdateProfessional() {
     lastName: '',
     phone: '',
     specialization: '',
-    titleAbbreviation: '',
+    title: ''
   };
 
   const updateForm = useForm<z.infer<typeof professionalSchema>>({
@@ -101,6 +101,7 @@ export default function UpdateProfessional() {
       ProfessionalApiService
       .findOne(id)
       .then((response) => {
+        console.log(response);
         setProfessional(response.data);
         setProfessionalLoading(false);
         setIsLoading(false);
@@ -129,7 +130,7 @@ export default function UpdateProfessional() {
       updateForm.setValue('lastName', capitalize(professional.lastName) || '');
       updateForm.setValue('phone', professional.phone);
       updateForm.setValue('specialization', professional.specialization._id);
-      updateForm.setValue('titleAbbreviation', capitalize(professional.titleAbbreviation) || '');
+      updateForm.setValue('title', capitalize(professional.title.abbreviation) || '');
 
       valuesRef.current = updateForm.getValues();
     }
@@ -281,7 +282,7 @@ export default function UpdateProfessional() {
                   <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
                       control={updateForm.control}
-                      name='titleAbbreviation'
+                      name='title'
                       render={({ field }) => (
                         <FormItem className=''>
                           <FormLabel>{PU_CONFIG.labels.titleAbbreviation}</FormLabel>
