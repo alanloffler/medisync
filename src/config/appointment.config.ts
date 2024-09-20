@@ -44,6 +44,7 @@ export const APPO_CONFIG = {
     availableAppointmentPlural: 'turnos disponibles',
     availableAppointmentSingular: 'turno disponible',
     availableDays: 'Días de atención:',
+    notAvailable: 'No disponible',
   },
   steps: {
     text1: 'Seleccionar profesional',
@@ -58,10 +59,12 @@ export const APPO_CONFIG = {
     selectWorkingDay: 'Seleccione un día laborable',
   },
   words: {
+    from: 'de',
     hours: 'hs.',
     hoursSeparator: '-',
     schedule: 'Horarios:',
     shiftPrefix: 'T',
+    to: 'a',
     unavailable: '-',
   },
 };
