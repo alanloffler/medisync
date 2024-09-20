@@ -239,7 +239,7 @@ export default function Appointments() {
         <div className='flex flex-col gap-4 overflow-x-auto md:flex-row lg:flex-row'>
           <div className='flex h-fit flex-col gap-5 md:mx-auto md:w-1/3 lg:mx-auto lg:w-1/3'>
             <div className='flex w-full flex-col space-y-4'>
-              <Steps text={APPO_CONFIG.steps.text1} step='1' className='bg-primary/20 text-primary' />
+              <Steps text={APPO_CONFIG.steps.text1} step='1' />
               <ProfessionalsCombobox
                 onSelectProfessional={(professional) => setProfessionalSelected(professional)}
                 options={{
@@ -266,7 +266,7 @@ export default function Appointments() {
             <div className={cn('flex flex-col space-y-4', showCalendar ? 'pointer-events-auto' : 'pointer-events-none')}>
               {professionalSelected && (
                 <>
-                  <Steps text={APPO_CONFIG.steps.text2} step='2' className='bg-primary/20 text-primary' />
+                  <Steps text={APPO_CONFIG.steps.text2} step='2' />
                   <Calendar
                     className='h-fit w-fit flex-row rounded-lg bg-card text-card-foreground shadow-sm'
                     disabled={[
@@ -294,7 +294,7 @@ export default function Appointments() {
           <div className='flex flex-col gap-4 md:w-2/3 lg:w-2/3'>
             {professionalSelected && selectedDate && (
               <>
-                <Steps text={APPO_CONFIG.steps.text3} step='3' className='bg-primary/20 text-primary' />
+                <Steps text={APPO_CONFIG.steps.text3} step='3' />
                 {todayIsWorkingDay ? (
                   loadingAppointments ? (
                     <LoadingDB text={'Cargando agenda'} variant='card' size='default' />
@@ -314,9 +314,15 @@ export default function Appointments() {
                         </CardTitle>
                         {!errorMessage && <div className='py-2 text-center text-base font-semibold text-primary'>{selectedLegibleDate}</div>}
                         {showTimeSlots && (
-                          <div className='flex flex-row items-center justify-start space-x-3 px-3 pb-3'>
-                            <div className='w-fit rounded-sm border border-primary/20 bg-primary/15 px-2 py-1 text-sm font-semibold text-primary'>{`${availableSlotsToReserve} ${availableSlotsToReserve === 1 ? APPO_CONFIG.phrases.availableAppointmentSingular : APPO_CONFIG.phrases.availableAppointmentPlural}`}</div>
-                            <div className='w-fit rounded-sm border border-slate-200 bg-slate-100 px-2 py-1 text-sm font-semibold text-slate-700'>{`${appointments.length} ${appointments.length === 1 ? APPO_CONFIG.phrases.alreadyReservedSingular : APPO_CONFIG.phrases.alreadyReservedPlural}`}</div>
+                          <div className='flex justify-start space-x-3 px-3 pb-2 text-sm font-normal'>
+                            <div className='flex flex-row items-center space-x-1.5'>
+                              <div className='w-2.5 h-2.5 rounded-full bg-emerald-300 border border-emerald-400'></div>
+                              <span>{`${availableSlotsToReserve} ${availableSlotsToReserve === 1 ? APPO_CONFIG.phrases.availableAppointmentSingular : APPO_CONFIG.phrases.availableAppointmentPlural}`}</span>
+                            </div>
+                            <div className='flex flex-row items-center space-x-1.5'>
+                              <div className='w-2.5 h-2.5 rounded-full bg-sky-300 border border-sky-400'></div>
+                              <span>{`${appointments.length} ${appointments.length === 1 ? APPO_CONFIG.phrases.alreadyReservedSingular : APPO_CONFIG.phrases.alreadyReservedPlural}`}</span>
+                            </div>
                           </div>
                         )}
                       </CardHeader>
