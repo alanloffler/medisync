@@ -87,14 +87,14 @@ export function UsersCombo({
         )}
       </div>
       {openCombobox && (
-        <ul className='absolute z-50 w-72 mt-1 border overflow-y-auto h-40 rounded-md bg-popover p-3 text-popover-foreground shadow-md'>
+        <ul className='absolute z-50 mt-1 h-40 w-72 overflow-y-auto rounded-md border bg-popover p-3 text-popover-foreground shadow-md'>
           {users.length > 0 &&
             users.map((user) => (
               <li key={user._id} className='relative'>
                 <button
                   type='button'
                   onClick={() => handleSelectedUser(user)}
-                  className='w-full rounded-sm px-1.5 py-0.5 text-left text-sm font-normal hover:bg-slate-100 hover:transition-all space-x-2'
+                  className='w-full space-x-2 rounded-sm px-1.5 py-0.5 text-left text-sm font-normal hover:bg-slate-100 hover:transition-all'
                 >
                   <span>{`${capitalize(user.lastName)}, ${capitalize(user.firstName)}`}</span>
                   <span className='italic text-slate-500'>{`- DNI ${delimiter(user.dni, '.', 3)}`}</span>
