@@ -1,12 +1,13 @@
+// Icons: https://lucide.dev/
+import { X } from 'lucide-react';
 // Components: https://ui.shadcn.com/docs/components
 import { Input } from '@/core/components/ui/input';
 // App
 import { ChangeEvent, useEffect, useState } from 'react';
-import { IUser } from '../interfaces/user.interface';
-import { UserApiService } from '../services/user-api.service';
+import { IUser } from '@/pages/users/interfaces/user.interface';
+import { UserApiService } from '@/pages/users/services/user-api.service';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useDebounce } from '@/core/hooks/useDebounce';
-import { X } from 'lucide-react';
 // React component
 export function UsersCombo({ searchBy, searchResult, placeholder }: { searchBy: 'name' | 'dni'; searchResult: (user: IUser) => void, placeholder: string }) {
   const [search, setSearch] = useState<string>('');
@@ -68,16 +69,16 @@ export function UsersCombo({ searchBy, searchResult, placeholder }: { searchBy: 
   return (
     <div className='relative w-full'>
       <div className='flex flex-row items-center space-x-3 w-full'>
-        <Input type={searchBy === 'name' ? 'text' : 'number'} value={search} onChange={handleSearch} placeholder={placeholder} className='w-full' />
+        <Input type={searchBy === 'name' ? 'text' : 'number'} value={search} onChange={handleSearch} placeholder={placeholder} className='h-9' />
         {openCombobox && <button onClick={handleCloseCombobox} className='p-2 bg-slate-200 rounded-full'>
           <X className='h-4 w-4' strokeWidth={2} />
         </button>}
       </div>
       {openCombobox && (
-        <ul className='absolute z-50 w-72 rounded-md bg-popover p-4 text-popover-foreground shadow-md'>
+        <ul className='absolute z-50 w-72 rounded-md bg-popover p-3 text-popover-foreground shadow-md'>
           {users.length > 0 && users.map((user) => (
             <li key={user._id} className='relative'>
-              <button type='button' onClick={() => handleSelectedUser(user)} className='w-full text-left'>{`${capitalize(user.lastName)}, ${capitalize(user.firstName)} (${user.dni})`}</button>
+              <button type='button' onClick={() => handleSelectedUser(user)} className='w-full text-left font-normal text-sm hover:bg-slate-100 px-1.5 py-0.5 rounded-sm hover:transition-all'>{`${capitalize(user.lastName)}, ${capitalize(user.firstName)} (${user.dni})`}</button>
             </li>
           ))}
           {showNoResults && <>No results</>}
