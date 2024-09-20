@@ -270,7 +270,8 @@ export default function Appointments() {
                   <Calendar
                     className='h-fit w-fit flex-row rounded-lg bg-card text-card-foreground shadow-sm'
                     disabled={[
-                      new Date(2024,8,17), new Date(2024,8,18),
+                      new Date(2024, 8, 17),
+                      new Date(2024, 8, 18),
                       { dayOfWeek: disabledDays },
                       // { before: new Date() }, // This is to disable past days
                       { from: new Date(2024, 5, 5) },
@@ -316,11 +317,11 @@ export default function Appointments() {
                         {showTimeSlots && (
                           <div className='flex justify-start space-x-3 px-3 pb-2 text-sm font-normal'>
                             <div className='flex flex-row items-center space-x-1.5'>
-                              <div className='w-2.5 h-2.5 rounded-full bg-emerald-300 border border-emerald-400'></div>
+                              <div className='h-2.5 w-2.5 rounded-full border border-emerald-400 bg-emerald-300'></div>
                               <span>{`${availableSlotsToReserve} ${availableSlotsToReserve === 1 ? APPO_CONFIG.phrases.availableAppointmentSingular : APPO_CONFIG.phrases.availableAppointmentPlural}`}</span>
                             </div>
                             <div className='flex flex-row items-center space-x-1.5'>
-                              <div className='w-2.5 h-2.5 rounded-full bg-sky-300 border border-sky-400'></div>
+                              <div className='h-2.5 w-2.5 rounded-full border border-sky-400 bg-sky-300'></div>
                               <span>{`${appointments.length} ${appointments.length === 1 ? APPO_CONFIG.phrases.alreadyReservedSingular : APPO_CONFIG.phrases.alreadyReservedPlural}`}</span>
                             </div>
                           </div>
@@ -344,12 +345,12 @@ export default function Appointments() {
                               </TableRow>
                             </TableHeader>
                             <TableBody>
-                              {timeSlots.map((slot, index) => (
-                                <TableRow
-                                  key={index}
-                                  className={`text-base ${slot.available ? 'text-foreground' : 'bg-slate-100 text-slate-400'} ${index === timeSlots.length - 1 ? 'border-none' : 'border-b'}`}
-                                >
-                                  {slot.available ? (
+                              {timeSlots.map((slot, index) =>
+                                slot.available ? (
+                                  <TableRow
+                                    key={index}
+                                    className={`text-base ${slot.available ? 'text-foreground' : 'bg-slate-100 text-slate-400'} ${index === timeSlots.length - 1 ? 'border-none' : 'border-b'}`}
+                                  >
                                     <>
                                       <TableCell className='p-1.5 text-center text-sm font-normal'>
                                         {APPO_CONFIG.words.shiftPrefix + slot.id}
@@ -398,19 +399,18 @@ export default function Appointments() {
                                         )}
                                       </TableCell>
                                     </>
-                                  ) : (
-                                    <>
-                                      <TableCell className='p-1.5 text-center text-sm font-semibold'>{APPO_CONFIG.words.unavailable}</TableCell>
-                                      <TableCell className='p-1.5 text-left text-sm'>
-                                        {slot.available ? slot.begin : `${slot.begin} ${APPO_CONFIG.words.hoursSeparator} ${slot.end}`}{' '}
-                                        {APPO_CONFIG.words.hours}
-                                      </TableCell>
-                                      <TableCell className='p-1.5'></TableCell>
-                                      <TableCell className='p-1.5'></TableCell>
-                                    </>
-                                  )}
-                                </TableRow>
-                              ))}
+                                  </TableRow>
+                                ) : (
+                                  <TableRow className='bg-slate-100/60 text-slate-400'>
+                                    <TableCell colSpan={4} className='p-1.5 text-center'>
+                                      {slot.available
+                                        ? slot.begin
+                                        : `${APPO_CONFIG.phrases.notAvailable} ${APPO_CONFIG.words.from} ${slot.begin} ${APPO_CONFIG.words.to} ${slot.end}`}
+                                      {APPO_CONFIG.words.hours}
+                                    </TableCell>
+                                  </TableRow>
+                                ),
+                              )}
                             </TableBody>
                           </Table>
                         </CardContent>
