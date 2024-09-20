@@ -13,6 +13,9 @@ input[type="number"] {
 
 @layer base {
   :root {
+    font-family: InterVariable, ui-sans-serif, system-ui, sans-serif;
+		font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
@@ -87,4 +90,28 @@ input[type="number"] {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@supports (font-variation-settings: normal) {
+	:root {
+		font-family: 'InterVariable', sans-serif;
+		font-optical-sizing: auto;
+		font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+	}
+}
+
+@font-face {
+	font-family: InterVariable;
+	font-style: normal;
+	font-weight: 100 900;
+	font-display: swap;
+	src: url('assets/fonts/InterVariable.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: InterVariable;
+	font-style: italic;
+	font-weight: 100 900;
+	font-display: swap;
+	src: url('assets/fonts/InterVariable-Italic.woff2') format('woff2');
 }
