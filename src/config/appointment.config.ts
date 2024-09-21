@@ -20,9 +20,6 @@ export const APPO_CONFIG = {
         save: 'Confirmar reserva',
       },
       description: 'Al confirmar, vas a realizar una reserva de turno',
-      search: {
-        placeholder: 'Buscar por DNI',
-      },
       title: 'Reserva de turno',
     },
     cancel: {
@@ -33,7 +30,12 @@ export const APPO_CONFIG = {
       contentText: 'Cancelación del turno para ',
       description: 'Al confirmar, vas a cancelar la reserva de turno',
       title: 'Cancelación de turno',
-    }
+    },
+    userCombobox: {
+      dniLabel: '- DNI',
+      noResults: 'Búsqueda sin resultados',
+      placeholder: 'Buscar por DNI',
+    },
   },
   errors: {
     configurationUnavailable: 'El profesional no tiene configuración de agenda',
@@ -73,7 +75,7 @@ export const VIEW_APPOINTMENT_CONFIG = {
   breadcrumb: [
     { id: 1, name: 'Inicio', path: '/' },
     { id: 2, name: 'Turnos', path: '/' },
-    { id: 3, name: 'Detalle', path: '' }, 
+    { id: 3, name: 'Detalle', path: '' },
   ],
   button: {
     back: 'Volver',
@@ -86,5 +88,5 @@ export const VIEW_APPOINTMENT_CONFIG = {
   title: 'Detalle de turno',
   words: {
     hoursAbbreviation: 'hs.',
-  }
+  },
 };
