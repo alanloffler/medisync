@@ -2,7 +2,9 @@
 import { X } from 'lucide-react';
 // Components: https://ui.shadcn.com/docs/components
 import { Input } from '@/core/components/ui/input';
+import { ScrollArea } from '@/core/components/ui/scroll-area';
 // App
+import { APPO_CONFIG } from '@/config/appointment.config';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { IUser } from '@/pages/users/interfaces/user.interface';
 import { UserApiService } from '@/pages/users/services/user-api.service';
@@ -21,12 +23,12 @@ export function UsersCombo({
 }) {
   const [search, setSearch] = useState<string>('');
   const [users, setUsers] = useState<IUser[]>([] as IUser[]);
-  const DEBOUNCE_TIME = 500;
-  const capitalize = useCapitalize();
-  const debouncedSearch = useDebounce<string>(search, DEBOUNCE_TIME);
-  const delimiter: (input: string | number, delimiter: string, each: number) => string = useDelimiter();
   const [openCombobox, setOpenCombobox] = useState<boolean>(false);
   const [showNoResults, setShowNoResults] = useState<boolean>(false);
+  const DEBOUNCE_TIME: number = 500;
+  const capitalize: (sentence: string | undefined) => string | undefined = useCapitalize();
+  const debouncedSearch: string = useDebounce<string>(search, DEBOUNCE_TIME);
+  const delimiter: (input: string | number, delimiter: string, each: number) => string = useDelimiter();
 
   function handleSearch(event: ChangeEvent<HTMLInputElement>): void {
     setSearch(event.target.value);
@@ -77,9 +79,15 @@ export function UsersCombo({
   }, [debouncedSearch, searchBy]);
 
   return (
-    <div className='relative w-full'>
-      <div className='flex w-full flex-row items-center space-x-3'>
-        <Input type={searchBy === 'name' ? 'text' : 'number'} value={search} onChange={handleSearch} placeholder={placeholder} className='h-9' />
+    <div className='flex flex-col'>
+      <div className='flex flex-row items-center space-x-3'>
+        <Input
+          type={searchBy === 'name' ? 'text' : 'number'}
+          value={search}
+          onChange={handleSearch}
+          placeholder={placeholder}
+          className='h-9 w-full'
+        />
         {openCombobox && (
           <button onClick={handleCloseCombobox} className='rounded-full bg-slate-200 p-2'>
             <X className='h-4 w-4' strokeWidth={2} />
@@ -87,22 +95,28 @@ export function UsersCombo({
         )}
       </div>
       {openCombobox && (
-        <ul className='absolute z-50 mt-1 h-40 w-72 overflow-y-auto rounded-md border bg-popover p-3 text-popover-foreground shadow-md'>
-          {users.length > 0 &&
-            users.map((user) => (
-              <li key={user._id} className='relative'>
-                <button
-                  type='button'
-                  onClick={() => handleSelectedUser(user)}
-                  className='w-full space-x-2 rounded-sm px-1.5 py-0.5 text-left text-sm font-normal hover:bg-slate-100 hover:transition-all'
-                >
-                  <span>{`${capitalize(user.lastName)}, ${capitalize(user.firstName)}`}</span>
-                  <span className='italic text-slate-500'>{`- DNI ${delimiter(user.dni, '.', 3)}`}</span>
-                </button>
+        <div className='absolute mt-9 flex min-w-[50%] flex-row text-sm font-normal'>
+          <ScrollArea className='mt-1 max-h-40 w-full overflow-auto rounded-md border bg-popover p-1 shadow-md'>
+            {users.length > 0 &&
+              users.map((user) => (
+                <li key={user._id} className='list-none'>
+                  <button
+                    type='button'
+                    onClick={() => handleSelectedUser(user)}
+                    className='w-full space-x-2 rounded-sm px-1.5 py-0.5 text-left hover:bg-slate-100 hover:transition-all'
+                  >
+                    <span>{`${capitalize(user.lastName)}, ${capitalize(user.firstName)}`}</span>
+                    <span className='italic text-slate-500'>{`${APPO_CONFIG.dialog.userCombobox.dniLabel} ${delimiter(user.dni, '.', 3)}`}</span>
+                  </button>
+                </li>
+              ))}
+            {showNoResults && (
+              <li className='list-none'>
+                <span className='italic text-rose-500'>{APPO_CONFIG.dialog.userCombobox.noResults}</span>
               </li>
-            ))}
-          {showNoResults && <>No results</>}
-        </ul>
+            )}
+          </ScrollArea>
+        </div>
       )}
     </div>
   );
