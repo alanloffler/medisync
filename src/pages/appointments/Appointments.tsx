@@ -439,7 +439,7 @@ export default function Appointments() {
             {dialogContent.action === 'reserve' && (
               <div className='pt-4'>
                 <div className='pt-4'>
-                  <UsersCombo searchBy='dni' searchResult={(e) => setUserSelected(e)} placeholder={APPO_CONFIG.dialog.reserve.search.placeholder} />
+                  <UsersCombo searchBy='dni' searchResult={(e) => setUserSelected(e)} placeholder={APPO_CONFIG.dialog.userCombobox.placeholder} />
                   {userSelected._id && (
                     <>
                       <div className='flex items-center space-x-2 py-4'>
