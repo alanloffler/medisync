@@ -1,3 +1,3 @@
-export const FOOTER_TEXT = {
+export const FOOTER_CONFIG = {
     title: '© 2024 MediSync'
 }

@@ -4,7 +4,7 @@ import { SquareChevronRight } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/core/components/ui/dropdown-menu';
 import { ScrollArea } from '@/core/components/ui/scroll-area';
 // App
-import { FOOTER_TEXT } from '../../config/layout/footer.config';
+import { FOOTER_CONFIG } from '@/config/layout/footer.config';
 import { useEffect, useState } from 'react';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 // React component
@@ -57,7 +57,7 @@ export function Footer() {
             </>
           )}
         </div>
-        <div className='hidden justify-end text-sm font-medium text-primary md:flex lg:flex'>{FOOTER_TEXT.title}</div>
+        <div className='hidden justify-end text-sm font-medium text-primary md:flex lg:flex'>{FOOTER_CONFIG.title}</div>
       </div>
     </footer>
   );
