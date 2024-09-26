@@ -30,13 +30,17 @@ export function Footer() {
             </DropdownMenuTrigger>
             <DropdownMenuContent className='ml-4 max-h-[250px]'>
               <ScrollArea className='h-[250px] p-1.5'>
-                <ul className='text-xs'>
+                <ul className='w-full text-xs'>
                   {notifications.map((notification) => (
-                    <li key={crypto.randomUUID()} className='flex flex-row items-center space-x-2 py-1.5 border-t'>
-                      {notification.type === 'success' ? <div className='w-2 rounded-full bg-green-500 p-1.5'></div> : <div className='w-2 rounded-full bg-red-500 p-1.5'></div>}
+                    <li key={crypto.randomUUID()} className='flex w-full flex-row items-center space-x-2 border-t py-1.5'>
+                      {notification.type === 'success' ? (
+                        <div className='w-2 rounded-full bg-green-500 p-1.5'></div>
+                      ) : (
+                        <div className='w-2 rounded-full bg-red-500 p-1.5'></div>
+                      )}
                       <span className='font-medium text-slate-500'>[{notification.date}]</span>
                       <span>{`>`}</span>
-                      <span className='text-slate-500'>{notification.message}</span>
+                      <span className='flex-grow text-slate-500'>{notification.message}</span>
                     </li>
                   ))}
                 </ul>
@@ -47,7 +51,11 @@ export function Footer() {
             <>
               {notifications[notifications.length - 1] && (
                 <div className={`flex items-center space-x-2 py-1`}>
-                  {notifications[0].type === 'success' ? <div className='rounded-full bg-green-500 p-1.5'></div> : <div className='rounded-full bg-red-500 p-1.5'></div>}
+                  {notifications[0].type === 'success' ? (
+                    <div className='rounded-full bg-green-500 p-1.5'></div>
+                  ) : (
+                    <div className='rounded-full bg-red-500 p-1.5'></div>
+                  )}
                   <div className='flex select-none space-x-1 text-nowrap py-3 text-xs'>
                     <span className='font-medium text-slate-500'>{`[${notifications[0].date}]`}</span>
                     <span className='text-slate-500'>{`> ${notifications[0].message}`}</span>
