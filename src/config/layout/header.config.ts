@@ -1,4 +1,3 @@
-// Header config
 export const HEADER_CONFIG = {
   appName: 'MediSync',
   headerMenu: [
@@ -7,9 +6,6 @@ export const HEADER_CONFIG = {
     { id: 3, title: 'Profesionales', path: '/professionals' },
     { id: 4, title: 'Pacientes', path: '/users' },
   ],
-  search: {
-    placeholder: 'Buscar turnos',
-  },
   user: {
     title: 'Mi cuenta',
     menuItems: [
