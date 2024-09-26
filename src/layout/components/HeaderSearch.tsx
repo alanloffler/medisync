@@ -2,7 +2,7 @@
 import { Search } from 'lucide-react';
 // Components: https://ui.shadcn.com/docs/components
 import { Input } from '@/core/components/ui/input';
-import { HEADER_CONFIG } from '../config/header.config';
+import { HEADER_CONFIG } from '../../config/layout/header.config';
 // React component
 export function HeaderSearch() {
   return (

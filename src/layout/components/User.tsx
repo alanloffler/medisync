@@ -8,7 +8,7 @@ import { DropdownMenuItem } from '@/core/components/ui/dropdown-menu';
 import { DropdownMenuLabel } from '@/core/components/ui/dropdown-menu';
 import { DropdownMenuSeparator } from '@/core/components/ui/dropdown-menu';
 // App
-import { HEADER_CONFIG } from '../config/header.config';
+import { HEADER_CONFIG } from '../../config/layout/header.config';
 import { Link } from 'react-router-dom';
 // React component
 export function User() {
