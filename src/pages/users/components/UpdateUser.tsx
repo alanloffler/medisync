@@ -79,6 +79,7 @@ export default function UpdateUser() {
     updateForm.setValue('firstName', capitalize(user.firstName) || '');
     updateForm.setValue('lastName', capitalize(user.lastName) || '');
     updateForm.setValue('phone', user.phone);
+    navigate('/users');
   }
   // #endregion
   // #region Load user data
