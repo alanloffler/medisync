@@ -348,7 +348,7 @@ export default function Appointments() {
                               {timeSlots.map((slot, index) =>
                                 slot.available ? (
                                   <TableRow
-                                    key={index}
+                                    key={crypto.randomUUID()}
                                     className={`text-base ${slot.available ? 'text-foreground' : 'bg-slate-100 text-slate-400'} ${index === timeSlots.length - 1 ? 'border-none' : 'border-b'}`}
                                   >
                                     <>
