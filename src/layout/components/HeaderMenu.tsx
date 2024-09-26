@@ -4,9 +4,9 @@ import { Package2, Menu } from 'lucide-react';
 import { Button } from '@/core/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/core/components/ui/sheet';
 // App components
-import { useHeaderMenuStore } from '../stores/header-menu.service';
+import { useHeaderMenuStore } from '@/layout/stores/header-menu.service';
 // App
-import { HEADER_CONFIG } from '@/layout/config/header.config';
+import { HEADER_CONFIG } from '@/config/layout/header.config';
 import { Link } from 'react-router-dom';
 import { MouseEvent } from 'react';
 // React component
