@@ -28,7 +28,7 @@ import { IWorkingDay } from '@/pages/professionals/interfaces/working-days.inter
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { es, enUS } from 'date-fns/locale';
-import { format } from '@formkit/tempo';
+import { format, range } from '@formkit/tempo';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useCapitalizeFirstLetter } from '@/core/hooks/useCapitalizeFirstLetter';
 import { useEffect, useState } from 'react';
@@ -61,6 +61,7 @@ export default function Appointments() {
 
 
   const [yearsRange, setYearsRange] = useState<string[]>([]);
+  const [monthsRange, setMonthsRange] = useState<string[]>([]);
   // #region professionalSelected actions
   useEffect(() => {
     if (professionalSelected) {
@@ -91,6 +92,9 @@ export default function Appointments() {
       _yearsRange.push((actualYear - i));
     }
     setYearsRange(_yearsRange.sort((a, b) => a - b).map(year => year.toString()));
+    // Generate Select Months
+    const _months = range('MMMM', 'es');
+    setMonthsRange(_months);
   }, [professionalSelected]);
   // #endregion
   // #region Load data, schedule creation, time slots generation and appointments insertion.
@@ -349,9 +353,7 @@ export default function Appointments() {
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
-                              <SelectItem value='apple'>2023</SelectItem>
-                              <SelectItem value='banana'>2024</SelectItem>
-                              <SelectItem value='blueberry'>2025</SelectItem>
+                              {monthsRange.map(month => <SelectItem key={month} value={month}>{capitalize(month)}</SelectItem>)}
                             </SelectGroup>
                           </SelectContent>
                         </Select>
