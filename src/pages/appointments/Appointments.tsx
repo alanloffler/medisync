@@ -81,11 +81,11 @@ export default function Appointments() {
     setSelectedDate(undefined);
     setShowCalendar(true);
     setSelectedDate(new Date());
-
-    const calendarYears: string[] = CalendarService.generateYearsRange(1);
+    // TODO: make both language and years range by admin configuration (db entity)
+    const calendarYears: string[] = CalendarService.generateYearsRange(APPO_CONFIG.calendar.yearsRange);
     setCalendarYears(calendarYears);
 
-    const calendarMonths: string[] = CalendarService.generateMonths('es');
+    const calendarMonths: string[] = CalendarService.generateMonths(APPO_CONFIG.calendar.language);
     setCalendarMonths(calendarMonths);
   }, [professionalSelected]);
   // #endregion
