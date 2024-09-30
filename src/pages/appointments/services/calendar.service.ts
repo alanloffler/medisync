@@ -43,7 +43,7 @@ export class CalendarService {
     let daysOfWeek: string[] = range('dddd', 'es');
 
     if (capitalized) daysOfWeek = daysOfWeek.map((day) => day.charAt(0).toUpperCase() + day.slice(1));
-    
+
     return days
       .filter((day) => day.value)
       .map((day) => daysOfWeek[day.day])
@@ -61,5 +61,25 @@ export class CalendarService {
     } else {
       return `${slotTimeInit} ${PV_CONFIG.words.hoursSeparator} ${slotTimeEnd}`;
     }
+  }
+
+  public static generateYearsRange(rangeLimit: number): string[] {
+    const yearsRange: number[] = [];
+    const actualYear: number = new Date().getFullYear();
+
+    yearsRange.push(actualYear);
+
+    for (let i = 1; i <= rangeLimit; i++) {
+      yearsRange.push(actualYear + i);
+      yearsRange.push(actualYear - i);
+    }
+
+    const orderedYearsRange: string[] = yearsRange.sort((a, b) => a - b).map((year) => year.toString());
+
+    return orderedYearsRange;
+  }
+
+  public static generateMonths(language: string): string[] {
+    return range('MMMM', language);
   }
 }
