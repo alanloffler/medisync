@@ -331,7 +331,7 @@ export default function Appointments() {
                       <div className='flex text-xs w-full pt-3 space-x-3'>
                         <Select defaultValue={new Date().getFullYear().toString()}>
                           <SelectTrigger className='w-1/2 h-7 text-xs'>
-                            <SelectValue placeholder='Año' />
+                            <SelectValue placeholder={APPO_CONFIG.calendar.placeholder.year} />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
@@ -341,7 +341,7 @@ export default function Appointments() {
                         </Select>
                         <Select defaultValue={format(new Date(), 'MMMM')}>
                           <SelectTrigger className='w-1/2 h-7 text-xs'>
-                            <SelectValue placeholder='Mes' />
+                            <SelectValue placeholder={APPO_CONFIG.calendar.placeholder.month} />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
