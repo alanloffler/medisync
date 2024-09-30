@@ -6,9 +6,11 @@ export const APPO_CONFIG = {
   },
   calendar: {
     language: 'es',
-    monthLabel: 'Mes',
+    placeholder: {
+      month: 'Mes',
+      year: 'Año',
+    },
     yearsRange: 1,
-    yearLabel: 'Año',
   },
   combobox: {
     loadingText: 'Cargando profesionales',
