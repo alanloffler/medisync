@@ -196,11 +196,7 @@ export default function Appointments() {
     if (action === 'reserve') {
       const reserveDialogContent: IDialog = {
         action: 'reserve',
-        content: (
-          <div className='pt-4'>
-            <UsersCombo searchBy='dni' searchResult={(e) => setUserSelected(e)} placeholder={APPO_CONFIG.dialog.userCombobox.placeholder} />
-          </div>
-        ),
+        content: <UsersCombo searchBy='dni' searchResult={(e) => setUserSelected(e)} placeholder={APPO_CONFIG.dialog.userCombobox.placeholder} />,
         description: APPO_CONFIG.dialog.reserve.description,
         title: APPO_CONFIG.dialog.reserve.title,
       };
@@ -214,7 +210,7 @@ export default function Appointments() {
       const cancelDialogContent: IDialog = {
         action: 'cancel',
         content: (
-          <div className='space-y-2 pt-4'>
+          <div className='space-y-2'>
             <div>
               {APPO_CONFIG.dialog.cancel.contentText}
               <span className='font-semibold'>
@@ -241,6 +237,7 @@ export default function Appointments() {
 
   function generateReservationSummary(userSelected: IUser): JSX.Element {
     return (
+      // TODO: get text from config file
       <div className='space-y-2'>
         <div className='flex items-center space-x-2'>
           <ClipboardCheck className='h-5 w-5' strokeWidth={2} />
@@ -467,9 +464,11 @@ export default function Appointments() {
           <DialogHeader>
             <DialogTitle className='text-xl'>{dialogContent.title}</DialogTitle>
             <DialogDescription>{dialogContent.description}</DialogDescription>
-            {dialogContent.action === 'reserve' && !userSelected._id && dialogContent.content}
-            {dialogContent.action === 'reserve' && userSelected._id && generateReservationSummary(userSelected)}
-            {dialogContent.action === 'cancel' && dialogContent.content}
+            <div className='pt-4'>
+              {dialogContent.action === 'reserve' && !userSelected._id && dialogContent.content}
+              {dialogContent.action === 'reserve' && userSelected._id && generateReservationSummary(userSelected)}
+              {dialogContent.action === 'cancel' && dialogContent.content}
+            </div>
             <div className='flex justify-end gap-6 pt-4'>
               <Button variant={'secondary'} size={'default'} onClick={() => handleResetDialog()}>
                 {APPO_CONFIG.buttons.cancelAppointment}
