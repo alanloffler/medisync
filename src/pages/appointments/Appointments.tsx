@@ -5,6 +5,7 @@ import { Button } from '@/core/components/ui/button';
 import { Calendar } from '@/core/components/ui/calendar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/core/components/ui/dialog';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/core/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/core/components/ui/table';
 // App components
 import { InfoCard } from '@/core/components/common/InfoCard';
@@ -57,6 +58,9 @@ export default function Appointments() {
   const capitalize: (sentence: string | undefined) => string | undefined = useCapitalize();
   const capitalizeFirstLetter: (sentence: string | undefined) => string | undefined = useCapitalizeFirstLetter();
   const navigate: NavigateFunction = useNavigate();
+
+
+  const [yearsRange, setYearsRange] = useState<string[]>([]);
   // #region professionalSelected actions
   useEffect(() => {
     if (professionalSelected) {
@@ -78,6 +82,15 @@ export default function Appointments() {
     setSelectedDate(undefined);
     setShowCalendar(true);
     setSelectedDate(new Date());
+    // TODO: Remove this from here in a method
+    const _yearsRange: number[] = [];
+    const actualYear: number = new Date().getFullYear();
+    _yearsRange.push(actualYear);
+    for (let i = 1; i <= 2; i++) {
+      _yearsRange.push((actualYear + i));
+      _yearsRange.push((actualYear - i));
+    }
+    setYearsRange(_yearsRange.sort((a, b) => a - b).map(year => year.toString()));
   }, [professionalSelected]);
   // #endregion
   // #region Load data, schedule creation, time slots generation and appointments insertion.
@@ -318,7 +331,32 @@ export default function Appointments() {
                     // captionLayout={'dropdown'}
                     // fromYear={2023}
                     // toYear={2025}
-                    footer={<div className='text-xs'>Footer</div>}
+                    footer={
+                      <div className='flex text-xs w-full pt-3 space-x-3'>
+                        <Select defaultValue={new Date().getFullYear().toString()}>
+                          <SelectTrigger className='w-1/2 h-7 text-xs'>
+                            <SelectValue placeholder='Año' />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              {yearsRange.map(year => <SelectItem key={year} value={year}>{year}</SelectItem>)}
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                        <Select>
+                          <SelectTrigger className='w-1/2 h-7 text-xs'>
+                            <SelectValue placeholder='Mes' />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectItem value='apple'>2023</SelectItem>
+                              <SelectItem value='banana'>2024</SelectItem>
+                              <SelectItem value='blueberry'>2025</SelectItem>
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    }
                   />
                 </>
               )}
