@@ -237,22 +237,25 @@ export default function Appointments() {
 
   function generateReservationSummary(userSelected: IUser): JSX.Element {
     return (
-      // TODO: get text from config file
       <div className='space-y-2'>
         <div className='flex items-center space-x-2'>
           <ClipboardCheck className='h-5 w-5' strokeWidth={2} />
           <div className='flex flex-row items-center space-x-1'>
-            <span>Reserva de turno para</span>
+            <span>{APPO_CONFIG.dialog.reserve.summary.line1}</span>
             <span className='font-bold'>{`${capitalize(userSelected.lastName)}, ${capitalize(userSelected.firstName)}`}</span>
           </div>
         </div>
         <div className='flex items-center space-x-2'>
           <CalendarCheck className='h-5 w-5' strokeWidth={2} />
-          <span>El día {selectedLegibleDate}</span>
+          <span>
+            {APPO_CONFIG.dialog.reserve.summary.line2} {selectedLegibleDate}
+          </span>
         </div>
         <div className='flex items-center space-x-2'>
           <Clock className='h-5 w-5' strokeWidth={2} />
-          <span>A las {selectedSlot.begin}</span>
+          <span>
+            {APPO_CONFIG.dialog.reserve.summary.line3} {selectedSlot.begin}
+          </span>
         </div>
         <div className='flex items-center space-x-2'>
           <BriefcaseMedical className='h-5 w-5' strokeWidth={2} />
