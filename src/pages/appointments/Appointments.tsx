@@ -196,7 +196,11 @@ export default function Appointments() {
     if (action === 'reserve') {
       const reserveDialogContent: IDialog = {
         action: 'reserve',
-        content: <UsersCombo searchBy='dni' searchResult={(e) => setUserSelected(e)} placeholder={APPO_CONFIG.dialog.userCombobox.placeholder} />,
+        content: (
+          <div className='pt-4'>
+            <UsersCombo searchBy='dni' searchResult={(e) => setUserSelected(e)} placeholder={APPO_CONFIG.dialog.userCombobox.placeholder} />
+          </div>
+        ),
         description: APPO_CONFIG.dialog.reserve.description,
         title: APPO_CONFIG.dialog.reserve.title,
       };
@@ -463,12 +467,8 @@ export default function Appointments() {
           <DialogHeader>
             <DialogTitle className='text-xl'>{dialogContent.title}</DialogTitle>
             <DialogDescription>{dialogContent.description}</DialogDescription>
-            {dialogContent.action === 'reserve' && (
-              <div className='pt-4'>
-                {!userSelected._id && dialogContent.content}
-                {userSelected._id && generateReservationSummary(userSelected)}
-              </div>
-            )}
+            {dialogContent.action === 'reserve' && !userSelected._id && dialogContent.content}
+            {dialogContent.action === 'reserve' && userSelected._id && generateReservationSummary(userSelected)}
             {dialogContent.action === 'cancel' && dialogContent.content}
             <div className='flex justify-end gap-6 pt-4'>
               <Button variant={'secondary'} size={'default'} onClick={() => handleResetDialog()}>
