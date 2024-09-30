@@ -20,6 +20,11 @@ export const APPO_CONFIG = {
         save: 'Confirmar reserva',
       },
       description: 'Al confirmar, vas a realizar una reserva de turno',
+      summary: {
+        line1: 'Reserva de turno para',
+        line2: 'El día',
+        line3: 'A las',
+      },
       title: 'Reserva de turno',
     },
     cancel: {
