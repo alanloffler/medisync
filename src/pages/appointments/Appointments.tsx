@@ -196,7 +196,7 @@ export default function Appointments() {
     if (action === 'reserve') {
       const reserveDialogContent: IDialog = {
         action: 'reserve',
-        content: '',
+        content: <UsersCombo searchBy='dni' searchResult={(e) => setUserSelected(e)} placeholder={APPO_CONFIG.dialog.userCombobox.placeholder} />,
         description: APPO_CONFIG.dialog.reserve.description,
         title: APPO_CONFIG.dialog.reserve.title,
       };
@@ -233,6 +233,32 @@ export default function Appointments() {
   function handleResetDialog(): void {
     setOpenDialog(false);
     setUserSelected({} as IUser);
+  }
+
+  function generateReservationSummary(userSelected: IUser): JSX.Element {
+    return (
+      <div className='space-y-2'>
+        <div className='flex items-center space-x-2'>
+          <ClipboardCheck className='h-5 w-5' strokeWidth={2} />
+          <div className='flex flex-row items-center space-x-1'>
+            <span>Reserva de turno para</span>
+            <span className='font-bold'>{`${capitalize(userSelected.lastName)}, ${capitalize(userSelected.firstName)}`}</span>
+          </div>
+        </div>
+        <div className='flex items-center space-x-2'>
+          <CalendarCheck className='h-5 w-5' strokeWidth={2} />
+          <span>El día {selectedLegibleDate}</span>
+        </div>
+        <div className='flex items-center space-x-2'>
+          <Clock className='h-5 w-5' strokeWidth={2} />
+          <span>A las {selectedSlot.begin}</span>
+        </div>
+        <div className='flex items-center space-x-2'>
+          <BriefcaseMedical className='h-5 w-5' strokeWidth={2} />
+          <span className='font-semibold'>{`${capitalize(professionalSelected?.title.abbreviation)} ${capitalize(professionalSelected?.lastName)}, ${capitalize(professionalSelected?.firstName)}`}</span>
+        </div>
+      </div>
+    );
   }
   // #endregion
   return (
@@ -432,7 +458,6 @@ export default function Appointments() {
         </div>
       </main>
       {/* Dialog */}
-      {/* TODO: make this dialog dynamic */}
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent>
           <DialogHeader>
@@ -440,33 +465,8 @@ export default function Appointments() {
             <DialogDescription>{dialogContent.description}</DialogDescription>
             {dialogContent.action === 'reserve' && (
               <div className='pt-4'>
-                {!userSelected._id && (
-                  <UsersCombo searchBy='dni' searchResult={(e) => setUserSelected(e)} placeholder={APPO_CONFIG.dialog.userCombobox.placeholder} />
-                )}
-                {userSelected._id && (
-                  <>
-                    <div className='flex items-center space-x-2 py-4'>
-                      <ClipboardCheck className='h-5 w-5' strokeWidth={2} />
-                      <span>
-                        {/* TODO: make this message dynamic */}
-                        Reserva de turno para{' '}
-                        <span className='font-bold'>{`${capitalize(userSelected.lastName)}, ${capitalize(userSelected.firstName)}`}</span>
-                      </span>
-                    </div>
-                    <div className='flex items-center space-x-2'>
-                      <CalendarCheck className='h-5 w-5' strokeWidth={2} />
-                      <span>El día {selectedLegibleDate}</span>
-                    </div>
-                    <div className='flex items-center space-x-2'>
-                      <Clock className='h-5 w-5' strokeWidth={2} />
-                      <span>A las {selectedSlot.begin}</span>
-                    </div>
-                    <div className='flex items-center space-x-2'>
-                      <BriefcaseMedical className='h-5 w-5' strokeWidth={2} />
-                      <span className='font-semibold'>{`${capitalize(professionalSelected?.title.abbreviation)} ${capitalize(professionalSelected?.lastName)}, ${capitalize(professionalSelected?.firstName)}`}</span>
-                    </div>
-                  </>
-                )}
+                {!userSelected._id && dialogContent.content}
+                {userSelected._id && generateReservationSummary(userSelected)}
               </div>
             )}
             {dialogContent.action === 'cancel' && dialogContent.content}
