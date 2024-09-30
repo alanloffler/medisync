@@ -28,7 +28,7 @@ import { IWorkingDay } from '@/pages/professionals/interfaces/working-days.inter
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { es, enUS } from 'date-fns/locale';
-import { format, range } from '@formkit/tempo';
+import { format } from '@formkit/tempo';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useCapitalizeFirstLetter } from '@/core/hooks/useCapitalizeFirstLetter';
 import { useEffect, useState } from 'react';
@@ -36,6 +36,8 @@ import { useEffect, useState } from 'react';
 export default function Appointments() {
   const [appointments, setAppointments] = useState<IAppointment[]>([] as IAppointment[]);
   const [availableSlotsToReserve, setAvailableSlotsToReserve] = useState<number | string>(0);
+  const [calendarMonths, setCalendarMonths] = useState<string[]>([]);
+  const [calendarYears, setCalendarYears] = useState<string[]>([]);
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [dialogContent, setDialogContent] = useState<IDialog>({} as IDialog);
   const [disabledDays, setDisabledDays] = useState<number[]>([]);
@@ -58,10 +60,6 @@ export default function Appointments() {
   const capitalize: (sentence: string | undefined) => string | undefined = useCapitalize();
   const capitalizeFirstLetter: (sentence: string | undefined) => string | undefined = useCapitalizeFirstLetter();
   const navigate: NavigateFunction = useNavigate();
-
-
-  const [yearsRange, setYearsRange] = useState<string[]>([]);
-  const [monthsRange, setMonthsRange] = useState<string[]>([]);
   // #region professionalSelected actions
   useEffect(() => {
     if (professionalSelected) {
@@ -83,18 +81,12 @@ export default function Appointments() {
     setSelectedDate(undefined);
     setShowCalendar(true);
     setSelectedDate(new Date());
-    // TODO: Remove this from here in a method
-    const _yearsRange: number[] = [];
-    const actualYear: number = new Date().getFullYear();
-    _yearsRange.push(actualYear);
-    for (let i = 1; i <= 2; i++) {
-      _yearsRange.push((actualYear + i));
-      _yearsRange.push((actualYear - i));
-    }
-    setYearsRange(_yearsRange.sort((a, b) => a - b).map(year => year.toString()));
-    // Generate Select Months
-    const _months = range('MMMM', 'es');
-    setMonthsRange(_months);
+
+    const calendarYears: string[] = CalendarService.generateYearsRange(1);
+    setCalendarYears(calendarYears);
+
+    const calendarMonths: string[] = CalendarService.generateMonths('es');
+    setCalendarMonths(calendarMonths);
   }, [professionalSelected]);
   // #endregion
   // #region Load data, schedule creation, time slots generation and appointments insertion.
@@ -330,12 +322,12 @@ export default function Appointments() {
                     selected={date}
                     showOutsideDays={false}
                     onDayClick={(event) => setSelectedDate(event)}
-                    // TODO: add select for month and year, see how it works
                     // Replacing the code below ->
                     // captionLayout={'dropdown'}
                     // fromYear={2023}
                     // toYear={2025}
                     footer={
+                      // TODO: onValueChange select the date, by year and month
                       <div className='flex text-xs w-full pt-3 space-x-3'>
                         <Select defaultValue={new Date().getFullYear().toString()}>
                           <SelectTrigger className='w-1/2 h-7 text-xs'>
@@ -343,17 +335,17 @@ export default function Appointments() {
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
-                              {yearsRange.map(year => <SelectItem key={year} value={year}>{year}</SelectItem>)}
+                              {calendarYears.map(year => <SelectItem key={year} value={year}>{year}</SelectItem>)}
                             </SelectGroup>
                           </SelectContent>
                         </Select>
-                        <Select>
+                        <Select defaultValue={format(new Date(), 'MMMM')}>
                           <SelectTrigger className='w-1/2 h-7 text-xs'>
                             <SelectValue placeholder='Mes' />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
-                              {monthsRange.map(month => <SelectItem key={month} value={month}>{capitalize(month)}</SelectItem>)}
+                              {calendarMonths.map(month => <SelectItem key={month} value={month}>{capitalize(month)}</SelectItem>)}
                             </SelectGroup>
                           </SelectContent>
                         </Select>
