@@ -205,6 +205,8 @@ export default function Appointments() {
     }
 
     if (action === 'cancel') {
+      setUserSelected({} as IUser);
+
       const cancelDialogContent: IDialog = {
         action: 'cancel',
         content: (
@@ -438,33 +440,33 @@ export default function Appointments() {
             <DialogDescription>{dialogContent.description}</DialogDescription>
             {dialogContent.action === 'reserve' && (
               <div className='pt-4'>
-                <div className='pt-4'>
+                {!userSelected._id && (
                   <UsersCombo searchBy='dni' searchResult={(e) => setUserSelected(e)} placeholder={APPO_CONFIG.dialog.userCombobox.placeholder} />
-                  {userSelected._id && (
-                    <>
-                      <div className='flex items-center space-x-2 py-4'>
-                        <ClipboardCheck className='h-5 w-5' strokeWidth={2} />
-                        <span>
-                          {/* TODO: make this message dynamic */}
-                          Reserva de turno para{' '}
-                          <span className='font-bold'>{`${capitalize(userSelected.lastName)}, ${capitalize(userSelected.firstName)}`}</span>
-                        </span>
-                      </div>
-                      <div className='flex items-center space-x-2'>
-                        <CalendarCheck className='h-5 w-5' strokeWidth={2} />
-                        <span>El día {selectedLegibleDate}</span>
-                      </div>
-                      <div className='flex items-center space-x-2'>
-                        <Clock className='h-5 w-5' strokeWidth={2} />
-                        <span>A las {selectedSlot.begin}</span>
-                      </div>
-                      <div className='flex items-center space-x-2'>
-                        <BriefcaseMedical className='h-5 w-5' strokeWidth={2} />
-                        <span className='font-semibold'>{`${capitalize(professionalSelected?.title.abbreviation)} ${capitalize(professionalSelected?.lastName)}, ${capitalize(professionalSelected?.firstName)}`}</span>
-                      </div>
-                    </>
-                  )}
-                </div>
+                )}
+                {userSelected._id && (
+                  <>
+                    <div className='flex items-center space-x-2 py-4'>
+                      <ClipboardCheck className='h-5 w-5' strokeWidth={2} />
+                      <span>
+                        {/* TODO: make this message dynamic */}
+                        Reserva de turno para{' '}
+                        <span className='font-bold'>{`${capitalize(userSelected.lastName)}, ${capitalize(userSelected.firstName)}`}</span>
+                      </span>
+                    </div>
+                    <div className='flex items-center space-x-2'>
+                      <CalendarCheck className='h-5 w-5' strokeWidth={2} />
+                      <span>El día {selectedLegibleDate}</span>
+                    </div>
+                    <div className='flex items-center space-x-2'>
+                      <Clock className='h-5 w-5' strokeWidth={2} />
+                      <span>A las {selectedSlot.begin}</span>
+                    </div>
+                    <div className='flex items-center space-x-2'>
+                      <BriefcaseMedical className='h-5 w-5' strokeWidth={2} />
+                      <span className='font-semibold'>{`${capitalize(professionalSelected?.title.abbreviation)} ${capitalize(professionalSelected?.lastName)}, ${capitalize(professionalSelected?.firstName)}`}</span>
+                    </div>
+                  </>
+                )}
               </div>
             )}
             {dialogContent.action === 'cancel' && dialogContent.content}
