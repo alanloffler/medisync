@@ -322,16 +322,12 @@ export default function Appointments() {
                     selected={date}
                     showOutsideDays={false}
                     onDayClick={(event) => setSelectedDate(event)}
-                    // Replacing the code below ->
-                    // captionLayout={'dropdown'}
-                    // fromYear={2023}
-                    // toYear={2025}
                     footer={
                       // TODO: onValueChange select the date, by year and month
                       // and set the date to calendar -> setSelectedDate()
                       <div className='flex text-xs w-full pt-3 space-x-3'>
                         <Select defaultValue={new Date().getFullYear().toString()}>
-                          <SelectTrigger className='w-1/2 h-7 text-xs'>
+                          <SelectTrigger className='w-1/2 h-7 text-xs border'>
                             <SelectValue placeholder={APPO_CONFIG.calendar.placeholder.year} />
                           </SelectTrigger>
                           <SelectContent>
@@ -341,7 +337,7 @@ export default function Appointments() {
                           </SelectContent>
                         </Select>
                         <Select defaultValue={format(new Date(), 'MMMM')}>
-                          <SelectTrigger className='w-1/2 h-7 text-xs'>
+                          <SelectTrigger className='w-1/2 h-7 text-xs border'>
                             <SelectValue placeholder={APPO_CONFIG.calendar.placeholder.month} />
                           </SelectTrigger>
                           <SelectContent>
