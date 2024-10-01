@@ -328,6 +328,7 @@ export default function Appointments() {
                     // toYear={2025}
                     footer={
                       // TODO: onValueChange select the date, by year and month
+                      // and set the date to calendar -> setSelectedDate()
                       <div className='flex text-xs w-full pt-3 space-x-3'>
                         <Select defaultValue={new Date().getFullYear().toString()}>
                           <SelectTrigger className='w-1/2 h-7 text-xs'>
