@@ -3,7 +3,16 @@ import { CirclePlus, List, ListFilter, ListRestart, PlusCircle, Search, X } from
 // Components: https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '@/core/components/ui/dropdown-menu';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuPortal,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from '@/core/components/ui/dropdown-menu';
 import { Input } from '@/core/components/ui/input';
 // App components
 import { PageHeader } from '@/core/components/common/PageHeader';
@@ -69,7 +78,13 @@ export default function Professionals() {
               <div className='flex flex-col space-y-2'>
                 <div className='relative w-full'>
                   <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
-                  <Input onChange={handleSearch} value={search} type='text' placeholder={PROF_CONFIG.search.placeholder} className='bg-background pl-9 shadow-sm' />
+                  <Input
+                    onChange={handleSearch}
+                    value={search}
+                    type='text'
+                    placeholder={PROF_CONFIG.search.placeholder}
+                    className='bg-background pl-9 shadow-sm'
+                  />
                   {search && (
                     <button onClick={() => setSearch('')} className='absolute right-3 top-3 text-muted-foreground hover:text-black'>
                       <X className='h-4 w-4' />
