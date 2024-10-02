@@ -6,7 +6,18 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/core/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/core/components/ui/table';
 // Tanstack Data Table: https://tanstack.com/table/latest
-import { ColumnDef, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, PaginationState, SortingState, useReactTable } from '@tanstack/react-table';
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  PaginationState,
+  SortingState,
+  useReactTable,
+  Table as ITable
+} from '@tanstack/react-table';
 // App components
 import { InfoCard } from '@/core/components/common/InfoCard';
 import { LoadingDB } from '@/core/components/common/LoadingDB';
@@ -41,7 +52,7 @@ const defaultPagination = { pageIndex: 0, pageSize: PROF_CONFIG.table.defaultPag
 // React component
 export function ProfessionalsDataTable({ search, reload, setReload, setErrorMessage }: DataTableProps) {
   const [columns, setColumns] = useState<ColumnDef<IProfessional>[]>([]);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<IProfessional[]>([]);
   const [infoCard, setInfoCard] = useState<IInfoCard>({ text: '', type: 'error' });
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
@@ -70,14 +81,19 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
           {totalItems === 1 ? (
             PROF_CONFIG.table.headers[0]
           ) : (
-            <button className='flex items-center gap-2 hover:text-accent-foreground' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            <button
+              className='flex items-center gap-2 hover:text-accent-foreground'
+              onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+            >
               {PROF_CONFIG.table.headers[0]}
               <ArrowDownUp className='h-3 w-3' />
             </button>
           )}
         </div>
       ),
-      cell: ({ row }) => <div className='text-left font-medium'>{`${capitalize(row.original.title.abbreviation)} ${capitalize(row.original.lastName)}, ${capitalize(row.original.firstName)}`}</div>,
+      cell: ({ row }) => (
+        <div className='text-left font-medium'>{`${capitalize(row.original.title.abbreviation)} ${capitalize(row.original.lastName)}, ${capitalize(row.original.firstName)}`}</div>
+      ),
     },
     {
       accessorKey: 'area',
@@ -87,7 +103,10 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
           {totalItems === 1 ? (
             PROF_CONFIG.table.headers[1]
           ) : (
-            <button className='flex items-center gap-2 hover:text-accent-foreground' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            <button
+              className='flex items-center gap-2 hover:text-accent-foreground'
+              onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+            >
               {PROF_CONFIG.table.headers[1]}
               <ArrowDownUp className='h-3 w-3' />
             </button>
@@ -104,7 +123,10 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
           {totalItems === 1 ? (
             PROF_CONFIG.table.headers[2]
           ) : (
-            <button className='flex items-center gap-2 hover:text-accent-foreground' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            <button
+              className='flex items-center gap-2 hover:text-accent-foreground'
+              onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+            >
               {PROF_CONFIG.table.headers[2]}
               <ArrowDownUp className='h-3 w-3' />
             </button>
@@ -121,7 +143,10 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
           {totalItems === 1 ? (
             PROF_CONFIG.table.headers[3]
           ) : (
-            <button className='flex items-center gap-2 hover:text-accent-foreground' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            <button
+              className='flex items-center gap-2 hover:text-accent-foreground'
+              onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+            >
               {PROF_CONFIG.table.headers[3]}
               <ArrowDownUp className='h-3 w-3' />
             </button>
@@ -131,7 +156,9 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
       cell: ({ row }) => (
         <div className='flex flex-row items-center justify-start space-x-2 text-xs'>
           <div className={`flex ${row.original.available ? 'h-2 w-2 rounded-full bg-green-400' : 'h-2 w-2 rounded-full bg-red-400'}`}></div>
-          <div className={`flex ${row.original.available ? 'text-slate-800' : 'text-slate-400'}`}>{row.original.available ? 'Activo' : 'Inactivo'}</div>
+          <div className={`flex ${row.original.available ? 'text-slate-800' : 'text-slate-400'}`}>
+            {row.original.available ? 'Activo' : 'Inactivo'}
+          </div>
         </div>
       ),
     },
@@ -141,16 +168,37 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
       header: () => <div className='text-center'>{PROF_CONFIG.table.headers[4]}</div>,
       cell: ({ row }) => (
         <div className='flex flex-row items-center justify-center space-x-2'>
-          <Button variant={'ghost'} size={'miniIcon'} onClick={() => navigate(`/professionals/${row.original._id}`)} className='hover:bg-transparent hover:text-fuchsia-500'>
+          <Button
+            variant={'ghost'}
+            size={'miniIcon'}
+            onClick={() => navigate(`/professionals/${row.original._id}`)}
+            className='hover:bg-transparent hover:text-fuchsia-500'
+          >
             <FileText className='h-4 w-4' />
           </Button>
-          <Button variant={'ghost'} size={'miniIcon'} onClick={() => navigate(`/professionals/update/${row.original._id}`)} className='hover:bg-transparent hover:text-indigo-500'>
+          <Button
+            variant={'ghost'}
+            size={'miniIcon'}
+            onClick={() => navigate(`/professionals/update/${row.original._id}`)}
+            className='hover:bg-transparent hover:text-indigo-500'
+          >
             <FilePen className='h-4 w-4' />
           </Button>
-          <Button variant={'ghost'} size={'miniIcon'} onClick={() => handleRemoveDialog(row.original)} className='hover:bg-transparent hover:text-red-500'>
+          <Button
+            variant={'ghost'}
+            size={'miniIcon'}
+            onClick={() => handleRemoveDialog(row.original)}
+            className='hover:bg-transparent hover:text-red-500'
+          >
             <Trash2 className='h-4 w-4' />
           </Button>
-          <Button disabled={!row.original.phone} variant={'ghost'} size={'miniIcon'} className='fill-current hover:bg-transparent hover:fill-green-500' onClick={() => navigate(`/whatsapp/professional/${row.original._id}`)}>
+          <Button
+            disabled={!row.original.phone}
+            variant={'ghost'}
+            size={'miniIcon'}
+            className='fill-current hover:bg-transparent hover:fill-green-500'
+            onClick={() => navigate(`/whatsapp/professional/${row.original._id}`)}
+          >
             <svg width='100' height='100' viewBox='0 0 464 488' className='h-4 w-4'>
               <path d='M462 228q0 93-66 159t-160 66q-56 0-109-28L2 464l40-120q-32-54-32-116q0-93 66-158.5T236 4t160 65.5T462 228zM236 39q-79 0-134.5 55.5T46 228q0 62 36 111l-24 70l74-23q49 31 104 31q79 0 134.5-55.5T426 228T370.5 94.5T236 39zm114 241q-1-1-10-7q-3-1-19-8.5t-19-8.5q-9-3-13 2q-1 3-4.5 7.5t-7.5 9t-5 5.5q-4 6-12 1q-34-17-45-27q-7-7-13.5-15t-12-15t-5.5-8q-3-7 3-11q4-6 8-10l6-9q2-5-1-10q-4-13-17-41q-3-9-12-9h-11q-9 0-15 7q-19 19-19 45q0 24 22 57l2 3q2 3 4.5 6.5t7 9t9 10.5t10.5 11.5t13 12.5t14.5 11.5t16.5 10t18 8.5q16 6 27.5 10t18 5t9.5 1t7-1t5-1q9-1 21.5-9t15.5-17q8-21 3-26z' />
             </svg>
@@ -174,7 +222,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
   //   available: false,
   // });
 
-  const table = useReactTable({
+  const table: ITable<IProfessional> = useReactTable({
     columns: columns,
     data: data,
     getCoreRowModel: getCoreRowModel(),
@@ -220,7 +268,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
         if (!response.statusCode) {
           setData(response.data);
           setColumns(tableColumns);
-          setTotalItems(response.count);
+          setTotalItems(response.data.length);
           setErrorMessage('');
         }
         if (response.statusCode > 399) {
@@ -312,19 +360,39 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
             </div>
             {table.getPageCount() > 1 && (
               <div className='flex items-center space-x-2'>
-                <Button variant='ghost' className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800' onClick={() => table.setPageIndex(0)} disabled={!table.getCanPreviousPage()}>
+                <Button
+                  variant='ghost'
+                  className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800'
+                  onClick={() => table.setPageIndex(0)}
+                  disabled={!table.getCanPreviousPage()}
+                >
                   <span className='sr-only'>Go to first page</span>
                   <ArrowLeftIcon className='h-4 w-4' />
                 </Button>
-                <Button variant='ghost' className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 dark:bg-neutral-950 dark:hover:bg-neutral-800' onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
+                <Button
+                  variant='ghost'
+                  className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 dark:bg-neutral-950 dark:hover:bg-neutral-800'
+                  onClick={() => table.previousPage()}
+                  disabled={!table.getCanPreviousPage()}
+                >
                   <span className='sr-only'>Go to previous page</span>
                   <ChevronLeftIcon className='h-4 w-4' />
                 </Button>
-                <Button variant='ghost' className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 dark:bg-neutral-950 dark:hover:bg-neutral-800' onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
+                <Button
+                  variant='ghost'
+                  className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 dark:bg-neutral-950 dark:hover:bg-neutral-800'
+                  onClick={() => table.nextPage()}
+                  disabled={!table.getCanNextPage()}
+                >
                   <span className='sr-only'>Go to next page</span>
                   <ChevronRightIcon className='h-4 w-4' />
                 </Button>
-                <Button variant='ghost' className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800' onClick={() => table.setPageIndex(table.getPageCount() - 1)} disabled={!table.getCanNextPage()}>
+                <Button
+                  variant='ghost'
+                  className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800'
+                  onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+                  disabled={!table.getCanNextPage()}
+                >
                   <span className='sr-only'>Go to last page</span>
                   <ArrowRightIcon className='h-4 w-4' />
                 </Button>
