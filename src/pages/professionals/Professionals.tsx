@@ -37,7 +37,7 @@ export default function Professionals() {
   const [search, setSearch] = useState<{ value: string; type: string }>({ value: '', type: 'professional' });
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
-  const debouncedSearch = useDebounce<{ value: string, type: string }>(search, DEBOUNCE_TIME);
+  const debouncedSearch = useDebounce<{ value: string; type: string }>(search, DEBOUNCE_TIME);
   const navigate = useNavigate();
 
   function handleSearchByProfessional(event: ChangeEvent<HTMLInputElement>): void {
@@ -53,10 +53,6 @@ export default function Professionals() {
     setReload(Math.random());
   }
 
-  // useEffect(() => {
-  //   console.log(searchType);
-  // }, [searchType])
-
   useEffect(() => {
     AreaService.findAll().then((response) => {
       if (response.statusCode === 200) setAreas(response.data);
@@ -65,7 +61,6 @@ export default function Professionals() {
     });
   }, [addNotification]);
 
-  // #endregion
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
       {/* Page Header */}
@@ -94,7 +89,10 @@ export default function Professionals() {
                     className='bg-background pl-9 shadow-sm'
                   />
                   {search && (
-                    <button onClick={() => setSearch({ value: '', type: 'professional' })} className='absolute right-3 top-3 text-muted-foreground hover:text-black'>
+                    <button
+                      onClick={() => setSearch({ value: '', type: 'professional' })}
+                      className='absolute right-3 top-3 text-muted-foreground hover:text-black'
+                    >
                       <X className='h-4 w-4' />
                     </button>
                   )}
@@ -129,7 +127,6 @@ export default function Professionals() {
                             <DropdownMenuPortal>
                               <DropdownMenuSubContent>
                                 {area.specializations.map((spec) => (
-                                  // <DropdownMenuItem key={spec._id} onClick={() => setSearch(spec.name)}>
                                   <DropdownMenuItem key={spec._id} onClick={() => handleSearchBySpecialization(spec._id)}>
                                     <span>{capitalize(spec.name)}</span>
                                   </DropdownMenuItem>
@@ -151,14 +148,7 @@ export default function Professionals() {
             </div>
           </CardHeader>
           <CardContent className='px-3'>
-            {/* prettier-ignore */}
-            <ProfessionalsDataTable 
-              key={reload}
-              reload={reload} 
-              search={debouncedSearch} 
-              setErrorMessage={setErrorMessage} 
-              setReload={setReload}
-            />
+            <ProfessionalsDataTable key={reload} reload={reload} search={debouncedSearch} setErrorMessage={setErrorMessage} setReload={setReload} />
           </CardContent>
         </Card>
       </div>
