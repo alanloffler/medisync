@@ -40,6 +40,24 @@ export class ProfessionalApiService {
     }
   }
 
+  public static async findBySpecialization(specialization: string) {
+    console.log(specialization);
+    const url: string = `${this.API_URL}/professionals/specialization/${specialization}`;
+
+    try {
+      const query: Response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json;charset=UTF-8',
+        },
+      });
+
+      return await query.json();
+    } catch (error) {
+      return error;
+    }
+  }
+
   public static async create(data: IProfessionalForm) {
     const transformedData = ProfessionalUtils.lowercaseFormItems(data);
     const url: string = `${this.API_URL}/professionals`;
