@@ -27,7 +27,7 @@ export const PROF_CONFIG = {
     placeholder: 'Buscar profesional o especialización',
   },
   table: {
-    defaultPageSize: 10,
+    defaultPageSize: 5,
     defaultSortingId: 'lastName',
     defaultSortingType: false, // desc: true | false
     headers: ['Nombre', 'Área', 'Espec.', 'Disp.', 'Acciones'],
