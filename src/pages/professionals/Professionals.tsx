@@ -34,20 +34,28 @@ export default function Professionals() {
   const [areas, setAreas] = useState<IArea[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [reload, setReload] = useState<number>(0);
-  const [search, setSearch] = useState<string>('');
+  const [search, setSearch] = useState<{ value: string; type: string }>({ value: '', type: 'professional' });
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
-  const debouncedSearch = useDebounce<string>(search, DEBOUNCE_TIME);
+  const debouncedSearch = useDebounce<{ value: string, type: string }>(search, DEBOUNCE_TIME);
   const navigate = useNavigate();
 
-  function handleSearch(event: ChangeEvent<HTMLInputElement>): void {
-    setSearch(event.target.value);
+  function handleSearchByProfessional(event: ChangeEvent<HTMLInputElement>): void {
+    setSearch({ value: event.target.value, type: 'professional' });
+  }
+
+  function handleSearchBySpecialization(_id: string): void {
+    setSearch({ value: _id, type: 'specialization' });
   }
 
   function handleReload(): void {
-    setSearch('');
+    setSearch({ value: '', type: 'professional' });
     setReload(Math.random());
   }
+
+  // useEffect(() => {
+  //   console.log(searchType);
+  // }, [searchType])
 
   useEffect(() => {
     AreaService.findAll().then((response) => {
@@ -79,14 +87,14 @@ export default function Professionals() {
                 <div className='relative w-full'>
                   <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
                   <Input
-                    onChange={handleSearch}
-                    value={search}
+                    onChange={handleSearchByProfessional}
+                    value={search.value}
                     type='text'
                     placeholder={PROF_CONFIG.search.placeholder}
                     className='bg-background pl-9 shadow-sm'
                   />
                   {search && (
-                    <button onClick={() => setSearch('')} className='absolute right-3 top-3 text-muted-foreground hover:text-black'>
+                    <button onClick={() => setSearch({ value: '', type: 'professional' })} className='absolute right-3 top-3 text-muted-foreground hover:text-black'>
                       <X className='h-4 w-4' />
                     </button>
                   )}
@@ -121,7 +129,8 @@ export default function Professionals() {
                             <DropdownMenuPortal>
                               <DropdownMenuSubContent>
                                 {area.specializations.map((spec) => (
-                                  <DropdownMenuItem key={spec._id} onClick={() => setSearch(spec.name)}>
+                                  // <DropdownMenuItem key={spec._id} onClick={() => setSearch(spec.name)}>
+                                  <DropdownMenuItem key={spec._id} onClick={() => handleSearchBySpecialization(spec._id)}>
                                     <span>{capitalize(spec.name)}</span>
                                   </DropdownMenuItem>
                                 ))}
