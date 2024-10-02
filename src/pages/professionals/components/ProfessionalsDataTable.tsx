@@ -36,7 +36,7 @@ import { useTruncateText } from '@/core/hooks/useTruncateText';
 // import { useMediaQuery } from '@uidotdev/usehooks';
 // Table interfaces
 interface DataTableProps {
-  search: string;
+  search: { value: string; type: string };
   reload: number;
   setReload: React.Dispatch<React.SetStateAction<number>>;
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
@@ -261,27 +261,49 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
   }, [reload]);
 
   useEffect(() => {
-    const fetchData = (search: string, sorting: SortingState, skipItems: number, itemsPerPage: number) => {
+    const fetchData = (search: { value: string; type: string }, sorting: SortingState, skipItems: number, itemsPerPage: number) => {
       setIsLoading(true);
-
-      ProfessionalApiService.findAll(search, sorting, skipItems, itemsPerPage).then((response) => {
-        if (!response.statusCode) {
-          setData(response.data);
-          setColumns(tableColumns);
-          setTotalItems(response.data.length);
-          setErrorMessage('');
-        }
-        if (response.statusCode > 399) {
-          setErrorMessage(response.message);
-          addNotification({ type: 'error', message: response.message });
-          setInfoCard({ text: response.message, type: 'warning' });
-        }
-        if (response instanceof Error) {
-          addNotification({ type: 'error', message: APP_CONFIG.error.server });
-          setInfoCard({ text: APP_CONFIG.error.server, type: 'error' });
-        }
-        setIsLoading(false);
-      });
+      
+      if (search.type === 'specialization') {
+        ProfessionalApiService.findBySpecialization(search.value).then((response) => {
+          if (response.statusCode === 200) {
+            setData(response.data);
+            setColumns(tableColumns);
+            setTotalItems(response.data.length);
+            setErrorMessage('');
+          }
+          if (response.statusCode > 399) {
+            setErrorMessage(response.message);
+            addNotification({ type: 'error', message: response.message });
+            setInfoCard({ text: response.message, type: 'warning' });
+          }
+          if (response instanceof Error) {
+            addNotification({ type: 'error', message: APP_CONFIG.error.server });
+            setInfoCard({ text: APP_CONFIG.error.server, type: 'error' });
+          }
+          setIsLoading(false);
+        });
+      }
+      if (search.type === 'professional') {
+        ProfessionalApiService.findAll(search.value, sorting, skipItems, itemsPerPage).then((response) => {
+          if (!response.statusCode) {
+            setData(response.data);
+            setColumns(tableColumns);
+            setTotalItems(response.data.length);
+            setErrorMessage('');
+          }
+          if (response.statusCode > 399) {
+            setErrorMessage(response.message);
+            addNotification({ type: 'error', message: response.message });
+            setInfoCard({ text: response.message, type: 'warning' });
+          }
+          if (response instanceof Error) {
+            addNotification({ type: 'error', message: APP_CONFIG.error.server });
+            setInfoCard({ text: APP_CONFIG.error.server, type: 'error' });
+          }
+          setIsLoading(false);
+        });
+      }
     };
     fetchData(search, tableManager.sorting, tableManager.pagination.pageIndex * tableManager.pagination.pageSize, tableManager.pagination.pageSize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
