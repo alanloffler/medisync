@@ -28,7 +28,7 @@ import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useDebounce } from '@/core/hooks/useDebounce';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 // Constants
-const DEBOUNCE_TIME: number = 500;
+const DEBOUNCE_TIME: number = PROF_CONFIG.search.debounceTime;
 // React component
 export default function Professionals() {
   const [areas, setAreas] = useState<IArea[]>([]);
