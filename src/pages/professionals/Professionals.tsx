@@ -91,12 +91,12 @@ export default function Professionals() {
                   <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
                   <Input
                     onChange={handleSearchByProfessional}
-                    value={search.value}
+                    value={search.type === 'professional' ? search.value : ''}
                     type='text'
                     placeholder={PROF_CONFIG.search.placeholder}
                     className='bg-background pl-9 shadow-sm'
                   />
-                  {search && (
+                  {search.type === 'professional' && search.value && (
                     <button
                       onClick={() => setSearch({ value: '', type: 'professional' })}
                       className='absolute right-3 top-3 text-muted-foreground hover:text-black'
@@ -105,7 +105,6 @@ export default function Professionals() {
                     </button>
                   )}
                 </div>
-
                 {errorMessage && <div className='flex flex-row items-center text-xs font-medium text-rose-400'>{errorMessage}</div>}
               </div>
             </div>
