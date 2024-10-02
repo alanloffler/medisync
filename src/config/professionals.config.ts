@@ -24,6 +24,7 @@ export const PROF_CONFIG = {
     },
   },
   search: {
+    debounceTime: 500,
     placeholder: 'Buscar profesional o especialización',
   },
   table: {
