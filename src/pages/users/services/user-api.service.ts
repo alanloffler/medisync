@@ -1,5 +1,5 @@
-import { IUserForm } from '@/pages/users/interfaces/user.interface';
-import { SortingState } from '@tanstack/react-table';
+import type { IUserForm } from '@/pages/users/interfaces/user.interface';
+import type { SortingState } from '@tanstack/react-table';
 import { UserUtils } from '@/pages/users/services/user.utils';
 
 export class UserApiService {
