@@ -10,10 +10,10 @@ import { InfoCard } from '@/core/components/common/InfoCard';
 import { LoadingDB } from '@/core/components/common/LoadingDB';
 import { PageHeader } from '@/core/components/common/PageHeader';
 // App
+import type { IEmail } from '@/core/interfaces/email.interface';
+import type { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
+import type { IUser } from '@/pages/users/interfaces/user.interface';
 import { APP_CONFIG } from '@/config/app.config';
-import { IEmail } from '@/core/interfaces/email.interface';
-import { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
-import { IUser } from '@/pages/users/interfaces/user.interface';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { USER_VIEW_CONFIG as UV_CONFIG } from '@/config/user.config';
 import { UserApiService } from '@/pages/users/services/user-api.service';
@@ -40,26 +40,27 @@ export default function ViewUser() {
     if (id) {
       setIsLoading(true);
 
-      UserApiService.findOne(id).then((response) => {
-        if (response.statusCode === 200) {
-          setUser(response.data);
-          setShowCard(true);
-          setEmailObject({
-            to: response.data.email,
-            subject: UV_CONFIG.email.subject,
-            body: `${UV_CONFIG.email.body[0]} ${capitalize(response.data?.firstName)}${UV_CONFIG.email.body[1]}`,
-          });
-        }
-        if (response.statusCode > 399) {
-          addNotification({ type: 'error', message: response.message });
-          setInfoCard({ text: response.message, type: 'warning' });
-        }
-        if (response instanceof Error) {
-          addNotification({ type: 'error', message: APP_CONFIG.error.server });
-          setInfoCard({ text: APP_CONFIG.error.server, type: 'error' });
-        }
-        setIsLoading(false);
-      });
+      UserApiService.findOne(id)
+        .then((response) => {
+          if (response.statusCode === 200) {
+            setUser(response.data);
+            setShowCard(true);
+            setEmailObject({
+              to: response.data.email,
+              subject: UV_CONFIG.email.subject,
+              body: `${UV_CONFIG.email.body[0]} ${capitalize(response.data?.firstName)}${UV_CONFIG.email.body[1]}`,
+            });
+          }
+          if (response.statusCode > 399) {
+            addNotification({ type: 'error', message: response.message });
+            setInfoCard({ type: 'warning', text: response.message });
+          }
+          if (response instanceof Error) {
+            addNotification({ type: 'error', message: APP_CONFIG.error.server });
+            setInfoCard({ type: 'error', text: APP_CONFIG.error.server });
+          }
+        })
+        .finally(() => setIsLoading(false));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
@@ -100,7 +101,11 @@ export default function ViewUser() {
                         <DropdownMenuContent className='w-fit' align='end'>
                           <DropdownMenuGroup>
                             {/* Send email */}
-                            <Link to={`https://mail.google.com/mail/?view=cm&to=${emailObject.to}&su=${emailObject.subject}&body=${emailObject.body}`} target='_blank' className='transition-colors hover:text-indigo-500'>
+                            <Link
+                              to={`https://mail.google.com/mail/?view=cm&to=${emailObject.to}&su=${emailObject.subject}&body=${emailObject.body}`}
+                              target='_blank'
+                              className='transition-colors hover:text-indigo-500'
+                            >
                               <DropdownMenuItem>{UV_CONFIG.dropdownMenu[0].name}</DropdownMenuItem>
                             </Link>
                             {/* Send whatsapp */}
