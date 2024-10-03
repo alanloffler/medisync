@@ -1,7 +1,8 @@
+// App
 import { APP_CONFIG } from '@/config/app.config';
 import { cn } from '@/lib/utils';
-import { cva, type VariantProps } from 'class-variance-authority';
-
+import { cva } from 'class-variance-authority';
+// Loader variants
 const loadingDBVariants = cva('flex items-center justify-center gap-2 text-sm font-medium text-slate-500', {
   variants: {
     variant: {
@@ -19,11 +20,7 @@ const loadingDBVariants = cva('flex items-center justify-center gap-2 text-sm fo
     size: 'default',
   },
 });
-
-export interface LoadingProps extends React.ButtonHTMLAttributes<HTMLElement>, VariantProps<typeof loadingDBVariants> {
-  asChild?: boolean;
-}
-
+// React component
 export function LoadingDB({
   text,
   className,
