@@ -4,9 +4,9 @@ import { X } from 'lucide-react';
 import { Input } from '@/core/components/ui/input';
 import { ScrollArea } from '@/core/components/ui/scroll-area';
 // App
+import type { IUser } from '@/pages/users/interfaces/user.interface';
 import { APPO_CONFIG } from '@/config/appointment.config';
 import { ChangeEvent, useEffect, useState } from 'react';
-import { IUser } from '@/pages/users/interfaces/user.interface';
 import { UserApiService } from '@/pages/users/services/user-api.service';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useDebounce } from '@/core/hooks/useDebounce';
@@ -21,14 +21,14 @@ export function UsersCombo({
   searchResult: (user: IUser) => void;
   placeholder: string;
 }) {
-  const [search, setSearch] = useState<string>('');
-  const [users, setUsers] = useState<IUser[]>([] as IUser[]);
   const [openCombobox, setOpenCombobox] = useState<boolean>(false);
+  const [search, setSearch] = useState<string>('');
   const [showNoResults, setShowNoResults] = useState<boolean>(false);
+  const [users, setUsers] = useState<IUser[]>([] as IUser[]);
   const DEBOUNCE_TIME: number = 500;
-  const capitalize: (sentence: string | undefined) => string | undefined = useCapitalize();
-  const debouncedSearch: string = useDebounce<string>(search, DEBOUNCE_TIME);
-  const delimiter: (input: string | number, delimiter: string, each: number) => string = useDelimiter();
+  const capitalize = useCapitalize();
+  const debouncedSearch = useDebounce<string>(search, DEBOUNCE_TIME);
+  const delimiter = useDelimiter();
 
   function handleSearch(event: ChangeEvent<HTMLInputElement>): void {
     setSearch(event.target.value);
@@ -48,6 +48,7 @@ export function UsersCombo({
   useEffect(() => {
     if (debouncedSearch !== '') {
       setOpenCombobox(true);
+
       if (searchBy === 'name') {
         UserApiService.findAll(debouncedSearch, [{ id: 'lastName', desc: false }], 0, 10).then((response) => {
           if (response.statusCode === 200) {
@@ -58,6 +59,7 @@ export function UsersCombo({
             setShowNoResults(true);
             setUsers([]);
           }
+          // TODO: handle server error
         });
       }
       if (searchBy === 'dni') {
@@ -70,6 +72,7 @@ export function UsersCombo({
             setShowNoResults(true);
             setUsers([]);
           }
+          // TODO: handle server error
         });
       }
     } else {
