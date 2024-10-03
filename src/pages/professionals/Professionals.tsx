@@ -18,11 +18,11 @@ import { Input } from '@/core/components/ui/input';
 import { PageHeader } from '@/core/components/common/PageHeader';
 import { ProfessionalsDataTable } from '@/pages/professionals/components/ProfessionalsDataTable';
 // App
+import type { IArea } from '@/core/interfaces/area.interface';
+import type { ISpecialization } from '@/core/interfaces/specialization.interface';
 import { APP_CONFIG } from '@/config/app.config';
 import { AreaService } from '@/core/services/area.service';
 import { ChangeEvent, useEffect, useState } from 'react';
-import { IArea } from '@/core/interfaces/area.interface';
-import { ISpecialization } from '@/core/interfaces/specialization.interface';
 import { Link, useNavigate } from 'react-router-dom';
 import { PROF_CONFIG } from '@/config/professionals.config';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
@@ -112,7 +112,7 @@ export default function Professionals() {
         </Card>
         <div className='col-span-1 overflow-y-auto md:col-span-4 lg:col-span-3 xl:col-span-3'>
           <div className='flex flex-row items-center justify-start space-x-3 py-3'>
-            <div className='flex space-x-2 items-center text-sm font-medium text-slate-500'>
+            <div className='flex items-center space-x-2 text-sm font-medium text-slate-500'>
               <Filter size={14} strokeWidth={2} />
               <span>{PROF_CONFIG.search.filterBy}</span>
             </div>
