@@ -29,11 +29,11 @@ export const PROF_CONFIG = {
     placeholder: 'Buscar profesional',
   },
   table: {
-    defaultPageSize: 5,
+    defaultPageSize: 1,
     defaultSortingId: 'lastName',
     defaultSortingType: false, // desc: true | false
     headers: ['Nombre', 'Área', 'Espec.', 'Disp.', 'Acciones'],
-    itemsPerPage: [5, 10, 20],
+    itemsPerPage: [1, 5, 10, 20],
     noResults: 'No hay resultados',
     pagination: {
       page: 'Página',
