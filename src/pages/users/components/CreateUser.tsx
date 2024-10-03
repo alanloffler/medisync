@@ -9,23 +9,21 @@ import { Input } from '@/core/components/ui/input';
 // App components
 import { PageHeader } from '@/core/components/common/PageHeader';
 // App
-import { useNavigate } from 'react-router-dom';
 import { USER_CREATE_CONFIG as UC_CONFIG } from '@/config/user.config';
-import { UserApiService } from '../services/user-api.service';
+import { USER_SCHEMA } from '@/config/schemas/user.schema';
+import { UserApiService } from '@/pages/users/services/user-api.service';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
+import { useDelimiter } from '@/core/hooks/useDelimiter';
 import { useEffect, useState, MouseEvent } from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
-import { userSchema } from '../schemas/user.schema';
+import { userSchema } from '@/pages/users/schemas/user.schema';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-
-import { USER_SCHEMA } from '@/config/schemas/user.schema';
-import { useDelimiter } from '@/core/hooks/useDelimiter';
 // React component
 export default function CreateUser() {
   const [showUserCard, setShowUserCard] = useState<boolean>(false);
-
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const delimiter = useDelimiter();
