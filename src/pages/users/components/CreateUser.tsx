@@ -1,7 +1,6 @@
 // Icons: https://lucide.dev/icons/
 import { ArrowLeft, CreditCard, FilePlus2, Mail, Menu, Smartphone } from 'lucide-react';
 // Components: https://ui.shadcn.com/docs/components
-// import { Badge } from '@/core/components/ui/badge';
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { Form, FormField, FormControl, FormItem, FormLabel, FormMessage } from '@/core/components/ui/form';
@@ -54,6 +53,7 @@ export default function CreateUser() {
         addNotification({ type: 'success', message: response.message });
       }
       if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
+      // TODO: dynamic message
       if (response instanceof Error) addNotification({ type: 'error', message: 'Error en el servidor creando el usuario' });
       createForm.reset();
       setShowUserCard(false);
@@ -65,7 +65,6 @@ export default function CreateUser() {
     createForm.reset();
     setShowUserCard(false);
   }
-  // const dniRef = useMask({ mask: '+549 (____) ______', replacement: { _: /\d/ } });
   // #endregion
   return (
     <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
@@ -105,7 +104,6 @@ export default function CreateUser() {
                       <FormItem className=''>
                         <FormLabel>{UC_CONFIG.labels.dni}</FormLabel>
                         <FormControl className='h-9'>
-                          {/* <Input placeholder={UC_CONFIG.placeholders.dni} {...field} ref={dniRef}  /> */}
                           <Input type='number' placeholder={UC_CONFIG.placeholders.dni} {...field} maxLength={USER_SCHEMA.dni.max.value} />
                         </FormControl>
                         <FormMessage />
