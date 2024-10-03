@@ -1,54 +1,26 @@
-import { z } from 'zod';
 import { USER_SCHEMA } from '@/config/schemas/user.schema';
-// prettier-ignore
-export const userSchema = z.object({
-  dni: z
-    .coerce
-    .number()
-    .min(
-      USER_SCHEMA.dni.min.value, 
-      { message: USER_SCHEMA.dni.min.message }
-    )
-    .max(
-      USER_SCHEMA.dni.max.value, 
-      { message: USER_SCHEMA.dni.max.message }
-    ),
+import { z } from 'zod';
 
-  lastName: z
-    .string()
-    .min(
-      USER_SCHEMA.lastName.min.value, 
-      { message: USER_SCHEMA.lastName.min.message }
-    )
-    .max(
-      USER_SCHEMA.lastName.max.value, 
-      { message: USER_SCHEMA.lastName.max.message }
-    ),
+export const userSchema = z.object({
+  dni: z.coerce
+    .number()
+    .min(USER_SCHEMA.dni.min.value, { message: USER_SCHEMA.dni.min.message })
+    .max(USER_SCHEMA.dni.max.value, { message: USER_SCHEMA.dni.max.message }),
+
+  email: z.string().email({ message: USER_SCHEMA.email.message }),
 
   firstName: z
     .string()
-    .min(
-      USER_SCHEMA.firstName.min.value, 
-      { message: USER_SCHEMA.firstName.min.message }
-    )
-    .max(
-      USER_SCHEMA.firstName.max.value, 
-      { message: USER_SCHEMA.firstName.max.message }
-    ),
+    .min(USER_SCHEMA.firstName.min.value, { message: USER_SCHEMA.firstName.min.message })
+    .max(USER_SCHEMA.firstName.max.value, { message: USER_SCHEMA.firstName.max.message }),
 
-  phone: z
-    .coerce
-    .number()
-    .min(
-      USER_SCHEMA.phone.min.value, 
-      { message: USER_SCHEMA.phone.min.message }
-    )
-    .max(
-      USER_SCHEMA.phone.max.value, 
-      { message: USER_SCHEMA.phone.max.message }
-    ),
-
-  email: z
+  lastName: z
     .string()
-    .email({ message: USER_SCHEMA.email.message }),
+    .min(USER_SCHEMA.lastName.min.value, { message: USER_SCHEMA.lastName.min.message })
+    .max(USER_SCHEMA.lastName.max.value, { message: USER_SCHEMA.lastName.max.message }),
+
+  phone: z.coerce
+    .number()
+    .min(USER_SCHEMA.phone.min.value, { message: USER_SCHEMA.phone.min.message })
+    .max(USER_SCHEMA.phone.max.value, { message: USER_SCHEMA.phone.max.message }),
 });
