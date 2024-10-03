@@ -89,7 +89,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
           </button>
         </div>
       ),
-      cell: ({ row }) => <div className='text-left font-medium'>{`${capitalize(row.original.lastName)}, ${capitalize(row.original.firstName)}`}</div>,
+      cell: ({ row }) => <div className='text-left'>{`${capitalize(row.original.lastName)}, ${capitalize(row.original.firstName)}`}</div>,
     },
     {
       accessorKey: 'dni',
@@ -289,6 +289,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
   useEffect(() => {
     const fetchData = (search: string, sorting: SortingState, skipItems: number, itemsPerPage: number) => {
       setIsLoading(true);
+      
       if (!isNumericString(search)) {
         UserApiService.findAll(search, sorting, skipItems, itemsPerPage).then((response) => {
           if (response.statusCode === 200) {
@@ -306,8 +307,8 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
             addNotification({ type: 'error', message: APP_CONFIG.error.server });
             setInfoCardText(APP_CONFIG.error.server);
           }
-          setIsLoading(false);
-        });
+        })
+        .finally(() => setIsLoading(false));
       } else {
         UserApiService.findAllByDNI(search, sorting, skipItems, itemsPerPage).then((response) => {
           if (response.statusCode === 200) {
@@ -325,8 +326,8 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
             addNotification({ type: 'error', message: APP_CONFIG.error.server });
             setInfoCardText(APP_CONFIG.error.server);
           }
-          setIsLoading(false);
-        });
+        })
+        .finally(() => setIsLoading(false));
       }
     };
     fetchData(search, tableManager.sorting, tableManager.pagination.pageIndex * tableManager.pagination.pageSize, tableManager.pagination.pageSize);
