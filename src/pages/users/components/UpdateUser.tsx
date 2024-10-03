@@ -10,10 +10,10 @@ import { InfoCard } from '@/core/components/common/InfoCard';
 import { LoadingDB } from '@/core/components/common/LoadingDB';
 import { PageHeader } from '@/core/components/common/PageHeader';
 // App
+import type { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
+import type { IResponse } from '@/core/interfaces/response.interface';
+import type { IUser } from '@/pages/users/interfaces/user.interface';
 import { APP_CONFIG } from '@/config/app.config';
-import { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
-import { IResponse } from '@/core/interfaces/response.interface';
-import { IUser } from '@/pages/users/interfaces/user.interface';
 import { MouseEvent, useEffect, useState } from 'react';
 import { USER_SCHEMA } from '@/config/schemas/user.schema';
 import { USER_UPDATE_CONFIG as UU_CONFIG } from '@/config/user.config';
@@ -50,25 +50,22 @@ export default function UpdateUser() {
   });
 
   function handleUpdateUser(data: z.infer<typeof userSchema>): void {
-    // prettier-ignore
-    UserApiService
-      .update(user._id, data)
-      .then((response: IResponse) => {
-        if (response.statusCode === 200) {
-          addNotification({ type: 'success', message: response.message });
-          navigate('/users');
-        }
-        if (response.statusCode > 399) {
-          addNotification({ type: 'error', message: response.message });
-          setInfoCard({ text: response.message, type: 'warning' });
-          setError(true);
-        }
-        if (response instanceof Error) {
-          addNotification({ type: 'error', message: APP_CONFIG.error.server });
-          setInfoCard({ text: APP_CONFIG.error.server, type: 'error' });
-          setError(true);
-        }
-      });
+    UserApiService.update(user._id, data).then((response: IResponse) => {
+      if (response.statusCode === 200) {
+        addNotification({ type: 'success', message: response.message });
+        navigate('/users');
+      }
+      if (response.statusCode > 399) {
+        addNotification({ type: 'error', message: response.message });
+        setInfoCard({ text: response.message, type: 'warning' });
+        setError(true);
+      }
+      if (response instanceof Error) {
+        addNotification({ type: 'error', message: APP_CONFIG.error.server });
+        setInfoCard({ text: APP_CONFIG.error.server, type: 'error' });
+        setError(true);
+      }
+    });
   }
 
   function handleCancel(event: MouseEvent<HTMLButtonElement>): void {
@@ -84,32 +81,30 @@ export default function UpdateUser() {
   // #endregion
   // #region Load user data
   useEffect(() => {
-    // prettier-ignore
     if (id) {
       setIsLoading(true);
-      UserApiService
-        .findOne(id)
-        .then((response: IResponse) => {
-          if (response.statusCode === 200) {
-            setUser(response.data);
-            updateForm.setValue('dni', response.data.dni);
-            updateForm.setValue('email', response.data.email);
-            updateForm.setValue('firstName', capitalize(response.data.firstName) || '');
-            updateForm.setValue('lastName', capitalize(response.data.lastName) || '');
-            updateForm.setValue('phone', response.data.phone);
-          }
-          if (response.statusCode > 399) {
-            setInfoCard({ text: response.message, type: 'warning' });
-            setError(true);
-            addNotification({ type: 'error', message: response.message });
-          }
-          if (response instanceof Error) {
-            setInfoCard({ text: APP_CONFIG.error.server, type: 'error' });
-            setError(true);
-            addNotification({ type: 'error', message: APP_CONFIG.error.server });
-          }
-          setIsLoading(false);
-        });
+
+      UserApiService.findOne(id).then((response: IResponse) => {
+        if (response.statusCode === 200) {
+          setUser(response.data);
+          updateForm.setValue('dni', response.data.dni);
+          updateForm.setValue('email', response.data.email);
+          updateForm.setValue('firstName', capitalize(response.data.firstName) || '');
+          updateForm.setValue('lastName', capitalize(response.data.lastName) || '');
+          updateForm.setValue('phone', response.data.phone);
+        }
+        if (response.statusCode > 399) {
+          setInfoCard({ text: response.message, type: 'warning' });
+          setError(true);
+          addNotification({ type: 'error', message: response.message });
+        }
+        if (response instanceof Error) {
+          setInfoCard({ text: APP_CONFIG.error.server, type: 'error' });
+          setError(true);
+          addNotification({ type: 'error', message: APP_CONFIG.error.server });
+        }
+        setIsLoading(false);
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
@@ -138,7 +133,7 @@ export default function UpdateUser() {
                 <Menu className='h-4 w-4' strokeWidth={2} />
               </Button>
             </CardTitle>
-            {(!isLoading && !error) && <CardDescription>{UU_CONFIG.formDescription}</CardDescription>}
+            {!isLoading && !error && <CardDescription>{UU_CONFIG.formDescription}</CardDescription>}
           </CardHeader>
           <CardContent>
             {isLoading ? (
