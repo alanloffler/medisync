@@ -8,6 +8,7 @@ import { Input } from '@/core/components/ui/input';
 // App components
 import { PageHeader } from '@/core/components/common/PageHeader';
 // App
+import { APP_CONFIG } from '@/config/app.config';
 import { USER_CREATE_CONFIG as UC_CONFIG } from '@/config/user.config';
 import { USER_SCHEMA } from '@/config/schemas/user.schema';
 import { UserApiService } from '@/pages/users/services/user-api.service';
@@ -53,8 +54,8 @@ export default function CreateUser() {
         addNotification({ type: 'success', message: response.message });
       }
       if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
-      // TODO: dynamic message
-      if (response instanceof Error) addNotification({ type: 'error', message: 'Error en el servidor creando el usuario' });
+      if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
+
       createForm.reset();
       setShowUserCard(false);
     });
@@ -66,6 +67,7 @@ export default function CreateUser() {
     setShowUserCard(false);
   }
   // #endregion
+  // TODO: remove realtime card display
   return (
     <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
       {/* Page Header */}
