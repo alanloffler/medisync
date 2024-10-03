@@ -51,6 +51,7 @@ const defaultSorting = [{ id: PROF_CONFIG.table.defaultSortingId, desc: PROF_CON
 const defaultPagination = { pageIndex: 0, pageSize: PROF_CONFIG.table.defaultPageSize };
 // React component
 export function ProfessionalsDataTable({ search, reload, setReload, setErrorMessage }: DataTableProps) {
+  const [actualSearchType, setActualSearchType] = useState<string>(search.type);
   const [columns, setColumns] = useState<ColumnDef<IProfessional>[]>([]);
   const [data, setData] = useState<IProfessional[]>([]);
   const [infoCard, setInfoCard] = useState<IInfoCard>({ text: '', type: 'error' });
@@ -265,11 +266,15 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
       setIsLoading(true);
       
       if (search.type === 'specialization') {
+        if (actualSearchType !== search.type) {
+          setPagination(defaultPagination);
+          setActualSearchType(search.type);
+        }
         ProfessionalApiService.findBySpecialization(search.value, skipItems, itemsPerPage).then((response) => {
           if (response.statusCode === 200) {
-            setData(response.data);
+            setData(response.data.data);
             setColumns(tableColumns);
-            setTotalItems(response.count);
+            setTotalItems(response.data.count);
             setErrorMessage('');
           }
           if (response.statusCode > 399) {
@@ -285,11 +290,15 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
         });
       }
       if (search.type === 'professional') {
+        if (actualSearchType !== search.type) {
+          setPagination(defaultPagination);
+          setActualSearchType(search.type);
+        }
         ProfessionalApiService.findAll(search.value, sorting, skipItems, itemsPerPage).then((response) => {
-          if (!response.statusCode) {
-            setData(response.data);
+          if (response.statusCode === 200) {
+            setData(response.data.data);
             setColumns(tableColumns);
-            setTotalItems(response.count);
+            setTotalItems(response.data.count);
             setErrorMessage('');
           }
           if (response.statusCode > 399) {
