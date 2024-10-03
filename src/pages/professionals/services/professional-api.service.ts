@@ -40,9 +40,8 @@ export class ProfessionalApiService {
     }
   }
 
-  public static async findBySpecialization(specialization: string) {
-    console.log(specialization);
-    const url: string = `${this.API_URL}/professionals/specialization/${specialization}`;
+  public static async findBySpecialization(id: string, skip: number, limit: number) {
+    const url: string = `${this.API_URL}/professionals/specialization?id=${id}&limit=${limit}&skip=${skip}`;
 
     try {
       const query: Response = await fetch(url, {
