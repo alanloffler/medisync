@@ -16,16 +16,16 @@ import {
   PaginationState,
   SortingState,
   useReactTable,
-  Table as ITable
+  Table as ITable,
 } from '@tanstack/react-table';
 // App components
 import { InfoCard } from '@/core/components/common/InfoCard';
 import { LoadingDB } from '@/core/components/common/LoadingDB';
 // App
+import type { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
+import type { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
+import type { IResponse } from '@/core/interfaces/response.interface';
 import { APP_CONFIG } from '@/config/app.config';
-import { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
-import { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
-import { IResponse } from '@/core/interfaces/response.interface';
 import { PROF_CONFIG } from '@/config/professionals.config';
 import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
@@ -264,7 +264,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
   useEffect(() => {
     const fetchData = (search: { value: string; type: string }, sorting: SortingState, skipItems: number, itemsPerPage: number) => {
       setIsLoading(true);
-      
+
       if (search.type === 'specialization') {
         if (actualSearchType !== search.type) {
           setPagination(defaultPagination);
