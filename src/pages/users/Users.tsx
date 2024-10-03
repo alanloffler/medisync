@@ -9,7 +9,7 @@ import { Switch } from '@/core/components/ui/switch';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/core/components/ui/tooltip';
 // App components
 import { PageHeader } from '@/core/components/common/PageHeader';
-import { UsersDataTable } from './components/UsersDataTable';
+import { UsersDataTable } from '@/pages/users/components/UsersDataTable';
 // App
 import { ChangeEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -74,10 +74,7 @@ export default function Users() {
                     className='bg-background pl-10 shadow-sm'
                   />
                   {searchByDNI && (
-                    <button
-                      onClick={() => setSearchByDNI('')}
-                      className='absolute right-3 top-3 text-muted-foreground hover:text-black'
-                    >
+                    <button onClick={() => setSearchByDNI('')} className='absolute right-3 top-3 text-muted-foreground hover:text-black'>
                       <X className='h-4 w-4' />
                     </button>
                   )}
@@ -96,18 +93,13 @@ export default function Users() {
                     className='bg-background pl-10 shadow-sm'
                   />
                   {searchByName && (
-                    <button
-                      onClick={() => setSearchByName('')}
-                      className='absolute right-3 top-3 text-muted-foreground hover:text-black'
-                    >
+                    <button onClick={() => setSearchByName('')} className='absolute right-3 top-3 text-muted-foreground hover:text-black'>
                       <X className='h-4 w-4' />
                     </button>
                   )}
                 </div>
               </div>
-              {errorMessage && (
-                <div className='flex flex-row items-center text-xs font-medium text-rose-400'>{errorMessage}</div>
-              )}
+              {errorMessage && <div className='flex flex-row items-center text-xs font-medium text-rose-400'>{errorMessage}</div>}
               {/* Enable tooltips */}
               <div className='flex flex-row items-center space-x-2'>
                 <Switch id='tooltips' checked={helpChecked} onCheckedChange={() => setHelpChecked(!helpChecked)} />
@@ -169,11 +161,7 @@ export default function Users() {
                     <TooltipProvider delayDuration={0.3}>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button
-                            variant={'tableHeaderPrimary'}
-                            size={'miniIcon'}
-                            onClick={() => navigate('/users/create')}
-                          >
+                          <Button variant={'tableHeaderPrimary'} size={'miniIcon'} onClick={() => navigate('/users/create')}>
                             <CirclePlus className='h-4 w-4' strokeWidth={2} />
                           </Button>
                         </TooltipTrigger>
@@ -194,12 +182,12 @@ export default function Users() {
           {/* Table */}
           <CardContent className='px-3'>
             <UsersDataTable
-              key={reload}
-              setReload={setReload}
-              search={debouncedSearchByName || debouncedSearchByDNI}
-              reload={reload}
-              setErrorMessage={setErrorMessage}
               help={helpChecked}
+              key={reload}
+              reload={reload}
+              search={debouncedSearchByName || debouncedSearchByDNI}
+              setErrorMessage={setErrorMessage}
+              setReload={setReload}
             />
           </CardContent>
         </Card>
