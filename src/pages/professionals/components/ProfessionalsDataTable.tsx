@@ -269,7 +269,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
           if (response.statusCode === 200) {
             setData(response.data);
             setColumns(tableColumns);
-            setTotalItems(response.data.length);
+            setTotalItems(response.count);
             setErrorMessage('');
           }
           if (response.statusCode > 399) {
@@ -289,7 +289,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
           if (!response.statusCode) {
             setData(response.data);
             setColumns(tableColumns);
-            setTotalItems(response.data.length);
+            setTotalItems(response.count);
             setErrorMessage('');
           }
           if (response.statusCode > 399) {
