@@ -242,7 +242,6 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
     },
     // onColumnVisibilityChange: setColumnVisibility,
   });
-
   // #endregion
   // #region Load data, pagination and sorting
   useEffect(() => {
@@ -265,11 +264,12 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
     const fetchData = (search: { value: string; type: string }, sorting: SortingState, skipItems: number, itemsPerPage: number) => {
       setIsLoading(true);
 
+      if (actualSearchType !== search.type) {
+        setPagination(defaultPagination);
+        setActualSearchType(search.type);
+      }
+
       if (search.type === 'specialization') {
-        if (actualSearchType !== search.type) {
-          setPagination(defaultPagination);
-          setActualSearchType(search.type);
-        }
         ProfessionalApiService.findBySpecialization(search.value, skipItems, itemsPerPage).then((response) => {
           if (response.statusCode === 200) {
             setData(response.data.data);
@@ -290,10 +290,6 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
         });
       }
       if (search.type === 'professional') {
-        if (actualSearchType !== search.type) {
-          setPagination(defaultPagination);
-          setActualSearchType(search.type);
-        }
         ProfessionalApiService.findAll(search.value, sorting, skipItems, itemsPerPage).then((response) => {
           if (response.statusCode === 200) {
             setData(response.data.data);
