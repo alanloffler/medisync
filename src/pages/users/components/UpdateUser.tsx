@@ -36,17 +36,8 @@ export default function UpdateUser() {
   const navigate = useNavigate();
   const { id } = useParams();
   // #region Form actions
-  const defaultValues = {
-    dni: undefined,
-    email: '',
-    firstName: '',
-    lastName: '',
-    phone: undefined,
-  };
-
   const updateForm = useForm<z.infer<typeof userSchema>>({
-    resolver: zodResolver(userSchema),
-    defaultValues: defaultValues,
+    resolver: zodResolver(userSchema)
   });
 
   function handleUpdateUser(data: z.infer<typeof userSchema>): void {
@@ -57,7 +48,7 @@ export default function UpdateUser() {
       }
       if (response.statusCode > 399) {
         addNotification({ type: 'error', message: response.message });
-        setInfoCard({ text: response.message, type: 'warning' });
+        setInfoCard({ type: 'warning', text: response.message });
         setError(true);
       }
       if (response instanceof Error) {
