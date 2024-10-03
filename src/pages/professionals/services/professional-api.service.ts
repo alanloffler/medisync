@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { IProfessionalForm } from '../interfaces/professional.interface';
-import { ProfessionalUtils } from './professional.utils';
-import { SortingState } from '@tanstack/react-table';
+import type { IProfessionalForm } from '@/pages/professionals/interfaces/professional.interface';
+import type { SortingState } from '@tanstack/react-table';
+import { ProfessionalUtils } from '@/pages/professionals/services/professional.utils';
 
 export class ProfessionalApiService {
   private static readonly API_URL = import.meta.env.VITE_API_URL;
