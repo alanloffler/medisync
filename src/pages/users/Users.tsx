@@ -118,25 +118,6 @@ export default function Users() {
                   {USER_CONFIG.table.title}
                 </div>
                 <div className='flex items-center gap-2'>
-                  {/* Sort */}
-                  {/* {helpChecked ? (
-                    <TooltipProvider delayDuration={0.3}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button variant={'tableHeader'} size={'miniIcon'} className='flex items-center'>
-                            <ListFilter className='h-4 w-4' strokeWidth={2} />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p className='text-xs font-medium'>{USER_CONFIG.tooltip.sort}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  ) : (
-                    <Button variant={'tableHeader'} size={'miniIcon'} className='flex items-center'>
-                      <ListFilter className='h-4 w-4' strokeWidth={2} />
-                    </Button>
-                  )} */}
                   {/* Reload */}
                   {helpChecked ? (
                     <TooltipProvider delayDuration={0.3}>
