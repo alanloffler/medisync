@@ -53,7 +53,7 @@ export default function UpdateUser() {
       }
       if (response instanceof Error) {
         addNotification({ type: 'error', message: APP_CONFIG.error.server });
-        setInfoCard({ text: APP_CONFIG.error.server, type: 'error' });
+        setInfoCard({ type: 'error', text: APP_CONFIG.error.server });
         setError(true);
       }
     });
