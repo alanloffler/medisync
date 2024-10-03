@@ -37,7 +37,7 @@ export default function UpdateUser() {
   const { id } = useParams();
   // #region Form actions
   const updateForm = useForm<z.infer<typeof userSchema>>({
-    resolver: zodResolver(userSchema)
+    resolver: zodResolver(userSchema),
   });
 
   function handleUpdateUser(data: z.infer<typeof userSchema>): void {
@@ -75,27 +75,28 @@ export default function UpdateUser() {
     if (id) {
       setIsLoading(true);
 
-      UserApiService.findOne(id).then((response: IResponse) => {
-        if (response.statusCode === 200) {
-          setUser(response.data);
-          updateForm.setValue('dni', response.data.dni);
-          updateForm.setValue('email', response.data.email);
-          updateForm.setValue('firstName', capitalize(response.data.firstName) || '');
-          updateForm.setValue('lastName', capitalize(response.data.lastName) || '');
-          updateForm.setValue('phone', response.data.phone);
-        }
-        if (response.statusCode > 399) {
-          setInfoCard({ text: response.message, type: 'warning' });
-          setError(true);
-          addNotification({ type: 'error', message: response.message });
-        }
-        if (response instanceof Error) {
-          setInfoCard({ text: APP_CONFIG.error.server, type: 'error' });
-          setError(true);
-          addNotification({ type: 'error', message: APP_CONFIG.error.server });
-        }
-        setIsLoading(false);
-      });
+      UserApiService.findOne(id)
+        .then((response: IResponse) => {
+          if (response.statusCode === 200) {
+            setUser(response.data);
+            updateForm.setValue('dni', response.data.dni);
+            updateForm.setValue('email', response.data.email);
+            updateForm.setValue('firstName', capitalize(response.data.firstName) || '');
+            updateForm.setValue('lastName', capitalize(response.data.lastName) || '');
+            updateForm.setValue('phone', response.data.phone);
+          }
+          if (response.statusCode > 399) {
+            setInfoCard({ text: response.message, type: 'warning' });
+            setError(true);
+            addNotification({ type: 'error', message: response.message });
+          }
+          if (response instanceof Error) {
+            setInfoCard({ text: APP_CONFIG.error.server, type: 'error' });
+            setError(true);
+            addNotification({ type: 'error', message: APP_CONFIG.error.server });
+          }
+        })
+        .finally(() => setIsLoading(false));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
