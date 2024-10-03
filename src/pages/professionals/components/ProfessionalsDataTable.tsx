@@ -265,7 +265,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
       setIsLoading(true);
       
       if (search.type === 'specialization') {
-        ProfessionalApiService.findBySpecialization(search.value).then((response) => {
+        ProfessionalApiService.findBySpecialization(search.value, skipItems, itemsPerPage).then((response) => {
           if (response.statusCode === 200) {
             setData(response.data);
             setColumns(tableColumns);
