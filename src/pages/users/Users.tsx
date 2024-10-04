@@ -1,18 +1,19 @@
 // Icons: https://lucide.dev/icons/
 import { CirclePlus, List, ListRestart, PlusCircle, Search, X } from 'lucide-react';
-// Components: https://ui.shadcn.com/docs/components
+// External Components: https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { Input } from '@/core/components/ui/input';
 import { Label } from '@/core/components/ui/label';
 import { Switch } from '@/core/components/ui/switch';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/core/components/ui/tooltip';
-// App components
+// Components
 import { PageHeader } from '@/core/components/common/PageHeader';
 import { UsersDataTable } from '@/pages/users/components/UsersDataTable';
-// App
+// External Imports
 import { ChangeEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+// Imports
 import { USER_CONFIG } from '@/config/user.config';
 import { useDebounce } from '@/core/hooks/useDebounce';
 // React component
@@ -44,13 +45,13 @@ export default function Users() {
 
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
-      {/* Page Header */}
+      {/* Section: Page Header */}
       <div className='flex items-center justify-between'>
         <PageHeader title={USER_CONFIG.title} breadcrumb={USER_CONFIG.breadcrumb} />
       </div>
-      {/* Page content */}
+      {/* Section: Page content */}
       <div className='grid gap-6 md:grid-cols-4 md:gap-8 lg:grid-cols-4 xl:grid-cols-4'>
-        {/* Left side content */}
+        {/* Section: Left side content */}
         <Card className='col-span-1 border-none bg-slate-200 bg-transparent shadow-none md:col-span-4 lg:col-span-1 xl:col-span-1'>
           <CardContent className='p-0'>
             <div className='flex flex-col gap-6 md:w-full'>
@@ -63,7 +64,7 @@ export default function Users() {
               {/* Search by DNI */}
               <div className='flex flex-col space-y-4'>
                 <h1 className='text-lg font-semibold'>{USER_CONFIG.search.label}</h1>
-                <div className='relative w-full items-center'>
+                <div className='relative w-full items-center md:w-1/3 lg:w-full'>
                   <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
                   <Input
                     onClick={() => setSearchByName('')}
@@ -82,7 +83,7 @@ export default function Users() {
               </div>
               {/* Search by firstname or lastname */}
               <div className='flex flex-col space-y-4'>
-                <div className='relative w-full items-center'>
+                <div className='relative w-full items-center md:w-1/3 lg:w-full'>
                   <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
                   <Input
                     onClick={() => setSearchByDNI('')}
@@ -108,7 +109,7 @@ export default function Users() {
             </div>
           </CardContent>
         </Card>
-        {/* Right side content */}
+        {/* Section: Right side content */}
         <Card className='col-span-1 h-fit overflow-y-auto md:col-span-4 lg:col-span-3 xl:col-span-3'>
           <CardHeader>
             <div className='grid gap-2'>
