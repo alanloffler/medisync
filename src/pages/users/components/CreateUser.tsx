@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 // Imports
+import type { IResponse } from '@/core/interfaces/response.interface';
 import { APP_CONFIG } from '@/config/app.config';
 import { USER_CREATE_CONFIG as UC_CONFIG } from '@/config/user.config';
 import { USER_SCHEMA } from '@/config/schemas/user.schema';
@@ -42,7 +43,7 @@ export default function CreateUser() {
   });
 
   function handleCreateUser(data: z.infer<typeof userSchema>): void {
-    UserApiService.create(data).then((response) => {
+    UserApiService.create(data).then((response: IResponse) => {
       if (response.statusCode === 200) {
         navigate(`/users/${response.data._id}`);
         addNotification({ type: 'success', message: response.message });
