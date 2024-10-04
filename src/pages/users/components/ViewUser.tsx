@@ -144,6 +144,11 @@ export default function ViewUser() {
           )}
         </Card>
       </div>
+      <section className='mx-auto pt-3'>
+        <Button variant='default' size='default' onClick={() => navigate('/users')}>
+          {UV_CONFIG.buttons.goToUsers}
+        </Button>
+      </section>
     </main>
   );
 }
