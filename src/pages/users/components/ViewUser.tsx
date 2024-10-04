@@ -64,15 +64,15 @@ export default function ViewUser() {
   return (
     <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
       {/* Section: Page Header */}
-      <div className='flex items-center justify-between'>
+      <header className='flex items-center justify-between'>
         <PageHeader title={UV_CONFIG.title} breadcrumb={UV_CONFIG.breadcrumb} />
         <Button variant={'outline'} size={'sm'} className='gap-2' onClick={() => navigate(-1)}>
           <ArrowLeft className='h-4 w-4' />
           {UV_CONFIG.buttons.back}
         </Button>
-      </div>
+      </header>
       {/* Section: Page Content */}
-      <div className='mx-auto mt-4 flex w-full flex-row px-2 md:w-[500px]'>
+      <section className='mx-auto mt-4 flex w-full flex-row px-2 md:w-[500px]'>
         <Card className='w-full'>
           {showCard && (
             <CardHeader>
@@ -126,29 +126,29 @@ export default function ViewUser() {
           ) : (
             showCard && (
               <CardContent className='mt-3 space-y-3'>
-                <div className='flex items-center space-x-4'>
+                <section className='flex items-center space-x-4'>
                   <CreditCard className='h-6 w-6' strokeWidth={2} />
                   <span className='text-lg font-medium'>{delimiter(user.dni, '.', 3)}</span>
-                </div>
-                <div className='flex items-center space-x-4'>
+                </section>
+                <section className='flex items-center space-x-4'>
                   <Smartphone className='h-6 w-6' strokeWidth={2} />
                   <span className='text-lg font-medium'>{delimiter(user.phone, '-', 6)}</span>
-                </div>
-                <div className='flex items-center space-x-4'>
+                </section>
+                <section className='flex items-center space-x-4'>
                   <Mail className='h-6 w-6' strokeWidth={2} />
                   <span className='text-lg font-medium'>{user.email}</span>
-                </div>
-                <div className='flex justify-end pt-2 text-base leading-none text-slate-500'>{`${UV_CONFIG.phrase.userSince} ${legibleDate(new Date(user.createdAt), 'short')}`}</div>
+                </section>
+                <section className='flex justify-end pt-2 text-base leading-none text-slate-500'>{`${UV_CONFIG.phrase.userSince} ${legibleDate(new Date(user.createdAt), 'short')}`}</section>
               </CardContent>
             )
           )}
         </Card>
-      </div>
-      <section className='mx-auto pt-3'>
+      </section>
+      <footer className='mx-auto pt-3'>
         <Button variant='default' size='default' onClick={() => navigate('/users')}>
           {UV_CONFIG.buttons.goToUsers}
         </Button>
-      </section>
+      </footer>
     </main>
   );
 }
