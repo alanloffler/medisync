@@ -109,6 +109,7 @@ export const USER_VIEW_CONFIG = {
   ],
   buttons: {
     back: 'Volver',
+    goToUsers: 'Ir a pacientes',
   },
   dropdownMenu: [
     { id: 1, name: 'Enviar e-mail' },
