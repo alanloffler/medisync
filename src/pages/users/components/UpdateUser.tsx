@@ -1,30 +1,31 @@
 // Icons: https://lucide.dev/icons/
 import { ArrowLeft, FilePen, Menu } from 'lucide-react';
-// Components: https://ui.shadcn.com/docs/components
+// External components: https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { Form, FormField, FormControl, FormItem, FormLabel, FormMessage } from '@/core/components/ui/form';
 import { Input } from '@/core/components/ui/input';
-// App components
+// Components
 import { InfoCard } from '@/core/components/common/InfoCard';
 import { LoadingDB } from '@/core/components/common/LoadingDB';
 import { PageHeader } from '@/core/components/common/PageHeader';
-// App
+// External imports
+import { MouseEvent, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useNavigate, useParams } from 'react-router-dom';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+// Imports
 import type { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
 import type { IResponse } from '@/core/interfaces/response.interface';
 import type { IUser } from '@/pages/users/interfaces/user.interface';
 import { APP_CONFIG } from '@/config/app.config';
-import { MouseEvent, useEffect, useState } from 'react';
 import { USER_SCHEMA } from '@/config/schemas/user.schema';
 import { USER_UPDATE_CONFIG as UU_CONFIG } from '@/config/user.config';
 import { UserApiService } from '@/pages/users/services/user-api.service';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
-import { useForm } from 'react-hook-form';
-import { useNavigate, useParams } from 'react-router-dom';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 import { userSchema } from '@/pages/users/schemas/user.schema';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
 // React component
 export default function UpdateUser() {
   const [error, setError] = useState<boolean>(false);
@@ -35,7 +36,7 @@ export default function UpdateUser() {
   const capitalize = useCapitalize();
   const navigate = useNavigate();
   const { id } = useParams();
-  // #region Form actions
+
   const updateForm = useForm<z.infer<typeof userSchema>>({
     resolver: zodResolver(userSchema),
   });
@@ -43,18 +44,18 @@ export default function UpdateUser() {
   function handleUpdateUser(data: z.infer<typeof userSchema>): void {
     UserApiService.update(user._id, data).then((response: IResponse) => {
       if (response.statusCode === 200) {
+        navigate(`/users/${user._id}`);
         addNotification({ type: 'success', message: response.message });
-        navigate('/users');
       }
       if (response.statusCode > 399) {
-        addNotification({ type: 'error', message: response.message });
-        setInfoCard({ type: 'warning', text: response.message });
         setError(true);
+        setInfoCard({ type: 'warning', text: response.message });
+        addNotification({ type: 'error', message: response.message });
       }
       if (response instanceof Error) {
-        addNotification({ type: 'error', message: APP_CONFIG.error.server });
-        setInfoCard({ type: 'error', text: APP_CONFIG.error.server });
         setError(true);
+        setInfoCard({ type: 'error', text: APP_CONFIG.error.server });
+        addNotification({ type: 'error', message: APP_CONFIG.error.server });
       }
     });
   }
@@ -69,8 +70,7 @@ export default function UpdateUser() {
     updateForm.setValue('phone', user.phone);
     navigate('/users');
   }
-  // #endregion
-  // #region Load user data
+
   useEffect(() => {
     if (id) {
       setIsLoading(true);
@@ -81,18 +81,18 @@ export default function UpdateUser() {
             setUser(response.data);
             updateForm.setValue('dni', response.data.dni);
             updateForm.setValue('email', response.data.email);
-            updateForm.setValue('firstName', capitalize(response.data.firstName) || '');
-            updateForm.setValue('lastName', capitalize(response.data.lastName) || '');
+            updateForm.setValue('firstName', capitalize(response.data.firstName));
+            updateForm.setValue('lastName', capitalize(response.data.lastName));
             updateForm.setValue('phone', response.data.phone);
           }
           if (response.statusCode > 399) {
-            setInfoCard({ text: response.message, type: 'warning' });
             setError(true);
+            setInfoCard({ type: 'warning', text: response.message });
             addNotification({ type: 'error', message: response.message });
           }
           if (response instanceof Error) {
-            setInfoCard({ text: APP_CONFIG.error.server, type: 'error' });
             setError(true);
+            setInfoCard({ type: 'error', text: APP_CONFIG.error.server });
             addNotification({ type: 'error', message: APP_CONFIG.error.server });
           }
         })
@@ -100,10 +100,10 @@ export default function UpdateUser() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
-  // #endregion
+
   return (
     <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
-      {/* Page Header */}
+      {/* Section: Page Header */}
       <div className='flex items-center justify-between'>
         <PageHeader title={''} breadcrumb={UU_CONFIG.breadcrumb} />
         <Button variant={'outline'} size={'sm'} className='gap-2' onClick={() => navigate(-1)}>
@@ -111,7 +111,7 @@ export default function UpdateUser() {
           {UU_CONFIG.button.back}
         </Button>
       </div>
-      {/* Form */}
+      {/* Section: Form */}
       <div className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-2 lg:gap-6'>
         <Card className='w-full md:grid-cols-2'>
           <CardHeader>
