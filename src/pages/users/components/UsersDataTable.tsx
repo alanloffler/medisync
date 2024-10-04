@@ -1,13 +1,11 @@
 // Icons: https://lucide.dev/icons/
 import { ArrowDownUp, ArrowLeftIcon, ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon, FilePen, FileText, Trash2 } from 'lucide-react';
-// Components: https://ui.shadcn.com/docs/components
+// External components: https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/core/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/core/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/core/components/ui/table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/core/components/ui/tooltip';
-// App components
-import { LoadingDB } from '@/core/components/common/LoadingDB';
 // Tanstack Data Table: https://tanstack.com/table/latest
 import {
   ColumnDef,
@@ -20,17 +18,21 @@ import {
   SortingState,
   useReactTable,
 } from '@tanstack/react-table';
-// App
+// Components
+import { InfoCard } from '@/core/components/common/InfoCard';
+import { LoadingDB } from '@/core/components/common/LoadingDB';
+// External imports
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+// Imports
+import type { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
 import type { IUser } from '@/pages/users/interfaces/user.interface';
 import { APP_CONFIG } from '@/config/app.config';
-import { InfoCard } from '@/core/components/common/InfoCard';
 import { USER_CONFIG } from '@/config/user.config';
 import { UserApiService } from '@/pages/users/services/user-api.service';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useDelimiter } from '@/core/hooks/useDelimiter';
-import { useEffect, useRef, useState } from 'react';
 import { useIsNumericString } from '@/core/hooks/useIsNumericString';
-import { useNavigate } from 'react-router-dom';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 import { useTruncateText } from '@/core/hooks/useTruncateText';
 // Table interfaces
@@ -53,7 +55,7 @@ const defaultPagination = { pageIndex: 0, pageSize: USER_CONFIG.table.defaultPag
 export function UsersDataTable({ search, reload, setReload, setErrorMessage, help }: DataTableProps) {
   const [columns, setColumns] = useState<ColumnDef<IUser>[]>([]);
   const [data, setData] = useState<IUser[]>([]);
-  const [infoCardText, setInfoCardText] = useState<string>('');
+  const [infoCardContent, setInfoCardContent] = useState<IInfoCard>({ type: 'success', text: '' });
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [pagination, setPagination] = useState<PaginationState>(defaultPagination);
@@ -289,45 +291,52 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
   useEffect(() => {
     const fetchData = (search: string, sorting: SortingState, skipItems: number, itemsPerPage: number) => {
       setIsLoading(true);
-      
+
       if (!isNumericString(search)) {
-        UserApiService.findAll(search, sorting, skipItems, itemsPerPage).then((response) => {
-          if (response.statusCode === 200) {
-            setData(response.data.data);
-            setColumns(tableColumns);
-            setTotalItems(response.data.count);
-            setErrorMessage('');
-          }
-          if (response.statusCode > 399) {
-            setErrorMessage(response.message);
-            addNotification({ type: 'warning', message: response.message });
-            setInfoCardText(response.message);
-          }
-          if (response instanceof Error) {
-            addNotification({ type: 'error', message: APP_CONFIG.error.server });
-            setInfoCardText(APP_CONFIG.error.server);
-          }
-        })
-        .finally(() => setIsLoading(false));
+        UserApiService.findAll(search, sorting, skipItems, itemsPerPage)
+          .then((response) => {
+            if (response.statusCode === 200) {
+              if (response.data.length === 0) {
+                addNotification({ type: 'error', message: response.message });
+                setInfoCardContent({ type: 'warning', text: response.message });
+              }
+
+              setData(response.data.data);
+              setColumns(tableColumns);
+              setTotalItems(response.data.count);
+              setErrorMessage('');
+            }
+            if (response.statusCode > 399) {
+              setErrorMessage(response.message);
+              addNotification({ type: 'warning', message: response.message });
+              setInfoCardContent({ type: 'error', text: response.message });
+            }
+            if (response instanceof Error) {
+              addNotification({ type: 'error', message: APP_CONFIG.error.server });
+              setInfoCardContent({ type: 'error', text: APP_CONFIG.error.server });
+            }
+          })
+          .finally(() => setIsLoading(false));
       } else {
-        UserApiService.findAllByDNI(search, sorting, skipItems, itemsPerPage).then((response) => {
-          if (response.statusCode === 200) {
-            setData(response.data.data);
-            setColumns(tableColumns);
-            setTotalItems(response.data.count);
-            setErrorMessage('');
-          }
-          if (response.statusCode > 399) {
-            setErrorMessage(response.message);
-            addNotification({ type: 'warning', message: response.message });
-            setInfoCardText(response.message);
-          }
-          if (response instanceof Error) {
-            addNotification({ type: 'error', message: APP_CONFIG.error.server });
-            setInfoCardText(APP_CONFIG.error.server);
-          }
-        })
-        .finally(() => setIsLoading(false));
+        UserApiService.findAllByDNI(search, sorting, skipItems, itemsPerPage)
+          .then((response) => {
+            if (response.statusCode === 200) {
+              setData(response.data.data);
+              setColumns(tableColumns);
+              setTotalItems(response.data.count);
+              setErrorMessage('');
+            }
+            if (response.statusCode > 399) {
+              setErrorMessage(response.message);
+              addNotification({ type: 'error', message: response.message });
+              setInfoCardContent({ type: 'error', text: response.message });
+            }
+            if (response instanceof Error) {
+              addNotification({ type: 'error', message: APP_CONFIG.error.server });
+              setInfoCardContent({ type: 'error', text: APP_CONFIG.error.server });
+            }
+          })
+          .finally(() => setIsLoading(false));
       }
     };
     fetchData(search, tableManager.sorting, tableManager.pagination.pageIndex * tableManager.pagination.pageSize, tableManager.pagination.pageSize);
@@ -348,7 +357,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
         setUserSelected({} as IUser);
         setReload(new Date().getTime());
       }
-      // TODO show error in dialog or toast?
+      // TODO: show error in dialog or toast?
       if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
       if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
     });
@@ -359,7 +368,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
       {isLoading ? (
         <LoadingDB text={APP_CONFIG.loadingDB.findUsers} className='mt-3' />
       ) : table.getRowModel().rows?.length > 0 ? (
-        <>
+        <section>
           <div className='flex items-center justify-end text-sm font-medium text-slate-400'>
             {totalItems === 1 ? `${totalItems} ${USER_CONFIG.dbUsersSingular}` : `${totalItems} ${USER_CONFIG.dbUsersPlural}`}
           </div>
@@ -387,7 +396,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
               ))}
             </TableBody>
           </Table>
-          <div className='flex items-center justify-between space-x-6 pt-6 lg:space-x-8'>
+          <section className='flex items-center justify-between space-x-6 pt-6 lg:space-x-8'>
             <div className='flex items-center space-x-2'>
               <p className='text-xs font-normal text-slate-400'>{USER_CONFIG.table.rowsPerPage}</p>
               <Select value={`${table.getState().pagination.pageSize}`} onValueChange={(e) => setPagination({ pageIndex: 0, pageSize: parseInt(e) })}>
@@ -545,8 +554,8 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
                 )}
               </div>
             )}
-          </div>
-          {/* Dialog */}
+          </section>
+          {/* Section: Dialog */}
           <Dialog open={openDialog} onOpenChange={setOpenDialog}>
             <DialogContent>
               <DialogHeader>
@@ -568,9 +577,9 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
               </DialogHeader>
             </DialogContent>
           </Dialog>
-        </>
+        </section>
       ) : (
-        <InfoCard text={infoCardText} type='error' className='mt-3' />
+        <InfoCard text={infoCardContent.text} type={infoCardContent.type} className='mt-3' />
       )}
     </>
   );
