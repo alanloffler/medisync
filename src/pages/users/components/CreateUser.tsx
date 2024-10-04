@@ -75,15 +75,15 @@ export default function CreateUser() {
   return (
     <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
       {/* Section: Page Header */}
-      <div className='flex items-center justify-between'>
+      <header className='flex items-center justify-between'>
         <PageHeader title={''} breadcrumb={UC_CONFIG.breadcrumb} />
         <Button variant={'outline'} size={'sm'} className='gap-2' onClick={() => navigate(-1)}>
           <ArrowLeft className='h-4 w-4' />
           {UC_CONFIG.buttons.back}
         </Button>
-      </div>
+      </header>
       {/* Section: Form */}
-      <div className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-2 lg:gap-6'>
+      <section className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-2 lg:gap-6'>
         <Card className='w-full md:grid-cols-2'>
           <CardHeader>
             <CardTitle className='flex items-center justify-between'>
@@ -102,7 +102,7 @@ export default function CreateUser() {
             <Form {...createForm}>
               <form onSubmit={createForm.handleSubmit(handleCreateUser)} className='space-y-4'>
                 {/* Form field: DNI */}
-                <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                   <FormField
                     control={createForm.control}
                     name='dni'
@@ -116,9 +116,9 @@ export default function CreateUser() {
                       </FormItem>
                     )}
                   />
-                </div>
+                </section>
                 {/* Form fields: lastName and firstName */}
-                <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                   <FormField
                     control={createForm.control}
                     name='lastName'
@@ -145,9 +145,9 @@ export default function CreateUser() {
                       </FormItem>
                     )}
                   />
-                </div>
+                </section>
                 {/* Form fields: email and phone */}
-                <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                   <FormField
                     control={createForm.control}
                     name='email'
@@ -174,21 +174,21 @@ export default function CreateUser() {
                       </FormItem>
                     )}
                   />
-                </div>
+                </section>
                 {/* Buttons */}
-                <div className='grid grid-cols-1 space-y-2 pt-2 md:flex md:justify-end md:gap-6 md:space-y-0'>
+                <footer className='grid grid-cols-1 space-y-2 pt-2 md:flex md:justify-end md:gap-6 md:space-y-0'>
                   <Button type='submit' className='order-1 md:order-2 lg:order-2'>
                     {isCreating ? <LoadingDB text={UC_CONFIG.buttons.creating} variant='button' /> : UC_CONFIG.buttons.create}
                   </Button>
                   <Button variant={'ghost'} onClick={handleCancel} className='order-2 md:order-1 lg:order-1'>
                     {UC_CONFIG.buttons.cancel}
                   </Button>
-                </div>
+                </footer>
               </form>
             </Form>
           </CardContent>
         </Card>
-      </div>
+      </section>
       {/* Section: Dialog */}
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent>
