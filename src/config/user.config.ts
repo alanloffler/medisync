@@ -140,6 +140,12 @@ export const USER_UPDATE_CONFIG = {
     update: 'Actualizar',
     updating: 'Actualizando',
   },
+  dialog: {
+    title: 'Error al actualizar el paciente',
+    button: {
+      close: 'Cerrar',
+    },
+  },
   formDescription: 'Editá los datos para actualizar el paciente',
   formTitle: 'Actualización de paciente',
   label: {
