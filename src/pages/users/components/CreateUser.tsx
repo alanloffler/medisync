@@ -1,6 +1,6 @@
 // Icons: https://lucide.dev/icons/
 import { ArrowLeft, FilePlus2, Menu } from 'lucide-react';
-// External Components: https://ui.shadcn.com/docs/components
+// External components: https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/core/components/ui/dialog';

@@ -1,6 +1,6 @@
 // Icons: https://lucide.dev/icons/
 import { CirclePlus, List, ListRestart, PlusCircle, Search, X } from 'lucide-react';
-// External Components: https://ui.shadcn.com/docs/components
+// External components: https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { Input } from '@/core/components/ui/input';
@@ -10,7 +10,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/core
 // Components
 import { PageHeader } from '@/core/components/common/PageHeader';
 import { UsersDataTable } from '@/pages/users/components/UsersDataTable';
-// External Imports
+// External imports
 import { ChangeEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 // Imports
