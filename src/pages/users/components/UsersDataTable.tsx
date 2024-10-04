@@ -555,32 +555,32 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
               </div>
             )}
           </section>
-          {/* Section: Dialog */}
-          <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle className='text-xl'>{USER_CONFIG.dialog.remove.title}</DialogTitle>
-                <DialogDescription>{USER_CONFIG.dialog.remove.subtitle}</DialogDescription>
-                <div className='flex flex-col pt-2'>
-                  <span className=''>{USER_CONFIG.dialog.remove.content.title}</span>
-                  <span className='mt-1 text-lg font-semibold'>{`${capitalize(userSelected.lastName)}, ${capitalize(userSelected.firstName)}`}</span>
-                  <span className='font-medium'>{`${USER_CONFIG.dialog.remove.content.dni}: ${delimiter(userSelected.dni, '.', 3)}`}</span>
-                  <div className='mt-5 flex justify-end space-x-4'>
-                    <Button variant={'secondary'} size={'sm'} onClick={() => setOpenDialog(false)}>
-                      {USER_CONFIG.buttons.cancel}
-                    </Button>
-                    <Button variant={'remove'} size={'sm'} onClick={() => handleRemoveUserDatabase(userSelected._id)}>
-                      {USER_CONFIG.buttons.remove}
-                    </Button>
-                  </div>
-                </div>
-              </DialogHeader>
-            </DialogContent>
-          </Dialog>
         </section>
       ) : (
         <InfoCard text={infoCardContent.text} type={infoCardContent.type} className='mt-3' />
       )}
+      {/* Section: Dialog */}
+      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className='text-xl'>{USER_CONFIG.dialog.remove.title}</DialogTitle>
+            <DialogDescription>{USER_CONFIG.dialog.remove.subtitle}</DialogDescription>
+            <section className='flex flex-col pt-2'>
+              <span className=''>{USER_CONFIG.dialog.remove.content.title}</span>
+              <span className='mt-1 text-lg font-semibold'>{`${capitalize(userSelected.lastName)}, ${capitalize(userSelected.firstName)}`}</span>
+              <span className='font-medium'>{`${USER_CONFIG.dialog.remove.content.dni}: ${delimiter(userSelected.dni, '.', 3)}`}</span>
+              <footer className='mt-5 flex justify-end space-x-4'>
+                <Button variant={'secondary'} size={'sm'} onClick={() => setOpenDialog(false)}>
+                  {USER_CONFIG.buttons.cancel}
+                </Button>
+                <Button variant={'remove'} size={'sm'} onClick={() => handleRemoveUserDatabase(userSelected._id)}>
+                  {USER_CONFIG.buttons.remove}
+                </Button>
+              </footer>
+            </section>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
