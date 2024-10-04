@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { ArrowLeft, CreditCard, FilePlus2, Mail, Menu, Smartphone } from 'lucide-react';
+import { ArrowLeft, FilePlus2, Menu } from 'lucide-react';
 // Components: https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/core/components/ui/card';
@@ -12,8 +12,6 @@ import { APP_CONFIG } from '@/config/app.config';
 import { USER_CREATE_CONFIG as UC_CONFIG } from '@/config/user.config';
 import { USER_SCHEMA } from '@/config/schemas/user.schema';
 import { UserApiService } from '@/pages/users/services/user-api.service';
-import { useCapitalize } from '@/core/hooks/useCapitalize';
-import { useDelimiter } from '@/core/hooks/useDelimiter';
 import { useEffect, useState, MouseEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -25,8 +23,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 export default function CreateUser() {
   const [showUserCard, setShowUserCard] = useState<boolean>(false);
   const addNotification = useNotificationsStore((state) => state.addNotification);
-  const capitalize = useCapitalize();
-  const delimiter = useDelimiter();
   const navigate = useNavigate();
   // #region Form config and actions
   const defaultValues = {
@@ -67,10 +63,9 @@ export default function CreateUser() {
     setShowUserCard(false);
   }
   // #endregion
-  // TODO: remove realtime card display
   return (
     <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
-      {/* Page Header */}
+      {/* Section: Page Header */}
       <div className='flex items-center justify-between'>
         <PageHeader title={''} breadcrumb={UC_CONFIG.breadcrumb} />
         <Button variant={'outline'} size={'sm'} className='gap-2' onClick={() => navigate(-1)}>
@@ -78,7 +73,7 @@ export default function CreateUser() {
           {UC_CONFIG.buttons.back}
         </Button>
       </div>
-      {/* Form */}
+      {/* Section: Form */}
       <div className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-2 lg:gap-6'>
         <Card className='w-full md:grid-cols-2'>
           <CardHeader>
@@ -184,45 +179,6 @@ export default function CreateUser() {
             </Form>
           </CardContent>
         </Card>
-        {showUserCard && (
-          <div className='mx-auto w-full animate-fadeIn justify-items-center md:grid-cols-1 lg:grid-cols-1'>
-            <div className='mx-auto flex h-full items-center justify-center'>
-              <Card className='w-full md:w-2/3 lg:w-2/3'>
-                {createForm.watch('lastName') !== '' || createForm.watch('firstName') !== '' ? (
-                  <CardHeader>
-                    <CardTitle>
-                      <div className='relative flex items-center justify-center'>
-                        <h1 className='text-center text-2xl font-bold'>
-                          {capitalize(createForm.watch('lastName'))}, {capitalize(createForm.watch('firstName'))}
-                        </h1>
-                      </div>
-                    </CardTitle>
-                  </CardHeader>
-                ) : null}
-                <CardContent className='mt-3 space-y-3'>
-                  {createForm.watch('dni') !== undefined && (
-                    <div className='flex items-center space-x-4'>
-                      <CreditCard className='h-6 w-6' strokeWidth={2} />
-                      <span className='text-lg font-medium'>{delimiter(createForm.watch('dni'), '.', 3)}</span>
-                    </div>
-                  )}
-                  {createForm.watch('phone') !== undefined && (
-                    <div className='flex items-center gap-4'>
-                      <Smartphone className='h-6 w-6' strokeWidth={2} />
-                      <span className='text-lg font-medium'>{delimiter(createForm.watch('phone'), '-', 6)}</span>
-                    </div>
-                  )}
-                  {createForm.watch('email') !== '' && (
-                    <div className='flex items-center space-x-4'>
-                      <Mail className='h-6 w-6' strokeWidth={2} />
-                      <span className='text-lg font-medium'>{createForm.watch('email')}</span>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        )}
       </div>
     </main>
   );
