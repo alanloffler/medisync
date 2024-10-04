@@ -22,9 +22,11 @@ import { USER_SCHEMA } from '@/config/schemas/user.schema';
 import { UserApiService } from '@/pages/users/services/user-api.service';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 import { userSchema } from '@/pages/users/schemas/user.schema';
+import { LoadingDB } from '@/core/components/common/LoadingDB';
 // React component
 export default function CreateUser() {
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [isCreating, setIsCreating] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const navigate = useNavigate();
@@ -43,22 +45,26 @@ export default function CreateUser() {
   });
 
   function handleCreateUser(data: z.infer<typeof userSchema>): void {
-    UserApiService.create(data).then((response: IResponse) => {
-      if (response.statusCode === 200) {
-        navigate(`/users/${response.data._id}`);
-        addNotification({ type: 'success', message: response.message });
-      }
-      if (response.statusCode > 399) {
-        setOpenDialog(true);
-        setErrorMessage(response.message);
-        addNotification({ type: 'error', message: response.message });
-      }
-      if (response instanceof Error) {
-        setOpenDialog(true);
-        setErrorMessage(APP_CONFIG.error.server);
-        addNotification({ type: 'error', message: APP_CONFIG.error.server });
-      }
-    });
+    setIsCreating(true);
+
+    UserApiService.create(data)
+      .then((response: IResponse) => {
+        if (response.statusCode === 200) {
+          navigate(`/users/${response.data._id}`);
+          addNotification({ type: 'success', message: response.message });
+        }
+        if (response.statusCode > 399) {
+          setOpenDialog(true);
+          setErrorMessage(response.message);
+          addNotification({ type: 'error', message: response.message });
+        }
+        if (response instanceof Error) {
+          setOpenDialog(true);
+          setErrorMessage(APP_CONFIG.error.server);
+          addNotification({ type: 'error', message: APP_CONFIG.error.server });
+        }
+      })
+      .finally(() => setIsCreating(false));
   }
 
   function handleCancel(event: MouseEvent<HTMLButtonElement | HTMLDivElement | HTMLInputElement>): void {
@@ -172,7 +178,7 @@ export default function CreateUser() {
                 {/* Buttons */}
                 <div className='grid grid-cols-1 space-y-2 pt-2 md:flex md:justify-end md:gap-6 md:space-y-0'>
                   <Button type='submit' className='order-1 md:order-2 lg:order-2'>
-                    {UC_CONFIG.buttons.create}
+                    {isCreating ? <LoadingDB text={UC_CONFIG.buttons.creating} variant='button' /> : UC_CONFIG.buttons.create}
                   </Button>
                   <Button variant={'ghost'} onClick={handleCancel} className='order-2 md:order-1 lg:order-1'>
                     {UC_CONFIG.buttons.cancel}
