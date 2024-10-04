@@ -3,10 +3,10 @@ import { ArrowLeft, FilePen, Menu } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/core/components/ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/core/components/ui/dialog';
 import { Form, FormField, FormControl, FormItem, FormLabel, FormMessage } from '@/core/components/ui/form';
 import { Input } from '@/core/components/ui/input';
 // Components
-import { InfoCard } from '@/core/components/common/InfoCard';
 import { LoadingDB } from '@/core/components/common/LoadingDB';
 import { PageHeader } from '@/core/components/common/PageHeader';
 // External imports
@@ -16,7 +16,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 // Imports
-import type { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
 import type { IResponse } from '@/core/interfaces/response.interface';
 import type { IUser } from '@/pages/users/interfaces/user.interface';
 import { APP_CONFIG } from '@/config/app.config';
@@ -28,10 +27,10 @@ import { useNotificationsStore } from '@/core/stores/notifications.store';
 import { userSchema } from '@/pages/users/schemas/user.schema';
 // React component
 export default function UpdateUser() {
-  const [error, setError] = useState<boolean>(false);
-  const [infoCard, setInfoCard] = useState<IInfoCard>({} as IInfoCard);
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [user, setUser] = useState<IUser>({} as IUser);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
@@ -57,13 +56,13 @@ export default function UpdateUser() {
             updateForm.setValue('phone', response.data.phone);
           }
           if (response.statusCode > 399) {
-            setError(true);
-            setInfoCard({ type: 'warning', text: response.message });
+            setOpenDialog(true);
+            setErrorMessage(response.message);
             addNotification({ type: 'error', message: response.message });
           }
           if (response instanceof Error) {
-            setError(true);
-            setInfoCard({ type: 'error', text: APP_CONFIG.error.server });
+            setOpenDialog(true);
+            setErrorMessage(APP_CONFIG.error.server);
             addNotification({ type: 'error', message: APP_CONFIG.error.server });
           }
         })
@@ -82,13 +81,13 @@ export default function UpdateUser() {
           addNotification({ type: 'success', message: response.message });
         }
         if (response.statusCode > 399) {
-          setError(true);
-          setInfoCard({ type: 'warning', text: response.message });
+          setOpenDialog(true);
+          setErrorMessage(response.message);
           addNotification({ type: 'error', message: response.message });
         }
         if (response instanceof Error) {
-          setError(true);
-          setInfoCard({ type: 'error', text: APP_CONFIG.error.server });
+          setOpenDialog(true);
+          setErrorMessage(APP_CONFIG.error.server);
           addNotification({ type: 'error', message: APP_CONFIG.error.server });
         }
       })
@@ -130,13 +129,11 @@ export default function UpdateUser() {
                 <Menu className='h-4 w-4' strokeWidth={2} />
               </Button>
             </CardTitle>
-            {!isLoading && !error && <CardDescription>{UU_CONFIG.formDescription}</CardDescription>}
+            {!isLoading && <CardDescription>{UU_CONFIG.formDescription}</CardDescription>}
           </CardHeader>
           <CardContent>
             {isLoading ? (
               <LoadingDB text={APP_CONFIG.loadingDB.findOneUser} className='mt-3' />
-            ) : error ? (
-              <InfoCard text={infoCard.text} type={infoCard.type} className='mt-3' />
             ) : (
               <Form {...updateForm}>
                 <form onSubmit={updateForm.handleSubmit(handleUpdateUser)} className='space-y-4'>
@@ -229,6 +226,23 @@ export default function UpdateUser() {
           </CardContent>
         </Card>
       </div>
+      {/* Section: Dialog */}
+      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className='text-xl'>{UU_CONFIG.dialog.title}</DialogTitle>
+            <DialogDescription className='sr-only'></DialogDescription>
+            <div className='flex flex-col pt-2'>
+              <span className=''>{errorMessage}</span>
+              <div className='mt-5 flex justify-end space-x-4'>
+                <Button variant='default' size='sm' onClick={() => setOpenDialog(false)}>
+                  {UU_CONFIG.dialog.button.close}
+                </Button>
+              </div>
+            </div>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }
