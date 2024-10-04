@@ -31,6 +31,7 @@ export default function UpdateUser() {
   const [error, setError] = useState<boolean>(false);
   const [infoCard, setInfoCard] = useState<IInfoCard>({} as IInfoCard);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [user, setUser] = useState<IUser>({} as IUser);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
@@ -72,22 +73,26 @@ export default function UpdateUser() {
   }, [id]);
 
   function handleUpdateUser(data: z.infer<typeof userSchema>): void {
-    UserApiService.update(user._id, data).then((response: IResponse) => {
-      if (response.statusCode === 200) {
-        navigate(`/users/${user._id}`);
-        addNotification({ type: 'success', message: response.message });
-      }
-      if (response.statusCode > 399) {
-        setError(true);
-        setInfoCard({ type: 'warning', text: response.message });
-        addNotification({ type: 'error', message: response.message });
-      }
-      if (response instanceof Error) {
-        setError(true);
-        setInfoCard({ type: 'error', text: APP_CONFIG.error.server });
-        addNotification({ type: 'error', message: APP_CONFIG.error.server });
-      }
-    });
+    setIsUpdating(true);
+
+    UserApiService.update(user._id, data)
+      .then((response: IResponse) => {
+        if (response.statusCode === 200) {
+          navigate(`/users/${user._id}`);
+          addNotification({ type: 'success', message: response.message });
+        }
+        if (response.statusCode > 399) {
+          setError(true);
+          setInfoCard({ type: 'warning', text: response.message });
+          addNotification({ type: 'error', message: response.message });
+        }
+        if (response instanceof Error) {
+          setError(true);
+          setInfoCard({ type: 'error', text: APP_CONFIG.error.server });
+          addNotification({ type: 'error', message: APP_CONFIG.error.server });
+        }
+      })
+      .finally(() => setIsUpdating(false));
   }
 
   function handleCancel(event: MouseEvent<HTMLButtonElement>): void {
@@ -212,7 +217,7 @@ export default function UpdateUser() {
                   {/* Buttons */}
                   <div className='grid grid-cols-1 space-y-2 pt-2 md:flex md:justify-end md:gap-6 md:space-y-0'>
                     <Button type='submit' className='order-1 md:order-2 lg:order-2'>
-                      {UU_CONFIG.button.update}
+                      {isUpdating ? <LoadingDB text={UU_CONFIG.button.updating} variant='button' /> : UU_CONFIG.button.update}
                     </Button>
                     <Button variant={'ghost'} onClick={handleCancel} className='order-2 md:order-1 lg:order-1'>
                       {UU_CONFIG.button.cancel}
