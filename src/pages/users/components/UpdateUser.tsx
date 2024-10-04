@@ -41,36 +41,6 @@ export default function UpdateUser() {
     resolver: zodResolver(userSchema),
   });
 
-  function handleUpdateUser(data: z.infer<typeof userSchema>): void {
-    UserApiService.update(user._id, data).then((response: IResponse) => {
-      if (response.statusCode === 200) {
-        navigate(`/users/${user._id}`);
-        addNotification({ type: 'success', message: response.message });
-      }
-      if (response.statusCode > 399) {
-        setError(true);
-        setInfoCard({ type: 'warning', text: response.message });
-        addNotification({ type: 'error', message: response.message });
-      }
-      if (response instanceof Error) {
-        setError(true);
-        setInfoCard({ type: 'error', text: APP_CONFIG.error.server });
-        addNotification({ type: 'error', message: APP_CONFIG.error.server });
-      }
-    });
-  }
-
-  function handleCancel(event: MouseEvent<HTMLButtonElement>): void {
-    event.preventDefault();
-    updateForm.reset();
-    updateForm.setValue('dni', user.dni);
-    updateForm.setValue('email', user.email);
-    updateForm.setValue('firstName', capitalize(user.firstName) || '');
-    updateForm.setValue('lastName', capitalize(user.lastName) || '');
-    updateForm.setValue('phone', user.phone);
-    navigate('/users');
-  }
-
   useEffect(() => {
     if (id) {
       setIsLoading(true);
@@ -100,6 +70,36 @@ export default function UpdateUser() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  function handleUpdateUser(data: z.infer<typeof userSchema>): void {
+    UserApiService.update(user._id, data).then((response: IResponse) => {
+      if (response.statusCode === 200) {
+        navigate(`/users/${user._id}`);
+        addNotification({ type: 'success', message: response.message });
+      }
+      if (response.statusCode > 399) {
+        setError(true);
+        setInfoCard({ type: 'warning', text: response.message });
+        addNotification({ type: 'error', message: response.message });
+      }
+      if (response instanceof Error) {
+        setError(true);
+        setInfoCard({ type: 'error', text: APP_CONFIG.error.server });
+        addNotification({ type: 'error', message: APP_CONFIG.error.server });
+      }
+    });
+  }
+
+  function handleCancel(event: MouseEvent<HTMLButtonElement>): void {
+    event.preventDefault();
+    updateForm.reset();
+    updateForm.setValue('dni', user.dni);
+    updateForm.setValue('email', user.email);
+    updateForm.setValue('firstName', capitalize(user.firstName) || '');
+    updateForm.setValue('lastName', capitalize(user.lastName) || '');
+    updateForm.setValue('phone', user.phone);
+    navigate('/users');
+  }
 
   return (
     <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
