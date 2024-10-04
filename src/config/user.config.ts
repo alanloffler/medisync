@@ -137,6 +137,7 @@ export const USER_UPDATE_CONFIG = {
     back: 'Volver',
     cancel: 'Cancelar',
     update: 'Actualizar',
+    updating: 'Actualizando',
   },
   formDescription: 'Editá los datos para actualizar el paciente',
   formTitle: 'Actualización de paciente',
