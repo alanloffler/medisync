@@ -76,6 +76,12 @@ export const USER_CREATE_CONFIG = {
     cancel: 'Cancelar',
     create: 'Crear usuario',
   },
+  dialog: {
+    title: 'Error al crear el paciente',
+    button: {
+      close: 'Cerrar',
+    },
+  },
   formDescription: 'Ingresá los datos para dar de alta a un nuevo usuario',
   formTitle: 'Creación de usuario',
   labels: {
@@ -104,21 +110,21 @@ export const USER_VIEW_CONFIG = {
     back: 'Volver',
   },
   dropdownMenu: [
-    { id: 1, name: 'Enviar e-mail' }, 
+    { id: 1, name: 'Enviar e-mail' },
     { id: 2, name: 'Enviar WhatsApp' },
     { id: 3, name: 'Editar paciente' },
   ],
   email: {
     subject: 'MediSync - Turnos médicos',
-    body: ['Hola', ','], 
+    body: ['Hola', ','],
   },
   phrase: {
     userSince: 'Paciente desde el',
   },
   title: 'Detalles del paciente',
   tooltip: {
-    dropdown: 'Acciones'
-  }
+    dropdown: 'Acciones',
+  },
 };
 
 export const USER_UPDATE_CONFIG = {
@@ -147,5 +153,5 @@ export const USER_UPDATE_CONFIG = {
     firstName: 'Ingresá el nombre',
     lastName: 'Ingresá el apellido',
     phone: 'Ingresá el teléfono',
-  }
+  },
 };
