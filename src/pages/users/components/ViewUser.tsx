@@ -1,31 +1,29 @@
 // Icons: https://lucide.dev/icons/
 import { ArrowLeft, CreditCard, Mail, Menu, Smartphone } from 'lucide-react';
-// Components: https://ui.shadcn.com/docs/components
+// External components: https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '@/core/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/core/components/ui/tooltip';
-// App components
-import { InfoCard } from '@/core/components/common/InfoCard';
+// Components
 import { LoadingDB } from '@/core/components/common/LoadingDB';
 import { PageHeader } from '@/core/components/common/PageHeader';
-// App
+// External imports
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+// Imports
 import type { IEmail } from '@/core/interfaces/email.interface';
-import type { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
 import type { IUser } from '@/pages/users/interfaces/user.interface';
 import { APP_CONFIG } from '@/config/app.config';
-import { Link, useNavigate, useParams } from 'react-router-dom';
 import { USER_VIEW_CONFIG as UV_CONFIG } from '@/config/user.config';
 import { UserApiService } from '@/pages/users/services/user-api.service';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useDelimiter } from '@/core/hooks/useDelimiter';
-import { useEffect, useState } from 'react';
 import { useLegibleDate } from '@/core/hooks/useDateToString';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 // React component
 export default function ViewUser() {
   const [emailObject, setEmailObject] = useState<IEmail>({} as IEmail);
-  const [infoCard, setInfoCard] = useState<IInfoCard>({} as IInfoCard);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showCard, setShowCard] = useState<boolean>(false);
   const [user, setUser] = useState<IUser>({} as IUser);
@@ -53,11 +51,9 @@ export default function ViewUser() {
           }
           if (response.statusCode > 399) {
             addNotification({ type: 'error', message: response.message });
-            setInfoCard({ type: 'warning', text: response.message });
           }
           if (response instanceof Error) {
             addNotification({ type: 'error', message: APP_CONFIG.error.server });
-            setInfoCard({ type: 'error', text: APP_CONFIG.error.server });
           }
         })
         .finally(() => setIsLoading(false));
@@ -67,7 +63,7 @@ export default function ViewUser() {
 
   return (
     <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
-      {/* Page Header */}
+      {/* Section: Page Header */}
       <div className='flex items-center justify-between'>
         <PageHeader title={UV_CONFIG.title} breadcrumb={UV_CONFIG.breadcrumb} />
         <Button variant={'outline'} size={'sm'} className='gap-2' onClick={() => navigate(-1)}>
@@ -75,10 +71,10 @@ export default function ViewUser() {
           {UV_CONFIG.buttons.back}
         </Button>
       </div>
-      {/* Page Content */}
+      {/* Section: Page Content */}
       <div className='mx-auto mt-4 flex w-full flex-row px-2 md:w-[500px]'>
         <Card className='w-full'>
-          {showCard ? (
+          {showCard && (
             <CardHeader>
               <CardTitle>
                 <div className='relative flex items-center justify-center'>
@@ -124,8 +120,6 @@ export default function ViewUser() {
                 </div>
               </CardTitle>
             </CardHeader>
-          ) : (
-            <InfoCard text={infoCard.text} type={infoCard.type} className='py-6' />
           )}
           {isLoading ? (
             <LoadingDB text={APP_CONFIG.loadingDB.findOneUser} className='-mt-12 py-6' />
