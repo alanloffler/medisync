@@ -1,12 +1,13 @@
 // Icons: https://lucide.dev/
 import { X } from 'lucide-react';
-// Components: https://ui.shadcn.com/docs/components
+// External components: https://ui.shadcn.com/docs/components
 import { Input } from '@/core/components/ui/input';
 import { ScrollArea } from '@/core/components/ui/scroll-area';
-// App
+// External imports
+import { ChangeEvent, useEffect, useState } from 'react';
+// Imports
 import type { IUser } from '@/pages/users/interfaces/user.interface';
 import { APPO_CONFIG } from '@/config/appointment.config';
-import { ChangeEvent, useEffect, useState } from 'react';
 import { UserApiService } from '@/pages/users/services/user-api.service';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useDebounce } from '@/core/hooks/useDebounce';
@@ -82,8 +83,8 @@ export function UsersCombo({
   }, [debouncedSearch, searchBy]);
 
   return (
-    <div className='flex flex-col'>
-      <div className='flex flex-row items-center space-x-3'>
+    <main className='flex flex-col'>
+      <section className='flex flex-row items-center space-x-3'>
         <Input
           type={searchBy === 'name' ? 'text' : 'number'}
           value={search}
@@ -96,9 +97,9 @@ export function UsersCombo({
             <X className='h-4 w-4' strokeWidth={2} />
           </button>
         )}
-      </div>
+      </section>
       {openCombobox && (
-        <div className='absolute mt-9 flex min-w-[50%] flex-row text-sm font-normal'>
+        <section className='absolute mt-9 flex min-w-[50%] flex-row text-sm font-normal'>
           <ScrollArea className='mt-1 max-h-40 w-full overflow-auto rounded-md border bg-popover p-1 shadow-md'>
             {users.length > 0 &&
               users.map((user) => (
@@ -119,8 +120,8 @@ export function UsersCombo({
               </li>
             )}
           </ScrollArea>
-        </div>
+        </section>
       )}
-    </div>
+    </main>
   );
 }
