@@ -75,6 +75,7 @@ export const USER_CREATE_CONFIG = {
     back: 'Volver',
     cancel: 'Cancelar',
     create: 'Crear usuario',
+    creating: 'Creando',
   },
   dialog: {
     title: 'Error al crear el paciente',
