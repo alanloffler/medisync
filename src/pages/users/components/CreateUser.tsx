@@ -1,30 +1,33 @@
 // Icons: https://lucide.dev/icons/
 import { ArrowLeft, FilePlus2, Menu } from 'lucide-react';
-// Components: https://ui.shadcn.com/docs/components
+// External Components: https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/core/components/ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/core/components/ui/dialog';
 import { Form, FormField, FormControl, FormItem, FormLabel, FormMessage } from '@/core/components/ui/form';
 import { Input } from '@/core/components/ui/input';
-// App components
+// Components
 import { PageHeader } from '@/core/components/common/PageHeader';
-// App
+// External imports
+import { MouseEvent, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+// Imports
 import { APP_CONFIG } from '@/config/app.config';
 import { USER_CREATE_CONFIG as UC_CONFIG } from '@/config/user.config';
 import { USER_SCHEMA } from '@/config/schemas/user.schema';
 import { UserApiService } from '@/pages/users/services/user-api.service';
-import { useEffect, useState, MouseEvent } from 'react';
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 import { userSchema } from '@/pages/users/schemas/user.schema';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
 // React component
 export default function CreateUser() {
-  const [showUserCard, setShowUserCard] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const navigate = useNavigate();
-  // #region Form config and actions
+
   const defaultValues = {
     dni: '' as unknown as number,
     email: '',
@@ -38,31 +41,30 @@ export default function CreateUser() {
     defaultValues: defaultValues,
   });
 
-  useEffect(() => {
-    const isDirty = createForm.formState.isDirty;
-    if (isDirty) setShowUserCard(true);
-    if (!isDirty) setShowUserCard(false);
-  }, [createForm.formState.isDirty, showUserCard]);
-
-  function handleCreateUser(data: z.infer<typeof userSchema>) {
+  function handleCreateUser(data: z.infer<typeof userSchema>): void {
     UserApiService.create(data).then((response) => {
       if (response.statusCode === 200) {
+        navigate(`/users/${response.data._id}`);
         addNotification({ type: 'success', message: response.message });
       }
-      if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
-      if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
-
-      createForm.reset();
-      setShowUserCard(false);
+      if (response.statusCode > 399) {
+        setOpenDialog(true);
+        setErrorMessage(response.message);
+        addNotification({ type: 'error', message: response.message });
+      }
+      if (response instanceof Error) {
+        setOpenDialog(true);
+        setErrorMessage(APP_CONFIG.error.server);
+        addNotification({ type: 'error', message: APP_CONFIG.error.server });
+      }
     });
   }
 
-  function handleCancel(event: MouseEvent<HTMLButtonElement | HTMLDivElement | HTMLInputElement>) {
+  function handleCancel(event: MouseEvent<HTMLButtonElement | HTMLDivElement | HTMLInputElement>): void {
     event.preventDefault();
     createForm.reset();
-    setShowUserCard(false);
   }
-  // #endregion
+
   return (
     <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
       {/* Section: Page Header */}
@@ -180,6 +182,23 @@ export default function CreateUser() {
           </CardContent>
         </Card>
       </div>
+      {/* Section: Dialog */}
+      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className='text-xl'>{UC_CONFIG.dialog.title}</DialogTitle>
+            <DialogDescription className='sr-only'></DialogDescription>
+            <div className='flex flex-col pt-2'>
+              <span className=''>{errorMessage}</span>
+              <div className='mt-5 flex justify-end space-x-4'>
+                <Button variant='default' size='sm' onClick={() => setOpenDialog(false)}>
+                  {UC_CONFIG.dialog.button.close}
+                </Button>
+              </div>
+            </div>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }
