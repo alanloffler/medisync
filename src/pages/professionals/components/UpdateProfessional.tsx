@@ -99,7 +99,6 @@ export default function UpdateProfessional() {
       ProfessionalApiService
       .findOne(id)
       .then((response) => {
-        console.log(response);
         setProfessional(response.data);
         setProfessionalLoading(false);
         setIsLoading(false);
@@ -118,8 +117,8 @@ export default function UpdateProfessional() {
       updateForm.setValue('configuration.scheduleTimeEnd', professional.configuration?.scheduleTimeEnd);
       updateForm.setValue('configuration.scheduleTimeInit', professional.configuration?.scheduleTimeInit);
       updateForm.setValue('configuration.slotDuration', professional.configuration?.slotDuration);
-      updateForm.setValue('configuration.timeSlotUnavailableEnd', professional.configuration?.timeSlotUnavailableEnd);
-      updateForm.setValue('configuration.timeSlotUnavailableInit', professional.configuration?.timeSlotUnavailableInit);
+      updateForm.setValue('configuration.unavailableTimeSlot.timeSlotUnavailableEnd', professional.configuration?.timeSlotUnavailableEnd || '');
+      updateForm.setValue('configuration.unavailableTimeSlot.timeSlotUnavailableInit', professional.configuration?.timeSlotUnavailableInit || '');
       updateForm.setValue('configuration.workingDays', professional.configuration?.workingDays);
       updateForm.setValue('description', professional.description);
       updateForm.setValue('dni', professional.dni);
@@ -468,12 +467,13 @@ export default function UpdateProfessional() {
                   <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
                       control={updateForm.control}
-                      name='configuration.timeSlotUnavailableInit'
+                      name='configuration.unavailableTimeSlot.timeSlotUnavailableInit'
                       render={({ field }) => (
                         <FormItem className=''>
                           <FormLabel>{PU_CONFIG.labels.timeSlotUnavailableInit}</FormLabel>
-                          <FormControl className='h-9'>
+                          <FormControl className='h-9'><>{field.value}
                             <Input placeholder={PU_CONFIG.placeholders.timeSlotUnavailableInit} {...field} />
+                            </>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -481,7 +481,7 @@ export default function UpdateProfessional() {
                     />
                     <FormField
                       control={updateForm.control}
-                      name='configuration.timeSlotUnavailableEnd'
+                      name='configuration.unavailableTimeSlot.timeSlotUnavailableEnd'
                       render={({ field }) => (
                         <FormItem className=''>
                           <FormLabel>{PU_CONFIG.labels.timeSlotUnavailableEnd}</FormLabel>
