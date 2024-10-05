@@ -142,8 +142,12 @@ export default function ViewProfessional() {
               <CardContent className='mt-3 space-y-3'>
                 {professional.area && professional.specialization && (
                   <div className='space-x-4 pb-2'>
-                    <Badge className='text-base'>{capitalize(professional.area.name)}</Badge>
-                    <Badge className='text-base'>{capitalize(professional.specialization.name)}</Badge>
+                    <Badge variant='secondary' className='border border-slate-200 text-base font-medium'>
+                      {capitalize(professional.area.name)}
+                    </Badge>
+                    <Badge variant='secondary' className='border border-slate-200 text-base font-medium'>
+                      {capitalize(professional.specialization.name)}
+                    </Badge>
                   </div>
                 )}
                 {professional.configuration?.workingDays && (
@@ -181,6 +185,7 @@ export default function ViewProfessional() {
           )}
         </Card>
       </section>
+      {/* Section: Page footer */}
       <footer className='mx-auto pt-3'>
         <Button variant='default' size='default' onClick={() => navigate('/professionals')}>
           {PV_CONFIG.button.goToProfessionals}
