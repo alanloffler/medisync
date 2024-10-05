@@ -1,6 +1,6 @@
 // Icons: https://lucide.dev/icons/
 import { ChevronDown, CirclePlus, Filter, List, ListRestart, PlusCircle, Search, X } from 'lucide-react';
-// Components: https://ui.shadcn.com/docs/components
+// External components: https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
 import {
@@ -14,16 +14,17 @@ import {
   DropdownMenuTrigger,
 } from '@/core/components/ui/dropdown-menu';
 import { Input } from '@/core/components/ui/input';
-// App components
+// Components
 import { PageHeader } from '@/core/components/common/PageHeader';
 import { ProfessionalsDataTable } from '@/pages/professionals/components/ProfessionalsDataTable';
-// App
+// External imports
+import { ChangeEvent, useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+// Imports
 import type { IArea } from '@/core/interfaces/area.interface';
 import type { ISpecialization } from '@/core/interfaces/specialization.interface';
 import { APP_CONFIG } from '@/config/app.config';
 import { AreaService } from '@/core/services/area.service';
-import { ChangeEvent, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import { PROF_CONFIG } from '@/config/professionals.config';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useDebounce } from '@/core/hooks/useDebounce';
@@ -71,12 +72,12 @@ export default function Professionals() {
 
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
-      {/* Page Header */}
-      <div className='flex items-center justify-between'>
+      {/* Section: Page Header */}
+      <header className='flex items-center justify-between'>
         <PageHeader title={PROF_CONFIG.title} breadcrumb={PROF_CONFIG.breadcrumb} />
-      </div>
-      {/* Page content */}
-      <div className='grid gap-6 md:grid-cols-4 md:gap-8 lg:grid-cols-4 xl:grid-cols-4'>
+      </header>
+      {/* Section: Page content */}
+      <section className='grid gap-6 md:grid-cols-4 md:gap-8 lg:grid-cols-4 xl:grid-cols-4'>
         <Card className='col-span-1 border-none bg-slate-200 bg-transparent shadow-none md:col-span-4 lg:col-span-1 xl:col-span-1'>
           <CardContent className='p-0'>
             <div className='flex flex-col gap-6 md:w-full'>
@@ -110,8 +111,8 @@ export default function Professionals() {
             </div>
           </CardContent>
         </Card>
-        <div className='col-span-1 overflow-y-auto md:col-span-4 lg:col-span-3 xl:col-span-3'>
-          <div className='flex flex-row items-center justify-start space-x-3 py-3'>
+        <section className='col-span-1 overflow-y-auto md:col-span-4 lg:col-span-3 xl:col-span-3'>
+          <section className='flex flex-row items-center justify-start space-x-3 py-3'>
             <div className='flex items-center space-x-2 text-sm font-medium text-slate-500'>
               <Filter size={14} strokeWidth={2} />
               <span>{PROF_CONFIG.search.filterBy}</span>
@@ -156,7 +157,7 @@ export default function Professionals() {
                   ))}
               </DropdownMenuContent>
             </DropdownMenu>
-          </div>
+          </section>
           <Card>
             <CardHeader>
               <div className='grid gap-2'>
@@ -166,32 +167,6 @@ export default function Professionals() {
                     {PROF_CONFIG.table.title}
                   </div>
                   <div className='flex items-center gap-2'>
-                    {/* <DropdownMenu>
-                    <DropdownMenuTrigger disabled={!areas.length} asChild>
-                      <Button variant={'tableHeader'} size={'miniIcon'} className='flex items-center'>
-                        <ListFilter className='h-4 w-4' strokeWidth={2} />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className='w-fit' align='center'>
-                      {areas.length > 0 &&
-                        areas.map((area) => (
-                          <DropdownMenuSub key={area._id}>
-                            <DropdownMenuSubTrigger>
-                              <span>{capitalize(area.name)}</span>
-                            </DropdownMenuSubTrigger>
-                            <DropdownMenuPortal>
-                              <DropdownMenuSubContent>
-                                {area.specializations.map((spec) => (
-                                  <DropdownMenuItem key={spec._id} onClick={() => handleSearchBySpecialization(spec._id)}>
-                                    <span>{capitalize(spec.name)}</span>
-                                  </DropdownMenuItem>
-                                ))}
-                              </DropdownMenuSubContent>
-                            </DropdownMenuPortal>
-                          </DropdownMenuSub>
-                        ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu> */}
                     <Button variant={'tableHeader'} size={'miniIcon'} onClick={handleReload}>
                       <ListRestart className='h-4 w-4' strokeWidth={2} />
                     </Button>
@@ -206,8 +181,8 @@ export default function Professionals() {
               <ProfessionalsDataTable key={reload} reload={reload} search={debouncedSearch} setErrorMessage={setErrorMessage} setReload={setReload} />
             </CardContent>
           </Card>
-        </div>
-      </div>
+        </section>
+      </section>
     </main>
   );
 }
