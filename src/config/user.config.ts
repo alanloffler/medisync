@@ -13,6 +13,9 @@ export const USER_CONFIG = {
   dbUsersPlural: 'pacientes en la base de datos',
   dbUsersSingular: 'paciente en la base de datos',
   dialog: {
+    button: {
+      close: 'Cerrar',
+    },
     remove: {
       content: {
         dni: 'DNI',
