@@ -25,6 +25,7 @@ import { LoadingDB } from '@/core/components/common/LoadingDB';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // Imports
+import type { IDataTable, ITableManager } from '@/pages/users/interfaces/table.interface';
 import type { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
 import type { IUser } from '@/pages/users/interfaces/user.interface';
 import { APP_CONFIG } from '@/config/app.config';
@@ -35,24 +36,11 @@ import { useDelimiter } from '@/core/hooks/useDelimiter';
 import { useIsNumericString } from '@/core/hooks/useIsNumericString';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 import { useTruncateText } from '@/core/hooks/useTruncateText';
-// Table interfaces
-interface DataTableProps {
-  help: boolean;
-  reload: number;
-  search: string;
-  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
-  setReload: React.Dispatch<React.SetStateAction<number>>;
-}
-
-interface TableManager {
-  pagination: PaginationState;
-  sorting: SortingState;
-}
 // Default values for pagination and sorting
-const defaultSorting = [{ id: USER_CONFIG.table.defaultSortingId, desc: USER_CONFIG.table.defaultSortingType }];
-const defaultPagination = { pageIndex: 0, pageSize: USER_CONFIG.table.defaultPageSize };
+const defaultSorting: SortingState = [{ id: USER_CONFIG.table.defaultSortingId, desc: USER_CONFIG.table.defaultSortingType }];
+const defaultPagination: PaginationState = { pageIndex: 0, pageSize: USER_CONFIG.table.defaultPageSize };
 // React component
-export function UsersDataTable({ search, reload, setReload, setErrorMessage, help }: DataTableProps) {
+export function UsersDataTable({ search, reload, setReload, setErrorMessage, help }: IDataTable) {
   const [columns, setColumns] = useState<ColumnDef<IUser>[]>([]);
   const [data, setData] = useState<IUser[]>([]);
   const [errorRemoving, setErrorRemoving] = useState<boolean>(false);
@@ -63,7 +51,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [pagination, setPagination] = useState<PaginationState>(defaultPagination);
   const [sorting, setSorting] = useState<SortingState>(defaultSorting);
-  const [tableManager, setTableManager] = useState<TableManager>({ sorting, pagination });
+  const [tableManager, setTableManager] = useState<ITableManager>({ sorting, pagination });
   const [totalItems, setTotalItems] = useState<number>(0);
   const [userSelected, setUserSelected] = useState<IUser>({} as IUser);
   const addNotification = useNotificationsStore((state) => state.addNotification);
