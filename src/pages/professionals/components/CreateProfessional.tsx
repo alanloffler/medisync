@@ -295,7 +295,11 @@ export default function CreateProfessional() {
                           >
                             <FormControl>
                               <SelectTrigger className={`h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
-                                {titlesIsLoading ? <LoadingDB variant='default' text={PC_CONFIG.select.loadingText} /> : <SelectValue placeholder={PC_CONFIG.placeholders.titleAbbreviation} />}
+                                {titlesIsLoading ? (
+                                  <LoadingDB variant='default' text={PC_CONFIG.select.loadingText} className='ml-0' />
+                                ) : (
+                                  <SelectValue placeholder={PC_CONFIG.placeholders.titleAbbreviation} />
+                                )}
                               </SelectTrigger>
                             </FormControl>
                             <FormMessage />
