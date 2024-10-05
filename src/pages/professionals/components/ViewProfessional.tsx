@@ -62,7 +62,7 @@ export default function ViewProfessional() {
           }
           if (response.statusCode > 399) {
             setInfoCard({ type: 'warning', text: response.message });
-            addNotification({ type: 'error', message: response.message });
+            addNotification({ type: 'warning', message: response.message });
           }
           if (response instanceof Error) {
             setInfoCard({ type: 'error', text: APP_CONFIG.error.server });
