@@ -33,11 +33,9 @@ export function Footer() {
                 <ul className='w-full text-xs'>
                   {notifications.map((notification) => (
                     <li key={crypto.randomUUID()} className='flex w-full flex-row items-center space-x-2 border-t py-1.5'>
-                      {notification.type === 'success' ? (
-                        <div className='w-2 rounded-full bg-green-500 p-1.5'></div>
-                      ) : (
-                        <div className='w-2 rounded-full bg-red-500 p-1.5'></div>
-                      )}
+                      <div
+                        className={`w-2 rounded-full p-1.5 ${notification.type === 'success' ? 'bg-green-500' : notification.type === 'error' ? 'bg-red-500' : 'bg-yellow-500'}`}
+                      ></div>
                       <span className='font-medium text-slate-500'>[{notification.date}]</span>
                       <span>{`>`}</span>
                       <span className='flex-grow text-slate-500'>{notification.message}</span>
