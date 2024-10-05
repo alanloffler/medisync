@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/core/components/ui/switch';
 import { Textarea } from '@/core/components/ui/textarea';
 // Components
-import InputMask from "@mona-health/react-input-mask";
+import InputMask from '@mona-health/react-input-mask';
 import { PageHeader } from '@/core/components/common/PageHeader';
 import { WorkingDays } from '@/pages/professionals/components/common/WorkingDays';
 // External imports
@@ -40,7 +40,7 @@ import { useNotificationsStore } from '@/core/stores/notifications.store';
 export default function CreateProfessional() {
   const [areas, setAreas] = useState<IArea[]>([]);
   const [disabledSpec, setDisabledSpec] = useState<boolean>(true);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [areaIsLoading, setAreaIsLoading] = useState<boolean>(false);
   const [slotDurationValues, setSlotDurationValues] = useState<number[]>([]);
   const [specializations, setSpecializations] = useState<ISpecialization[]>([]);
   const [titles, setTitles] = useState<ITitle[]>([]);
@@ -51,19 +51,20 @@ export default function CreateProfessional() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setIsLoading(true);
+    setAreaIsLoading(true);
 
-    AreaService.findAll().then((response: IResponse) => {
-      if (response.statusCode === 200) {
-        setAreas(response.data);
-        setDisabledSpec(false);
-        // TODO notification general file for all app with custom messages
-        addNotification({ type: 'success', message: 'Areas y especialidades cargadas' });
-      }
-      if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
-      if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
-      setIsLoading(false);
-    });
+    AreaService.findAll()
+      .then((response: IResponse) => {
+        if (response.statusCode === 200) {
+          setAreas(response.data);
+          setDisabledSpec(false);
+          // TODO notification general file for all app with custom messages
+          addNotification({ type: 'success', message: 'Areas y especialidades cargadas' });
+        }
+        if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
+        if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
+      })
+      .finally(() => setAreaIsLoading(false));
     // TODO: manage errors from here to the end of the useEffect
     TitleService.findAll().then((response: IResponse) => {
       if (response.statusCode === 200) {
@@ -74,7 +75,7 @@ export default function CreateProfessional() {
     ScheduleService.findAllSlotDurations().then((response: number[]) => {
       setSlotDurationValues(response);
     });
-    
+
     const daysOfWeek: IWorkingDay[] = generateWeekOfWorkingDays();
     setWorkingDays(daysOfWeek);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -118,9 +119,9 @@ export default function CreateProfessional() {
         ...configData,
         timeSlotUnavailableEnd: unavailableTimeSlot?.timeSlotUnavailableEnd === '' ? null : unavailableTimeSlot?.timeSlotUnavailableEnd,
         timeSlotUnavailableInit: unavailableTimeSlot?.timeSlotUnavailableInit === '' ? null : unavailableTimeSlot?.timeSlotUnavailableInit,
-      }
+      },
     };
-    
+
     ProfessionalApiService.create(formattedData).then((response) => {
       if (response.statusCode === 200) {
         setDisabledSpec(true);
@@ -163,8 +164,8 @@ export default function CreateProfessional() {
           {PC_CONFIG.buttons.back}
         </Button>
       </header>
-      {!isLoading && (
-        <Card className='mt-4 flex w-full flex-col'>
+      {!areaIsLoading && (
+        <Card className='mx-auto mt-4 flex w-full md:w-full lg:w-4/5 flex-col'>
           <CardHeader className='flex flex-col'>
             <CardTitle className='flex flex-row items-center justify-between'>
               <div className='flex items-center gap-2'>
@@ -238,7 +239,12 @@ export default function CreateProfessional() {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>{PC_CONFIG.labels.specialization}</FormLabel>
-                            <Select defaultValue={field.value} disabled={disabledSpec || specializations.length < 1} onValueChange={(event) => field.onChange(event)} value={field.value}>
+                            <Select
+                              defaultValue={field.value}
+                              disabled={disabledSpec || specializations.length < 1}
+                              onValueChange={(event) => field.onChange(event)}
+                              value={field.value}
+                            >
                               <FormControl>
                                 <SelectTrigger className={`h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
                                   <SelectValue placeholder={PC_CONFIG.placeholders.specialization} />
