@@ -364,13 +364,16 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
           setUserSelected({} as IUser);
           setReload(new Date().getTime());
         }
-        // TODO: show error in dialog or toast?
         if (response.statusCode > 399) {
           setErrorRemoving(true);
           setErrorRemovingContent({ type: 'error', text: response.message });
           addNotification({ type: 'error', message: response.message });
         }
-        if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
+        if (response instanceof Error) {
+          setErrorRemoving(true);
+          setErrorRemovingContent({ type: 'error', text: APP_CONFIG.error.server });
+          addNotification({ type: 'error', message: APP_CONFIG.error.server });
+        }
       })
       .finally(() => setIsRemoving(false));
   }
