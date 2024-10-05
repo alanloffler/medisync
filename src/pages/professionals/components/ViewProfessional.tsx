@@ -58,12 +58,8 @@ export default function ViewProfessional() {
             const legibleWorkingDays: string = CalendarService.getLegibleWorkingDays(response.data.configuration.workingDays, true);
             setLegibleWorkingDays(legibleWorkingDays);
           }
-          if (response.statusCode > 399) {
-            setInfoCard({ text: response.message, type: 'warning' });
-          }
-          if (response instanceof Error) {
-            setInfoCard({ text: APP_CONFIG.error.server, type: 'error' });
-          }
+          if (response.statusCode > 399) setInfoCard({ type: 'warning', text: response.message });
+          if (response instanceof Error) setInfoCard({ type: 'error', text: APP_CONFIG.error.server });
         })
         .finally(() => setIsLoading(false));
     }
@@ -129,7 +125,10 @@ export default function ViewProfessional() {
               </CardTitle>
             </CardHeader>
           ) : (
-            <InfoCard text={infoCard.text} type={infoCard.type} className='py-6' />
+            <>
+              {infoCard.type}
+              <InfoCard text={infoCard.text} type={infoCard.type} className='py-6' />
+            </>
           )}
           {isLoading ? (
             <LoadingDB text={APP_CONFIG.loadingDB.findOneUser} className='-mt-12 py-6' />
