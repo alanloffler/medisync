@@ -9,7 +9,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 export interface INotification {
   date?: string;
   message: string;
-  type: string;
+  type: 'success' | 'warning' | 'error';
 }
 
 type States = {
