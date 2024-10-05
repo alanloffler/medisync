@@ -181,6 +181,11 @@ export default function ViewProfessional() {
           )}
         </Card>
       </section>
+      <footer className='mx-auto pt-3'>
+        <Button variant='default' size='default' onClick={() => navigate('/professionals')}>
+          {PV_CONFIG.button.goToProfessionals}
+        </Button>
+      </footer>
     </main>
   );
 }
