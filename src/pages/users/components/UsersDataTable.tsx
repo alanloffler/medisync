@@ -73,7 +73,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
   const isNumericString = useIsNumericString();
   const navigate = useNavigate();
   const truncate = useTruncateText();
-  // #region Table columns
+
   const tableColumns: ColumnDef<IUser>[] = [
     {
       accessorKey: 'index',
@@ -273,8 +273,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
       pagination,
     },
   });
-  // #endregion
-  // #region Load data, pagination and sorting
+
   useEffect(() => {
     if (firstUpdate.current) {
       firstUpdate.current = false;
@@ -345,8 +344,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
     fetchData(search, tableManager.sorting, tableManager.pagination.pageIndex * tableManager.pagination.pageSize, tableManager.pagination.pageSize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search, tableManager, help]);
-  // #endregion
-  // #region Table actions
+
   function handleRemoveUserDialog(user: IUser): void {
     setOpenDialog(true);
     setUserSelected(user);
@@ -377,7 +375,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
       })
       .finally(() => setIsRemoving(false));
   }
-  // #endregion
+
   return (
     <>
       {isLoading ? (
