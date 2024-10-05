@@ -1,6 +1,6 @@
 // Icons: https://lucide.dev/icons/
 import { ArrowLeft, FilePlus, Menu } from 'lucide-react';
-// Components: https://ui.shadcn.com/docs/components
+// External components: https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/core/components/ui/dropdown-menu';
@@ -10,19 +10,24 @@ import { Label } from '@/core/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/core/components/ui/select';
 import { Switch } from '@/core/components/ui/switch';
 import { Textarea } from '@/core/components/ui/textarea';
-// App components
+// Components
 import InputMask from "@mona-health/react-input-mask";
 import { PageHeader } from '@/core/components/common/PageHeader';
 import { WorkingDays } from '@/pages/professionals/components/common/WorkingDays';
-// App
+// External imports
+import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState, MouseEvent } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+// Imports
+import type { IArea } from '@/core/interfaces/area.interface';
+import type { IResponse } from '@/core/interfaces/response.interface';
+import type { ISpecialization } from '@/core/interfaces/specialization.interface';
+import type { ITitle } from '@/core/interfaces/title.interface';
+import type { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
 import { APP_CONFIG } from '@/config/app.config';
 import { AreaService } from '@/core/services/area.service';
-import { IArea } from '@/core/interfaces/area.interface';
-import { IResponse } from '@/core/interfaces/response.interface';
-import { ISpecialization } from '@/core/interfaces/specialization.interface';
-import { ITitle } from '@/core/interfaces/title.interface';
-import { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
-import { Link, useNavigate } from 'react-router-dom';
 import { PROF_CREATE_CONFIG as PC_CONFIG } from '@/config/professionals.config';
 import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
 import { ScheduleService } from '@/pages/settings/services/schedule-settings.service';
@@ -30,11 +35,7 @@ import { TitleService } from '@/core/services/title.service';
 import { generateWeekOfWorkingDays } from '@/pages/professionals/utils/week-working-days.util';
 import { professionalSchema } from '@/pages/professionals/schemas/professional.schema';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
-import { useEffect, useState, MouseEvent } from 'react';
-import { useForm } from 'react-hook-form';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
 // React component
 export default function CreateProfessional() {
   const [areas, setAreas] = useState<IArea[]>([]);
@@ -48,7 +49,7 @@ export default function CreateProfessional() {
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const navigate = useNavigate();
-  // #region Load data
+
   useEffect(() => {
     setIsLoading(true);
 
@@ -78,8 +79,7 @@ export default function CreateProfessional() {
     setWorkingDays(daysOfWeek);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  // #endregion
-  // #region Form config and actions
+
   const defaultValues = {
     area: '',
     available: true,
@@ -152,10 +152,10 @@ export default function CreateProfessional() {
     createForm.setValue('configuration.workingDays', data);
     createForm.clearErrors('configuration.workingDays');
   }
-  // #endregion
+
   return (
     <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
-      {/* Page Header */}
+      {/* Section: Page Header */}
       <div className='flex items-center justify-between'>
         <PageHeader title={''} breadcrumb={PC_CONFIG.breadcrumb} />
         <Button variant={'outline'} size={'sm'} className='gap-2' onClick={() => navigate(-1)}>
