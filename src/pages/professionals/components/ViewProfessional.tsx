@@ -26,6 +26,7 @@ import { ProfessionalApiService } from '@/pages/professionals/services/professio
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useCapitalizeFirstLetter } from '@/core/hooks/useCapitalizeFirstLetter';
 import { useDelimiter } from '@/core/hooks/useDelimiter';
+import { useNotificationsStore } from '@/core/stores/notifications.store';
 // React component
 export default function ViewProfessional() {
   const [emailObject, setEmailObject] = useState<IEmail>({} as IEmail);
@@ -34,6 +35,7 @@ export default function ViewProfessional() {
   const [legibleWorkingDays, setLegibleWorkingDays] = useState<string>('');
   const [professional, setProfessional] = useState<IProfessional>({} as IProfessional);
   const [showCard, setShowCard] = useState<boolean>(false);
+  const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const capitalizeFirstLetter = useCapitalizeFirstLetter();
   const delimiter = useDelimiter();
@@ -58,8 +60,14 @@ export default function ViewProfessional() {
             const legibleWorkingDays: string = CalendarService.getLegibleWorkingDays(response.data.configuration.workingDays, true);
             setLegibleWorkingDays(legibleWorkingDays);
           }
-          if (response.statusCode > 399) setInfoCard({ type: 'warning', text: response.message });
-          if (response instanceof Error) setInfoCard({ type: 'error', text: APP_CONFIG.error.server });
+          if (response.statusCode > 399) {
+            setInfoCard({ type: 'warning', text: response.message });
+            addNotification({ type: 'error', message: response.message });
+          }
+          if (response instanceof Error) {
+            setInfoCard({ type: 'error', text: APP_CONFIG.error.server });
+            addNotification({ type: 'error', message: APP_CONFIG.error.server });
+          }
         })
         .finally(() => setIsLoading(false));
     }
@@ -125,10 +133,7 @@ export default function ViewProfessional() {
               </CardTitle>
             </CardHeader>
           ) : (
-            <>
-              {infoCard.type}
-              <InfoCard text={infoCard.text} type={infoCard.type} className='py-6' />
-            </>
+            <InfoCard type={infoCard.type} text={infoCard.text} className='py-6' />
           )}
           {isLoading ? (
             <LoadingDB text={APP_CONFIG.loadingDB.findOneUser} className='-mt-12 py-6' />
