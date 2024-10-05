@@ -72,16 +72,16 @@ export default function ViewProfessional() {
 
   return (
     <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
-      {/* Page Header */}
-      <div className='flex items-center justify-between'>
+      {/* Section: Page Header */}
+      <header className='flex items-center justify-between'>
         <PageHeader title={PV_CONFIG.title} breadcrumb={PV_CONFIG.breadcrumb} />
         <Button variant={'outline'} size={'sm'} className='gap-2' onClick={() => navigate(-1)}>
           <ArrowLeft className='h-4 w-4' />
           {PV_CONFIG.button.back}
         </Button>
-      </div>
-      {/* Page content */}
-      <div className='mx-auto mt-4 flex w-full flex-row px-2 md:w-[500px]'>
+      </header>
+      {/* Section: Page content */}
+      <section className='mx-auto mt-4 flex w-full flex-row px-2 md:w-[500px]'>
         <Card className='w-full'>
           {showCard ? (
             <CardHeader>
@@ -176,7 +176,7 @@ export default function ViewProfessional() {
             )
           )}
         </Card>
-      </div>
+      </section>
     </main>
   );
 }
