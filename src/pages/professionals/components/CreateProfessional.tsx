@@ -156,13 +156,13 @@ export default function CreateProfessional() {
   return (
     <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
       {/* Section: Page Header */}
-      <div className='flex items-center justify-between'>
+      <header className='flex items-center justify-between'>
         <PageHeader title={''} breadcrumb={PC_CONFIG.breadcrumb} />
         <Button variant={'outline'} size={'sm'} className='gap-2' onClick={() => navigate(-1)}>
           <ArrowLeft className='h-4 w-4' />
           {PC_CONFIG.buttons.back}
         </Button>
-      </div>
+      </header>
       {!isLoading && (
         <Card className='mt-4 flex w-full flex-col'>
           <CardHeader className='flex flex-col'>
@@ -192,13 +192,13 @@ export default function CreateProfessional() {
           <CardContent className='pt-1'>
             <Form {...createForm}>
               <form onSubmit={createForm.handleSubmit(handleCreateProfessional)}>
-                {/* Form fields */}
-                <div className='grid grid-cols-1 space-y-6 md:grid-cols-2 md:space-y-0'>
-                  {/* SECTION: Professional data (left side) */}
-                  <div className='flex flex-col gap-4 md:pr-6'>
+                {/* Section: Form fields */}
+                <section className='grid grid-cols-1 space-y-6 md:grid-cols-2 md:space-y-0'>
+                  {/* Section: Professional data (left side) */}
+                  <section className='flex flex-col gap-4 md:pr-6'>
                     <h1 className='mb-3 rounded-sm bg-slate-200/50 px-2 py-1 font-semibold text-slate-700'>{PC_CONFIG.formTitle.professional}</h1>
                     {/* Form fields: area and specialization */}
-                    <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                    <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                       <FormField
                         control={createForm.control}
                         name='area'
@@ -256,9 +256,9 @@ export default function CreateProfessional() {
                           </FormItem>
                         )}
                       />
-                    </div>
+                    </section>
                     {/* Form fields: titleAbbreviation and available */}
-                    <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                    <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                       <FormField
                         control={createForm.control}
                         name='title'
@@ -306,9 +306,9 @@ export default function CreateProfessional() {
                           </FormItem>
                         )}
                       />
-                    </div>
+                    </section>
                     {/* Form fields: lastName and firstName */}
-                    <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                    <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                       <FormField
                         control={createForm.control}
                         name='lastName'
@@ -335,9 +335,9 @@ export default function CreateProfessional() {
                           </FormItem>
                         )}
                       />
-                    </div>
+                    </section>
                     {/* Form fields: dni */}
-                    <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                    <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                       <FormField
                         control={createForm.control}
                         name='dni'
@@ -351,9 +351,9 @@ export default function CreateProfessional() {
                           </FormItem>
                         )}
                       />
-                    </div>
+                    </section>
                     {/* Form fields: email and phone */}
-                    <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                    <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                       <FormField
                         control={createForm.control}
                         name='email'
@@ -380,9 +380,9 @@ export default function CreateProfessional() {
                           </FormItem>
                         )}
                       />
-                    </div>
+                    </section>
                     {/* Form fields: description */}
-                    <div className='grid grid-cols-1 gap-6 md:grid-cols-1'>
+                    <section className='grid grid-cols-1 gap-6 md:grid-cols-1'>
                       <FormField
                         control={createForm.control}
                         name='description'
@@ -396,13 +396,13 @@ export default function CreateProfessional() {
                           </FormItem>
                         )}
                       />
-                    </div>
-                  </div>
-                  {/* SECTION: Schedule (right side) */}
-                  <div className='flex flex-col gap-4 border-t pt-6 md:border-l md:border-t-0 md:pl-6 md:pt-0'>
+                    </section>
+                  </section>
+                  {/* Section: Schedule (right side) */}
+                  <section className='flex flex-col gap-4 border-t pt-6 md:border-l md:border-t-0 md:pl-6 md:pt-0'>
                     <h1 className='mb-3 rounded-sm bg-slate-200/50 px-2 py-1 font-semibold text-slate-700'>{PC_CONFIG.formTitle.schedule}</h1>
                     {/* Schedule working days */}
-                    <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                    <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                       <FormField
                         control={createForm.control}
                         name='configuration.workingDays'
@@ -421,9 +421,9 @@ export default function CreateProfessional() {
                           </FormItem>
                         )}
                       />
-                    </div>
+                    </section>
                     {/* Schedule time slot duration */}
-                    <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                    <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                       <FormField
                         control={createForm.control}
                         name='configuration.slotDuration'
@@ -455,9 +455,9 @@ export default function CreateProfessional() {
                           </FormItem>
                         )}
                       />
-                    </div>
+                    </section>
                     {/* Schedule time init and end */}
-                    <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                    <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                       <FormField
                         control={createForm.control}
                         name='configuration.scheduleTimeInit'
@@ -502,9 +502,9 @@ export default function CreateProfessional() {
                           </FormItem>
                         )}
                       />
-                    </div>
+                    </section>
                     {/* Schedule time slot unavailable init and end */}
-                    <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                    <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                       <FormField
                         control={createForm.control}
                         name='configuration.unavailableTimeSlot.timeSlotUnavailableInit'
@@ -549,18 +549,18 @@ export default function CreateProfessional() {
                           </FormItem>
                         )}
                       />
-                    </div>
-                  </div>
-                </div>
-                {/* Buttons */}
-                <div className='grid grid-cols-1 space-y-2 pt-6 md:flex md:justify-end md:gap-6 md:space-y-0'>
+                    </section>
+                  </section>
+                </section>
+                {/* Section footer: Buttons */}
+                <footer className='grid grid-cols-1 space-y-2 pt-6 md:flex md:justify-end md:gap-6 md:space-y-0'>
                   <Button type='submit' className='order-1 md:order-2 lg:order-2'>
                     {PC_CONFIG.buttons.create}
                   </Button>
                   <Button variant={'ghost'} onClick={handleCancel} className='order-2 md:order-1 lg:order-1'>
                     {PC_CONFIG.buttons.cancel}
                   </Button>
-                </div>
+                </footer>
               </form>
             </Form>
           </CardContent>
