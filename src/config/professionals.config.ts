@@ -115,6 +115,7 @@ export const PROF_VIEW_CONFIG = {
   ],
   button: {
     back: 'Volver',
+    goToProfessionals: 'Ir a profesionales',
   },
   dropdownMenu: [
     { id: 1, name: 'Enviar e-mail' },
