@@ -1,30 +1,31 @@
 // Icons: https://lucide.dev/icons/
 import { ArrowLeft, CalendarClock, CalendarDays, Mail, Menu, Smartphone } from 'lucide-react';
-// Components: https://ui.shadcn.com/docs/components
+// External components: https://ui.shadcn.com/docs/components
 import { Badge } from '@/core/components/ui/badge';
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '@/core/components/ui/dropdown-menu';
 import { Separator } from '@/core/components/ui/separator';
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@/core/components/ui/tooltip';
-// App components
+// Components
 import { InfoCard } from '@/core/components/common/InfoCard';
 import { LoadingDB } from '@/core/components/common/LoadingDB';
 import { PageHeader } from '@/core/components/common/PageHeader';
-// App
+// External imports
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+// Imports
+import type { IEmail } from '@/core/interfaces/email.interface';
+import type { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
+import type { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
+import type { IResponse } from '@/core/interfaces/response.interface';
 import { APP_CONFIG } from '@/config/app.config';
 import { CalendarService } from '@/pages/appointments/services/calendar.service';
-import { IEmail } from '@/core/interfaces/email.interface';
-import { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
-import { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
-import { IResponse } from '@/core/interfaces/response.interface';
-import { Link, useNavigate, useParams } from 'react-router-dom';
 import { PROF_VIEW_CONFIG as PV_CONFIG } from '@/config/professionals.config';
 import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useCapitalizeFirstLetter } from '@/core/hooks/useCapitalizeFirstLetter';
 import { useDelimiter } from '@/core/hooks/useDelimiter';
-import { useEffect, useState } from 'react';
 // React component
 export default function ViewProfessional() {
   const [emailObject, setEmailObject] = useState<IEmail>({} as IEmail);
@@ -38,38 +39,37 @@ export default function ViewProfessional() {
   const delimiter = useDelimiter();
   const navigate = useNavigate();
   const { id } = useParams();
-  // #region Load professional data
+
   useEffect(() => {
     if (id) {
       setIsLoading(true);
 
-      ProfessionalApiService
-      .findOne(id)
-      .then((response: IResponse) => {
-        if (response.statusCode === 200) {
-          setProfessional(response.data);
-          setEmailObject({
-            to: response.data.email,
-            subject: PV_CONFIG.email.subject,
-            body: `${PV_CONFIG.email.body[0]} ${capitalize(response.data?.firstName)}${PV_CONFIG.email.body[1]}`,
-          });
-          setShowCard(true);
+      ProfessionalApiService.findOne(id)
+        .then((response: IResponse) => {
+          if (response.statusCode === 200) {
+            setProfessional(response.data);
+            setEmailObject({
+              to: response.data.email,
+              subject: PV_CONFIG.email.subject,
+              body: `${PV_CONFIG.email.body[0]} ${capitalize(response.data?.firstName)}${PV_CONFIG.email.body[1]}`,
+            });
+            setShowCard(true);
 
-          const legibleWorkingDays: string = CalendarService.getLegibleWorkingDays(response.data.configuration.workingDays, true);
-          setLegibleWorkingDays(legibleWorkingDays);
-        }
-        if (response.statusCode > 399) {
-          setInfoCard({ text: response.message, type: 'warning' });
-        }
-        if (response instanceof Error) {
-          setInfoCard({ text: APP_CONFIG.error.server, type: 'error' });
-        }
-      })
-      .finally(() => setIsLoading(false));
+            const legibleWorkingDays: string = CalendarService.getLegibleWorkingDays(response.data.configuration.workingDays, true);
+            setLegibleWorkingDays(legibleWorkingDays);
+          }
+          if (response.statusCode > 399) {
+            setInfoCard({ text: response.message, type: 'warning' });
+          }
+          if (response instanceof Error) {
+            setInfoCard({ text: APP_CONFIG.error.server, type: 'error' });
+          }
+        })
+        .finally(() => setIsLoading(false));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
-  // #endregion
+
   return (
     <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
       {/* Page Header */}
