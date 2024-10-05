@@ -29,8 +29,6 @@ import { PROF_CONFIG } from '@/config/professionals.config';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useDebounce } from '@/core/hooks/useDebounce';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
-// Constants
-const DEBOUNCE_TIME: number = PROF_CONFIG.search.debounceTime;
 // React component
 export default function Professionals() {
   const [areas, setAreas] = useState<IArea[]>([]);
@@ -40,7 +38,7 @@ export default function Professionals() {
   const [specSelected, setSpecSelected] = useState<string>('Especialización');
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
-  const debouncedSearch = useDebounce<{ value: string; type: string }>(search, DEBOUNCE_TIME);
+  const debouncedSearch = useDebounce<{ value: string; type: string }>(search, PROF_CONFIG.search.debounceTime);
   const navigate = useNavigate();
 
   function handleSearchByProfessional(event: ChangeEvent<HTMLInputElement>): void {
