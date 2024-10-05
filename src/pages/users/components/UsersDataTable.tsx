@@ -25,7 +25,7 @@ import { LoadingDB } from '@/core/components/common/LoadingDB';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // Imports
-import type { IDataTable, ITableManager } from '@/pages/users/interfaces/table.interface';
+import type { IDataTable, ITableManager } from '@/core/interfaces/table.interface';
 import type { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
 import type { IUser } from '@/pages/users/interfaces/user.interface';
 import { APP_CONFIG } from '@/config/app.config';
