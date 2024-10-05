@@ -8,6 +8,7 @@ export const USER_CONFIG = {
     cancel: 'Cancelar',
     createUser: 'Agregar paciente',
     remove: 'Eliminar paciente',
+    removing: 'Eliminando',
   },
   dbUsersPlural: 'pacientes en la base de datos',
   dbUsersSingular: 'paciente en la base de datos',
