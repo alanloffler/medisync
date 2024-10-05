@@ -63,22 +63,34 @@ export default function CreateProfessional() {
         if (response.statusCode === 200) {
           setAreas(response.data);
           setDisabledSpec(false);
-          // TODO notification general file for all app with custom messages
-          addNotification({ type: 'success', message: 'Areas y especialidades cargadas' });
         }
-        if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
-        if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
+        if (response.statusCode > 399) {
+          createForm.setError('area', { message: response.message });
+          createForm.setError('specialization', { message: response.message });
+          addNotification({ type: 'error', message: response.message });
+        }
+        if (response instanceof Error) {
+          createForm.setError('area', { message: APP_CONFIG.error.server });
+          createForm.setError('specialization', { message: APP_CONFIG.error.server });
+          addNotification({ type: 'error', message: APP_CONFIG.error.server });
+        }
       })
       .finally(() => setAreasIsLoading(false));
-    // TODO: manage errors from here to the end of the useEffect
+
     TitleService.findAll()
       .then((response: IResponse) => {
-        if (response.statusCode === 200) {
-          setTitles(response.data);
+        if (response.statusCode === 200) setTitles(response.data);
+        if (response.statusCode > 399) {
+          createForm.setError('title', { message: response.message });
+          addNotification({ type: 'error', message: response.message });
+        }
+        if (response instanceof Error) {
+          createForm.setError('title', { message: APP_CONFIG.error.server });
+          addNotification({ type: 'error', message: APP_CONFIG.error.server });
         }
       })
       .finally(() => setTitlesIsLoading(false));
-
+    // TODO: manage errors here
     ScheduleService.findAllSlotDurations().then((response: number[]) => {
       setSlotDurationValues(response);
     });
