@@ -57,6 +57,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
   const [data, setData] = useState<IUser[]>([]);
   const [infoCardContent, setInfoCardContent] = useState<IInfoCard>({ type: 'success', text: '' });
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isRemoving, setIsRemoving] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [pagination, setPagination] = useState<PaginationState>(defaultPagination);
   const [sorting, setSorting] = useState<SortingState>(defaultSorting);
@@ -350,17 +351,21 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
   }
 
   function handleRemoveUserDatabase(id: string): void {
-    UserApiService.remove(id).then((response) => {
-      if (response.statusCode === 200) {
-        addNotification({ type: 'success', message: response.message });
-        setOpenDialog(false);
-        setUserSelected({} as IUser);
-        setReload(new Date().getTime());
-      }
-      // TODO: show error in dialog or toast?
-      if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
-      if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
-    });
+    setIsRemoving(true);
+
+    UserApiService.remove(id)
+      .then((response) => {
+        if (response.statusCode === 200) {
+          addNotification({ type: 'success', message: response.message });
+          setOpenDialog(false);
+          setUserSelected({} as IUser);
+          setReload(new Date().getTime());
+        }
+        // TODO: show error in dialog or toast?
+        if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
+        if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
+      })
+      .finally(() => setIsRemoving(false));
   }
   // #endregion
   return (
@@ -574,7 +579,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
                   {USER_CONFIG.buttons.cancel}
                 </Button>
                 <Button variant={'remove'} size={'sm'} onClick={() => handleRemoveUserDatabase(userSelected._id)}>
-                  {USER_CONFIG.buttons.remove}
+                  {isRemoving ? <LoadingDB text={USER_CONFIG.buttons.removing} variant='button' /> : USER_CONFIG.buttons.remove}
                 </Button>
               </footer>
             </section>
