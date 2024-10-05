@@ -104,6 +104,9 @@ export const PROF_CREATE_CONFIG = {
     specialization: 'Ingresá la especialidad',
     titleAbbreviation: 'Ingresá el título',
   },
+  select: {
+    loadingText: 'Cargando',
+  },
   title: 'Crear un nuevo profesional',
 };
 
