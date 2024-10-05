@@ -1,6 +1,6 @@
 // Icons: https://lucide.dev/icons/
 import { ArrowLeft, FilePlus, Menu } from 'lucide-react';
-// Components: https://ui.shadcn.com/docs/components
+// External components: https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/core/components/ui/dropdown-menu';
@@ -11,27 +11,28 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@
 import { Separator } from '@/core/components/ui/separator';
 import { Switch } from '@/core/components/ui/switch';
 import { Textarea } from '@/core/components/ui/textarea';
-// App components
+// Components
 import { Loading } from '@/core/components/common/Loading';
 import { PageHeader } from '@/core/components/common/PageHeader';
 import { WorkingDays } from '@/pages/professionals/components/common/WorkingDays';
-// App
+// External imports
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState, MouseEvent, useRef } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+// Imports
+import type { IArea } from '@/core/interfaces/area.interface';
+import type { IProfessional, IProfessionalForm } from '@/pages/professionals/interfaces/professional.interface';
+import type { ISpecialization } from '@/core/interfaces/specialization.interface';
+import type { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
 import { APP_CONFIG } from '@/config/app.config';
 import { AreaService } from '@/core/services/area.service';
-import { IArea } from '@/core/interfaces/area.interface';
-import { IProfessional, IProfessionalForm } from '@/pages/professionals/interfaces/professional.interface';
-import { ISpecialization } from '@/core/interfaces/specialization.interface';
-import { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
-import { Link, useNavigate, useParams } from 'react-router-dom';
 import { PROF_UPDATE_CONFIG as PU_CONFIG } from '@/pages/professionals/config/update-professional.config';
 import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
 import { professionalSchema } from '@/pages/professionals/schemas/professional.schema';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
-import { useEffect, useState, MouseEvent, useRef } from 'react';
-import { useForm } from 'react-hook-form';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
 // React component
 export default function UpdateProfessional() {
   const [areas, setAreas] = useState<IArea[]>([]);
@@ -49,7 +50,7 @@ export default function UpdateProfessional() {
   const capitalize = useCapitalize();
   const navigate = useNavigate();
   const valuesRef = useRef<IProfessionalForm>({} as IProfessionalForm);
-  // #region Form config and actions
+
   const defaultValues = {
     _id: '',
     area: '',
@@ -76,12 +77,10 @@ export default function UpdateProfessional() {
     resolver: zodResolver(professionalSchema),
     defaultValues: defaultValues,
   });
-  // #endregion
-  // #region Load data
   // TODO: implement toast
   useEffect(() => {
     setIsLoading(true);
-    // prettier-ignore
+
     AreaService
     .findAll()
     .then((response) => {
@@ -97,7 +96,6 @@ export default function UpdateProfessional() {
 
   useEffect(() => {
     if (id && !areasLoading) {
-      // prettier-ignore
       ProfessionalApiService
       .findOne(id)
       .then((response) => {
@@ -137,8 +135,6 @@ export default function UpdateProfessional() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [areasLoading, professionalLoading]);
 
-  // #endregion
-  // #region Form actions
   function handleChangeArea(event: string) {
     const specializations = areas.find((area) => area._id === event)?.specializations || [];
     setSpecializations(specializations);
@@ -148,7 +144,6 @@ export default function UpdateProfessional() {
 
   function handleUpdateProfessional(data: z.infer<typeof professionalSchema>) {
     if (id) {
-      // prettier-ignore
       ProfessionalApiService
       .update(id, data)
       .then((response) => {
@@ -172,7 +167,6 @@ export default function UpdateProfessional() {
   function handleWorkingDaysValues(data: IWorkingDay[]) {
     updateForm.setValue('configuration.workingDays', data);
   }
-  // #endregion
   // TODO: copy form with 2 columns like create
   return (
     <main className='flex flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
