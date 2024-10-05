@@ -55,6 +55,8 @@ const defaultPagination = { pageIndex: 0, pageSize: USER_CONFIG.table.defaultPag
 export function UsersDataTable({ search, reload, setReload, setErrorMessage, help }: DataTableProps) {
   const [columns, setColumns] = useState<ColumnDef<IUser>[]>([]);
   const [data, setData] = useState<IUser[]>([]);
+  const [errorRemoving, setErrorRemoving] = useState<boolean>(false);
+  const [errorRemovingContent, setErrorRemovingContent] = useState<IInfoCard>({ type: 'success', text: '' });
   const [infoCardContent, setInfoCardContent] = useState<IInfoCard>({ type: 'success', text: '' });
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isRemoving, setIsRemoving] = useState<boolean>(false);
@@ -352,6 +354,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
 
   function handleRemoveUserDatabase(id: string): void {
     setIsRemoving(true);
+    setErrorRemoving(false);
 
     UserApiService.remove(id)
       .then((response) => {
@@ -362,7 +365,11 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
           setReload(new Date().getTime());
         }
         // TODO: show error in dialog or toast?
-        if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
+        if (response.statusCode > 399) {
+          setErrorRemoving(true);
+          setErrorRemovingContent({ type: 'error', text: response.message });
+          addNotification({ type: 'error', message: response.message });
+        }
         if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
       })
       .finally(() => setIsRemoving(false));
@@ -569,19 +576,32 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
         <DialogContent>
           <DialogHeader>
             <DialogTitle className='text-xl'>{USER_CONFIG.dialog.remove.title}</DialogTitle>
-            <DialogDescription>{USER_CONFIG.dialog.remove.subtitle}</DialogDescription>
+            {errorRemoving ? <DialogDescription></DialogDescription> : <DialogDescription>{USER_CONFIG.dialog.remove.subtitle}</DialogDescription>}
             <section className='flex flex-col pt-2'>
-              <span className=''>{USER_CONFIG.dialog.remove.content.title}</span>
-              <span className='mt-1 text-lg font-semibold'>{`${capitalize(userSelected.lastName)}, ${capitalize(userSelected.firstName)}`}</span>
-              <span className='font-medium'>{`${USER_CONFIG.dialog.remove.content.dni}: ${delimiter(userSelected.dni, '.', 3)}`}</span>
-              <footer className='mt-5 flex justify-end space-x-4'>
-                <Button variant={'secondary'} size={'sm'} onClick={() => setOpenDialog(false)}>
-                  {USER_CONFIG.buttons.cancel}
-                </Button>
-                <Button variant={'remove'} size={'sm'} onClick={() => handleRemoveUserDatabase(userSelected._id)}>
-                  {isRemoving ? <LoadingDB text={USER_CONFIG.buttons.removing} variant='button' /> : USER_CONFIG.buttons.remove}
-                </Button>
-              </footer>
+              {errorRemoving ? (
+                <>
+                  <InfoCard text={errorRemovingContent.text} type={errorRemovingContent.type} />
+                  <footer className='mt-5 flex justify-end space-x-4'>
+                    <Button variant='default' size='sm' onClick={() => setOpenDialog(false)}>
+                      {USER_CONFIG.dialog.button.close}
+                    </Button>
+                  </footer>
+                </>
+              ) : (
+                <>
+                  <span className=''>{USER_CONFIG.dialog.remove.content.title}</span>
+                  <span className='mt-1 text-lg font-semibold'>{`${capitalize(userSelected.lastName)}, ${capitalize(userSelected.firstName)}`}</span>
+                  <span className='font-medium'>{`${USER_CONFIG.dialog.remove.content.dni}: ${delimiter(userSelected.dni, '.', 3)}`}</span>
+                  <footer className='mt-5 flex justify-end space-x-4'>
+                    <Button variant={'secondary'} size={'sm'} onClick={() => setOpenDialog(false)}>
+                      {USER_CONFIG.buttons.cancel}
+                    </Button>
+                    <Button variant={'remove'} size={'sm'} onClick={() => handleRemoveUserDatabase(userSelected._id)}>
+                      {isRemoving ? <LoadingDB text={USER_CONFIG.buttons.removing} variant='button' /> : USER_CONFIG.buttons.remove}
+                    </Button>
+                  </footer>
+                </>
+              )}
             </section>
           </DialogHeader>
         </DialogContent>
