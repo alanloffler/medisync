@@ -456,7 +456,7 @@ export default function CreateProfessional() {
                 {/* Section: Schedule (right side) */}
                 <section className='flex flex-col gap-4 border-t pt-6 md:border-l md:border-t-0 md:pl-6 md:pt-0'>
                   <h1 className='mb-3 rounded-sm bg-slate-200/50 px-2 py-1 font-semibold text-slate-700'>{PC_CONFIG.formTitle.schedule}</h1>
-                  {/* Schedule working days */}
+                  {/* Form fields: Schedule working days */}
                   <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
                       control={createForm.control}
@@ -464,20 +464,19 @@ export default function CreateProfessional() {
                       render={() => (
                         <FormItem className='w-full'>
                           <FormControl>
-                            {/* prettier-ignore */}
-                            <WorkingDays 
-                                key={workingDaysKey} 
-                                label={PC_CONFIG.labels.workingDays} 
-                                data={workingDays} 
-                                handleWorkingDaysValues={handleWorkingDaysValues} 
-                              />
+                            <WorkingDays
+                              key={workingDaysKey}
+                              label={PC_CONFIG.labels.workingDays}
+                              data={workingDays}
+                              handleWorkingDaysValues={handleWorkingDaysValues}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
                   </section>
-                  {/* Schedule time slot duration */}
+                  {/* Form fields: Schedule time slot duration */}
                   <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
                       control={createForm.control}
@@ -511,7 +510,7 @@ export default function CreateProfessional() {
                       )}
                     />
                   </section>
-                  {/* Schedule time init and end */}
+                  {/* Form fields: Schedule time init and end */}
                   <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
                       control={createForm.control}
@@ -558,7 +557,7 @@ export default function CreateProfessional() {
                       )}
                     />
                   </section>
-                  {/* Schedule time slot unavailable init and end */}
+                  {/* Form fields: Schedule time slot unavailable init and end */}
                   <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
                       control={createForm.control}
