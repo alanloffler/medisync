@@ -1,6 +1,7 @@
 // Icons: https://lucide.dev/icons/
 import { ArrowLeft, FilePlus, Menu } from 'lucide-react';
-// External components: https://ui.shadcn.com/docs/components
+// External components:
+// https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/core/components/ui/dropdown-menu';
@@ -11,6 +12,8 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@
 import { Separator } from '@/core/components/ui/separator';
 import { Switch } from '@/core/components/ui/switch';
 import { Textarea } from '@/core/components/ui/textarea';
+// https://github.com/mona-health/react-input-mask
+import InputMask from '@mona-health/react-input-mask';
 // Components
 import { Loading } from '@/core/components/common/Loading';
 import { PageHeader } from '@/core/components/common/PageHeader';
