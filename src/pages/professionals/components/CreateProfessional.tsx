@@ -489,7 +489,7 @@ export default function CreateProfessional() {
                             onValueChange={(event) => {
                               field.onChange(event);
                             }}
-                            value={field.value.toString()}
+                            value={String(field.value)}
                           >
                             <FormControl>
                               <SelectTrigger className={`h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
@@ -500,7 +500,7 @@ export default function CreateProfessional() {
                             <SelectContent>
                               {slotDurationValues.length > 0 &&
                                 slotDurationValues.map((el) => (
-                                  <SelectItem key={el} value={el.toString()} className='text-sm'>
+                                  <SelectItem key={el} value={String(el)} className='text-sm'>
                                     {el}
                                   </SelectItem>
                                 ))}
