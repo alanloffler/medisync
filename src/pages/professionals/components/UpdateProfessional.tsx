@@ -9,12 +9,12 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/core/components/ui/input';
 import { Label } from '@/core/components/ui/label';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/core/components/ui/select';
-import { Separator } from '@/core/components/ui/separator';
 import { Switch } from '@/core/components/ui/switch';
 import { Textarea } from '@/core/components/ui/textarea';
 // https://github.com/mona-health/react-input-mask
-import InputMask from '@mona-health/react-input-mask';
+// import InputMask from '@mona-health/react-input-mask';
 // Components
+import { LoadingDB } from '@/core/components/common/LoadingDB';
 import { PageHeader } from '@/core/components/common/PageHeader';
 import { WorkingDays } from '@/pages/professionals/components/common/WorkingDays';
 // External imports
@@ -26,25 +26,29 @@ import { zodResolver } from '@hookform/resolvers/zod';
 // Imports
 import type { IArea } from '@/core/interfaces/area.interface';
 import type { IProfessional, IProfessionalForm } from '@/pages/professionals/interfaces/professional.interface';
+import type { IResponse } from '@/core/interfaces/response.interface';
 import type { ISpecialization } from '@/core/interfaces/specialization.interface';
+import type { ITitle } from '@/core/interfaces/title.interface';
 import type { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
 import { APP_CONFIG } from '@/config/app.config';
 import { AreaService } from '@/core/services/area.service';
 import { PROF_UPDATE_CONFIG as PU_CONFIG } from '@/config/professionals.config';
 import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
+import { TitleService } from '@/core/services/title.service';
 import { professionalSchema } from '@/pages/professionals/schemas/professional.schema';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 // React component
 export default function UpdateProfessional() {
   const [areas, setAreas] = useState<IArea[]>([]);
-  const [areasLoading, setAreasLoading] = useState<boolean>(true);
+  const [areasIsLoading, setAreasIsLoading] = useState<boolean>(false);
   const [disabledSpec, setDisabledSpec] = useState<boolean>(true);
   // const [isLoading, setIsLoading] = useState<boolean>(false);
   const [professional, setProfessional] = useState<IProfessional>({} as IProfessional);
   const [professionalLoading, setProfessionalLoading] = useState<boolean>(true);
   const [specKey, setSpecKey] = useState<string>('');
   const [specializations, setSpecializations] = useState<ISpecialization[]>([]);
+  const [titles, setTitles] = useState<ITitle[]>([]);
   const [workingDaysKey, setWorkingDaysKey] = useState<string>('');
   const [workingDaysValuesRef, setWorkingDaysValuesRef] = useState<IWorkingDay[]>([] as IWorkingDay[]);
   const { id } = useParams();
@@ -79,31 +83,55 @@ export default function UpdateProfessional() {
     resolver: zodResolver(professionalSchema),
     defaultValues: defaultValues,
   });
-  // TODO: implement toast
+
   useEffect(() => {
-    AreaService.findAll().then((response) => {
-      if (response.statusCode === 200) {
-        setAreas(response.data);
-        setAreasLoading(false);
+    setAreasIsLoading(true);
+
+    AreaService.findAll()
+      .then((response) => {
+        if (response.statusCode === 200) {
+          setAreas(response.data);
+          setDisabledSpec(false);
+        }
+        if (response.statusCode > 399) {
+          updateForm.setError('area', { message: response.message });
+          updateForm.setError('specialization', { message: response.message });
+          addNotification({ type: 'error', message: response.message });
+        }
+        if (response instanceof Error) {
+          updateForm.setError('area', { message: APP_CONFIG.error.server });
+          updateForm.setError('specialization', { message: APP_CONFIG.error.server });
+          addNotification({ type: 'error', message: APP_CONFIG.error.server });
+        }
+      })
+      .finally(() => setAreasIsLoading(false));
+
+    TitleService.findAll().then((response: IResponse) => {
+      if (response.statusCode === 200) setTitles(response.data);
+      if (response.statusCode > 399) {
+        updateForm.setError('title', { message: response.message });
+        addNotification({ type: 'error', message: response.message });
       }
-      if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
-      if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
+      if (response instanceof Error) {
+        updateForm.setError('title', { message: APP_CONFIG.error.server });
+        addNotification({ type: 'error', message: APP_CONFIG.error.server });
+      }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (id && !areasLoading) {
+    if (id && !areasIsLoading) {
       ProfessionalApiService.findOne(id).then((response) => {
         setProfessional(response.data);
         setProfessionalLoading(false);
         setWorkingDaysValuesRef(response.data.configuration?.workingDays || []);
       });
     }
-  }, [areasLoading, id]);
+  }, [areasIsLoading, id]);
 
   useEffect(() => {
-    if (!areasLoading && !professionalLoading) {
+    if (!areasIsLoading && !professionalLoading) {
       // set area value, update specs for select then force specs select re-render
       updateForm.setValue('area', professional.area._id);
       handleChangeArea(professional.area._id);
@@ -127,7 +155,7 @@ export default function UpdateProfessional() {
       valuesRef.current = updateForm.getValues();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [areasLoading, professionalLoading]);
+  }, [areasIsLoading, professionalLoading]);
 
   function handleChangeArea(event: string) {
     const specializations = areas.find((area) => area._id === event)?.specializations || [];
@@ -222,15 +250,17 @@ export default function UpdateProfessional() {
                             value={field.value}
                           >
                             <FormControl>
-                              {/* TODO: loading */}
                               <SelectTrigger className={`h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
-                                <SelectValue placeholder={PU_CONFIG.placeholders.area} />
+                                {areasIsLoading ? (
+                                  <LoadingDB variant='default' text={PU_CONFIG.select.loadingText} className='ml-0' />
+                                ) : (
+                                  <SelectValue placeholder={PU_CONFIG.placeholders.area} />
+                                )}
                               </SelectTrigger>
                             </FormControl>
                             <FormMessage />
                             <SelectContent>
-                              {areas &&
-                                areas.length > 0 &&
+                              {areas.length > 0 &&
                                 areas.map((el) => (
                                   <SelectItem key={el._id} value={el._id} className='text-sm'>
                                     {capitalize(el.name)}
@@ -255,9 +285,12 @@ export default function UpdateProfessional() {
                             value={field.value}
                           >
                             <FormControl>
-                              {/* TODO: add loading */}
                               <SelectTrigger className={`h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
-                                <SelectValue placeholder={PU_CONFIG.placeholders.specialization} />
+                                {areasIsLoading ? (
+                                  <LoadingDB variant='default' text={PU_CONFIG.select.loadingText} className='ml-0' />
+                                ) : (
+                                  <SelectValue placeholder={PU_CONFIG.placeholders.specialization} />
+                                )}
                               </SelectTrigger>
                             </FormControl>
                             <FormMessage />
@@ -279,12 +312,31 @@ export default function UpdateProfessional() {
                       control={updateForm.control}
                       name='title'
                       render={({ field }) => (
-                        <FormItem className=''>
+                        <FormItem>
                           <FormLabel>{PU_CONFIG.labels.titleAbbreviation}</FormLabel>
-                          <FormControl className='h-9'>
-                            <Input placeholder={PU_CONFIG.placeholders.titleAbbreviation} {...field} />
-                          </FormControl>
-                          <FormMessage />
+                          <Select
+                            defaultValue={field.value}
+                            disabled={titles.length < 1}
+                            onValueChange={(event) => {
+                              field.onChange(event);
+                            }}
+                            value={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className={`h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
+                                <SelectValue placeholder={PU_CONFIG.placeholders.titleAbbreviation} />
+                              </SelectTrigger>
+                            </FormControl>
+                            <FormMessage />
+                            <SelectContent>
+                              {titles.length > 0 &&
+                                titles.map((el) => (
+                                  <SelectItem key={el._id} value={el._id} className='text-sm'>
+                                    {capitalize(el.name)}
+                                  </SelectItem>
+                                ))}
+                            </SelectContent>
+                          </Select>
                         </FormItem>
                       )}
                     />
