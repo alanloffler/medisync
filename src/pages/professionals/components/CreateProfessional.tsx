@@ -4,6 +4,7 @@ import { ArrowLeft, FilePlus, Menu } from 'lucide-react';
 // https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/core/components/ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/core/components/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/core/components/ui/dropdown-menu';
 import { Form, FormField, FormControl, FormItem, FormLabel, FormMessage } from '@/core/components/ui/form';
 import { Input } from '@/core/components/ui/input';
@@ -44,7 +45,9 @@ export default function CreateProfessional() {
   const [areas, setAreas] = useState<IArea[]>([]);
   const [areasIsLoading, setAreasIsLoading] = useState<boolean>(false);
   const [disabledSpec, setDisabledSpec] = useState<boolean>(true);
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const [isCreating, setIsCreating] = useState<boolean>(false);
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [slotDurationValues, setSlotDurationValues] = useState<number[]>([]);
   const [specializations, setSpecializations] = useState<ISpecialization[]>([]);
   const [titles, setTitles] = useState<ITitle[]>([]);
@@ -143,8 +146,9 @@ export default function CreateProfessional() {
         timeSlotUnavailableInit: unavailableTimeSlot?.timeSlotUnavailableInit === '' ? null : unavailableTimeSlot?.timeSlotUnavailableInit,
       },
     };
-    // WIP: loading on button and manage errors
+
     setIsCreating(true);
+
     ProfessionalApiService.create(formattedData)
       .then((response) => {
         if (response.statusCode === 200) {
@@ -153,8 +157,16 @@ export default function CreateProfessional() {
           createForm.reset(defaultValues);
           navigate(`/professionals/${response.data._id}`);
         }
-        if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
-        if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
+        if (response.statusCode > 399) {
+          setOpenDialog(true);
+          setErrorMessage(response.message);
+          addNotification({ type: 'error', message: response.message });
+        }
+        if (response instanceof Error) {
+          setOpenDialog(true);
+          setErrorMessage(APP_CONFIG.error.server);
+          addNotification({ type: 'error', message: APP_CONFIG.error.server });
+        }
       })
       .finally(() => setIsCreating(false));
   }
@@ -189,6 +201,7 @@ export default function CreateProfessional() {
           {PC_CONFIG.buttons.back}
         </Button>
       </header>
+      {/* Section: Form */}
       <Card className='mx-auto mt-4 flex w-full flex-col md:w-full lg:w-4/5'>
         <CardHeader className='flex flex-col'>
           <CardTitle className='flex flex-row items-center justify-between'>
@@ -607,6 +620,23 @@ export default function CreateProfessional() {
           </Form>
         </CardContent>
       </Card>
+      {/* Section: Dialog */}
+      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className='text-xl'>{PC_CONFIG.dialog.create.errorTitle}</DialogTitle>
+            <DialogDescription className='sr-only'></DialogDescription>
+            <div className='flex flex-col pt-2'>
+              <span className=''>{errorMessage}</span>
+              <div className='mt-5 flex justify-end space-x-4'>
+                <Button variant='remove' size='sm' onClick={() => setOpenDialog(false)}>
+                  {PC_CONFIG.dialog.button.close}
+                </Button>
+              </div>
+            </div>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }
