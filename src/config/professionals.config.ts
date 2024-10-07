@@ -84,6 +84,7 @@ export const PROF_CREATE_CONFIG = {
       slotDuration: 'Duración del turno (min)',
       timeSlotUnavailableEnd: 'Fin de descanso',
       timeSlotUnavailableInit: 'Inicio de descanso',
+      workingDays: 'Días laborales',
     },
     description: 'Descripción',
     dni: 'DNI',
@@ -93,7 +94,6 @@ export const PROF_CREATE_CONFIG = {
     phone: 'Teléfono',
     specialization: 'Especialidad',
     title: 'Título',
-    workingDays: 'Días laborales',
   },
   placeholders: {
     area: 'Ingresá el área',
@@ -147,6 +147,7 @@ export const PROF_UPDATE_CONFIG = {
     available: 'Disponible',
     configuration: {
       slotDuration: 'Duración del turno (min)',
+      workingDays: 'Días laborables',
     },
     description: 'Descripción',
     dni: 'DNI',
@@ -160,7 +161,6 @@ export const PROF_UPDATE_CONFIG = {
     timeSlotUnavailableEnd: 'Fin de descanso',
     timeSlotUnavailableInit: 'Inicio de descanso',
     title: 'Título',
-    workingDays: 'Días laborables',
   },
   placeholders: {
     area: 'Ingresá el área',
