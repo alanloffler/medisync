@@ -116,7 +116,7 @@ export const PROF_CREATE_CONFIG = {
   select: {
     loadingText: 'Cargando',
   },
-  title: 'Crear un nuevo profesional',
+  title: 'Crear profesional',
 };
 
 export const PROF_VIEW_CONFIG = {
