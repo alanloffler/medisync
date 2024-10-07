@@ -134,9 +134,14 @@ export const PROF_UPDATE_CONFIG = {
     { id: 1, name: 'Agregar área', path: '/' },
     { id: 2, name: 'Agregar especialidad', path: '/' },
   ],
-  formDescription: 'Modificá los datos para actualizar a un profesional',
+  
   formSubtitle: 'Configuración de agenda',
-  formTitle: 'Formulario de actualización',
+  formTitle: {
+    description: 'Modificá los datos para actualizar a un profesional',
+    header: 'Formulario de actualización',
+    professional: 'Datos del profesional',
+    schedule: 'Configuración de la agenda',
+  },
   labels: {
     area: 'Área',
     available: 'Disponible',
