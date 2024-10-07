@@ -264,8 +264,8 @@ export default function CreateProfessional() {
                             <FormMessage />
                             <SelectContent>
                               {areas.length > 0 &&
-                                areas.map((el, index) => (
-                                  <SelectItem key={index} value={el._id} className='text-sm'>
+                                areas.map((el) => (
+                                  <SelectItem key={el._id} value={el._id} className='text-sm'>
                                     {capitalize(el.name)}
                                   </SelectItem>
                                 ))}
