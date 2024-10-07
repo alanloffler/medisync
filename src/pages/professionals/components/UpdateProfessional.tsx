@@ -171,7 +171,7 @@ export default function UpdateProfessional() {
     <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
       {/* Section: Page Header */}
       <header className='flex items-center justify-between'>
-        <PageHeader title={''} breadcrumb={PU_CONFIG.breadcrumb} />
+        <PageHeader title={PU_CONFIG.title} breadcrumb={PU_CONFIG.breadcrumb} />
         <Button variant={'outline'} size={'sm'} className='gap-2' onClick={() => navigate(-1)}>
           <ArrowLeft className='h-4 w-4' />
           {PU_CONFIG.button.back}
