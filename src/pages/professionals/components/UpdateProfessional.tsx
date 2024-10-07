@@ -72,7 +72,7 @@ export default function UpdateProfessional() {
     lastName: '',
     phone: '',
     specialization: '',
-    title: ''
+    title: '',
   };
 
   const updateForm = useForm<z.infer<typeof professionalSchema>>({
@@ -81,10 +81,7 @@ export default function UpdateProfessional() {
   });
   // TODO: implement toast
   useEffect(() => {
-
-    AreaService
-    .findAll()
-    .then((response) => {
+    AreaService.findAll().then((response) => {
       if (response.statusCode === 200) {
         setAreas(response.data);
         setAreasLoading(false);
@@ -97,9 +94,7 @@ export default function UpdateProfessional() {
 
   useEffect(() => {
     if (id && !areasLoading) {
-      ProfessionalApiService
-      .findOne(id)
-      .then((response) => {
+      ProfessionalApiService.findOne(id).then((response) => {
         setProfessional(response.data);
         setProfessionalLoading(false);
         setWorkingDaysValuesRef(response.data.configuration?.workingDays || []);
@@ -143,9 +138,7 @@ export default function UpdateProfessional() {
 
   function handleUpdateProfessional(data: z.infer<typeof professionalSchema>) {
     if (id) {
-      ProfessionalApiService
-      .update(id, data)
-      .then((response) => {
+      ProfessionalApiService.update(id, data).then((response) => {
         if (response.statusCode === 200) {
           addNotification({ type: 'success', message: response.message });
         }
@@ -177,37 +170,42 @@ export default function UpdateProfessional() {
           {PU_CONFIG.button.back}
         </Button>
       </header>
-        <div className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-2 lg:gap-6'>
-          <Card className='w-full md:grid-cols-2'>
-            <CardHeader>
-              <CardTitle className='flex items-center justify-between'>
-                <div className='flex items-center gap-2'>
-                  <FilePlus className='h-4 w-4' strokeWidth={2} />
-                  <span>{PU_CONFIG.formTitle}</span>
-                </div>
-                {/* Dropdown menu */}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant={'tableHeader'} size={'miniIcon'}>
-                      <Menu className='h-4 w-4' strokeWidth={2} />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className='w-fit' align='center'>
-                    {PU_CONFIG.dropdownMenu.map((item) => (
-                      <DropdownMenuItem key={item.id}>
-                        <Link to={item.path}>{item.name}</Link>
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </CardTitle>
-              <CardDescription>{PU_CONFIG.formDescription}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Form {...updateForm}>
-                <form onSubmit={updateForm.handleSubmit(handleUpdateProfessional)} className='space-y-4'>
+      {/* Section: Form */}
+      <Card className='mx-auto mt-4 flex w-full flex-col md:w-full lg:w-4/5'>
+        <CardHeader className='flex flex-col'>
+          <CardTitle className='flex flex-row items-center justify-between'>
+            <div className='flex items-center gap-2'>
+              <FilePlus className='h-4 w-4' strokeWidth={2} />
+              <span>{PU_CONFIG.formTitle.header}</span>
+            </div>
+            {/* Dropdown menu */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant={'tableHeader'} size={'miniIcon'}>
+                  <Menu className='h-4 w-4' strokeWidth={2} />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className='w-fit' align='center'>
+                {PU_CONFIG.dropdownMenu.map((item) => (
+                  <DropdownMenuItem key={item.id}>
+                    <Link to={item.path}>{item.name}</Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </CardTitle>
+          <CardDescription className='flex flex-row'>{PU_CONFIG.formTitle.description}</CardDescription>
+        </CardHeader>
+        <CardContent className='pt-1'>
+          <Form {...updateForm}>
+            <form onSubmit={updateForm.handleSubmit(handleUpdateProfessional)}>
+              {/* Section: Form fields */}
+              <section className='grid grid-cols-1 space-y-6 md:grid-cols-2 md:space-y-0'>
+                {/* Section: Professional data (left side) */}
+                <section className='flex flex-col gap-4 md:pr-6'>
+                  <h1 className='mb-3 rounded-sm bg-slate-200 px-2 py-1 font-semibold text-slate-700'>{PU_CONFIG.formTitle.professional}</h1>
                   {/* Form fields: area and specialization */}
-                  <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                  <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
                       control={updateForm.control}
                       name='area'
@@ -267,9 +265,9 @@ export default function UpdateProfessional() {
                         </FormItem>
                       )}
                     />
-                  </div>
+                  </section>
                   {/* Form fields: titleAbbreviation and available */}
-                  <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                  <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
                       control={updateForm.control}
                       name='title'
@@ -298,9 +296,9 @@ export default function UpdateProfessional() {
                         </FormItem>
                       )}
                     />
-                  </div>
+                  </section>
                   {/* Form fields: lastName and firstName */}
-                  <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                  <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
                       control={updateForm.control}
                       name='lastName'
@@ -327,9 +325,9 @@ export default function UpdateProfessional() {
                         </FormItem>
                       )}
                     />
-                  </div>
+                  </section>
                   {/* Form fields: dni */}
-                  <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                  <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
                       control={updateForm.control}
                       name='dni'
@@ -343,9 +341,9 @@ export default function UpdateProfessional() {
                         </FormItem>
                       )}
                     />
-                  </div>
+                  </section>
                   {/* Form fields: email and phone */}
-                  <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                  <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
                       control={updateForm.control}
                       name='email'
@@ -372,9 +370,9 @@ export default function UpdateProfessional() {
                         </FormItem>
                       )}
                     />
-                  </div>
+                  </section>
                   {/* Form fields: description */}
-                  <div className='grid grid-cols-1 gap-6 md:grid-cols-1'>
+                  <section className='grid grid-cols-1 gap-6 md:grid-cols-1'>
                     <FormField
                       control={updateForm.control}
                       name='description'
@@ -388,40 +386,38 @@ export default function UpdateProfessional() {
                         </FormItem>
                       )}
                     />
-                  </div>
-                  {/* FORM SECTION: Schedule */}
-                  <div className='flex flex-row pt-4'>
-                    <Separator />
-                  </div>
-                  <div className='flex flex-row font-semibold'>{PU_CONFIG.formSubtitle}</div>
-                  {/* Schedule working days */}
-                  <div className='flex flex-row pt-2'>
+                  </section>
+                </section>
+                {/* Section: Schedule (right side) */}
+                <section className='flex flex-col gap-4 border-t pt-6 md:border-l md:border-t-0 md:pl-6 md:pt-0'>
+                  <h1 className='mb-3 rounded-sm bg-slate-200/50 px-2 py-1 font-semibold text-slate-700'>{PU_CONFIG.formTitle.schedule}</h1>
+                  {/* Form fields: Schedule working days */}
+                  <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
                       control={updateForm.control}
                       name='configuration.workingDays'
                       render={({ field }) => (
                         <FormItem className='w-full'>
                           <FormControl>
-                            {/* prettier-ignore */}
-                            <WorkingDays 
-                              key={workingDaysKey} 
-                              label={PU_CONFIG.labels.workingDays} 
-                              data={field.value} 
-                              handleWorkingDaysValues={handleWorkingDaysValues} 
+                            <WorkingDays
+                              key={workingDaysKey}
+                              label={PU_CONFIG.labels.workingDays}
+                              data={field.value}
+                              handleWorkingDaysValues={handleWorkingDaysValues}
                             />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-                  </div>
-                  {/* Schedule time slot duration */}
-                  <div className='grid grid-cols-1 gap-6 pt-2 md:grid-cols-2'>
+                  </section>
+                  {/* Form fields: Schedule time slot duration */}
+                  <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
                       control={updateForm.control}
                       name='configuration.slotDuration'
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem className='space-y-1'>
                           <FormLabel>{PU_CONFIG.labels.slotDuration}</FormLabel>
                           <FormControl className='h-9 w-1/2'>
                             <Input type='number' placeholder={PU_CONFIG.placeholders.slotDuration} {...field} />
@@ -430,9 +426,9 @@ export default function UpdateProfessional() {
                         </FormItem>
                       )}
                     />
-                  </div>
-                  {/* Schedule time init and end */}
-                  <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                  </section>
+                  {/* Form fields: Schedule time init and end */}
+                  <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
                       control={updateForm.control}
                       name='configuration.scheduleTimeInit'
@@ -459,17 +455,19 @@ export default function UpdateProfessional() {
                         </FormItem>
                       )}
                     />
-                  </div>
-                  {/* Schedule time slot unavailable init and end */}
-                  <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                  </section>
+                  {/* Form fields: Schedule time slot unavailable init and end */}
+                  <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
                       control={updateForm.control}
                       name='configuration.unavailableTimeSlot.timeSlotUnavailableInit'
                       render={({ field }) => (
                         <FormItem className=''>
                           <FormLabel>{PU_CONFIG.labels.timeSlotUnavailableInit}</FormLabel>
-                          <FormControl className='h-9'><>{field.value}
-                            <Input placeholder={PU_CONFIG.placeholders.timeSlotUnavailableInit} {...field} />
+                          <FormControl className='h-9'>
+                            <>
+                              {field.value}
+                              <Input placeholder={PU_CONFIG.placeholders.timeSlotUnavailableInit} {...field} />
                             </>
                           </FormControl>
                           <FormMessage />
@@ -489,22 +487,24 @@ export default function UpdateProfessional() {
                         </FormItem>
                       )}
                     />
-                  </div>
-                  {/* Buttons */}
-                  <div className='grid grid-cols-1 space-y-2 pt-4 md:flex md:justify-end md:gap-6 md:space-y-0'>
-                    <Button type='submit' className='order-1 md:order-2 lg:order-2'>
-                      {PU_CONFIG.button.create}
-                    </Button>
-                    <Button variant={'ghost'} onClick={handleCancel} className='order-2 md:order-1 lg:order-1'>
-                      {PU_CONFIG.button.cancel}
-                    </Button>
-                  </div>
-                </form>
-              </Form>
-            </CardContent>
-          </Card>
-          {/* TODO: here add dialog for error */}
-        </div>
+                  </section>
+                </section>
+              </section>
+              {/* Section footer: Buttons */}
+              <footer className='grid grid-cols-1 space-y-2 pt-6 md:flex md:justify-end md:gap-6 md:space-y-0'>
+                <Button type='submit' className='order-1 md:order-2 lg:order-2'>
+                  {PU_CONFIG.button.create}
+                </Button>
+                <Button variant={'ghost'} onClick={handleCancel} className='order-2 md:order-1 lg:order-1'>
+                  {PU_CONFIG.button.cancel}
+                </Button>
+              </footer>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+      {/* TODO: here add dialog for error */}
+      {/* </div> */}
     </main>
   );
 }
