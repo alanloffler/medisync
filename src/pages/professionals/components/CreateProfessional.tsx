@@ -315,7 +315,7 @@ export default function CreateProfessional() {
                       name='title'
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{PC_CONFIG.labels.titleAbbreviation}</FormLabel>
+                          <FormLabel>{PC_CONFIG.labels.title}</FormLabel>
                           <Select
                             defaultValue={field.value}
                             disabled={titles.length < 1}
