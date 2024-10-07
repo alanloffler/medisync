@@ -57,6 +57,14 @@ export const PROF_CREATE_CONFIG = {
     create: 'Crear profesional',
     creating: 'Creando',
   },
+  dialog: {
+    button: {
+      close: 'Cerrar',
+    },
+    create: {
+      errorTitle: 'Error al crear profesional',
+    },
+  },
   dropdownMenu: [
     { id: 1, name: 'Agregar área', path: '/' },
     { id: 2, name: 'Agregar especialidad', path: '/' },
