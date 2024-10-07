@@ -123,11 +123,11 @@ export default function UpdateProfessional() {
       updateForm.setValue('description', professional.description);
       updateForm.setValue('dni', professional.dni);
       updateForm.setValue('email', professional.email);
-      updateForm.setValue('firstName', capitalize(professional.firstName) || '');
-      updateForm.setValue('lastName', capitalize(professional.lastName) || '');
+      updateForm.setValue('firstName', capitalize(professional.firstName));
+      updateForm.setValue('lastName', capitalize(professional.lastName));
       updateForm.setValue('phone', professional.phone);
       updateForm.setValue('specialization', professional.specialization._id);
-      updateForm.setValue('title', capitalize(professional.title.abbreviation) || '');
+      updateForm.setValue('title', capitalize(professional.title.abbreviation));
 
       valuesRef.current = updateForm.getValues();
     }
