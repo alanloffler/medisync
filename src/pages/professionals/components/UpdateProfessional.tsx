@@ -57,31 +57,8 @@ export default function UpdateProfessional() {
   const navigate = useNavigate();
   const valuesRef = useRef<IProfessionalForm>({} as IProfessionalForm);
 
-  const defaultValues = {
-    _id: '',
-    area: '',
-    available: true,
-    configuration: {
-      scheduleTimeEnd: '',
-      scheduleTimeInit: '',
-      slotDuration: '',
-      timeSlotUnavailableEnd: '',
-      timeSlotUnavailableInit: '',
-      workingDays: [],
-    },
-    description: '',
-    dni: '',
-    email: '',
-    firstName: '',
-    lastName: '',
-    phone: '',
-    specialization: '',
-    title: '',
-  };
-
   const updateForm = useForm<z.infer<typeof professionalSchema>>({
     resolver: zodResolver(professionalSchema),
-    defaultValues: defaultValues,
   });
 
   useEffect(() => {
@@ -280,7 +257,7 @@ export default function UpdateProfessional() {
                           <Select
                             defaultValue={field.value}
                             disabled={disabledSpec || specializations.length < 1}
-                            key={specKey} // FIXME: see if is used
+                            key={specKey}
                             onValueChange={(event) => field.onChange(event)}
                             value={field.value}
                           >
