@@ -151,7 +151,7 @@ export default function CreateProfessional() {
           setDisabledSpec(true);
           addNotification({ type: 'success', message: response.message });
           createForm.reset(defaultValues);
-          navigate('/professionals');
+          navigate(`/professionals/${response.data._id}`);
         }
         if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
         if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
