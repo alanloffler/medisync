@@ -92,7 +92,7 @@ export const PROF_CREATE_CONFIG = {
     lastName: 'Apellido',
     phone: 'Teléfono',
     specialization: 'Especialidad',
-    titleAbbreviation: 'Título',
+    title: 'Título',
     workingDays: 'Días laborales',
   },
   placeholders: {
@@ -174,7 +174,7 @@ export const PROF_UPDATE_CONFIG = {
     specialization: 'Ingresá la especialidad',
     timeSlotUnavailableEnd: 'Ingresá la hora de finalización',
     timeSlotUnavailableInit: 'Ingresá la hora de inicio',
-    titleAbbreviation: 'Ingresá el título',
+    title: 'Ingresá el título',
   },
   select: {
     loadingText: 'Cargando',
