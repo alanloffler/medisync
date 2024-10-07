@@ -134,7 +134,7 @@ export const PROF_UPDATE_CONFIG = {
     { id: 1, name: 'Agregar área', path: '/' },
     { id: 2, name: 'Agregar especialidad', path: '/' },
   ],
-  
+
   formSubtitle: 'Configuración de agenda',
   formTitle: {
     description: 'Modificá los datos para actualizar a un profesional',
@@ -145,6 +145,9 @@ export const PROF_UPDATE_CONFIG = {
   labels: {
     area: 'Área',
     available: 'Disponible',
+    configuration: {
+      slotDuration: 'Duración del turno (min)',
+    },
     description: 'Descripción',
     dni: 'DNI',
     email: 'Correo electrónico',
@@ -153,7 +156,6 @@ export const PROF_UPDATE_CONFIG = {
     phone: 'Teléfono',
     scheduleTimeEnd: 'Fin de turnos',
     scheduleTimeInit: 'Inicio de turnos',
-    slotDuration: 'Duración del turno (min)',
     specialization: 'Especialidad',
     timeSlotUnavailableEnd: 'Fin de descanso',
     timeSlotUnavailableInit: 'Inicio de descanso',
@@ -162,6 +164,9 @@ export const PROF_UPDATE_CONFIG = {
   },
   placeholders: {
     area: 'Ingresá el área',
+    configuration: {
+      slotDuration: 'Ingresá la duración del turno',
+    },
     description: 'Ingresá la descripción',
     dni: 'Ingresá el DNI',
     email: 'Ingresá el correo electrónico',
@@ -170,7 +175,6 @@ export const PROF_UPDATE_CONFIG = {
     phone: 'Ingresá el teléfono',
     scheduleTimeEnd: 'Ingresá la hora de finalización',
     scheduleTimeInit: 'Ingresá la hora de inicio',
-    slotDuration: 'Ingresá la duración del turno',
     specialization: 'Ingresá la especialidad',
     timeSlotUnavailableEnd: 'Ingresá la hora de finalización',
     timeSlotUnavailableInit: 'Ingresá la hora de inicio',
