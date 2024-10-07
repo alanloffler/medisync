@@ -34,6 +34,7 @@ import { APP_CONFIG } from '@/config/app.config';
 import { AreaService } from '@/core/services/area.service';
 import { PROF_UPDATE_CONFIG as PU_CONFIG } from '@/config/professionals.config';
 import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
+import { ScheduleService } from '@/pages/settings/services/schedule-settings.service';
 import { TitleService } from '@/core/services/title.service';
 import { professionalSchema } from '@/pages/professionals/schemas/professional.schema';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
@@ -43,9 +44,9 @@ export default function UpdateProfessional() {
   const [areas, setAreas] = useState<IArea[]>([]);
   const [areasIsLoading, setAreasIsLoading] = useState<boolean>(false);
   const [disabledSpec, setDisabledSpec] = useState<boolean>(true);
-  // const [isLoading, setIsLoading] = useState<boolean>(false);
   const [professional, setProfessional] = useState<IProfessional>({} as IProfessional);
   const [professionalLoading, setProfessionalLoading] = useState<boolean>(true);
+  const [slotDurationValues, setSlotDurationValues] = useState<number[]>([]);
   const [specKey, setSpecKey] = useState<string>('');
   const [specializations, setSpecializations] = useState<ISpecialization[]>([]);
   const [titles, setTitles] = useState<ITitle[]>([]);
@@ -98,6 +99,13 @@ export default function UpdateProfessional() {
         }
       })
       .finally(() => setTitlesIsLoading(false));
+
+      ScheduleService.findAllSlotDurations().then((response: number[]) => {
+        // TODO: dynamic when database entity created
+        // Manage errors then
+        setSlotDurationValues(response);
+        console.log(response);
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -465,11 +473,29 @@ export default function UpdateProfessional() {
                       name='configuration.slotDuration'
                       render={({ field }) => (
                         <FormItem className='space-y-1'>
-                          <FormLabel>{PU_CONFIG.labels.slotDuration}</FormLabel>
-                          <FormControl className='h-9 w-1/2'>
-                            <Input type='number' placeholder={PU_CONFIG.placeholders.slotDuration} {...field} />
-                          </FormControl>
-                          <FormMessage />
+                          <FormLabel>{PU_CONFIG.labels.configuration.slotDuration}</FormLabel>
+                          <Select
+                            disabled={areas.length < 1}
+                            onValueChange={(event) => {
+                              field.onChange(event);
+                            }}
+                            value={String(field.value)}
+                          >
+                            <FormControl>
+                              <SelectTrigger className={`h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
+                                <SelectValue placeholder={PU_CONFIG.placeholders.configuration.slotDuration} />
+                              </SelectTrigger>
+                            </FormControl>
+                            <FormMessage />
+                            <SelectContent>
+                              {slotDurationValues.length > 0 &&
+                                slotDurationValues.map((el) => (
+                                  <SelectItem key={el} value={String(el)} className='text-sm'>
+                                    {el}
+                                  </SelectItem>
+                                ))}
+                            </SelectContent>
+                          </Select>
                         </FormItem>
                       )}
                     />
