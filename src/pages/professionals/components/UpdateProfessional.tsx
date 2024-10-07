@@ -30,7 +30,7 @@ import type { ISpecialization } from '@/core/interfaces/specialization.interface
 import type { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
 import { APP_CONFIG } from '@/config/app.config';
 import { AreaService } from '@/core/services/area.service';
-import { PROF_UPDATE_CONFIG as PU_CONFIG } from '@/pages/professionals/config/update-professional.config';
+import { PROF_UPDATE_CONFIG as PU_CONFIG } from '@/config/professionals.config';
 import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
 import { professionalSchema } from '@/pages/professionals/schemas/professional.schema';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
