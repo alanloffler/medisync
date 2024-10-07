@@ -456,7 +456,7 @@ export default function UpdateProfessional() {
                           <FormControl>
                             <WorkingDays
                               key={workingDaysKey}
-                              label={PU_CONFIG.labels.workingDays}
+                              label={PU_CONFIG.labels.configuration.workingDays}
                               data={field.value}
                               handleWorkingDaysValues={handleWorkingDaysValues}
                             />

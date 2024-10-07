@@ -466,7 +466,7 @@ export default function CreateProfessional() {
                           <FormControl>
                             <WorkingDays
                               key={workingDaysKey}
-                              label={PC_CONFIG.labels.workingDays}
+                              label={PC_CONFIG.labels.configuration.workingDays}
                               data={workingDays}
                               handleWorkingDaysValues={handleWorkingDaysValues}
                             />
