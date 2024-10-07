@@ -114,6 +114,7 @@ export default function UpdateProfessional() {
       updateForm.setValue('area', professional.area._id);
       handleChangeArea(professional.area._id);
       setSpecKey(crypto.randomUUID());
+
       updateForm.setValue('available', professional.available);
       updateForm.setValue('configuration.scheduleTimeEnd', professional.configuration?.scheduleTimeEnd);
       updateForm.setValue('configuration.scheduleTimeInit', professional.configuration?.scheduleTimeInit);
@@ -130,6 +131,7 @@ export default function UpdateProfessional() {
       updateForm.setValue('specialization', professional.specialization._id);
       updateForm.setValue('title', professional.title._id);
 
+      setWorkingDaysKey(crypto.randomUUID());
       valuesRef.current = updateForm.getValues();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -157,8 +159,8 @@ export default function UpdateProfessional() {
   function handleCancel(event: MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     updateForm.reset(valuesRef.current);
-    updateForm.setValue('configuration.workingDays', workingDaysValuesRef);
     setWorkingDaysKey(crypto.randomUUID());
+    updateForm.setValue('configuration.workingDays', workingDaysValuesRef);
     setDisabledSpec(true);
   }
 
@@ -444,6 +446,7 @@ export default function UpdateProfessional() {
                             />
                           </FormControl>
                           <FormMessage />
+                          {JSON.stringify(field.value)}
                         </FormItem>
                       )}
                     />
