@@ -119,6 +119,61 @@ export const PROF_CREATE_CONFIG = {
   title: 'Crear profesional',
 };
 
+export const PROF_UPDATE_CONFIG = {
+  breadcrumb: [
+    { id: 1, name: 'Inicio', path: '/' },
+    { id: 2, name: 'Profesionales', path: '/professionals' },
+    { id: 3, name: 'Actualizar', path: '/update' },
+  ],
+  button: {
+    back: 'Volver',
+    cancel: 'Cancelar',
+    create: 'Actualizar profesional',
+  },
+  dropdownMenu: [
+    { id: 1, name: 'Agregar área', path: '/' },
+    { id: 2, name: 'Agregar especialidad', path: '/' },
+  ],
+  formDescription: 'Modificá los datos para actualizar a un profesional',
+  formSubtitle: 'Configuración de agenda',
+  formTitle: 'Formulario de actualización',
+  labels: {
+    area: 'Área',
+    available: 'Disponible',
+    description: 'Descripción',
+    dni: 'DNI',
+    email: 'Correo electrónico',
+    firstName: 'Nombre',
+    lastName: 'Apellido',
+    phone: 'Teléfono',
+    scheduleTimeEnd: 'Fin de turnos',
+    scheduleTimeInit: 'Inicio de turnos',
+    slotDuration: 'Duración del turno (min)',
+    specialization: 'Especialidad',
+    timeSlotUnavailableEnd: 'Fin de descanso',
+    timeSlotUnavailableInit: 'Inicio de descanso',
+    titleAbbreviation: 'Título',
+    workingDays: 'Días laborables',
+  },
+  placeholders: {
+    area: 'Ingresá el área',
+    description: 'Ingresá la descripción',
+    dni: 'Ingresá el DNI',
+    email: 'Ingresá el correo electrónico',
+    firstName: 'Ingresá el nombre',
+    lastName: 'Ingresá el apellido',
+    phone: 'Ingresá el teléfono',
+    scheduleTimeEnd: 'Ingresá la hora de finalización',
+    scheduleTimeInit: 'Ingresá la hora de inicio',
+    slotDuration: 'Ingresá la duración del turno',
+    specialization: 'Ingresá la especialidad',
+    timeSlotUnavailableEnd: 'Ingresá la hora de finalización',
+    timeSlotUnavailableInit: 'Ingresá la hora de inicio',
+    titleAbbreviation: 'Ingresá el título',
+  },
+  title: 'Actualizar un profesional',
+};
+
 export const PROF_VIEW_CONFIG = {
   breadcrumb: [
     { id: 1, name: 'Inicio', path: '/' },
