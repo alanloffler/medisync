@@ -176,6 +176,9 @@ export const PROF_UPDATE_CONFIG = {
     timeSlotUnavailableInit: 'Ingresá la hora de inicio',
     titleAbbreviation: 'Ingresá el título',
   },
+  select: {
+    loadingText: 'Cargando',
+  },
   title: 'Actualizar profesional',
 };
 
