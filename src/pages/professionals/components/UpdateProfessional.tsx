@@ -15,7 +15,6 @@ import { Textarea } from '@/core/components/ui/textarea';
 // https://github.com/mona-health/react-input-mask
 import InputMask from '@mona-health/react-input-mask';
 // Components
-import { Loading } from '@/core/components/common/Loading';
 import { PageHeader } from '@/core/components/common/PageHeader';
 import { WorkingDays } from '@/pages/professionals/components/common/WorkingDays';
 // External imports
@@ -41,7 +40,7 @@ export default function UpdateProfessional() {
   const [areas, setAreas] = useState<IArea[]>([]);
   const [areasLoading, setAreasLoading] = useState<boolean>(true);
   const [disabledSpec, setDisabledSpec] = useState<boolean>(true);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  // const [isLoading, setIsLoading] = useState<boolean>(false);
   const [professional, setProfessional] = useState<IProfessional>({} as IProfessional);
   const [professionalLoading, setProfessionalLoading] = useState<boolean>(true);
   const [specKey, setSpecKey] = useState<string>('');
@@ -82,7 +81,6 @@ export default function UpdateProfessional() {
   });
   // TODO: implement toast
   useEffect(() => {
-    setIsLoading(true);
 
     AreaService
     .findAll()
@@ -104,7 +102,6 @@ export default function UpdateProfessional() {
       .then((response) => {
         setProfessional(response.data);
         setProfessionalLoading(false);
-        setIsLoading(false);
         setWorkingDaysValuesRef(response.data.configuration?.workingDays || []);
       });
     }
@@ -171,9 +168,9 @@ export default function UpdateProfessional() {
   }
   // TODO: copy form with 2 columns like create
   return (
-    <main className='flex flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
+    <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
       {/* Section: Page Header */}
-      <header className='flex h-fit items-center justify-between'>
+      <header className='flex items-center justify-between'>
         <PageHeader title={''} breadcrumb={PU_CONFIG.breadcrumb} />
         <Button variant={'outline'} size={'sm'} className='gap-2' onClick={() => navigate(-1)}>
           <ArrowLeft className='h-4 w-4' />
