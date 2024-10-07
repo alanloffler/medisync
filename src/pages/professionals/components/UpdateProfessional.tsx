@@ -49,6 +49,7 @@ export default function UpdateProfessional() {
   const [specKey, setSpecKey] = useState<string>('');
   const [specializations, setSpecializations] = useState<ISpecialization[]>([]);
   const [titles, setTitles] = useState<ITitle[]>([]);
+  const [titlesIsLoading, setTitlesIsLoading] = useState<boolean>(false);
   const [workingDaysKey, setWorkingDaysKey] = useState<string>('');
   const [workingDaysValuesRef, setWorkingDaysValuesRef] = useState<IWorkingDay[]>([] as IWorkingDay[]);
   const { id } = useParams();
@@ -63,6 +64,7 @@ export default function UpdateProfessional() {
 
   useEffect(() => {
     setAreasIsLoading(true);
+    setTitlesIsLoading(true);
 
     AreaService.findAll()
       .then((response) => {
@@ -83,17 +85,19 @@ export default function UpdateProfessional() {
       })
       .finally(() => setAreasIsLoading(false));
 
-    TitleService.findAll().then((response: IResponse) => {
-      if (response.statusCode === 200) setTitles(response.data);
-      if (response.statusCode > 399) {
-        updateForm.setError('title', { message: response.message });
-        addNotification({ type: 'error', message: response.message });
-      }
-      if (response instanceof Error) {
-        updateForm.setError('title', { message: APP_CONFIG.error.server });
-        addNotification({ type: 'error', message: APP_CONFIG.error.server });
-      }
-    });
+    TitleService.findAll()
+      .then((response: IResponse) => {
+        if (response.statusCode === 200) setTitles(response.data);
+        if (response.statusCode > 399) {
+          updateForm.setError('title', { message: response.message });
+          addNotification({ type: 'error', message: response.message });
+        }
+        if (response instanceof Error) {
+          updateForm.setError('title', { message: APP_CONFIG.error.server });
+          addNotification({ type: 'error', message: APP_CONFIG.error.server });
+        }
+      })
+      .finally(() => setTitlesIsLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -293,7 +297,7 @@ export default function UpdateProfessional() {
                       name='title'
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{PU_CONFIG.labels.titleAbbreviation}</FormLabel>
+                          <FormLabel>{PU_CONFIG.labels.title}</FormLabel>
                           <Select
                             defaultValue={field.value}
                             disabled={titles.length < 1}
@@ -304,7 +308,7 @@ export default function UpdateProfessional() {
                           >
                             <FormControl>
                               <SelectTrigger className={`h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
-                                <SelectValue placeholder={PU_CONFIG.placeholders.titleAbbreviation} />
+                                <SelectValue placeholder={PU_CONFIG.placeholders.title} />
                               </SelectTrigger>
                             </FormControl>
                             <FormMessage />
