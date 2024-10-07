@@ -397,7 +397,7 @@ export default function CreateProfessional() {
                       control={createForm.control}
                       name='dni'
                       render={({ field }) => (
-                        <FormItem className=''>
+                        <FormItem>
                           <FormLabel>{PC_CONFIG.labels.dni}</FormLabel>
                           <FormControl className='h-9'>
                             <Input type='number' placeholder={PC_CONFIG.placeholders.dni} {...field} />
@@ -413,7 +413,7 @@ export default function CreateProfessional() {
                       control={createForm.control}
                       name='email'
                       render={({ field }) => (
-                        <FormItem className=''>
+                        <FormItem>
                           <FormLabel>{PC_CONFIG.labels.email}</FormLabel>
                           <FormControl className='h-9'>
                             <Input placeholder={PC_CONFIG.placeholders.email} {...field} />
@@ -442,7 +442,7 @@ export default function CreateProfessional() {
                       control={createForm.control}
                       name='description'
                       render={({ field }) => (
-                        <FormItem className=''>
+                        <FormItem>
                           <FormLabel>{PC_CONFIG.labels.description}</FormLabel>
                           <FormControl className='h-9'>
                             <Textarea placeholder={PC_CONFIG.placeholders.description} {...field} />

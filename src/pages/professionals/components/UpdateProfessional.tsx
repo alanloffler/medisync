@@ -387,7 +387,7 @@ export default function UpdateProfessional() {
                       control={updateForm.control}
                       name='dni'
                       render={({ field }) => (
-                        <FormItem className=''>
+                        <FormItem>
                           <FormLabel>{PU_CONFIG.labels.dni}</FormLabel>
                           <FormControl className='h-9'>
                             <Input type='number' placeholder={PU_CONFIG.placeholders.dni} {...field} />
@@ -403,7 +403,7 @@ export default function UpdateProfessional() {
                       control={updateForm.control}
                       name='email'
                       render={({ field }) => (
-                        <FormItem className=''>
+                        <FormItem>
                           <FormLabel>{PU_CONFIG.labels.email}</FormLabel>
                           <FormControl className='h-9'>
                             <Input placeholder={PU_CONFIG.placeholders.email} {...field} />
@@ -432,7 +432,7 @@ export default function UpdateProfessional() {
                       control={updateForm.control}
                       name='description'
                       render={({ field }) => (
-                        <FormItem className=''>
+                        <FormItem>
                           <FormLabel>{PU_CONFIG.labels.description}</FormLabel>
                           <FormControl className='h-9'>
                             <Textarea placeholder={PU_CONFIG.placeholders.description} {...field} />
