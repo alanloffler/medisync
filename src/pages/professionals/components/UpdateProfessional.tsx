@@ -172,17 +172,14 @@ export default function UpdateProfessional() {
   // TODO: copy form with 2 columns like create
   return (
     <main className='flex flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
-      {/* Page Header */}
-      <div className='flex h-fit items-center justify-between'>
+      {/* Section: Page Header */}
+      <header className='flex h-fit items-center justify-between'>
         <PageHeader title={''} breadcrumb={PU_CONFIG.breadcrumb} />
         <Button variant={'outline'} size={'sm'} className='gap-2' onClick={() => navigate(-1)}>
           <ArrowLeft className='h-4 w-4' />
           {PU_CONFIG.button.back}
         </Button>
-      </div>
-      {/* TODO: add loading for database data */}
-      {isLoading && <Loading className='' />}
-      {!isLoading && (
+      </header>
         <div className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-2 lg:gap-6'>
           <Card className='w-full md:grid-cols-2'>
             <CardHeader>
@@ -509,8 +506,8 @@ export default function UpdateProfessional() {
               </Form>
             </CardContent>
           </Card>
+          {/* TODO: here add dialog for error */}
         </div>
-      )}
     </main>
   );
 }
