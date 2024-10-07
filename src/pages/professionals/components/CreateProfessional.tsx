@@ -44,6 +44,7 @@ export default function CreateProfessional() {
   const [areas, setAreas] = useState<IArea[]>([]);
   const [areasIsLoading, setAreasIsLoading] = useState<boolean>(false);
   const [disabledSpec, setDisabledSpec] = useState<boolean>(true);
+  const [isCreating, setIsCreating] = useState<boolean>(false);
   const [slotDurationValues, setSlotDurationValues] = useState<number[]>([]);
   const [specializations, setSpecializations] = useState<ISpecialization[]>([]);
   const [titles, setTitles] = useState<ITitle[]>([]);
@@ -90,8 +91,10 @@ export default function CreateProfessional() {
         }
       })
       .finally(() => setTitlesIsLoading(false));
-    // TODO: manage errors here
+
     ScheduleService.findAllSlotDurations().then((response: number[]) => {
+      // TODO: dynamic when database entity created
+      // Manage errors then
       setSlotDurationValues(response);
     });
 
@@ -140,17 +143,20 @@ export default function CreateProfessional() {
         timeSlotUnavailableInit: unavailableTimeSlot?.timeSlotUnavailableInit === '' ? null : unavailableTimeSlot?.timeSlotUnavailableInit,
       },
     };
-
-    ProfessionalApiService.create(formattedData).then((response) => {
-      if (response.statusCode === 200) {
-        setDisabledSpec(true);
-        addNotification({ type: 'success', message: response.message });
-        createForm.reset(defaultValues);
-        navigate('/professionals');
-      }
-      if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
-      if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
-    });
+    // WIP: loading on button and manage errors
+    setIsCreating(true);
+    ProfessionalApiService.create(formattedData)
+      .then((response) => {
+        if (response.statusCode === 200) {
+          setDisabledSpec(true);
+          addNotification({ type: 'success', message: response.message });
+          createForm.reset(defaultValues);
+          navigate('/professionals');
+        }
+        if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
+        if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
+      })
+      .finally(() => setIsCreating(false));
   }
 
   function handleCancel(event: MouseEvent<HTMLButtonElement | HTMLDivElement | HTMLInputElement>): void {
@@ -591,7 +597,7 @@ export default function CreateProfessional() {
               {/* Section footer: Buttons */}
               <footer className='grid grid-cols-1 space-y-2 pt-6 md:flex md:justify-end md:gap-6 md:space-y-0'>
                 <Button type='submit' className='order-1 md:order-2 lg:order-2'>
-                  {PC_CONFIG.buttons.create}
+                  {isCreating ? <LoadingDB text={PC_CONFIG.buttons.creating} variant='button'></LoadingDB> : PC_CONFIG.buttons.create}
                 </Button>
                 <Button variant={'ghost'} onClick={handleCancel} className='order-2 md:order-1 lg:order-1'>
                   {PC_CONFIG.buttons.cancel}
