@@ -55,6 +55,7 @@ export const PROF_CREATE_CONFIG = {
     back: 'Volver',
     cancel: 'Cancelar',
     create: 'Crear profesional',
+    creating: 'Creando',
   },
   dropdownMenu: [
     { id: 1, name: 'Agregar área', path: '/' },
