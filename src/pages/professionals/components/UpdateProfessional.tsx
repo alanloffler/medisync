@@ -358,7 +358,7 @@ export default function UpdateProfessional() {
                       control={updateForm.control}
                       name='lastName'
                       render={({ field }) => (
-                        <FormItem className=''>
+                        <FormItem>
                           <FormLabel>{PU_CONFIG.labels.lastName}</FormLabel>
                           <FormControl className='h-9'>
                             <Input placeholder={PU_CONFIG.placeholders.lastName} {...field} />
@@ -371,7 +371,7 @@ export default function UpdateProfessional() {
                       control={updateForm.control}
                       name='firstName'
                       render={({ field }) => (
-                        <FormItem className=''>
+                        <FormItem>
                           <FormLabel>{PU_CONFIG.labels.firstName}</FormLabel>
                           <FormControl className='h-9'>
                             <Input placeholder={PU_CONFIG.placeholders.firstName} {...field} />

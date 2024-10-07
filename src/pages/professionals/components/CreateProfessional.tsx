@@ -368,7 +368,7 @@ export default function CreateProfessional() {
                       control={createForm.control}
                       name='lastName'
                       render={({ field }) => (
-                        <FormItem className=''>
+                        <FormItem>
                           <FormLabel>{PC_CONFIG.labels.lastName}</FormLabel>
                           <FormControl className='h-9'>
                             <Input placeholder={PC_CONFIG.placeholders.lastName} {...field} />
@@ -381,7 +381,7 @@ export default function CreateProfessional() {
                       control={createForm.control}
                       name='firstName'
                       render={({ field }) => (
-                        <FormItem className=''>
+                        <FormItem>
                           <FormLabel>{PC_CONFIG.labels.firstName}</FormLabel>
                           <FormControl className='h-9'>
                             <Input placeholder={PC_CONFIG.placeholders.firstName} {...field} />
