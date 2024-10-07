@@ -99,6 +99,7 @@ export default function UpdateProfessional() {
 
   useEffect(() => {
     if (id && !areasIsLoading) {
+      // TODO: manage errors
       ProfessionalApiService.findOne(id).then((response) => {
         setProfessional(response.data);
         setProfessionalLoading(false);
@@ -127,7 +128,7 @@ export default function UpdateProfessional() {
       updateForm.setValue('lastName', capitalize(professional.lastName));
       updateForm.setValue('phone', professional.phone);
       updateForm.setValue('specialization', professional.specialization._id);
-      updateForm.setValue('title', capitalize(professional.title.abbreviation));
+      updateForm.setValue('title', professional.title._id);
 
       valuesRef.current = updateForm.getValues();
     }
