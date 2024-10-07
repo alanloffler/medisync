@@ -44,7 +44,7 @@ export default function UpdateProfessional() {
   const [professional, setProfessional] = useState<IProfessional>({} as IProfessional);
   const [professionalLoading, setProfessionalLoading] = useState<boolean>(true);
   const [specKey, setSpecKey] = useState<string>('');
-  const [specializations, setSpecializations] = useState<ISpecialization[]>();
+  const [specializations, setSpecializations] = useState<ISpecialization[]>([]);
   const [workingDaysKey, setWorkingDaysKey] = useState<string>('');
   const [workingDaysValuesRef, setWorkingDaysValuesRef] = useState<IWorkingDay[]>([] as IWorkingDay[]);
   const { id } = useParams();
@@ -194,7 +194,7 @@ export default function UpdateProfessional() {
               </DropdownMenuContent>
             </DropdownMenu>
           </CardTitle>
-          <CardDescription className='flex flex-row'>{PU_CONFIG.formTitle.description}</CardDescription>
+          <CardDescription className='flex w-full flex-row'>{PU_CONFIG.formTitle.description}</CardDescription>
         </CardHeader>
         <CardContent className='pt-1'>
           <Form {...updateForm}>
@@ -203,7 +203,7 @@ export default function UpdateProfessional() {
               <section className='grid grid-cols-1 space-y-6 md:grid-cols-2 md:space-y-0'>
                 {/* Section: Professional data (left side) */}
                 <section className='flex flex-col gap-4 md:pr-6'>
-                  <h1 className='mb-3 rounded-sm bg-slate-200 px-2 py-1 font-semibold text-slate-700'>{PU_CONFIG.formTitle.professional}</h1>
+                  <h1 className='mb-3 rounded-sm bg-slate-200/50 px-2 py-1 font-semibold text-slate-700'>{PU_CONFIG.formTitle.professional}</h1>
                   {/* Form fields: area and specialization */}
                   <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
@@ -213,7 +213,8 @@ export default function UpdateProfessional() {
                         <FormItem>
                           <FormLabel>{PU_CONFIG.labels.area}</FormLabel>
                           <Select
-                            disabled={false}
+                            defaultValue={field.value}
+                            disabled={areas.length < 1}
                             onValueChange={(event) => {
                               field.onChange(event);
                               handleChangeArea(event);
@@ -221,7 +222,8 @@ export default function UpdateProfessional() {
                             value={field.value}
                           >
                             <FormControl>
-                              <SelectTrigger className={`focus:red h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
+                              {/* TODO: loading */}
+                              <SelectTrigger className={`h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
                                 <SelectValue placeholder={PU_CONFIG.placeholders.area} />
                               </SelectTrigger>
                             </FormControl>
@@ -245,21 +247,26 @@ export default function UpdateProfessional() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>{PU_CONFIG.labels.specialization}</FormLabel>
-                          <Select disabled={disabledSpec} key={specKey} onValueChange={(event) => field.onChange(event)} value={field.value}>
+                          <Select
+                            defaultValue={field.value}
+                            disabled={disabledSpec || specializations.length < 1}
+                            key={specKey} // FIXME: see if is used
+                            onValueChange={(event) => field.onChange(event)}
+                            value={field.value}
+                          >
                             <FormControl>
+                              {/* TODO: add loading */}
                               <SelectTrigger className={`h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
                                 <SelectValue placeholder={PU_CONFIG.placeholders.specialization} />
                               </SelectTrigger>
                             </FormControl>
                             <FormMessage />
                             <SelectContent>
-                              {specializations &&
-                                specializations.length > 0 &&
-                                specializations.map((el) => (
-                                  <SelectItem key={el._id} value={el._id} className='text-sm'>
-                                    {capitalize(el.name)}
-                                  </SelectItem>
-                                ))}
+                              {specializations.map((el) => (
+                                <SelectItem key={el._id} value={el._id} className='text-sm'>
+                                  {capitalize(el.name)}
+                                </SelectItem>
+                              ))}
                             </SelectContent>
                           </Select>
                         </FormItem>
