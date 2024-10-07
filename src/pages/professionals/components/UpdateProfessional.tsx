@@ -308,7 +308,11 @@ export default function UpdateProfessional() {
                           >
                             <FormControl>
                               <SelectTrigger className={`h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
-                                <SelectValue placeholder={PU_CONFIG.placeholders.title} />
+                                {titlesIsLoading ? (
+                                  <LoadingDB variant='default' text={PU_CONFIG.select.loadingText} className='ml-0' />
+                                ) : (
+                                  <SelectValue placeholder={PU_CONFIG.placeholders.title} />
+                                )}
                               </SelectTrigger>
                             </FormControl>
                             <FormMessage />
@@ -450,7 +454,6 @@ export default function UpdateProfessional() {
                             />
                           </FormControl>
                           <FormMessage />
-                          {JSON.stringify(field.value)}
                         </FormItem>
                       )}
                     />
