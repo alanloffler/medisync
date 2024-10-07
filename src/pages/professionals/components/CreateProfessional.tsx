@@ -329,7 +329,7 @@ export default function CreateProfessional() {
                                 {titlesIsLoading ? (
                                   <LoadingDB variant='default' text={PC_CONFIG.select.loadingText} className='ml-0' />
                                 ) : (
-                                  <SelectValue placeholder={PC_CONFIG.placeholders.titleAbbreviation} />
+                                  <SelectValue placeholder={PC_CONFIG.placeholders.title} />
                                 )}
                               </SelectTrigger>
                             </FormControl>
