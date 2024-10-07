@@ -1,7 +1,7 @@
-import { IArea } from '@/core/interfaces/area.interface';
-import { ISpecialization } from '@/core/interfaces/specialization.interface';
-import { ITitle } from '@/core/interfaces/title.interface';
-import { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
+import type { IArea } from '@/core/interfaces/area.interface';
+import type { ISpecialization } from '@/core/interfaces/specialization.interface';
+import type { ITitle } from '@/core/interfaces/title.interface';
+import type { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
 
 export interface IProfessionalForm {
   area: string;
@@ -32,7 +32,7 @@ export interface IProfessional {
   title: ITitle;
   unavailableObject: TMP;
 }
-// TODO this implementation will be used only for the professional creation (validation schema)
+// TODO: this implementation will be used only for the professional creation (validation schema)
 interface TMP {
   timeSlotUnavailableInit?: string;
   timeSlotUnavailableEnd?: string;
