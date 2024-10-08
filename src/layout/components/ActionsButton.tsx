@@ -1,0 +1,50 @@
+// Icons: https://lucide.dev/icons/
+import { Plus } from 'lucide-react';
+// External components
+import { Select, SelectContent, SelectGroup, SelectTrigger } from '@/core/components/ui/select';
+import { Separator } from '@/core/components/ui/separator';
+// External imports
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+// Imports
+import type { ILinks } from '@/layout/interfaces/links.interface';
+// React component
+export function ActionsButton({ links }: { links: ILinks[] }) {
+  const [open, setOpen] = useState<boolean>(false);
+  const navigate = useNavigate();
+
+  function handleClick(path: string): void {
+    setOpen(false);
+    navigate(path);
+  }
+
+  return (
+    <Select open={open} onOpenChange={setOpen}>
+      <section className='flex h-8 items-center rounded-md bg-primary/75 text-sm font-medium text-white'>
+        <button onClick={() => navigate(links[0].path)} className='flex h-8 items-center space-x-1 rounded-l-md px-3 py-1'>
+          <Plus strokeWidth={2} className='h-4 w-4' />
+          <span>{links[0].title}</span>
+        </button>
+        <SelectTrigger className='h-8 w-fit rounded-l-none rounded-r-md bg-primary focus:ring-0'></SelectTrigger>
+      </section>
+      <SelectContent align='end' className='text-sm font-medium text-white [&>div]:p-0'>
+        <SelectGroup>
+          {links.map((link, index) => (
+            <>
+              <li key={link.id} className='list-none'>
+                <button
+                  className='flex w-full items-center space-x-2 bg-primary/75 px-2 py-1 hover:bg-primary'
+                  onClick={() => handleClick(link.path)}
+                >
+                  <Plus strokeWidth={2} className='h-4 w-4' />
+                  <span>{link.title}</span>
+                </button>
+              </li>
+              {index < links.length - 1 && <Separator className='bg-primary/50' />}
+            </>
+          ))}
+        </SelectGroup>
+      </SelectContent>
+    </Select>
+  );
+}
