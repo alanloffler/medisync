@@ -8,14 +8,17 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // Imports
 import type { ILinks } from '@/layout/interfaces/links.interface';
+import { useHeaderMenuStore } from '@/layout/stores/header-menu.service';
 // React component
 export function ActionsButton({ links }: { links: ILinks[] }) {
   const [open, setOpen] = useState<boolean>(false);
   const navigate = useNavigate();
+  const setMenuItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
 
-  function handleClick(path: string): void {
+  function handleClick(link: ILinks): void {
     setOpen(false);
-    navigate(path);
+    navigate(link.path);
+    setMenuItemSelected(link.menuId);
   }
 
   return (
@@ -31,7 +34,7 @@ export function ActionsButton({ links }: { links: ILinks[] }) {
         <SelectGroup>
           {links.map((link, index) => (
             <div key={link.id}>
-              <button className='flex w-full items-center space-x-2 bg-primary/75 px-2 py-1 hover:bg-primary' onClick={() => handleClick(link.path)}>
+              <button className='flex w-full items-center space-x-2 bg-primary/75 px-2 py-1 hover:bg-primary' onClick={() => handleClick(link)}>
                 <Plus strokeWidth={2} className='h-4 w-4' />
                 <span>{link.title}</span>
               </button>
