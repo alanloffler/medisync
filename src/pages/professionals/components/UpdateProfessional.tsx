@@ -12,7 +12,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@
 import { Switch } from '@/core/components/ui/switch';
 import { Textarea } from '@/core/components/ui/textarea';
 // https://github.com/mona-health/react-input-mask
-// import InputMask from '@mona-health/react-input-mask';
+import InputMask from '@mona-health/react-input-mask';
 // Components
 import { LoadingDB } from '@/core/components/common/LoadingDB';
 import { PageHeader } from '@/core/components/common/PageHeader';
@@ -100,12 +100,12 @@ export default function UpdateProfessional() {
       })
       .finally(() => setTitlesIsLoading(false));
 
-      ScheduleService.findAllSlotDurations().then((response: number[]) => {
-        // TODO: dynamic when database entity created
-        // Manage errors then
-        setSlotDurationValues(response);
-        console.log(response);
-      });
+    ScheduleService.findAllSlotDurations().then((response: number[]) => {
+      // TODO: dynamic when database entity created
+      // Manage errors then
+      setSlotDurationValues(response);
+      console.log(response);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -114,6 +114,7 @@ export default function UpdateProfessional() {
       // TODO: manage errors
       ProfessionalApiService.findOne(id).then((response) => {
         setProfessional(response.data);
+        console.log(response.data);
         setProfessionalLoading(false);
         setWorkingDaysValuesRef(response.data.configuration?.workingDays || []);
       });
@@ -482,7 +483,7 @@ export default function UpdateProfessional() {
                             value={String(field.value)}
                           >
                             <FormControl>
-                              <SelectTrigger className={`w-1/2 h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
+                              <SelectTrigger className={`h-9 w-1/2 ${!field.value ? 'text-muted-foreground' : ''}`}>
                                 <SelectValue placeholder={PU_CONFIG.placeholders.configuration.slotDuration} />
                               </SelectTrigger>
                             </FormControl>
@@ -507,9 +508,11 @@ export default function UpdateProfessional() {
                       name='configuration.scheduleTimeInit'
                       render={({ field }) => (
                         <FormItem className=''>
-                          <FormLabel>{PU_CONFIG.labels.scheduleTimeInit}</FormLabel>
+                          <FormLabel>{PU_CONFIG.labels.configuration.scheduleTimeInit}</FormLabel>
                           <FormControl className='h-9'>
-                            <Input placeholder={PU_CONFIG.placeholders.scheduleTimeInit} {...field} />
+                            <InputMask mask='99:99' maskPlaceholder='--:--' alwaysShowMask={false} placeholder={'00:00'} {...field}>
+                              <Input />
+                            </InputMask>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -519,10 +522,12 @@ export default function UpdateProfessional() {
                       control={updateForm.control}
                       name='configuration.scheduleTimeEnd'
                       render={({ field }) => (
-                        <FormItem className=''>
-                          <FormLabel>{PU_CONFIG.labels.scheduleTimeEnd}</FormLabel>
+                        <FormItem className='space-y-1'>
+                          <FormLabel>{PU_CONFIG.labels.configuration.scheduleTimeEnd}</FormLabel>
                           <FormControl className='h-9'>
-                            <Input placeholder={PU_CONFIG.placeholders.scheduleTimeEnd} {...field} />
+                            <InputMask mask='99:99' maskPlaceholder='--:--' alwaysShowMask={false} placeholder={'00:00'} {...field}>
+                              <Input />
+                            </InputMask>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -536,11 +541,11 @@ export default function UpdateProfessional() {
                       name='configuration.unavailableTimeSlot.timeSlotUnavailableInit'
                       render={({ field }) => (
                         <FormItem className=''>
-                          <FormLabel>{PU_CONFIG.labels.timeSlotUnavailableInit}</FormLabel>
+                          <FormLabel>{PU_CONFIG.labels.configuration.timeSlotUnavailableInit}</FormLabel>
                           <FormControl className='h-9'>
                             <>
                               {field.value}
-                              <Input placeholder={PU_CONFIG.placeholders.timeSlotUnavailableInit} {...field} />
+                              <Input placeholder={PU_CONFIG.placeholders.configuration.timeSlotUnavailableInit} {...field} />
                             </>
                           </FormControl>
                           <FormMessage />
@@ -552,9 +557,9 @@ export default function UpdateProfessional() {
                       name='configuration.unavailableTimeSlot.timeSlotUnavailableEnd'
                       render={({ field }) => (
                         <FormItem className=''>
-                          <FormLabel>{PU_CONFIG.labels.timeSlotUnavailableEnd}</FormLabel>
+                          <FormLabel>{PU_CONFIG.labels.configuration.timeSlotUnavailableEnd}</FormLabel>
                           <FormControl className='h-9'>
-                            <Input placeholder={PU_CONFIG.placeholders.timeSlotUnavailableEnd} {...field} />
+                            <Input placeholder={PU_CONFIG.placeholders.configuration.timeSlotUnavailableEnd} {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
