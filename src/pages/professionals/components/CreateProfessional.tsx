@@ -492,7 +492,7 @@ export default function CreateProfessional() {
                             value={String(field.value)}
                           >
                             <FormControl>
-                              <SelectTrigger className={`h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
+                              <SelectTrigger className={`w-1/2 h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
                                 <SelectValue placeholder={PC_CONFIG.placeholders.configuration.slotDuration} />
                               </SelectTrigger>
                             </FormControl>
