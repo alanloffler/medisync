@@ -15,6 +15,7 @@ import { Textarea } from '@/core/components/ui/textarea';
 // https://github.com/mona-health/react-input-mask
 import InputMask from '@mona-health/react-input-mask';
 // Components
+import { InfoCard } from '@/core/components/common/InfoCard';
 import { LoadingDB } from '@/core/components/common/LoadingDB';
 import { PageHeader } from '@/core/components/common/PageHeader';
 import { WorkingDays } from '@/pages/professionals/components/common/WorkingDays';
@@ -34,7 +35,6 @@ import type { ITitle } from '@/core/interfaces/title.interface';
 import type { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
 import { APP_CONFIG } from '@/config/app.config';
 import { AreaService } from '@/core/services/area.service';
-import { InfoCard } from '@/core/components/common/InfoCard';
 import { PROF_UPDATE_CONFIG as PU_CONFIG } from '@/config/professionals.config';
 import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
 import { ScheduleService } from '@/pages/settings/services/schedule-settings.service';
@@ -47,9 +47,9 @@ export default function UpdateProfessional() {
   const [areas, setAreas] = useState<IArea[]>([]);
   const [areasIsLoading, setAreasIsLoading] = useState<boolean>(false);
   const [disabledSpec, setDisabledSpec] = useState<boolean>(true);
-  const [errorMessage, setErrorMessage] = useState<string>('');
   const [errorLoadingProfessional, setErrorLoadingProfessional] = useState<boolean>(false);
-  const [infoCardContent, setInfoCardContent] = useState<IInfoCard>({ type: 'success', text: ''});
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [infoCardContent, setInfoCardContent] = useState<IInfoCard>({ type: 'success', text: '' });
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [professional, setProfessional] = useState<IProfessional>({} as IProfessional);
@@ -613,7 +613,11 @@ export default function UpdateProfessional() {
             </Form>
           </CardContent>
         </Card>
-      ) : (<Card className='mx-auto w-fit mt-4 p-2'><InfoCard text={infoCardContent.text} type={infoCardContent.type} /></Card>)}
+      ) : (
+        <Card className='mx-auto mt-4 w-fit p-2'>
+          <InfoCard text={infoCardContent.text} type={infoCardContent.type} />
+        </Card>
+      )}
       {/* Section: Dialog */}
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent>
