@@ -30,18 +30,13 @@ export function ActionsButton({ links }: { links: ILinks[] }) {
       <SelectContent align='end' className='text-sm font-medium text-white [&>div]:p-0'>
         <SelectGroup>
           {links.map((link, index) => (
-            <>
-              <li key={link.id} className='list-none'>
-                <button
-                  className='flex w-full items-center space-x-2 bg-primary/75 px-2 py-1 hover:bg-primary'
-                  onClick={() => handleClick(link.path)}
-                >
-                  <Plus strokeWidth={2} className='h-4 w-4' />
-                  <span>{link.title}</span>
-                </button>
-              </li>
+            <div key={link.id}>
+              <button className='flex w-full items-center space-x-2 bg-primary/75 px-2 py-1 hover:bg-primary' onClick={() => handleClick(link.path)}>
+                <Plus strokeWidth={2} className='h-4 w-4' />
+                <span>{link.title}</span>
+              </button>
               {index < links.length - 1 && <Separator className='bg-primary/50' />}
-            </>
+            </div>
           ))}
         </SelectGroup>
       </SelectContent>
