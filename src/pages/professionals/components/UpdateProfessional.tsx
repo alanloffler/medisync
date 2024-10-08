@@ -4,6 +4,7 @@ import { ArrowLeft, FilePlus, Menu } from 'lucide-react';
 // https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/core/components/ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/core/components/ui/dialog';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/core/components/ui/dropdown-menu';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/core/components/ui/form';
 import { Input } from '@/core/components/ui/input';
@@ -44,6 +45,9 @@ export default function UpdateProfessional() {
   const [areas, setAreas] = useState<IArea[]>([]);
   const [areasIsLoading, setAreasIsLoading] = useState<boolean>(false);
   const [disabledSpec, setDisabledSpec] = useState<boolean>(true);
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [professional, setProfessional] = useState<IProfessional>({} as IProfessional);
   const [professionalLoading, setProfessionalLoading] = useState<boolean>(true);
   const [slotDurationValues, setSlotDurationValues] = useState<number[]>([]);
@@ -68,7 +72,7 @@ export default function UpdateProfessional() {
     setTitlesIsLoading(true);
 
     AreaService.findAll()
-      .then((response) => {
+      .then((response: IResponse) => {
         if (response.statusCode === 200) {
           setAreas(response.data);
           setDisabledSpec(false);
@@ -104,7 +108,6 @@ export default function UpdateProfessional() {
       // TODO: dynamic when database entity created
       // Manage errors then
       setSlotDurationValues(response);
-      console.log(response);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -112,9 +115,8 @@ export default function UpdateProfessional() {
   useEffect(() => {
     if (id && !areasIsLoading) {
       // TODO: manage errors
-      ProfessionalApiService.findOne(id).then((response) => {
+      ProfessionalApiService.findOne(id).then((response: IResponse) => {
         setProfessional(response.data);
-        console.log(response.data);
         setProfessionalLoading(false);
         setWorkingDaysValuesRef(response.data.configuration?.workingDays || []);
       });
@@ -123,7 +125,6 @@ export default function UpdateProfessional() {
 
   useEffect(() => {
     if (!areasIsLoading && !professionalLoading) {
-      // set area value, update specs for select then force specs select re-render
       updateForm.setValue('area', professional.area._id);
       handleChangeArea(professional.area._id);
       setSpecKey(crypto.randomUUID());
@@ -150,26 +151,39 @@ export default function UpdateProfessional() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [areasIsLoading, professionalLoading]);
 
-  function handleChangeArea(event: string) {
+  function handleChangeArea(event: string): void {
     const specializations = areas.find((area) => area._id === event)?.specializations || [];
     setSpecializations(specializations);
     setDisabledSpec(false);
     updateForm.setValue('specialization', '');
   }
 
-  function handleUpdateProfessional(data: z.infer<typeof professionalSchema>) {
+  function handleUpdateProfessional(data: z.infer<typeof professionalSchema>): void {
+    setIsUpdating(true);
+
     if (id) {
-      ProfessionalApiService.update(id, data).then((response) => {
-        if (response.statusCode === 200) {
-          addNotification({ type: 'success', message: response.message });
-        }
-        if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
-        if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
-      });
+      ProfessionalApiService.update(id, data)
+        .then((response: IResponse) => {
+          if (response.statusCode === 200) {
+            navigate(`/professionals/${response.data._id}`);
+            addNotification({ type: 'success', message: response.message });
+          }
+          if (response.statusCode > 399) {
+            setOpenDialog(true);
+            setErrorMessage(response.message);
+            addNotification({ type: 'error', message: response.message });
+          }
+          if (response instanceof Error) {
+            setOpenDialog(true);
+            setErrorMessage(APP_CONFIG.error.server);
+            addNotification({ type: 'error', message: APP_CONFIG.error.server });
+          }
+        })
+        .finally(() => setIsUpdating(false));
     }
   }
 
-  function handleCancel(event: MouseEvent<HTMLButtonElement>) {
+  function handleCancel(event: MouseEvent<HTMLButtonElement>): void {
     event.preventDefault();
     updateForm.reset(valuesRef.current);
     setWorkingDaysKey(crypto.randomUUID());
@@ -177,10 +191,10 @@ export default function UpdateProfessional() {
     setDisabledSpec(true);
   }
 
-  function handleWorkingDaysValues(data: IWorkingDay[]) {
+  function handleWorkingDaysValues(data: IWorkingDay[]): void {
     updateForm.setValue('configuration.workingDays', data);
   }
-  // TODO: copy form with 2 columns like create
+
   return (
     <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
       {/* Section: Page Header */}
@@ -507,7 +521,7 @@ export default function UpdateProfessional() {
                       control={updateForm.control}
                       name='configuration.scheduleTimeInit'
                       render={({ field }) => (
-                        <FormItem className=''>
+                        <FormItem className='space-y-1'>
                           <FormLabel>{PU_CONFIG.labels.configuration.scheduleTimeInit}</FormLabel>
                           <FormControl className='h-9'>
                             <InputMask mask='99:99' maskPlaceholder='--:--' alwaysShowMask={false} placeholder={'00:00'} {...field}>
@@ -540,13 +554,12 @@ export default function UpdateProfessional() {
                       control={updateForm.control}
                       name='configuration.unavailableTimeSlot.timeSlotUnavailableInit'
                       render={({ field }) => (
-                        <FormItem className=''>
+                        <FormItem className='space-y-1'>
                           <FormLabel>{PU_CONFIG.labels.configuration.timeSlotUnavailableInit}</FormLabel>
                           <FormControl className='h-9'>
-                            <>
-                              {field.value}
-                              <Input placeholder={PU_CONFIG.placeholders.configuration.timeSlotUnavailableInit} {...field} />
-                            </>
+                            <InputMask mask='99:99' maskPlaceholder='--:--' alwaysShowMask={false} placeholder={'00:00'} {...field}>
+                              <Input />
+                            </InputMask>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -556,10 +569,12 @@ export default function UpdateProfessional() {
                       control={updateForm.control}
                       name='configuration.unavailableTimeSlot.timeSlotUnavailableEnd'
                       render={({ field }) => (
-                        <FormItem className=''>
+                        <FormItem className='space-y-1'>
                           <FormLabel>{PU_CONFIG.labels.configuration.timeSlotUnavailableEnd}</FormLabel>
                           <FormControl className='h-9'>
-                            <Input placeholder={PU_CONFIG.placeholders.configuration.timeSlotUnavailableEnd} {...field} />
+                            <InputMask mask='99:99' maskPlaceholder='--:--' alwaysShowMask={false} placeholder={'00:00'} {...field}>
+                              <Input />
+                            </InputMask>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -571,7 +586,7 @@ export default function UpdateProfessional() {
               {/* Section footer: Buttons */}
               <footer className='grid grid-cols-1 space-y-2 pt-6 md:flex md:justify-end md:gap-6 md:space-y-0'>
                 <Button type='submit' className='order-1 md:order-2 lg:order-2'>
-                  {PU_CONFIG.button.create}
+                  {isUpdating ? <LoadingDB text={PU_CONFIG.button.updating} variant='button' /> : PU_CONFIG.button.update}
                 </Button>
                 <Button variant={'ghost'} onClick={handleCancel} className='order-2 md:order-1 lg:order-1'>
                   {PU_CONFIG.button.cancel}
@@ -581,8 +596,23 @@ export default function UpdateProfessional() {
           </Form>
         </CardContent>
       </Card>
-      {/* TODO: here add dialog for error */}
-      {/* </div> */}
+      {/* Section: Dialog */}
+      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className='text-xl'>{PU_CONFIG.dialog.update.errorTitle}</DialogTitle>
+            <DialogDescription className='sr-only'></DialogDescription>
+            <div className='flex flex-col pt-2'>
+              <span className=''>{errorMessage}</span>
+              <div className='mt-5 flex justify-end space-x-4'>
+                <Button variant='remove' size='sm' onClick={() => setOpenDialog(false)}>
+                  {PU_CONFIG.dialog.button.close}
+                </Button>
+              </div>
+            </div>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }
