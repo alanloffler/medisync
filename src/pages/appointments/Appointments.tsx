@@ -60,6 +60,13 @@ export default function Appointments() {
   const capitalize: (sentence: string | undefined) => string | undefined = useCapitalize();
   const capitalizeFirstLetter: (sentence: string | undefined) => string | undefined = useCapitalizeFirstLetter();
   const navigate: NavigateFunction = useNavigate();
+
+
+  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
+  const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth());
+  const [key, setKey] = useState<string>('');
+
+
   // #region professionalSelected actions
   useEffect(() => {
     if (professionalSelected) {
@@ -308,7 +315,12 @@ export default function Appointments() {
               {professionalSelected && (
                 <>
                   <Steps text={APPO_CONFIG.steps.text2} step='2' />
-                  <Calendar
+                  <Calendar 
+                    key={key}
+                    onMonthChange={month => {setSelectedMonth(month.getMonth()); setSelectedYear(month.getFullYear());}}
+                    defaultMonth={new Date(selectedYear, selectedMonth)}
+                    fromYear={Number(calendarYears[0])}
+                    toYear={Number(calendarYears[calendarYears.length - 1])}
                     className='h-fit w-fit flex-row rounded-lg bg-card text-card-foreground shadow-sm'
                     disabled={[
                       new Date(2024, 8, 17),
@@ -319,14 +331,16 @@ export default function Appointments() {
                     ]}
                     locale={APPO_CONFIG.calendar.language === 'es' ? es : enUS}
                     mode='single'
+                    // selected={new Date(selectedYear, selectedMonth, 1)}
                     selected={date}
                     showOutsideDays={false}
                     onDayClick={(event) => setSelectedDate(event)}
                     footer={
                       // TODO: onValueChange select the date, by year and month
                       // and set the date to calendar -> setSelectedDate()
+                      // WIP: onValueChange must be refactored in a function and re-render the schedule
                       <div className='flex text-xs w-full pt-3 space-x-3'>
-                        <Select defaultValue={new Date().getFullYear().toString()}>
+                        <Select value={selectedYear.toString()} onValueChange={(value) => {setSelectedYear(Number(value)); setKey(crypto.randomUUID())}}>
                           <SelectTrigger className='w-1/2 h-7 text-xs border'>
                             <SelectValue placeholder={APPO_CONFIG.calendar.placeholder.year} />
                           </SelectTrigger>
@@ -336,13 +350,13 @@ export default function Appointments() {
                             </SelectGroup>
                           </SelectContent>
                         </Select>
-                        <Select defaultValue={format(new Date(), 'MMMM')}>
+                        <Select value={selectedMonth.toString()} onValueChange={(value) => {setSelectedMonth(Number(value)); setKey(crypto.randomUUID())}}>
                           <SelectTrigger className='w-1/2 h-7 text-xs border'>
                             <SelectValue placeholder={APPO_CONFIG.calendar.placeholder.month} />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
-                              {calendarMonths.map(month => <SelectItem key={month} value={month}>{capitalize(month)}</SelectItem>)}
+                              {calendarMonths.map((month, index) => <SelectItem key={month} value={index.toString()}>{capitalize(month)}</SelectItem>)}
                             </SelectGroup>
                           </SelectContent>
                         </Select>
