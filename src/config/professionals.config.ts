@@ -81,7 +81,7 @@ export const PROF_CREATE_CONFIG = {
     configuration: {
       scheduleTimeEnd: 'Fin de turnos',
       scheduleTimeInit: 'Inicio de turnos',
-      slotDuration: 'Duración del turno (min)',
+      slotDuration: 'Duración del turno',
       timeSlotUnavailableEnd: 'Fin de descanso',
       timeSlotUnavailableInit: 'Inicio de descanso',
       workingDays: 'Días laborales',
@@ -100,7 +100,7 @@ export const PROF_CREATE_CONFIG = {
     configuration: {
       scheduleTimeEnd: 'Ingresá la hora de finalización',
       scheduleTimeInit: 'Ingresá la hora de inicio',
-      slotDuration: 'Ingresá la duración',
+      slotDuration: 'Min',
       timeSlotUnavailableEnd: 'Ingresá la hora de finalización',
       timeSlotUnavailableInit: 'Ingresá la hora de inicio',
     },
