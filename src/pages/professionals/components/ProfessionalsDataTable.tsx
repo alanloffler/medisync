@@ -93,7 +93,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
         </div>
       ),
       cell: ({ row }) => (
-        <div className='text-left font-medium'>{`${capitalize(row.original.title.abbreviation)} ${capitalize(row.original.lastName)}, ${capitalize(row.original.firstName)}`}</div>
+        <div className='text-left'>{`${capitalize(row.original.title.abbreviation)} ${capitalize(row.original.lastName)}, ${capitalize(row.original.firstName)}`}</div>
       ),
     },
     {
