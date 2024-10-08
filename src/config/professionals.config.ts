@@ -131,6 +131,14 @@ export const PROF_UPDATE_CONFIG = {
     update: 'Actualizar profesional',
     updating: 'Actualizando',
   },
+  dialog: {
+    button: {
+      close: 'Cerrar',
+    },
+    update: {
+      errorTitle: 'Error al actualizar profesional',
+    },
+  },
   dropdownMenu: [
     { id: 1, name: 'Agregar área', path: '/' },
     { id: 2, name: 'Agregar especialidad', path: '/' },
