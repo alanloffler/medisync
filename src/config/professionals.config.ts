@@ -146,7 +146,7 @@ export const PROF_UPDATE_CONFIG = {
     area: 'Área',
     available: 'Disponible',
     configuration: {
-      slotDuration: 'Duración del turno (min)',
+      slotDuration: 'Duración del turno',
       workingDays: 'Días laborables',
     },
     description: 'Descripción',
@@ -165,7 +165,7 @@ export const PROF_UPDATE_CONFIG = {
   placeholders: {
     area: 'Ingresá el área',
     configuration: {
-      slotDuration: 'Ingresá la duración del turno',
+      slotDuration: 'Min',
     },
     description: 'Ingresá la descripción',
     dni: 'Ingresá el DNI',
