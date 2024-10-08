@@ -10,9 +10,27 @@ import { generateWeekOfWorkingDays } from '@/pages/professionals/utils/week-work
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 // React component
 export function WorkingDays({ label, data, handleWorkingDaysValues }: IWorkingDaysProps) {
+  const [days, setDays] = useState<string[]>([]);
   const [daysData, setDaysData] = useState<IWorkingDay[]>([]);
-  const capitalize: (text: string | undefined) => string | undefined = useCapitalize();
-  const DAYS: (string | undefined)[] = range('dddd', 'es').map((day) => capitalize(day));
+  const capitalize = useCapitalize();
+
+  useEffect(() => {
+    function handleResize(): void {
+      const windowWidth: number = window.innerWidth;
+      if (windowWidth < 1140 && windowWidth >= 768) {
+        setDays(range('ddd', 'es').map((day) => day));
+      } else {
+        setDays(range('dddd', 'es').map((day) => day));
+      }
+    }
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const defaultWorkingDaysValues: IWorkingDay[] = generateWeekOfWorkingDays();
@@ -22,9 +40,9 @@ export function WorkingDays({ label, data, handleWorkingDaysValues }: IWorkingDa
 
   function handleCheckedChange(dayIndex: number, checked: boolean) {
     if (!daysData) return;
-    
+
     const updatedValues = daysData.find((value) => value.day === dayIndex);
-    
+
     if (updatedValues) {
       updatedValues.value = checked;
       handleWorkingDaysValues([...daysData]);
@@ -42,7 +60,7 @@ export function WorkingDays({ label, data, handleWorkingDaysValues }: IWorkingDa
                 defaultChecked={daysData.find((value) => value.day === index)?.value || false}
                 onCheckedChange={(checked) => handleCheckedChange(index, checked as boolean)}
               />
-              <span className='text-xs font-medium'>{DAYS[index]}</span>
+              <span className='text-xs font-medium'>{capitalize(days[index])}</span>
             </div>
           ))}
       </div>
