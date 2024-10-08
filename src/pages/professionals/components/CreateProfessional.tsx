@@ -492,7 +492,7 @@ export default function CreateProfessional() {
                             value={String(field.value)}
                           >
                             <FormControl>
-                              <SelectTrigger className={`w-1/2 h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
+                              <SelectTrigger className={`h-9 w-1/2 ${!field.value ? 'text-muted-foreground' : ''}`}>
                                 <SelectValue placeholder={PC_CONFIG.placeholders.configuration.slotDuration} />
                               </SelectTrigger>
                             </FormControl>
@@ -519,16 +519,9 @@ export default function CreateProfessional() {
                         <FormItem className='space-y-1'>
                           <FormLabel>{PC_CONFIG.labels.configuration.scheduleTimeInit}</FormLabel>
                           <FormControl className='h-9'>
-                            {/* prettier-ignore */}
-                            <InputMask 
-                                mask='99:99' 
-                                maskPlaceholder='--:--' 
-                                alwaysShowMask={false} 
-                                placeholder={'00:00'} 
-                                {...field} 
-                              >
-                                <Input />
-                              </InputMask>
+                            <InputMask mask='99:99' maskPlaceholder='--:--' alwaysShowMask={false} placeholder={'00:00'} {...field}>
+                              <Input />
+                            </InputMask>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -541,16 +534,9 @@ export default function CreateProfessional() {
                         <FormItem className='space-y-1'>
                           <FormLabel>{PC_CONFIG.labels.configuration.scheduleTimeEnd}</FormLabel>
                           <FormControl className='h-9'>
-                            {/* prettier-ignore */}
-                            <InputMask 
-                                mask='99:99' 
-                                maskPlaceholder='--:--' 
-                                alwaysShowMask={false} 
-                                placeholder={'00:00'} 
-                                {...field} 
-                              >
-                                <Input />
-                              </InputMask>
+                            <InputMask mask='99:99' maskPlaceholder='--:--' alwaysShowMask={false} placeholder={'00:00'} {...field}>
+                              <Input />
+                            </InputMask>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
