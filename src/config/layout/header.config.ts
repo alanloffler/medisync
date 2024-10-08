@@ -7,9 +7,9 @@ export const HEADER_CONFIG = {
     { id: 4, title: 'Pacientes', path: '/users' },
   ],
   actionsButton: [
-    { id: 1, title: 'Turno', path: '/' },
-    { id: 2, title: 'Paciente', path: '/users/create' },
-    { id: 3, title: 'Profesional', path: '/professionals/create' },
+    { id: 1, menuId: 2, title: 'Turno', path: '/' },
+    { id: 2, menuId: 4, title: 'Paciente', path: '/users/create' },
+    { id: 3, menuId: 3, title: 'Profesional', path: '/professionals/create' },
   ],
   user: {
     title: 'Mi cuenta',
