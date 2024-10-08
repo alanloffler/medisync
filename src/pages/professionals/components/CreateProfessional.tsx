@@ -549,19 +549,12 @@ export default function CreateProfessional() {
                       control={createForm.control}
                       name='configuration.unavailableTimeSlot.timeSlotUnavailableInit'
                       render={({ field }) => (
-                        <FormItem className=''>
+                        <FormItem className='space-y-1'>
                           <FormLabel>{PC_CONFIG.labels.configuration.timeSlotUnavailableInit}</FormLabel>
                           <FormControl className='h-9'>
-                            {/* prettier-ignore */}
-                            <InputMask 
-                                mask='99:99' 
-                                maskPlaceholder='--:--' 
-                                alwaysShowMask={false} 
-                                placeholder={'00:00'} 
-                                {...field} 
-                              >
-                                <Input />
-                              </InputMask>
+                            <InputMask mask='99:99' maskPlaceholder='--:--' alwaysShowMask={false} placeholder={'00:00'} {...field}>
+                              <Input />
+                            </InputMask>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -571,19 +564,12 @@ export default function CreateProfessional() {
                       control={createForm.control}
                       name='configuration.unavailableTimeSlot.timeSlotUnavailableEnd'
                       render={({ field }) => (
-                        <FormItem className=''>
+                        <FormItem className='space-y-1'>
                           <FormLabel>{PC_CONFIG.labels.configuration.timeSlotUnavailableEnd}</FormLabel>
                           <FormControl className='h-9'>
-                            {/* prettier-ignore */}
-                            <InputMask 
-                                mask='99:99' 
-                                maskPlaceholder='--:--' 
-                                alwaysShowMask={false} 
-                                placeholder={'00:00'} 
-                                {...field} 
-                              >
-                                <Input />
-                              </InputMask>
+                            <InputMask mask='99:99' maskPlaceholder='--:--' alwaysShowMask={false} placeholder={'00:00'} {...field}>
+                              <Input />
+                            </InputMask>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
