@@ -17,6 +17,7 @@ export function WorkingDays({ label, data, handleWorkingDaysValues }: IWorkingDa
   useEffect(() => {
     function handleResize(): void {
       const windowWidth: number = window.innerWidth;
+      
       if (windowWidth < 1140 && windowWidth >= 768) {
         setDays(range('ddd', 'es').map((day) => day));
       } else {
@@ -24,12 +25,13 @@ export function WorkingDays({ label, data, handleWorkingDaysValues }: IWorkingDa
       }
     }
 
+    handleResize();
+
     window.addEventListener('resize', handleResize);
 
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
