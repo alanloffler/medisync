@@ -128,7 +128,8 @@ export const PROF_UPDATE_CONFIG = {
   button: {
     back: 'Volver',
     cancel: 'Cancelar',
-    create: 'Actualizar profesional',
+    update: 'Actualizar profesional',
+    updating: 'Actualizando',
   },
   dropdownMenu: [
     { id: 1, name: 'Agregar área', path: '/' },
