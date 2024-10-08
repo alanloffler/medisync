@@ -132,7 +132,6 @@ export const professionalSchema = z.object({
             if (timeToMinutes(data) < timeToMinutes(timeInit, slotDuration)) {
               ctx.addIssue({
                 code: z.ZodIssueCode.custom,
-                //
                 message: PROF_SCHEMA.configuration.unavailableTimeSlot.timeInit.greaterThanTimeInit,
               });
             }
