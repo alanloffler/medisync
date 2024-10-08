@@ -1,5 +1,6 @@
 export interface ILinks {
   id: number;
-  title: string;
+  menuId: number;
   path: string;
+  title: string;
 }
