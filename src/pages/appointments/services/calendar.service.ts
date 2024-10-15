@@ -4,11 +4,11 @@ import { range } from '@formkit/tempo';
 
 export class CalendarService {
   private static days: number[] = Array.from({ length: 7 }, (_, index) => index);
-
+  // Used on appointments (select calendar day if it's working day)
   public static checkTodayIsWorkingDay(workingDays: IWorkingDay[], dayOfWeekSelected: number): boolean {
     return workingDays.some((day) => day.day === dayOfWeekSelected && day.value === true);
   }
-
+  // Used on appointments calendar component
   public static getDisabledDays(professionalWorkingDays: IWorkingDay[]): number[] {
     if (!professionalWorkingDays) return [];
     const professionalWorkingDaysNumbers = professionalWorkingDays.filter((day) => day.value === true).map((day) => day.day);
@@ -16,7 +16,7 @@ export class CalendarService {
 
     return professionalNotWorkingDaysNumbers;
   }
-
+  // Used on appointments professional selected
   public static getLegibleWorkingDays(daysArray: IWorkingDay[], capitalized: boolean): string {
     const stringDays: string[] = this.getStringWorkingDaysArray(daysArray, capitalized);
     if (!stringDays) return '';
@@ -49,7 +49,7 @@ export class CalendarService {
       .map((day) => daysOfWeek[day.day])
       .filter((day) => typeof day === 'string');
   }
-
+  // Used on appointments professional selected
   public static getLegibleSchedule(
     slotTimeInit: string,
     slotTimeEnd: string,
