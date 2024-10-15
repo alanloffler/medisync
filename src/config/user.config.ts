@@ -78,7 +78,7 @@ export const USER_CREATE_CONFIG = {
   buttons: {
     back: 'Volver',
     cancel: 'Cancelar',
-    create: 'Crear usuario',
+    create: 'Crear paciente',
     creating: 'Creando',
   },
   dialog: {
@@ -87,8 +87,8 @@ export const USER_CREATE_CONFIG = {
       close: 'Cerrar',
     },
   },
-  formDescription: 'Ingresá los datos para dar de alta a un nuevo usuario',
-  formTitle: 'Creación de usuario',
+  formDescription: 'Ingresá los datos para dar de alta a un nuevo paciente',
+  formTitle: 'Creación de paciente',
   labels: {
     dni: 'DNI',
     email: 'Correo electrónico',
