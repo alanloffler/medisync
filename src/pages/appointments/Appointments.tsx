@@ -112,7 +112,7 @@ export default function Appointments() {
           setAvailableSlotsToReserve(0);
         }
 
-        // Check if today is professional working day
+        // Check if today is professional's working day
         const dayOfWeekSelected: number = selectedDate.getDay();
         const workingDays: IWorkingDay[] = professionalSelected.configuration.workingDays;
         const todayIsWorkingDay: boolean = CalendarService.checkTodayIsWorkingDay(workingDays, dayOfWeekSelected);
@@ -142,26 +142,25 @@ export default function Appointments() {
           setTimeSlots(schedule.timeSlots);
           setShowTimeSlots(true);
           setLoadingAppointments(true);
-          // prettier-ignore
-          AppointmentApiService
-          .findAllByProfessional(professionalSelected._id, scheduleDate)
-          .then((response) => {
-            if (response.statusCode === 200) {
-              setAppointments(response.data);
-              schedule.insertAppointments(response.data);
 
-              const availableSlotsToReserve: number = schedule.availableSlotsToReserve(selectedDate, schedule.timeSlots, response.data.length);
-              setAvailableSlotsToReserve(availableSlotsToReserve);
-            }
+          AppointmentApiService.findAllByProfessional(professionalSelected._id, scheduleDate)
+            .then((response) => {
+              if (response.statusCode === 200) {
+                setAppointments(response.data);
+                schedule.insertAppointments(response.data);
 
-            if (response.statusCode > 399) {
-              const availableSlotsToReserve: number = schedule.availableSlotsToReserve(selectedDate, schedule.timeSlots, 0);
-              setAvailableSlotsToReserve(availableSlotsToReserve);
-            }
+                const availableSlotsToReserve: number = schedule.availableSlotsToReserve(selectedDate, schedule.timeSlots, response.data.length);
+                setAvailableSlotsToReserve(availableSlotsToReserve);
+              }
 
-            if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
-          })
-          .finally(() => setLoadingAppointments(false));
+              if (response.statusCode > 399) {
+                const availableSlotsToReserve: number = schedule.availableSlotsToReserve(selectedDate, schedule.timeSlots, 0);
+                setAvailableSlotsToReserve(availableSlotsToReserve);
+              }
+
+              if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
+            })
+            .finally(() => setLoadingAppointments(false));
         }
       }
     }
@@ -249,7 +248,7 @@ export default function Appointments() {
     setOpenDialog(false);
     setUserSelected({} as IUser);
   }
-
+  // #endregion
   function generateReservationSummary(userSelected: IUser): JSX.Element {
     return (
       <div className='space-y-2'>
@@ -279,6 +278,55 @@ export default function Appointments() {
       </div>
     );
   }
+  // #region Calendar footer
+  function selectYear(value: string): void {
+    setSelectedYear(parseInt(value));
+    setCalendarKey(crypto.randomUUID());
+  }
+
+  function selectMonth(value: string): void {
+    setSelectedMonth(parseInt(value));
+    setCalendarKey(crypto.randomUUID());
+  }
+
+  const footer: JSX.Element = (
+    <div className='flex w-full space-x-3 pt-3 text-xs'>
+      <Select
+        value={selectedYear.toString()}
+        onValueChange={selectYear}
+      >
+        <SelectTrigger className='h-7 w-1/2 border text-xs'>
+          <SelectValue placeholder={APPO_CONFIG.calendar.placeholder.year} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            {calendarYears.map((year) => (
+              <SelectItem key={year} value={year}>
+                {year}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+      <Select
+        value={selectedMonth.toString()}
+        onValueChange={selectMonth}
+      >
+        <SelectTrigger className='h-7 w-1/2 border text-xs'>
+          <SelectValue placeholder={APPO_CONFIG.calendar.placeholder.month} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            {calendarMonths.map((month, index) => (
+              <SelectItem key={month} value={index.toString()}>
+                {capitalize(month)}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    </div>
+  );
   // #endregion
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6'>
@@ -312,83 +360,35 @@ export default function Appointments() {
             )}
           </section>
           {/* Section: Calendar (Step 2) */}
-          <section className={cn('flex flex-col space-y-4', showCalendar ? 'pointer-events-auto' : 'pointer-events-none')}>
-            {professionalSelected && (
-              <>
-                <Steps text={APPO_CONFIG.steps.text2} step='2' />
-                <Calendar
-                  key={calendarKey}
-                  onMonthChange={(month) => {
-                    setSelectedMonth(month.getMonth());
-                    setSelectedYear(month.getFullYear());
-                  }}
-                  defaultMonth={new Date(selectedYear, selectedMonth)}
-                  fromYear={Number(calendarYears[0])}
-                  toYear={Number(calendarYears[calendarYears.length - 1])}
-                  className='h-fit w-fit flex-row rounded-lg bg-card text-card-foreground shadow-sm'
-                  disabled={[
-                    new Date(2024, 8, 17),
-                    new Date(2024, 8, 18),
-                    { dayOfWeek: disabledDays },
-                    // { before: new Date() }, // This is to disable past days
-                    { from: new Date(2024, 5, 5) },
-                  ]}
-                  locale={APPO_CONFIG.calendar.language === 'es' ? es : enUS}
-                  mode='single'
-                  selected={date}
-                  showOutsideDays={false}
-                  onDayClick={(event) => setSelectedDate(event)}
-                  footer={
-                    // TODO: onValueChange select the date, by year and month
-                    // and set the date to calendar -> setSelectedDate()
-                    // WIP: onValueChange must be refactored in a function and re-render the schedule
-                    <div className='flex w-full space-x-3 pt-3 text-xs'>
-                      <Select
-                        value={selectedYear.toString()}
-                        onValueChange={(value) => {
-                          setSelectedYear(Number(value));
-                          setCalendarKey(crypto.randomUUID());
-                        }}
-                      >
-                        <SelectTrigger className='h-7 w-1/2 border text-xs'>
-                          <SelectValue placeholder={APPO_CONFIG.calendar.placeholder.year} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            {calendarYears.map((year) => (
-                              <SelectItem key={year} value={year}>
-                                {year}
-                              </SelectItem>
-                            ))}
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                      <Select
-                        value={selectedMonth.toString()}
-                        onValueChange={(value) => {
-                          setSelectedMonth(Number(value));
-                          setCalendarKey(crypto.randomUUID());
-                        }}
-                      >
-                        <SelectTrigger className='h-7 w-1/2 border text-xs'>
-                          <SelectValue placeholder={APPO_CONFIG.calendar.placeholder.month} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            {calendarMonths.map((month, index) => (
-                              <SelectItem key={month} value={index.toString()}>
-                                {capitalize(month)}
-                              </SelectItem>
-                            ))}
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  }
-                />
-              </>
-            )}
-          </section>
+          {professionalSelected && (
+            <section className={cn('flex flex-col space-y-4', showCalendar ? 'pointer-events-auto' : 'pointer-events-none')}>
+              <Steps text={APPO_CONFIG.steps.text2} step='2' />
+              <Calendar
+                className='h-fit w-fit flex-row rounded-lg bg-card text-card-foreground shadow-sm'
+                defaultMonth={new Date(selectedYear, selectedMonth)}
+                disabled={[
+                  new Date(2024, 8, 17),
+                  new Date(2024, 8, 18),
+                  { dayOfWeek: disabledDays },
+                  // { before: new Date() }, // This is to disable past days
+                  { from: new Date(2024, 5, 5) },
+                ]}
+                fromYear={Number(calendarYears[0])}
+                key={calendarKey}
+                locale={APPO_CONFIG.calendar.language === 'es' ? es : enUS}
+                mode='single'
+                onDayClick={(event) => setSelectedDate(event)}
+                onMonthChange={(month) => {
+                  setSelectedMonth(month.getMonth());
+                  setSelectedYear(month.getFullYear());
+                }}
+                selected={date}
+                showOutsideDays={false}
+                toYear={Number(calendarYears[calendarYears.length - 1])}
+                footer={footer}
+              />
+            </section>
+          )}
         </section>
         {/* Section: Right side */}
         <section className='flex flex-col gap-4 md:w-2/3 lg:w-2/3'>
@@ -403,7 +403,7 @@ export default function Appointments() {
                   <Card className='w-full'>
                     <CardHeader>
                       <CardTitle className='px-3 text-base'>
-                        <div className='flex flex-row justify-between'>
+                        <section className='flex flex-row justify-between'>
                           <div className='flex flex-row items-center gap-2'>
                             <CalendarDays className='h-4 w-4' />
                             <span>{APPO_CONFIG.table.title}</span>
@@ -411,11 +411,11 @@ export default function Appointments() {
                           {professionalSelected?._id && (
                             <h1>{`${capitalize(professionalSelected?.title.abbreviation)} ${capitalize(professionalSelected?.lastName)}, ${capitalize(professionalSelected?.firstName)}`}</h1>
                           )}
-                        </div>
+                        </section>
                       </CardTitle>
-                      {!errorMessage && <div className='py-2 text-center text-base font-semibold text-primary'>{selectedLegibleDate}</div>}
+                      {!errorMessage && <section className='py-2 text-center text-base font-semibold text-primary'>{selectedLegibleDate}</section>}
                       {showTimeSlots && (
-                        <div className='flex justify-start space-x-3 px-3 pb-2 text-sm font-normal'>
+                        <section className='flex justify-start space-x-3 px-3 pb-2 text-sm font-normal'>
                           <div className='flex flex-row items-center space-x-1.5'>
                             <div className='h-2.5 w-2.5 rounded-full border border-emerald-400 bg-emerald-300'></div>
                             <span>{`${availableSlotsToReserve} ${availableSlotsToReserve === 1 ? APPO_CONFIG.phrases.availableAppointmentSingular : APPO_CONFIG.phrases.availableAppointmentPlural}`}</span>
@@ -424,14 +424,14 @@ export default function Appointments() {
                             <div className='h-2.5 w-2.5 rounded-full border border-sky-400 bg-sky-300'></div>
                             <span>{`${appointments.length} ${appointments.length === 1 ? APPO_CONFIG.phrases.alreadyReservedSingular : APPO_CONFIG.phrases.alreadyReservedPlural}`}</span>
                           </div>
-                        </div>
+                        </section>
                       )}
                     </CardHeader>
                     {errorMessage && (
-                      <div className='flex items-center justify-center space-x-2 px-4 py-0 text-rose-500'>
+                      <section className='flex items-center justify-center space-x-2 px-4 py-0 text-rose-500'>
                         <FileWarning className='h-5 w-5' strokeWidth={2} />
                         <span className='text-center font-medium'>{errorMessage}</span>
-                      </div>
+                      </section>
                     )}
                     {showTimeSlots && (
                       <CardContent>
@@ -532,12 +532,12 @@ export default function Appointments() {
           <DialogHeader>
             <DialogTitle className='text-xl'>{dialogContent.title}</DialogTitle>
             <DialogDescription>{dialogContent.description}</DialogDescription>
-            <div className='pt-4'>
+            <section className='pt-4'>
               {dialogContent.action === 'reserve' && !userSelected._id && dialogContent.content}
               {dialogContent.action === 'reserve' && userSelected._id && generateReservationSummary(userSelected)}
               {dialogContent.action === 'cancel' && dialogContent.content}
-            </div>
-            <div className='flex justify-end gap-6 pt-4'>
+            </section>
+            <footer className='flex justify-end gap-6 pt-4'>
               <Button variant={'secondary'} size={'default'} onClick={() => handleResetDialog()}>
                 {APPO_CONFIG.buttons.cancelAppointment}
               </Button>
@@ -551,7 +551,7 @@ export default function Appointments() {
                   {APPO_CONFIG.dialog.cancel.buttons.save}
                 </Button>
               )}
-            </div>
+            </footer>
           </DialogHeader>
         </DialogContent>
       </Dialog>
