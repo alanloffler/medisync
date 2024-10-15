@@ -33,6 +33,11 @@ import { cn } from '@/lib/utils';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useCapitalizeFirstLetter } from '@/core/hooks/useCapitalizeFirstLetter';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
+// Enum
+enum DialogAction {
+  CANCEL = 'cancel',
+  RESERVE = 'reserve',
+}
 // React component
 export default function Appointments() {
   const [appointments, setAppointments] = useState<IAppointment[]>([] as IAppointment[]);
@@ -201,13 +206,13 @@ export default function Appointments() {
   }
   // #endregion
   // #region Dialog
-  function handleDialog(action: 'reserve' | 'cancel', slot: ITimeSlot): void {
+  function handleDialog(action: DialogAction, slot: ITimeSlot): void {
     setOpenDialog(true);
     setSelectedSlot(slot);
 
-    if (action === 'reserve') {
+    if (action === DialogAction.RESERVE) {
       const reserveDialogContent: IDialog = {
-        action: 'reserve',
+        action: DialogAction.RESERVE,
         content: <UsersCombo searchBy='dni' searchResult={(e) => setUserSelected(e)} placeholder={APPO_CONFIG.dialog.userCombobox.placeholder} />,
         description: APPO_CONFIG.dialog.reserve.description,
         title: APPO_CONFIG.dialog.reserve.title,
@@ -216,11 +221,11 @@ export default function Appointments() {
       setDialogContent(reserveDialogContent);
     }
 
-    if (action === 'cancel') {
+    if (action === DialogAction.CANCEL) {
       setUserSelected({} as IUser);
 
       const cancelDialogContent: IDialog = {
-        action: 'cancel',
+        action: DialogAction.CANCEL,
         content: (
           <div className='space-y-2'>
             <div>
@@ -433,7 +438,7 @@ export default function Appointments() {
                                       {/* Time slot reserve button */}
                                       {!slot.appointment?.user && AppoSchedule.isDatetimeInFuture(date, slot.begin) && (
                                         <Button
-                                          onClick={() => handleDialog('reserve', slot)}
+                                          onClick={() => handleDialog(DialogAction.RESERVE, slot)}
                                           variant='default'
                                           size='xs'
                                           className='border border-emerald-300/50 bg-emerald-200 px-2 py-1 text-xs text-emerald-700 shadow-none hover:bg-emerald-300'
@@ -455,7 +460,7 @@ export default function Appointments() {
                                       {/* Time slot cancel button */}
                                       {slot.appointment?.user && AppoSchedule.isDatetimeInFuture(date, slot.begin) && (
                                         <Button
-                                          onClick={() => handleDialog('cancel', slot)}
+                                          onClick={() => handleDialog(DialogAction.CANCEL, slot)}
                                           variant='table'
                                           size='xs'
                                           className='border border-rose-300/50 bg-rose-200 px-2 py-1 text-xs text-rose-700 shadow-none hover:bg-rose-300'
@@ -501,20 +506,20 @@ export default function Appointments() {
             <DialogTitle className='text-xl'>{dialogContent.title}</DialogTitle>
             <DialogDescription>{dialogContent.description}</DialogDescription>
             <section className='pt-4'>
-              {dialogContent.action === 'reserve' && !userSelected._id && dialogContent.content}
-              {dialogContent.action === 'reserve' && userSelected._id && generateReservationSummary(userSelected)}
-              {dialogContent.action === 'cancel' && dialogContent.content}
+              {dialogContent.action === DialogAction.RESERVE && !userSelected._id && dialogContent.content}
+              {dialogContent.action === DialogAction.RESERVE && userSelected._id && generateReservationSummary(userSelected)}
+              {dialogContent.action === DialogAction.CANCEL && dialogContent.content}
             </section>
             <footer className='flex justify-end gap-6 pt-4'>
               <Button variant={'secondary'} size={'default'} onClick={() => handleResetDialog()}>
                 {APPO_CONFIG.buttons.cancelAppointment}
               </Button>
-              {dialogContent.action === 'reserve' && (
+              {dialogContent.action === DialogAction.RESERVE && (
                 <Button variant={'default'} size={'default'} onClick={() => handleReserveAppointment(selectedSlot)}>
                   {APPO_CONFIG.dialog.reserve.buttons.save}
                 </Button>
               )}
-              {dialogContent.action === 'cancel' && (
+              {dialogContent.action === DialogAction.CANCEL && (
                 <Button variant={'default'} size={'default'} onClick={() => handleCancelAppointment(selectedSlot)}>
                   {APPO_CONFIG.dialog.cancel.buttons.save}
                 </Button>
