@@ -6,7 +6,7 @@ import type { ICalendarFooter } from '@/pages/appointments/interfaces/calendar.i
 import { APPO_CONFIG } from '@/config/appointment.config';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 // React component
-export default function CalendarFooter({ calendarMonths, calendarYears, selectedMonth, selectedYear, selectMonth, selectYear }: ICalendarFooter) {
+export function CalendarFooter({ calendarMonths, calendarYears, selectedMonth, selectedYear, selectMonth, selectYear }: ICalendarFooter) {
   const capitalize = useCapitalize();
 
   return (
