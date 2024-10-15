@@ -5,7 +5,6 @@ import { Button } from '@/core/components/ui/button';
 import { Calendar } from '@/core/components/ui/calendar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/core/components/ui/dialog';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/core/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/core/components/ui/table';
 // App components
 import { InfoCard } from '@/core/components/common/InfoCard';
@@ -32,6 +31,7 @@ import { format } from '@formkit/tempo';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useCapitalizeFirstLetter } from '@/core/hooks/useCapitalizeFirstLetter';
 import { useEffect, useState } from 'react';
+import CalendarFooter from './components/CalendarFooter';
 // React component
 export default function Appointments() {
   const [appointments, setAppointments] = useState<IAppointment[]>([] as IAppointment[]);
@@ -288,45 +288,6 @@ export default function Appointments() {
     setSelectedMonth(parseInt(value));
     setCalendarKey(crypto.randomUUID());
   }
-
-  const footer: JSX.Element = (
-    <div className='flex w-full space-x-3 pt-3 text-xs'>
-      <Select
-        value={selectedYear.toString()}
-        onValueChange={selectYear}
-      >
-        <SelectTrigger className='h-7 w-1/2 border text-xs'>
-          <SelectValue placeholder={APPO_CONFIG.calendar.placeholder.year} />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            {calendarYears.map((year) => (
-              <SelectItem key={year} value={year}>
-                {year}
-              </SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-      <Select
-        value={selectedMonth.toString()}
-        onValueChange={selectMonth}
-      >
-        <SelectTrigger className='h-7 w-1/2 border text-xs'>
-          <SelectValue placeholder={APPO_CONFIG.calendar.placeholder.month} />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            {calendarMonths.map((month, index) => (
-              <SelectItem key={month} value={index.toString()}>
-                {capitalize(month)}
-              </SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-    </div>
-  );
   // #endregion
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6'>
@@ -385,7 +346,16 @@ export default function Appointments() {
                 selected={date}
                 showOutsideDays={false}
                 toYear={Number(calendarYears[calendarYears.length - 1])}
-                footer={footer}
+                footer={
+                  <CalendarFooter
+                    calendarMonths={calendarMonths}
+                    calendarYears={calendarYears}
+                    selectedMonth={selectedMonth}
+                    selectedYear={selectedYear}
+                    selectMonth={selectMonth}
+                    selectYear={selectYear}
+                  />
+                }
               />
             </section>
           )}
