@@ -39,7 +39,7 @@ export function ActionsButton({ links }: { links: ILinks[] }) {
           className='flex h-8 w-fit items-center space-x-2 rounded-l-md bg-primary/75 px-3 py-1'
         >
           <Plus ref={plusScope} size={16} strokeWidth={2} />
-          <span>{links[0].title}</span>
+          <span>{links.find((link) => link.default)?.title || links[0].title}</span>
         </button>
         <DropdownMenuTrigger
           onClick={() => setOpen(true)}
@@ -52,18 +52,20 @@ export function ActionsButton({ links }: { links: ILinks[] }) {
         </DropdownMenuTrigger>
       </section>
       <DropdownMenuContent align='end' onCloseAutoFocus={(e) => e.preventDefault()} className='w-fit p-0 text-sm font-medium text-white'>
-        {links.map((link, index) => (
-          <section key={crypto.randomUUID()}>
-            <button
-              className='flex w-full items-center space-x-2 rounded-none bg-primary/75 px-2 py-1 hover:bg-primary'
-              onClick={() => handleClick(link)}
-            >
-              <Plus strokeWidth={2} className='h-4 w-4' />
-              <span>{link.title}</span>
-            </button>
-            {index < links.length - 1 && <Separator className='bg-primary/50' />}
-          </section>
-        ))}
+        {links
+          .filter((item, index, array) => (array.some((i) => i.default) ? !item.default : index !== 0))
+          .map((link, index) => (
+            <section key={crypto.randomUUID()}>
+              <button
+                className='flex w-full items-center space-x-2 rounded-none bg-primary/75 px-2 py-1 hover:bg-primary'
+                onClick={() => handleClick(link)}
+              >
+                <Plus strokeWidth={2} className='h-4 w-4' />
+                <span>{link.title}</span>
+              </button>
+              {index < links.length - 1 && <Separator className='bg-primary/50' />}
+            </section>
+          ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );
