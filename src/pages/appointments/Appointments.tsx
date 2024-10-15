@@ -1,41 +1,43 @@
 // Icons: https://lucide.dev/icons
 import { BriefcaseMedical, CalendarCheck, CalendarClock, CalendarDays, ClipboardCheck, Clock, FileWarning } from 'lucide-react';
-// Components: https://ui.shadcn.com/docs/components
+// External Components: https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
 import { Calendar } from '@/core/components/ui/calendar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/core/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/core/components/ui/table';
-// App components
+// Components
+import { CalendarFooter } from '@/pages/appointments/components/CalendarFooter';
 import { InfoCard } from '@/core/components/common/InfoCard';
 import { LoadingDB } from '@/core/components/common/LoadingDB';
 import { ProfessionalsCombobox } from '@/pages/professionals/components/common/ProfessionalsCombobox';
 import { Steps } from '@/core/components/common/Steps';
 import { UsersCombo } from '@/pages/users/components/UsersCombo';
-// App
+// External imports
+import { es, enUS } from 'date-fns/locale';
+import { format } from '@formkit/tempo';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+// Imports
+import type { IAppointment, ITimeSlot } from '@/pages/appointments/interfaces/appointment.interface';
+import type { IDialog } from '@/core/interfaces/dialog.interface';
+import type { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
+import type { IUser } from '@/pages/users/interfaces/user.interface';
+import type { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
 import { APPO_CONFIG } from '@/config/appointment.config';
 import { APP_CONFIG } from '@/config/app.config';
 import { AppoSchedule } from '@/pages/appointments/services/schedule.service';
 import { AppointmentApiService } from '@/pages/appointments/services/appointment.service';
 import { CalendarService } from '@/pages/appointments/services/calendar.service';
-import { IAppointment, ITimeSlot } from '@/pages/appointments/interfaces/appointment.interface';
-import { IDialog } from '@/core/interfaces/dialog.interface';
-import { INotification, useNotificationsStore } from '@/core/stores/notifications.store';
-import { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
-import { IUser } from '@/pages/users/interfaces/user.interface';
-import { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
-import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { es, enUS } from 'date-fns/locale';
-import { format } from '@formkit/tempo';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useCapitalizeFirstLetter } from '@/core/hooks/useCapitalizeFirstLetter';
-import { useEffect, useState } from 'react';
-import CalendarFooter from './components/CalendarFooter';
+import { useNotificationsStore } from '@/core/stores/notifications.store';
 // React component
 export default function Appointments() {
   const [appointments, setAppointments] = useState<IAppointment[]>([] as IAppointment[]);
   const [availableSlotsToReserve, setAvailableSlotsToReserve] = useState<number | string>(0);
+  const [calendarKey, setCalendarKey] = useState<string>('');
   const [calendarMonths, setCalendarMonths] = useState<string[]>([]);
   const [calendarYears, setCalendarYears] = useState<string[]>([]);
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -50,22 +52,18 @@ export default function Appointments() {
   const [refreshAppos, setRefreshAppos] = useState<string>('');
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedLegibleDate, setSelectedLegibleDate] = useState<string>('');
+  const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth());
   const [selectedSlot, setSelectedSlot] = useState<ITimeSlot>({} as ITimeSlot);
+  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [showTimeSlots, setShowTimeSlots] = useState<boolean>(false);
   const [timeSlots, setTimeSlots] = useState<ITimeSlot[]>([] as ITimeSlot[]);
   const [todayIsWorkingDay, setTodayIsWorkingDay] = useState<boolean>(false);
   const [userSelected, setUserSelected] = useState<IUser>({} as IUser);
-  const addNotification: (notification: INotification) => void = useNotificationsStore((state) => state.addNotification);
-  const capitalize: (sentence: string | undefined) => string | undefined = useCapitalize();
-  const capitalizeFirstLetter: (sentence: string | undefined) => string | undefined = useCapitalizeFirstLetter();
-  const navigate: NavigateFunction = useNavigate();
-
-  // WIP: working, see comments on calendar
-  const [calendarKey, setCalendarKey] = useState<string>('');
-  const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth());
-  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
-
+  const addNotification = useNotificationsStore((state) => state.addNotification);
+  const capitalize = useCapitalize();
+  const capitalizeFirstLetter = useCapitalizeFirstLetter();
+  const navigate = useNavigate();
   // #region professionalSelected actions
   useEffect(() => {
     if (professionalSelected) {
