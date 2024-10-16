@@ -1,5 +1,18 @@
 // Icons: https://lucide.dev/icons
-import { BriefcaseMedical, CalendarCheck, CalendarClock, CalendarDays, ClipboardCheck, Clock, FileWarning } from 'lucide-react';
+import {
+  BriefcaseMedical,
+  CalendarCheck,
+  CalendarClock,
+  CalendarDays,
+  ClipboardCheck,
+  Clock,
+  Clock1,
+  Clock12,
+  Clock9,
+  Clock10,
+  Clock11,
+  FileWarning,
+} from 'lucide-react';
 // External Components: https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
 import { Calendar } from '@/core/components/ui/calendar';
@@ -414,7 +427,7 @@ export default function Appointments() {
                           <TableHeader className='bg-slate-200/80'>
                             <TableRow>
                               <TableHead className='h-0 w-[60px] py-1 text-center font-semibold'>{APPO_CONFIG.table.headers[0]}</TableHead>
-                              <TableHead className='h-0 w-[80px] px-2 py-1 text-center font-semibold'>{APPO_CONFIG.table.headers[1]}</TableHead>
+                              <TableHead className='h-0 w-[100px] px-2 py-1 text-center font-semibold'>{APPO_CONFIG.table.headers[1]}</TableHead>
                               <TableHead className='h-0 px-2 py-1 text-center font-semibold'>{APPO_CONFIG.table.headers[2]}</TableHead>
                               <TableHead className='h-0 px-2 py-1 text-left font-semibold'>{APPO_CONFIG.table.headers[3]}</TableHead>
                               <TableHead className='h-0 w-[100px] py-1 text-center font-semibold'>{APPO_CONFIG.table.headers[4]}</TableHead>
@@ -431,8 +444,15 @@ export default function Appointments() {
                                     <TableCell className='bg-slate-100 p-1.5 text-center text-sm font-normal'>
                                       {APPO_CONFIG.words.shiftPrefix + slot.id}
                                     </TableCell>
-                                    <TableCell className='p-1.5 text-center text-sm font-normal'>
-                                      {slot.begin} {APPO_CONFIG.words.hours}
+                                    {/* TODO: put content on center for row, specially schedule hour */}
+                                    <TableCell className='flex items-center align-middle space-x-1 text-center text-sm font-normal'>
+                                      {/* TODO: make a component for this */}
+                                      {parseInt(slot.begin.split(':')[0]) === 9 && <Clock9 size={20} strokeWidth={1.5} />}
+                                      {parseInt(slot.begin.split(':')[0]) === 10 && <Clock10 size={20} strokeWidth={1.5} />}
+                                      {parseInt(slot.begin.split(':')[0]) === 11 && <Clock11 size={20} strokeWidth={1.5} />}
+                                      {parseInt(slot.begin.split(':')[0]) === 12 && <Clock12 size={20} strokeWidth={1.5} />}
+                                      {parseInt(slot.begin.split(':')[0]) === 13 && <Clock1 size={20} strokeWidth={1.5} />}
+                                      <span>{slot.begin}</span>
                                     </TableCell>
                                     {slot.appointment?.user ? (
                                       <>
@@ -448,7 +468,7 @@ export default function Appointments() {
                                         <TableCell className='p-1.5 font-normal'></TableCell>
                                       </>
                                     )}
-                                    <TableCell className='flex items-center justify-end space-x-4 p-1.5'>
+                                    <TableCell className='flex items-center justify-end space-x-4'>
                                       {/* Time slot reserve button */}
                                       {!slot.appointment?.user && AppoSchedule.isDatetimeInFuture(date, slot.begin) && (
                                         <Button
