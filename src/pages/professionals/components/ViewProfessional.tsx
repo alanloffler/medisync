@@ -157,13 +157,13 @@ export default function ViewProfessional() {
                   </div>
                 )}
                 {professional.configuration?.scheduleTimeInit &&
-                  professional.configuration?.timeSlotUnavailableInit &&
-                  professional.configuration?.timeSlotUnavailableEnd &&
+                  professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableInit &&
+                  professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableEnd &&
                   professional.configuration?.scheduleTimeEnd && (
                     <div className='flex items-center space-x-4'>
                       <CalendarClock className='h-6 w-6' strokeWidth={2} />
                       <span className='text-base font-medium'>
-                        {`${professional.configuration.scheduleTimeInit} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.timeSlotUnavailableInit} ${PV_CONFIG.words.slotsSeparator} ${professional.configuration.timeSlotUnavailableEnd} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.scheduleTimeEnd}`}
+                        {`${professional.configuration.scheduleTimeInit} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.unavailableTimeSlot?.timeSlotUnavailableInit} ${PV_CONFIG.words.slotsSeparator} ${professional.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.scheduleTimeEnd}`}
                       </span>
                     </div>
                   )}
