@@ -149,8 +149,14 @@ export default function UpdateProfessional() {
       updateForm.setValue('configuration.scheduleTimeEnd', professional.configuration?.scheduleTimeEnd);
       updateForm.setValue('configuration.scheduleTimeInit', professional.configuration?.scheduleTimeInit);
       updateForm.setValue('configuration.slotDuration', professional.configuration?.slotDuration);
-      updateForm.setValue('configuration.unavailableTimeSlot.timeSlotUnavailableEnd', professional.configuration?.timeSlotUnavailableEnd || '');
-      updateForm.setValue('configuration.unavailableTimeSlot.timeSlotUnavailableInit', professional.configuration?.timeSlotUnavailableInit || '');
+      updateForm.setValue(
+        'configuration.unavailableTimeSlot.timeSlotUnavailableEnd',
+        professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableEnd || '',
+      );
+      updateForm.setValue(
+        'configuration.unavailableTimeSlot.timeSlotUnavailableInit',
+        professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableInit || '',
+      );
       updateForm.setValue('configuration.workingDays', professional.configuration?.workingDays);
       updateForm.setValue('description', professional.description);
       updateForm.setValue('dni', professional.dni);
