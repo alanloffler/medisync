@@ -81,8 +81,8 @@ export default function Appointments() {
       const legibleSchedule: string = CalendarService.getLegibleSchedule(
         professionalSelected.configuration.scheduleTimeInit,
         professionalSelected.configuration.scheduleTimeEnd,
-        professionalSelected.configuration.timeSlotUnavailableInit || undefined,
-        professionalSelected.configuration.timeSlotUnavailableEnd || undefined,
+        professionalSelected.configuration.unavailableTimeSlot?.timeSlotUnavailableInit || undefined,
+        professionalSelected.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd || undefined,
       );
       setLegibleSchedule(legibleSchedule);
     }
@@ -135,8 +135,8 @@ export default function Appointments() {
             Number(professionalSelected.configuration.slotDuration),
             [
               {
-                begin: new Date(`${scheduleDate}T${professionalSelected.configuration.timeSlotUnavailableInit}`),
-                end: new Date(`${scheduleDate}T${professionalSelected.configuration.timeSlotUnavailableEnd}`),
+                begin: new Date(`${scheduleDate}T${professionalSelected.configuration.unavailableTimeSlot?.timeSlotUnavailableInit}`),
+                end: new Date(`${scheduleDate}T${professionalSelected.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd}`),
               },
             ],
           );
