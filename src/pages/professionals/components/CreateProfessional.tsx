@@ -142,8 +142,10 @@ export default function CreateProfessional() {
       ...formData,
       configuration: {
         ...configData,
-        timeSlotUnavailableEnd: unavailableTimeSlot?.timeSlotUnavailableEnd === '' ? null : unavailableTimeSlot?.timeSlotUnavailableEnd,
-        timeSlotUnavailableInit: unavailableTimeSlot?.timeSlotUnavailableInit === '' ? null : unavailableTimeSlot?.timeSlotUnavailableInit,
+        unavailableTimeSlot: {
+          timeSlotUnavailableEnd: unavailableTimeSlot?.timeSlotUnavailableEnd === '' ? undefined : unavailableTimeSlot?.timeSlotUnavailableEnd,
+          timeSlotUnavailableInit: unavailableTimeSlot?.timeSlotUnavailableInit === '' ? undefined : unavailableTimeSlot?.timeSlotUnavailableInit,
+        },
       },
     };
 
