@@ -30,19 +30,15 @@ export interface IProfessional {
   phone: number;
   specialization: ISpecialization;
   title: ITitle;
-  unavailableObject: TMP;
-}
-// TODO: this implementation will be used only for the professional creation (validation schema)
-interface TMP {
-  timeSlotUnavailableInit?: string;
-  timeSlotUnavailableEnd?: string;
 }
 
 interface IProfessionalConfiguration {
   scheduleTimeEnd: string;
   scheduleTimeInit: string;
   slotDuration: number | string;
-  timeSlotUnavailableEnd?: string | null;
-  timeSlotUnavailableInit?: string | null;
+  unavailableTimeSlot?: {
+    timeSlotUnavailableInit?: string;
+    timeSlotUnavailableEnd?: string;
+  };
   workingDays: IWorkingDay[];
 }
