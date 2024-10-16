@@ -472,7 +472,7 @@ export default function Appointments() {
                                   </>
                                 </TableRow>
                               ) : (
-                                <TableRow className='bg-slate-100/60 text-slate-400'>
+                                <TableRow key={crypto.randomUUID()} className='bg-slate-100/60 text-slate-400'>
                                   <TableCell colSpan={4} className='p-1.5 text-center'>
                                     {slot.available
                                       ? slot.begin
