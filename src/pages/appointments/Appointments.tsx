@@ -32,6 +32,7 @@ import { CalendarService } from '@/pages/appointments/services/calendar.service'
 import { cn } from '@/lib/utils';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useCapitalizeFirstLetter } from '@/core/hooks/useCapitalizeFirstLetter';
+import { useDelimiter } from '@/core/hooks/useDelimiter';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 // Enum
 enum DialogAction {
@@ -68,6 +69,7 @@ export default function Appointments() {
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const capitalizeFirstLetter = useCapitalizeFirstLetter();
+  const delimiter = useDelimiter();
   const navigate = useNavigate();
   // #region professionalSelected actions
   useEffect(() => {
@@ -409,12 +411,13 @@ export default function Appointments() {
                     {showTimeSlots && (
                       <CardContent>
                         <Table>
-                          <TableHeader className='bg-slate-100'>
+                          <TableHeader className='bg-slate-200/80'>
                             <TableRow>
                               <TableHead className='h-0 w-[60px] py-1 text-center font-semibold'>{APPO_CONFIG.table.headers[0]}</TableHead>
-                              <TableHead className='h-0 w-[100px] px-2 py-1 text-left font-semibold'>{APPO_CONFIG.table.headers[1]}</TableHead>
-                              <TableHead className='h-0 py-1 text-left font-semibold'>{APPO_CONFIG.table.headers[2]}</TableHead>
-                              <TableHead className='h-0 w-[140px] px-2 py-1 text-center font-semibold'>{APPO_CONFIG.table.headers[3]}</TableHead>
+                              <TableHead className='h-0 w-[80px] px-2 py-1 text-center font-semibold'>{APPO_CONFIG.table.headers[1]}</TableHead>
+                              <TableHead className='h-0 px-2 py-1 text-center font-semibold'>{APPO_CONFIG.table.headers[2]}</TableHead>
+                              <TableHead className='h-0 px-2 py-1 text-left font-semibold'>{APPO_CONFIG.table.headers[3]}</TableHead>
+                              <TableHead className='h-0 w-[100px] py-1 text-center font-semibold'>{APPO_CONFIG.table.headers[4]}</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
@@ -422,17 +425,28 @@ export default function Appointments() {
                               slot.available ? (
                                 <TableRow
                                   key={crypto.randomUUID()}
-                                  className={`text-base ${slot.available ? 'text-foreground' : 'bg-slate-100 text-slate-400'} ${index === timeSlots.length - 1 ? 'border-none' : 'border-b'}`}
+                                  className={`text-sm ${slot.available ? 'text-foreground' : 'bg-slate-100 text-slate-400'} ${index === timeSlots.length - 1 ? 'border-none' : 'border-b'}`}
                                 >
                                   <>
-                                    <TableCell className='p-1.5 text-center text-sm font-normal'>{APPO_CONFIG.words.shiftPrefix + slot.id}</TableCell>
-                                    <TableCell className='p-1.5 text-left text-sm font-normal'>
+                                    <TableCell className='bg-slate-100 p-1.5 text-center text-sm font-normal'>
+                                      {APPO_CONFIG.words.shiftPrefix + slot.id}
+                                    </TableCell>
+                                    <TableCell className='p-1.5 text-center text-sm font-normal'>
                                       {slot.begin} {APPO_CONFIG.words.hours}
                                     </TableCell>
                                     {slot.appointment?.user ? (
-                                      <TableCell className='p-1.5 text-base font-normal'>{`${capitalize(slot.appointment.user.lastName)}, ${capitalize(slot.appointment.user.firstName)}`}</TableCell>
+                                      <>
+                                        <TableCell className='p-1.5'>
+                                          <span className='font-medium'>{`${capitalize(slot.appointment.user.lastName)}, ${capitalize(slot.appointment.user.firstName)}`}</span>
+                                          <span></span>
+                                        </TableCell>
+                                        <TableCell className='p-1.5'>{delimiter(slot.appointment.user.dni, '.', 3)}</TableCell>
+                                      </>
                                     ) : (
-                                      <TableCell className='p-1.5 text-base font-normal'></TableCell>
+                                      <>
+                                        <TableCell className='p-1.5 font-normal'></TableCell>
+                                        <TableCell className='p-1.5 font-normal'></TableCell>
+                                      </>
                                     )}
                                     <TableCell className='flex items-center justify-end space-x-4 p-1.5'>
                                       {/* Time slot reserve button */}
@@ -472,12 +486,12 @@ export default function Appointments() {
                                   </>
                                 </TableRow>
                               ) : (
-                                <TableRow key={crypto.randomUUID()} className='bg-slate-100/60 text-slate-400'>
-                                  <TableCell colSpan={4} className='p-1.5 text-center'>
+                                <TableRow key={crypto.randomUUID()} className=' '>
+                                  <TableCell className='bg-slate-100 p-1.5 text-center'>-</TableCell>
+                                  <TableCell colSpan={4} className='bg-slate-100/60 p-1.5 text-center text-sm text-slate-400'>
                                     {slot.available
                                       ? slot.begin
-                                      : `${APPO_CONFIG.phrases.notAvailable} ${APPO_CONFIG.words.from} ${slot.begin} ${APPO_CONFIG.words.to} ${slot.end}`}
-                                    {APPO_CONFIG.words.hours}
+                                      : `${APPO_CONFIG.phrases.notAvailable} ${APPO_CONFIG.words.from} ${slot.begin} ${APPO_CONFIG.words.to} ${slot.end} ${APPO_CONFIG.words.hours}`}
                                   </TableCell>
                                 </TableRow>
                               ),
