@@ -64,7 +64,7 @@ export const APPO_CONFIG = {
     text3: 'Seleccionar turno',
   },
   table: {
-    headers: ['Turno', 'Horario', 'Nombre del paciente', 'Acciones'],
+    headers: ['Turno', 'Horario', 'Nombre del paciente', 'DNI', 'Acciones'],
     title: 'Turnos diarios',
   },
   warning: {
