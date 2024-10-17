@@ -95,6 +95,9 @@ export const VIEW_APPOINTMENT_CONFIG = {
     body: 'Este es el mensaje de tu turno',
     subject: 'Tu turno para',
   },
+  loading: {
+    appointmentDetails: 'Cargando detalles del turno',
+  },
   title: 'Detalle de turno',
   words: {
     hoursAbbreviation: 'hs.',
