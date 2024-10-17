@@ -1,18 +1,5 @@
 // Icons: https://lucide.dev/icons
-import {
-  BriefcaseMedical,
-  CalendarCheck,
-  CalendarClock,
-  CalendarDays,
-  ClipboardCheck,
-  Clock,
-  Clock1,
-  Clock12,
-  Clock9,
-  Clock10,
-  Clock11,
-  FileWarning,
-} from 'lucide-react';
+import { BriefcaseMedical, CalendarCheck, CalendarClock, CalendarDays, ClipboardCheck, Clock, FileWarning } from 'lucide-react';
 // External Components: https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
 import { Calendar } from '@/core/components/ui/calendar';
@@ -438,34 +425,27 @@ export default function Appointments() {
                               slot.available ? (
                                 <TableRow
                                   key={crypto.randomUUID()}
-                                  className={`text-sm ${slot.available ? 'text-foreground' : 'bg-slate-100 text-slate-400'} ${index === timeSlots.length - 1 ? 'border-none' : 'border-b'}`}
+                                  className={`text-sm [&>td]:p-1.5 ${slot.available ? 'text-foreground' : 'bg-slate-100 text-slate-400'} ${index === timeSlots.length - 1 ? 'border-none' : 'border-b'}`}
                                 >
                                   <>
                                     <TableCell className='bg-slate-100 p-1.5 text-center text-sm font-normal'>
                                       {APPO_CONFIG.words.shiftPrefix + slot.id}
                                     </TableCell>
-                                    {/* TODO: put content on center for row, specially schedule hour */}
-                                    <TableCell className='flex items-center align-middle space-x-1 text-center text-sm font-normal'>
-                                      {/* TODO: make a component for this */}
-                                      {parseInt(slot.begin.split(':')[0]) === 9 && <Clock9 size={20} strokeWidth={1.5} />}
-                                      {parseInt(slot.begin.split(':')[0]) === 10 && <Clock10 size={20} strokeWidth={1.5} />}
-                                      {parseInt(slot.begin.split(':')[0]) === 11 && <Clock11 size={20} strokeWidth={1.5} />}
-                                      {parseInt(slot.begin.split(':')[0]) === 12 && <Clock12 size={20} strokeWidth={1.5} />}
-                                      {parseInt(slot.begin.split(':')[0]) === 13 && <Clock1 size={20} strokeWidth={1.5} />}
-                                      <span>{slot.begin}</span>
+                                    <TableCell>
+                                      <span>{`${slot.begin} ${APPO_CONFIG.words.hours}`}</span>
                                     </TableCell>
                                     {slot.appointment?.user ? (
                                       <>
-                                        <TableCell className='p-1.5'>
+                                        <TableCell>
                                           <span className='font-medium'>{`${capitalize(slot.appointment.user.lastName)}, ${capitalize(slot.appointment.user.firstName)}`}</span>
                                           <span></span>
                                         </TableCell>
-                                        <TableCell className='p-1.5'>{delimiter(slot.appointment.user.dni, '.', 3)}</TableCell>
+                                        <TableCell>{delimiter(slot.appointment.user.dni, '.', 3)}</TableCell>
                                       </>
                                     ) : (
                                       <>
-                                        <TableCell className='p-1.5 font-normal'></TableCell>
-                                        <TableCell className='p-1.5 font-normal'></TableCell>
+                                        <TableCell></TableCell>
+                                        <TableCell></TableCell>
                                       </>
                                     )}
                                     <TableCell className='flex items-center justify-end space-x-4'>
@@ -506,9 +486,9 @@ export default function Appointments() {
                                   </>
                                 </TableRow>
                               ) : (
-                                <TableRow key={crypto.randomUUID()} className=' '>
-                                  <TableCell className='bg-slate-100 p-1.5 text-center'>-</TableCell>
-                                  <TableCell colSpan={4} className='bg-slate-100/60 p-1.5 text-center text-sm text-slate-400'>
+                                <TableRow key={crypto.randomUUID()} className='[&>td]:p-1.5'>
+                                  <TableCell className='bg-slate-100 text-center'>-</TableCell>
+                                  <TableCell colSpan={4} className='bg-slate-100/60 text-center text-sm text-slate-400'>
                                     {slot.available
                                       ? slot.begin
                                       : `${APPO_CONFIG.phrases.notAvailable} ${APPO_CONFIG.words.from} ${slot.begin} ${APPO_CONFIG.words.to} ${slot.end} ${APPO_CONFIG.words.hours}`}
