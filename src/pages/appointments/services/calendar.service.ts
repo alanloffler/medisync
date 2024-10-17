@@ -1,24 +1,28 @@
-import { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
-import { PROF_VIEW_CONFIG as PV_CONFIG } from '@/config/professionals.config';
+// External imports
 import { range } from '@formkit/tempo';
+// Imports
+import type { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
+import { PROF_VIEW_CONFIG as PV_CONFIG } from '@/config/professionals.config';
 
 export class CalendarService {
   private static days: number[] = Array.from({ length: 7 }, (_, index) => index);
   // Used on appointments (select calendar day if it's working day)
   public static checkTodayIsWorkingDay(workingDays: IWorkingDay[], dayOfWeekSelected: number): boolean {
-    return workingDays.some((day) => day.day === dayOfWeekSelected && day.value === true);
+    return workingDays.some((workingDay) => workingDay.day === dayOfWeekSelected && workingDay.value === true);
   }
   // Used on appointments calendar component
   public static getDisabledDays(professionalWorkingDays: IWorkingDay[]): number[] {
     if (!professionalWorkingDays) return [];
-    const professionalWorkingDaysNumbers = professionalWorkingDays.filter((day) => day.value === true).map((day) => day.day);
-    const professionalNotWorkingDaysNumbers = CalendarService.days.filter((day) => !professionalWorkingDaysNumbers.includes(day));
+
+    const professionalWorkingDaysNumbers: number[] = professionalWorkingDays.filter((day) => day.value === true).map((day) => day.day);
+    const professionalNotWorkingDaysNumbers: number[] = CalendarService.days.filter((day) => !professionalWorkingDaysNumbers.includes(day));
 
     return professionalNotWorkingDaysNumbers;
   }
   // Used on appointments professional selected
   public static getLegibleWorkingDays(daysArray: IWorkingDay[], capitalized: boolean): string {
     const stringDays: string[] = this.getStringWorkingDaysArray(daysArray, capitalized);
+
     if (!stringDays) return '';
 
     const legibleDays: string = stringDays
@@ -35,7 +39,7 @@ export class CalendarService {
 
     return legibleDays;
   }
-
+  // Used on private getLegibleWorkingDays for string days conversion
   private static getStringWorkingDaysArray(days: IWorkingDay[], capitalized: boolean): string[] {
     if (!days) return [];
 
@@ -62,14 +66,14 @@ export class CalendarService {
       return `${slotTimeInit} ${PV_CONFIG.words.hoursSeparator} ${slotTimeEnd}`;
     }
   }
-
+  // Used on appointments
   public static generateYearsRange(rangeLimit: number): string[] {
     const yearsRange: number[] = [];
     const actualYear: number = new Date().getFullYear();
 
     yearsRange.push(actualYear);
 
-    for (let i = 1; i <= rangeLimit; i++) {
+    for (let i: number = 1; i <= rangeLimit; i++) {
       yearsRange.push(actualYear + i);
       yearsRange.push(actualYear - i);
     }
@@ -78,7 +82,7 @@ export class CalendarService {
 
     return orderedYearsRange;
   }
-
+  // Used on appointments
   public static generateMonths(language: string): string[] {
     return range('MMMM', language);
   }
