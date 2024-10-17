@@ -156,17 +156,23 @@ export default function ViewProfessional() {
                     <span className='text-base font-medium'>{legibleWorkingDays}</span>
                   </div>
                 )}
-                {professional.configuration?.scheduleTimeInit &&
-                  professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableInit &&
-                  professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableEnd &&
-                  professional.configuration?.scheduleTimeEnd && (
-                    <div className='flex items-center space-x-4'>
-                      <CalendarClock className='h-6 w-6' strokeWidth={2} />
-                      <span className='text-base font-medium'>
-                        {`${professional.configuration.scheduleTimeInit} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.unavailableTimeSlot?.timeSlotUnavailableInit} ${PV_CONFIG.words.slotsSeparator} ${professional.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.scheduleTimeEnd}`}
-                      </span>
-                    </div>
-                  )}
+                {professional.configuration?.scheduleTimeInit && professional.configuration?.scheduleTimeEnd && (
+                  <div className='flex items-center space-x-4'>
+                    <CalendarClock className='h-6 w-6' strokeWidth={2} />
+                    <span className='text-base font-medium'>
+                      {professional.configuration?.scheduleTimeInit &&
+                        professional.configuration?.scheduleTimeEnd &&
+                        !professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableInit &&
+                        !professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableEnd &&
+                        `${professional.configuration.scheduleTimeInit} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.scheduleTimeEnd}`}
+                      {professional.configuration?.scheduleTimeInit &&
+                        professional.configuration?.scheduleTimeEnd &&
+                        professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableInit &&
+                        professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableEnd &&
+                        `${professional.configuration.scheduleTimeInit} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.unavailableTimeSlot?.timeSlotUnavailableInit} ${PV_CONFIG.words.slotsSeparator} ${professional.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.scheduleTimeEnd}`}
+                    </span>
+                  </div>
+                )}
                 {professional.phone && (
                   <div className='flex items-center space-x-4'>
                     <Smartphone className='h-6 w-6' strokeWidth={2} />
