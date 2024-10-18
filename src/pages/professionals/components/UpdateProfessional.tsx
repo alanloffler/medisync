@@ -21,6 +21,8 @@ import { PageHeader } from '@/core/components/common/PageHeader';
 import { WorkingDays } from '@/pages/professionals/components/common/WorkingDays';
 // External imports
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { spring } from 'framer-motion';
+import { useAnimate } from 'framer-motion/mini';
 import { useEffect, useState, MouseEvent, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -61,11 +63,12 @@ export default function UpdateProfessional() {
   const [titlesIsLoading, setTitlesIsLoading] = useState<boolean>(false);
   const [workingDaysKey, setWorkingDaysKey] = useState<string>('');
   const [workingDaysValuesRef, setWorkingDaysValuesRef] = useState<IWorkingDay[]>([] as IWorkingDay[]);
-  const { id } = useParams();
+  const [dropdownScope, dropdownAnimation] = useAnimate();
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const navigate = useNavigate();
   const valuesRef = useRef<IProfessionalForm>({} as IProfessionalForm);
+  const { id } = useParams();
 
   const updateForm = useForm<z.infer<typeof professionalSchema>>({
     resolver: zodResolver(professionalSchema),
@@ -239,7 +242,17 @@ export default function UpdateProfessional() {
               {/* Dropdown menu */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant={'tableHeader'} size={'miniIcon'}>
+                  <Button
+                    ref={dropdownScope}
+                    size={'miniIcon'}
+                    variant={'tableHeader'}
+                    onMouseOver={() =>
+                      dropdownAnimation(dropdownScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                    }
+                    onMouseOut={() =>
+                      dropdownAnimation(dropdownScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                    }
+                  >
                     <Menu className='h-4 w-4' strokeWidth={2} />
                   </Button>
                 </DropdownMenuTrigger>
