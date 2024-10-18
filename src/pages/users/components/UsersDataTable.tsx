@@ -134,7 +134,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
                       onClick={() => navigate(`/users/${row.original._id}`)}
                       className='hover:bg-transparent hover:text-fuchsia-500'
                     >
-                      <FileText className='h-4 w-4' />
+                      <FileText size={16} strokeWidth={2} />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
@@ -152,7 +152,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
                       onClick={() => navigate(`/users/update/${row.original._id}`)}
                       className='hover:bg-transparent hover:text-indigo-500'
                     >
-                      <FilePen className='h-4 w-4' />
+                      <FilePen size={16} strokeWidth={2} />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
@@ -170,7 +170,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
                       onClick={() => handleRemoveUserDialog(row.original)}
                       className='hover:bg-transparent hover:text-red-500'
                     >
-                      <Trash2 className='h-4 w-4' />
+                      <Trash2 size={16} strokeWidth={2} />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
@@ -208,7 +208,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
                 onClick={() => navigate(`/users/${row.original._id}`)}
                 className='hover:bg-transparent hover:text-fuchsia-500'
               >
-                <FileText className='h-4 w-4' />
+                <FileText size={16} strokeWidth={2} />
               </Button>
               <Button
                 variant={'ghost'}
@@ -216,7 +216,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
                 onClick={() => navigate(`/users/update/${row.original._id}`)}
                 className='hover:bg-transparent hover:text-indigo-500'
               >
-                <FilePen className='h-4 w-4' />
+                <FilePen size={16} strokeWidth={2} />
               </Button>
               <Button
                 variant={'ghost'}
@@ -224,7 +224,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
                 onClick={() => handleRemoveUserDialog(row.original)}
                 className='hover:bg-transparent hover:text-red-500'
               >
-                <Trash2 className='h-4 w-4' />
+                <Trash2 size={16} strokeWidth={2} />
               </Button>
               <Button
                 disabled={!row.original.phone}
@@ -454,7 +454,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
                             onClick={() => table.setPageIndex(0)}
                             disabled={!table.getCanPreviousPage()}
                           >
-                            <ArrowLeftIcon className='h-4 w-4' />
+                            <ArrowLeftIcon size={16} strokeWidth={2} />
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
@@ -472,7 +472,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
                             onClick={() => table.previousPage()}
                             disabled={!table.getCanPreviousPage()}
                           >
-                            <ChevronLeftIcon className='h-4 w-4' />
+                            <ChevronLeftIcon size={16} strokeWidth={2} />
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
@@ -490,7 +490,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
                             onClick={() => table.nextPage()}
                             disabled={!table.getCanNextPage()}
                           >
-                            <ChevronRightIcon className='h-4 w-4' />
+                            <ChevronRightIcon size={16} strokeWidth={2} />
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
@@ -508,7 +508,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
                             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
                             disabled={!table.getCanNextPage()}
                           >
-                            <ArrowRightIcon className='h-4 w-4' />
+                            <ArrowRightIcon size={16} strokeWidth={2} />
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
@@ -525,7 +525,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
                       onClick={() => table.setPageIndex(0)}
                       disabled={!table.getCanPreviousPage()}
                     >
-                      <ArrowLeftIcon className='h-4 w-4' />
+                      <ArrowLeftIcon size={16} strokeWidth={2} />
                     </Button>
                     <Button
                       variant='ghost'
@@ -533,7 +533,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
                       onClick={() => table.previousPage()}
                       disabled={!table.getCanPreviousPage()}
                     >
-                      <ChevronLeftIcon className='h-4 w-4' />
+                      <ChevronLeftIcon size={16} strokeWidth={2} />
                     </Button>
                     <Button
                       variant='ghost'
@@ -541,7 +541,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
                       onClick={() => table.nextPage()}
                       disabled={!table.getCanNextPage()}
                     >
-                      <ChevronRightIcon className='h-4 w-4' />
+                      <ChevronRightIcon size={16} strokeWidth={2} />
                     </Button>
                     <Button
                       variant='ghost'
@@ -549,7 +549,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
                       onClick={() => table.setPageIndex(table.getPageCount() - 1)}
                       disabled={!table.getCanNextPage()}
                     >
-                      <ArrowRightIcon className='h-4 w-4' />
+                      <ArrowRightIcon size={16} strokeWidth={2} />
                     </Button>
                   </>
                 )}
