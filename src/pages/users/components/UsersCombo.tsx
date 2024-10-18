@@ -94,7 +94,7 @@ export function UsersCombo({
         />
         {openCombobox && (
           <button onClick={handleCloseCombobox} className='rounded-full bg-slate-200 p-2'>
-            <X className='h-4 w-4' strokeWidth={2} />
+            <X size={16} strokeWidth={2} />
           </button>
         )}
       </section>
