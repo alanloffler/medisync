@@ -85,7 +85,7 @@ export default function ViewUser() {
                         <TooltipTrigger asChild>
                           <DropdownMenuTrigger asChild>
                             <Button variant={'tableHeader'} size={'miniIcon'} className='absolute right-1 flex items-center'>
-                              <Menu className='h-4 w-4' strokeWidth={2} />
+                              <Menu size={16} strokeWidth={2} />
                             </Button>
                           </DropdownMenuTrigger>
                         </TooltipTrigger>
@@ -125,15 +125,15 @@ export default function ViewUser() {
             showCard && (
               <CardContent className='mt-3 space-y-3'>
                 <section className='flex items-center space-x-4'>
-                  <CreditCard className='h-6 w-6' strokeWidth={2} />
+                  <CreditCard size={24} strokeWidth={2} />
                   <span className='text-lg font-medium'>{delimiter(user.dni, '.', 3)}</span>
                 </section>
                 <section className='flex items-center space-x-4'>
-                  <Smartphone className='h-6 w-6' strokeWidth={2} />
+                  <Smartphone size={24} strokeWidth={2} />
                   <span className='text-lg font-medium'>{delimiter(user.phone, '-', 6)}</span>
                 </section>
                 <section className='flex items-center space-x-4'>
-                  <Mail className='h-6 w-6' strokeWidth={2} />
+                  <Mail size={24} strokeWidth={2} />
                   <span className='text-lg font-medium'>{user.email}</span>
                 </section>
                 <section className='flex justify-end pt-2 text-base leading-none text-slate-500'>{`${UV_CONFIG.phrase.userSince} ${legibleDate(new Date(user.createdAt), 'short')}`}</section>
