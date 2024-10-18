@@ -98,7 +98,7 @@ export default function ViewProfessional() {
                         <TooltipTrigger asChild>
                           <DropdownMenuTrigger asChild>
                             <Button variant={'tableHeader'} size={'miniIcon'} className='absolute right-1 flex items-center'>
-                              <Menu className='h-4 w-4' strokeWidth={2} />
+                              <Menu size={16} strokeWidth={2} />
                             </Button>
                           </DropdownMenuTrigger>
                         </TooltipTrigger>
