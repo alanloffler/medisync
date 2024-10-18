@@ -38,7 +38,9 @@ export default function Professionals() {
   const [reload, setReload] = useState<number>(0);
   const [search, setSearch] = useState<{ value: string; type: string }>({ value: '', type: 'professional' });
   const [specSelected, setSpecSelected] = useState<string>('Especialización');
+  const [createMiniScope, createMiniAnimation] = useAnimate();
   const [createScope, createAnimation] = useAnimate();
+  const [reloadScope, reloadAnimation] = useAnimate();
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const debouncedSearch = useDebounce<{ value: string; type: string }>(search, PROF_CONFIG.search.debounceTime);
@@ -173,10 +175,32 @@ export default function Professionals() {
                     {PROF_CONFIG.table.title}
                   </div>
                   <div className='flex items-center gap-2'>
-                    <Button variant={'tableHeader'} size={'miniIcon'} onClick={handleReload}>
+                    <Button
+                      ref={reloadScope}
+                      size={'miniIcon'}
+                      variant={'tableHeader'}
+                      onClick={handleReload}
+                      onMouseOver={() =>
+                        reloadAnimation(reloadScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                      }
+                      onMouseOut={() =>
+                        reloadAnimation(reloadScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                      }
+                    >
                       <ListRestart className='h-4 w-4' strokeWidth={2} />
                     </Button>
-                    <Button variant={'tableHeaderPrimary'} size={'miniIcon'} onClick={() => navigate('/professionals/create')}>
+                    <Button
+                      ref={createMiniScope}
+                      size={'miniIcon'}
+                      variant={'tableHeaderPrimary'}
+                      onClick={() => navigate('/professionals/create')}
+                      onMouseOver={() =>
+                        createMiniAnimation(createMiniScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                      }
+                      onMouseOut={() =>
+                        createMiniAnimation(createMiniScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                      }
+                    >
                       <CirclePlus className='h-4 w-4' strokeWidth={2} />
                     </Button>
                   </div>
