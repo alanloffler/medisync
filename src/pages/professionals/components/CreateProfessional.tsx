@@ -21,6 +21,8 @@ import { PageHeader } from '@/core/components/common/PageHeader';
 import { WorkingDays } from '@/pages/professionals/components/common/WorkingDays';
 // External imports
 import { Link, useNavigate } from 'react-router-dom';
+import { spring } from 'framer-motion';
+import { useAnimate } from 'framer-motion/mini';
 import { useEffect, useState, MouseEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -55,6 +57,7 @@ export default function CreateProfessional() {
   const [titlesIsLoading, setTitlesIsLoading] = useState<boolean>(false);
   const [workingDays, setWorkingDays] = useState<IWorkingDay[]>([]);
   const [workingDaysKey, setWorkingDaysKey] = useState<string>('');
+  const [dropdownScope, dropdownAnimation] = useAnimate();
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const navigate = useNavigate();
@@ -212,7 +215,17 @@ export default function CreateProfessional() {
             {/* Dropdown menu */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant={'tableHeader'} size={'miniIcon'}>
+                <Button
+                  ref={dropdownScope}
+                  variant={'tableHeader'}
+                  size={'miniIcon'}
+                  onMouseOver={() =>
+                    dropdownAnimation(dropdownScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                  }
+                  onMouseOut={() =>
+                    dropdownAnimation(dropdownScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                  }
+                >
                   <Menu size={16} strokeWidth={2} />
                 </Button>
               </DropdownMenuTrigger>
