@@ -234,7 +234,7 @@ export default function UpdateProfessional() {
           <CardHeader className='flex flex-col'>
             <CardTitle className='flex flex-row items-center justify-between'>
               <div className='flex items-center gap-2'>
-                <FilePlus className='h-4 w-4' strokeWidth={2} />
+                <FilePlus size={16} strokeWidth={2} />
                 <span>{PU_CONFIG.formTitle.header}</span>
               </div>
               {/* Dropdown menu */}
@@ -251,7 +251,7 @@ export default function UpdateProfessional() {
                       dropdownAnimation(dropdownScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
                     }
                   >
-                    <Menu className='h-4 w-4' strokeWidth={2} />
+                    <Menu size={16} strokeWidth={2} />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className='w-fit' align='center'>
