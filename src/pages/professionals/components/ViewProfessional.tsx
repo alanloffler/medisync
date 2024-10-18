@@ -14,6 +14,8 @@ import { LoadingDB } from '@/core/components/common/LoadingDB';
 import { PageHeader } from '@/core/components/common/PageHeader';
 // External imports
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { spring } from 'framer-motion';
+import { useAnimate } from 'framer-motion/mini';
 import { useEffect, useState } from 'react';
 // Imports
 import type { IEmail } from '@/core/interfaces/email.interface';
@@ -36,6 +38,7 @@ export default function ViewProfessional() {
   const [legibleWorkingDays, setLegibleWorkingDays] = useState<string>('');
   const [professional, setProfessional] = useState<IProfessional>({} as IProfessional);
   const [showCard, setShowCard] = useState<boolean>(false);
+  const [dropdownScope, dropdownAnimation] = useAnimate();
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const capitalizeFirstLetter = useCapitalizeFirstLetter();
@@ -95,7 +98,18 @@ export default function ViewProfessional() {
                       <DropdownMenu>
                         <TooltipTrigger asChild>
                           <DropdownMenuTrigger asChild>
-                            <Button variant={'tableHeader'} size={'miniIcon'} className='absolute right-1 flex items-center'>
+                            <Button
+                              className='absolute right-1 flex items-center'
+                              ref={dropdownScope}
+                              size='miniIcon'
+                              variant='tableHeader'
+                              onMouseOver={() =>
+                                dropdownAnimation(dropdownScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                              }
+                              onMouseOut={() =>
+                                dropdownAnimation(dropdownScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                              }
+                            >
                               <Menu size={16} strokeWidth={2} />
                             </Button>
                           </DropdownMenuTrigger>
