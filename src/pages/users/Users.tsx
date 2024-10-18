@@ -13,6 +13,8 @@ import { UsersDataTable } from '@/pages/users/components/UsersDataTable';
 // External imports
 import { ChangeEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { spring } from 'framer-motion';
+import { useAnimate } from 'framer-motion/mini';
 // Imports
 import { USER_CONFIG } from '@/config/user.config';
 import { useDebounce } from '@/core/hooks/useDebounce';
@@ -23,8 +25,11 @@ export default function Users() {
   const [reload, setReload] = useState<number>(0);
   const [searchByName, setSearchByName] = useState<string>('');
   const [searchByDNI, setSearchByDNI] = useState<string>('');
-  const debouncedSearchByName = useDebounce<string>(searchByName, USER_CONFIG.search.debounceTime);
+  const [createMiniScope, createMiniAnimation] = useAnimate();
+  const [createScope, createAnimation] = useAnimate();
+  const [reloadScope, reloadAnimation] = useAnimate();
   const debouncedSearchByDNI = useDebounce<string>(searchByDNI, USER_CONFIG.search.debounceTime);
+  const debouncedSearchByName = useDebounce<string>(searchByName, USER_CONFIG.search.debounceTime);
   const navigate = useNavigate();
 
   function handleSearchByName(event: ChangeEvent<HTMLInputElement>): void {
@@ -56,8 +61,16 @@ export default function Users() {
           <CardContent className='p-0'>
             <div className='flex flex-col gap-6 md:w-full'>
               <Link to={`/users/create`} className='w-fit'>
-                <Button variant={'default'} size={'sm'} className='gap-2'>
-                  <PlusCircle className='h-4 w-4' strokeWidth={2} />
+                <Button
+                  variant={'default'}
+                  size={'sm'}
+                  className='gap-2'
+                  onMouseOver={() =>
+                    createAnimation(createScope.current, { scale: 1.2 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                  }
+                  onMouseOut={() => createAnimation(createScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })}
+                >
+                  <PlusCircle ref={createScope} size={16} strokeWidth={2} />
                   {USER_CONFIG.buttons.createUser}
                 </Button>
               </Link>
@@ -76,7 +89,7 @@ export default function Users() {
                   />
                   {searchByDNI && (
                     <button onClick={() => setSearchByDNI('')} className='absolute right-3 top-3 text-muted-foreground hover:text-black'>
-                      <X className='h-4 w-4' />
+                      <X size={16} strokeWidth={2} />
                     </button>
                   )}
                 </div>
@@ -95,7 +108,7 @@ export default function Users() {
                   />
                   {searchByName && (
                     <button onClick={() => setSearchByName('')} className='absolute right-3 top-3 text-muted-foreground hover:text-black'>
-                      <X className='h-4 w-4' />
+                      <X size={16} strokeWidth={2} />
                     </button>
                   )}
                 </div>
@@ -115,7 +128,7 @@ export default function Users() {
             <div className='grid gap-2'>
               <CardTitle className='flex items-center justify-between'>
                 <div className='flex items-center gap-3.5 px-2'>
-                  <List className='h-4 w-4' strokeWidth={2} />
+                  <List size={16} strokeWidth={2} />
                   {USER_CONFIG.table.title}
                 </div>
                 <div className='flex items-center gap-2'>
@@ -124,8 +137,19 @@ export default function Users() {
                     <TooltipProvider delayDuration={0.3}>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button variant={'tableHeader'} size={'miniIcon'} onClick={handleReload}>
-                            <ListRestart className='h-4 w-4' strokeWidth={2} />
+                          <Button
+                            ref={reloadScope}
+                            size={'miniIcon'}
+                            variant={'tableHeader'}
+                            onClick={handleReload}
+                            onMouseOver={() =>
+                              reloadAnimation(reloadScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                            }
+                            onMouseOut={() =>
+                              reloadAnimation(reloadScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                            }
+                          >
+                            <ListRestart size={16} strokeWidth={2} />
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
@@ -134,8 +158,19 @@ export default function Users() {
                       </Tooltip>
                     </TooltipProvider>
                   ) : (
-                    <Button variant={'tableHeader'} size={'miniIcon'} onClick={handleReload}>
-                      <ListRestart className='h-4 w-4' strokeWidth={2} />
+                    <Button
+                      size={'miniIcon'}
+                      variant={'tableHeader'}
+                      ref={reloadScope}
+                      onClick={handleReload}
+                      onMouseOver={() =>
+                        reloadAnimation(reloadScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                      }
+                      onMouseOut={() =>
+                        reloadAnimation(reloadScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                      }
+                    >
+                      <ListRestart size={16} strokeWidth={2} />
                     </Button>
                   )}
                   {/* Create user */}
@@ -143,8 +178,23 @@ export default function Users() {
                     <TooltipProvider delayDuration={0.3}>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button variant={'tableHeaderPrimary'} size={'miniIcon'} onClick={() => navigate('/users/create')}>
-                            <CirclePlus className='h-4 w-4' strokeWidth={2} />
+                          <Button
+                            size={'miniIcon'}
+                            variant={'tableHeaderPrimary'}
+                            ref={createMiniScope}
+                            onClick={() => navigate('/users/create')}
+                            onMouseOver={() =>
+                              createMiniAnimation(
+                                createMiniScope.current,
+                                { scale: 1.2 },
+                                { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 },
+                              )
+                            }
+                            onMouseOut={() =>
+                              createMiniAnimation(createMiniScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                            }
+                          >
+                            <CirclePlus size={16} strokeWidth={2} />
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
@@ -153,8 +203,19 @@ export default function Users() {
                       </Tooltip>
                     </TooltipProvider>
                   ) : (
-                    <Button variant={'tableHeaderPrimary'} size={'miniIcon'} onClick={() => navigate('/users/create')}>
-                      <CirclePlus className='h-4 w-4' strokeWidth={2} />
+                    <Button
+                      ref={createMiniScope}
+                      size={'miniIcon'}
+                      variant={'tableHeaderPrimary'}
+                      onClick={() => navigate('/users/create')}
+                      onMouseOver={() =>
+                        createMiniAnimation(createMiniScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                      }
+                      onMouseOut={() =>
+                        createMiniAnimation(createMiniScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                      }
+                    >
+                      <CirclePlus size={16} strokeWidth={2} />
                     </Button>
                   )}
                 </div>
