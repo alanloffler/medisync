@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { ArrowLeft, FilePlus, Menu } from 'lucide-react';
+import { FilePlus, Menu } from 'lucide-react';
 // External components:
 // https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
@@ -15,6 +15,7 @@ import { Textarea } from '@/core/components/ui/textarea';
 // https://github.com/mona-health/react-input-mask
 import InputMask from '@mona-health/react-input-mask';
 // Components
+import { BackButton } from '@/core/components/common/BackButton';
 import { InfoCard } from '@/core/components/common/InfoCard';
 import { LoadingDB } from '@/core/components/common/LoadingDB';
 import { PageHeader } from '@/core/components/common/PageHeader';
@@ -225,10 +226,7 @@ export default function UpdateProfessional() {
       {/* Section: Page Header */}
       <header className='flex items-center justify-between'>
         <PageHeader title={PU_CONFIG.title} breadcrumb={PU_CONFIG.breadcrumb} />
-        <Button variant={'outline'} size={'sm'} className='gap-2' onClick={() => navigate(-1)}>
-          <ArrowLeft className='h-4 w-4' />
-          {PU_CONFIG.button.back}
-        </Button>
+        <BackButton label={PU_CONFIG.button.back} />
       </header>
       {/* Section: Form */}
       {!errorLoadingProfessional ? (
