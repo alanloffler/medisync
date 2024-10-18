@@ -214,6 +214,10 @@ export const PROF_VIEW_CONFIG = {
     subject: 'MediSync - Turnos médicos',
     body: ['Hola', ','],
   },
+  phrases: {
+    scheduleTitle: 'Días y horario de atención:',
+    contactTitle: 'Contacto:',
+  },
   title: 'Detalles del profesional',
   tooltip: {
     dropdown: 'Acciones',
