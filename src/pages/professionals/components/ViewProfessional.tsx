@@ -153,13 +153,13 @@ export default function ViewProfessional() {
             showCard && (
               <CardContent className='mt-3 space-y-3'>
                 {professional.description && (
-                  <div className='flex flex-row space-x-1 items-center'>
-                    <Quote size={8} strokeWidth={0} className='rotate-180 fill-black relative bottom-1' />
+                  <div className='flex flex-row items-center space-x-1'>
+                    <Quote size={8} strokeWidth={0} className='relative bottom-1 rotate-180 fill-black' />
                     <blockquote className='text-pretty text-base font-normal italic'>{`${capitalizeFirstLetter(professional.description)}`}</blockquote>
                     <Quote size={8} strokeWidth={0} className='relative bottom-1 fill-black' />
                   </div>
                 )}
-                <h2 className='pt-2 text-base font-semibold'>{PV_CONFIG.phrases.scheduleTitle}</h2>
+                <h2 className='pt-2 text-base font-semibold underline underline-offset-4'>{PV_CONFIG.phrases.scheduleTitle}</h2>
                 {professional.configuration?.workingDays && (
                   <div className='flex items-center space-x-4'>
                     <CalendarDays size={20} strokeWidth={2} />
@@ -183,7 +183,7 @@ export default function ViewProfessional() {
                     </span>
                   </div>
                 )}
-                <h2 className='pt-2 text-base font-semibold'>{PV_CONFIG.phrases.contactTitle}</h2>
+                <h2 className='pt-2 text-base font-semibold underline underline-offset-4'>{PV_CONFIG.phrases.contactTitle}</h2>
                 {professional.phone && (
                   <div className='flex items-center space-x-4'>
                     <Smartphone size={20} strokeWidth={2} />
