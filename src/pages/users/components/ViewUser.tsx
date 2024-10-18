@@ -6,10 +6,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/c
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '@/core/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/core/components/ui/tooltip';
 // Components
+import { BackButton } from '@/core/components/common/BackButton';
 import { LoadingDB } from '@/core/components/common/LoadingDB';
 import { PageHeader } from '@/core/components/common/PageHeader';
 // External imports
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { spring } from 'framer-motion';
+import { useAnimate } from 'framer-motion/mini';
 import { useEffect, useState } from 'react';
 // Imports
 import type { IEmail } from '@/core/interfaces/email.interface';
@@ -21,13 +24,13 @@ import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useDelimiter } from '@/core/hooks/useDelimiter';
 import { useLegibleDate } from '@/core/hooks/useDateToString';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
-import { BackButton } from '@/core/components/common/BackButton';
 // React component
 export default function ViewUser() {
   const [emailObject, setEmailObject] = useState<IEmail>({} as IEmail);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showCard, setShowCard] = useState<boolean>(false);
   const [user, setUser] = useState<IUser>({} as IUser);
+  const [dropdownScope, dropdownAnimation] = useAnimate();
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const delimiter = useDelimiter();
@@ -84,7 +87,18 @@ export default function ViewUser() {
                       <DropdownMenu>
                         <TooltipTrigger asChild>
                           <DropdownMenuTrigger asChild>
-                            <Button variant={'tableHeader'} size={'miniIcon'} className='absolute right-1 flex items-center'>
+                            <Button
+                              className='absolute right-1 flex items-center'
+                              ref={dropdownScope} 
+                              size={'miniIcon'}
+                              variant={'tableHeader'}
+                              onMouseOver={() =>
+                                dropdownAnimation(dropdownScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                              }
+                              onMouseOut={() =>
+                                dropdownAnimation(dropdownScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                              }
+                            >
                               <Menu size={16} strokeWidth={2} />
                             </Button>
                           </DropdownMenuTrigger>
