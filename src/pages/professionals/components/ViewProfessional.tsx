@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { CalendarClock, CalendarDays, Mail, Menu, Smartphone } from 'lucide-react';
+import { CalendarClock, CalendarDays, Mail, Menu, Quote, Smartphone } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Badge } from '@/core/components/ui/badge';
 import { Button } from '@/core/components/ui/button';
@@ -152,26 +152,24 @@ export default function ViewProfessional() {
           ) : (
             showCard && (
               <CardContent className='mt-3 space-y-3'>
-                {professional.area && professional.specialization && (
-                  <div className='space-x-4 pb-2'>
-                    <Badge variant='secondary' className='border border-slate-200 text-sm font-medium'>
-                      {capitalize(professional.area.name)}
-                    </Badge>
-                    <Badge variant='secondary' className='border border-slate-200 text-sm font-medium'>
-                      {capitalize(professional.specialization.name)}
-                    </Badge>
+                {professional.description && (
+                  <div className='flex flex-row space-x-1 items-center'>
+                    <Quote size={8} strokeWidth={0} className='rotate-180 fill-black relative bottom-1' />
+                    <blockquote className='text-pretty text-base font-normal italic'>{`${capitalizeFirstLetter(professional.description)}`}</blockquote>
+                    <Quote size={8} strokeWidth={0} className='relative bottom-1 fill-black' />
                   </div>
                 )}
+                <h2 className='pt-2 text-base font-semibold'>{PV_CONFIG.phrases.scheduleTitle}</h2>
                 {professional.configuration?.workingDays && (
                   <div className='flex items-center space-x-4'>
-                    <CalendarDays size={24} strokeWidth={2} />
-                    <span className='text-base font-medium'>{legibleWorkingDays}</span>
+                    <CalendarDays size={20} strokeWidth={2} />
+                    <span className='text-base'>{legibleWorkingDays}</span>
                   </div>
                 )}
                 {professional.configuration?.scheduleTimeInit && professional.configuration?.scheduleTimeEnd && (
                   <div className='flex items-center space-x-4'>
-                    <CalendarClock size={24} strokeWidth={2} />
-                    <span className='text-base font-medium'>
+                    <CalendarClock size={20} strokeWidth={2} />
+                    <span className='text-base'>
                       {professional.configuration?.scheduleTimeInit &&
                         professional.configuration?.scheduleTimeEnd &&
                         !professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableInit &&
@@ -185,19 +183,29 @@ export default function ViewProfessional() {
                     </span>
                   </div>
                 )}
+                <h2 className='pt-2 text-base font-semibold'>{PV_CONFIG.phrases.contactTitle}</h2>
                 {professional.phone && (
                   <div className='flex items-center space-x-4'>
-                    <Smartphone size={24} strokeWidth={2} />
+                    <Smartphone size={20} strokeWidth={2} />
                     <span className='text-base font-medium'>{delimiter(professional.phone, '-', 6)}</span>
                   </div>
                 )}
                 {professional.email && (
                   <div className='flex items-center space-x-4'>
-                    <Mail size={24} strokeWidth={2} />
+                    <Mail size={20} strokeWidth={2} />
                     <span className='text-base font-medium'>{professional.email}</span>
                   </div>
                 )}
-                {professional.description && <div className='text-pretty pt-2 text-base'>{capitalizeFirstLetter(professional.description)}</div>}
+                {professional.area && professional.specialization && (
+                  <div className='flex justify-end space-x-4 pt-3'>
+                    <Badge variant='secondary' className='border border-slate-200 text-sm font-medium'>
+                      {capitalize(professional.area.name)}
+                    </Badge>
+                    <Badge variant='secondary' className='border border-slate-200 text-sm font-medium'>
+                      {capitalize(professional.specialization.name)}
+                    </Badge>
+                  </div>
+                )}
               </CardContent>
             )
           )}
