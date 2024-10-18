@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { ArrowLeft, FilePlus2, Menu } from 'lucide-react';
+import { FilePlus2 } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/core/components/ui/card';
@@ -7,6 +7,8 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Form, FormField, FormControl, FormItem, FormLabel, FormMessage } from '@/core/components/ui/form';
 import { Input } from '@/core/components/ui/input';
 // Components
+import { BackButton } from '@/core/components/common/BackButton';
+import { LoadingDB } from '@/core/components/common/LoadingDB';
 import { PageHeader } from '@/core/components/common/PageHeader';
 // External imports
 import { MouseEvent, useState } from 'react';
@@ -22,12 +24,12 @@ import { USER_SCHEMA } from '@/config/schemas/user.schema';
 import { UserApiService } from '@/pages/users/services/user-api.service';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 import { userSchema } from '@/pages/users/schemas/user.schema';
-import { LoadingDB } from '@/core/components/common/LoadingDB';
 // React component
 export default function CreateUser() {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [isCreating, setIsCreating] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
+
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const navigate = useNavigate();
 
@@ -77,10 +79,7 @@ export default function CreateUser() {
       {/* Section: Page Header */}
       <header className='flex items-center justify-between'>
         <PageHeader title={''} breadcrumb={UC_CONFIG.breadcrumb} />
-        <Button variant={'outline'} size={'sm'} className='gap-2' onClick={() => navigate(-1)}>
-          <ArrowLeft className='h-4 w-4' />
-          {UC_CONFIG.buttons.back}
-        </Button>
+        <BackButton label={UC_CONFIG.buttons.back} />
       </header>
       {/* Section: Form */}
       <section className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-2 lg:gap-6'>
@@ -91,10 +90,6 @@ export default function CreateUser() {
                 <FilePlus2 className='h-4 w-4' strokeWidth={2} />
                 <span>{UC_CONFIG.formTitle}</span>
               </div>
-              {/* Dropdown menu */}
-              <Button variant={'tableHeader'} size={'miniIcon'}>
-                <Menu className='h-4 w-4' strokeWidth={2} />
-              </Button>
             </CardTitle>
             <CardDescription>{UC_CONFIG.formDescription}</CardDescription>
           </CardHeader>
