@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { ArrowLeft, CreditCard, Mail, Menu, Smartphone } from 'lucide-react';
+import { CreditCard, Mail, Menu, Smartphone } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
@@ -21,6 +21,7 @@ import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useDelimiter } from '@/core/hooks/useDelimiter';
 import { useLegibleDate } from '@/core/hooks/useDateToString';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
+import { BackButton } from '@/core/components/common/BackButton';
 // React component
 export default function ViewUser() {
   const [emailObject, setEmailObject] = useState<IEmail>({} as IEmail);
@@ -66,10 +67,7 @@ export default function ViewUser() {
       {/* Section: Page Header */}
       <header className='flex items-center justify-between'>
         <PageHeader title={UV_CONFIG.title} breadcrumb={UV_CONFIG.breadcrumb} />
-        <Button variant={'outline'} size={'sm'} className='gap-2' onClick={() => navigate(-1)}>
-          <ArrowLeft className='h-4 w-4' />
-          {UV_CONFIG.buttons.back}
-        </Button>
+        <BackButton label={UV_CONFIG.buttons.back} />
       </header>
       {/* Section: Page Content */}
       <section className='mx-auto mt-4 flex w-full flex-row px-2 md:w-[500px]'>
