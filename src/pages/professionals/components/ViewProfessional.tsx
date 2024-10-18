@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { ArrowLeft, CalendarClock, CalendarDays, Mail, Menu, Smartphone } from 'lucide-react';
+import { CalendarClock, CalendarDays, Mail, Menu, Smartphone } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Badge } from '@/core/components/ui/badge';
 import { Button } from '@/core/components/ui/button';
@@ -8,6 +8,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import { Separator } from '@/core/components/ui/separator';
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@/core/components/ui/tooltip';
 // Components
+import { BackButton } from '@/core/components/common/BackButton';
 import { InfoCard } from '@/core/components/common/InfoCard';
 import { LoadingDB } from '@/core/components/common/LoadingDB';
 import { PageHeader } from '@/core/components/common/PageHeader';
@@ -79,10 +80,7 @@ export default function ViewProfessional() {
       {/* Section: Page Header */}
       <header className='flex items-center justify-between'>
         <PageHeader title={PV_CONFIG.title} breadcrumb={PV_CONFIG.breadcrumb} />
-        <Button variant={'outline'} size={'sm'} className='gap-2' onClick={() => navigate(-1)}>
-          <ArrowLeft className='h-4 w-4' />
-          {PV_CONFIG.button.back}
-        </Button>
+        <BackButton label={PV_CONFIG.button.back} />
       </header>
       {/* Section: Page content */}
       <section className='mx-auto mt-4 flex w-full flex-row px-2 md:w-[500px]'>
