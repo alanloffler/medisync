@@ -154,23 +154,23 @@ export default function ViewProfessional() {
               <CardContent className='mt-3 space-y-3'>
                 {professional.area && professional.specialization && (
                   <div className='space-x-4 pb-2'>
-                    <Badge variant='secondary' className='border border-slate-200 text-base font-medium'>
+                    <Badge variant='secondary' className='border border-slate-200 text-sm font-medium'>
                       {capitalize(professional.area.name)}
                     </Badge>
-                    <Badge variant='secondary' className='border border-slate-200 text-base font-medium'>
+                    <Badge variant='secondary' className='border border-slate-200 text-sm font-medium'>
                       {capitalize(professional.specialization.name)}
                     </Badge>
                   </div>
                 )}
                 {professional.configuration?.workingDays && (
                   <div className='flex items-center space-x-4'>
-                    <CalendarDays className='h-6 w-6' strokeWidth={2} />
+                    <CalendarDays size={24} strokeWidth={2} />
                     <span className='text-base font-medium'>{legibleWorkingDays}</span>
                   </div>
                 )}
                 {professional.configuration?.scheduleTimeInit && professional.configuration?.scheduleTimeEnd && (
                   <div className='flex items-center space-x-4'>
-                    <CalendarClock className='h-6 w-6' strokeWidth={2} />
+                    <CalendarClock size={24} strokeWidth={2} />
                     <span className='text-base font-medium'>
                       {professional.configuration?.scheduleTimeInit &&
                         professional.configuration?.scheduleTimeEnd &&
@@ -187,13 +187,13 @@ export default function ViewProfessional() {
                 )}
                 {professional.phone && (
                   <div className='flex items-center space-x-4'>
-                    <Smartphone className='h-6 w-6' strokeWidth={2} />
+                    <Smartphone size={24} strokeWidth={2} />
                     <span className='text-base font-medium'>{delimiter(professional.phone, '-', 6)}</span>
                   </div>
                 )}
                 {professional.email && (
                   <div className='flex items-center space-x-4'>
-                    <Mail className='h-6 w-6' strokeWidth={2} />
+                    <Mail size={24} strokeWidth={2} />
                     <span className='text-base font-medium'>{professional.email}</span>
                   </div>
                 )}
