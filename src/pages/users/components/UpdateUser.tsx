@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { ArrowLeft, FilePen, Menu } from 'lucide-react';
+import { FilePen } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/core/components/ui/card';
@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Form, FormField, FormControl, FormItem, FormLabel, FormMessage } from '@/core/components/ui/form';
 import { Input } from '@/core/components/ui/input';
 // Components
+import { BackButton } from '@/core/components/common/BackButton';
 import { LoadingDB } from '@/core/components/common/LoadingDB';
 import { PageHeader } from '@/core/components/common/PageHeader';
 // External imports
@@ -110,10 +111,7 @@ export default function UpdateUser() {
       {/* Section: Page Header */}
       <header className='flex items-center justify-between'>
         <PageHeader title={''} breadcrumb={UU_CONFIG.breadcrumb} />
-        <Button variant={'outline'} size={'sm'} className='gap-2' onClick={() => navigate(-1)}>
-          <ArrowLeft className='h-4 w-4' />
-          {UU_CONFIG.button.back}
-        </Button>
+        <BackButton label={UU_CONFIG.button.back} />
       </header>
       {/* Section: Form */}
       <section className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-2 lg:gap-6'>
@@ -121,13 +119,9 @@ export default function UpdateUser() {
           <CardHeader>
             <CardTitle className='flex items-center justify-between'>
               <div className='flex items-center gap-2'>
-                <FilePen className='h-4 w-4' strokeWidth={2} />
+                <FilePen size={16} strokeWidth={2} />
                 <span>{UU_CONFIG.formTitle}</span>
               </div>
-              {/* Dropdown menu */}
-              <Button variant={'tableHeader'} size={'miniIcon'}>
-                <Menu className='h-4 w-4' strokeWidth={2} />
-              </Button>
             </CardTitle>
             {!isLoading && <CardDescription>{UU_CONFIG.formDescription}</CardDescription>}
           </CardHeader>
