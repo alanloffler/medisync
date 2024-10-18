@@ -110,7 +110,7 @@ export default function Professionals() {
                       onClick={() => setSearch({ value: '', type: 'professional' })}
                       className='absolute right-3 top-3 text-muted-foreground hover:text-black'
                     >
-                      <X className='h-4 w-4' />
+                      <X size={16} strokeWidth={2} />
                     </button>
                   )}
                 </div>
@@ -132,7 +132,7 @@ export default function Professionals() {
                   className='flex w-fit items-center space-x-2 rounded-md border bg-white px-2 py-1 text-sm'
                 >
                   <span>{capitalize(specSelected)}</span>
-                  <ChevronDown className='h-4 w-4' strokeWidth={2} />
+                  <ChevronDown size={16} strokeWidth={2} />
                 </DropdownMenuTrigger>
                 {specSelected !== 'Especialización' && (
                   <Button
@@ -171,7 +171,7 @@ export default function Professionals() {
               <div className='grid gap-2'>
                 <CardTitle className='flex items-center justify-between'>
                   <div className='flex items-center gap-3.5 px-2'>
-                    <List className='h-4 w-4' strokeWidth={2} />
+                    <List size={16} strokeWidth={2} />
                     {PROF_CONFIG.table.title}
                   </div>
                   <div className='flex items-center gap-2'>
@@ -187,7 +187,7 @@ export default function Professionals() {
                         reloadAnimation(reloadScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
                       }
                     >
-                      <ListRestart className='h-4 w-4' strokeWidth={2} />
+                      <ListRestart size={16} strokeWidth={2} />
                     </Button>
                     <Button
                       ref={createMiniScope}
@@ -201,7 +201,7 @@ export default function Professionals() {
                         createMiniAnimation(createMiniScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
                       }
                     >
-                      <CirclePlus className='h-4 w-4' strokeWidth={2} />
+                      <CirclePlus size={16} strokeWidth={2} />
                     </Button>
                   </div>
                 </CardTitle>
