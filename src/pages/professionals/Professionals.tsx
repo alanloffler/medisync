@@ -19,7 +19,9 @@ import { PageHeader } from '@/core/components/common/PageHeader';
 import { ProfessionalsDataTable } from '@/pages/professionals/components/ProfessionalsDataTable';
 // External imports
 import { ChangeEvent, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { spring } from 'framer-motion';
+import { useAnimate } from 'framer-motion/mini';
 // Imports
 import type { IArea } from '@/core/interfaces/area.interface';
 import type { ISpecialization } from '@/core/interfaces/specialization.interface';
@@ -36,6 +38,7 @@ export default function Professionals() {
   const [reload, setReload] = useState<number>(0);
   const [search, setSearch] = useState<{ value: string; type: string }>({ value: '', type: 'professional' });
   const [specSelected, setSpecSelected] = useState<string>('Especialización');
+  const [createScope, createAnimation] = useAnimate();
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const debouncedSearch = useDebounce<{ value: string; type: string }>(search, PROF_CONFIG.search.debounceTime);
@@ -78,13 +81,18 @@ export default function Professionals() {
       <section className='grid gap-6 md:grid-cols-4 md:gap-8 lg:grid-cols-4 xl:grid-cols-4'>
         <Card className='col-span-1 border-none bg-slate-200 bg-transparent shadow-none md:col-span-4 lg:col-span-1 xl:col-span-1'>
           <CardContent className='p-0'>
-            <div className='flex flex-col gap-6 md:w-full'>
-              <Link to={`/professionals/create`} className='w-fit'>
-                <Button variant={'default'} size={'sm'} className='gap-2'>
-                  <PlusCircle className='h-4 w-4' strokeWidth={2} />
-                  {PROF_CONFIG.buttons.addProfessional}
-                </Button>
-              </Link>
+            <section className='flex flex-col gap-6 md:w-full'>
+              <Button
+                variant='default'
+                size='sm'
+                className='w-fit space-x-2'
+                onClick={() => navigate('/professionals/create')}
+                onMouseOver={() => createAnimation(createScope.current, { scale: 1.2 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })}
+                onMouseOut={() => createAnimation(createScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })}
+              >
+                <PlusCircle ref={createScope} size={16} strokeWidth={2} />
+                <span>{PROF_CONFIG.buttons.addProfessional}</span>
+              </Button>
               <div className='flex flex-col space-y-2'>
                 <div className='relative w-full'>
                   <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
@@ -106,7 +114,7 @@ export default function Professionals() {
                 </div>
                 {errorMessage && <div className='flex flex-row items-center text-xs font-medium text-rose-400'>{errorMessage}</div>}
               </div>
-            </div>
+            </section>
           </CardContent>
         </Card>
         <section className='col-span-1 overflow-y-auto md:col-span-4 lg:col-span-3 xl:col-span-3'>
