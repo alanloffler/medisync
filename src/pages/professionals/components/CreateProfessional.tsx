@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { ArrowLeft, FilePlus, Menu } from 'lucide-react';
+import { FilePlus, Menu } from 'lucide-react';
 // External components:
 // https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
@@ -15,6 +15,7 @@ import { Textarea } from '@/core/components/ui/textarea';
 // https://github.com/mona-health/react-input-mask
 import InputMask from '@mona-health/react-input-mask';
 // Components
+import { BackButton } from '@/core/components/common/BackButton';
 import { LoadingDB } from '@/core/components/common/LoadingDB';
 import { PageHeader } from '@/core/components/common/PageHeader';
 import { WorkingDays } from '@/pages/professionals/components/common/WorkingDays';
@@ -198,24 +199,21 @@ export default function CreateProfessional() {
       {/* Section: Page Header */}
       <header className='flex items-center justify-between'>
         <PageHeader title={PC_CONFIG.title} breadcrumb={PC_CONFIG.breadcrumb} />
-        <Button variant={'outline'} size={'sm'} className='gap-2' onClick={() => navigate(-1)}>
-          <ArrowLeft className='h-4 w-4' />
-          {PC_CONFIG.buttons.back}
-        </Button>
+        <BackButton label={PC_CONFIG.buttons.back} />
       </header>
       {/* Section: Form */}
       <Card className='mx-auto mt-4 flex w-full flex-col md:w-full lg:w-4/5'>
         <CardHeader className='flex flex-col'>
           <CardTitle className='flex flex-row items-center justify-between'>
             <div className='flex items-center gap-2'>
-              <FilePlus className='h-4 w-4' strokeWidth={2} />
+              <FilePlus size={16} strokeWidth={2} />
               <span>{PC_CONFIG.formTitle.header}</span>
             </div>
             {/* Dropdown menu */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant={'tableHeader'} size={'miniIcon'}>
-                  <Menu className='h-4 w-4' strokeWidth={2} />
+                  <Menu size={16} strokeWidth={2} />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className='w-fit' align='center'>
