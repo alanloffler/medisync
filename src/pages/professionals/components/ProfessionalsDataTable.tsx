@@ -261,44 +261,46 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
       }
 
       if (search.type === 'specialization') {
-        ProfessionalApiService.findBySpecialization(search.value, sorting, skipItems, itemsPerPage).then((response: IResponse) => {
-          if (response.statusCode === 200) {
-            setData(response.data.data);
-            setColumns(tableColumns);
-            setTotalItems(response.data.count);
-            setErrorMessage('');
-          }
-          if (response.statusCode > 399) {
-            setErrorMessage(response.message);
-            addNotification({ type: 'error', message: response.message });
-            setInfoCard({ text: response.message, type: 'warning' });
-          }
-          if (response instanceof Error) {
-            addNotification({ type: 'error', message: APP_CONFIG.error.server });
-            setInfoCard({ text: APP_CONFIG.error.server, type: 'error' });
-          }
-          setIsLoading(false);
-        });
+        ProfessionalApiService.findBySpecialization(search.value, sorting, skipItems, itemsPerPage)
+          .then((response: IResponse) => {
+            if (response.statusCode === 200) {
+              setData(response.data.data);
+              setColumns(tableColumns);
+              setTotalItems(response.data.count);
+              setErrorMessage('');
+            }
+            if (response.statusCode > 399) {
+              setErrorMessage(response.message);
+              addNotification({ type: 'error', message: response.message });
+              setInfoCard({ text: response.message, type: 'warning' });
+            }
+            if (response instanceof Error) {
+              addNotification({ type: 'error', message: APP_CONFIG.error.server });
+              setInfoCard({ text: APP_CONFIG.error.server, type: 'error' });
+            }
+          })
+          .finally(() => setIsLoading(false));
       }
       if (search.type === 'professional') {
-        ProfessionalApiService.findAll(search.value, sorting, skipItems, itemsPerPage).then((response: IResponse) => {
-          if (response.statusCode === 200) {
-            setData(response.data.data);
-            setColumns(tableColumns);
-            setTotalItems(response.data.count);
-            setErrorMessage('');
-          }
-          if (response.statusCode > 399) {
-            setErrorMessage(response.message);
-            addNotification({ type: 'error', message: response.message });
-            setInfoCard({ text: response.message, type: 'warning' });
-          }
-          if (response instanceof Error) {
-            addNotification({ type: 'error', message: APP_CONFIG.error.server });
-            setInfoCard({ text: APP_CONFIG.error.server, type: 'error' });
-          }
-          setIsLoading(false);
-        });
+        ProfessionalApiService.findAll(search.value, sorting, skipItems, itemsPerPage)
+          .then((response: IResponse) => {
+            if (response.statusCode === 200) {
+              setData(response.data.data);
+              setColumns(tableColumns);
+              setTotalItems(response.data.count);
+              setErrorMessage('');
+            }
+            if (response.statusCode > 399) {
+              setErrorMessage(response.message);
+              addNotification({ type: 'error', message: response.message });
+              setInfoCard({ text: response.message, type: 'warning' });
+            }
+            if (response instanceof Error) {
+              addNotification({ type: 'error', message: APP_CONFIG.error.server });
+              setInfoCard({ text: APP_CONFIG.error.server, type: 'error' });
+            }
+          })
+          .finally(() => setIsLoading(false));
       }
     };
     fetchData(search, tableManager.sorting, tableManager.pagination.pageIndex * tableManager.pagination.pageSize, tableManager.pagination.pageSize);
@@ -310,7 +312,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
     setProfessionalSelected(professional);
     setOpenDialog(true);
   }
-
+  // TODO: loader when removing professional
   function removeProfessional(id: string): void {
     if (id) {
       ProfessionalApiService.remove(id).then((response: IResponse) => {
