@@ -1,6 +1,7 @@
 // Icons: https://lucide.dev/icons/
 import { ArrowDownUp, ArrowLeftIcon, ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon, FilePen, FileText, Trash2 } from 'lucide-react';
-// External components: https://ui.shadcn.com/docs/components
+// External components:
+// https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/core/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/core/components/ui/select';
@@ -8,14 +9,15 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/core/components/ui/tooltip';
 // Tanstack Data Table: https://tanstack.com/table/latest
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  PaginationState,
-  SortingState,
+  type ColumnDef,
+  type PaginationState,
+  type SortingState,
+  type Table as ITable,
   useReactTable,
 } from '@tanstack/react-table';
 // Components
@@ -27,6 +29,7 @@ import { useNavigate } from 'react-router-dom';
 // Imports
 import type { IDataTableUsers, ITableManager } from '@/core/interfaces/table.interface';
 import type { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
+import type { IResponse } from '@/core/interfaces/response.interface';
 import type { IUser } from '@/pages/users/interfaces/user.interface';
 import { APP_CONFIG } from '@/config/app.config';
 import { USER_CONFIG } from '@/config/user.config';
@@ -244,7 +247,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
     },
   ];
 
-  const table = useReactTable({
+  const table: ITable<IUser> = useReactTable({
     columns: columns,
     data: data,
     getCoreRowModel: getCoreRowModel(),
@@ -284,7 +287,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
 
       if (!isNumericString(search)) {
         UserApiService.findAll(search, sorting, skipItems, itemsPerPage)
-          .then((response) => {
+          .then((response: IResponse) => {
             if (response.statusCode === 200) {
               if (response.data.length === 0) {
                 addNotification({ type: 'error', message: response.message });
@@ -309,7 +312,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
           .finally(() => setIsLoading(false));
       } else {
         UserApiService.findAllByDNI(search, sorting, skipItems, itemsPerPage)
-          .then((response) => {
+          .then((response: IResponse) => {
             if (response.statusCode === 200) {
               setData(response.data.data);
               setColumns(tableColumns);
@@ -343,7 +346,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
     setErrorRemoving(false);
 
     UserApiService.remove(id)
-      .then((response) => {
+      .then((response: IResponse) => {
         if (response.statusCode === 200) {
           addNotification({ type: 'success', message: response.message });
           setOpenDialog(false);
