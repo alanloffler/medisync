@@ -25,7 +25,7 @@ import { LoadingDB } from '@/core/components/common/LoadingDB';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // Imports
-import type { IDataTable, ITableManager } from '@/core/interfaces/table.interface';
+import type { IDataTableUsers, ITableManager } from '@/core/interfaces/table.interface';
 import type { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
 import type { IUser } from '@/pages/users/interfaces/user.interface';
 import { APP_CONFIG } from '@/config/app.config';
@@ -40,7 +40,7 @@ import { useTruncateText } from '@/core/hooks/useTruncateText';
 const defaultSorting: SortingState = [{ id: USER_CONFIG.table.defaultSortingId, desc: USER_CONFIG.table.defaultSortingType }];
 const defaultPagination: PaginationState = { pageIndex: 0, pageSize: USER_CONFIG.table.defaultPageSize };
 // React component
-export function UsersDataTable({ search, reload, setReload, setErrorMessage, help }: IDataTable) {
+export function UsersDataTable({ search, reload, setReload, setErrorMessage, help }: IDataTableUsers) {
   const [columns, setColumns] = useState<ColumnDef<IUser>[]>([]);
   const [data, setData] = useState<IUser[]>([]);
   const [errorRemoving, setErrorRemoving] = useState<boolean>(false);
