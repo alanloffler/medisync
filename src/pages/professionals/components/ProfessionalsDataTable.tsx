@@ -8,16 +8,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/core/components/ui/table';
 // Tanstack Data Table: https://tanstack.com/table/latest
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  PaginationState,
-  SortingState,
+  type ColumnDef,
+  type PaginationState,
+  type SortingState,
+  type Table as ITable,
   useReactTable,
-  Table as ITable,
 } from '@tanstack/react-table';
 // Components
 import { InfoCard } from '@/core/components/common/InfoCard';
@@ -38,8 +38,8 @@ import { useNotificationsStore } from '@/core/stores/notifications.store';
 import { useTruncateText } from '@/core/hooks/useTruncateText';
 // import { useMediaQuery } from '@uidotdev/usehooks';
 // Default values for pagination and sorting
-const defaultSorting = [{ id: PROF_CONFIG.table.defaultSortingId, desc: PROF_CONFIG.table.defaultSortingType }];
-const defaultPagination = { pageIndex: 0, pageSize: PROF_CONFIG.table.defaultPageSize };
+const defaultSorting: SortingState = [{ id: PROF_CONFIG.table.defaultSortingId, desc: PROF_CONFIG.table.defaultSortingType }];
+const defaultPagination: PaginationState = { pageIndex: 0, pageSize: PROF_CONFIG.table.defaultPageSize };
 // React component
 export function ProfessionalsDataTable({ search, reload, setReload, setErrorMessage }: IDataTableProfessionals) {
   const [actualSearchType, setActualSearchType] = useState<string>(search.type);
@@ -261,7 +261,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
       }
 
       if (search.type === 'specialization') {
-        ProfessionalApiService.findBySpecialization(search.value, sorting, skipItems, itemsPerPage).then((response) => {
+        ProfessionalApiService.findBySpecialization(search.value, sorting, skipItems, itemsPerPage).then((response: IResponse) => {
           if (response.statusCode === 200) {
             setData(response.data.data);
             setColumns(tableColumns);
@@ -281,7 +281,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
         });
       }
       if (search.type === 'professional') {
-        ProfessionalApiService.findAll(search.value, sorting, skipItems, itemsPerPage).then((response) => {
+        ProfessionalApiService.findAll(search.value, sorting, skipItems, itemsPerPage).then((response: IResponse) => {
           if (response.statusCode === 200) {
             setData(response.data.data);
             setColumns(tableColumns);
