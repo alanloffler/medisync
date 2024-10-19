@@ -166,7 +166,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
             onClick={() => navigate(`/professionals/${row.original._id}`)}
             className='hover:bg-transparent hover:text-fuchsia-500'
           >
-            <FileText className='h-4 w-4' />
+            <FileText size={16} strokeWidth={2} />
           </Button>
           <Button
             variant={'ghost'}
@@ -174,7 +174,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
             onClick={() => navigate(`/professionals/update/${row.original._id}`)}
             className='hover:bg-transparent hover:text-indigo-500'
           >
-            <FilePen className='h-4 w-4' />
+            <FilePen size={16} strokeWidth={2} />
           </Button>
           <Button
             variant={'ghost'}
@@ -182,7 +182,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
             onClick={() => handleRemoveDialog(row.original)}
             className='hover:bg-transparent hover:text-red-500'
           >
-            <Trash2 className='h-4 w-4' />
+            <Trash2 size={16} strokeWidth={2} />
           </Button>
           <Button
             disabled={!row.original.phone}
@@ -387,7 +387,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
                   disabled={!table.getCanPreviousPage()}
                 >
                   <span className='sr-only'>Go to first page</span>
-                  <ArrowLeftIcon className='h-4 w-4' />
+                  <ArrowLeftIcon size={16} strokeWidth={2} />
                 </Button>
                 <Button
                   variant='ghost'
@@ -396,7 +396,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
                   disabled={!table.getCanPreviousPage()}
                 >
                   <span className='sr-only'>Go to previous page</span>
-                  <ChevronLeftIcon className='h-4 w-4' />
+                  <ChevronLeftIcon size={16} strokeWidth={2} />
                 </Button>
                 <Button
                   variant='ghost'
@@ -405,7 +405,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
                   disabled={!table.getCanNextPage()}
                 >
                   <span className='sr-only'>Go to next page</span>
-                  <ChevronRightIcon className='h-4 w-4' />
+                  <ChevronRightIcon size={16} strokeWidth={2} />
                 </Button>
                 <Button
                   variant='ghost'
@@ -414,7 +414,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
                   disabled={!table.getCanNextPage()}
                 >
                   <span className='sr-only'>Go to last page</span>
-                  <ArrowRightIcon className='h-4 w-4' />
+                  <ArrowRightIcon size={16} strokeWidth={2} />
                 </Button>
               </div>
             )}
