@@ -223,6 +223,7 @@ export default function Users() {
             </div>
           </CardHeader>
           {/* Table */}
+          {/* TODO: this must be implemented like in ProfessionalsDataTable with the search object */}
           <CardContent className='px-3'>
             <UsersDataTable
               help={helpChecked}
