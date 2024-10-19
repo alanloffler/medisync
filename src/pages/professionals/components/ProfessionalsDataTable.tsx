@@ -1,6 +1,7 @@
 // Icons: https://lucide.dev/icons/
 import { ArrowDownUp, ArrowLeftIcon, ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon, FilePen, FileText, Trash2 } from 'lucide-react';
-// Components: https://ui.shadcn.com/docs/components
+// External components:
+// https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/core/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/core/components/ui/select';
@@ -18,10 +19,14 @@ import {
   useReactTable,
   Table as ITable,
 } from '@tanstack/react-table';
-// App components
+// Components
 import { InfoCard } from '@/core/components/common/InfoCard';
 import { LoadingDB } from '@/core/components/common/LoadingDB';
-// App
+// External imports
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+// Imports
+import type { IDataTableProfessionals, ITableManager } from '@/core/interfaces/table.interface';
 import type { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
 import type { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
 import type { IResponse } from '@/core/interfaces/response.interface';
@@ -29,28 +34,14 @@ import { APP_CONFIG } from '@/config/app.config';
 import { PROF_CONFIG } from '@/config/professionals.config';
 import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
-import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useNotificationsStore } from '@/core/stores/notifications.store';
 import { useTruncateText } from '@/core/hooks/useTruncateText';
 // import { useMediaQuery } from '@uidotdev/usehooks';
-// Table interfaces
-interface DataTableProps {
-  search: { value: string; type: string };
-  reload: number;
-  setReload: React.Dispatch<React.SetStateAction<number>>;
-  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
-}
-
-interface TableManager {
-  sorting: SortingState;
-  pagination: PaginationState;
-}
 // Default values for pagination and sorting
 const defaultSorting = [{ id: PROF_CONFIG.table.defaultSortingId, desc: PROF_CONFIG.table.defaultSortingType }];
 const defaultPagination = { pageIndex: 0, pageSize: PROF_CONFIG.table.defaultPageSize };
 // React component
-export function ProfessionalsDataTable({ search, reload, setReload, setErrorMessage }: DataTableProps) {
+export function ProfessionalsDataTable({ search, reload, setReload, setErrorMessage }: IDataTableProfessionals) {
   const [actualSearchType, setActualSearchType] = useState<string>(search.type);
   const [columns, setColumns] = useState<ColumnDef<IProfessional>[]>([]);
   const [data, setData] = useState<IProfessional[]>([]);
@@ -60,7 +51,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
   const [pagination, setPagination] = useState<PaginationState>(defaultPagination);
   const [professionalSelected, setProfessionalSelected] = useState<IProfessional>({} as IProfessional);
   const [sorting, setSorting] = useState<SortingState>(defaultSorting);
-  const [tableManager, setTableManager] = useState<TableManager>({ sorting, pagination });
+  const [tableManager, setTableManager] = useState<ITableManager>({ sorting, pagination });
   const [totalItems, setTotalItems] = useState<number>(0);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
