@@ -1,11 +1,18 @@
-import { PaginationState, SortingState } from '@tanstack/react-table';
+import type { PaginationState, SortingState } from '@tanstack/react-table';
 
 export interface IDataTable {
-  help: boolean;
+  help?: boolean;
   reload: number;
-  search: string;
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
   setReload: React.Dispatch<React.SetStateAction<number>>;
+}
+
+export interface IDataTableProfessionals extends IDataTable {
+  search: { value: string; type: string };
+}
+
+export interface IDataTableUsers extends IDataTable {
+  search: string;
 }
 
 export interface ITableManager {
