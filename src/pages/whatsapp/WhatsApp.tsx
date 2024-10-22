@@ -31,42 +31,39 @@ export default function WhatsApp() {
   const capitalize = useCapitalize();
   const navigate = useNavigate();
   const { id, type } = useParams();
-  // #region Load data
+
   useEffect(() => {
     if (id) {
       setIsLoading(true);
       // TODO: manage errors
       if (type === 'user') {
         setLoadingMessage(APP_CONFIG.loadingDB.findOneUser);
-        // prettier-ignore
-        UserApiService
-        .findOne(id)
-        .then((response: IResponse) => {
-          if (response.statusCode === 200) {
-            setAddressee(response.data);
-            whatsappForm.setValue('phone', response.data.phone);
-            setIsLoading(false);
-          }
-        });
+
+        UserApiService.findOne(id)
+          .then((response: IResponse) => {
+            if (response.statusCode === 200) {
+              setAddressee(response.data);
+              whatsappForm.setValue('phone', response.data.phone);
+            }
+          })
+          .finally(() => setIsLoading(false));
       }
       if (type === 'professional') {
         setLoadingMessage(APP_CONFIG.loadingDB.findOneProfessional);
-        // prettier-ignore
-        ProfessionalApiService
-        .findOne(id)
-        .then((response: IResponse) => {
-          if (response.statusCode === 200) {
-            setAddressee(response.data);
-            whatsappForm.setValue('phone', response.data.phone);
-            setIsLoading(false);
-          }
-        });
+
+        ProfessionalApiService.findOne(id)
+          .then((response: IResponse) => {
+            if (response.statusCode === 200) {
+              setAddressee(response.data);
+              whatsappForm.setValue('phone', response.data.phone);
+            }
+          })
+          .finally(() => setIsLoading(false));
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
-  // #endregion
-  // #region Form
+
   const whatsappSchema = z.object({
     phone: z.coerce.number(),
     message: z.string(),
@@ -78,8 +75,7 @@ export default function WhatsApp() {
     },
     resolver: zodResolver(whatsappSchema),
   });
-  // #endregion
-  // #region Buttons actions
+
   function sendMessage(e: z.infer<typeof whatsappSchema>) {
     console.log(e);
   }
@@ -88,7 +84,6 @@ export default function WhatsApp() {
     event.preventDefault();
     navigate(-1);
   }
-  // #endregion
 
   return (
     <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
