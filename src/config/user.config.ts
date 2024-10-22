@@ -107,10 +107,9 @@ export const USER_CREATE_CONFIG = {
 
 export const USER_VIEW_CONFIG = {
   appointmentRecords: {
+    loader: 'Cargando turnos',
     noAppointments: 'No existen turnos para el paciente',
-    loader: {
-      text: 'Cargando turnos',
-    },
+    tableHeaders: ['Fecha', 'Profesional', 'Acciones'],
     title: 'Historial de turnos',
   },
   breadcrumb: [
