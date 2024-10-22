@@ -47,6 +47,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
   const [data, setData] = useState<IProfessional[]>([]);
   const [infoCard, setInfoCard] = useState<IInfoCard>({ text: '', type: 'error' });
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isRemovingProfessional, setIsRemovingProfessional] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [pagination, setPagination] = useState<PaginationState>(defaultPagination);
   const [professionalSelected, setProfessionalSelected] = useState<IProfessional>({} as IProfessional);
@@ -312,19 +313,23 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
     setProfessionalSelected(professional);
     setOpenDialog(true);
   }
-  // TODO: loader when removing professional
+  // TODO: display error on UI ???
   function removeProfessional(id: string): void {
     if (id) {
-      ProfessionalApiService.remove(id).then((response: IResponse) => {
-        if (response.statusCode === 200) {
-          addNotification({ type: 'success', message: response.message });
-          setOpenDialog(false);
-          setProfessionalSelected({} as IProfessional);
-          setReload(new Date().getTime());
-        }
-        if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
-        if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
-      });
+      setIsRemovingProfessional(true);
+
+      ProfessionalApiService.remove(id)
+        .then((response: IResponse) => {
+          if (response.statusCode === 200) {
+            addNotification({ type: 'success', message: response.message });
+            setOpenDialog(false);
+            setProfessionalSelected({} as IProfessional);
+            setReload(new Date().getTime());
+          }
+          if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
+          if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
+        })
+        .finally(() => setIsRemovingProfessional(false));
     }
   }
   // #endregion
@@ -423,24 +428,24 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
       ) : (
         <InfoCard text={infoCard.text} type={infoCard.type} className='mt-3' />
       )}
-      {/* Dialog */}
+      {/* Section: Dialog */}
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle className='text-xl'>{PROF_CONFIG.dialog.remove.title}</DialogTitle>
             <DialogDescription>{PROF_CONFIG.dialog.remove.subtitle}</DialogDescription>
-            <div className='flex flex-col pt-2'>
+            <section className='flex flex-col pt-2'>
               <span className=''>{PROF_CONFIG.dialog.remove.content.title}</span>
               <span className='mt-1 text-lg font-semibold'>{`${capitalize(professionalSelected.title?.abbreviation)} ${capitalize(professionalSelected.lastName)}, ${capitalize(professionalSelected.firstName)}`}</span>
-              <div className='mt-5 flex justify-end space-x-4'>
+              <footer className='mt-5 flex justify-end space-x-4'>
                 <Button variant={'secondary'} size={'sm'} onClick={() => setOpenDialog(false)}>
-                  {PROF_CONFIG.buttons.cancel}
+                  {PROF_CONFIG.button.cancel}
                 </Button>
                 <Button variant={'remove'} size={'sm'} onClick={() => removeProfessional(professionalSelected._id)}>
-                  {PROF_CONFIG.buttons.remove}
+                  {isRemovingProfessional ? <LoadingDB variant='button' text={PROF_CONFIG.button.isRemoving} /> : PROF_CONFIG.button.remove}
                 </Button>
-              </div>
-            </div>
+              </footer>
+            </section>
           </DialogHeader>
         </DialogContent>
       </Dialog>
