@@ -93,7 +93,7 @@ export default function Professionals() {
                 onMouseOut={() => createAnimation(createScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })}
               >
                 <PlusCircle ref={createScope} size={16} strokeWidth={2} />
-                <span>{PROF_CONFIG.buttons.addProfessional}</span>
+                <span>{PROF_CONFIG.button.addProfessional}</span>
               </Button>
               <div className='flex flex-col space-y-2'>
                 <div className='relative w-full'>
