@@ -229,3 +229,7 @@ export const PROF_VIEW_CONFIG = {
     slotsSeparator: '-',
   },
 };
+
+export const PROFESSIONALS_SELECT_CONFIG = {
+  placeholder: 'Seleccione',
+};
