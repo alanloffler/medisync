@@ -158,7 +158,7 @@ export default function ViewUser() {
         </Card>
       </section>
       {showCard && <section className='mx-auto w-3/4 pt-3'>
-        <AppointmentsRecord userId={user._id} loaderText={USER_VIEW_CONFIG.appointmentRecords.loader.text} />
+        <AppointmentsRecord userId={user._id} loaderText={USER_VIEW_CONFIG.appointmentRecords.loader} />
       </section>}
       <footer className='mx-auto pt-3'>
         <Button variant='default' size='default' onClick={() => navigate('/users')}>
