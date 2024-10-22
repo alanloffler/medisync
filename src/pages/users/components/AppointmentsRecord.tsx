@@ -15,16 +15,18 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    setIsLoading(true);
+    if (userId) {
+      setIsLoading(true);
 
-    AppointmentApiService.findAllByUser(userId)
-      .then((response: IResponse) => {
-        // TODO: handle errors
-        if (response.statusCode === 200) {
-          setAppointments(response.data);
-        }
-      })
-      .finally(() => setIsLoading(false));
+      AppointmentApiService.findAllByUser(userId)
+        .then((response: IResponse) => {
+          // TODO: handle errors
+          if (response.statusCode === 200) {
+            setAppointments(response.data);
+          }
+        })
+        .finally(() => setIsLoading(false));
+    }
   }, [userId]);
 
   return (
@@ -37,7 +39,7 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
       ) : (
         <CardContent>
           {appointments.length > 0
-            ? appointments?.map((appointment) => <div>{appointment.day}</div>)
+            ? appointments?.map((appointment) => <div key={crypto.randomUUID()}>{appointment.day}</div>)
             : USER_VIEW_CONFIG.appointmentRecords.noAppointments}
         </CardContent>
       )}
