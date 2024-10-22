@@ -3,9 +3,10 @@ export const PROF_CONFIG = {
     { id: 1, name: 'Inicio', path: '/' },
     { id: 2, name: 'Profesionales', path: '/professionals' },
   ],
-  buttons: {
+  button: {
     addProfessional: 'Agregar profesional',
     cancel: 'Cancelar',
+    isRemoving: 'Eliminando profesional',
     remove: 'Eliminar profesional',
   },
   dbProfessionalPlural: 'profesionales en la base de datos',
