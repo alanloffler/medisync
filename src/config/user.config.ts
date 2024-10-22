@@ -106,6 +106,13 @@ export const USER_CREATE_CONFIG = {
 };
 
 export const USER_VIEW_CONFIG = {
+  appointmentRecords: {
+    noAppointments: 'No existen turnos para el paciente',
+    loader: {
+      text: 'Cargando turnos',
+    },
+    title: 'Historial de turnos',
+  },
   breadcrumb: [
     { id: 1, name: 'Inicio', path: '/' },
     { id: 2, name: 'Pacientes', path: '/users' },
