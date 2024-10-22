@@ -21,11 +21,12 @@ export function Header() {
       <div className='flex w-full items-center justify-end gap-4 md:ml-auto md:gap-2 lg:gap-4'>
         <ActionsButton links={links} />
         <Link
+        ref={settingScope} 
           to='/settings'
           onMouseOver={() => settingAnimation(settingScope.current, { rotate: '90deg' }, { duration: 0.25, ease: 'easeIn' })}
           onMouseOut={() => settingAnimation(settingScope.current, { rotate: '-90deg' }, { duration: 0.25, ease: 'easeIn' })}
         >
-          <Settings ref={settingScope} className='h-5 w-5' strokeWidth={2} />
+          <Settings size={20} strokeWidth={2} />
         </Link>
         <User />
       </div>
