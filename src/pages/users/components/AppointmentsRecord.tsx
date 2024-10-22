@@ -1,12 +1,16 @@
+// Icons: https://lucide.dev/icons/
+import { FileText, Trash2 } from 'lucide-react';
 // External imports
 import { useEffect, useState } from 'react';
 // External components: https://ui.shadcn.com/docs/components
+import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
 // Components
 import { InfoCard } from '@/core/components/common/InfoCard';
 import { LoadingDB } from '@/core/components/common/LoadingDB';
 // External imports
 import { format } from '@formkit/tempo';
+import { useNavigate } from 'react-router-dom';
 // Imports
 import type { IAppointmentView } from '@/pages/appointments/interfaces/appointment.interface';
 import type { IResponse } from '@/core/interfaces/response.interface';
@@ -14,7 +18,6 @@ import { APP_CONFIG } from '@/config/app.config';
 import { AppointmentApiService } from '@/pages/appointments/services/appointment.service';
 import { USER_VIEW_CONFIG } from '@/config/user.config';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
-import { Button } from '@/core/components/ui/button';
 // React component
 export function AppointmentsRecord({ userId, loaderText }: { userId: string; loaderText?: string }) {
   const [appointments, setAppointments] = useState<IAppointmentView[]>([]);
@@ -22,6 +25,7 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
   const [isError, setIsError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const capitalize = useCapitalize();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (userId) {
@@ -45,6 +49,10 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
     }
   }, [userId]);
 
+  function handleRemoveAppointment(id: string): void {
+    console.log('Remove appointment Nº', id);
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -58,13 +66,32 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
             <InfoCard type='error' text={errorMessage} className='p-0 pt-3' />
           ) : appointments.length > 0 ? (
             appointments?.map((appointment, index) => (
-              <div key={crypto.randomUUID()} className={`flex flex-row items-center justify-between p-1 text-sm ${index % 2 === 0 && 'bg-slate-100/80'}`}>
-                <div className='flex flex-row items-center w-3/4'>
+              <div
+                key={crypto.randomUUID()}
+                className={`flex flex-row items-center justify-between p-1 text-sm ${index % 2 === 0 && 'bg-slate-100/80'}`}
+              >
+                <div className='flex w-3/4 flex-row items-center'>
                   <div className='w-1/4'>{format(appointment.day, 'DD/MM/YYYY')}</div>
                   <div className='w-3/4'>{`${capitalize(appointment.professional.title.abbreviation)} ${capitalize(appointment.professional.lastName)}, ${capitalize(appointment.professional.firstName)}`}</div>
                 </div>
-                <div className='w-1/4 justify-end'>
-                  <Button>Ver</Button>
+                <div className='flex w-1/4 items-center justify-end space-x-1.5 p-0.5'>
+                  <Button
+                    variant='tableHeader'
+                    size='miniIcon'
+                    onClick={() => navigate(`/appointments/${appointment._id}`)}
+                    className={`border border-slate-300 shadow-sm transition-all hover:scale-110 hover:border-fuchsia-500 hover:text-fuchsia-500 ${index % 2 === 0 ? 'bg-white hover:bg-white' : 'bg-slate-100 hover:bg-white'}`}
+                  >
+                    <FileText size={17} strokeWidth={1.5} />
+                  </Button>
+                  <Button
+                    key={crypto.randomUUID()}
+                    variant='tableHeader'
+                    size='miniIcon'
+                    onClick={() => handleRemoveAppointment(appointment._id)}
+                    className={`border border-slate-300 shadow-sm transition-all hover:scale-110 hover:border-red-500 hover:text-red-500 ${index % 2 === 0 ? 'bg-white hover:bg-white' : 'bg-slate-100 hover:bg-white'}`}
+                  >
+                    <Trash2 size={17} strokeWidth={1.5} />
+                  </Button>
                 </div>
               </div>
             ))
