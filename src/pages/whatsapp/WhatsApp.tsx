@@ -1,27 +1,28 @@
-// Components: https://ui.shadcn.com/docs/components
+// External components: https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/core/components/ui/form';
 import { Input } from '@/core/components/ui/input';
 import { Textarea } from '@/core/components/ui/textarea';
-// App components
-import { PageHeader } from '@/core/components/common/PageHeader';
-// App
-import { APP_CONFIG } from '@/config/app.config';
-import { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
-import { IResponse } from '@/core/interfaces/response.interface';
-import { IUser } from '@/pages/users/interfaces/user.interface';
+// Components
+import { BackButton } from '@/core/components/common/BackButton';
 import { LoadingDB } from '@/core/components/common/LoadingDB';
+import { PageHeader } from '@/core/components/common/PageHeader';
+// External imports
 import { MouseEvent, useEffect, useState } from 'react';
-import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
-import { UserApiService } from '@/pages/users/services/user-api.service';
-import { WHATSAPP_CONFIG } from '@/config/whatsapp.config';
-import { useCapitalize } from '@/core/hooks/useCapitalize';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BackButton } from '@/core/components/common/BackButton';
+// Imports
+import type { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
+import type { IResponse } from '@/core/interfaces/response.interface';
+import type { IUser } from '@/pages/users/interfaces/user.interface';
+import { APP_CONFIG } from '@/config/app.config';
+import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
+import { UserApiService } from '@/pages/users/services/user-api.service';
+import { WHATSAPP_CONFIG } from '@/config/whatsapp.config';
+import { useCapitalize } from '@/core/hooks/useCapitalize';
 // React component
 export default function WhatsApp() {
   const [addressee, setAddressee] = useState<IProfessional | IUser>({} as IProfessional | IUser);
