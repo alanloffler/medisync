@@ -231,5 +231,6 @@ export const PROF_VIEW_CONFIG = {
 };
 
 export const PROFESSIONALS_SELECT_CONFIG = {
+  label: 'Profesional',
   placeholder: 'Seleccione',
 };
