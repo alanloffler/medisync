@@ -54,27 +54,35 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
   }
 
   return (
-    <Card>
+    <Card className='border'>
       <CardHeader>
-        <CardTitle>{USER_VIEW_CONFIG.appointmentRecords.title}</CardTitle>
+        <CardTitle className='border border-slate-600 bg-slate-500 text-white'>{USER_VIEW_CONFIG.appointmentRecords.title}</CardTitle>
       </CardHeader>
       {isLoading ? (
         <LoadingDB text={loaderText || 'Loading data'} className='pb-4 pt-2' />
       ) : (
         <CardContent className='px-3 pb-3'>
+          <section className='mb-3 bg-primary/10 p-2 text-slate-500'>Here filters and search</section>
+          <section className='flex font-medium text-sm border-b-2 pb-1'>
+            <div className='flex w-3/4 items-center'>
+              <div className='w-1/4 text-center'>{USER_VIEW_CONFIG.appointmentRecords.tableHeaders[0]}</div>
+              <div className='w-3/4 text-center'>{USER_VIEW_CONFIG.appointmentRecords.tableHeaders[1]}</div>
+            </div>
+            <div className='w-1/4 text-center'>{USER_VIEW_CONFIG.appointmentRecords.tableHeaders[2]}</div>
+          </section>
           {isError ? (
             <InfoCard type='error' text={errorMessage} className='p-0 pt-3' />
           ) : appointments.length > 0 ? (
             appointments?.map((appointment, index) => (
-              <div
+              <section
                 key={crypto.randomUUID()}
-                className={`flex flex-row items-center justify-between p-1 text-sm ${index % 2 === 0 && 'bg-slate-100/80'}`}
+                className={`flex flex-row items-center justify-between p-1.5 text-sm ${index % 2 === 0 && 'bg-slate-100/80'}`}
               >
-                <div className='flex w-3/4 flex-row items-center'>
-                  <div className='w-1/4'>{format(appointment.day, 'DD/MM/YYYY')}</div>
+                <section className='flex w-3/4 flex-row items-center'>
+                  <div className='w-1/4 text-center'>{format(appointment.day, 'DD/MM/YYYY')}</div>
                   <div className='w-3/4'>{`${capitalize(appointment.professional.title.abbreviation)} ${capitalize(appointment.professional.lastName)}, ${capitalize(appointment.professional.firstName)}`}</div>
-                </div>
-                <div className='flex w-1/4 items-center justify-end space-x-1.5 p-0.5'>
+                </section>
+                <section className='flex w-1/4 items-center justify-end space-x-1.5'>
                   <Button
                     variant='tableHeader'
                     size='miniIcon'
@@ -92,8 +100,8 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
                   >
                     <Trash2 size={17} strokeWidth={1.5} />
                   </Button>
-                </div>
-              </div>
+                </section>
+              </section>
             ))
           ) : (
             <InfoCard type='warning' text={errorMessage} className='p-0 pt-3' />
