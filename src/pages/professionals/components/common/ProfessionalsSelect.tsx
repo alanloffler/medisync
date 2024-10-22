@@ -14,7 +14,7 @@ export function ProfessionalsSelect({ professionals }: { professionals: IProfess
 
   return (
     <main className='flex flex-col items-start space-y-1'>
-      <span className='text-sm font-medium text-slate-500'>Profesional</span>
+      <span className='text-sm font-medium text-slate-500'>{PS_CONFIG.label}</span>
       <Select onValueChange={(e) => handleSelectProfessional(e)}>
         <SelectTrigger className='h-8 w-[200px] border bg-white shadow-sm'>
           <SelectValue placeholder={PS_CONFIG.placeholder} />
