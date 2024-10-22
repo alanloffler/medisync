@@ -1,5 +1,3 @@
-// Icons: https://lucide.dev/icons
-import { ArrowLeft } from 'lucide-react';
 // Components: https://ui.shadcn.com/docs/components
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
@@ -23,6 +21,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BackButton } from '@/core/components/common/BackButton';
 // React component
 export default function WhatsApp() {
   const [addressee, setAddressee] = useState<IProfessional | IUser>({} as IProfessional | IUser);
@@ -95,10 +94,7 @@ export default function WhatsApp() {
       {/* Page Header */}
       <div className='flex items-center justify-between'>
         <PageHeader title={''} breadcrumb={WHATSAPP_CONFIG.breadcrumb} />
-        <Button variant={'outline'} size={'sm'} className='gap-2' onClick={() => navigate(-1)}>
-          <ArrowLeft className='h-4 w-4' />
-          {WHATSAPP_CONFIG.button.back}
-        </Button>
+        <BackButton label={WHATSAPP_CONFIG.button.back} />
       </div>
       {/* Page Content */}
       <div className='mx-auto mt-4 flex w-full flex-row px-2 md:w-[500px]'>
@@ -113,7 +109,6 @@ export default function WhatsApp() {
               </div>
             </CardTitle>
           </CardHeader>
-
           <CardContent>
             {isLoading ? (
               <LoadingDB text={loadingMessage} className='mt-3' />
