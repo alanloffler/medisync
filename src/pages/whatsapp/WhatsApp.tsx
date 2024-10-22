@@ -87,12 +87,12 @@ export default function WhatsApp() {
 
   return (
     <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
-      {/* Page Header */}
+      {/* Section: Page Header */}
       <section className='flex items-center justify-between'>
         <PageHeader title={''} breadcrumb={WHATSAPP_CONFIG.breadcrumb} />
         <BackButton label={WHATSAPP_CONFIG.button.back} />
       </section>
-      {/* Page Content */}
+      {/* Section: Page Content */}
       <section className='mx-auto mt-4 flex w-full flex-row px-2 md:w-[500px]'>
         <Card className='w-full'>
           <CardHeader>
@@ -114,6 +114,7 @@ export default function WhatsApp() {
                   {WHATSAPP_CONFIG.subtitle}
                   <span className='font-bold'>{` ${capitalize(addressee.firstName)} ${capitalize(addressee.lastName)}`}</span>.
                 </section>
+                {/* Section: Form */}
                 <Form {...whatsappForm}>
                   <form onSubmit={whatsappForm.handleSubmit(sendMessage)} className='mt-4 flex flex-col gap-4'>
                     <FormField
@@ -142,14 +143,14 @@ export default function WhatsApp() {
                         </FormItem>
                       )}
                     />
-                    <div className='grid grid-cols-1 space-y-2 pt-2 md:flex md:justify-end md:gap-6 md:space-y-0'>
-                      <Button type='submit' variant={'default'} className='order-1 md:order-2 lg:order-2'>
+                    <footer className='grid grid-cols-1 space-y-2 pt-2 md:flex md:justify-end md:gap-6 md:space-y-0'>
+                      <Button type='submit' variant='default' className='order-1 md:order-2 lg:order-2'>
                         {WHATSAPP_CONFIG.button.sendMessage}
                       </Button>
-                      <Button variant={'ghost'} onClick={handleCancel} className='order-2 md:order-1 lg:order-1'>
+                      <Button variant='ghost' onClick={handleCancel} className='order-2 md:order-1 lg:order-1'>
                         {WHATSAPP_CONFIG.button.cancel}
                       </Button>
-                    </div>
+                    </footer>
                   </form>
                 </Form>
               </>
