@@ -28,6 +28,7 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
   const [professionals, setProfessionals] = useState<IProfessional[]>([]);
   const capitalize = useCapitalize();
   const navigate = useNavigate();
+  const [selectKey, setSelectKey] = useState<string>(crypto.randomUUID());
 
   useEffect(() => {
     if (userId) {
@@ -80,13 +81,22 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
       {isLoading ? (
         <LoadingDB text={loaderText || 'Loading data'} className='pb-4 pt-2' />
       ) : (
-        <CardContent className='px-3 pb-3'>
+        // FIXME: how to make reload the appointments when no professional is selected
+        <CardContent className='px-3 pb-3'
+              key={selectKey}>
           <section className='mb-3 space-x-3 bg-primary/10 p-2 text-slate-500'>
             <ProfessionalsSelect
               className='w-fit text-foreground [&>svg]:opacity-100'
               onValueChange={(e) => handleSelectProfessional(e)}
               professionals={professionals}
             />
+            <button
+              onClick={() => {
+                setSelectKey(crypto.randomUUID());
+              }}
+            >
+              X
+            </button>
           </section>
           <section className='flex border-b-2 pb-1 text-sm font-medium'>
             <div className='flex w-3/4 items-center'>
