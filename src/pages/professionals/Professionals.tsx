@@ -41,7 +41,7 @@ export default function Professionals() {
   const [createMiniScope, createMiniAnimation] = useAnimate();
   const [createScope, createAnimation] = useAnimate();
   const [reloadScope, reloadAnimation] = useAnimate();
-  const [professionalScope, professionalAnimation] = useAnimate();
+  const [specializationsScope, specializationsAnimation] = useAnimate();
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const debouncedSearch = useDebounce<{ value: string; type: string }>(search, PROF_CONFIG.search.debounceTime);
@@ -58,6 +58,7 @@ export default function Professionals() {
 
   function handleClearSearch(): void {
     setSearch({ value: '', type: 'professional' });
+    // FIXME: this must be something globally
     setSpecSelected('Especialización');
   }
 
@@ -137,15 +138,23 @@ export default function Professionals() {
                 </DropdownMenuTrigger>
                 {specSelected !== 'Especialización' && (
                   <Button
-                    ref={professionalScope}
+                    ref={specializationsScope}
                     variant='default'
                     size='miniIcon'
                     onClick={handleClearSearch}
                     onMouseOver={() =>
-                      professionalAnimation(professionalScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                      specializationsAnimation(
+                        specializationsScope.current,
+                        { scale: 1.1 },
+                        { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 },
+                      )
                     }
                     onMouseOut={() =>
-                      professionalAnimation(professionalScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                      specializationsAnimation(
+                        specializationsScope.current,
+                        { scale: 1 },
+                        { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 },
+                      )
                     }
                     className='h-5 w-5 rounded-full bg-black p-0 text-xs font-medium text-white hover:bg-black/70'
                   >
