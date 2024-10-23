@@ -8,10 +8,12 @@ import { useCapitalize } from '@/core/hooks/useCapitalize';
 // React component
 export function ProfessionalsSelect({
   className,
+  defaultValue,
   professionals,
   onValueChange,
 }: {
   className?: string;
+  defaultValue?: string;
   professionals: IProfessional[];
   onValueChange?: (e: string) => void;
 }) {
@@ -20,7 +22,7 @@ export function ProfessionalsSelect({
   return (
     <main className='flex flex-row space-x-2 items-center'>
       <span className='text-[13px] font-medium text-slate-500'>{PS_CONFIG.label}</span>
-      <Select onValueChange={onValueChange}>
+      <Select defaultValue={defaultValue} onValueChange={onValueChange}>
         <SelectTrigger className={cn('h-8 w-full space-x-2 border bg-white text-[13px] shadow-sm', className)}>
           <SelectValue placeholder={PS_CONFIG.placeholder} />
         </SelectTrigger>
