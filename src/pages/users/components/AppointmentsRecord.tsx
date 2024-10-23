@@ -68,9 +68,20 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
     }
   }, [userId, selectKey]);
 
+  // useEffect(() => {
+  //   if (searchParams.has('pid')) {
+  //     setDefaultProfessionalId(searchParams.get('pid') as string);
+  //     handleSelectProfessional(searchParams.get('pid') as string);
+  //   } else {
+  //     setDefaultProfessionalId(undefined);
+  //     setSearchParams({});
+  //   }
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [searchParams]);
+
   useEffect(() => {
     setDefaultProfessionalId(undefined);
-
+    // FIXME: when navigate by history the table shows all appos and the select has the searchParam value
     if (typeof searchParams.get('pid') === 'string') {
       handleSelectProfessional(searchParams.get('pid') as string);
       setDefaultProfessionalId(searchParams.get('pid') as string);
