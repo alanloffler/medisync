@@ -65,8 +65,11 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
     console.log('Remove appointment Nº', id);
   }
 
-  function handleSelectProfessional(professional: string): void {
-    console.log('Select professional', professional);
+  function handleSelectProfessional(professionalId: string): void {
+    // TODO: handle errors, loader and display errors on UI
+    AppointmentApiService.findAllByUserAndProfessional(userId, professionalId).then((response: IResponse) => {
+      if (response.statusCode === 200) setAppointments(response.data);
+    });
   }
 
   return (
