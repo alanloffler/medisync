@@ -9,6 +9,8 @@ import { LoadingDB } from '@/core/components/common/LoadingDB';
 import { ProfessionalsSelect } from '@/pages/professionals/components/common/ProfessionalsSelect';
 // External imports
 import { format } from '@formkit/tempo';
+import { spring } from 'framer-motion';
+import { useAnimate } from 'framer-motion/mini';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // Imports
@@ -26,9 +28,11 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
   const [isError, setIsError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [professionals, setProfessionals] = useState<IProfessional[]>([]);
+  const [selectKey, setSelectKey] = useState<string>(crypto.randomUUID());
+  const [showClearSelectButton, setShowClearSelectButton] = useState<boolean>(false);
+  const [professionalScope, professionalAnimation] = useAnimate();
   const capitalize = useCapitalize();
   const navigate = useNavigate();
-  const [selectKey, setSelectKey] = useState<string>(crypto.randomUUID());
 
   useEffect(() => {
     if (userId) {
@@ -60,17 +64,23 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
         })
         .finally(() => setIsLoading(false));
     }
-  }, [userId]);
-
-  function handleRemoveAppointment(id: string): void {
-    console.log('Remove appointment Nº', id);
-  }
+  }, [userId, selectKey]);
 
   function handleSelectProfessional(professionalId: string): void {
+    setShowClearSelectButton(true);
     // TODO: handle errors, loader and display errors on UI
     AppointmentApiService.findAllByUserAndProfessional(userId, professionalId).then((response: IResponse) => {
       if (response.statusCode === 200) setAppointments(response.data);
     });
+  }
+
+  function clearProfessionalSelect(): void {
+    setSelectKey(crypto.randomUUID());
+    setShowClearSelectButton(false);
+  }
+
+  function handleRemoveAppointment(id: string): void {
+    console.log('Remove appointment Nº', id);
   }
 
   return (
@@ -81,22 +91,30 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
       {isLoading ? (
         <LoadingDB text={loaderText || 'Loading data'} className='pb-4 pt-2' />
       ) : (
-        // FIXME: how to make reload the appointments when no professional is selected
-        <CardContent className='px-3 pb-3'
-              key={selectKey}>
-          <section className='mb-3 space-x-3 bg-primary/10 p-2 text-slate-500'>
+        <CardContent className='px-3 pb-3'>
+          <section className='mb-3 flex items-center space-x-3 bg-primary/10 p-2 text-slate-500'>
             <ProfessionalsSelect
               className='w-fit text-foreground [&>svg]:opacity-100'
               onValueChange={(e) => handleSelectProfessional(e)}
               professionals={professionals}
             />
-            <button
-              onClick={() => {
-                setSelectKey(crypto.randomUUID());
-              }}
-            >
-              X
-            </button>
+            {showClearSelectButton && (
+              <Button
+                className='h-5 w-5 rounded-full bg-black p-0 text-xs font-medium text-white hover:bg-black/70'
+                ref={professionalScope}
+                size='miniIcon'
+                variant='default'
+                onClick={clearProfessionalSelect}
+                onMouseOver={() =>
+                  professionalAnimation(professionalScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                }
+                onMouseOut={() =>
+                  professionalAnimation(professionalScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                }
+              >
+                <Trash2 size={14} strokeWidth={2} />
+              </Button>
+            )}
           </section>
           <section className='flex border-b-2 pb-1 text-sm font-medium'>
             <div className='flex w-3/4 items-center'>
