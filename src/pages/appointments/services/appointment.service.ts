@@ -37,6 +37,23 @@ export class AppointmentApiService {
     }
   }
 
+  public static async findAllByUserAndProfessional(userId: string, professionalId: string) {
+    const url: string = `${this.API_URL}/appointments/byUserAndProfessional?user=${userId}&professional=${professionalId}`;
+
+    try {
+      const query: Response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json;charset=UTF-8',
+        },
+      });
+
+      return await query.json();
+    } catch (error) {
+      return error;
+    }
+  }
+
   public static async create(data: IAppointmentForm) {
     const url: string = `${this.API_URL}/appointments`;
 
