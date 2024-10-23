@@ -65,6 +65,10 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
     console.log('Remove appointment Nº', id);
   }
 
+  function handleSelectProfessional(professional: string): void {
+    console.log('Select professional', professional);
+  }
+
   return (
     <Card className='border'>
       <CardHeader>
@@ -75,7 +79,11 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
       ) : (
         <CardContent className='px-3 pb-3'>
           <section className='mb-3 space-x-3 bg-primary/10 p-2 text-slate-500'>
-          <ProfessionalsSelect professionals={professionals} />
+            <ProfessionalsSelect
+              className='w-fit text-foreground [&>svg]:opacity-100'
+              onValueChange={(e) => handleSelectProfessional(e)}
+              professionals={professionals}
+            />
           </section>
           <section className='flex border-b-2 pb-1 text-sm font-medium'>
             <div className='flex w-3/4 items-center'>
