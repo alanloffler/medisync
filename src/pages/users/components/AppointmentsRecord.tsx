@@ -12,7 +12,7 @@ import { format } from '@formkit/tempo';
 import { spring } from 'framer-motion';
 import { useAnimate } from 'framer-motion/mini';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 // Imports
 import type { IAppointmentView } from '@/pages/appointments/interfaces/appointment.interface';
 import type { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
@@ -24,6 +24,7 @@ import { useCapitalize } from '@/core/hooks/useCapitalize';
 // React component
 export function AppointmentsRecord({ userId, loaderText }: { userId: string; loaderText?: string }) {
   const [appointments, setAppointments] = useState<IAppointmentView[]>([]);
+  const [defaultProfessionalId, setDefaultProfessionalId] = useState<string | undefined>(undefined);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [isError, setIsError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -31,6 +32,7 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
   const [selectKey, setSelectKey] = useState<string>(crypto.randomUUID());
   const [showClearSelectButton, setShowClearSelectButton] = useState<boolean>(false);
   const [professionalScope, professionalAnimation] = useAnimate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const capitalize = useCapitalize();
   const navigate = useNavigate();
 
@@ -66,17 +68,34 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
     }
   }, [userId, selectKey]);
 
+  useEffect(() => {
+    setDefaultProfessionalId(undefined);
+
+    if (typeof searchParams.get('pid') === 'string') {
+      handleSelectProfessional(searchParams.get('pid') as string);
+      setDefaultProfessionalId(searchParams.get('pid') as string);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
   function handleSelectProfessional(professionalId: string): void {
-    setShowClearSelectButton(true);
-    // TODO: handle errors, loader and display errors on UI
-    AppointmentApiService.findAllByUserAndProfessional(userId, professionalId).then((response: IResponse) => {
-      if (response.statusCode === 200) setAppointments(response.data);
-    });
+    if (professionalId) {
+      // TODO: handle errors, loader and display errors on UI
+      AppointmentApiService.findAllByUserAndProfessional(userId, professionalId).then((response: IResponse) => {
+        if (response.statusCode === 200) {
+          setAppointments(response.data);
+          setShowClearSelectButton(true);
+          setSearchParams({ pid: professionalId });
+        }
+      });
+    }
   }
 
   function clearProfessionalSelect(): void {
     setSelectKey(crypto.randomUUID());
     setShowClearSelectButton(false);
+    setDefaultProfessionalId(undefined);
+    setSearchParams({});
   }
 
   function handleRemoveAppointment(id: string): void {
@@ -95,6 +114,7 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
           <section className='mb-3 flex items-center space-x-3 bg-primary/10 p-2 text-slate-500'>
             <ProfessionalsSelect
               className='w-fit text-foreground [&>svg]:opacity-100'
+              defaultValue={defaultProfessionalId}
               onValueChange={(e) => handleSelectProfessional(e)}
               professionals={professionals}
             />
