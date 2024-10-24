@@ -4,6 +4,7 @@ import { FileText, Trash2 } from 'lucide-react';
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
 // Components
+import { ApposDateSelect } from '@/pages/users/components/ApposDateSelect';
 import { InfoCard } from '@/core/components/common/InfoCard';
 import { LoadingDB } from '@/core/components/common/LoadingDB';
 import { ProfessionalsSelect } from '@/pages/professionals/components/common/ProfessionalsSelect';
@@ -119,31 +120,37 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
         <CardTitle className='border border-slate-600 bg-slate-500 text-white'>{USER_VIEW_CONFIG.appointmentRecords.title}</CardTitle>
       </CardHeader>
       <CardContent className='px-3 pb-3'>
-        <section className='mb-3 flex items-center space-x-3 bg-primary/10 p-2 text-slate-500'>
-          <ProfessionalsSelect
-            className='w-fit text-foreground [&>svg]:opacity-100'
-            defaultValue={defaultProfessionalId}
-            key={professionalSelectKey}
-            onValueChange={(e) => setSearchParams({ pid: e })}
-            professionals={professionals}
-          />
-          {defaultProfessionalId && (
-            <Button
-              className='h-5 w-5 rounded-full bg-black p-0 text-xs font-medium text-white hover:bg-black/70'
-              ref={professionalScope}
-              size='miniIcon'
-              variant='default'
-              onClick={clearProfessionalSelect}
-              onMouseOver={() =>
-                professionalAnimation(professionalScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-              }
-              onMouseOut={() =>
-                professionalAnimation(professionalScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-              }
-            >
-              <Trash2 size={14} strokeWidth={2} />
-            </Button>
-          )}
+        {/* Section: Filters */}
+        <section className='mb-3 flex flex-row items-center space-x-3 bg-primary/10 p-2 text-slate-500'>
+          <div className='flex flex-row items-center space-x-2 w-1/2'>
+            <ProfessionalsSelect
+              className='w-fit text-foreground [&>svg]:opacity-100'
+              defaultValue={defaultProfessionalId}
+              key={professionalSelectKey}
+              onValueChange={(e) => setSearchParams({ pid: e })}
+              professionals={professionals}
+            />
+            {defaultProfessionalId && (
+              <Button
+                className='h-5 w-5 rounded-full bg-black p-0 text-xs font-medium text-white hover:bg-black/70'
+                ref={professionalScope}
+                size='miniIcon'
+                variant='default'
+                onClick={clearProfessionalSelect}
+                onMouseOver={() =>
+                  professionalAnimation(professionalScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                }
+                onMouseOut={() =>
+                  professionalAnimation(professionalScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                }
+              >
+                <Trash2 size={14} strokeWidth={2} />
+              </Button>
+            )}
+          </div>
+          <div className='flex flex-row items-center space-x-2 w-1/2'>
+            <ApposDateSelect appointments={appointments} />
+          </div>
         </section>
         <section className='flex border-b-2 pb-1 text-sm font-medium'>
           <div className='flex w-3/4 items-center'>
