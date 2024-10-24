@@ -75,69 +75,71 @@ export default function ViewUser() {
       </header>
       {/* Section: Page Content */}
       <section className='mx-auto mt-4 flex w-full flex-row px-2 md:w-[500px]'>
-        <Card className='w-full'>
-          {showCard && (
-            <CardHeader>
-              <CardTitle>
-                <div className='relative flex items-center justify-center'>
-                  <h1 className='text-center text-2xl font-bold'>
-                    {capitalize(user.lastName)}, {capitalize(user.firstName)}
-                  </h1>
-                  <TooltipProvider delayDuration={0.3}>
-                    <Tooltip>
-                      <DropdownMenu>
-                        <TooltipTrigger asChild>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              className='absolute right-1 flex items-center'
-                              ref={dropdownScope}
-                              size={'miniIcon'}
-                              variant={'tableHeader'}
-                              onMouseOver={() =>
-                                dropdownAnimation(dropdownScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                              }
-                              onMouseOut={() =>
-                                dropdownAnimation(dropdownScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                              }
-                            >
-                              <Menu size={16} strokeWidth={2} />
-                            </Button>
-                          </DropdownMenuTrigger>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p className='text-xs font-medium'>{UV_CONFIG.tooltip.dropdown}</p>
-                        </TooltipContent>
-                        <DropdownMenuContent className='w-fit' align='end'>
-                          <DropdownMenuGroup>
-                            {/* Send email */}
-                            <Link
-                              to={`https://mail.google.com/mail/?view=cm&to=${emailObject.to}&su=${emailObject.subject}&body=${emailObject.body}`}
-                              target='_blank'
-                              className='transition-colors hover:text-indigo-500'
-                            >
-                              <DropdownMenuItem>{UV_CONFIG.dropdownMenu[0].name}</DropdownMenuItem>
-                            </Link>
-                            {/* Send whatsapp */}
-                            <Link to={`/whatsapp/${user._id}`}>
-                              <DropdownMenuItem>{UV_CONFIG.dropdownMenu[1].name}</DropdownMenuItem>
-                            </Link>
-                            {/* Edit user */}
-                            <Link to={`/users/update/${user._id}`}>
-                              <DropdownMenuItem>{UV_CONFIG.dropdownMenu[2].name}</DropdownMenuItem>
-                            </Link>
-                          </DropdownMenuGroup>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </Tooltip>
-                  </TooltipProvider>
-                </div>
-              </CardTitle>
-            </CardHeader>
-          )}
-          {isLoading ? (
-            <LoadingDB text={APP_CONFIG.loadingDB.findOneUser} className='-mt-12 py-6' />
-          ) : (
-            showCard && (
+        {isLoading ? (
+          <LoadingDB text={APP_CONFIG.loadingDB.findOneUser} variant='card' className='border' />
+        ) : (
+          showCard && (
+            <Card className='w-full'>
+              <CardHeader>
+                <CardTitle>
+                  <div className='relative flex items-center justify-center'>
+                    <h1 className='text-center text-2xl font-bold'>
+                      {capitalize(user.lastName)}, {capitalize(user.firstName)}
+                    </h1>
+                    <TooltipProvider delayDuration={0.3}>
+                      <Tooltip>
+                        <DropdownMenu>
+                          <TooltipTrigger asChild>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                className='absolute right-1 flex items-center'
+                                ref={dropdownScope}
+                                size={'miniIcon'}
+                                variant={'tableHeader'}
+                                onMouseOver={() =>
+                                  dropdownAnimation(
+                                    dropdownScope.current,
+                                    { scale: 1.1 },
+                                    { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 },
+                                  )
+                                }
+                                onMouseOut={() =>
+                                  dropdownAnimation(dropdownScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                                }
+                              >
+                                <Menu size={16} strokeWidth={2} />
+                              </Button>
+                            </DropdownMenuTrigger>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p className='text-xs font-medium'>{UV_CONFIG.tooltip.dropdown}</p>
+                          </TooltipContent>
+                          <DropdownMenuContent className='w-fit' align='end'>
+                            <DropdownMenuGroup>
+                              {/* Send email */}
+                              <Link
+                                to={`https://mail.google.com/mail/?view=cm&to=${emailObject.to}&su=${emailObject.subject}&body=${emailObject.body}`}
+                                target='_blank'
+                                className='transition-colors hover:text-indigo-500'
+                              >
+                                <DropdownMenuItem>{UV_CONFIG.dropdownMenu[0].name}</DropdownMenuItem>
+                              </Link>
+                              {/* Send whatsapp */}
+                              <Link to={`/whatsapp/${user._id}`}>
+                                <DropdownMenuItem>{UV_CONFIG.dropdownMenu[1].name}</DropdownMenuItem>
+                              </Link>
+                              {/* Edit user */}
+                              <Link to={`/users/update/${user._id}`}>
+                                <DropdownMenuItem>{UV_CONFIG.dropdownMenu[2].name}</DropdownMenuItem>
+                              </Link>
+                            </DropdownMenuGroup>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                </CardTitle>
+              </CardHeader>
               <CardContent className='mt-3 space-y-3'>
                 <section className='flex items-center space-x-4'>
                   <CreditCard size={24} strokeWidth={2} />
@@ -153,13 +155,15 @@ export default function ViewUser() {
                 </section>
                 <section className='flex justify-end pt-2 text-base leading-none text-slate-500'>{`${UV_CONFIG.phrase.userSince} ${legibleDate(new Date(user.createdAt), 'short')}`}</section>
               </CardContent>
-            )
-          )}
-        </Card>
+            </Card>
+          )
+        )}
       </section>
-      {showCard && <section className='mx-auto w-3/4 pt-3'>
-        <AppointmentsRecord userId={user._id} loaderText={USER_VIEW_CONFIG.appointmentRecords.loader} />
-      </section>}
+      {showCard && (
+        <section className='mx-auto w-3/4 pt-3'>
+          <AppointmentsRecord userId={user._id} loaderText={USER_VIEW_CONFIG.appointmentRecords.loader} />
+        </section>
+      )}
       <footer className='mx-auto pt-3'>
         <Button variant='default' size='default' onClick={() => navigate('/users')}>
           {UV_CONFIG.buttons.goToUsers}
