@@ -28,9 +28,9 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [isError, setIsError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [professionalSelectKey, setProfessionalSelectKey] = useState<string>(crypto.randomUUID());
   const [professionals, setProfessionals] = useState<IProfessional[]>([]);
   const [selectKey, setSelectKey] = useState<string>(crypto.randomUUID());
-  const [showClearSelectButton, setShowClearSelectButton] = useState<boolean>(false);
   const [professionalScope, professionalAnimation] = useAnimate();
   const [searchParams, setSearchParams] = useSearchParams();
   const capitalize = useCapitalize();
@@ -68,43 +68,31 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
     }
   }, [userId, selectKey]);
 
-  // useEffect(() => {
-  //   if (searchParams.has('pid')) {
-  //     setDefaultProfessionalId(searchParams.get('pid') as string);
-  //     handleSelectProfessional(searchParams.get('pid') as string);
-  //   } else {
-  //     setDefaultProfessionalId(undefined);
-  //     setSearchParams({});
-  //   }
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [searchParams]);
-
   useEffect(() => {
-    setDefaultProfessionalId(undefined);
-    // FIXME: when navigate by history the table shows all appos and the select has the searchParam value
-    if (typeof searchParams.get('pid') === 'string') {
+    if (searchParams.get('pid') === null) {
+      setSelectKey(crypto.randomUUID());
+      searchParams.delete('pid');
+    } else {
       handleSelectProfessional(searchParams.get('pid') as string);
       setDefaultProfessionalId(searchParams.get('pid') as string);
+      setProfessionalSelectKey(crypto.randomUUID());
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
 
-  function handleSelectProfessional(professionalId: string): void {
-    if (professionalId) {
-      // TODO: handle errors, loader and display errors on UI
-      AppointmentApiService.findAllByUserAndProfessional(userId, professionalId).then((response: IResponse) => {
-        if (response.statusCode === 200) {
-          setAppointments(response.data);
-          setShowClearSelectButton(true);
-          setSearchParams({ pid: professionalId });
-        }
-      });
+    function handleSelectProfessional(professionalId: string): void {
+      if (professionalId) {
+        // TODO: handle errors, loader and display errors on UI
+        AppointmentApiService.findAllByUserAndProfessional(userId, professionalId).then((response: IResponse) => {
+          if (response.statusCode === 200) {
+            setAppointments(response.data);
+            setSearchParams({ pid: professionalId });
+          }
+        });
+      }
     }
-  }
+  }, [searchParams, setSearchParams, userId]);
 
   function clearProfessionalSelect(): void {
     setSelectKey(crypto.randomUUID());
-    setShowClearSelectButton(false);
     setDefaultProfessionalId(undefined);
     setSearchParams({});
   }
@@ -126,10 +114,11 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
             <ProfessionalsSelect
               className='w-fit text-foreground [&>svg]:opacity-100'
               defaultValue={defaultProfessionalId}
-              onValueChange={(e) => handleSelectProfessional(e)}
+              key={professionalSelectKey}
+              onValueChange={(e) => setSearchParams({ pid: e })}
               professionals={professionals}
             />
-            {showClearSelectButton && (
+            {defaultProfessionalId && (
               <Button
                 className='h-5 w-5 rounded-full bg-black p-0 text-xs font-medium text-white hover:bg-black/70'
                 ref={professionalScope}
