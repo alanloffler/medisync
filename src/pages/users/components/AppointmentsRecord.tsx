@@ -80,11 +80,19 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
 
     function handleSelectProfessional(professionalId: string): void {
       if (professionalId) {
-        // TODO: handle errors, loader and display errors on UI
         AppointmentApiService.findAllByUserAndProfessional(userId, professionalId).then((response: IResponse) => {
           if (response.statusCode === 200) {
             setAppointments(response.data);
             setSearchParams({ pid: professionalId });
+            if (response.data.length === 0) setErrorMessage(response.message);
+          }
+          if (response.statusCode > 399) {
+            setIsError(true);
+            setErrorMessage(response.message);
+          }
+          if (response instanceof Error) {
+            setIsError(true);
+            setErrorMessage(APP_CONFIG.error.server);
           }
         });
       }
