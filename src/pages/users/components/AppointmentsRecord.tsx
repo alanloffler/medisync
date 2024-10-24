@@ -80,21 +80,25 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
 
     function handleSelectProfessional(professionalId: string): void {
       if (professionalId) {
-        AppointmentApiService.findAllByUserAndProfessional(userId, professionalId).then((response: IResponse) => {
-          if (response.statusCode === 200) {
-            setAppointments(response.data);
-            setSearchParams({ pid: professionalId });
-            if (response.data.length === 0) setErrorMessage(response.message);
-          }
-          if (response.statusCode > 399) {
-            setIsError(true);
-            setErrorMessage(response.message);
-          }
-          if (response instanceof Error) {
-            setIsError(true);
-            setErrorMessage(APP_CONFIG.error.server);
-          }
-        });
+        setIsLoading(true);
+
+        AppointmentApiService.findAllByUserAndProfessional(userId, professionalId)
+          .then((response: IResponse) => {
+            if (response.statusCode === 200) {
+              setAppointments(response.data);
+              setSearchParams({ pid: professionalId });
+              if (response.data.length === 0) setErrorMessage(response.message);
+            }
+            if (response.statusCode > 399) {
+              setIsError(true);
+              setErrorMessage(response.message);
+            }
+            if (response instanceof Error) {
+              setIsError(true);
+              setErrorMessage(APP_CONFIG.error.server);
+            }
+          })
+          .finally(() => setIsLoading(false));
       }
     }
   }, [searchParams, setSearchParams, userId]);
@@ -114,81 +118,78 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
       <CardHeader>
         <CardTitle className='border border-slate-600 bg-slate-500 text-white'>{USER_VIEW_CONFIG.appointmentRecords.title}</CardTitle>
       </CardHeader>
-      {isLoading ? (
-        <LoadingDB text={loaderText || 'Loading data'} className='pb-4 pt-2' />
-      ) : (
-        <CardContent className='px-3 pb-3'>
-          <section className='mb-3 flex items-center space-x-3 bg-primary/10 p-2 text-slate-500'>
-            <ProfessionalsSelect
-              className='w-fit text-foreground [&>svg]:opacity-100'
-              defaultValue={defaultProfessionalId}
-              key={professionalSelectKey}
-              onValueChange={(e) => setSearchParams({ pid: e })}
-              professionals={professionals}
-            />
-            {defaultProfessionalId && (
-              <Button
-                className='h-5 w-5 rounded-full bg-black p-0 text-xs font-medium text-white hover:bg-black/70'
-                ref={professionalScope}
-                size='miniIcon'
-                variant='default'
-                onClick={clearProfessionalSelect}
-                onMouseOver={() =>
-                  professionalAnimation(professionalScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                }
-                onMouseOut={() =>
-                  professionalAnimation(professionalScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                }
-              >
-                <Trash2 size={14} strokeWidth={2} />
-              </Button>
-            )}
-          </section>
-          <section className='flex border-b-2 pb-1 text-sm font-medium'>
-            <div className='flex w-3/4 items-center'>
-              <div className='w-1/4 text-center'>{USER_VIEW_CONFIG.appointmentRecords.tableHeaders[0]}</div>
-              <div className='w-3/4 text-center'>{USER_VIEW_CONFIG.appointmentRecords.tableHeaders[1]}</div>
-            </div>
-            <div className='w-1/4 text-center'>{USER_VIEW_CONFIG.appointmentRecords.tableHeaders[2]}</div>
-          </section>
-          {isError ? (
-            <InfoCard type='error' text={errorMessage} className='p-0 pt-3' />
-          ) : appointments.length > 0 ? (
-            appointments?.map((appointment, index) => (
-              <section
-                key={crypto.randomUUID()}
-                className={`flex flex-row items-center justify-between p-1.5 text-sm ${index % 2 === 0 && 'bg-slate-100/80'}`}
-              >
-                <section className='flex w-3/4 flex-row items-center'>
-                  <div className='w-1/4 text-center'>{format(appointment.day, 'DD/MM/YYYY')}</div>
-                  <div className='w-3/4'>{`${capitalize(appointment.professional.title.abbreviation)} ${capitalize(appointment.professional.lastName)}, ${capitalize(appointment.professional.firstName)}`}</div>
-                </section>
-                <section className='flex w-1/4 items-center justify-end space-x-1.5'>
-                  <Button
-                    variant='tableHeader'
-                    size='miniIcon'
-                    onClick={() => navigate(`/appointments/${appointment._id}`)}
-                    className={`border border-slate-300 shadow-sm transition-all hover:scale-110 hover:border-fuchsia-500 hover:text-fuchsia-500 ${index % 2 === 0 ? 'bg-white hover:bg-white' : 'bg-slate-100 hover:bg-white'}`}
-                  >
-                    <FileText size={17} strokeWidth={1.5} />
-                  </Button>
-                  <Button
-                    key={crypto.randomUUID()}
-                    variant='tableHeader'
-                    size='miniIcon'
-                    onClick={() => handleRemoveAppointment(appointment._id)}
-                    className={`border border-slate-300 shadow-sm transition-all hover:scale-110 hover:border-red-500 hover:text-red-500 ${index % 2 === 0 ? 'bg-white hover:bg-white' : 'bg-slate-100 hover:bg-white'}`}
-                  >
-                    <Trash2 size={17} strokeWidth={1.5} />
-                  </Button>
-                </section>
-              </section>
-            ))
-          ) : (
-            <InfoCard type='warning' text={errorMessage} className='p-0 pt-3' />
+      <CardContent className='px-3 pb-3'>
+        <section className='mb-3 flex items-center space-x-3 bg-primary/10 p-2 text-slate-500'>
+          <ProfessionalsSelect
+            className='w-fit text-foreground [&>svg]:opacity-100'
+            defaultValue={defaultProfessionalId}
+            key={professionalSelectKey}
+            onValueChange={(e) => setSearchParams({ pid: e })}
+            professionals={professionals}
+          />
+          {defaultProfessionalId && (
+            <Button
+              className='h-5 w-5 rounded-full bg-black p-0 text-xs font-medium text-white hover:bg-black/70'
+              ref={professionalScope}
+              size='miniIcon'
+              variant='default'
+              onClick={clearProfessionalSelect}
+              onMouseOver={() =>
+                professionalAnimation(professionalScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+              }
+              onMouseOut={() =>
+                professionalAnimation(professionalScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+              }
+            >
+              <Trash2 size={14} strokeWidth={2} />
+            </Button>
           )}
-        </CardContent>
-      )}
+        </section>
+        <section className='flex border-b-2 pb-1 text-sm font-medium'>
+          <div className='flex w-3/4 items-center'>
+            <div className='w-1/4 text-center'>{USER_VIEW_CONFIG.appointmentRecords.tableHeaders[0]}</div>
+            <div className='w-3/4 text-center'>{USER_VIEW_CONFIG.appointmentRecords.tableHeaders[1]}</div>
+          </div>
+          <div className='w-1/4 text-center'>{USER_VIEW_CONFIG.appointmentRecords.tableHeaders[2]}</div>
+        </section>
+        {isLoading && <LoadingDB text={loaderText || 'Loading data'} className='p-0 pt-3' />}
+        {!isLoading && isError ? (
+          <InfoCard type='error' text={errorMessage} className='p-0 pt-3' />
+        ) : (
+          !isLoading &&
+          appointments.length > 0 &&
+          appointments?.map((appointment, index) => (
+            <section
+              key={crypto.randomUUID()}
+              className={`flex flex-row items-center justify-between p-1.5 text-sm ${index % 2 === 0 && 'bg-slate-100/80'}`}
+            >
+              <section className='flex w-3/4 flex-row items-center'>
+                <div className='w-1/4 text-center'>{format(appointment.day, 'DD/MM/YYYY')}</div>
+                <div className='w-3/4'>{`${capitalize(appointment.professional.title.abbreviation)} ${capitalize(appointment.professional.lastName)}, ${capitalize(appointment.professional.firstName)}`}</div>
+              </section>
+              <section className='flex w-1/4 items-center justify-end space-x-1.5'>
+                <Button
+                  variant='tableHeader'
+                  size='miniIcon'
+                  onClick={() => navigate(`/appointments/${appointment._id}`)}
+                  className={`border border-slate-300 shadow-sm transition-all hover:scale-110 hover:border-fuchsia-500 hover:text-fuchsia-500 ${index % 2 === 0 ? 'bg-white hover:bg-white' : 'bg-slate-100 hover:bg-white'}`}
+                >
+                  <FileText size={17} strokeWidth={1.5} />
+                </Button>
+                <Button
+                  key={crypto.randomUUID()}
+                  variant='tableHeader'
+                  size='miniIcon'
+                  onClick={() => handleRemoveAppointment(appointment._id)}
+                  className={`border border-slate-300 shadow-sm transition-all hover:scale-110 hover:border-red-500 hover:text-red-500 ${index % 2 === 0 ? 'bg-white hover:bg-white' : 'bg-slate-100 hover:bg-white'}`}
+                >
+                  <Trash2 size={17} strokeWidth={1.5} />
+                </Button>
+              </section>
+            </section>
+          ))
+        )}
+      </CardContent>
     </Card>
   );
 }
