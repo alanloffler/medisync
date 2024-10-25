@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 import type { IAppointmentView } from '@/pages/appointments/interfaces/appointment.interface';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/core/components/ui/select';
 // React component
-export function ApposDateSelect({ appointments }: { appointments: IAppointmentView[] }) {
+export function ApposDateSelect({ appointments, onValueChange }: { appointments: IAppointmentView[]; onValueChange?: (e: string) => void }) {
   const [date, setDate] = useState<Date>();
   const [calendarScope, calendarAnimation] = useAnimate();
 
@@ -23,11 +23,11 @@ export function ApposDateSelect({ appointments }: { appointments: IAppointmentVi
   }, [appointments.length]);
 
   const uniqueYears: string[] = appointments
-    .map((appointment: IAppointmentView) => parse(appointment.day, 'yyyy').getFullYear().toString())
+    .map((appointment: IAppointmentView) => parse(appointment.day).getFullYear().toString())
     .filter((value, index, array) => {
       return array.indexOf(value) === index;
     });
-
+    
   return (
     <main className='flex flex-row items-center space-x-2'>
       <span className='text-[13px] font-medium text-slate-500'>Fecha</span>
@@ -47,7 +47,7 @@ export function ApposDateSelect({ appointments }: { appointments: IAppointmentVi
           <section className='flex w-[180px] flex-col space-y-2 p-3'>
             <section className='flex flex-row items-center space-x-2'>
               <span className='text-[13px] font-medium text-slate-500'>Año</span>
-              <Select>
+              <Select onValueChange={onValueChange}>
                 <SelectTrigger className={'h-8 w-full space-x-2 border bg-white text-[13px] shadow-sm'}>
                   <SelectValue />
                 </SelectTrigger>
