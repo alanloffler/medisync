@@ -114,6 +114,10 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
     console.log('Remove appointment Nº', id);
   }
 
+  function handleDateChange(e: string): void {
+    console.log('Date change', e);
+  }
+
   return (
     <Card className='border'>
       <CardHeader>
@@ -149,7 +153,7 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
             )}
           </div>
           <div className='flex flex-row items-center space-x-2 w-1/2'>
-            <ApposDateSelect appointments={appointments} />
+            <ApposDateSelect appointments={appointments} onValueChange={handleDateChange} />
           </div>
         </section>
         <section className='flex border-b-2 pb-1 text-sm font-medium'>
