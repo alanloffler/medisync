@@ -123,9 +123,26 @@ export class AppointmentApiService {
     }
   }
 
-  // Methods for the appointment records filter by year
-  public static async findAppointmentsYearsByUser(userId: string) {
+  // AppointmentsRecord component methods
+  public static async findApposYearsByUser(userId: string) {
     const url: string = `${this.API_URL}/appointments/yearsByUser?u=${userId}`;
+
+    try {
+      const query: Response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json;charset=UTF-8',
+        },
+      });
+
+      return await query.json();
+    } catch (error) {
+      return error;
+    }
+  }
+
+  public static async findApposMonthsByUser(userId: string, year: string) {
+    const url: string = `${this.API_URL}/appointments/monthsByUser?u=${userId}&y=${year}`;
 
     try {
       const query: Response = await fetch(url, {
