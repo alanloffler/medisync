@@ -54,8 +54,8 @@ export class AppointmentApiService {
     }
   }
 
-  public static async findAllByUserAndYear(userId: string, year: string) {
-    const url: string = `${this.API_URL}/appointments/byUserAndYear?u=${userId}&y=${year}`;
+  public static async findAllByUserAndYear(userId: string, year: string | undefined, month: string | undefined) {
+    const url: string = `${this.API_URL}/appointments/byUserAndYear?u=${userId}&y=${year}&m=${month}`;
 
     try {
       const query: Response = await fetch(url, {

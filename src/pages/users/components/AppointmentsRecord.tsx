@@ -115,7 +115,7 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
   }
 
   // TODO: handle error and loading
-  function handleDateChange(year: string, month: string): void {
+  function handleDateChange(year: string | undefined, month: string | undefined): void {
     AppointmentApiService.findAllByUserAndYear(userId, year, month).then((response: IResponse) => {
       if (response.statusCode === 200) {
         setAppointments(response.data);
