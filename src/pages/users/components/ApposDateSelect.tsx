@@ -80,7 +80,15 @@ export function ApposDateSelect({ userId, onValueChange }: { userId: string; onV
             onMouseOut={bounceCalendarOut}
           >
             <CalendarIcon ref={calendarScope} size={16} strokeWidth={2} />
-            {selectedYear !== undefined ? <span>{selectedYear}</span> : <span>Seleccionar</span>}
+            {selectedYear !== undefined ? (
+              selectedMonth !== undefined ? (
+                <span>{`${selectedMonth} / ${selectedYear}`}</span>
+              ) : (
+                <span>{selectedYear}</span>
+              )
+            ) : (
+              <span>Seleccionar</span>
+            )}
           </Button>
         </PopoverTrigger>
         <PopoverContent className='w-auto p-0'>
@@ -105,18 +113,14 @@ export function ApposDateSelect({ userId, onValueChange }: { userId: string; onV
               </div>
               <div className='flex flex-row place-content-start items-center space-x-2'>
                 <span className='text-[13px] font-medium text-slate-500'>Mes</span>
-                <Select value={selectedMonth} onValueChange={(e) => setSelectedMonth(e)}>
-                  <SelectTrigger className={'h-6 w-fit space-x-2 border bg-white text-xs shadow-sm'}>
+                <Select value={selectedMonth} onValueChange={(e) => setSelectedMonth(e)} disabled={selectedYear === undefined}>
+                  <SelectTrigger className={'h-6 w-fit space-x-2 border bg-white text-xs shadow-sm disabled:opacity-50'}>
                     <SelectValue placeholder='Mes' />
                   </SelectTrigger>
                   <SelectContent className='w-fit min-w-10' onCloseAutoFocus={(e) => e.preventDefault()}>
                     <SelectGroup>
                       {months.map((month) => (
-                        <SelectItem
-                          key={crypto.randomUUID()}
-                          value={month}
-                          className='py-1 text-xs [&>span>span>svg]:h-3 [&>span>span>svg]:w-3'
-                        >
+                        <SelectItem key={crypto.randomUUID()} value={month} className='py-1 text-xs [&>span>span>svg]:h-3 [&>span>span>svg]:w-3'>
                           {capitalize(format(new Date(month), 'MMMM', 'es'))}
                         </SelectItem>
                       ))}
