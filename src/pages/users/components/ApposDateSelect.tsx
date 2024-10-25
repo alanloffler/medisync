@@ -61,7 +61,7 @@ export function ApposDateSelect({ userId, onValueChange }: { userId: string; onV
                   <SelectTrigger className={'h-6 w-fit space-x-2 border bg-white text-xs shadow-sm'}>
                     <SelectValue placeholder='Año' />
                   </SelectTrigger>
-                  <SelectContent className='w-fit min-w-10'>
+                  <SelectContent className='w-fit min-w-10' onCloseAutoFocus={(e) => e.preventDefault()}>
                     <SelectGroup>
                       {years.map((year) => (
                         <SelectItem key={crypto.randomUUID()} value={year} className='w-fit py-1 text-xs [&>span>span>svg]:h-3 [&>span>span>svg]:w-3'>
