@@ -114,14 +114,13 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
     console.log('Remove appointment Nº', id);
   }
 
-  function handleDateChange(e: string): void {
-    console.log('Date change', e);
-    AppointmentApiService.findAllByUserAndYear(userId, e)
-      .then((response: IResponse) => {
-        if (response.statusCode === 200) {
-          setAppointments(response.data);
-        }
-      });
+  // TODO: handle error and loading
+  function handleDateChange(year: string): void {
+    AppointmentApiService.findAllByUserAndYear(userId, year).then((response: IResponse) => {
+      if (response.statusCode === 200) {
+        setAppointments(response.data);
+      }
+    });
   }
 
   return (
@@ -132,7 +131,7 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
       <CardContent className='px-3 pb-3'>
         {/* Section: Filters */}
         <section className='mb-3 flex flex-row items-center space-x-3 bg-primary/10 p-2 text-slate-500'>
-          <div className='flex flex-row items-center space-x-2 w-1/2'>
+          <div className='flex w-1/2 flex-row items-center space-x-2'>
             <ProfessionalsSelect
               className='w-fit text-foreground [&>svg]:opacity-100'
               defaultValue={defaultProfessionalId}
@@ -158,8 +157,8 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
               </Button>
             )}
           </div>
-          <div className='flex flex-row items-center space-x-2 w-1/2'>
-            <ApposDateSelect appointments={appointments} onValueChange={handleDateChange} />
+          <div className='flex w-1/2 flex-row items-center space-x-2'>
+            <ApposDateSelect userId={userId} onValueChange={handleDateChange} />
           </div>
         </section>
         <section className='flex border-b-2 pb-1 text-sm font-medium'>
