@@ -88,7 +88,7 @@ export function ApposDateSelect({
           >
             <CalendarIcon ref={calendarScope} size={16} strokeWidth={2} />
             {selectedYear !== undefined ? (
-              selectedMonth !== undefined ? (
+              selectedMonth !== '' ? (
                 <span>{`${selectedMonth} / ${selectedYear}`}</span>
               ) : (
                 <span>{selectedYear}</span>
