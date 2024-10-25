@@ -12,8 +12,8 @@ import { useEffect, useState } from 'react';
 import type { IAppointmentView } from '@/pages/appointments/interfaces/appointment.interface';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/core/components/ui/select';
 // React component
-export function ApposDateSelect({ appointments, onValueChange }: { appointments: IAppointmentView[]; onValueChange?: (e: string) => void }) {
-  const [date, setDate] = useState<Date>();
+export function ApposDateSelect({ appointments, onValueChange }: { appointments: IAppointmentView[]; onValueChange: (e: string) => void }) {
+  const [year, setYear] = useState<string>('');
   const [calendarScope, calendarAnimation] = useAnimate();
 
   useEffect(() => {
@@ -27,7 +27,15 @@ export function ApposDateSelect({ appointments, onValueChange }: { appointments:
     .filter((value, index, array) => {
       return array.indexOf(value) === index;
     });
-    
+
+    function clearYear(): void {
+      setYear('');
+      onValueChange('');
+    }
+    // TODO: show year on date picker, see the method to clear year and set placeholder
+    // Also, must style the inputs
+    // FIXME: create a api call which will return the unique years from a db query (now has a bug)
+
   return (
     <main className='flex flex-row items-center space-x-2'>
       <span className='text-[13px] font-medium text-slate-500'>Fecha</span>
@@ -40,7 +48,7 @@ export function ApposDateSelect({ appointments, onValueChange }: { appointments:
             onMouseOut={() => calendarAnimation(calendarScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })}
           >
             <CalendarIcon ref={calendarScope} size={16} strokeWidth={2} />
-            {date ? <span>{format(date, 'dd/MM/yyyy')}</span> : <span>Seleccionar</span>}
+            {year !== '' ? <span>{format(year, 'dd/MM/yyyy')}</span> : <span>Seleccionar</span>}
           </Button>
         </PopoverTrigger>
         <PopoverContent className='w-auto p-0'>
@@ -61,6 +69,7 @@ export function ApposDateSelect({ appointments, onValueChange }: { appointments:
                   </SelectGroup>
                 </SelectContent>
               </Select>
+              <Button onClick={clearYear}>X</Button>
             </section>
           </section>
         </PopoverContent>
