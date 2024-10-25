@@ -14,7 +14,13 @@ import type { IResponse } from '@/core/interfaces/response.interface';
 import { AppointmentApiService } from '@/pages/appointments/services/appointment.service';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 // React component
-export function ApposDateSelect({ userId, onValueChange }: { userId: string; onValueChange: (year: string | undefined, month: string | undefined) => void }) {
+export function ApposDateSelect({
+  userId,
+  onValueChange,
+}: {
+  userId: string;
+  onValueChange: (year: string | undefined, month: string | undefined) => void;
+}) {
   const [months, setMonths] = useState<string[]>([]);
   const [openPopover, setOpenPopover] = useState<boolean>(false);
   const [selectedMonth, setSelectedMonth] = useState<string | undefined>(undefined);
@@ -33,7 +39,7 @@ export function ApposDateSelect({ userId, onValueChange }: { userId: string; onV
 
   function handleYearChange(year: string | undefined, month: string | undefined): void {
     if (year !== undefined) {
-      (month !== undefined) ? onValueChange(year, month) : onValueChange(year, undefined);
+      month !== undefined ? onValueChange(year, month) : onValueChange(year, undefined);
       setOpenPopover(false);
     } else {
       setSelectedYear(undefined);
@@ -44,6 +50,7 @@ export function ApposDateSelect({ userId, onValueChange }: { userId: string; onV
   }
 
   useEffect(() => {
+    setSelectedMonth('');
     // TODO: handle errors and loading
     if (selectedYear !== undefined) {
       AppointmentApiService.findApposMonthsByUser(userId, selectedYear).then((response: IResponse) => {
@@ -128,7 +135,7 @@ export function ApposDateSelect({ userId, onValueChange }: { userId: string; onV
                   </SelectContent>
                 </Select>
               </div>
-              <Button variant='default' size='xs' onClick={() => handleYearChange(selectedYear, selectedMonth)}>
+              <Button disabled={selectedYear === undefined} variant='default' size='xs' onClick={() => handleYearChange(selectedYear, selectedMonth)}>
                 Buscar
               </Button>
             </section>
