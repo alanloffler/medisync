@@ -13,6 +13,7 @@ import type { IResponse } from '@/core/interfaces/response.interface';
 import { AppointmentApiService } from '@/pages/appointments/services/appointment.service';
 // React component
 export function ApposDateSelect({ userId, onValueChange }: { userId: string; onValueChange: (value: string) => void }) {
+  const [months, setMonths] = useState<string[]>([]);
   const [openPopover, setOpenPopover] = useState<boolean>(false);
   const [selectedYear, setSelectedYear] = useState<string | undefined>(undefined);
   const [years, setYears] = useState<string[]>([]);
@@ -20,8 +21,8 @@ export function ApposDateSelect({ userId, onValueChange }: { userId: string; onV
   const [clearYearScope, clearYearAnimation] = useAnimate();
 
   useEffect(() => {
-    AppointmentApiService.findAppointmentsYearsByUser(userId).then((response: IResponse) => {
-      console.log(response);
+    // TODO: handle errors and loading
+    AppointmentApiService.findApposYearsByUser(userId).then((response: IResponse) => {
       setYears(response.data);
     });
   }, [userId]);
@@ -37,6 +38,15 @@ export function ApposDateSelect({ userId, onValueChange }: { userId: string; onV
       setOpenPopover(false);
     }
   }
+
+  useEffect(() => {
+    // TODO: handle errors and loading
+    if (selectedYear !== undefined) {
+      AppointmentApiService.findApposMonthsByUser(userId, selectedYear).then((response: IResponse) => {
+        setMonths(response.data);
+      });
+    }
+  }, [selectedYear, userId]);
 
   function bounceClearYearOver(): void {
     clearYearAnimation(clearYearScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 });
@@ -89,6 +99,7 @@ export function ApposDateSelect({ userId, onValueChange }: { userId: string; onV
                   </SelectContent>
                 </Select>
               </div>
+              {JSON.stringify(months)}
               <Button variant='default' size='xs' onClick={() => handleYearChange(selectedYear)}>
                 Buscar
               </Button>
