@@ -5,20 +5,24 @@ import { Button } from '@/core/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/core/components/ui/popover';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/core/components/ui/select';
 // External imports
+import { format } from '@formkit/tempo';
 import { spring } from 'framer-motion';
 import { useAnimate } from 'framer-motion/mini';
 import { useEffect, useState } from 'react';
 // Imports
 import type { IResponse } from '@/core/interfaces/response.interface';
 import { AppointmentApiService } from '@/pages/appointments/services/appointment.service';
+import { useCapitalize } from '@/core/hooks/useCapitalize';
 // React component
 export function ApposDateSelect({ userId, onValueChange }: { userId: string; onValueChange: (value: string) => void }) {
   const [months, setMonths] = useState<string[]>([]);
   const [openPopover, setOpenPopover] = useState<boolean>(false);
+  const [selectedMonth, setSelectedMonth] = useState<string | undefined>(undefined);
   const [selectedYear, setSelectedYear] = useState<string | undefined>(undefined);
   const [years, setYears] = useState<string[]>([]);
   const [calendarScope, calendarAnimation] = useAnimate();
   const [clearYearScope, clearYearAnimation] = useAnimate();
+  const capitalize = useCapitalize();
 
   useEffect(() => {
     // TODO: handle errors and loading
@@ -29,11 +33,11 @@ export function ApposDateSelect({ userId, onValueChange }: { userId: string; onV
 
   function handleYearChange(year: string | undefined): void {
     if (year !== undefined) {
-      console.log(year);
       onValueChange(year);
       setOpenPopover(false);
     } else {
       setSelectedYear(undefined);
+      setSelectedMonth(undefined);
       onValueChange('');
       setOpenPopover(false);
     }
@@ -91,7 +95,7 @@ export function ApposDateSelect({ userId, onValueChange }: { userId: string; onV
                   <SelectContent className='w-fit min-w-10' onCloseAutoFocus={(e) => e.preventDefault()}>
                     <SelectGroup>
                       {years.map((year) => (
-                        <SelectItem key={crypto.randomUUID()} value={year} className='w-fit py-1 text-xs [&>span>span>svg]:h-3 [&>span>span>svg]:w-3'>
+                        <SelectItem key={crypto.randomUUID()} value={year} className='py-1 text-xs [&>span>span>svg]:h-3 [&>span>span>svg]:w-3'>
                           {year}
                         </SelectItem>
                       ))}
@@ -99,7 +103,27 @@ export function ApposDateSelect({ userId, onValueChange }: { userId: string; onV
                   </SelectContent>
                 </Select>
               </div>
-              {JSON.stringify(months)}
+              <div className='flex flex-row place-content-start items-center space-x-2'>
+                <span className='text-[13px] font-medium text-slate-500'>Mes</span>
+                <Select value={selectedMonth} onValueChange={(e) => setSelectedMonth(e)}>
+                  <SelectTrigger className={'h-6 w-fit space-x-2 border bg-white text-xs shadow-sm'}>
+                    <SelectValue placeholder='Mes' />
+                  </SelectTrigger>
+                  <SelectContent className='w-fit min-w-10' onCloseAutoFocus={(e) => e.preventDefault()}>
+                    <SelectGroup>
+                      {months.map((month) => (
+                        <SelectItem
+                          key={crypto.randomUUID()}
+                          value={month}
+                          className='py-1 text-xs [&>span>span>svg]:h-3 [&>span>span>svg]:w-3'
+                        >
+                          {capitalize(format(new Date(month), 'MMMM', 'es'))}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
               <Button variant='default' size='xs' onClick={() => handleYearChange(selectedYear)}>
                 Buscar
               </Button>
