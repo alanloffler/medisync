@@ -15,6 +15,7 @@ import { APP_CONFIG } from '@/config/app.config';
 import { AppointmentApiService } from '@/pages/appointments/services/appointment.service';
 import { USER_VIEW_CONFIG } from '@/config/user.config';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
+import { useSearchParams } from 'react-router-dom';
 // React component
 export function ApposDateSelect({
   userId,
@@ -25,13 +26,33 @@ export function ApposDateSelect({
 }) {
   const [months, setMonths] = useState<string[]>([]);
   const [openPopover, setOpenPopover] = useState<boolean>(false);
-  const [selectedMonth, setSelectedMonth] = useState<string | undefined>(undefined);
-  const [selectedYear, setSelectedYear] = useState<string | undefined>(undefined);
   const [years, setYears] = useState<string[]>([]);
   const [calendarScope, calendarAnimation] = useAnimate();
   const [clearYearScope, clearYearAnimation] = useAnimate();
   const capitalize = useCapitalize();
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [selectedYear, setSelectedYear] = useState<string | undefined>();
+  const [selectedMonth, setSelectedMonth] = useState<string | undefined>();
+
+  function setSelectedDate(year: string | undefined, month: string | undefined): void {
+    console.log('year', year, 'month', month);
+    if (year !== undefined) {
+      month !== undefined ? onValueChange(year, month) : onValueChange(year, undefined);
+      setOpenPopover(false);
+    } else handleClearDateFilter();
+  }
+
+  // WORKING: reset year and month selected and reload the appos
+  function handleClearDateFilter(): void {
+    setSelectedYear(undefined);
+    setSelectedMonth(undefined);
+    onValueChange(undefined, undefined);
+    setOpenPopover(false);
+    setSearchParams({});
+  }
+
+  // WORKING: load years by user appos
   useEffect(() => {
     // TODO: handle errors and loading
     AppointmentApiService.findApposYearsByUser(userId).then((response: IResponse) => {
@@ -39,27 +60,17 @@ export function ApposDateSelect({
     });
   }, [userId]);
 
-  function handleYearChange(year: string | undefined, month: string | undefined): void {
-    if (year !== undefined) {
-      month !== undefined ? onValueChange(year, month) : onValueChange(year, undefined);
-      setOpenPopover(false);
-    } else {
-      setSelectedYear(undefined);
-      setSelectedMonth(undefined);
-      onValueChange(undefined, undefined);
-      setOpenPopover(false);
-    }
-  }
-
+  // WORKING: but check if some params are unnecessary
   useEffect(() => {
-    setSelectedMonth('');
+    setSelectedMonth(undefined);
     // TODO: handle errors and loading
     if (selectedYear !== undefined) {
       AppointmentApiService.findApposMonthsByUser(userId, selectedYear).then((response: IResponse) => {
         setMonths(response.data);
       });
     }
-  }, [selectedYear, userId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedYear]);
 
   function bounceClearYearOver(): void {
     clearYearAnimation(clearYearScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 });
@@ -90,7 +101,7 @@ export function ApposDateSelect({
           >
             <CalendarIcon ref={calendarScope} size={16} strokeWidth={2} />
             {selectedYear !== undefined ? (
-              selectedMonth !== '' ? (
+              selectedMonth !== undefined ? (
                 <span>{`${selectedMonth} / ${selectedYear}`}</span>
               ) : (
                 <span>{selectedYear}</span>
@@ -123,7 +134,9 @@ export function ApposDateSelect({
                 </Select>
               </div>
               <div className='flex flex-row place-content-start items-center space-x-2'>
-                <span className='text-[13px] font-medium text-slate-500'>{USER_VIEW_CONFIG.appointmentsRecord.select.datePicker.monthSelect.label}</span>
+                <span className='text-[13px] font-medium text-slate-500'>
+                  {USER_VIEW_CONFIG.appointmentsRecord.select.datePicker.monthSelect.label}
+                </span>
                 <Select value={selectedMonth} onValueChange={(e) => setSelectedMonth(e)} disabled={selectedYear === undefined}>
                   <SelectTrigger className={'h-6 w-fit space-x-2 border bg-white text-xs shadow-sm disabled:opacity-50'}>
                     <SelectValue placeholder={USER_VIEW_CONFIG.appointmentsRecord.select.datePicker.monthSelect.placeholder} />
@@ -139,7 +152,7 @@ export function ApposDateSelect({
                   </SelectContent>
                 </Select>
               </div>
-              <Button disabled={selectedYear === undefined} variant='default' size='xs' onClick={() => handleYearChange(selectedYear, selectedMonth)}>
+              <Button disabled={selectedYear === undefined} variant='default' size='xs' onClick={() => setSelectedDate(selectedYear, selectedMonth)}>
                 {USER_VIEW_CONFIG.appointmentsRecord.select.datePicker.button.search}
               </Button>
             </section>
@@ -152,7 +165,7 @@ export function ApposDateSelect({
           ref={clearYearScope}
           size='miniIcon'
           variant='default'
-          onClick={() => handleYearChange(undefined, undefined)}
+          onClick={handleClearDateFilter}
           onMouseOver={bounceClearYearOver}
           onMouseOut={bounceClearYearOut}
         >
