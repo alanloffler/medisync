@@ -2,6 +2,9 @@ export const APP_CONFIG = {
   error: {
     server: 'Error interno del servidor'
   },
+  i18n: {
+    locale: 'es',
+  },
   loading: {
     duration: 0.5,
     size: 45,
