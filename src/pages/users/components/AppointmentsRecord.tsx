@@ -131,8 +131,8 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
       </CardHeader>
       <CardContent className='px-3 pb-3'>
         {/* Section: Filters */}
-        <section className='mb-3 flex flex-row items-center space-x-3 bg-primary/10 p-2 text-slate-500'>
-          <div className='flex w-1/2 flex-row items-center space-x-2'>
+        <section className='mb-3 flex flex-col items-center space-y-2 bg-primary/10 p-2 text-slate-500 md:flex-row md:space-x-3 md:space-y-0'>
+          <div className='flex w-full flex-row items-center space-x-2 md:w-1/2'>
             <ProfessionalsSelect
               className='w-fit text-foreground [&>svg]:opacity-100'
               defaultValue={defaultProfessionalId}
@@ -158,7 +158,7 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
               </Button>
             )}
           </div>
-          <div className='flex w-1/2 flex-row items-center space-x-2'>
+          <div className='flex w-full flex-row items-center space-x-2 md:w-1/2'>
             <ApposDateSelect userId={userId} onValueChange={handleDateChange} />
           </div>
         </section>
