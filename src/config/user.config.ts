@@ -106,7 +106,7 @@ export const USER_CREATE_CONFIG = {
 };
 
 export const USER_VIEW_CONFIG = {
-  appointmentRecords: {
+  appointmentsRecord: {
     loader: 'Cargando turnos',
     noAppointments: 'No existen turnos para el paciente',
     select: {
