@@ -160,7 +160,7 @@ export default function ViewUser() {
         )}
       </section>
       {showCard && (
-        <section className='mx-auto w-3/4 pt-3'>
+        <section className='mx-auto w-full md:w-3/4 pt-3'>
           <AppointmentsRecord userId={user._id} loaderText={USER_VIEW_CONFIG.appointmentsRecord.loader} />
         </section>
       )}
