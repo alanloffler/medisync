@@ -109,6 +109,23 @@ export const USER_VIEW_CONFIG = {
   appointmentRecords: {
     loader: 'Cargando turnos',
     noAppointments: 'No existen turnos para el paciente',
+    select: {
+      datePicker: {
+        button: {
+          search: 'Buscar',
+        },
+        label: 'Fecha',
+        placeholder: 'Seleccionar',
+        monthSelect: {
+          label: 'Meses',
+          placeholder: 'Seleccionar',
+        },
+        yearSelect: {
+          label: 'Años',
+          placeholder: 'Seleccionar',
+        },
+      },
+    },
     tableHeaders: ['Fecha', 'Profesional', 'Acciones'],
     title: 'Historial de turnos',
   },
