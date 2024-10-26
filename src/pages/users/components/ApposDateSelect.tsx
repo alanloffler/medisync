@@ -11,7 +11,9 @@ import { useAnimate } from 'framer-motion/mini';
 import { useEffect, useState } from 'react';
 // Imports
 import type { IResponse } from '@/core/interfaces/response.interface';
+import { APP_CONFIG } from '@/config/app.config';
 import { AppointmentApiService } from '@/pages/appointments/services/appointment.service';
+import { USER_VIEW_CONFIG } from '@/config/user.config';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 // React component
 export function ApposDateSelect({
@@ -77,7 +79,7 @@ export function ApposDateSelect({
 
   return (
     <main className='flex flex-row items-center space-x-2'>
-      <span className='text-[13px] font-medium text-slate-500'>Fecha</span>
+      <span className='text-[13px] font-medium text-slate-500'>{USER_VIEW_CONFIG.appointmentsRecord.select.datePicker.label}</span>
       <Popover open={openPopover} onOpenChange={(e) => setOpenPopover(e)}>
         <PopoverTrigger asChild>
           <Button
@@ -94,18 +96,20 @@ export function ApposDateSelect({
                 <span>{selectedYear}</span>
               )
             ) : (
-              <span>Seleccionar</span>
+              <span>{USER_VIEW_CONFIG.appointmentsRecord.select.datePicker.placeholder}</span>
             )}
           </Button>
         </PopoverTrigger>
         <PopoverContent className='w-auto p-0'>
-          <section className='flex w-[180px] flex-col space-y-2 p-3'>
+          <section className='flex w-[200px] flex-col space-y-2 p-3'>
             <section className='flex flex-col space-y-3'>
               <div className='flex flex-row place-content-start items-center space-x-2'>
-                <span className='text-[13px] font-medium text-slate-500'>Año</span>
+                <span className='text-[13px] font-medium text-slate-500'>
+                  {USER_VIEW_CONFIG.appointmentsRecord.select.datePicker.yearSelect.label}
+                </span>
                 <Select value={selectedYear} onValueChange={(e) => setSelectedYear(e)}>
                   <SelectTrigger className={'h-6 w-fit space-x-2 border bg-white text-xs shadow-sm'}>
-                    <SelectValue placeholder='Año' />
+                    <SelectValue placeholder={USER_VIEW_CONFIG.appointmentsRecord.select.datePicker.yearSelect.placeholder} />
                   </SelectTrigger>
                   <SelectContent className='w-fit min-w-10' onCloseAutoFocus={(e) => e.preventDefault()}>
                     <SelectGroup>
@@ -119,16 +123,16 @@ export function ApposDateSelect({
                 </Select>
               </div>
               <div className='flex flex-row place-content-start items-center space-x-2'>
-                <span className='text-[13px] font-medium text-slate-500'>Mes</span>
+                <span className='text-[13px] font-medium text-slate-500'>{USER_VIEW_CONFIG.appointmentsRecord.select.datePicker.monthSelect.label}</span>
                 <Select value={selectedMonth} onValueChange={(e) => setSelectedMonth(e)} disabled={selectedYear === undefined}>
                   <SelectTrigger className={'h-6 w-fit space-x-2 border bg-white text-xs shadow-sm disabled:opacity-50'}>
-                    <SelectValue placeholder='Mes' />
+                    <SelectValue placeholder={USER_VIEW_CONFIG.appointmentsRecord.select.datePicker.monthSelect.placeholder} />
                   </SelectTrigger>
                   <SelectContent className='w-fit min-w-10' onCloseAutoFocus={(e) => e.preventDefault()}>
                     <SelectGroup>
                       {months.map((month) => (
                         <SelectItem key={crypto.randomUUID()} value={month} className='py-1 text-xs [&>span>span>svg]:h-3 [&>span>span>svg]:w-3'>
-                          {capitalize(format(new Date(month), 'MMMM', 'es'))}
+                          {capitalize(format(new Date(month), 'MMMM', APP_CONFIG.i18n.locale))}
                         </SelectItem>
                       ))}
                     </SelectGroup>
@@ -136,7 +140,7 @@ export function ApposDateSelect({
                 </Select>
               </div>
               <Button disabled={selectedYear === undefined} variant='default' size='xs' onClick={() => handleYearChange(selectedYear, selectedMonth)}>
-                Buscar
+                {USER_VIEW_CONFIG.appointmentsRecord.select.datePicker.button.search}
               </Button>
             </section>
           </section>
