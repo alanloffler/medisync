@@ -127,7 +127,7 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
   return (
     <Card className='border'>
       <CardHeader>
-        <CardTitle className='border border-slate-600 bg-slate-500 text-white'>{USER_VIEW_CONFIG.appointmentRecords.title}</CardTitle>
+        <CardTitle className='border border-slate-600 bg-slate-500 text-white'>{USER_VIEW_CONFIG.appointmentsRecord.title}</CardTitle>
       </CardHeader>
       <CardContent className='px-3 pb-3'>
         {/* Section: Filters */}
@@ -164,10 +164,10 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
         </section>
         <section className='flex border-b-2 pb-1 text-sm font-medium'>
           <div className='flex w-3/4 items-center'>
-            <div className='w-1/4 text-center'>{USER_VIEW_CONFIG.appointmentRecords.tableHeaders[0]}</div>
-            <div className='w-3/4 text-center'>{USER_VIEW_CONFIG.appointmentRecords.tableHeaders[1]}</div>
+            <div className='w-1/4 text-center'>{USER_VIEW_CONFIG.appointmentsRecord.tableHeaders[0]}</div>
+            <div className='w-3/4 text-center'>{USER_VIEW_CONFIG.appointmentsRecord.tableHeaders[1]}</div>
           </div>
-          <div className='w-1/4 text-center'>{USER_VIEW_CONFIG.appointmentRecords.tableHeaders[2]}</div>
+          <div className='w-1/4 text-center'>{USER_VIEW_CONFIG.appointmentsRecord.tableHeaders[2]}</div>
         </section>
         {isLoading && <LoadingDB text={loaderText || 'Loading data'} className='p-0 pt-3' />}
         {!isLoading && isError ? (
