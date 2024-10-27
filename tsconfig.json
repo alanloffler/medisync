@@ -24,6 +24,7 @@
     "paths": {
       "@/*": ["./src/*"],
       "@appointments/*": ["./src/pages/appointments/*"],
+      "@config/*": ["./src/config/*"],
       "@core/*": ["./src/core/*"],
       "@professionals/*": ["./src/pages/professionals/*"],
       "@users/*": ["./src/pages/users/*"]
