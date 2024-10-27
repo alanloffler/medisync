@@ -1,30 +1,30 @@
 // Icons: https://lucide.dev/icons/
 import { CreditCard, Mail, Menu, Smartphone } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
-import { Button } from '@/core/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '@/core/components/ui/dropdown-menu';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/core/components/ui/tooltip';
+import { Button } from '@core/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@core/components/ui/card';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '@core/components/ui/dropdown-menu';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@core/components/ui/tooltip';
 // Components
-import { AppointmentsRecord } from '@/pages/users/components/AppointmentsRecord';
-import { BackButton } from '@/core/components/common/BackButton';
-import { LoadingDB } from '@/core/components/common/LoadingDB';
-import { PageHeader } from '@/core/components/common/PageHeader';
+import { ApposRecord } from '@appointments/components/ApposRecord';
+import { BackButton } from '@core/components/common/BackButton';
+import { LoadingDB } from '@core/components/common/LoadingDB';
+import { PageHeader } from '@core/components/common/PageHeader';
 // External imports
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { spring } from 'framer-motion';
 import { useAnimate } from 'framer-motion/mini';
 import { useEffect, useState } from 'react';
 // Imports
-import type { IEmail } from '@/core/interfaces/email.interface';
-import type { IUser } from '@/pages/users/interfaces/user.interface';
-import { APP_CONFIG } from '@/config/app.config';
-import { USER_VIEW_CONFIG, USER_VIEW_CONFIG as UV_CONFIG } from '@/config/user.config';
-import { UserApiService } from '@/pages/users/services/user-api.service';
-import { useCapitalize } from '@/core/hooks/useCapitalize';
-import { useDelimiter } from '@/core/hooks/useDelimiter';
-import { useLegibleDate } from '@/core/hooks/useDateToString';
-import { useNotificationsStore } from '@/core/stores/notifications.store';
+import type { IEmail } from '@core/interfaces/email.interface';
+import type { IUser } from '@users/interfaces/user.interface';
+import { APP_CONFIG } from '@config/app.config';
+import { USER_VIEW_CONFIG as UV_CONFIG } from '@config/user.config';
+import { UserApiService } from '@users/services/user-api.service';
+import { useCapitalize } from '@core/hooks/useCapitalize';
+import { useDelimiter } from '@core/hooks/useDelimiter';
+import { useLegibleDate } from '@core/hooks/useDateToString';
+import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export default function ViewUser() {
   const [emailObject, setEmailObject] = useState<IEmail>({} as IEmail);
@@ -161,7 +161,7 @@ export default function ViewUser() {
       </section>
       {showCard && (
         <section className='mx-auto w-full md:w-3/4 pt-3'>
-          <AppointmentsRecord userId={user._id} loaderText={USER_VIEW_CONFIG.appointmentsRecord.loader} />
+          <ApposRecord userId={user._id} />
         </section>
       )}
       <footer className='mx-auto pt-3'>
