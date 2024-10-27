@@ -116,10 +116,12 @@ export function AppointmentsRecord({ userId, loaderText }: { userId: string; loa
 
   // TODO: handle error and loading
   function handleDateChange(year: string | undefined, month: string | undefined): void {
+    console.log('from appos record: ', year, month);
     if (year === undefined) setSelectKey(crypto.randomUUID());
     AppointmentApiService.findAllByUserAndYear(userId, year, month).then((response: IResponse) => {
       if (response.statusCode === 200) {
         setAppointments(response.data);
+        console.log(response.data);
       }
     });
   }

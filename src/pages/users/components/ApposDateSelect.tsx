@@ -35,13 +35,28 @@ export function ApposDateSelect({
   const [selectedYear, setSelectedYear] = useState<string | undefined>();
   const [selectedMonth, setSelectedMonth] = useState<string | undefined>();
 
-  function setSelectedDate(year: string | undefined, month: string | undefined): void {
-    console.log('year', year, 'month', month);
-    if (year !== undefined) {
-      month !== undefined ? onValueChange(year, month) : onValueChange(year, undefined);
-      setOpenPopover(false);
-    } else handleClearDateFilter();
-  }
+  // function setSelectedDate(year: string | undefined, month: string | undefined): void {
+  //   console.log('year', year, 'month', month);
+  //   if (year !== undefined) {
+  //     month !== undefined ? onValueChange(year, month) : onValueChange(year, undefined);
+  //     setOpenPopover(false);
+  //   } else handleClearDateFilter();
+  // }
+  
+  useEffect(()=> {
+    console.log('year params:', searchParams.get('y'), 'month params:', searchParams.get('m'));
+    const yearParam = searchParams.get('y');
+    const monthParam = searchParams.get('m');
+    yearParam !== null ? setSelectedYear(yearParam) : setSelectedYear(undefined);
+    monthParam !== null ? setSelectedMonth(monthParam) : setSelectedMonth(undefined);
+    console.log('selectedYear:', selectedYear, 'selectedMonth:', selectedMonth);
+
+    if (yearParam !== null && monthParam !== null) onValueChange(selectedYear, selectedMonth);
+    if (yearParam !== null && monthParam === null) onValueChange(yearParam, undefined);
+    if (yearParam === null && monthParam === null) handleClearDateFilter();
+    setOpenPopover(false);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   // WORKING: reset year and month selected and reload the appos
   function handleClearDateFilter(): void {
@@ -62,7 +77,7 @@ export function ApposDateSelect({
 
   // WORKING: but check if some params are unnecessary
   useEffect(() => {
-    setSelectedMonth(undefined);
+    // setSelectedMonth(undefined);
     // TODO: handle errors and loading
     if (selectedYear !== undefined) {
       AppointmentApiService.findApposMonthsByUser(userId, selectedYear).then((response: IResponse) => {
@@ -118,7 +133,7 @@ export function ApposDateSelect({
                 <span className='text-[13px] font-medium text-slate-500'>
                   {USER_VIEW_CONFIG.appointmentsRecord.select.datePicker.yearSelect.label}
                 </span>
-                <Select value={selectedYear} onValueChange={(e) => setSelectedYear(e)}>
+                <Select value={selectedYear} onValueChange={(e) => {setSelectedYear(e); setSelectedMonth(undefined)}}>
                   <SelectTrigger className={'h-6 w-fit space-x-2 border bg-white text-xs shadow-sm'}>
                     <SelectValue placeholder={USER_VIEW_CONFIG.appointmentsRecord.select.datePicker.yearSelect.placeholder} />
                   </SelectTrigger>
@@ -152,7 +167,11 @@ export function ApposDateSelect({
                   </SelectContent>
                 </Select>
               </div>
-              <Button disabled={selectedYear === undefined} variant='default' size='xs' onClick={() => setSelectedDate(selectedYear, selectedMonth)}>
+              {/* <Button disabled={selectedYear === undefined} variant='default' size='xs' onClick={() => setSelectedDate(selectedYear, selectedMonth)}> */}
+              <Button disabled={selectedYear === undefined} variant='default' size='xs' onClick={() => {
+                if (selectedYear !== undefined && selectedMonth !== undefined) setSearchParams({ y: selectedYear, m: selectedMonth });
+                if (selectedYear !== undefined && selectedMonth === undefined) setSearchParams({ y: selectedYear });
+              }}>
                 {USER_VIEW_CONFIG.appointmentsRecord.select.datePicker.button.search}
               </Button>
             </section>
