@@ -22,9 +22,11 @@
     /* Shadcn-ui */
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"],
+      "@appointments/*": ["./src/pages/appointments/*"],
+      "@core/*": ["./src/core/*"],
+      "@professionals/*": ["./src/pages/professionals/*"],
+      "@users/*": ["./src/pages/users/*"]
     }
   },
   "include": ["src"],
