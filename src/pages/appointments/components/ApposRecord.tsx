@@ -15,35 +15,24 @@ export interface IApposRecord {
 // React component
 export function ApposRecord({ userId }: IApposRecord) {
   const [appointments, setAppointments] = useState<IAppointmentView[]>([]);
-  const { professional } = useApposFilters();
+  const { professional, year } = useApposFilters();
 
   useEffect(() => {
-    AppointmentApiService.findAllByUser(userId).then((response: IResponse) => {
+    // TODO: manage error for all api calls
+    AppointmentApiService.findApposRecordWithFilters(userId, professional, year).then((response: IResponse) => {
       if (response.statusCode === 200) {
         if (response.data.length > 0) {
           setAppointments(response.data);
         }
       }
     });
-  }, [userId]);
-
-  useEffect(() => {
-    if (professional) {
-      AppointmentApiService.findAllByUserAndProfessional(userId, professional).then((response: IResponse) => {
-        if (response.statusCode === 200) {
-          if (response.data.length > 0) {
-            setAppointments(response.data);
-          }
-        }
-      });
-    }
-  }, [professional]);
+  }, [professional, year, userId]);
 
   return (
     <main>
-      <header>ApposRecord component for {userId}</header>
+      <header>ApposRecord</header>
       <section>
-        <ApposFilters appointments={appointments} />
+        <ApposFilters userId={userId} />
         {appointments && <ApposList appointments={appointments} />}
       </section>
     </main>
