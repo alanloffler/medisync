@@ -106,24 +106,18 @@ export const USER_CREATE_CONFIG = {
 };
 
 export const USER_VIEW_CONFIG = {
-  appointmentsRecord: {
+  apposRecord: {
+    filters: {
+      title: 'Filtrar turnos',
+    },
     loader: 'Cargando turnos',
     noAppointments: 'No existen turnos para el paciente',
     select: {
-      datePicker: {
-        button: {
-          search: 'Buscar',
-        },
-        label: 'Fecha',
-        placeholder: 'Seleccionar',
-        monthSelect: {
-          label: 'Meses',
-          placeholder: 'Seleccionar',
-        },
-        yearSelect: {
-          label: 'Años',
-          placeholder: 'Seleccionar',
-        },
+      professional: {
+        placeholder: 'Profesionales',
+      },
+      year: {
+        placeholder: 'Año',
       },
     },
     tableHeaders: ['Fecha', 'Profesional', 'Acciones'],
