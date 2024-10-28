@@ -3,72 +3,62 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 // External imports
 import { useEffect, useState } from 'react';
 // Imports
-import type { IAppointmentView } from '@appointments/interfaces/appointment.interface';
+import type { IApposFilters } from '@appointments/hooks/useApposFilters';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
-import { type IApposFilters, useApposFilters } from '@appointments/hooks/useApposFilters';
+import type { IResponse } from '@/core/interfaces/response.interface';
+import { AppointmentApiService } from '@appointments/services/appointment.service';
+import { USER_VIEW_CONFIG } from '@/config/user.config';
+import { useApposFilters } from '@appointments/hooks/useApposFilters';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 // React component
-export function ApposFilters({ appointments }: { appointments: IAppointmentView[] }) {
+export function ApposFilters({ userId }: { userId: string }) {
   const [professionals, setProfessionals] = useState<IProfessional[]>([]);
+  const [years, setYears] = useState<string[]>([]);
   const capitalize = useCapitalize();
-  const { professional, setFilters } = useApposFilters();
+  const { setFilters } = useApposFilters();
 
   useEffect(() => {
-    // TODO: find unique professionals by user from database method
-    // const professionalsFiltered: IProfessional[] = appointments
-    //   .map((appointment: IAppointmentView) => appointment.professional)
-    //   .filter((professional: IProfessional, index: number, self: IProfessional[]) => index === self.findIndex((p) => p._id === professional._id))
-    //   .sort((a: IProfessional, b: IProfessional) => a.lastName.localeCompare(b.lastName));
+    // TODO: manage error for all api calls
+    AppointmentApiService.findUniqueProfessionalsByUser(userId).then((response: IResponse) => setProfessionals(response.data));
 
-    // setProfessionals(professionalsFiltered);
-    setProfessionals([
-      {
-        _id: '66c9dec69c2d5d22c5399b45',
-        firstName: 'susana',
-        lastName: 'barrios',
-        title: {
-          _id: '66a970803bdb5eb3f8ca3afa',
-          abbreviation: 'bioq.',
-        },
-      },
-      {
-        _id: '67101e1284dc5351a1712895',
-        firstName: 'isabel',
-        lastName: 'correa',
-        title: {
-          _id: '66a9705f3bdb5eb3f8ca3af8',
-          abbreviation: 'téc.',
-        },
-      },
-      {
-        _id: '66c9279455ce3eb6af8a44db',
-        firstName: 'silvana',
-        lastName: 'valiente',
-        title: {
-          _id: '66a9703b3bdb5eb3f8ca3af2',
-          abbreviation: 'lic.',
-        },
-      },
-    ]);
-  }, [appointments]);
+    AppointmentApiService.findApposYearsByUser(userId).then((response: IResponse) => setYears(response.data));
+  }, [userId]);
 
   return (
     <main>
       <h1>ApposFilters</h1>
-      <Select value={professional} onValueChange={(e) => setFilters({ professional: e as IApposFilters['professional'] })}>
-        <SelectTrigger className={'h-8 w-fit space-x-2 border bg-white text-[13px] shadow-sm'}>
-          <SelectValue placeholder={'Profesionales'} />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            {professionals.map((professional) => (
-              <SelectItem key={crypto.randomUUID()} value={professional._id}>
-                {capitalize(professional.title.abbreviation)} {capitalize(professional.lastName)}, {capitalize(professional.firstName)}
-              </SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+      <section>
+        <Select onValueChange={(e) => setFilters({ professional: e as IApposFilters['professional'] })}>
+          <SelectTrigger className={'h-8 w-fit space-x-2 border bg-white text-[13px] shadow-sm'}>
+            <SelectValue placeholder={'Profesionales'} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {professionals.map((professional) => (
+                <SelectItem key={crypto.randomUUID()} value={professional._id}>
+                  {capitalize(professional.title.abbreviation)} {capitalize(professional.lastName)}, {capitalize(professional.firstName)}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </section>
+      <section>
+        <Select onValueChange={(e) => setFilters({ year: e as IApposFilters['year'] })}>
+          <SelectTrigger className={'h-6 w-fit space-x-2 border bg-white text-xs shadow-sm'}>
+            <SelectValue placeholder={USER_VIEW_CONFIG.appointmentsRecord.select.datePicker.yearSelect.placeholder} />
+          </SelectTrigger>
+          <SelectContent className='w-fit min-w-10' onCloseAutoFocus={(e) => e.preventDefault()}>
+            <SelectGroup>
+              {years.map((year) => (
+                <SelectItem key={crypto.randomUUID()} value={year} className='py-1 text-xs [&>span>span>svg]:h-3 [&>span>span>svg]:w-3'>
+                  {year}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </section>
     </main>
   );
 }
