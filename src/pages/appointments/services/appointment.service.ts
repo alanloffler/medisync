@@ -37,6 +37,7 @@ export class AppointmentApiService {
     }
   }
 
+  // FIXME: check if is unused method
   public static async findAllByUserAndProfessional(userId: string, professionalId: string) {
     const url: string = `${this.API_URL}/appointments/byUserAndProfessional?user=${userId}&professional=${professionalId}`;
 
@@ -54,23 +55,27 @@ export class AppointmentApiService {
     }
   }
 
-  public static async findAllByUserAndYear(userId: string, year: string | undefined, month: string | undefined) {
-    let url: string;
-    month !== undefined
-      ? (url = `${this.API_URL}/appointments/byUserAndYear?u=${userId}&y=${year}&m=${month}`)
-      : (url = `${this.API_URL}/appointments/byUserAndYear?u=${userId}&y=${year}`);
+  public static async findApposRecordWithFilters(userId: string, professionalId?: string, year?: string) {
+    if (userId) {
+      let url: string = `${this.API_URL}/appointments/byFilters?u=${userId}`;
 
-    try {
-      const query: Response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json;charset=UTF-8',
-        },
-      });
+      professionalId !== 'null' && professionalId ? (url = `${url}&p=${professionalId}`) : (url = `${url}`);
+      year !== 'null' && year ? (url = `${url}&y=${year}`) : (url = `${url}`);
 
-      return await query.json();
-    } catch (error) {
-      return error;
+      try {
+        const query: Response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'content-type': 'application/json;charset=UTF-8',
+          },
+        });
+
+        return await query.json();
+      } catch (error) {
+        return error;
+      }
+    } else {
+      console.log('userId is undefined');
     }
   }
 
@@ -126,7 +131,24 @@ export class AppointmentApiService {
     }
   }
 
-  // AppointmentsRecord component methods
+  // ApposRecord component methods
+  public static async findUniqueProfessionalsByUser(userId: string) {
+    const url: string = `${this.API_URL}/appointments/uniqueProfessionalsByUser?u=${userId}`;
+
+    try {
+      const query: Response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json;charset=UTF-8',
+        },
+      });
+
+      return await query.json();
+    } catch (error) {
+      return error;
+    }
+  }
+
   public static async findApposYearsByUser(userId: string) {
     const url: string = `${this.API_URL}/appointments/yearsByUser?u=${userId}`;
 
