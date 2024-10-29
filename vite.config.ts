@@ -12,6 +12,7 @@ export default defineConfig({
       '@config': path.resolve(__dirname, './src/config'),
       '@core': path.resolve(__dirname, './src/core'),
       '@professionals': path.resolve(__dirname, './src/pages/professionals'),
+      '@settings': path.resolve(__dirname, './src/pages/settings'),
       '@users': path.resolve(__dirname, './src/pages/users'),
     },
   },

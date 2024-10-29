@@ -27,6 +27,7 @@
       "@config/*": ["./src/config/*"],
       "@core/*": ["./src/core/*"],
       "@professionals/*": ["./src/pages/professionals/*"],
+      "@settings/*": ["./src/pages/settings/*"],
       "@users/*": ["./src/pages/users/*"]
     }
   },
