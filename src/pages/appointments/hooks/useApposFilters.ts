@@ -22,11 +22,22 @@ export function useApposFilters() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const clearFilters = useCallback((filters: Partial<IApposFilters>) => {
+    setSearchParams((params) => {
+      if (filters.professional !== undefined) params.delete('p');
+      if (filters.year !== undefined) params.delete('y');
+      if (filters.month !== undefined) params.delete('m');
+
+      return params;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return {
     professional,
     year,
     month,
     setFilters,
-    resetFilters: () => setSearchParams({}),
+    clearFilters,
   };
 }
