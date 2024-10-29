@@ -4,7 +4,8 @@ import { Filter, X } from 'lucide-react';
 import { Button } from '@/core/components/ui/button';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/core/components/ui/select';
 // External imports
-import { useEffect, useState } from 'react';
+import { animate, spring } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
 // Imports
 import type { IApposFilters } from '@appointments/interfaces/appos-filters.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
@@ -18,6 +19,8 @@ export function ApposFilters({ userId }: { userId: string }) {
   const [professionals, setProfessionals] = useState<IProfessional[]>([]);
   const [years, setYears] = useState<string[]>([]);
   const capitalize = useCapitalize();
+  const clearButtonRef = useRef(null);
+  const clearLabelRef = useRef(null);
   const { professional, year, setFilters, clearFilters } = useApposFilters();
 
   useEffect(() => {
@@ -31,6 +34,20 @@ export function ApposFilters({ userId }: { userId: string }) {
   useEffect(() => {
     console.log('check professional years on db');
   }, [professional]);
+
+  function clearButtonOverAnimation(): void {
+    if (clearButtonRef.current && clearLabelRef.current) {
+      animate(clearButtonRef.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 });
+      animate(clearLabelRef.current, { opacity: 1 }, { duration: 0.2, ease: 'easeIn' });
+    }
+  }
+
+  function clearButtonOutAnimation(): void {
+    if (clearButtonRef.current && clearLabelRef.current) {
+      animate(clearButtonRef.current, { scale: 1 }, { duration: 0.1 });
+      animate(clearLabelRef.current, { opacity: 0 }, { duration: 0.1 });
+    }
+  }
 
   return (
     <main className='flex w-full items-center justify-between rounded-md border border-slate-300 bg-slate-200 px-4 py-2 shadow-sm'>
@@ -69,9 +86,21 @@ export function ApposFilters({ userId }: { userId: string }) {
         </Select>
       </section>
       {(professional || year) && (
-        <Button variant='clear' size='icon5' onClick={() => clearFilters({ professional, year })}>
-          <X size={14} strokeWidth={2} />
-        </Button>
+        <section className='flex items-center space-x-2'>
+          <span ref={clearLabelRef} className='text-xs text-slate-500 opacity-0'>
+            {USER_VIEW_CONFIG.apposRecord.button.clear}
+          </span>
+          <Button
+            ref={clearButtonRef}
+            variant='clear'
+            size='icon5'
+            onClick={() => clearFilters({ professional, year })}
+            onMouseOver={clearButtonOverAnimation}
+            onMouseOut={clearButtonOutAnimation}
+          >
+            <X size={14} strokeWidth={2} />
+          </Button>
+        </section>
       )}
     </main>
   );
