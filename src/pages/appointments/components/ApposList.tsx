@@ -9,6 +9,7 @@ import { type Cell, type ColumnDef, flexRender, getCoreRowModel, type Row, useRe
 import { useNavigate } from 'react-router-dom';
 // Imports
 import type { IAppointmentView } from '@appointments/interfaces/appointment.interface';
+import { USER_VIEW_CONFIG } from '@/config/user.config';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
 // React component
 export function ApposList({ appointments }: { appointments: IAppointmentView[] }) {
@@ -20,7 +21,7 @@ export function ApposList({ appointments }: { appointments: IAppointmentView[] }
       accessorKey: 'day',
       size: 80,
       cell: ({ row }) => <div className='text-center'>{format(row.original.day, 'DD/MM/YYYY')}</div>,
-      header: () => <div className='text-center'>Fecha</div>,
+      header: () => <div className='text-center'>{USER_VIEW_CONFIG.apposRecord.apposList.headers[0]}</div>,
     },
     {
       accessorKey: 'lastName',
@@ -31,13 +32,13 @@ export function ApposList({ appointments }: { appointments: IAppointmentView[] }
           )}
         </div>
       ),
-      header: () => <div className='text-left'>Profesional</div>,
+      header: () => <div className='text-left'>{USER_VIEW_CONFIG.apposRecord.apposList.headers[1]}</div>,
     },
     {
       accessorKey: 'actions',
       size: 100,
       cell: ({ row }) => (
-        <div className='text-center space-x-2 bg-red-400'>
+        <div className='text-center space-x-2'>
           <Button
             onClick={() => navigate(`/appointments/${row.original._id}`)}
             variant='tableHeader'
@@ -64,7 +65,7 @@ export function ApposList({ appointments }: { appointments: IAppointmentView[] }
           </Button>
         </div>
       ),
-      header: () => <div className='text-center bg-red-400'>Acciones</div>,
+      header: () => <div className='text-center'>{USER_VIEW_CONFIG.apposRecord.apposList.headers[2]}</div>,
     },
   ];
 
