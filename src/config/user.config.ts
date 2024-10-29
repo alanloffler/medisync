@@ -118,10 +118,12 @@ export const USER_VIEW_CONFIG = {
     select: {
       professional: {
         errorText: 'Error',
+        loadingText: 'Cargando',
         placeholder: 'Profesionales',
       },
       year: {
         errorText: 'Error',
+        loadingText: 'Cargando',
         placeholder: 'Año',
       },
     },
