@@ -1,9 +1,10 @@
+// Imports
 import type { IAppointmentView } from '@appointments/interfaces/appointment.interface';
-
+// React component
 export function ApposList({ appointments }: { appointments: IAppointmentView[] }) {
   return (
     <main>
-      <h1>Appointments list</h1>
+      {/* TODO: implement tanstack table */}
       <section>
         <ul>
           {appointments.map((appointment) => (
