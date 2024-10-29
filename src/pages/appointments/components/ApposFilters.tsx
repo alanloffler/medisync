@@ -1,9 +1,12 @@
+// Icons: https://lucide.dev
+import { Filter, X } from 'lucide-react';
 // External components: http://ui.shadcn.com/docs/components
+import { Button } from '@/core/components/ui/button';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/core/components/ui/select';
 // External imports
 import { useEffect, useState } from 'react';
 // Imports
-import type { IApposFilters } from '@appointments/hooks/useApposFilters';
+import type { IApposFilters } from '@appointments/interfaces/appos-filters.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@/core/interfaces/response.interface';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
@@ -15,22 +18,30 @@ export function ApposFilters({ userId }: { userId: string }) {
   const [professionals, setProfessionals] = useState<IProfessional[]>([]);
   const [years, setYears] = useState<string[]>([]);
   const capitalize = useCapitalize();
-  const { setFilters } = useApposFilters();
+  const { professional, year, setFilters, resetFilters } = useApposFilters();
 
   useEffect(() => {
     // TODO: manage error for all api calls
     AppointmentApiService.findUniqueProfessionalsByUser(userId).then((response: IResponse) => setProfessionals(response.data));
-
+    // TODO: this must be a method that change the year by the professional selected
+    // No professional selected, get all years -> professionalSelected, get available years by professional
     AppointmentApiService.findApposYearsByUser(userId).then((response: IResponse) => setYears(response.data));
   }, [userId]);
 
+  useEffect(() => {
+    console.log('check professional years on db');
+  }, [professional]);
+
   return (
-    <main>
-      <h1>ApposFilters</h1>
-      <section>
-        <Select onValueChange={(e) => setFilters({ professional: e as IApposFilters['professional'] })}>
-          <SelectTrigger className={'h-8 w-fit space-x-2 border bg-white text-[13px] shadow-sm'}>
-            <SelectValue placeholder={'Profesionales'} />
+    <main className='flex w-full items-center justify-between rounded-md border border-slate-300 bg-slate-200 px-4 py-2 shadow-sm'>
+      <section className='flex items-center justify-start space-x-4'>
+        <section className='flex items-center space-x-2'>
+          <Filter size={16} strokeWidth={2} />
+          <h1 className='text-sm font-medium'>{USER_VIEW_CONFIG.apposRecord.filters.title}</h1>
+        </section>
+        <Select value={professional ? professional : ''} onValueChange={(e) => setFilters({ professional: e as IApposFilters['professional'] })}>
+          <SelectTrigger className={'h-7 w-fit space-x-3 border border-slate-300 bg-white text-[13px] shadow-sm'}>
+            <SelectValue placeholder={USER_VIEW_CONFIG.apposRecord.select.professional.placeholder} />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
@@ -42,16 +53,14 @@ export function ApposFilters({ userId }: { userId: string }) {
             </SelectGroup>
           </SelectContent>
         </Select>
-      </section>
-      <section>
-        <Select onValueChange={(e) => setFilters({ year: e as IApposFilters['year'] })}>
-          <SelectTrigger className={'h-6 w-fit space-x-2 border bg-white text-xs shadow-sm'}>
-            <SelectValue placeholder={USER_VIEW_CONFIG.appointmentsRecord.select.datePicker.yearSelect.placeholder} />
+        <Select value={year ? year : ''} onValueChange={(e) => setFilters({ year: e as IApposFilters['year'] })}>
+          <SelectTrigger className={'h-7 w-fit space-x-3 border border-slate-300 bg-white text-[13px] shadow-sm'}>
+            <SelectValue placeholder={USER_VIEW_CONFIG.apposRecord.select.year.placeholder} />
           </SelectTrigger>
-          <SelectContent className='w-fit min-w-10' onCloseAutoFocus={(e) => e.preventDefault()}>
+          <SelectContent onCloseAutoFocus={(e) => e.preventDefault()}>
             <SelectGroup>
               {years.map((year) => (
-                <SelectItem key={crypto.randomUUID()} value={year} className='py-1 text-xs [&>span>span>svg]:h-3 [&>span>span>svg]:w-3'>
+                <SelectItem key={crypto.randomUUID()} value={year}>
                   {year}
                 </SelectItem>
               ))}
@@ -59,6 +68,9 @@ export function ApposFilters({ userId }: { userId: string }) {
           </SelectContent>
         </Select>
       </section>
+      <Button variant='clear' size='icon5' onClick={() => resetFilters()}>
+        <X size={14} strokeWidth={2} />
+      </Button>
     </main>
   );
 }
