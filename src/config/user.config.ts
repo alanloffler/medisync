@@ -107,13 +107,16 @@ export const USER_CREATE_CONFIG = {
 
 export const USER_VIEW_CONFIG = {
   apposRecord: {
+    apposList: {
+      errorText: 'Error cargando turnos',
+      loadingText: 'Cargando turnos',
+    },
     button: {
       clear: 'Borrar filtros',
     },
     filters: {
       title: 'Filtrar turnos',
     },
-    loader: 'Cargando turnos',
     noAppointments: 'No existen turnos para el paciente',
     select: {
       professional: {
