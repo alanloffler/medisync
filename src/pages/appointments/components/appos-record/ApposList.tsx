@@ -1,16 +1,16 @@
 // Icons: https://lucide.dev/icons/
 import { FileText, MessageCircle, Trash2 } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
-import { Button } from '@/core/components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/core/components/ui/table';
+import { Button } from '@core/components/ui/button';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@core/components/ui/table';
 // External imports
 import { format } from '@formkit/tempo';
 import { type Cell, type ColumnDef, flexRender, getCoreRowModel, type Row, useReactTable } from '@tanstack/react-table';
 import { useNavigate } from 'react-router-dom';
 // Imports
 import type { IAppointmentView } from '@appointments/interfaces/appointment.interface';
-import { USER_VIEW_CONFIG } from '@/config/user.config';
-import { useCapitalize } from '@/core/hooks/useCapitalize';
+import { USER_VIEW_CONFIG } from '@config/user.config';
+import { useCapitalize } from '@core/hooks/useCapitalize';
 // React component
 export function ApposList({ appointments }: { appointments: IAppointmentView[] }) {
   const capitalize = useCapitalize();
