@@ -107,6 +107,9 @@ export const USER_CREATE_CONFIG = {
 
 export const USER_VIEW_CONFIG = {
   apposRecord: {
+    button: {
+      clear: 'Borrar filtros',
+    },
     filters: {
       title: 'Filtrar turnos',
     },
