@@ -108,6 +108,7 @@ export const USER_CREATE_CONFIG = {
 export const USER_VIEW_CONFIG = {
   apposRecord: {
     apposList: {
+      headers: ['Fecha', 'Profesional', 'Acciones'],
       emptyList: 'No existen turnos para el paciente',
       errorText: 'Error cargando turnos',
       loadingText: 'Cargando turnos',
@@ -130,7 +131,6 @@ export const USER_VIEW_CONFIG = {
         placeholder: 'Año',
       },
     },
-    tableHeaders: ['Fecha', 'Profesional', 'Acciones'],
     title: 'Historial de turnos',
   },
   breadcrumb: [
