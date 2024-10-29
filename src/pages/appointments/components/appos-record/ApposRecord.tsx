@@ -1,8 +1,8 @@
 // External components
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
 // Components
-import { ApposFilters } from '@appointments/components/ApposFilters';
-import { ApposList } from '@appointments/components/ApposList';
+import { ApposFilters } from '@/pages/appointments/components/appos-record/ApposFilters';
+import { ApposList } from '@/pages/appointments/components/appos-record/ApposList';
 import { InfoCard } from '@/core/components/common/InfoCard';
 import { LoadingDB } from '@/core/components/common/LoadingDB';
 // External imports

@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@core/components/ui/ca
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '@core/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@core/components/ui/tooltip';
 // Components
-import { ApposRecord } from '@appointments/components/ApposRecord';
+import { ApposRecord } from '@appointments/components/appos-record/ApposRecord';
 import { BackButton } from '@core/components/common/BackButton';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
