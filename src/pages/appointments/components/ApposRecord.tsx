@@ -8,12 +8,8 @@ import type { IAppointmentView } from '@appointments/interfaces/appointment.inte
 import type { IResponse } from '@core/interfaces/response.interface';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { useApposFilters } from '@appointments/hooks/useApposFilters';
-// TODO: put in an interface file
-export interface IApposRecord {
-  userId: string;
-}
 // React component
-export function ApposRecord({ userId }: IApposRecord) {
+export function ApposRecord({ userId }: { userId: string }) {
   const [appointments, setAppointments] = useState<IAppointmentView[]>([]);
   const { professional, year } = useApposFilters();
 
@@ -30,8 +26,7 @@ export function ApposRecord({ userId }: IApposRecord) {
 
   return (
     <main>
-      <header>ApposRecord</header>
-      <section>
+      <section className='flex flex-col gap-3 w-full'>
         <ApposFilters userId={userId} />
         {appointments && <ApposList appointments={appointments} />}
       </section>
