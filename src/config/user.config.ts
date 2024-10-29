@@ -117,9 +117,11 @@ export const USER_VIEW_CONFIG = {
     noAppointments: 'No existen turnos para el paciente',
     select: {
       professional: {
+        errorText: 'Error',
         placeholder: 'Profesionales',
       },
       year: {
+        errorText: 'Error',
         placeholder: 'Año',
       },
     },
