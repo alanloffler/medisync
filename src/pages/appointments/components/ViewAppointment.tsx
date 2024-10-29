@@ -9,6 +9,7 @@ import { PageHeader } from '@/core/components/common/PageHeader';
 // External imports
 import * as htmlToImage from 'html-to-image';
 import jsPDF from 'jspdf';
+import { format } from '@formkit/tempo';
 import { useEffect, useRef, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 // Imports
@@ -17,6 +18,7 @@ import type { IEmail } from '@/core/interfaces/email.interface';
 import { AppointmentApiService } from '@/pages/appointments/services/appointment.service';
 import { VIEW_APPOINTMENT_CONFIG as VA_CONFIG } from '@/config/appointment.config';
 import { useCapitalize } from '@/core/hooks/useCapitalize';
+import { useCapitalizeFirstLetter } from '@/core/hooks/useCapitalizeFirstLetter';
 import { useLegibleDate } from '@/core/hooks/useDateToString';
 // React component
 export default function ViewAppointment() {
@@ -26,6 +28,7 @@ export default function ViewAppointment() {
   const [email, setEmail] = useState<IEmail>({} as IEmail);
   const [pdfIsGenerating, setPdfIsGenerating] = useState<boolean>(false);
   const capitalize = useCapitalize();
+  const capitalizeFirst = useCapitalizeFirstLetter();
   const legibleDate = useLegibleDate();
   const navigate = useNavigate();
   const pdfRef = useRef<HTMLDivElement>(null);
@@ -38,7 +41,11 @@ export default function ViewAppointment() {
       AppointmentApiService.findOne(id)
         .then((response) => {
           setAppointment(response.data);
-          setDate(legibleDate(new Date(appointment.day), 'long'));
+
+          const legibleDate: string = format(appointment.day, 'full');
+          const capitalized = capitalizeFirst(legibleDate);
+          capitalized && setDate(capitalized);
+          
           // FIXME: check if user has email and removed default email
           setEmail({
             to: response.data.user.email || 'alanmatiasloffler@gmail.com',
