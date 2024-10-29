@@ -12,6 +12,9 @@ module.exports = {
       },
     },
     extend: {
+      fontSize: {
+        'xsm': ['13px', '15px']
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
