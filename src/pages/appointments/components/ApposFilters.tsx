@@ -18,7 +18,7 @@ export function ApposFilters({ userId }: { userId: string }) {
   const [professionals, setProfessionals] = useState<IProfessional[]>([]);
   const [years, setYears] = useState<string[]>([]);
   const capitalize = useCapitalize();
-  const { professional, year, setFilters, resetFilters } = useApposFilters();
+  const { professional, year, setFilters, clearFilters } = useApposFilters();
 
   useEffect(() => {
     // TODO: manage error for all api calls
@@ -68,9 +68,11 @@ export function ApposFilters({ userId }: { userId: string }) {
           </SelectContent>
         </Select>
       </section>
-      <Button variant='clear' size='icon5' onClick={() => resetFilters()}>
-        <X size={14} strokeWidth={2} />
-      </Button>
+      {(professional || year) && (
+        <Button variant='clear' size='icon5' onClick={() => clearFilters({ professional, year })}>
+          <X size={14} strokeWidth={2} />
+        </Button>
+      )}
     </main>
   );
 }
