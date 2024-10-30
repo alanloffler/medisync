@@ -1,4 +1,4 @@
-import type { IProfessionalForm } from '@/pages/professionals/interfaces/professional.interface';
+import type { IProfessionalForm } from '@professionals/interfaces/professional.interface';
 
 export class ProfessionalUtils {
   public static lowercaseFormItems(items: IProfessionalForm): IProfessionalForm {
