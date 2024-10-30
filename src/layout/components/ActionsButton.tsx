@@ -1,16 +1,16 @@
 // Icons: https://lucide.dev/icons/
 import { ChevronDown, Plus } from 'lucide-react';
 // External components
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/core/components/ui/dropdown-menu';
-import { Separator } from '@/core/components/ui/separator';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@core/components/ui/dropdown-menu';
+import { Separator } from '@core/components/ui/separator';
 // External imports
 import { spring } from 'framer-motion';
 import { useAnimate } from 'framer-motion/mini';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // Imports
-import type { ILinks } from '@/layout/interfaces/links.interface';
-import { useHeaderMenuStore } from '@/layout/stores/header-menu.service';
+import type { ILinks } from '@layout/interfaces/links.interface';
+import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 // React component
 export function ActionsButton({ links }: { links: ILinks[] }) {
   const [chevronScope, chevronAnimation] = useAnimate();
