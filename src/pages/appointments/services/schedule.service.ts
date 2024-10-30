@@ -1,8 +1,8 @@
 // External imports
 import { addMinute, format, isAfter, isEqual } from '@formkit/tempo';
 // Imports
-import type { IAppointmentView } from '@/pages/appointments/interfaces/appointment.interface';
-import type { ITimeRange, ITimeRangeString, ITimeSlot } from '@/pages/appointments/interfaces/appointment.interface';
+import type { IAppointmentView } from '@appointments/interfaces/appointment.interface';
+import type { ITimeRange, ITimeRangeString, ITimeSlot } from '@appointments/interfaces/appointment.interface';
 
 export class AppoSchedule {
   public name: string;

@@ -1,8 +1,8 @@
 // External imports
 import { range } from '@formkit/tempo';
 // Imports
-import type { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
-import { PROF_VIEW_CONFIG as PV_CONFIG } from '@/config/professionals.config';
+import type { IWorkingDay } from '@professionals/interfaces/working-days.interface';
+import { PROF_VIEW_CONFIG as PV_CONFIG } from '@config/professionals.config';
 
 export class CalendarService {
   private static days: number[] = Array.from({ length: 7 }, (_, index) => index);

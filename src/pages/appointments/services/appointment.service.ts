@@ -1,4 +1,4 @@
-import type { IAppointmentForm } from '@/pages/appointments/interfaces/appointment.interface';
+import type { IAppointmentForm } from '@appointments/interfaces/appointment.interface';
 
 export class AppointmentApiService {
   private static readonly API_URL: string = import.meta.env.VITE_API_URL;
