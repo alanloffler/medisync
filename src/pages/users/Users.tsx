@@ -4,8 +4,6 @@ import { CirclePlus, List, ListRestart, PlusCircle, Search, X } from 'lucide-rea
 import { Button } from '@/core/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { Input } from '@/core/components/ui/input';
-import { Label } from '@/core/components/ui/label';
-import { Switch } from '@/core/components/ui/switch';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/core/components/ui/tooltip';
 // Components
 import { PageHeader } from '@/core/components/common/PageHeader';
@@ -18,10 +16,10 @@ import { useAnimate } from 'framer-motion/mini';
 // Imports
 import { USER_CONFIG } from '@/config/user.config';
 import { useDebounce } from '@/core/hooks/useDebounce';
+import { useHelpStore } from '@settings/stores/help.store';
 // React component
 export default function Users() {
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const [helpChecked, setHelpChecked] = useState<boolean>(false); // TODO: value must be stored on db and be global
   const [reload, setReload] = useState<number>(0);
   const [searchByName, setSearchByName] = useState<string>('');
   const [searchByDNI, setSearchByDNI] = useState<string>('');
@@ -31,6 +29,7 @@ export default function Users() {
   const debouncedSearchByDNI = useDebounce<string>(searchByDNI, USER_CONFIG.search.debounceTime);
   const debouncedSearchByName = useDebounce<string>(searchByName, USER_CONFIG.search.debounceTime);
   const navigate = useNavigate();
+  const { help } = useHelpStore();
 
   function handleSearchByName(event: ChangeEvent<HTMLInputElement>): void {
     setReload(new Date().getTime());
@@ -114,11 +113,6 @@ export default function Users() {
                 </div>
               </div>
               {errorMessage && <div className='flex flex-row items-center text-xs font-medium text-rose-400'>{errorMessage}</div>}
-              {/* Enable tooltips */}
-              <div className='flex flex-row items-center space-x-2'>
-                <Switch id='tooltips' checked={helpChecked} onCheckedChange={() => setHelpChecked(!helpChecked)} />
-                <Label htmlFor='tooltips'>{USER_CONFIG.buttons.activateHelp}</Label>
-              </div>
             </div>
           </CardContent>
         </Card>
@@ -133,7 +127,7 @@ export default function Users() {
                 </div>
                 <div className='flex items-center gap-2'>
                   {/* Reload */}
-                  {helpChecked ? (
+                  {help ? (
                     <TooltipProvider delayDuration={0.3}>
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -174,7 +168,7 @@ export default function Users() {
                     </Button>
                   )}
                   {/* Create user */}
-                  {helpChecked ? (
+                  {help ? (
                     <TooltipProvider delayDuration={0.3}>
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -226,7 +220,7 @@ export default function Users() {
           {/* TODO: this must be implemented like in ProfessionalsDataTable with the search object */}
           <CardContent className='px-3'>
             <UsersDataTable
-              help={helpChecked}
+              help={help}
               key={reload}
               reload={reload}
               search={debouncedSearchByName || debouncedSearchByDNI}
