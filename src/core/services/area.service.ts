@@ -1,5 +1,5 @@
 export class AreaService {
-  private static readonly API_URL = import.meta.env.VITE_API_URL;
+  private static readonly API_URL: string = import.meta.env.VITE_API_URL;
 
   public static async findAll() {
     try {
@@ -9,6 +9,7 @@ export class AreaService {
           'content-type': 'application/json;charset=UTF-8',
         },
       });
+      
       return await fetchData.json();
     } catch (error) {
       return error;
