@@ -1,3 +1,4 @@
+import type { IUserSearch } from '@users/interfaces/user-search.interface';
 import type { PaginationState, SortingState } from '@tanstack/react-table';
 
 export interface IDataTable {
@@ -12,7 +13,7 @@ export interface IDataTableProfessionals extends IDataTable {
 }
 
 export interface IDataTableUsers extends IDataTable {
-  search: { value: string; type: string };
+  search: IUserSearch;
 }
 
 export interface ITableManager {
