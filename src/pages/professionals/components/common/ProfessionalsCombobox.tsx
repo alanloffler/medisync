@@ -1,22 +1,23 @@
 // Icons: https://lucide.dev/icons
 import { Check, ChevronsUpDown } from 'lucide-react';
-// Components: https://ui.shadcn.com/docs/components
-import { Button } from '@/core/components/ui/button';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/core/components/ui/command';
-import { Popover, PopoverContent, PopoverTrigger } from '@/core/components/ui/popover';
-// App components
-import { LoadingDB } from '@/core/components/common/LoadingDB';
-// App
-import { APP_CONFIG } from '@/config/app.config';
-import { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
-import { IResponse } from '@/core/interfaces/response.interface';
-import { InfoCard } from '@/core/components/common/InfoCard';
-import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
-import { cn } from '@/lib/utils';
-import { useCapitalize } from '@/core/hooks/useCapitalize';
+// External components: https://ui.shadcn.com/docs/components
+import { Button } from '@core/components/ui/button';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@core/components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@core/components/ui/popover';
+// Components
+import { InfoCard } from '@core/components/common/InfoCard';
+import { LoadingDB } from '@core/components/common/LoadingDB';
+// External imports
 import { useEffect, useState } from 'react';
-import { useNotificationsStore } from '@/core/stores/notifications.store';
-import { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
+// Imports
+import type { IInfoCard } from '@core/components/common/interfaces/infocard.interface';
+import type { IProfessional } from '@professionals/interfaces/professional.interface';
+import type { IResponse } from '@core/interfaces/response.interface';
+import { APP_CONFIG } from '@config/app.config';
+import { ProfessionalApiService } from '@professionals/services/professional-api.service';
+import { cn } from '@lib/utils';
+import { useCapitalize } from '@core/hooks/useCapitalize';
+import { useNotificationsStore } from '@core/stores/notifications.store';
 // Interface
 interface IProfessionalsCombobox {
   onSelectProfessional: (professional: IProfessional) => void;

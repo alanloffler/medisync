@@ -1,13 +1,13 @@
 // External components: https://ui.shadcn.com/docs/components
-import { Checkbox } from '@/core/components/ui/checkbox';
-import { Label } from '@/core/components/ui/label';
+import { Checkbox } from '@core/components/ui/checkbox';
+import { Label } from '@core/components/ui/label';
 // External imports
 import { range } from '@formkit/tempo';
 import { useEffect, useState } from 'react';
 // Imports
-import type { IWorkingDay, IWorkingDaysProps } from '@/pages/professionals/interfaces/working-days.interface';
-import { generateWeekOfWorkingDays } from '@/pages/professionals/utils/week-working-days.util';
-import { useCapitalize } from '@/core/hooks/useCapitalize';
+import type { IWorkingDay, IWorkingDaysProps } from '@professionals/interfaces/working-days.interface';
+import { generateWeekOfWorkingDays } from '@professionals/utils/week-working-days.util';
+import { useCapitalize } from '@core/hooks/useCapitalize';
 // React component
 export function WorkingDays({ label, data, handleWorkingDaysValues }: IWorkingDaysProps) {
   const [days, setDays] = useState<string[]>([]);

@@ -1,10 +1,10 @@
 // External components: https://ui.shadcn.com/docs/components
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/core/components/ui/select';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@core/components/ui/select';
 // Imports
-import type { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
-import { PROFESSIONALS_SELECT_CONFIG as PS_CONFIG } from '@/config/professionals.config';
-import { cn } from '@/lib/utils';
-import { useCapitalize } from '@/core/hooks/useCapitalize';
+import type { IProfessional } from '@professionals/interfaces/professional.interface';
+import { PROFESSIONALS_SELECT_CONFIG as PS_CONFIG } from '@config/professionals.config';
+import { cn } from '@lib/utils';
+import { useCapitalize } from '@core/hooks/useCapitalize';
 // React component
 export function ProfessionalsSelect({
   className,
