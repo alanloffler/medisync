@@ -3,6 +3,8 @@ import { FileText, MessageCircle, Trash2 } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@core/components/ui/table';
+// Components
+import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
 import { format } from '@formkit/tempo';
 import { type Cell, type ColumnDef, flexRender, getCoreRowModel, type Row, useReactTable } from '@tanstack/react-table';
@@ -11,10 +13,12 @@ import { useNavigate } from 'react-router-dom';
 import type { IAppointmentView } from '@appointments/interfaces/appointment.interface';
 import { USER_VIEW_CONFIG } from '@config/user.config';
 import { useCapitalize } from '@core/hooks/useCapitalize';
+import { useHelpStore } from '@settings/stores/help.store';
 // React component
 export function ApposList({ appointments }: { appointments: IAppointmentView[] }) {
   const capitalize = useCapitalize();
   const navigate = useNavigate();
+  const { help } = useHelpStore();
 
   const columns: ColumnDef<IAppointmentView>[] = [
     {
@@ -38,31 +42,37 @@ export function ApposList({ appointments }: { appointments: IAppointmentView[] }
       accessorKey: 'actions',
       size: 100,
       cell: ({ row }) => (
-        <div className='text-center space-x-2'>
-          <Button
-            onClick={() => navigate(`/appointments/${row.original._id}`)}
-            variant='tableHeader'
-            size='miniIcon'
-            className='border border-slate-300 bg-white transition-transform hover:scale-110 hover:border-sky-500 hover:bg-white hover:text-sky-500 hover:animate-in'
-          >
-            <FileText size={16} strokeWidth={1.5} />
-          </Button>
-          <Button
-            // onClick={}
-            variant='tableHeader'
-            size='miniIcon'
-            className='border border-slate-300 bg-white transition-transform hover:scale-110 hover:border-emerald-500 hover:bg-white hover:text-emerald-500 hover:animate-in'
-          >
-            <MessageCircle size={16} strokeWidth={1.5} />
-          </Button>
-          <Button
-            // onClick={}
-            variant='tableHeader'
-            size='miniIcon'
-            className='border border-slate-300 bg-white transition-transform hover:scale-110 hover:border-red-500 hover:bg-white hover:text-red-500 hover:animate-in'
-          >
-            <Trash2 size={16} strokeWidth={1.5} />
-          </Button>
+        <div className='space-x-2 text-center'>
+          <TooltipWrapper tooltip={USER_VIEW_CONFIG.apposRecord.tooltip.user.details} help={help}>
+            <Button
+              onClick={() => navigate(`/appointments/${row.original._id}`)}
+              variant='tableHeader'
+              size='miniIcon'
+              className='border border-slate-300 bg-white transition-transform hover:scale-110 hover:border-sky-500 hover:bg-white hover:text-sky-500 hover:animate-in'
+            >
+              <FileText size={16} strokeWidth={1.5} />
+            </Button>
+          </TooltipWrapper>
+          <TooltipWrapper tooltip={USER_VIEW_CONFIG.apposRecord.tooltip.user.message} help={help}>
+            <Button
+              // onClick={}
+              variant='tableHeader'
+              size='miniIcon'
+              className='border border-slate-300 bg-white transition-transform hover:scale-110 hover:border-emerald-500 hover:bg-white hover:text-emerald-500 hover:animate-in'
+            >
+              <MessageCircle size={16} strokeWidth={1.5} />
+            </Button>
+          </TooltipWrapper>
+          <TooltipWrapper tooltip={USER_VIEW_CONFIG.apposRecord.tooltip.user.delete} help={help}>
+            <Button
+              // onClick={}
+              variant='tableHeader'
+              size='miniIcon'
+              className='border border-slate-300 bg-white transition-transform hover:scale-110 hover:border-red-500 hover:bg-white hover:text-red-500 hover:animate-in'
+            >
+              <Trash2 size={16} strokeWidth={1.5} />
+            </Button>
+          </TooltipWrapper>
         </div>
       ),
       header: () => <div className='text-center'>{USER_VIEW_CONFIG.apposRecord.apposList.headers[2]}</div>,
