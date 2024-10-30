@@ -1,4 +1,4 @@
-import type { ISpecialization } from '@/core/interfaces/specialization.interface';
+import type { ISpecialization } from '@core/interfaces/specialization.interface';
 
 export interface IArea {
   _id: string;

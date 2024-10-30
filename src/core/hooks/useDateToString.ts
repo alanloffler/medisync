@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useCapitalize } from './useCapitalize';
+import { useCapitalize } from '@core/hooks/useCapitalize';
 
 export function useDateToString(): (date: Date) => string {
   return useCallback((date: Date) => {
