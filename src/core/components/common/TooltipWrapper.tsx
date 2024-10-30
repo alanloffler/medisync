@@ -5,18 +5,21 @@ import { ReactNode } from 'react';
 // Interface
 interface ITooltipWrapper {
   children: ReactNode;
-  content: string;
+  help?: boolean;
+  tooltip: string;
 }
 // React component
-export function TooltipWrapper({ children, content }: ITooltipWrapper) {
-  return (
+export function TooltipWrapper({ children, tooltip, help }: ITooltipWrapper) {
+  return help ? (
     <TooltipProvider delayDuration={0.3}>
       <Tooltip>
         <TooltipTrigger asChild>{children}</TooltipTrigger>
         <TooltipContent>
-          <p className='text-xs font-medium'>{content}</p>
+          <p className='select-none text-xs font-normal'>{tooltip}</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
+  ) : (
+    children
   );
 }
