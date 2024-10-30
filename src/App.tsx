@@ -1,8 +1,9 @@
-// App
-import Layout from './layout/Layout';
-import { Loading } from './core/components/common/Loading';
+// External imports
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
+// Imports
+import Layout from '@layout/Layout';
+import { Loading } from '@core/components/common/Loading';
 // Lazy loaded components
 const Appointments = lazy(() => import('./pages/appointments/Appointments'));
 const ViewAppointment = lazy(() => import('./pages/appointments/components/ViewAppointment'));
