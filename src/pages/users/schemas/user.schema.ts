@@ -1,4 +1,4 @@
-import { USER_SCHEMA } from '@/config/schemas/user.schema';
+import { USER_SCHEMA } from '@config/schemas/user.schema';
 import { z } from 'zod';
 
 export const userSchema = z.object({
