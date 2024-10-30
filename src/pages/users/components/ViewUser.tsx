@@ -162,9 +162,7 @@ export default function ViewUser() {
                             <Menu size={16} strokeWidth={2} />
                           </Button>
                         </DropdownMenuTrigger>
-
                         <p className='text-xs font-medium'>{UV_CONFIG.tooltip.dropdown}</p>
-
                         <DropdownMenuContent className='w-fit' align='end'>
                           <DropdownMenuGroup>
                             {/* Send email */}
