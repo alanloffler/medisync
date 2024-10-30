@@ -101,7 +101,7 @@ export function ApposFilters({ userId }: { userId: string }) {
           value={professional ? professional : ''}
           onValueChange={(e) => setFilters({ professional: e as IApposFilters['professional'] })}
         >
-          <TooltipWrapper tooltip='test tooltip' help={help}>
+          <TooltipWrapper tooltip={USER_VIEW_CONFIG.apposRecord.filters.select.professional.tooltip} help={help}>
             <SelectTrigger className={'h-7 w-fit space-x-3 border border-slate-300 bg-white text-xsm shadow-sm'}>
               {loadingProfessionals ? (
                 <LoadingDB
@@ -127,10 +127,14 @@ export function ApposFilters({ userId }: { userId: string }) {
           </SelectContent>
         </Select>
         <Select disabled={yearError} value={year ? year : ''} onValueChange={(e) => setFilters({ year: e as IApposFilters['year'] })}>
-          <TooltipWrapper tooltip='test tooltip' help={help}>
+          <TooltipWrapper tooltip={USER_VIEW_CONFIG.apposRecord.filters.select.year.tooltip} help={help}>
             <SelectTrigger className={'h-7 w-fit space-x-3 border border-slate-300 bg-white text-xsm shadow-sm'}>
               {loadingYears ? (
-                <LoadingDB variant='default' text={USER_VIEW_CONFIG.apposRecord.filters.select.year.loadingText} className='h-7 px-0 text-xsm font-normal' />
+                <LoadingDB
+                  variant='default'
+                  text={USER_VIEW_CONFIG.apposRecord.filters.select.year.loadingText}
+                  className='h-7 px-0 text-xsm font-normal'
+                />
               ) : yearError ? (
                 <span>{USER_VIEW_CONFIG.apposRecord.filters.select.year.errorText}</span>
               ) : (
