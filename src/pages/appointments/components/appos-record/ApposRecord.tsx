@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@core/components/ui/card';
 // Components
 import { ApposFilters } from '@appointments/components/appos-record/ApposFilters';
-import { ApposList } from '@appointments/components/appos-record/ApposList';
+import { ApposTable } from '@appointments/components/appos-record/ApposTable';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
@@ -55,7 +55,7 @@ export function ApposRecord({ userId }: { userId: string }) {
           {isLoading && <LoadingDB variant='default' text={USER_VIEW_CONFIG.apposRecord.apposList.loadingText} />}
           {!error ? (
             appointments.length > 0 ? (
-              <ApposList appointments={appointments} />
+              <ApposTable appointments={appointments} />
             ) : (
               <InfoCard type='warning' text={USER_VIEW_CONFIG.apposRecord.apposList.emptyList} className='pt-5' />
             )

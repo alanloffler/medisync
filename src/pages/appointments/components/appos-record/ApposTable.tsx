@@ -15,7 +15,7 @@ import { USER_VIEW_CONFIG } from '@config/user.config';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useHelpStore } from '@settings/stores/help.store';
 // React component
-export function ApposList({ appointments }: { appointments: IAppointmentView[] }) {
+export function ApposTable({ appointments }: { appointments: IAppointmentView[] }) {
   const capitalize = useCapitalize();
   const navigate = useNavigate();
   const { help } = useHelpStore();
