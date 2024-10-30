@@ -1,9 +1,9 @@
 // Icons: https://lucide.dev/icons/
 import { ChevronRight } from 'lucide-react';
 // Components: https://ui.shadcn.com/docs/components
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage } from '@/core/components/ui/breadcrumb';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage } from '@core/components/ui/breadcrumb';
 // App
-import type { IBreadcrumb } from '@/core/components/common/interfaces/breadcrumb.interface';
+import type { IBreadcrumb } from '@core/components/common/interfaces/breadcrumb.interface';
 import { Link } from 'react-router-dom';
 // React component
 export function BreadCrumb({ paths }: { paths: IBreadcrumb[] }) {
