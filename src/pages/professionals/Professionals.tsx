@@ -1,8 +1,8 @@
 // Icons: https://lucide.dev/icons/
 import { ChevronDown, CirclePlus, Filter, List, ListRestart, PlusCircle, Search, X } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
-import { Button } from '@/core/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
+import { Button } from '@core/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@core/components/ui/card';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,25 +12,25 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from '@/core/components/ui/dropdown-menu';
-import { Input } from '@/core/components/ui/input';
+} from '@core/components/ui/dropdown-menu';
+import { Input } from '@core/components/ui/input';
 // Components
-import { PageHeader } from '@/core/components/common/PageHeader';
-import { ProfessionalsDataTable } from '@/pages/professionals/components/ProfessionalsDataTable';
+import { PageHeader } from '@core/components/common/PageHeader';
+import { ProfessionalsDataTable } from '@professionals/components/ProfessionalsDataTable';
 // External imports
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { spring } from 'framer-motion';
 import { useAnimate } from 'framer-motion/mini';
 // Imports
-import type { IArea } from '@/core/interfaces/area.interface';
-import type { ISpecialization } from '@/core/interfaces/specialization.interface';
-import { APP_CONFIG } from '@/config/app.config';
-import { AreaService } from '@/core/services/area.service';
-import { PROF_CONFIG } from '@/config/professionals.config';
-import { useCapitalize } from '@/core/hooks/useCapitalize';
-import { useDebounce } from '@/core/hooks/useDebounce';
-import { useNotificationsStore } from '@/core/stores/notifications.store';
+import type { IArea } from '@core/interfaces/area.interface';
+import type { ISpecialization } from '@core/interfaces/specialization.interface';
+import { APP_CONFIG } from '@config/app.config';
+import { AreaService } from '@core/services/area.service';
+import { PROF_CONFIG } from '@config/professionals.config';
+import { useCapitalize } from '@core/hooks/useCapitalize';
+import { useDebounce } from '@core/hooks/useDebounce';
+import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export default function Professionals() {
   const [areas, setAreas] = useState<IArea[]>([]);
