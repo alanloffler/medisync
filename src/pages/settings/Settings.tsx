@@ -2,11 +2,19 @@
 import { Checkbox } from '@core/components/ui/checkbox';
 // Imports
 import { SETTINGS_CONFIG } from '@config/settings.config';
+import { useEffect } from 'react';
+import { useHelpStore } from '@settings/stores/help.store';
 // React component
 export default function Settings() {
-  function handleHelpChecked(checked: boolean) {
-    console.log('Help checked: ', checked);
-    console.log('save on store');
+  const { help, setHelp } = useHelpStore();
+
+  useEffect(() => {
+    console.log('Help on store: ', help);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function handleHelpChecked(checked: boolean): void {
+    setHelp(checked);
   }
 
   return (
@@ -18,7 +26,7 @@ export default function Settings() {
           <div className='space-y-2 pl-3'>
             <h5>{SETTINGS_CONFIG.section.application.subsection.help.title}</h5>
             <div className='flex items-center space-x-2'>
-              <Checkbox defaultChecked={true} onCheckedChange={handleHelpChecked} id='terms' className='h-5 w-5' />
+              <Checkbox checked={help} onCheckedChange={handleHelpChecked} id='terms' className='h-5 w-5' />
               <label htmlFor='terms' className='text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>
                 {SETTINGS_CONFIG.section.application.subsection.help.label}
               </label>
