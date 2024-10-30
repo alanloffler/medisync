@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { PROF_SCHEMA } from '@/pages/professionals/config/schemas.config';
+import { PROF_SCHEMA } from '@professionals/config/schemas.config';
 
 const workingDaySchema = z.object({
   day: z.number(),

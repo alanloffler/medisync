@@ -1,7 +1,7 @@
-import type { IArea } from '@/core/interfaces/area.interface';
-import type { ISpecialization } from '@/core/interfaces/specialization.interface';
-import type { ITitle } from '@/core/interfaces/title.interface';
-import type { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
+import type { IArea } from '@core/interfaces/area.interface';
+import type { ISpecialization } from '@core/interfaces/specialization.interface';
+import type { ITitle } from '@core/interfaces/title.interface';
+import type { IWorkingDay } from '@professionals/interfaces/working-days.interface';
 
 export interface IProfessionalForm {
   area: string;
