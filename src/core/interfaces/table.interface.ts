@@ -12,7 +12,7 @@ export interface IDataTableProfessionals extends IDataTable {
 }
 
 export interface IDataTableUsers extends IDataTable {
-  search: string;
+  search: { value: string; type: string };
 }
 
 export interface ITableManager {
