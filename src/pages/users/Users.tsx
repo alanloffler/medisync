@@ -14,6 +14,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { spring } from 'framer-motion';
 import { useAnimate } from 'framer-motion/mini';
 // Imports
+import { EUserSearch, type IUserSearch } from '@users/interfaces/user-search.interface';
 import { USER_CONFIG } from '@config/user.config';
 import { useDebounce } from '@core/hooks/useDebounce';
 import { useHelpStore } from '@settings/stores/help.store';
@@ -21,24 +22,24 @@ import { useHelpStore } from '@settings/stores/help.store';
 export default function Users() {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [reload, setReload] = useState<number>(0);
-  const [search, setSearch] = useState<{ value: string; type: string }>({ value: '', type: 'name' });
+  const [search, setSearch] = useState<IUserSearch>({ value: '', type: EUserSearch.NAME });
   const [createMiniScope, createMiniAnimation] = useAnimate();
   const [createScope, createAnimation] = useAnimate();
   const [reloadScope, reloadAnimation] = useAnimate();
-  const debouncedSearch = useDebounce<{ value: string; type: string }>(search, USER_CONFIG.search.debounceTime);
+  const debouncedSearch = useDebounce<IUserSearch>(search, USER_CONFIG.search.debounceTime);
   const navigate = useNavigate();
   const { help } = useHelpStore();
 
   function handleSearchByName(event: ChangeEvent<HTMLInputElement>): void {
-    setSearch({ value: event.target.value, type: 'name' });
+    setSearch({ value: event.target.value, type: EUserSearch.NAME });
   }
 
   function handleSearchByDNI(event: ChangeEvent<HTMLInputElement>): void {
-    setSearch({ value: event.target.value, type: 'dni' });
+    setSearch({ value: event.target.value, type: EUserSearch.DNI });
   }
 
   function handleReload(): void {
-    setSearch({ value: '', type: 'name' });
+    setSearch({ value: '', type: EUserSearch.NAME });
     setReload(new Date().getTime());
   }
 
@@ -74,16 +75,16 @@ export default function Users() {
                 <div className='relative w-full items-center md:w-1/3 lg:w-full'>
                   <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
                   <Input
-                    onClick={() => setSearch({ value: '', type: 'dni' })}
+                    onClick={() => setSearch({ value: '', type: EUserSearch.DNI })}
                     onChange={handleSearchByDNI}
-                    value={search.type === 'dni' ? search.value : ''}
+                    value={search.type === EUserSearch.DNI ? search.value : ''}
                     type='number'
                     placeholder={USER_CONFIG.search.placeholder.dni}
                     className='bg-background pl-10 shadow-sm'
                   />
-                  {search.type === 'dni' && search.value && (
+                  {search.type === EUserSearch.DNI && search.value && (
                     <button
-                      onClick={() => setSearch({ value: '', type: 'dni' })}
+                      onClick={() => setSearch({ value: '', type: EUserSearch.DNI })}
                       className='absolute right-3 top-3 text-muted-foreground hover:text-black'
                     >
                       <X size={16} strokeWidth={2} />
@@ -96,16 +97,16 @@ export default function Users() {
                 <div className='relative w-full items-center md:w-1/3 lg:w-full'>
                   <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
                   <Input
-                    onClick={() => setSearch({ value: '', type: 'name' })}
+                    onClick={() => setSearch({ value: '', type: EUserSearch.NAME })}
                     onChange={handleSearchByName}
-                    value={search.type === 'name' ? search.value : ''}
+                    value={search.type === EUserSearch.NAME ? search.value : ''}
                     type='text'
                     placeholder={USER_CONFIG.search.placeholder.name}
                     className='bg-background pl-10 shadow-sm'
                   />
-                  {search.type === 'name' && search.value && (
+                  {search.type === EUserSearch.NAME && search.value && (
                     <button
-                      onClick={() => setSearch({ value: '', type: 'name' })}
+                      onClick={() => setSearch({ value: '', type: EUserSearch.NAME })}
                       className='absolute right-3 top-3 text-muted-foreground hover:text-black'
                     >
                       <X size={16} strokeWidth={2} />
