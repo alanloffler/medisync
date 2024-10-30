@@ -1,21 +1,21 @@
 // Icons: https://lucide.dev/icons/
 import { CirclePlus, List, ListRestart, PlusCircle, Search, X } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
-import { Button } from '@/core/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
-import { Input } from '@/core/components/ui/input';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/core/components/ui/tooltip';
+import { Button } from '@core/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@core/components/ui/card';
+import { Input } from '@core/components/ui/input';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@core/components/ui/tooltip';
 // Components
-import { PageHeader } from '@/core/components/common/PageHeader';
-import { UsersDataTable } from '@/pages/users/components/UsersDataTable';
+import { PageHeader } from '@core/components/common/PageHeader';
+import { UsersDataTable } from '@users/components/UsersDataTable';
 // External imports
 import { ChangeEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { spring } from 'framer-motion';
 import { useAnimate } from 'framer-motion/mini';
 // Imports
-import { USER_CONFIG } from '@/config/user.config';
-import { useDebounce } from '@/core/hooks/useDebounce';
+import { USER_CONFIG } from '@config/user.config';
+import { useDebounce } from '@core/hooks/useDebounce';
 import { useHelpStore } from '@settings/stores/help.store';
 // React component
 export default function Users() {

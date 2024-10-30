@@ -1,9 +1,9 @@
-import type { IUserForm } from '@/pages/users/interfaces/user.interface';
+import type { IUserForm } from '@users/interfaces/user.interface';
 import type { SortingState } from '@tanstack/react-table';
-import { UserUtils } from '@/pages/users/services/user.utils';
+import { UserUtils } from '@users/services/user.utils';
 
 export class UserApiService {
-  private static readonly API_URL = import.meta.env.VITE_API_URL;
+  private static readonly API_URL: string = import.meta.env.VITE_API_URL;
 
   public static async create(data: IUserForm) {
     const transformedData: IUserForm = UserUtils.lowercaseFormItems(data);
