@@ -1,11 +1,11 @@
 // Icons: https://lucide.dev/icons
 import { ArrowLeft, CalendarDays, Clock, Link as LinkIcon, Printer, Send } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
-import { Button } from '@/core/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
+import { Button } from '@core/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@core/components/ui/card';
 // Components
-import { LoadingDB } from '@/core/components/common/LoadingDB';
-import { PageHeader } from '@/core/components/common/PageHeader';
+import { LoadingDB } from '@core/components/common/LoadingDB';
+import { PageHeader } from '@core/components/common/PageHeader';
 // External imports
 import * as htmlToImage from 'html-to-image';
 import jsPDF from 'jspdf';
@@ -13,13 +13,13 @@ import { format } from '@formkit/tempo';
 import { useEffect, useRef, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 // Imports
-import type { IAppointmentView } from '@/pages/appointments/interfaces/appointment.interface';
-import type { IEmail } from '@/core/interfaces/email.interface';
-import { AppointmentApiService } from '@/pages/appointments/services/appointment.service';
-import { VIEW_APPOINTMENT_CONFIG as VA_CONFIG } from '@/config/appointment.config';
-import { useCapitalize } from '@/core/hooks/useCapitalize';
-import { useCapitalizeFirstLetter } from '@/core/hooks/useCapitalizeFirstLetter';
-import { useLegibleDate } from '@/core/hooks/useDateToString';
+import type { IAppointmentView } from '@appointments/interfaces/appointment.interface';
+import type { IEmail } from '@core/interfaces/email.interface';
+import { AppointmentApiService } from '@appointments/services/appointment.service';
+import { VIEW_APPOINTMENT_CONFIG as VA_CONFIG } from '@config/appointment.config';
+import { useCapitalize } from '@core/hooks/useCapitalize';
+import { useCapitalizeFirstLetter } from '@core/hooks/useCapitalizeFirstLetter';
+import { useLegibleDate } from '@core/hooks/useDateToString';
 // React component
 export default function ViewAppointment() {
   const [appointment, setAppointment] = useState<IAppointmentView>({} as IAppointmentView);

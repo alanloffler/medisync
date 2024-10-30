@@ -1,6 +1,6 @@
 // Imports
-import type { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
-import type { IUser } from '@/pages/users/interfaces/user.interface';
+import type { IProfessional } from '@professionals/interfaces/professional.interface';
+import type { IUser } from '@users/interfaces/user.interface';
 
 export interface IAppointmentForm {
   day: string;
