@@ -1,6 +1,7 @@
-// App
-import type { IBreadcrumb } from '@/core/components/common/interfaces/breadcrumb.interface';
-import { BreadCrumb } from '@/core/components/common/BreadCrumb';
+// Components
+import { BreadCrumb } from '@core/components/common/BreadCrumb';
+// Imports
+import type { IBreadcrumb } from '@core/components/common/interfaces/breadcrumb.interface';
 // React component
 export function PageHeader({ title, breadcrumb }: { title: string; breadcrumb: IBreadcrumb[] }) {
   return (
