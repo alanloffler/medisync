@@ -22,7 +22,6 @@
     /* Shadcn-ui */
     "baseUrl": ".",
     "paths": {
-      // "@/*": ["./src/*"],
       "@appointments/*": ["./src/pages/appointments/*"],
       "@config/*": ["./src/config/*"],
       "@core/*": ["./src/core/*"],
