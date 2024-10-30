@@ -36,6 +36,7 @@ import { ProfessionalApiService } from '@professionals/services/professional-api
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 import { useTruncateText } from '@core/hooks/useTruncateText';
+import { EProfessionalSearch, IProfessionalSearch } from '@professionals/interfaces/professional-search.interface';
 // import { useMediaQuery } from '@uidotdev/usehooks';
 // Default values for pagination and sorting
 const defaultSorting: SortingState = [{ id: PROF_CONFIG.table.defaultSortingId, desc: PROF_CONFIG.table.defaultSortingType }];
@@ -253,7 +254,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
   }, [reload]);
 
   useEffect(() => {
-    const fetchData = (search: { value: string; type: string }, sorting: SortingState, skipItems: number, itemsPerPage: number) => {
+    const fetchData = (search: IProfessionalSearch, sorting: SortingState, skipItems: number, itemsPerPage: number) => {
       setIsLoading(true);
 
       if (actualSearchType !== search.type) {
@@ -261,7 +262,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
         setActualSearchType(search.type);
       }
 
-      if (search.type === 'specialization') {
+      if (search.type === EProfessionalSearch.DROPDOWN) {
         ProfessionalApiService.findBySpecialization(search.value, sorting, skipItems, itemsPerPage)
           .then((response: IResponse) => {
             if (response.statusCode === 200) {
@@ -282,7 +283,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
           })
           .finally(() => setIsLoading(false));
       }
-      if (search.type === 'professional') {
+      if (search.type === EProfessionalSearch.INPUT) {
         ProfessionalApiService.findAll(search.value, sorting, skipItems, itemsPerPage)
           .then((response: IResponse) => {
             if (response.statusCode === 200) {

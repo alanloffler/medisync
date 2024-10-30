@@ -27,6 +27,7 @@ import type { IArea } from '@core/interfaces/area.interface';
 import type { ISpecialization } from '@core/interfaces/specialization.interface';
 import { APP_CONFIG } from '@config/app.config';
 import { AreaService } from '@core/services/area.service';
+import { EProfessionalSearch, type IProfessionalSearch } from '@professionals/interfaces/professional-search.interface';
 import { PROF_CONFIG } from '@config/professionals.config';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useDebounce } from '@core/hooks/useDebounce';
@@ -36,7 +37,7 @@ export default function Professionals() {
   const [areas, setAreas] = useState<IArea[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [reload, setReload] = useState<number>(0);
-  const [search, setSearch] = useState<{ value: string; type: string }>({ value: '', type: 'professional' });
+  const [search, setSearch] = useState<IProfessionalSearch>({ value: '', type: EProfessionalSearch.INPUT });
   const [specSelected, setSpecSelected] = useState<string>('Especialización');
   const [createMiniScope, createMiniAnimation] = useAnimate();
   const [createScope, createAnimation] = useAnimate();
@@ -44,26 +45,26 @@ export default function Professionals() {
   const [specializationsScope, specializationsAnimation] = useAnimate();
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
-  const debouncedSearch = useDebounce<{ value: string; type: string }>(search, PROF_CONFIG.search.debounceTime);
+  const debouncedSearch = useDebounce<IProfessionalSearch>(search, PROF_CONFIG.search.debounceTime);
   const navigate = useNavigate();
 
   function handleSearchByProfessional(event: ChangeEvent<HTMLInputElement>): void {
-    setSearch({ value: event.target.value, type: 'professional' });
+    setSearch({ value: event.target.value, type: EProfessionalSearch.INPUT });
   }
 
   function handleSearchBySpecialization(specialization: ISpecialization): void {
-    setSearch({ value: specialization._id, type: 'specialization' });
+    setSearch({ value: specialization._id, type: EProfessionalSearch.DROPDOWN });
     setSpecSelected(specialization.name);
   }
 
   function handleClearSearch(): void {
-    setSearch({ value: '', type: 'professional' });
+    setSearch({ value: '', type: EProfessionalSearch.INPUT });
     // FIXME: this must be something globally
     setSpecSelected('Especialización');
   }
 
   function handleReload(): void {
-    setSearch({ value: '', type: 'professional' });
+    setSearch({ value: '', type: EProfessionalSearch.INPUT });
     setReload(Math.random());
   }
 
@@ -102,14 +103,14 @@ export default function Professionals() {
                   <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
                   <Input
                     onChange={handleSearchByProfessional}
-                    value={search.type === 'professional' ? search.value : ''}
+                    value={search.type === EProfessionalSearch.INPUT ? search.value : ''}
                     type='text'
                     placeholder={PROF_CONFIG.search.placeholder}
                     className='bg-background pl-9 shadow-sm'
                   />
-                  {search.type === 'professional' && search.value && (
+                  {search.type === EProfessionalSearch.INPUT && search.value && (
                     <button
-                      onClick={() => setSearch({ value: '', type: 'professional' })}
+                      onClick={() => setSearch({ value: '', type: EProfessionalSearch.INPUT })}
                       className='absolute right-3 top-3 text-muted-foreground hover:text-black'
                     >
                       <X size={16} strokeWidth={2} />
