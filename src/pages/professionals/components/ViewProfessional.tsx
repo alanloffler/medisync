@@ -1,35 +1,35 @@
 // Icons: https://lucide.dev/icons/
 import { CalendarClock, CalendarDays, Mail, Menu, Quote, Smartphone } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
-import { Badge } from '@/core/components/ui/badge';
-import { Button } from '@/core/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '@/core/components/ui/dropdown-menu';
-import { Separator } from '@/core/components/ui/separator';
-import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@/core/components/ui/tooltip';
+import { Badge } from '@core/components/ui/badge';
+import { Button } from '@core/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@core/components/ui/card';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '@core/components/ui/dropdown-menu';
+import { Separator } from '@core/components/ui/separator';
+import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@core/components/ui/tooltip';
 // Components
-import { BackButton } from '@/core/components/common/BackButton';
-import { InfoCard } from '@/core/components/common/InfoCard';
-import { LoadingDB } from '@/core/components/common/LoadingDB';
-import { PageHeader } from '@/core/components/common/PageHeader';
+import { BackButton } from '@core/components/common/BackButton';
+import { InfoCard } from '@core/components/common/InfoCard';
+import { LoadingDB } from '@core/components/common/LoadingDB';
+import { PageHeader } from '@core/components/common/PageHeader';
 // External imports
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { spring } from 'framer-motion';
 import { useAnimate } from 'framer-motion/mini';
 import { useEffect, useState } from 'react';
 // Imports
-import type { IEmail } from '@/core/interfaces/email.interface';
-import type { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
-import type { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
-import type { IResponse } from '@/core/interfaces/response.interface';
-import { APP_CONFIG } from '@/config/app.config';
-import { CalendarService } from '@/pages/appointments/services/calendar.service';
-import { PROF_VIEW_CONFIG as PV_CONFIG } from '@/config/professionals.config';
-import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
-import { useCapitalize } from '@/core/hooks/useCapitalize';
-import { useCapitalizeFirstLetter } from '@/core/hooks/useCapitalizeFirstLetter';
-import { useDelimiter } from '@/core/hooks/useDelimiter';
-import { useNotificationsStore } from '@/core/stores/notifications.store';
+import type { IEmail } from '@core/interfaces/email.interface';
+import type { IInfoCard } from '@core/components/common/interfaces/infocard.interface';
+import type { IProfessional } from '@professionals/interfaces/professional.interface';
+import type { IResponse } from '@core/interfaces/response.interface';
+import { APP_CONFIG } from '@config/app.config';
+import { CalendarService } from '@appointments/services/calendar.service';
+import { PROF_VIEW_CONFIG as PV_CONFIG } from '@config/professionals.config';
+import { ProfessionalApiService } from '@professionals/services/professional-api.service';
+import { useCapitalize } from '@core/hooks/useCapitalize';
+import { useCapitalizeFirstLetter } from '@core/hooks/useCapitalizeFirstLetter';
+import { useDelimiter } from '@core/hooks/useDelimiter';
+import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export default function ViewProfessional() {
   const [emailObject, setEmailObject] = useState<IEmail>({} as IEmail);

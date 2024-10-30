@@ -2,10 +2,10 @@
 import { ArrowDownUp, ArrowLeftIcon, ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon, FilePen, FileText, Trash2 } from 'lucide-react';
 // External components:
 // https://ui.shadcn.com/docs/components
-import { Button } from '@/core/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/core/components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/core/components/ui/select';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/core/components/ui/table';
+import { Button } from '@core/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@core/components/ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@core/components/ui/table';
 // Tanstack Data Table: https://tanstack.com/table/latest
 import {
   flexRender,
@@ -20,22 +20,22 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 // Components
-import { InfoCard } from '@/core/components/common/InfoCard';
-import { LoadingDB } from '@/core/components/common/LoadingDB';
+import { InfoCard } from '@core/components/common/InfoCard';
+import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // Imports
-import type { IDataTableProfessionals, ITableManager } from '@/core/interfaces/table.interface';
-import type { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
-import type { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
-import type { IResponse } from '@/core/interfaces/response.interface';
-import { APP_CONFIG } from '@/config/app.config';
-import { PROF_CONFIG } from '@/config/professionals.config';
-import { ProfessionalApiService } from '@/pages/professionals/services/professional-api.service';
-import { useCapitalize } from '@/core/hooks/useCapitalize';
-import { useNotificationsStore } from '@/core/stores/notifications.store';
-import { useTruncateText } from '@/core/hooks/useTruncateText';
+import type { IDataTableProfessionals, ITableManager } from '@core/interfaces/table.interface';
+import type { IInfoCard } from '@core/components/common/interfaces/infocard.interface';
+import type { IProfessional } from '@professionals/interfaces/professional.interface';
+import type { IResponse } from '@core/interfaces/response.interface';
+import { APP_CONFIG } from '@config/app.config';
+import { PROF_CONFIG } from '@config/professionals.config';
+import { ProfessionalApiService } from '@professionals/services/professional-api.service';
+import { useCapitalize } from '@core/hooks/useCapitalize';
+import { useNotificationsStore } from '@core/stores/notifications.store';
+import { useTruncateText } from '@core/hooks/useTruncateText';
 // import { useMediaQuery } from '@uidotdev/usehooks';
 // Default values for pagination and sorting
 const defaultSorting: SortingState = [{ id: PROF_CONFIG.table.defaultSortingId, desc: PROF_CONFIG.table.defaultSortingType }];
