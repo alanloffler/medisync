@@ -1,5 +1,5 @@
-// App
-import { cn } from '@/lib/utils';
+// Imports
+import { cn } from '@lib/utils';
 // React component
 export function Steps({ text, step, className }: { text: string; step: string; className?: string }) {
   return (
