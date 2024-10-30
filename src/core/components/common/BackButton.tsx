@@ -1,7 +1,7 @@
 // Icons: https://lucide.dev/icons/
 import { ArrowLeft } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
-import { Button } from '@/core/components/ui/button';
+import { Button } from '@core/components/ui/button';
 // External imports
 import { spring } from 'framer-motion';
 import { useAnimate } from 'framer-motion/mini';
@@ -21,9 +21,9 @@ export function BackButton({ label }: { label: string }) {
 
   return (
     <Button
-      variant='outline'
-      size='sm'
       className='flex flex-row items-center space-x-2 text-xs font-medium uppercase'
+      size='sm'
+      variant='outline'
       onClick={() => navigate(-1)}
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
