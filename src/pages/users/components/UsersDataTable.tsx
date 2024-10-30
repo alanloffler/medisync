@@ -2,11 +2,11 @@
 import { ArrowDownUp, ArrowLeftIcon, ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon, FilePen, FileText, Trash2 } from 'lucide-react';
 // External components:
 // https://ui.shadcn.com/docs/components
-import { Button } from '@/core/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/core/components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/core/components/ui/select';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/core/components/ui/table';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/core/components/ui/tooltip';
+import { Button } from '@core/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@core/components/ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@core/components/ui/table';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@core/components/ui/tooltip';
 // Tanstack Data Table: https://tanstack.com/table/latest
 import {
   flexRender,
@@ -21,24 +21,24 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 // Components
-import { InfoCard } from '@/core/components/common/InfoCard';
-import { LoadingDB } from '@/core/components/common/LoadingDB';
+import { InfoCard } from '@core/components/common/InfoCard';
+import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // Imports
-import type { IDataTableUsers, ITableManager } from '@/core/interfaces/table.interface';
-import type { IInfoCard } from '@/core/components/common/interfaces/infocard.interface';
-import type { IResponse } from '@/core/interfaces/response.interface';
-import type { IUser } from '@/pages/users/interfaces/user.interface';
-import { APP_CONFIG } from '@/config/app.config';
-import { USER_CONFIG } from '@/config/user.config';
-import { UserApiService } from '@/pages/users/services/user-api.service';
-import { useCapitalize } from '@/core/hooks/useCapitalize';
-import { useDelimiter } from '@/core/hooks/useDelimiter';
-import { useIsNumericString } from '@/core/hooks/useIsNumericString';
-import { useNotificationsStore } from '@/core/stores/notifications.store';
-import { useTruncateText } from '@/core/hooks/useTruncateText';
+import type { IDataTableUsers, ITableManager } from '@core/interfaces/table.interface';
+import type { IInfoCard } from '@core/components/common/interfaces/infocard.interface';
+import type { IResponse } from '@core/interfaces/response.interface';
+import type { IUser } from '@users/interfaces/user.interface';
+import { APP_CONFIG } from '@config/app.config';
+import { USER_CONFIG } from '@config/user.config';
+import { UserApiService } from '@users/services/user-api.service';
+import { useCapitalize } from '@core/hooks/useCapitalize';
+import { useDelimiter } from '@core/hooks/useDelimiter';
+import { useIsNumericString } from '@core/hooks/useIsNumericString';
+import { useNotificationsStore } from '@core/stores/notifications.store';
+import { useTruncateText } from '@core/hooks/useTruncateText';
 // Default values for pagination and sorting
 const defaultSorting: SortingState = [{ id: USER_CONFIG.table.defaultSortingId, desc: USER_CONFIG.table.defaultSortingType }];
 const defaultPagination: PaginationState = { pageIndex: 0, pageSize: USER_CONFIG.table.defaultPageSize };

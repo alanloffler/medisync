@@ -1,15 +1,15 @@
 // Icons: https://lucide.dev/icons/
 import { FilePen } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
-import { Button } from '@/core/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/core/components/ui/card';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/core/components/ui/dialog';
-import { Form, FormField, FormControl, FormItem, FormLabel, FormMessage } from '@/core/components/ui/form';
-import { Input } from '@/core/components/ui/input';
+import { Button } from '@core/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@core/components/ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
+import { Form, FormField, FormControl, FormItem, FormLabel, FormMessage } from '@core/components/ui/form';
+import { Input } from '@core/components/ui/input';
 // Components
-import { BackButton } from '@/core/components/common/BackButton';
-import { LoadingDB } from '@/core/components/common/LoadingDB';
-import { PageHeader } from '@/core/components/common/PageHeader';
+import { BackButton } from '@core/components/common/BackButton';
+import { LoadingDB } from '@core/components/common/LoadingDB';
+import { PageHeader } from '@core/components/common/PageHeader';
 // External imports
 import { MouseEvent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -17,15 +17,15 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 // Imports
-import type { IResponse } from '@/core/interfaces/response.interface';
-import type { IUser } from '@/pages/users/interfaces/user.interface';
-import { APP_CONFIG } from '@/config/app.config';
-import { USER_SCHEMA } from '@/config/schemas/user.schema';
-import { USER_UPDATE_CONFIG as UU_CONFIG } from '@/config/user.config';
-import { UserApiService } from '@/pages/users/services/user-api.service';
-import { useCapitalize } from '@/core/hooks/useCapitalize';
-import { useNotificationsStore } from '@/core/stores/notifications.store';
-import { userSchema } from '@/pages/users/schemas/user.schema';
+import type { IResponse } from '@core/interfaces/response.interface';
+import type { IUser } from '@users/interfaces/user.interface';
+import { APP_CONFIG } from '@config/app.config';
+import { USER_SCHEMA } from '@config/schemas/user.schema';
+import { USER_UPDATE_CONFIG as UU_CONFIG } from '@config/user.config';
+import { UserApiService } from '@users/services/user-api.service';
+import { useCapitalize } from '@core/hooks/useCapitalize';
+import { useNotificationsStore } from '@core/stores/notifications.store';
+import { userSchema } from '@users/schemas/user.schema';
 // React component
 export default function UpdateUser() {
   const [errorMessage, setErrorMessage] = useState<string>('');

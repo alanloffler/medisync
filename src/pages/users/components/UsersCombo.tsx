@@ -1,17 +1,17 @@
 // Icons: https://lucide.dev/
 import { X } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
-import { Input } from '@/core/components/ui/input';
-import { ScrollArea } from '@/core/components/ui/scroll-area';
+import { Input } from '@core/components/ui/input';
+import { ScrollArea } from '@core/components/ui/scroll-area';
 // External imports
 import { ChangeEvent, useEffect, useState } from 'react';
 // Imports
-import type { IUser } from '@/pages/users/interfaces/user.interface';
-import { APPO_CONFIG } from '@/config/appointment.config';
-import { UserApiService } from '@/pages/users/services/user-api.service';
-import { useCapitalize } from '@/core/hooks/useCapitalize';
-import { useDebounce } from '@/core/hooks/useDebounce';
-import { useDelimiter } from '@/core/hooks/useDelimiter';
+import type { IUser } from '@users/interfaces/user.interface';
+import { APPO_CONFIG } from '@config/appointment.config';
+import { UserApiService } from '@users/services/user-api.service';
+import { useCapitalize } from '@core/hooks/useCapitalize';
+import { useDebounce } from '@core/hooks/useDebounce';
+import { useDelimiter } from '@core/hooks/useDelimiter';
 // React component
 export function UsersCombo({
   searchBy,
