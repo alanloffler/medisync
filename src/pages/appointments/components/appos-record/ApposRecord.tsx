@@ -52,15 +52,15 @@ export function ApposRecord({ userId }: { userId: string }) {
         </CardHeader>
         <CardContent className='flex flex-col gap-3'>
           <ApposFilters userId={userId} />
-          {isLoading && <LoadingDB variant='default' text={USER_VIEW_CONFIG.apposRecord.apposList.loadingText} />}
+          {isLoading && <LoadingDB variant='default' text={USER_VIEW_CONFIG.apposRecord.table.loadingText} />}
           {!error ? (
             appointments.length > 0 ? (
               <ApposTable appointments={appointments} />
             ) : (
-              <InfoCard type='warning' text={USER_VIEW_CONFIG.apposRecord.apposList.emptyList} className='pt-5' />
+              <InfoCard type='warning' text={USER_VIEW_CONFIG.apposRecord.table.emptyList} className='pt-5' />
             )
           ) : (
-            <InfoCard type='error' text={USER_VIEW_CONFIG.apposRecord.apposList.errorText} className='pt-5' />
+            <InfoCard type='error' text={USER_VIEW_CONFIG.apposRecord.table.errorText} className='pt-5' />
           )}
         </CardContent>
       </Card>
