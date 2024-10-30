@@ -1,13 +1,15 @@
 // Icons: https://lucide.dev/icons/
 import { Activity, ArrowUpRight, CreditCard, DollarSign, Users } from 'lucide-react';
-// Components: https://ui.shadcn.com/docs/components
-import { Avatar, AvatarFallback, AvatarImage } from '@/core/components/ui/avatar';
-import { Badge } from '@/core/components/ui/badge';
-import { Button } from '@/core/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/core/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/core/components/ui/table';
-import { PageHeader } from '@/core/components/common/PageHeader';
-import { IBreadcrumb } from '@/core/components/common/interfaces/breadcrumb.interface';
+// External components: https://ui.shadcn.com/docs/components
+import { Avatar, AvatarFallback, AvatarImage } from '@core/components/ui/avatar';
+import { Badge } from '@core/components/ui/badge';
+import { Button } from '@core/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@core/components/ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@core/components/ui/table';
+// Components
+import { PageHeader } from '@core/components/common/PageHeader';
+// Imports
+import type { IBreadcrumb } from '@core/components/common/interfaces/breadcrumb.interface';
 // React component
 export default function Dashboard() {
   const breadcrumb: IBreadcrumb[] = [
