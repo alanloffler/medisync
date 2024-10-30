@@ -25,7 +25,7 @@ export function ApposTable({ appointments }: { appointments: IAppointmentView[] 
       accessorKey: 'day',
       size: 80,
       cell: ({ row }) => <div className='text-center'>{format(row.original.day, 'DD/MM/YYYY')}</div>,
-      header: () => <div className='text-center'>{USER_VIEW_CONFIG.apposRecord.apposList.headers[0]}</div>,
+      header: () => <div className='text-center'>{USER_VIEW_CONFIG.apposRecord.table.headers[0]}</div>,
     },
     {
       accessorKey: 'lastName',
@@ -36,14 +36,14 @@ export function ApposTable({ appointments }: { appointments: IAppointmentView[] 
           )}
         </div>
       ),
-      header: () => <div className='text-left'>{USER_VIEW_CONFIG.apposRecord.apposList.headers[1]}</div>,
+      header: () => <div className='text-left'>{USER_VIEW_CONFIG.apposRecord.table.headers[1]}</div>,
     },
     {
       accessorKey: 'actions',
       size: 100,
       cell: ({ row }) => (
         <div className='space-x-2 text-center'>
-          <TooltipWrapper tooltip={USER_VIEW_CONFIG.apposRecord.tooltip.user.details} help={help}>
+          <TooltipWrapper tooltip={USER_VIEW_CONFIG.apposRecord.table.tooltip.user.details} help={help}>
             <Button
               onClick={() => navigate(`/appointments/${row.original._id}`)}
               variant='tableHeader'
@@ -53,7 +53,7 @@ export function ApposTable({ appointments }: { appointments: IAppointmentView[] 
               <FileText size={16} strokeWidth={1.5} />
             </Button>
           </TooltipWrapper>
-          <TooltipWrapper tooltip={USER_VIEW_CONFIG.apposRecord.tooltip.user.message} help={help}>
+          <TooltipWrapper tooltip={USER_VIEW_CONFIG.apposRecord.table.tooltip.user.message} help={help}>
             <Button
               // onClick={}
               variant='tableHeader'
@@ -63,7 +63,7 @@ export function ApposTable({ appointments }: { appointments: IAppointmentView[] 
               <MessageCircle size={16} strokeWidth={1.5} />
             </Button>
           </TooltipWrapper>
-          <TooltipWrapper tooltip={USER_VIEW_CONFIG.apposRecord.tooltip.user.delete} help={help}>
+          <TooltipWrapper tooltip={USER_VIEW_CONFIG.apposRecord.table.tooltip.user.delete} help={help}>
             <Button
               // onClick={}
               variant='tableHeader'
@@ -75,7 +75,7 @@ export function ApposTable({ appointments }: { appointments: IAppointmentView[] 
           </TooltipWrapper>
         </div>
       ),
-      header: () => <div className='text-center'>{USER_VIEW_CONFIG.apposRecord.apposList.headers[2]}</div>,
+      header: () => <div className='text-center'>{USER_VIEW_CONFIG.apposRecord.table.headers[2]}</div>,
     },
   ];
 
