@@ -1,7 +1,8 @@
-// App
-import { APP_CONFIG } from '@/config/app.config';
-import { cn } from '@/lib/utils';
+// External imports
 import { cva } from 'class-variance-authority';
+// Imports
+import { APP_CONFIG } from '@config/app.config';
+import { cn } from '@lib/utils';
 // Loader variants
 const loadingDBVariants = cva('flex items-center justify-center gap-2 text-sm font-medium text-slate-500', {
   variants: {
