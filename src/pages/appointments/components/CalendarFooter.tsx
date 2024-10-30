@@ -1,10 +1,10 @@
 // External components
 // https://ui.shadcn.com/docs/components
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/core/components/ui/select';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@core/components/ui/select';
 // Imports
-import type { ICalendarFooter } from '@/pages/appointments/interfaces/calendar.interface';
-import { APPO_CONFIG } from '@/config/appointment.config';
-import { useCapitalize } from '@/core/hooks/useCapitalize';
+import type { ICalendarFooter } from '@appointments/interfaces/calendar.interface';
+import { APPO_CONFIG } from '@config/appointment.config';
+import { useCapitalize } from '@core/hooks/useCapitalize';
 // React component
 export function CalendarFooter({ calendarMonths, calendarYears, selectedMonth, selectedYear, selectMonth, selectYear }: ICalendarFooter) {
   const capitalize = useCapitalize();
