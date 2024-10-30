@@ -5,6 +5,7 @@ import { Button } from '@core/components/ui/button';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@core/components/ui/select';
 // Components
 import { LoadingDB } from '@core/components/common/LoadingDB';
+import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
 import { animate, spring } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
@@ -17,6 +18,7 @@ import { AppointmentApiService } from '@appointments/services/appointment.servic
 import { USER_VIEW_CONFIG } from '@config/user.config';
 import { useApposFilters } from '@appointments/hooks/useApposFilters';
 import { useCapitalize } from '@core/hooks/useCapitalize';
+import { useHelpStore } from '@settings/stores/help.store';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export function ApposFilters({ userId }: { userId: string }) {
@@ -30,6 +32,7 @@ export function ApposFilters({ userId }: { userId: string }) {
   const capitalize = useCapitalize();
   const clearButtonRef = useRef(null);
   const clearLabelRef = useRef(null);
+  const { help } = useHelpStore();
   const { professional, year, setFilters, clearFilters } = useApposFilters();
 
   useEffect(() => {
@@ -92,25 +95,28 @@ export function ApposFilters({ userId }: { userId: string }) {
           <Filter size={16} strokeWidth={2} />
           <h1 className='text-sm font-medium'>{USER_VIEW_CONFIG.apposRecord.filters.title}</h1>
         </section>
+
         <Select
           disabled={professionalError}
           value={professional ? professional : ''}
           onValueChange={(e) => setFilters({ professional: e as IApposFilters['professional'] })}
         >
-          <SelectTrigger className={'text-xsm h-7 w-fit space-x-3 border border-slate-300 bg-white shadow-sm'}>
-            {loadingProfessionals ? (
-              <LoadingDB
-                variant='default'
-                text={USER_VIEW_CONFIG.apposRecord.select.professional.loadingText}
-                className='text-xsm h-7 px-0 font-normal'
-              />
-            ) : professionalError ? (
-              <span className='text-red-500'>{USER_VIEW_CONFIG.apposRecord.select.professional.errorText}</span>
-            ) : (
-              <SelectValue placeholder={USER_VIEW_CONFIG.apposRecord.select.professional.placeholder} />
-            )}
-          </SelectTrigger>
-          <SelectContent>
+          <TooltipWrapper tooltip='test tooltip' help={help}>
+            <SelectTrigger className={'h-7 w-fit space-x-3 border border-slate-300 bg-white text-xsm shadow-sm'}>
+              {loadingProfessionals ? (
+                <LoadingDB
+                  variant='default'
+                  text={USER_VIEW_CONFIG.apposRecord.filters.select.professional.loadingText}
+                  className='h-7 px-0 text-xsm font-normal'
+                />
+              ) : professionalError ? (
+                <span className='text-red-500'>{USER_VIEW_CONFIG.apposRecord.filters.select.professional.errorText}</span>
+              ) : (
+                <SelectValue placeholder={USER_VIEW_CONFIG.apposRecord.filters.select.professional.placeholder} />
+              )}
+            </SelectTrigger>
+          </TooltipWrapper>
+          <SelectContent onCloseAutoFocus={(e) => e.preventDefault()}>
             <SelectGroup>
               {professionals.map((professional) => (
                 <SelectItem key={crypto.randomUUID()} value={professional._id}>
@@ -121,15 +127,17 @@ export function ApposFilters({ userId }: { userId: string }) {
           </SelectContent>
         </Select>
         <Select disabled={yearError} value={year ? year : ''} onValueChange={(e) => setFilters({ year: e as IApposFilters['year'] })}>
-          <SelectTrigger className={'text-xsm h-7 w-fit space-x-3 border border-slate-300 bg-white shadow-sm'}>
-            {loadingYears ? (
-              <LoadingDB variant='default' text={USER_VIEW_CONFIG.apposRecord.select.year.loadingText} className='text-xsm h-7 px-0 font-normal' />
-            ) : yearError ? (
-              <span>{USER_VIEW_CONFIG.apposRecord.select.year.errorText}</span>
-            ) : (
-              <SelectValue placeholder={USER_VIEW_CONFIG.apposRecord.select.year.placeholder} />
-            )}
-          </SelectTrigger>
+          <TooltipWrapper tooltip='test tooltip' help={help}>
+            <SelectTrigger className={'h-7 w-fit space-x-3 border border-slate-300 bg-white text-xsm shadow-sm'}>
+              {loadingYears ? (
+                <LoadingDB variant='default' text={USER_VIEW_CONFIG.apposRecord.filters.select.year.loadingText} className='h-7 px-0 text-xsm font-normal' />
+              ) : yearError ? (
+                <span>{USER_VIEW_CONFIG.apposRecord.filters.select.year.errorText}</span>
+              ) : (
+                <SelectValue placeholder={USER_VIEW_CONFIG.apposRecord.filters.select.year.placeholder} />
+              )}
+            </SelectTrigger>
+          </TooltipWrapper>
           <SelectContent onCloseAutoFocus={(e) => e.preventDefault()}>
             <SelectGroup>
               {years.map((year) => (
@@ -144,7 +152,7 @@ export function ApposFilters({ userId }: { userId: string }) {
       {(professional || year) && (
         <section className='flex items-center space-x-2'>
           <span ref={clearLabelRef} className='text-xs text-slate-500 opacity-0'>
-            {USER_VIEW_CONFIG.apposRecord.button.clear}
+            {USER_VIEW_CONFIG.apposRecord.filters.button.clear}
           </span>
           <Button
             ref={clearButtonRef}
