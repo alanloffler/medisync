@@ -1,23 +1,23 @@
 // Icons: https://lucide.dev
 import { Filter, X } from 'lucide-react';
 // External components: http://ui.shadcn.com/docs/components
-import { Button } from '@/core/components/ui/button';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/core/components/ui/select';
+import { Button } from '@core/components/ui/button';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@core/components/ui/select';
 // Components
-import { LoadingDB } from '@/core/components/common/LoadingDB';
+import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
 import { animate, spring } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 // Imports
 import type { IApposFilters } from '@appointments/interfaces/appos-filters.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
-import type { IResponse } from '@/core/interfaces/response.interface';
-import { APP_CONFIG } from '@/config/app.config';
+import type { IResponse } from '@core/interfaces/response.interface';
+import { APP_CONFIG } from '@config/app.config';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
-import { USER_VIEW_CONFIG } from '@/config/user.config';
+import { USER_VIEW_CONFIG } from '@config/user.config';
 import { useApposFilters } from '@appointments/hooks/useApposFilters';
 import { useCapitalize } from '@core/hooks/useCapitalize';
-import { useNotificationsStore } from '@/core/stores/notifications.store';
+import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export function ApposFilters({ userId }: { userId: string }) {
   const [loadingProfessionals, setLoadingProfessionals] = useState<boolean>(false);
