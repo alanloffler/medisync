@@ -131,6 +131,13 @@ export const USER_VIEW_CONFIG = {
       },
     },
     title: 'Historial de turnos',
+    tooltip: {
+      user: {
+        delete: 'Eliminar',
+        details: 'Ver detalles',
+        message: 'Enviar mensaje',
+      },
+    }
   },
   breadcrumb: [
     { id: 1, name: 'Inicio', path: '/' },
