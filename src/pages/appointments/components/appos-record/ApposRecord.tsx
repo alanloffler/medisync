@@ -1,20 +1,20 @@
 // External components
-import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@core/components/ui/card';
 // Components
-import { ApposFilters } from '@/pages/appointments/components/appos-record/ApposFilters';
-import { ApposList } from '@/pages/appointments/components/appos-record/ApposList';
-import { InfoCard } from '@/core/components/common/InfoCard';
-import { LoadingDB } from '@/core/components/common/LoadingDB';
+import { ApposFilters } from '@appointments/components/appos-record/ApposFilters';
+import { ApposList } from '@appointments/components/appos-record/ApposList';
+import { InfoCard } from '@core/components/common/InfoCard';
+import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
 import { useEffect, useState } from 'react';
 // Imports
 import type { IAppointmentView } from '@appointments/interfaces/appointment.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
-import { APP_CONFIG } from '@/config/app.config';
+import { APP_CONFIG } from '@config/app.config';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
-import { USER_VIEW_CONFIG } from '@/config/user.config';
+import { USER_VIEW_CONFIG } from '@config/user.config';
 import { useApposFilters } from '@appointments/hooks/useApposFilters';
-import { useNotificationsStore } from '@/core/stores/notifications.store';
+import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export function ApposRecord({ userId }: { userId: string }) {
   const [appointments, setAppointments] = useState<IAppointmentView[]>([]);
