@@ -1,4 +1,4 @@
-import { IUserForm } from '@/pages/users/interfaces/user.interface';
+import type { IUserForm } from '@users/interfaces/user.interface';
 
 export class UserUtils {
   public static lowercaseFormItems(items: IUserForm): IUserForm {
