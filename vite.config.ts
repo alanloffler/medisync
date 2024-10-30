@@ -11,6 +11,7 @@ export default defineConfig({
       '@appointments': path.resolve(__dirname, './src/pages/appointments'),
       '@config': path.resolve(__dirname, './src/config'),
       '@core': path.resolve(__dirname, './src/core'),
+      '@lib': path.resolve(__dirname, './src/lib'),
       '@professionals': path.resolve(__dirname, './src/pages/professionals'),
       '@settings': path.resolve(__dirname, './src/pages/settings'),
       '@users': path.resolve(__dirname, './src/pages/users'),
