@@ -4,7 +4,6 @@ export const USER_CONFIG = {
     { id: 2, name: 'Pacientes', path: '/users' },
   ],
   buttons: {
-    activateHelp: 'Activar ayuda',
     cancel: 'Cancelar',
     createUser: 'Agregar paciente',
     remove: 'Eliminar paciente',
