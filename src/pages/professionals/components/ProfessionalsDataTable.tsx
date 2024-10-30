@@ -52,14 +52,16 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [pagination, setPagination] = useState<PaginationState>(defaultPagination);
   const [professionalSelected, setProfessionalSelected] = useState<IProfessional>({} as IProfessional);
-  const [sorting, setSorting] = useState<SortingState>(defaultSorting);
-  const [tableManager, setTableManager] = useState<ITableManager>({ sorting, pagination });
-  const [totalItems, setTotalItems] = useState<number>(0);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const firstUpdate = useRef(true);
   const navigate = useNavigate();
   const truncate = useTruncateText();
+  // Imports must be in order
+  const [sorting, setSorting] = useState<SortingState>(defaultSorting);
+  const [tableManager, setTableManager] = useState<ITableManager>({ sorting, pagination });
+  const [skipItems, setSkipItems] = useState<number>(0);
+  const [totalItems, setTotalItems] = useState<number>(0);
   // #region Table columns
   const tableColumns: ColumnDef<IProfessional>[] = [
     {
@@ -254,12 +256,17 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
   }, [reload]);
 
   useEffect(() => {
-    const fetchData = (search: IProfessionalSearch, sorting: SortingState, skipItems: number, itemsPerPage: number) => {
+    const fetchData = (search: IProfessionalSearch, sorting: SortingState, itemsPerPage: number) => {
       setIsLoading(true);
 
       if (actualSearchType !== search.type) {
+        console.log('diff search types');
         setPagination(defaultPagination);
         setActualSearchType(search.type);
+        setSkipItems(tableManager.pagination.pageSize);
+      } else {
+        console.log('equal search types');
+        setSkipItems(tableManager.pagination.pageIndex * tableManager.pagination.pageSize);
       }
 
       if (search.type === EProfessionalSearch.DROPDOWN) {
@@ -305,7 +312,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
           .finally(() => setIsLoading(false));
       }
     };
-    fetchData(search, tableManager.sorting, tableManager.pagination.pageIndex * tableManager.pagination.pageSize, tableManager.pagination.pageSize);
+    fetchData(search, tableManager.sorting, tableManager.pagination.pageSize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search, tableManager]);
   // #endregion

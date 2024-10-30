@@ -226,6 +226,8 @@ export default function Professionals() {
               </div>
             </CardHeader>
             <CardContent className='px-3'>
+              {/* TODO: must send to component the state of search, when is from a filter or not, then manage the sorting state on datatable
+              If is by filter then set skip to default (ex: 10), if not the datatable must manage the skip */}
               <ProfessionalsDataTable key={reload} reload={reload} search={debouncedSearch} setErrorMessage={setErrorMessage} setReload={setReload} />
             </CardContent>
           </Card>
