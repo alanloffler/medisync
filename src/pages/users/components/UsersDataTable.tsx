@@ -36,7 +36,6 @@ import { USER_CONFIG } from '@config/user.config';
 import { UserApiService } from '@users/services/user-api.service';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useDelimiter } from '@core/hooks/useDelimiter';
-import { useIsNumericString } from '@core/hooks/useIsNumericString';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 import { useTruncateText } from '@core/hooks/useTruncateText';
 // Default values for pagination and sorting
@@ -61,7 +60,6 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
   const capitalize = useCapitalize();
   const delimiter = useDelimiter();
   const firstUpdate = useRef(true);
-  const isNumericString = useIsNumericString();
   const navigate = useNavigate();
   const truncate = useTruncateText();
 
@@ -282,11 +280,11 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
   }, [reload]);
 
   useEffect(() => {
-    const fetchData = (search: string, sorting: SortingState, skipItems: number, itemsPerPage: number) => {
+    const fetchData = (search: { value: string; type: string }, sorting: SortingState, skipItems: number, itemsPerPage: number) => {
       setIsLoading(true);
 
-      if (!isNumericString(search)) {
-        UserApiService.findAll(search, sorting, skipItems, itemsPerPage)
+      if (search.type === 'name') {
+        UserApiService.findAll(search.value, sorting, skipItems, itemsPerPage)
           .then((response: IResponse) => {
             if (response.statusCode === 200) {
               if (response.data.length === 0) {
@@ -310,8 +308,9 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
             }
           })
           .finally(() => setIsLoading(false));
-      } else {
-        UserApiService.findAllByDNI(search, sorting, skipItems, itemsPerPage)
+      }
+      if (search.type === 'dni') {
+        UserApiService.findAllByDNI(search.value, sorting, skipItems, itemsPerPage)
           .then((response: IResponse) => {
             if (response.statusCode === 200) {
               setData(response.data.data);

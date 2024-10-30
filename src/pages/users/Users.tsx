@@ -21,29 +21,24 @@ import { useHelpStore } from '@settings/stores/help.store';
 export default function Users() {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [reload, setReload] = useState<number>(0);
-  const [searchByName, setSearchByName] = useState<string>('');
-  const [searchByDNI, setSearchByDNI] = useState<string>('');
+  const [search, setSearch] = useState<{ value: string; type: string }>({ value: '', type: 'name' });
   const [createMiniScope, createMiniAnimation] = useAnimate();
   const [createScope, createAnimation] = useAnimate();
   const [reloadScope, reloadAnimation] = useAnimate();
-  const debouncedSearchByDNI = useDebounce<string>(searchByDNI, USER_CONFIG.search.debounceTime);
-  const debouncedSearchByName = useDebounce<string>(searchByName, USER_CONFIG.search.debounceTime);
+  const debouncedSearch = useDebounce<{ value: string; type: string }>(search, USER_CONFIG.search.debounceTime);
   const navigate = useNavigate();
   const { help } = useHelpStore();
 
   function handleSearchByName(event: ChangeEvent<HTMLInputElement>): void {
-    setReload(new Date().getTime());
-    setSearchByName(event.target.value);
+    setSearch({ value: event.target.value, type: 'name' });
   }
 
   function handleSearchByDNI(event: ChangeEvent<HTMLInputElement>): void {
-    setReload(new Date().getTime());
-    setSearchByDNI(event.target.value);
+    setSearch({ value: event.target.value, type: 'dni' });
   }
 
   function handleReload(): void {
-    setSearchByDNI('');
-    setSearchByName('');
+    setSearch({ value: '', type: 'name' });
     setReload(new Date().getTime());
   }
 
@@ -79,15 +74,18 @@ export default function Users() {
                 <div className='relative w-full items-center md:w-1/3 lg:w-full'>
                   <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
                   <Input
-                    onClick={() => setSearchByName('')}
+                    onClick={() => setSearch({ value: '', type: 'dni' })}
                     onChange={handleSearchByDNI}
-                    value={searchByDNI}
+                    value={search.type === 'dni' ? search.value : ''}
                     type='number'
                     placeholder={USER_CONFIG.search.placeholder.dni}
                     className='bg-background pl-10 shadow-sm'
                   />
-                  {searchByDNI && (
-                    <button onClick={() => setSearchByDNI('')} className='absolute right-3 top-3 text-muted-foreground hover:text-black'>
+                  {search.type === 'dni' && search.value && (
+                    <button
+                      onClick={() => setSearch({ value: '', type: 'dni' })}
+                      className='absolute right-3 top-3 text-muted-foreground hover:text-black'
+                    >
                       <X size={16} strokeWidth={2} />
                     </button>
                   )}
@@ -98,15 +96,18 @@ export default function Users() {
                 <div className='relative w-full items-center md:w-1/3 lg:w-full'>
                   <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
                   <Input
-                    onClick={() => setSearchByDNI('')}
+                    onClick={() => setSearch({ value: '', type: 'name' })}
                     onChange={handleSearchByName}
-                    value={searchByName}
+                    value={search.type === 'name' ? search.value : ''}
                     type='text'
                     placeholder={USER_CONFIG.search.placeholder.name}
                     className='bg-background pl-10 shadow-sm'
                   />
-                  {searchByName && (
-                    <button onClick={() => setSearchByName('')} className='absolute right-3 top-3 text-muted-foreground hover:text-black'>
+                  {search.type === 'name' && search.value && (
+                    <button
+                      onClick={() => setSearch({ value: '', type: 'name' })}
+                      className='absolute right-3 top-3 text-muted-foreground hover:text-black'
+                    >
                       <X size={16} strokeWidth={2} />
                     </button>
                   )}
@@ -217,13 +218,12 @@ export default function Users() {
             </div>
           </CardHeader>
           {/* Table */}
-          {/* TODO: this must be implemented like in ProfessionalsDataTable with the search object */}
           <CardContent className='px-3'>
             <UsersDataTable
               help={help}
               key={reload}
               reload={reload}
-              search={debouncedSearchByName || debouncedSearchByDNI}
+              search={debouncedSearch}
               setErrorMessage={setErrorMessage}
               setReload={setReload}
             />
