@@ -1,39 +1,39 @@
 // Icons: https://lucide.dev/icons
 import { BriefcaseMedical, CalendarCheck, CalendarClock, CalendarDays, ClipboardCheck, Clock, FileWarning } from 'lucide-react';
 // External Components: https://ui.shadcn.com/docs/components
-import { Button } from '@/core/components/ui/button';
-import { Calendar } from '@/core/components/ui/calendar';
-import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/core/components/ui/dialog';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/core/components/ui/table';
+import { Button } from '@core/components/ui/button';
+import { Calendar } from '@core/components/ui/calendar';
+import { Card, CardContent, CardHeader, CardTitle } from '@core/components/ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@core/components/ui/table';
 // Components
-import { CalendarFooter } from '@/pages/appointments/components/CalendarFooter';
-import { InfoCard } from '@/core/components/common/InfoCard';
-import { LoadingDB } from '@/core/components/common/LoadingDB';
-import { ProfessionalsCombobox } from '@/pages/professionals/components/common/ProfessionalsCombobox';
-import { Steps } from '@/core/components/common/Steps';
-import { UsersCombo } from '@/pages/users/components/UsersCombo';
+import { CalendarFooter } from '@appointments/components/CalendarFooter';
+import { InfoCard } from '@core/components/common/InfoCard';
+import { LoadingDB } from '@core/components/common/LoadingDB';
+import { ProfessionalsCombobox } from '@professionals/components/common/ProfessionalsCombobox';
+import { Steps } from '@core/components/common/Steps';
+import { UsersCombo } from '@users/components/UsersCombo';
 // External imports
 import { es, enUS } from 'date-fns/locale';
 import { format } from '@formkit/tempo';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // Imports
-import type { IAppointment, ITimeSlot } from '@/pages/appointments/interfaces/appointment.interface';
-import type { IDialog } from '@/core/interfaces/dialog.interface';
-import type { IProfessional } from '@/pages/professionals/interfaces/professional.interface';
-import type { IUser } from '@/pages/users/interfaces/user.interface';
-import type { IWorkingDay } from '@/pages/professionals/interfaces/working-days.interface';
-import { APPO_CONFIG } from '@/config/appointment.config';
-import { APP_CONFIG } from '@/config/app.config';
-import { AppoSchedule } from '@/pages/appointments/services/schedule.service';
-import { AppointmentApiService } from '@/pages/appointments/services/appointment.service';
-import { CalendarService } from '@/pages/appointments/services/calendar.service';
-import { cn } from '@/lib/utils';
-import { useCapitalize } from '@/core/hooks/useCapitalize';
-import { useCapitalizeFirstLetter } from '@/core/hooks/useCapitalizeFirstLetter';
-import { useDelimiter } from '@/core/hooks/useDelimiter';
-import { useNotificationsStore } from '@/core/stores/notifications.store';
+import type { IAppointment, ITimeSlot } from '@appointments/interfaces/appointment.interface';
+import type { IDialog } from '@core/interfaces/dialog.interface';
+import type { IProfessional } from '@professionals/interfaces/professional.interface';
+import type { IUser } from '@users/interfaces/user.interface';
+import type { IWorkingDay } from '@professionals/interfaces/working-days.interface';
+import { APPO_CONFIG } from '@config/appointment.config';
+import { APP_CONFIG } from '@config/app.config';
+import { AppoSchedule } from '@appointments/services/schedule.service';
+import { AppointmentApiService } from '@appointments/services/appointment.service';
+import { CalendarService } from '@appointments/services/calendar.service';
+import { cn } from '@lib/utils';
+import { useCapitalize } from '@core/hooks/useCapitalize';
+import { useCapitalizeFirstLetter } from '@core/hooks/useCapitalizeFirstLetter';
+import { useDelimiter } from '@core/hooks/useDelimiter';
+import { useNotificationsStore } from '@core/stores/notifications.store';
 // Enum
 enum DialogAction {
   CANCEL = 'cancel',
