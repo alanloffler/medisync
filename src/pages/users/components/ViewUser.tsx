@@ -25,6 +25,7 @@ import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useDelimiter } from '@core/hooks/useDelimiter';
 import { useLegibleDate } from '@core/hooks/useDateToString';
 import { useNotificationsStore } from '@core/stores/notifications.store';
+import { useHelpStore } from '@settings/stores/help.store';
 // React component
 export default function ViewUser() {
   const [emailObject, setEmailObject] = useState<IEmail>({} as IEmail);
@@ -37,6 +38,7 @@ export default function ViewUser() {
   const delimiter = useDelimiter();
   const legibleDate = useLegibleDate();
   const navigate = useNavigate();
+  const { help } = useHelpStore();
   const { id } = useParams();
 
   useEffect(() => {
@@ -86,57 +88,105 @@ export default function ViewUser() {
                     <h1 className='text-center text-2xl font-bold'>
                       {capitalize(user.lastName)}, {capitalize(user.firstName)}
                     </h1>
-                    <TooltipProvider delayDuration={0.3}>
-                      <Tooltip>
-                        <DropdownMenu>
-                          <TooltipTrigger asChild>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                className='absolute right-1 flex items-center'
-                                ref={dropdownScope}
-                                size={'miniIcon'}
-                                variant={'tableHeader'}
-                                onMouseOver={() =>
-                                  dropdownAnimation(
-                                    dropdownScope.current,
-                                    { scale: 1.1 },
-                                    { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 },
-                                  )
-                                }
-                                onMouseOut={() =>
-                                  dropdownAnimation(dropdownScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                                }
-                              >
-                                <Menu size={16} strokeWidth={2} />
-                              </Button>
-                            </DropdownMenuTrigger>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p className='text-xs font-medium'>{UV_CONFIG.tooltip.dropdown}</p>
-                          </TooltipContent>
-                          <DropdownMenuContent className='w-fit' align='end'>
-                            <DropdownMenuGroup>
-                              {/* Send email */}
-                              <Link
-                                to={`https://mail.google.com/mail/?view=cm&to=${emailObject.to}&su=${emailObject.subject}&body=${emailObject.body}`}
-                                target='_blank'
-                                className='transition-colors hover:text-indigo-500'
-                              >
-                                <DropdownMenuItem>{UV_CONFIG.dropdownMenu[0].name}</DropdownMenuItem>
-                              </Link>
-                              {/* Send whatsapp */}
-                              <Link to={`/whatsapp/${user._id}`}>
-                                <DropdownMenuItem>{UV_CONFIG.dropdownMenu[1].name}</DropdownMenuItem>
-                              </Link>
-                              {/* Edit user */}
-                              <Link to={`/users/update/${user._id}`}>
-                                <DropdownMenuItem>{UV_CONFIG.dropdownMenu[2].name}</DropdownMenuItem>
-                              </Link>
-                            </DropdownMenuGroup>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </Tooltip>
-                    </TooltipProvider>
+                    {help ? (
+                      <TooltipProvider delayDuration={0.3}>
+                        <Tooltip>
+                          <DropdownMenu>
+                            <TooltipTrigger asChild>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  className='absolute right-1 flex items-center'
+                                  ref={dropdownScope}
+                                  size={'miniIcon'}
+                                  variant={'tableHeader'}
+                                  onMouseOver={() =>
+                                    dropdownAnimation(
+                                      dropdownScope.current,
+                                      { scale: 1.1 },
+                                      { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 },
+                                    )
+                                  }
+                                  onMouseOut={() =>
+                                    dropdownAnimation(
+                                      dropdownScope.current,
+                                      { scale: 1 },
+                                      { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 },
+                                    )
+                                  }
+                                >
+                                  <Menu size={16} strokeWidth={2} />
+                                </Button>
+                              </DropdownMenuTrigger>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p className='text-xs font-medium'>{UV_CONFIG.tooltip.dropdown}</p>
+                            </TooltipContent>
+                            <DropdownMenuContent className='w-fit' align='end'>
+                              <DropdownMenuGroup>
+                                {/* Send email */}
+                                <Link
+                                  to={`https://mail.google.com/mail/?view=cm&to=${emailObject.to}&su=${emailObject.subject}&body=${emailObject.body}`}
+                                  target='_blank'
+                                  className='transition-colors hover:text-indigo-500'
+                                >
+                                  <DropdownMenuItem>{UV_CONFIG.dropdownMenu[0].name}</DropdownMenuItem>
+                                </Link>
+                                {/* Send whatsapp */}
+                                <Link to={`/whatsapp/${user._id}`}>
+                                  <DropdownMenuItem>{UV_CONFIG.dropdownMenu[1].name}</DropdownMenuItem>
+                                </Link>
+                                {/* Edit user */}
+                                <Link to={`/users/update/${user._id}`}>
+                                  <DropdownMenuItem>{UV_CONFIG.dropdownMenu[2].name}</DropdownMenuItem>
+                                </Link>
+                              </DropdownMenuGroup>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ) : (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            className='absolute right-1 flex items-center'
+                            ref={dropdownScope}
+                            size={'miniIcon'}
+                            variant={'tableHeader'}
+                            onMouseOver={() =>
+                              dropdownAnimation(dropdownScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                            }
+                            onMouseOut={() =>
+                              dropdownAnimation(dropdownScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                            }
+                          >
+                            <Menu size={16} strokeWidth={2} />
+                          </Button>
+                        </DropdownMenuTrigger>
+
+                        <p className='text-xs font-medium'>{UV_CONFIG.tooltip.dropdown}</p>
+
+                        <DropdownMenuContent className='w-fit' align='end'>
+                          <DropdownMenuGroup>
+                            {/* Send email */}
+                            <Link
+                              to={`https://mail.google.com/mail/?view=cm&to=${emailObject.to}&su=${emailObject.subject}&body=${emailObject.body}`}
+                              target='_blank'
+                              className='transition-colors hover:text-indigo-500'
+                            >
+                              <DropdownMenuItem>{UV_CONFIG.dropdownMenu[0].name}</DropdownMenuItem>
+                            </Link>
+                            {/* Send whatsapp */}
+                            <Link to={`/whatsapp/${user._id}`}>
+                              <DropdownMenuItem>{UV_CONFIG.dropdownMenu[1].name}</DropdownMenuItem>
+                            </Link>
+                            {/* Edit user */}
+                            <Link to={`/users/update/${user._id}`}>
+                              <DropdownMenuItem>{UV_CONFIG.dropdownMenu[2].name}</DropdownMenuItem>
+                            </Link>
+                          </DropdownMenuGroup>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
                   </div>
                 </CardTitle>
               </CardHeader>
@@ -160,7 +210,7 @@ export default function ViewUser() {
         )}
       </section>
       {showCard && (
-        <section className='mx-auto w-full md:w-3/4 pt-3'>
+        <section className='mx-auto w-full pt-3 md:w-3/4'>
           <ApposRecord userId={user._id} />
         </section>
       )}
