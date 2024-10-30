@@ -1,17 +1,18 @@
 // Icons: https://lucide.dev/icons/
 import { SquareChevronRight } from 'lucide-react';
-// Components: https://ui.shadcn.com/docs/components
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/core/components/ui/dropdown-menu';
-import { ScrollArea } from '@/core/components/ui/scroll-area';
-// App
-import { FOOTER_CONFIG } from '@/config/layout/footer.config';
+// External components: https://ui.shadcn.com/docs/components
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@core/components/ui/dropdown-menu';
+import { ScrollArea } from '@core/components/ui/scroll-area';
+// External imports
 import { useEffect, useState } from 'react';
-import { useNotificationsStore } from '@/core/stores/notifications.store';
+// Imports
+import { FOOTER_CONFIG } from '@config/layout/footer.config';
+import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export function Footer() {
-  const notifications = useNotificationsStore((state) => state.notifications);
   const [showAll, setShowAll] = useState<boolean>(false);
   const [showNotification, setShowNotification] = useState<boolean>(false);
+  const notifications = useNotificationsStore((state) => state.notifications);
 
   useEffect(() => {
     setShowNotification(true);
