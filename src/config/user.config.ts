@@ -106,38 +106,39 @@ export const USER_CREATE_CONFIG = {
 
 export const USER_VIEW_CONFIG = {
   apposRecord: {
-    apposList: {
-      headers: ['Fecha', 'Profesional', 'Acciones'],
+    table: {
       emptyList: 'No existen turnos para el paciente',
       errorText: 'Error cargando turnos',
+      headers: ['Fecha', 'Profesional', 'Acciones'],
       loadingText: 'Cargando turnos',
-    },
-    button: {
-      clear: 'Borrar filtros',
+      tooltip: {
+        user: {
+          delete: 'Eliminar',
+          details: 'Ver detalles',
+          message: 'Enviar mensaje',
+        },
+      },
     },
     filters: {
+      button: {
+        clear: 'Borrar filtros',
+      },
+      select: {
+        professional: {
+          errorText: 'Error',
+          loadingText: 'Cargando',
+          placeholder: 'Profesionales',
+          tooltip: 'Seleccionar profesional',
+        },
+        year: {
+          errorText: 'Error',
+          loadingText: 'Cargando',
+          placeholder: 'Año',
+          tooltip: 'Seleccionar año',
+        },
+      },
       title: 'Filtrar turnos',
     },
-    select: {
-      professional: {
-        errorText: 'Error',
-        loadingText: 'Cargando',
-        placeholder: 'Profesionales',
-      },
-      year: {
-        errorText: 'Error',
-        loadingText: 'Cargando',
-        placeholder: 'Año',
-      },
-    },
-    title: 'Historial de turnos',
-    tooltip: {
-      user: {
-        delete: 'Eliminar',
-        details: 'Ver detalles',
-        message: 'Enviar mensaje',
-      },
-    }
   },
   breadcrumb: [
     { id: 1, name: 'Inicio', path: '/' },
