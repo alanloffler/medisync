@@ -43,7 +43,6 @@ const defaultSorting: SortingState = [{ id: PROF_CONFIG.table.defaultSortingId, 
 const defaultPagination: PaginationState = { pageIndex: 0, pageSize: PROF_CONFIG.table.defaultPageSize };
 // React component
 export function ProfessionalsDataTable({ search, reload, setReload, setErrorMessage }: IDataTableProfessionals) {
-  const [actualSearchType, setActualSearchType] = useState<string>(search.type);
   const [columns, setColumns] = useState<ColumnDef<IProfessional>[]>([]);
   const [data, setData] = useState<IProfessional[]>([]);
   const [infoCard, setInfoCard] = useState<IInfoCard>({ text: '', type: 'error' });
@@ -52,16 +51,15 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [pagination, setPagination] = useState<PaginationState>(defaultPagination);
   const [professionalSelected, setProfessionalSelected] = useState<IProfessional>({} as IProfessional);
+  const [sorting, setSorting] = useState<SortingState>(defaultSorting);
+  const [tableManager, setTableManager] = useState<ITableManager>({ sorting, pagination });
+  const [totalItems, setTotalItems] = useState<number>(0);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const firstUpdate = useRef(true);
   const navigate = useNavigate();
+  const prevDeps = useRef({ search, tableManager});
   const truncate = useTruncateText();
-  // Imports must be in order
-  const [sorting, setSorting] = useState<SortingState>(defaultSorting);
-  const [tableManager, setTableManager] = useState<ITableManager>({ sorting, pagination });
-  const [skipItems, setSkipItems] = useState<number>(0);
-  const [totalItems, setTotalItems] = useState<number>(0);
   // #region Table columns
   const tableColumns: ColumnDef<IProfessional>[] = [
     {
@@ -258,15 +256,15 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
   useEffect(() => {
     const fetchData = (search: IProfessionalSearch, sorting: SortingState, itemsPerPage: number) => {
       setIsLoading(true);
+      
+      let skipItems: number;
 
-      if (actualSearchType !== search.type) {
-        console.log('diff search types');
+      if (prevDeps.current.search.value !== search.value) {
         setPagination(defaultPagination);
-        setActualSearchType(search.type);
-        setSkipItems(tableManager.pagination.pageSize);
+        prevDeps.current.search = search;
+        skipItems = 0;
       } else {
-        console.log('equal search types');
-        setSkipItems(tableManager.pagination.pageIndex * tableManager.pagination.pageSize);
+        skipItems = tableManager.pagination.pageIndex * tableManager.pagination.pageSize;
       }
 
       if (search.type === EProfessionalSearch.DROPDOWN) {
