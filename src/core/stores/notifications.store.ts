@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { format } from '@formkit/tempo';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
 export interface INotification {
@@ -26,7 +27,7 @@ export const useNotificationsStore = create<States & Actions>()(
       notifications: initialState.notifications,
       addNotification: (notification: INotification) => {
         const nd = new Date();
-        notification.date = nd.toLocaleString('es-AR', { hour: '2-digit', minute: '2-digit', hourCycle: 'h24' });
+        notification.date = format(nd, 'HH:mm:ss');
         set((state) => ({ notifications: [notification, ...state.notifications]}));
       },
       reset: () => set(initialState),
