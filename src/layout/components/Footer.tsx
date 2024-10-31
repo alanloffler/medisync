@@ -26,7 +26,7 @@ export function Footer() {
       <div className='flex w-full items-center justify-between'>
         <div className='flex items-center gap-2 overflow-x-hidden'>
           <DropdownMenu>
-            <DropdownMenuTrigger onClick={() => setShowAll(!showAll)} className='focus:outline-none'>
+            <DropdownMenuTrigger disabled={notifications.length === 0} onClick={() => setShowAll(!showAll)} className='focus:outline-none'>
               <SquareChevronRight className='h-5 w-5' strokeWidth={2} />
             </DropdownMenuTrigger>
             <DropdownMenuContent className='ml-4 max-h-[250px]'>
