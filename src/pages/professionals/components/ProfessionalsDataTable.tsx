@@ -31,12 +31,12 @@ import type { IInfoCard } from '@core/components/common/interfaces/infocard.inte
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import { APP_CONFIG } from '@config/app.config';
+import { EProfessionalSearch, type IProfessionalSearch } from '@professionals/interfaces/professional-search.interface';
 import { PROF_CONFIG } from '@config/professionals.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 import { useTruncateText } from '@core/hooks/useTruncateText';
-import { EProfessionalSearch, IProfessionalSearch } from '@professionals/interfaces/professional-search.interface';
 // import { useMediaQuery } from '@uidotdev/usehooks';
 // Default values for pagination and sorting
 const defaultSorting: SortingState = [{ id: PROF_CONFIG.table.defaultSortingId, desc: PROF_CONFIG.table.defaultSortingType }];
@@ -58,7 +58,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
   const capitalize = useCapitalize();
   const firstUpdate = useRef(true);
   const navigate = useNavigate();
-  const prevDeps = useRef({ search, tableManager});
+  const prevDeps = useRef<{ search: IProfessionalSearch; tableManager: ITableManager }>({ search, tableManager });
   const truncate = useTruncateText();
   // #region Table columns
   const tableColumns: ColumnDef<IProfessional>[] = [
@@ -256,7 +256,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
   useEffect(() => {
     const fetchData = (search: IProfessionalSearch, sorting: SortingState, itemsPerPage: number) => {
       setIsLoading(true);
-      
+
       let skipItems: number;
 
       if (prevDeps.current.search.value !== search.value) {
