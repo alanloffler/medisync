@@ -62,6 +62,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
   const delimiter = useDelimiter();
   const firstUpdate = useRef(true);
   const navigate = useNavigate();
+  const prevDeps = useRef<{ search: IUserSearch; tableManager: ITableManager }>({ search, tableManager });
   const truncate = useTruncateText();
 
   const tableColumns: ColumnDef<IUser>[] = [
@@ -281,8 +282,18 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
   }, [reload]);
 
   useEffect(() => {
-    const fetchData = (search: IUserSearch, sorting: SortingState, skipItems: number, itemsPerPage: number) => {
+    const fetchData = (search: IUserSearch, sorting: SortingState, itemsPerPage: number) => {
       setIsLoading(true);
+
+      let skipItems: number;
+
+      if (prevDeps.current.search.value !== search.value) {
+        setPagination(defaultPagination);
+        prevDeps.current.search = search;
+        skipItems = 0;
+      } else {
+        skipItems = tableManager.pagination.pageIndex * tableManager.pagination.pageSize;
+      }
 
       if (search.type === EUserSearch.NAME) {
         UserApiService.findAll(search.value, sorting, skipItems, itemsPerPage)
@@ -332,9 +343,9 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
           .finally(() => setIsLoading(false));
       }
     };
-    fetchData(search, tableManager.sorting, tableManager.pagination.pageIndex * tableManager.pagination.pageSize, tableManager.pagination.pageSize);
+    fetchData(search, tableManager.sorting, tableManager.pagination.pageSize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search, tableManager, help]);
+  }, [search, tableManager]);
 
   function handleRemoveUserDialog(user: IUser): void {
     setOpenDialog(true);
