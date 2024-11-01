@@ -103,7 +103,7 @@ export default function ViewUser() {
                 <section className='pt-2 text-base'>{`${UV_CONFIG.phrase.userSince} ${legibleDate(new Date(user.createdAt), 'short')}`}</section>
               </CardContent>
               <section className='flex justify-end space-x-2 border-t p-2'>
-                <TooltipWrapper tooltip={'Enviar email'} help={help}>
+                <TooltipWrapper tooltip={UV_CONFIG.tooltip.sendEmail} help={help}>
                   <Button
                     onClick={() =>
                       window.open(
@@ -118,7 +118,7 @@ export default function ViewUser() {
                     <Send size={18} strokeWidth={1.5} />
                   </Button>
                 </TooltipWrapper>
-                <TooltipWrapper tooltip={'Enviar WhatsApp'} help={help}>
+                <TooltipWrapper tooltip={UV_CONFIG.tooltip.sendWhatsApp} help={help}>
                   <Button
                     onClick={() => navigate(`/whatsapp/${user._id}`)}
                     variant='secondary'
@@ -128,7 +128,7 @@ export default function ViewUser() {
                     <MessageCircle size={18} strokeWidth={1.5} />
                   </Button>
                 </TooltipWrapper>
-                <TooltipWrapper tooltip={'Editar paciente'} help={help}>
+                <TooltipWrapper tooltip={UV_CONFIG.tooltip.updateUser} help={help}>
                   <Button
                     onClick={() => navigate(`/users/update/${user._id}`)}
                     variant='secondary'
@@ -139,7 +139,7 @@ export default function ViewUser() {
                   </Button>
                 </TooltipWrapper>
                 {/* TODO: create dialog for user delete */}
-                <TooltipWrapper tooltip={'Eliminar paciente'} help={help}>
+                <TooltipWrapper tooltip={UV_CONFIG.tooltip.deleteUser} help={help}>
                   <Button
                     onClick={() => navigate(``)}
                     variant='secondary'
