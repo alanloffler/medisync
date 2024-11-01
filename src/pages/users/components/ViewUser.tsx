@@ -1,8 +1,8 @@
 // Icons: https://lucide.dev/icons/
-import { CreditCard, Mail, Menu, Smartphone } from 'lucide-react';
+import { CreditCard, FilePen, Mail, Menu, MessageCircle, Send, Smartphone } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@core/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@core/components/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '@core/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@core/components/ui/tooltip';
 // Components
@@ -202,6 +202,29 @@ export default function ViewUser() {
                 </section>
                 <section className='pt-2 text-base'>{`${UV_CONFIG.phrase.userSince} ${legibleDate(new Date(user.createdAt), 'short')}`}</section>
               </CardContent>
+              <section className='flex justify-end space-x-2 border-t p-2'>
+                <Button
+                  variant='secondary'
+                  size='miniIcon'
+                  className='bg-transparent transition-transform hover:scale-125 hover:bg-transparent hover:text-sky-500 hover:animate-in'
+                >
+                  <Send size={18} strokeWidth={1.5} />
+                </Button>
+                <Button
+                  variant='secondary'
+                  size='miniIcon'
+                  className='bg-transparent transition-transform hover:scale-125 hover:bg-transparent hover:text-emerald-500 hover:animate-in'
+                >
+                  <MessageCircle size={18} strokeWidth={1.5} />
+                </Button>
+                <Button
+                  variant='secondary'
+                  size='miniIcon'
+                  className='bg-transparent transition-transform hover:scale-125 hover:bg-transparent hover:text-amber-500 hover:animate-in'
+                >
+                  <FilePen size={18} strokeWidth={1.5} />
+                </Button>
+              </section>
             </Card>
           )
         )}
