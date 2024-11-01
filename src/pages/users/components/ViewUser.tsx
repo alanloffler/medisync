@@ -76,7 +76,7 @@ export default function ViewUser() {
         <BackButton label={UV_CONFIG.buttons.back} />
       </header>
       {/* Section: Page Content */}
-      <section className='grid gap-4 md:grid-cols-5 md:gap-8 lg:grid-cols-5 lg:gap-8'>
+      <section className='grid gap-4 md:grid-cols-5 md:gap-8 lg:grid-cols-5 lg:gap-8 xl:grid-cols-6 xl:gap-8'>
         {isLoading ? (
           <LoadingDB text={APP_CONFIG.loadingDB.findOneUser} variant='card' className='border' />
         ) : (
@@ -85,7 +85,7 @@ export default function ViewUser() {
               <CardHeader>
                 <CardTitle>
                   <div className='relative flex items-center justify-center'>
-                    <h1 className='text-center text-2xl font-bold'>
+                    <h1 className='text-center text-xl font-bold'>
                       {capitalize(user.lastName)}, {capitalize(user.firstName)}
                     </h1>
                     {help ? (
@@ -187,26 +187,26 @@ export default function ViewUser() {
                   </div>
                 </CardTitle>
               </CardHeader>
-              <CardContent className='mt-3 space-y-3'>
-                <section className='flex items-center space-x-4'>
-                  <CreditCard size={24} strokeWidth={2} />
-                  <span className='text-lg font-medium'>{delimiter(user.dni, '.', 3)}</span>
+              <CardContent className='mt-3 space-y-3 overflow-auto'>
+                <section className='flex items-center space-x-3'>
+                  <CreditCard size={18} strokeWidth={1.5} />
+                  <span className='text-base font-normal'>{delimiter(user.dni, '.', 3)}</span>
                 </section>
-                <section className='flex items-center space-x-4'>
-                  <Smartphone size={24} strokeWidth={2} />
-                  <span className='text-lg font-medium'>{delimiter(user.phone, '-', 6)}</span>
+                <section className='flex items-center space-x-3'>
+                  <Smartphone size={18} strokeWidth={1.5} />
+                  <span className='text-base font-normal'>{delimiter(user.phone, '-', 6)}</span>
                 </section>
-                <section className='flex items-center space-x-4'>
-                  <Mail size={24} strokeWidth={2} />
-                  <span className='text-lg font-medium'>{user.email}</span>
+                <section className='flex items-center space-x-3'>
+                  <Mail size={18} strokeWidth={1.5} />
+                  <span className='text-base font-normal'>{user.email}</span>
                 </section>
-                <section className='flex justify-end pt-2 text-base leading-none text-slate-500'>{`${UV_CONFIG.phrase.userSince} ${legibleDate(new Date(user.createdAt), 'short')}`}</section>
+                <section className='pt-2 text-base'>{`${UV_CONFIG.phrase.userSince} ${legibleDate(new Date(user.createdAt), 'short')}`}</section>
               </CardContent>
             </Card>
           )
         )}
         {showCard && (
-          <section className='col-span-1 overflow-y-auto md:col-span-3 lg:col-span-3 xl:col-span-3'>
+          <section className='col-span-1 overflow-y-auto md:col-span-3 lg:col-span-3 xl:col-span-4'>
             <ApposRecord userId={user._id} />
           </section>
         )}
