@@ -11,11 +11,19 @@ import { type Cell, type ColumnDef, flexRender, getCoreRowModel, type Row, useRe
 import { useNavigate } from 'react-router-dom';
 // Imports
 import type { IAppointmentView } from '@appointments/interfaces/appointment.interface';
+import type { IResponse } from '@core/interfaces/response.interface';
+import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { USER_VIEW_CONFIG } from '@config/user.config';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useHelpStore } from '@settings/stores/help.store';
 // React component
-export function ApposTable({ appointments }: { appointments: IAppointmentView[] }) {
+export function ApposTable({
+  appointments,
+  setRefresh,
+}: {
+  appointments: IAppointmentView[];
+  setRefresh: React.Dispatch<React.SetStateAction<string>>;
+}) {
   const capitalize = useCapitalize();
   const navigate = useNavigate();
   const { help } = useHelpStore();
@@ -32,7 +40,7 @@ export function ApposTable({ appointments }: { appointments: IAppointmentView[] 
       cell: ({ row }) => (
         <div>
           {capitalize(
-            `${row.original.professional.title.abbreviation} ${row.original.professional.lastName}, ${row.original.professional.firstName}`,
+            `${row.original.professional?.title.abbreviation} ${row.original.professional?.lastName}, ${row.original.professional?.firstName}`,
           )}
         </div>
       ),
@@ -65,7 +73,7 @@ export function ApposTable({ appointments }: { appointments: IAppointmentView[] 
           </TooltipWrapper>
           <TooltipWrapper tooltip={USER_VIEW_CONFIG.apposRecord.table.tooltip.user.delete} help={help}>
             <Button
-              // onClick={}
+              onClick={() => handleDeleteAppointment(row.original._id)}
               variant='tableHeader'
               size='miniIcon'
               className='border border-slate-300 bg-white transition-transform hover:scale-110 hover:border-red-500 hover:bg-white hover:text-red-500 hover:animate-in'
@@ -87,6 +95,15 @@ export function ApposTable({ appointments }: { appointments: IAppointmentView[] 
 
   function handleRowClick(row: Row<IAppointmentView>, cell: Cell<IAppointmentView, unknown>): void {
     if (cell.column.getIndex() < row.getAllCells().length - 1) navigate(`/appointments/${row.original._id}`);
+  }
+
+  function handleDeleteAppointment(id: string): void {
+    // TODO: handle response and errors
+    AppointmentApiService.remove(id).then((response: IResponse) => {
+      console.log(response);
+      setRefresh(crypto.randomUUID());
+      console.log();
+    });
   }
 
   return (
