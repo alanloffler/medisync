@@ -21,7 +21,7 @@ export function ApposRecord({ userId }: { userId: string }) {
   const [error, setError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [refresh, setRefresh] = useState<string>('');
-  const { professional, year } = useApposFilters();
+  const { professional, year, clearFilters } = useApposFilters();
   const addNotification = useNotificationsStore((state) => state.addNotification);
 
   useEffect(() => {
@@ -30,7 +30,13 @@ export function ApposRecord({ userId }: { userId: string }) {
     AppointmentApiService.findApposRecordWithFilters(userId, professional, year)
       .then((response: IResponse) => {
         if (response.statusCode === 200) {
-          if (response.data.length > 0) setAppointments(response.data);
+          if (response.data.length > 0) {
+            setAppointments(response.data);
+          } else {
+            setAppointments([]);
+            clearFilters({ professional: undefined, year: undefined });
+            // TODO: useState here setDisabledFilters and pass to ApposFilters and disabled selects if no appos found
+          }
         }
         if (response.statusCode > 399) {
           setError(true);
