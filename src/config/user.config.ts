@@ -150,11 +150,6 @@ export const USER_VIEW_CONFIG = {
     back: 'Volver',
     goToUsers: 'Ir a pacientes',
   },
-  dropdownMenu: [
-    { id: 1, name: 'Enviar e-mail' },
-    { id: 2, name: 'Enviar WhatsApp' },
-    { id: 3, name: 'Editar paciente' },
-  ],
   email: {
     subject: 'MediSync - Turnos médicos',
     body: ['Hola', ','],
@@ -164,7 +159,10 @@ export const USER_VIEW_CONFIG = {
   },
   title: 'Detalles del paciente',
   tooltip: {
-    dropdown: 'Acciones',
+   deleteUser: 'Eliminar paciente',
+   sendEmail: 'Enviar e-mail',
+   sendWhatsApp: 'Enviar WhatsApp',
+   updateUser: 'Editar paciente',
   },
 };
 
