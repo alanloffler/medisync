@@ -69,19 +69,19 @@ export default function ViewUser() {
   }, [id]);
 
   return (
-    <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
+    <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
       {/* Section: Page Header */}
       <header className='flex items-center justify-between'>
         <PageHeader title={UV_CONFIG.title} breadcrumb={UV_CONFIG.breadcrumb} />
         <BackButton label={UV_CONFIG.buttons.back} />
       </header>
       {/* Section: Page Content */}
-      <section className='mx-auto mt-4 flex w-full flex-row px-2 md:w-[500px]'>
+      <section className='grid gap-4 md:grid-cols-5 md:gap-8 lg:grid-cols-5 lg:gap-8'>
         {isLoading ? (
           <LoadingDB text={APP_CONFIG.loadingDB.findOneUser} variant='card' className='border' />
         ) : (
           showCard && (
-            <Card className='w-full'>
+            <Card className='col-span-1 mx-auto h-fit w-full border md:col-span-2 lg:col-span-2 xl:col-span-2'>
               <CardHeader>
                 <CardTitle>
                   <div className='relative flex items-center justify-center'>
@@ -162,7 +162,6 @@ export default function ViewUser() {
                             <Menu size={16} strokeWidth={2} />
                           </Button>
                         </DropdownMenuTrigger>
-                        <p className='text-xs font-medium'>{UV_CONFIG.tooltip.dropdown}</p>
                         <DropdownMenuContent className='w-fit' align='end'>
                           <DropdownMenuGroup>
                             {/* Send email */}
@@ -206,13 +205,13 @@ export default function ViewUser() {
             </Card>
           )
         )}
+        {showCard && (
+          <section className='col-span-1 overflow-y-auto md:col-span-3 lg:col-span-3 xl:col-span-3'>
+            <ApposRecord userId={user._id} />
+          </section>
+        )}
       </section>
-      {showCard && (
-        <section className='mx-auto w-full pt-3 md:w-3/4'>
-          <ApposRecord userId={user._id} />
-        </section>
-      )}
-      <footer className='mx-auto pt-3'>
+      <footer className='mx-auto'>
         <Button variant='default' size='default' onClick={() => navigate('/users')}>
           {UV_CONFIG.buttons.goToUsers}
         </Button>
