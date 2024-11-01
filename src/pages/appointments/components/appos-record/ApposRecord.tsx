@@ -20,6 +20,7 @@ export function ApposRecord({ userId }: { userId: string }) {
   const [appointments, setAppointments] = useState<IAppointmentView[]>([]);
   const [error, setError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [refresh, setRefresh] = useState<string>('');
   const { professional, year } = useApposFilters();
   const addNotification = useNotificationsStore((state) => state.addNotification);
 
@@ -42,7 +43,7 @@ export function ApposRecord({ userId }: { userId: string }) {
       })
       .finally(() => setIsLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [professional, year, userId]);
+  }, [professional, year, userId, refresh]);
 
   return (
     <main>
@@ -55,7 +56,7 @@ export function ApposRecord({ userId }: { userId: string }) {
           {isLoading && <LoadingDB variant='default' text={USER_VIEW_CONFIG.apposRecord.table.loadingText} />}
           {!error ? (
             appointments.length > 0 ? (
-              <ApposTable appointments={appointments} />
+              <ApposTable appointments={appointments} setRefresh={setRefresh} />
             ) : (
               <InfoCard type='warning' text={USER_VIEW_CONFIG.apposRecord.table.emptyList} className='pt-5' />
             )
