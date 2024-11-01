@@ -1,19 +1,16 @@
 // Icons: https://lucide.dev/icons/
-import { CreditCard, FilePen, Mail, Menu, MessageCircle, Send, Smartphone } from 'lucide-react';
+import { CreditCard, FilePen, Mail, MessageCircle, Send, Smartphone, Trash2 } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@core/components/ui/card';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '@core/components/ui/dropdown-menu';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@core/components/ui/tooltip';
+import { Card, CardContent, CardHeader, CardTitle } from '@core/components/ui/card';
 // Components
 import { ApposRecord } from '@appointments/components/appos-record/ApposRecord';
 import { BackButton } from '@core/components/common/BackButton';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
+import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { spring } from 'framer-motion';
-import { useAnimate } from 'framer-motion/mini';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 // Imports
 import type { IEmail } from '@core/interfaces/email.interface';
@@ -32,7 +29,6 @@ export default function ViewUser() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showCard, setShowCard] = useState<boolean>(false);
   const [user, setUser] = useState<IUser>({} as IUser);
-  const [dropdownScope, dropdownAnimation] = useAnimate();
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const delimiter = useDelimiter();
@@ -88,102 +84,6 @@ export default function ViewUser() {
                     <h1 className='text-center text-xl font-bold'>
                       {capitalize(user.lastName)}, {capitalize(user.firstName)}
                     </h1>
-                    {help ? (
-                      <TooltipProvider delayDuration={0.3}>
-                        <Tooltip>
-                          <DropdownMenu>
-                            <TooltipTrigger asChild>
-                              <DropdownMenuTrigger asChild>
-                                <Button
-                                  className='absolute right-1 flex items-center'
-                                  ref={dropdownScope}
-                                  size={'miniIcon'}
-                                  variant={'tableHeader'}
-                                  onMouseOver={() =>
-                                    dropdownAnimation(
-                                      dropdownScope.current,
-                                      { scale: 1.1 },
-                                      { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 },
-                                    )
-                                  }
-                                  onMouseOut={() =>
-                                    dropdownAnimation(
-                                      dropdownScope.current,
-                                      { scale: 1 },
-                                      { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 },
-                                    )
-                                  }
-                                >
-                                  <Menu size={16} strokeWidth={2} />
-                                </Button>
-                              </DropdownMenuTrigger>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p className='text-xs font-medium'>{UV_CONFIG.tooltip.dropdown}</p>
-                            </TooltipContent>
-                            <DropdownMenuContent className='w-fit' align='end'>
-                              <DropdownMenuGroup>
-                                {/* Send email */}
-                                <Link
-                                  to={`https://mail.google.com/mail/?view=cm&to=${emailObject.to}&su=${emailObject.subject}&body=${emailObject.body}`}
-                                  target='_blank'
-                                  className='transition-colors hover:text-indigo-500'
-                                >
-                                  <DropdownMenuItem>{UV_CONFIG.dropdownMenu[0].name}</DropdownMenuItem>
-                                </Link>
-                                {/* Send whatsapp */}
-                                <Link to={`/whatsapp/${user._id}`}>
-                                  <DropdownMenuItem>{UV_CONFIG.dropdownMenu[1].name}</DropdownMenuItem>
-                                </Link>
-                                {/* Edit user */}
-                                <Link to={`/users/update/${user._id}`}>
-                                  <DropdownMenuItem>{UV_CONFIG.dropdownMenu[2].name}</DropdownMenuItem>
-                                </Link>
-                              </DropdownMenuGroup>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </Tooltip>
-                      </TooltipProvider>
-                    ) : (
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            className='absolute right-1 flex items-center'
-                            ref={dropdownScope}
-                            size={'miniIcon'}
-                            variant={'tableHeader'}
-                            onMouseOver={() =>
-                              dropdownAnimation(dropdownScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                            }
-                            onMouseOut={() =>
-                              dropdownAnimation(dropdownScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                            }
-                          >
-                            <Menu size={16} strokeWidth={2} />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className='w-fit' align='end'>
-                          <DropdownMenuGroup>
-                            {/* Send email */}
-                            <Link
-                              to={`https://mail.google.com/mail/?view=cm&to=${emailObject.to}&su=${emailObject.subject}&body=${emailObject.body}`}
-                              target='_blank'
-                              className='transition-colors hover:text-indigo-500'
-                            >
-                              <DropdownMenuItem>{UV_CONFIG.dropdownMenu[0].name}</DropdownMenuItem>
-                            </Link>
-                            {/* Send whatsapp */}
-                            <Link to={`/whatsapp/${user._id}`}>
-                              <DropdownMenuItem>{UV_CONFIG.dropdownMenu[1].name}</DropdownMenuItem>
-                            </Link>
-                            {/* Edit user */}
-                            <Link to={`/users/update/${user._id}`}>
-                              <DropdownMenuItem>{UV_CONFIG.dropdownMenu[2].name}</DropdownMenuItem>
-                            </Link>
-                          </DropdownMenuGroup>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    )}
                   </div>
                 </CardTitle>
               </CardHeader>
@@ -203,27 +103,52 @@ export default function ViewUser() {
                 <section className='pt-2 text-base'>{`${UV_CONFIG.phrase.userSince} ${legibleDate(new Date(user.createdAt), 'short')}`}</section>
               </CardContent>
               <section className='flex justify-end space-x-2 border-t p-2'>
-                <Button
-                  variant='secondary'
-                  size='miniIcon'
-                  className='bg-transparent transition-transform hover:scale-125 hover:bg-transparent hover:text-sky-500 hover:animate-in'
-                >
-                  <Send size={18} strokeWidth={1.5} />
-                </Button>
-                <Button
-                  variant='secondary'
-                  size='miniIcon'
-                  className='bg-transparent transition-transform hover:scale-125 hover:bg-transparent hover:text-emerald-500 hover:animate-in'
-                >
-                  <MessageCircle size={18} strokeWidth={1.5} />
-                </Button>
-                <Button
-                  variant='secondary'
-                  size='miniIcon'
-                  className='bg-transparent transition-transform hover:scale-125 hover:bg-transparent hover:text-amber-500 hover:animate-in'
-                >
-                  <FilePen size={18} strokeWidth={1.5} />
-                </Button>
+                <TooltipWrapper tooltip={'Enviar email'} help={help}>
+                  <Button
+                    onClick={() =>
+                      window.open(
+                        `https://mail.google.com/mail/?view=cm&to=${emailObject.to}&su=${emailObject.subject}&body=${emailObject.body}`,
+                        '_blank',
+                      )
+                    }
+                    variant='secondary'
+                    size='miniIcon'
+                    className='bg-transparent transition-transform hover:scale-125 hover:bg-transparent hover:text-sky-500 hover:animate-in'
+                  >
+                    <Send size={18} strokeWidth={1.5} />
+                  </Button>
+                </TooltipWrapper>
+                <TooltipWrapper tooltip={'Enviar WhatsApp'} help={help}>
+                  <Button
+                    onClick={() => navigate(`/whatsapp/${user._id}`)}
+                    variant='secondary'
+                    size='miniIcon'
+                    className='bg-transparent transition-transform hover:scale-125 hover:bg-transparent hover:text-emerald-500 hover:animate-in'
+                  >
+                    <MessageCircle size={18} strokeWidth={1.5} />
+                  </Button>
+                </TooltipWrapper>
+                <TooltipWrapper tooltip={'Editar paciente'} help={help}>
+                  <Button
+                    onClick={() => navigate(`/users/update/${user._id}`)}
+                    variant='secondary'
+                    size='miniIcon'
+                    className='bg-transparent transition-transform hover:scale-125 hover:bg-transparent hover:text-amber-500 hover:animate-in'
+                  >
+                    <FilePen size={18} strokeWidth={1.5} />
+                  </Button>
+                </TooltipWrapper>
+                {/* TODO: create dialog for user delete */}
+                <TooltipWrapper tooltip={'Eliminar paciente'} help={help}>
+                  <Button
+                    onClick={() => navigate(``)}
+                    variant='secondary'
+                    size='miniIcon'
+                    className='bg-transparent transition-transform hover:scale-125 hover:bg-transparent hover:text-rose-500 hover:animate-in'
+                  >
+                    <Trash2 size={18} strokeWidth={1.5} />
+                  </Button>
+                </TooltipWrapper>
               </section>
             </Card>
           )
