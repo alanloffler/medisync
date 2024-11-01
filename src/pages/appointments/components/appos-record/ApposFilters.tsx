@@ -95,9 +95,8 @@ export function ApposFilters({ userId }: { userId: string }) {
           <Filter size={16} strokeWidth={2} />
           <h1 className='text-sm font-medium'>{USER_VIEW_CONFIG.apposRecord.filters.title}</h1>
         </section>
-
         <Select
-          disabled={professionalError}
+          disabled={professionalError || professionals.length === 0}
           value={professional ? professional : ''}
           onValueChange={(e) => setFilters({ professional: e as IApposFilters['professional'] })}
         >
@@ -126,7 +125,11 @@ export function ApposFilters({ userId }: { userId: string }) {
             </SelectGroup>
           </SelectContent>
         </Select>
-        <Select disabled={yearError} value={year ? year : ''} onValueChange={(e) => setFilters({ year: e as IApposFilters['year'] })}>
+        <Select
+          disabled={yearError || years.length === 0}
+          value={year ? year : ''}
+          onValueChange={(e) => setFilters({ year: e as IApposFilters['year'] })}
+        >
           <TooltipWrapper tooltip={USER_VIEW_CONFIG.apposRecord.filters.select.year.tooltip} help={help}>
             <SelectTrigger className={'h-7 w-fit space-x-3 border border-slate-300 bg-white text-xsm shadow-sm'}>
               {loadingYears ? (
