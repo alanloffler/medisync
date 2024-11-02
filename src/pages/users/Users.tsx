@@ -75,7 +75,7 @@ export default function Users() {
                 <div className='relative w-full items-center md:w-1/3 lg:w-full'>
                   <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
                   <Input
-                    onClick={() => setSearch({ value: '', type: EUserSearch.DNI })}
+                    onClick={() => search.value !== '' && search.type === EUserSearch.NAME && setSearch({ value: '', type: EUserSearch.DNI })}
                     onChange={handleSearchByDNI}
                     value={search.type === EUserSearch.DNI ? search.value : ''}
                     type='number'
@@ -97,7 +97,7 @@ export default function Users() {
                 <div className='relative w-full items-center md:w-1/3 lg:w-full'>
                   <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
                   <Input
-                    onClick={() => setSearch({ value: '', type: EUserSearch.NAME })}
+                    onClick={() => search.value !== '' && search.type === EUserSearch.DNI && setSearch({ value: '', type: EUserSearch.NAME })}
                     onChange={handleSearchByName}
                     value={search.type === EUserSearch.NAME ? search.value : ''}
                     type='text'
