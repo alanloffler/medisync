@@ -7,7 +7,7 @@ export function Statistic({ children, content, title, value }: IStatistic) {
   return (
     <Card className='bg-dark-bg'>
       <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-        <CardTitle className='flex px-2 py-1 bg-primary text-primary-foreground'>
+        <CardTitle className='flex bg-primary px-2 py-1 text-primary-foreground'>
           <span className='text-xsm font-medium'>{title}</span>
         </CardTitle>
         {children}
