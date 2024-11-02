@@ -10,6 +10,7 @@ export default defineConfig({
       '@appointments': path.resolve(__dirname, './src/pages/appointments'),
       '@config': path.resolve(__dirname, './src/config'),
       '@core': path.resolve(__dirname, './src/core'),
+      '@dashboard': path.resolve(__dirname, './src/pages/dashboard'),
       '@layout': path.resolve(__dirname, './src/layout'),
       '@lib': path.resolve(__dirname, './src/lib'),
       '@professionals': path.resolve(__dirname, './src/pages/professionals'),

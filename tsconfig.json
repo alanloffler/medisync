@@ -25,6 +25,7 @@
       "@appointments/*": ["./src/pages/appointments/*"],
       "@config/*": ["./src/config/*"],
       "@core/*": ["./src/core/*"],
+      "@dashboard/*": ["./src/pages/dashboard/*"],
       "@layout/*": ["./src/layout/*"],
       "@lib/*": ["./src/lib/*"],
       "@professionals/*": ["./src/pages/professionals/*"],
