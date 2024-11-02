@@ -5,7 +5,7 @@ import type { IStatistic } from '@dashboard/interfaces/statistic.interface';
 // React component
 export function Statistic({ children, content, title, value }: IStatistic) {
   return (
-    <Card className='bg-dark-bg'>
+    <Card>
       <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
         <CardTitle className='flex bg-primary px-2 py-1 text-primary-foreground'>
           <span className='text-xsm font-medium'>{title}</span>
@@ -13,8 +13,8 @@ export function Statistic({ children, content, title, value }: IStatistic) {
         {children}
       </CardHeader>
       <CardContent>
-        <div className='text-2xl font-bold'>{value}</div>
-        <p className='text-xs text-primary'>{content}</p>
+        <div className='text-dark-default text-2xl font-bold'>{value}</div>
+        <p className='text-dark-default text-xs'>{content}</p>
       </CardContent>
     </Card>
   );
