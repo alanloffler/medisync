@@ -21,7 +21,7 @@ export function ApposRecord({ userId }: { userId: string }) {
   const [error, setError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [refresh, setRefresh] = useState<string>('');
-  const { professional, year, clearFilters } = useApposFilters();
+  const { professional, year } = useApposFilters();
   const addNotification = useNotificationsStore((state) => state.addNotification);
 
   useEffect(() => {
@@ -34,7 +34,6 @@ export function ApposRecord({ userId }: { userId: string }) {
             setAppointments(response.data);
           } else {
             setAppointments([]);
-            clearFilters({ professional: undefined, year: undefined });
             // TODO: useState here setDisabledFilters and pass to ApposFilters and disabled selects if no appos found
           }
         }
