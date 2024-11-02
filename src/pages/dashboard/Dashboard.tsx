@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { Activity, ArrowUpRight, CreditCard, DollarSign, Users } from 'lucide-react';
+import { Activity, ArrowUpRight, CreditCard, Users } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Avatar, AvatarFallback, AvatarImage } from '@core/components/ui/avatar';
 import { Badge } from '@core/components/ui/badge';
@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@core
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@core/components/ui/table';
 // Components
 import { PageHeader } from '@core/components/common/PageHeader';
+import { Statistic } from '@dashboard/components/Statistic';
 // Imports
 import type { IBreadcrumb } from '@core/components/common/interfaces/breadcrumb.interface';
 // React component
@@ -22,16 +23,7 @@ export default function Dashboard() {
       <PageHeader title='Dashboard' breadcrumb={breadcrumb} />
       {/* Grid */}
       <div className='grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4'>
-        <Card x-chunk='dashboard-01-chunk-0'>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Total Revenue</CardTitle>
-            <DollarSign className='h-4 w-4 text-muted-foreground' />
-          </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>$45,231.89</div>
-            <p className='text-xs text-muted-foreground'>+20.1% from last month</p>
-          </CardContent>
-        </Card>
+        <Statistic content='Total Revenue' title='Revenue' value='$45,231.89' />
         <Card x-chunk='dashboard-01-chunk-1'>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
             <CardTitle className='text-sm font-medium'>Subscriptions</CardTitle>
