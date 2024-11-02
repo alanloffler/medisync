@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { Activity, CreditCard, DollarSign, Users } from 'lucide-react';
+import { Activity, CalendarCheck, CreditCard, Users } from 'lucide-react';
 // External imports
 import { useEffect, useState } from 'react';
 // Components
@@ -22,16 +22,16 @@ export function StatisticGroup() {
   return (
     <main className='grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4'>
       <Statistic content='Total Revenue' title='Revenue' value='$45,231.89'>
-        <DollarSign className='h-4 w-4 text-muted-foreground' />
+        <CalendarCheck size={24} strokeWidth={2} className='text-fuchsia-400' />
       </Statistic>
       <Statistic content={`${userStats.value2} nuevos este mes`} title='Pacientes' value={delimiter(userStats.value1, '.', 3)}>
-        <Users className='h-4 w-4 text-muted-foreground' />
+        <Users size={24} strokeWidth={2} className='text-sky-400' />
       </Statistic>
       <Statistic content='+19% from last month' title='Sales' value='+12,234'>
-        <CreditCard className='h-4 w-4 text-muted-foreground' />
+        <CreditCard size={24} strokeWidth={2} className='text-emerald-400' />
       </Statistic>
       <Statistic content='+201 since last hour' title='Active Now' value='+573'>
-        <Activity className='h-4 w-4 text-muted-foreground' />
+        <Activity size={24} strokeWidth={2} className='text-rose-400' />
       </Statistic>
     </main>
   );
