@@ -4,5 +4,6 @@ export interface IStatistic {
   children: ReactNode;
   content: string;
   title: string;
-  value: string;
+  value1?: string;
+  value2?: string;
 }
