@@ -1,6 +1,7 @@
+// Components
+import { Notifications } from '@layout/components/Notifications';
 // Imports
 import { FOOTER_CONFIG } from '@config/layout/footer.config';
-import { Notifications } from '@layout/components/Notifications';
 // React component
 export function Footer() {
   return (
