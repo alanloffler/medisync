@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { Activity, ArrowUpRight, CreditCard, Users } from 'lucide-react';
+import { Activity, ArrowUpRight, CreditCard, DollarSign, Users } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Avatar, AvatarFallback, AvatarImage } from '@core/components/ui/avatar';
 import { Badge } from '@core/components/ui/badge';
@@ -10,50 +10,26 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { PageHeader } from '@core/components/common/PageHeader';
 import { Statistic } from '@dashboard/components/Statistic';
 // Imports
-import type { IBreadcrumb } from '@core/components/common/interfaces/breadcrumb.interface';
+import { DASHBOARD_CONFIG } from '@config/dashboard.config';
 // React component
 export default function Dashboard() {
-  const breadcrumb: IBreadcrumb[] = [
-    { id: 1, name: 'Inicio', path: '/' },
-    { id: 2, name: 'Tablero', path: '/dashboard' },
-  ];
-
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8'>
-      <PageHeader title='Dashboard' breadcrumb={breadcrumb} />
+      <PageHeader title='Dashboard' breadcrumb={DASHBOARD_CONFIG.breadcrumb} />
       {/* Grid */}
       <div className='grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4'>
-        <Statistic content='Total Revenue' title='Revenue' value='$45,231.89' />
-        <Card x-chunk='dashboard-01-chunk-1'>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Subscriptions</CardTitle>
-            <Users className='h-4 w-4 text-muted-foreground' />
-          </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>+2350</div>
-            <p className='text-xs text-muted-foreground'>+180.1% from last month</p>
-          </CardContent>
-        </Card>
-        <Card x-chunk='dashboard-01-chunk-2'>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Sales</CardTitle>
-            <CreditCard className='h-4 w-4 text-muted-foreground' />
-          </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>+12,234</div>
-            <p className='text-xs text-muted-foreground'>+19% from last month</p>
-          </CardContent>
-        </Card>
-        <Card x-chunk='dashboard-01-chunk-3'>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Active Now</CardTitle>
-            <Activity className='h-4 w-4 text-muted-foreground' />
-          </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>+573</div>
-            <p className='text-xs text-muted-foreground'>+201 since last hour</p>
-          </CardContent>
-        </Card>
+        <Statistic content='Total Revenue' title='Revenue' value='$45,231.89'>
+          <DollarSign className='h-4 w-4 text-muted-foreground' />
+        </Statistic>
+        <Statistic content='47 nuevos este mes' title='Pacientes' value='2350'>
+          <Users className='h-4 w-4 text-muted-foreground' />
+        </Statistic>
+        <Statistic content='+19% from last month' title='Sales' value='+12,234'>
+          <CreditCard className='h-4 w-4 text-muted-foreground' />
+        </Statistic>
+        <Statistic content='+201 since last hour' title='Active Now' value='+573'>
+          <Activity className='h-4 w-4 text-muted-foreground' />
+        </Statistic>
       </div>
       {/* Tables */}
       <div className='grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3'>
