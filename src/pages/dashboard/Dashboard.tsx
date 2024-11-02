@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { Activity, ArrowUpRight, CreditCard, DollarSign, Users } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Avatar, AvatarFallback, AvatarImage } from '@core/components/ui/avatar';
 import { Badge } from '@core/components/ui/badge';
@@ -8,29 +8,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@core
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@core/components/ui/table';
 // Components
 import { PageHeader } from '@core/components/common/PageHeader';
-import { Statistic } from '@dashboard/components/Statistic';
 // Imports
 import { DASHBOARD_CONFIG } from '@config/dashboard.config';
+import { StatisticGroup } from '@dashboard/components/StatisticGroup';
 // React component
 export default function Dashboard() {
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8'>
       <PageHeader title='Dashboard' breadcrumb={DASHBOARD_CONFIG.breadcrumb} />
-      {/* Grid */}
-      <div className='grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4'>
-        <Statistic content='Total Revenue' title='Revenue' value='$45,231.89'>
-          <DollarSign className='h-4 w-4 text-muted-foreground' />
-        </Statistic>
-        <Statistic content='47 nuevos este mes' title='Pacientes' value='2350'>
-          <Users className='h-4 w-4 text-muted-foreground' />
-        </Statistic>
-        <Statistic content='+19% from last month' title='Sales' value='+12,234'>
-          <CreditCard className='h-4 w-4 text-muted-foreground' />
-        </Statistic>
-        <Statistic content='+201 since last hour' title='Active Now' value='+573'>
-          <Activity className='h-4 w-4 text-muted-foreground' />
-        </Statistic>
-      </div>
+      {/* Section: Statistic Group */}
+      <StatisticGroup />
       {/* Tables */}
       <div className='grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3'>
         <Card className='xl:col-span-2' x-chunk='dashboard-01-chunk-4'>
