@@ -13,15 +13,15 @@ export function StatisticGroup() {
 
   const { data: apposData, isLoading: apposDataIsLoading } = useQuery({
     queryKey: ['appos'],
-    queryFn: () => DashboardApiService.countAppointments(),
-    staleTime: 0
+    queryFn: async () => DashboardApiService.countAppointments(),
+    gcTime: 0 // No cached
   });
 
   const { data: usersData, isLoading: usersDataIsLoading } = useQuery({
     queryKey: ['users'],
     queryFn: async () => {
       return await DashboardApiService.countAllUsers();
-    },
+    }, // Cached by default
   });
 
   return (
