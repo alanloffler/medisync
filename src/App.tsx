@@ -1,4 +1,5 @@
 // External imports
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 // Imports
@@ -24,6 +25,7 @@ const ViewUser = lazy(() => import('./pages/users/components/ViewUser'));
 const WhatsApp = lazy(() => import('./pages/whatsapp/WhatsApp'));
 // React component
 export default function App() {
+  const queryClient = new QueryClient();
   // prettier-ignore
   const router = createBrowserRouter([
     { path: '/', element: <Layout />, children: 
@@ -46,5 +48,9 @@ export default function App() {
     },
   ]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
+  );
 }
