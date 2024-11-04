@@ -4,6 +4,7 @@ export interface IArea {
   _id: string;
   active: number;
   description: string;
+  icon: string;
   name: string;
   plural: string;
   specializations: ISpecialization[];
