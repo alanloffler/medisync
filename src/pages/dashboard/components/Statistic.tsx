@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@core/components/ui/ca
 import type { IStatistic } from '@dashboard/interfaces/statistic.interface';
 // React component
 export function Statistic({ children, content, isError, isLoading, title, value1, value2 }: IStatistic) {
-  console.log(isError)
   return (
     <Card>
       <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
