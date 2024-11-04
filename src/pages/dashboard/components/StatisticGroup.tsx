@@ -19,7 +19,7 @@ export function StatisticGroup() {
     queryKey: ['appos'],
     queryFn: async () => {
       const result = await DashboardApiService.countAppointments();
-      console.log(result);
+      // console.log(result);
       return result;
     },
     gcTime: 0, // No cached
