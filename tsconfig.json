@@ -23,6 +23,7 @@
     "baseUrl": ".",
     "paths": {
       "@appointments/*": ["./src/pages/appointments/*"],
+      "@assets/*": ["./src/assets/*"],
       "@config/*": ["./src/config/*"],
       "@core/*": ["./src/core/*"],
       "@dashboard/*": ["./src/pages/dashboard/*"],
