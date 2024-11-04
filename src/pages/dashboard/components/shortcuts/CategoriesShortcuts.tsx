@@ -8,6 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 // Imports
 import type { IArea } from '@core/interfaces/area.interface';
 import { AreaService } from '@core/services/area.service';
+import { DASHBOARD_CONFIG } from '@config/dashboard.config';
 // React component
 export function CategoriesShortcuts() {
   const [areaSelected, setAreaSelected] = useState<string>('');
@@ -26,8 +27,7 @@ export function CategoriesShortcuts() {
 
   return (
     <Card className='space-y-4 p-4 xl:col-span-2'>
-      {/* TODO: dynamic title from config file */}
-      <h5 className='text-lg font-medium leading-none'>Categorías</h5>
+      <h5 className='text-lg font-medium leading-none'>{DASHBOARD_CONFIG.categoriesShortcuts.title}</h5>
       <section className='flex w-full flex-row justify-center space-x-4'>
         {categories?.map((category) => (
           <IconShortcut
