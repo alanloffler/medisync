@@ -11,10 +11,18 @@ import { useDelimiter } from '@core/hooks/useDelimiter';
 export function StatisticGroup() {
   const delimiter = useDelimiter();
 
-  const { data: apposData, isLoading: apposDataIsLoading } = useQuery({
+  const {
+    data: apposData,
+    isError: apposError,
+    isLoading: apposDataIsLoading,
+  } = useQuery({
     queryKey: ['appos'],
-    queryFn: async () => DashboardApiService.countAppointments(),
-    gcTime: 0 // No cached
+    queryFn: async () => {
+      const result = await DashboardApiService.countAppointments();
+      console.log(result);
+      return result;
+    },
+    gcTime: 0, // No cached
   });
 
   const { data: usersData, isLoading: usersDataIsLoading } = useQuery({
@@ -32,6 +40,7 @@ export function StatisticGroup() {
         value1={apposData?.data?.value1}
         value2={apposData?.data?.value2}
         isLoading={apposDataIsLoading}
+        isError={apposError}
       >
         <CalendarCheck size={24} strokeWidth={2} className='text-fuchsia-400' />
       </Statistic>
