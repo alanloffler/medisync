@@ -45,12 +45,9 @@ export function CategoriesShortcuts({ className }: { className?: string }) {
 
       const x: number = e.pageX - scrollRef.current!.offsetLeft;
       const walk: number = (x - startX) * 2;
+
       scrollRef.current!.scrollLeft = scrollLeft - walk;
-
-      const maxScrollLeft: number = scrollRef.current!.scrollWidth - scrollRef.current!.clientWidth;
-
-      setReachedRightEdge(scrollRef.current!.scrollLeft >= maxScrollLeft);
-      setReachedLeftEdge(scrollRef.current!.scrollLeft <= 0);
+      updateScrollEdges();
     }
 
     function handleTouchStart(e: TouchEvent): void {
@@ -66,6 +63,7 @@ export function CategoriesShortcuts({ className }: { className?: string }) {
       const walk = (x - startX) * 2;
 
       scrollRef.current!.scrollLeft = scrollLeft - walk;
+      updateScrollEdges();
     }
 
     function handleScrollStop(): void {
@@ -100,6 +98,14 @@ export function CategoriesShortcuts({ className }: { className?: string }) {
 
       setReachedLeftEdge(true);
       setReachedRightEdge(!hasOverflow);
+    }
+  }
+
+  function updateScrollEdges(): void {
+    if (scrollRef.current) {
+      const maxScrollLeft: number = scrollRef.current.scrollWidth - scrollRef.current.clientWidth;
+      setReachedRightEdge(scrollRef.current.scrollLeft >= maxScrollLeft);
+      setReachedLeftEdge(scrollRef.current.scrollLeft <= 0);
     }
   }
 
