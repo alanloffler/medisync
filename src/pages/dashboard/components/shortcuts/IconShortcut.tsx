@@ -18,7 +18,7 @@ export function IconShortcut({ setAreaSelected, icon, iconSize, itemSize, label 
 
   return (
     <button
-      className='flex flex-col items-center justify-center space-y-2 rounded-md border p-2 shadow-sm transition-transform hover:border-slate-300 [&>img]:hover:scale-125 [&>img]:hover:animate-in'
+      className='flex select-none flex-col items-center justify-center space-y-2 rounded-md border p-2 shadow-sm transition-transform hover:border-slate-300 [&>img]:hover:scale-125 [&>img]:hover:animate-in'
       style={{ width: itemSize, height: itemSize, minWidth: itemSize, minHeight: itemSize }}
       onClick={() => setAreaSelected(label)}
     >
