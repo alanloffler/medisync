@@ -32,6 +32,11 @@ export class DashboardApiService {
     return { statusCode: 200, message: 'Appointments count found', data: { value1: value1.data, value2: value2.data } };
   }
 
+  public static async latestAppointments(limit: number) {
+    const url: string = `${this.API_URL}/dashboard/latestAppointments?l=${limit}`;
+    return this.getResponse(url);
+  }
+
   private static async getResponse(url: string) {
     try {
       const query: Response = await fetch(url, {
