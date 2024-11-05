@@ -1,9 +1,11 @@
-// External components: https://ui.shadcn.com/docs/components
+// Icons: https://lucide.dev
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+// External components: http://ui.shadcn.com/docs/components
 import { Card } from '@core/components/ui/card';
 // Components
 import { IconShortcut } from '@dashboard/components/shortcuts/IconShortcut';
 // External imports
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 // Imports
 import type { IResponse } from '@core/interfaces/response.interface';
@@ -11,110 +13,112 @@ import type { ISpecialization } from '@core/interfaces/specialization.interface'
 import { DASHBOARD_CONFIG } from '@config/dashboard.config';
 import { SpecializationService } from '@core/services/specialization.service';
 import { cn } from '@lib/utils';
-import { ChevronRight } from 'lucide-react';
 // React component
 export function CategoriesShortcuts({ className }: { className?: string }) {
   const [areaSelected, setAreaSelected] = useState<string>('');
-  const [showChevron, setShowChevron] = useState<boolean>(false);
-  const [reachedLeftEdge, setReachedLeftEdge] = useState<boolean>(false);
+  const [isOverflowing, setIsOverflowing] = useState<boolean>(false);
+  const [reachedLeftEdge, setReachedLeftEdge] = useState<boolean>(true);
   const [reachedRightEdge, setReachedRightEdge] = useState<boolean>(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const { data: specializations } = useQuery<IResponse>({
     queryKey: ['specializations'],
-    queryFn: async () => {
-      return await SpecializationService.findAll();
-    },
+    queryFn: async () => await SpecializationService.findAll(),
   });
 
-  const scrollRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!scrollRef.current) return;
 
-  function handleDragScroll(): void {
+    let isDown: boolean = false;
+    let startX: number = 0;
+    let scrollLeft: number = 0;
+
+    function handleMouseDown(e: MouseEvent): void {
+      isDown = true;
+      startX = e.pageX - scrollRef.current!.offsetLeft;
+      scrollLeft = scrollRef.current!.scrollLeft;
+    }
+
+    function handleMouseMove(e: MouseEvent): void {
+      if (!isDown) return;
+      e.preventDefault();
+
+      const x: number = e.pageX - scrollRef.current!.offsetLeft;
+      const walk: number = (x - startX) * 2;
+      scrollRef.current!.scrollLeft = scrollLeft - walk;
+
+      const maxScrollLeft: number = scrollRef.current!.scrollWidth - scrollRef.current!.clientWidth;
+
+      setReachedRightEdge(scrollRef.current!.scrollLeft >= maxScrollLeft);
+      setReachedLeftEdge(scrollRef.current!.scrollLeft <= 0);
+    }
+
+    function handleTouchStart(e: TouchEvent): void {
+      isDown = true;
+      startX = e.touches[0].pageX - scrollRef.current!.offsetLeft;
+      scrollLeft = scrollRef.current!.scrollLeft;
+    }
+
+    function handleTouchMove(e: TouchEvent): void {
+      if (!isDown) return;
+
+      const x = e.touches[0].pageX - scrollRef.current!.offsetLeft;
+      const walk = (x - startX) * 2;
+
+      scrollRef.current!.scrollLeft = scrollLeft - walk;
+    }
+
+    function handleScrollStop(): void {
+      isDown = false;
+    }
+
+    const reference = scrollRef.current!;
+
+    reference.addEventListener('mousedown', handleMouseDown);
+    reference.addEventListener('mouseup', handleScrollStop);
+    reference.addEventListener('mousemove', handleMouseMove);
+    reference.addEventListener('mouseleave', handleScrollStop);
+    reference.addEventListener('touchstart', handleTouchStart);
+    reference.addEventListener('touchend', handleScrollStop);
+    reference.addEventListener('touchmove', handleTouchMove);
+
+    return () => {
+      reference.removeEventListener('mousedown', handleMouseDown);
+      reference.removeEventListener('mouseup', handleScrollStop);
+      reference.removeEventListener('mousemove', handleMouseMove);
+      reference.removeEventListener('mouseleave', handleScrollStop);
+      reference.removeEventListener('touchstart', handleTouchStart);
+      reference.removeEventListener('touchend', handleScrollStop);
+      reference.removeEventListener('touchmove', handleTouchMove);
+    };
+  }, []);
+
+  function checkOverflow(): void {
     if (scrollRef.current) {
-      let isDown = false;
-      let startX: number;
-      let scrollLeft: number;
+      const hasOverflow = scrollRef.current.scrollWidth > scrollRef.current.clientWidth;
+      setIsOverflowing(hasOverflow);
 
-      scrollRef.current.addEventListener('mousedown', (e: MouseEvent) => {
-        isDown = true;
-        startX = e.pageX - scrollRef.current!.offsetLeft;
-        scrollLeft = scrollRef.current!.scrollLeft;
-      });
-
-      scrollRef.current.addEventListener('mouseleave', () => {
-        isDown = false;
-      });
-
-      scrollRef.current.addEventListener('mouseup', () => {
-        isDown = false;
-      });
-
-      scrollRef.current.addEventListener('mousemove', (e: MouseEvent) => {
-        if (!isDown) return;
-        e.preventDefault();
-        const x = e.pageX - scrollRef.current!.offsetLeft;
-        const walk = (x - startX) * 2;
-        scrollRef.current!.scrollLeft = scrollLeft - walk;
-
-        if (scrollRef.current!.scrollLeft <= 0) {
-          console.log('Reached the left edge, cannot scroll left');
-          setReachedLeftEdge(true);
-      }
-  
-      // Check for right edge
-      const maxScrollLeft = scrollRef.current!.scrollWidth - scrollRef.current!.clientWidth;
-      if (scrollRef.current!.scrollLeft >= maxScrollLeft) {
-          console.log('Reached the right edge, cannot scroll right');
-          setReachedRightEdge(true);
-      }
-      });
-
-      scrollRef.current.addEventListener('touchstart', (e: TouchEvent) => {
-        isDown = true;
-        startX = e.touches[0].pageX - scrollRef.current!.offsetLeft;
-        scrollLeft = scrollRef.current!.scrollLeft;
-      });
-
-      scrollRef.current.addEventListener('touchend', () => {
-        isDown = false;
-      });
-
-      scrollRef.current.addEventListener('touchmove', (e: TouchEvent) => {
-        if (!isDown) return;
-        const x = e.touches[0].pageX - scrollRef.current!.offsetLeft;
-        const walk = (x - startX) * 2;
-        scrollRef.current!.scrollLeft = scrollLeft - walk;
-      });
+      setReachedLeftEdge(true);
+      setReachedRightEdge(!hasOverflow);
     }
   }
-
-  const [isOverflowing, setIsOverflowing] = useState(false);
-
-  // Function to check if the container has overflow
-  const checkOverflow = () => {
-    if (scrollRef.current) {
-      setIsOverflowing(scrollRef.current.scrollWidth > scrollRef.current.clientWidth);
-    }
-  };
 
   useEffect(() => {
     checkOverflow();
     window.addEventListener('resize', checkOverflow);
+
     return () => window.removeEventListener('resize', checkOverflow);
-  }, []);
+  }, [specializations]);
 
   useEffect(() => {
     console.log('Area selected: ', areaSelected);
   }, [areaSelected]);
 
   return (
-    <Card className={cn('space-y-4 p-4', className)}>
-      <h5 className='text-lg font-medium leading-none'>{DASHBOARD_CONFIG.categoriesShortcuts.title}</h5>
-      <section
-        className='flex flex-row justify-start space-x-4 overflow-x-hidden'
-        ref={scrollRef}
-        onMouseDown={handleDragScroll}
-        onTouchStart={handleDragScroll}
-      >
+    <Card className={cn('space-y-2 p-4', className)}>
+      <h5 className='pb-3 text-lg font-medium leading-none'>{DASHBOARD_CONFIG.categoriesShortcuts.title}</h5>
+      {/* Section: Specializations shortcuts */}
+      <section className='flex flex-row justify-start space-x-4 overflow-x-hidden' ref={scrollRef}>
         {specializations?.data.map((specialization: ISpecialization) => (
           <IconShortcut
             icon={specialization.icon}
@@ -126,12 +130,17 @@ export function CategoriesShortcuts({ className }: { className?: string }) {
           />
         ))}
       </section>
-      {/* TODO: show or hide if colapse edges, first add a chevronleft */}
-      {isOverflowing && (
-        <section className='flex justify-end bg-red-500'>
-          <ChevronRight size={24} />
-        </section>
-      )}
+      {/* Section: Chevrons icons */}
+      <section className={`flex flex-row ${reachedLeftEdge ? 'justify-end' : 'justify-between'}`}>
+        {isOverflowing && reachedLeftEdge && <ChevronRight size={20} strokeWidth={2} />}
+        {isOverflowing && reachedRightEdge && <ChevronLeft size={20} strokeWidth={2} />}
+        {isOverflowing && !reachedLeftEdge && !reachedRightEdge && (
+          <>
+            <ChevronLeft size={20} strokeWidth={2} />
+            <ChevronRight size={20} strokeWidth={2} />
+          </>
+        )}
+      </section>
     </Card>
   );
 }
