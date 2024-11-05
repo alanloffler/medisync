@@ -16,10 +16,12 @@ export interface IAppointment extends IAppointmentForm {
 
 export interface IAppointmentView {
   _id: string;
+  createdAt: Date;
   day: string;
   hour: string;
   professional: IProfessional;
   slot: number;
+  updatedAt: Date;
   user: IUser;
 }
 
