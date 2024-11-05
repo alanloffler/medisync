@@ -7,6 +7,6 @@ export const DASHBOARD_CONFIG = {
     title: 'Categorías',
   },
   latestAppos: {
-    title: 'Últimos turnos',
+    title: 'Últimos turnos creados',
   }
 };
