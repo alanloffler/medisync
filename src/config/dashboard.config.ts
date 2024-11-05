@@ -5,5 +5,8 @@ export const DASHBOARD_CONFIG = {
   ],
   categoriesShortcuts: {
     title: 'Categorías',
+  },
+  latestAppos: {
+    title: 'Últimos turnos',
   }
 };
