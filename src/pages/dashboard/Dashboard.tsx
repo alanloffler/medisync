@@ -16,11 +16,11 @@ export default function Dashboard() {
       <StatisticGroup />
       {/* Section: Container */}
       <section className='grid grid-cols-1 gap-4 md:grid-cols-5 md:gap-8 lg:grid-cols-5 lg:gap-8 xl:grid-cols-5 xl:gap-8'>
-        <section className='col-span-1 h-fit space-y-4 md:col-span-2 md:space-y-8 lg:col-span-2 lg:space-y-8 xl:col-span-2 xl:space-y-8'>
+        <section className='col-span-1 h-fit space-y-4 md:col-span-5 md:space-y-8 lg:col-span-2 lg:space-y-8 xl:col-span-2 xl:space-y-8'>
           <CategoriesShortcuts />
           <Card>Here something else</Card>
         </section>
-        <section className='col-span-1 md:col-span-3 lg:col-span-3 xl:col-span-3'>
+        <section className='col-span-1 md:col-span-5 lg:col-span-3 xl:col-span-3'>
           <LatestAppos />
         </section>
       </section>
