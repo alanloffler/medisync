@@ -15,9 +15,9 @@ export default function Dashboard() {
       {/* Section: Statistic Group */}
       <StatisticGroup />
       {/* Section: Container */}
-      <section className='grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3'>
-        <CategoriesShortcuts />
-        <Card x-chunk='dashboard-01-chunk-5'>
+      <section className='grid grid-cols-1 gap-4 md:grid-cols-4 md:gap-8 lg:grid-cols-4 xl:grid-cols-4'>
+        <CategoriesShortcuts className='col-span-1 md:col-span-2 lg:col-span-2' />
+        <Card className='col-span-1 md:col-span-2 lg:col-span-2'>
           <CardHeader>
             <CardTitle>Recent Sales</CardTitle>
           </CardHeader>
