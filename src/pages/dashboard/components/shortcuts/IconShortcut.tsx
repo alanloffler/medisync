@@ -2,7 +2,7 @@
 import { useCapitalize } from '@core/hooks/useCapitalize';
 // Interface
 interface IIconShortcut {
-  setAreaSelected: React.Dispatch<React.SetStateAction<string>>
+  setAreaSelected: React.Dispatch<React.SetStateAction<string>>;
   icon: string;
   iconSize: number;
   itemSize: number;
@@ -18,8 +18,8 @@ export function IconShortcut({ setAreaSelected, icon, iconSize, itemSize, label 
 
   return (
     <button
-      className='flex flex-col items-center justify-center space-y-2 rounded-md border p-2 shadow-sm hover:scale-105 transition-transform hover:animate-in hover:border-slate-300'
-      style={{ width: itemSize, height: itemSize }}
+      className='flex flex-col items-center justify-center space-y-2 rounded-md border p-2 shadow-sm transition-transform hover:scale-105 hover:border-slate-300 hover:animate-in'
+      style={{ width: itemSize, height: itemSize, minWidth: itemSize, minHeight: itemSize }}
       onClick={() => setAreaSelected(label)}
     >
       <img src={getSVG(icon)} width={iconSize} height={iconSize} />
