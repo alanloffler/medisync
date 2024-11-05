@@ -1,12 +1,14 @@
 // External components: https://ui.shadcn.com/docs/components
 import { Avatar, AvatarFallback, AvatarImage } from '@core/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@core/components/ui/card';
+// Imports
+import { DASHBOARD_CONFIG } from '@config/dashboard.config';
 // React component
 export function LatestAppos() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Últimos turnos</CardTitle>
+        <CardTitle>{DASHBOARD_CONFIG.latestAppos.title}</CardTitle>
       </CardHeader>
       <CardContent className='grid gap-8'>
         <div className='flex items-center gap-4'>
