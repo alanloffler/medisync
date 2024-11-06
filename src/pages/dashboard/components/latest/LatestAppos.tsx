@@ -44,7 +44,7 @@ export function LatestAppos() {
   };
 
   return (
-    <main className='space-y-3'>
+    <main className='space-y-2'>
       <h2 className='text-xl font-medium text-dark-default'>{DASHBOARD_CONFIG.latestAppos.title}</h2>
       <Card>
         <CardContent className='grid gap-2 pt-6'>
