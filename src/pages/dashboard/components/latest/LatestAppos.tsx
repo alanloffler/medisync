@@ -40,7 +40,7 @@ export function LatestAppos() {
     user: {
       initial: { x: 0 },
       animate: { x: 5 },
-    }
+    },
   };
 
   return (
@@ -72,11 +72,14 @@ export function LatestAppos() {
                   </motion.div>
                 </div>
                 <div className='mr-2 flex w-1/2 flex-row items-center justify-end space-x-3 text-xs'>
-                  <motion.div variants={animation.professional} className='flex flex-col text-right'>
+                  <motion.div variants={animation.professional} className='hidden flex-col text-right md:flex lg:flex xl:flex'>
                     <p className='font-bold text-dark-default'>{`${capitalize(appo.professional.title.abbreviation)} ${capitalize(appo.professional.firstName)} ${capitalize(appo.professional.lastName)}`}</p>
                     <p className='text-xs font-light text-muted-foreground'>{capitalize(appo.professional.specialization.name)}</p>
                   </motion.div>
-                  <motion.div variants={animation.item} className='flex flex-row items-center space-x-2 rounded-sm bg-slate-200 p-1 pr-2 text-slate-600'>
+                  <motion.div
+                    variants={animation.item}
+                    className='flex flex-row items-center space-x-2 rounded-sm bg-emerald-100 p-1 pr-2 text-emerald-600'
+                  >
                     <CalendarClock size={16} strokeWidth={1.5} />
                     <p>{`${format(appo.day, 'DD/MM')} - ${appo.hour}`}</p>
                   </motion.div>
