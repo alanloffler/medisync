@@ -5,6 +5,7 @@ import { Card } from '@core/components/ui/card';
 // Components
 import { IconShortcut } from '@dashboard/components/shortcuts/IconShortcut';
 // External imports
+import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 // Imports
@@ -25,6 +26,13 @@ export function CategoriesShortcuts({ className }: { className?: string }) {
     queryKey: ['specializations'],
     queryFn: async () => await SpecializationService.findAll(),
   });
+
+  const animation = {
+    chevron: {
+      initial: { opacity: 0 },
+      animate: { opacity: 1, transition: { duration: 0.1, delay: 0.3 } },
+    },
+  };
 
   useEffect(() => {
     if (!scrollRef.current) return;
@@ -137,23 +145,43 @@ export function CategoriesShortcuts({ className }: { className?: string }) {
             />
           ))}
           {isOverflowing && reachedLeftEdge && (
-            <div className='absolute shadow-sm -right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 transform items-center justify-center rounded-full bg-dark-bg p-1 text-dark-default'>
+            <motion.div
+              variants={animation.chevron}
+              animate='animate'
+              initial='initial'
+              className='absolute -right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 transform items-center justify-center rounded-full bg-dark-bg p-1 text-dark-default shadow-sm'
+            >
               <ChevronRight size={20} strokeWidth={2} />
-            </div>
+            </motion.div>
           )}
           {isOverflowing && reachedRightEdge && (
-            <div className='absolute shadow-sm -left-7 top-1/2 flex h-6 w-6 -translate-y-1/2 transform items-center justify-center rounded-full bg-dark-bg p-1 text-dark-default'>
+            <motion.div
+              variants={animation.chevron}
+              animate='animate'
+              initial='initial'
+              className='absolute -left-7 top-1/2 flex h-6 w-6 -translate-y-1/2 transform items-center justify-center rounded-full bg-dark-bg p-1 text-dark-default shadow-sm'
+            >
               <ChevronLeft size={20} strokeWidth={2} />
-            </div>
+            </motion.div>
           )}
           {isOverflowing && !reachedLeftEdge && !reachedRightEdge && (
             <>
-              <div className='absolute shadow-sm -left-7 top-1/2 flex h-6 w-6 -translate-y-1/2 transform items-center justify-center rounded-full bg-dark-bg p-1 text-dark-default'>
+              <motion.div
+                variants={animation.chevron}
+                animate='animate'
+                initial='initial'
+                className='absolute -left-7 top-1/2 flex h-6 w-6 -translate-y-1/2 transform items-center justify-center rounded-full bg-dark-bg p-1 text-dark-default shadow-sm'
+              >
                 <ChevronLeft size={20} strokeWidth={2} />
-              </div>
-              <div className='absolute shadow-sm -right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 transform items-center justify-center rounded-full bg-dark-bg p-1 text-dark-default'>
+              </motion.div>
+              <motion.div
+                variants={animation.chevron}
+                animate='animate'
+                initial='initial'
+                className='absolute -right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 transform items-center justify-center rounded-full bg-dark-bg p-1 text-dark-default shadow-sm'
+              >
                 <ChevronRight size={20} strokeWidth={2} />
-              </div>
+              </motion.div>
             </>
           )}
         </section>
