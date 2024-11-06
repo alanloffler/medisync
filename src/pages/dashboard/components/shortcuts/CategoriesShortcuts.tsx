@@ -121,32 +121,34 @@ export function CategoriesShortcuts({ className }: { className?: string }) {
   }, [areaSelected]);
 
   return (
-    <Card className={cn('space-y-2 p-4', className)}>
-      <h5 className='pb-3 text-lg font-medium leading-none'>{DASHBOARD_CONFIG.categoriesShortcuts.title}</h5>
-      {/* Section: Specializations shortcuts */}
-      <section className='flex flex-row justify-start space-x-4 overflow-x-hidden' ref={scrollRef}>
-        {specializations?.data.map((specialization: ISpecialization) => (
-          <IconShortcut
-            icon={specialization.icon}
-            iconSize={24}
-            itemSize={95}
-            key={crypto.randomUUID()}
-            label={specialization.name}
-            setAreaSelected={setAreaSelected}
-          />
-        ))}
-      </section>
-      {/* Section: Chevrons icons */}
-      <section className={`flex flex-row ${reachedLeftEdge ? 'justify-end' : 'justify-between'}`}>
-        {isOverflowing && reachedLeftEdge && <ChevronRight size={20} strokeWidth={2} />}
-        {isOverflowing && reachedRightEdge && <ChevronLeft size={20} strokeWidth={2} />}
-        {isOverflowing && !reachedLeftEdge && !reachedRightEdge && (
-          <>
-            <ChevronLeft size={20} strokeWidth={2} />
-            <ChevronRight size={20} strokeWidth={2} />
-          </>
-        )}
-      </section>
-    </Card>
+    <main className='space-y-2'>
+      <h2 className='text-xl font-medium text-dark-default'>{DASHBOARD_CONFIG.categoriesShortcuts.title}</h2>
+      <Card className={cn('space-y-2 p-4', className)}>
+        {/* Section: Specializations shortcuts */}
+        <section className='flex flex-row justify-start space-x-4 overflow-x-hidden' ref={scrollRef}>
+          {specializations?.data.map((specialization: ISpecialization) => (
+            <IconShortcut
+              icon={specialization.icon}
+              iconSize={24}
+              itemSize={95}
+              key={crypto.randomUUID()}
+              label={specialization.name}
+              setAreaSelected={setAreaSelected}
+            />
+          ))}
+        </section>
+        {/* Section: Chevrons icons */}
+        <section className={`flex flex-row ${reachedLeftEdge ? 'justify-end' : 'justify-between'}`}>
+          {isOverflowing && reachedLeftEdge && <ChevronRight size={20} strokeWidth={2} />}
+          {isOverflowing && reachedRightEdge && <ChevronLeft size={20} strokeWidth={2} />}
+          {isOverflowing && !reachedLeftEdge && !reachedRightEdge && (
+            <>
+              <ChevronLeft size={20} strokeWidth={2} />
+              <ChevronRight size={20} strokeWidth={2} />
+            </>
+          )}
+        </section>
+      </Card>
+    </main>
   );
 }
