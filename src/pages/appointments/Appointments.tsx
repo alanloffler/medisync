@@ -390,14 +390,14 @@ export default function Appointments() {
                       </CardTitle>
                       {!errorMessage && <section className='py-2 text-center text-base font-semibold text-primary'>{selectedLegibleDate}</section>}
                       {showTimeSlots && (
-                        <section className='flex justify-start space-x-3 px-3 pb-2 text-sm font-normal'>
-                          <div className='flex flex-row items-center space-x-1.5'>
+                        <section className='flex justify-start space-x-3 px-3 pb-2 text-xsm font-normal'>
+                          <div className='flex flex-row items-center space-x-1.5 rounded-sm bg-emerald-100 px-2 py-1'>
                             <div className='h-2.5 w-2.5 rounded-full border border-emerald-400 bg-emerald-300'></div>
-                            <span>{`${availableSlotsToReserve} ${availableSlotsToReserve === 1 ? APPO_CONFIG.phrases.availableAppointmentSingular : APPO_CONFIG.phrases.availableAppointmentPlural}`}</span>
+                            <span className='text-emerald-700'>{`${availableSlotsToReserve} ${availableSlotsToReserve === 1 ? APPO_CONFIG.phrases.availableAppointmentSingular : APPO_CONFIG.phrases.availableAppointmentPlural}`}</span>
                           </div>
-                          <div className='flex flex-row items-center space-x-1.5'>
+                          <div className='flex flex-row items-center space-x-1.5 rounded-sm bg-sky-100 px-2 py-1'>
                             <div className='h-2.5 w-2.5 rounded-full border border-sky-400 bg-sky-300'></div>
-                            <span>{`${appointments.length} ${appointments.length === 1 ? APPO_CONFIG.phrases.alreadyReservedSingular : APPO_CONFIG.phrases.alreadyReservedPlural}`}</span>
+                            <span className='text-sky-700'>{`${appointments.length} ${appointments.length === 1 ? APPO_CONFIG.phrases.alreadyReservedSingular : APPO_CONFIG.phrases.alreadyReservedPlural}`}</span>
                           </div>
                         </section>
                       )}
