@@ -123,7 +123,7 @@ export function CategoriesShortcuts({ className }: { className?: string }) {
   return (
     <main className='space-y-2'>
       <h2 className='text-xl font-medium text-dark-default'>{DASHBOARD_CONFIG.categoriesShortcuts.title}</h2>
-      <Card className={cn('space-y-2 p-4', className)}>
+      <Card className={cn('relative p-4', className)}>
         {/* Section: Specializations shortcuts */}
         <section className='flex flex-row justify-start space-x-4 overflow-x-hidden' ref={scrollRef}>
           {specializations?.data.map((specialization: ISpecialization) => (
@@ -136,15 +136,24 @@ export function CategoriesShortcuts({ className }: { className?: string }) {
               setAreaSelected={setAreaSelected}
             />
           ))}
-        </section>
-        {/* Section: Chevrons icons */}
-        <section className={`flex flex-row ${reachedLeftEdge ? 'justify-end' : 'justify-between'}`}>
-          {isOverflowing && reachedLeftEdge && <ChevronRight size={20} strokeWidth={2} />}
-          {isOverflowing && reachedRightEdge && <ChevronLeft size={20} strokeWidth={2} />}
+          {isOverflowing && reachedLeftEdge && (
+            <div className='absolute shadow-sm -right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 transform items-center justify-center rounded-full bg-dark-bg p-1 text-dark-default'>
+              <ChevronRight size={20} strokeWidth={2} />
+            </div>
+          )}
+          {isOverflowing && reachedRightEdge && (
+            <div className='absolute shadow-sm -left-7 top-1/2 flex h-6 w-6 -translate-y-1/2 transform items-center justify-center rounded-full bg-dark-bg p-1 text-dark-default'>
+              <ChevronLeft size={20} strokeWidth={2} />
+            </div>
+          )}
           {isOverflowing && !reachedLeftEdge && !reachedRightEdge && (
             <>
-              <ChevronLeft size={20} strokeWidth={2} />
-              <ChevronRight size={20} strokeWidth={2} />
+              <div className='absolute shadow-sm -left-7 top-1/2 flex h-6 w-6 -translate-y-1/2 transform items-center justify-center rounded-full bg-dark-bg p-1 text-dark-default'>
+                <ChevronLeft size={20} strokeWidth={2} />
+              </div>
+              <div className='absolute shadow-sm -right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 transform items-center justify-center rounded-full bg-dark-bg p-1 text-dark-default'>
+                <ChevronRight size={20} strokeWidth={2} />
+              </div>
             </>
           )}
         </section>
