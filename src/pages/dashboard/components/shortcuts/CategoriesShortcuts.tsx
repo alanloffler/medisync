@@ -119,8 +119,8 @@ export function CategoriesShortcuts({ className }: { className?: string }) {
   function updateScrollEdges(): void {
     if (scrollRef.current) {
       const maxScrollLeft: number = scrollRef.current.scrollWidth - scrollRef.current.clientWidth;
-      setReachedRightEdge(scrollRef.current.scrollLeft >= maxScrollLeft);
-      setReachedLeftEdge(scrollRef.current.scrollLeft <= 0);
+      setReachedRightEdge(scrollRef.current.scrollLeft >= maxScrollLeft - 1);
+      setReachedLeftEdge(scrollRef.current.scrollLeft <= 1);
     }
   }
 
