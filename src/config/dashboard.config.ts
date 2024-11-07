@@ -4,6 +4,7 @@ export const DASHBOARD_CONFIG = {
     { id: 2, name: 'Dashboard', path: '/dashboard' },
   ],
   categoriesShortcuts: {
+    loadingText: 'Cargando especialidades',
     title: 'Categorías',
   },
   latestAppos: {
