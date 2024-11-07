@@ -48,7 +48,7 @@ export function LatestAppos() {
       <h2 className='text-xl font-medium text-dark-default'>{DASHBOARD_CONFIG.latestAppos.title}</h2>
       <Card>
         <CardContent className='grid gap-2 pt-6'>
-          {latestAppos &&
+          {latestAppos?.data &&
             latestAppos.data.map((appo: IAppointmentView) => (
               <motion.button
                 className='flex flex-row items-center justify-between gap-4 rounded-md border border-slate-200 p-3 text-sm'
