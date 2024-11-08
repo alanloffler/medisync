@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 // Imports
 import type { IStatistic } from '@dashboard/interfaces/statistic.interface';
 // React component
-export function Statistic({ children, content, isError, isLoading, title, value1, value2 }: IStatistic) {
+export function Statistic({ children, content, error, isLoading, title, value1, value2 }: IStatistic) {
   const targetNumber = value1?.toString();
   const [displayedDigits, setDisplayedDigits] = useState<number[]>(new Array(targetNumber?.length).fill(0));
 
@@ -62,7 +62,7 @@ export function Statistic({ children, content, isError, isLoading, title, value1
         {children}
       </CardHeader>
       <CardContent>
-        {isError && <div className='pt-4 text-sm font-medium text-rose-500'>Error cargando estadística</div>}
+        {error && <div className='pt-4 text-sm font-medium text-rose-500'>{error.message}</div>}
         {isLoading ? (
           <div className='text-2xl font-bold text-dark-default'>Cargando...</div>
         ) : (
