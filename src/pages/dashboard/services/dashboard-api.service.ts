@@ -29,7 +29,7 @@ export class DashboardApiService {
     if (value1 instanceof Error || value2 instanceof Error) return { statusCode: 500, message: APP_CONFIG.error.server, data: undefined };
     if (value1.statusCode > 399 || value2.statusCode > 399) return { statusCode: value1.statusCode, message: value1.message, data: undefined };
 
-    return { statusCode: 200, message: 'Appointments count found', data: { value1: value1.data, value2: value2.data } };
+    return { statusCode: 200, message: 'Users count found', data: { value1: value1.data, value2: value2.data } };
   }
 
   public static async latestAppointments(limit: number) {
