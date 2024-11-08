@@ -13,7 +13,9 @@ const loadingDBVariants = cva('flex items-center justify-center gap-2 text-sm fo
       primary: 'mx-auto bg-primary/25 rounded-lg text-slate-900',
     },
     size: {
+      box: 'w-fit px-4 py-4',
       default: 'w-fit px-3 py-2',
+      md: 'w-fit px-4 py-2',
       xs: 'w-fit px-2 py-1',
     },
   },
@@ -22,20 +24,18 @@ const loadingDBVariants = cva('flex items-center justify-center gap-2 text-sm fo
     size: 'default',
   },
 });
-// React component
-export function LoadingDB({
-  absolute,
-  text,
-  className,
-  variant,
-  size,
-}: {
+// Interface
+interface ILoadingDB {
   absolute?: boolean;
-  text?: string;
   className?: string;
+  empty?: boolean;
+  iconSize?: number;
+  size?: 'box' | 'default' | 'xs' | 'md';
+  text?: string;
   variant?: 'button' | 'card' | 'default' | 'primary';
-  size?: 'default' | 'xs';
-}) {
+}
+// React component
+export function LoadingDB({ absolute, className, empty, iconSize, size, text, variant }: ILoadingDB) {
   return (
     <div
       className={cn(
@@ -43,7 +43,12 @@ export function LoadingDB({
         loadingDBVariants({ variant, size, className }),
       )}
     >
-      <svg width={APP_CONFIG.loadingDB.settings.size} height={APP_CONFIG.loadingDB.settings.size} viewBox='0 0 24 24' className='fill-primary'>
+      <svg
+        width={iconSize || APP_CONFIG.loadingDB.settings.size}
+        height={iconSize || APP_CONFIG.loadingDB.settings.size}
+        viewBox='0 0 24 24'
+        className='fill-primary'
+      >
         <path d='M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z'>
           <animateTransform
             attributeName='transform'
@@ -54,7 +59,7 @@ export function LoadingDB({
           />
         </path>
       </svg>
-      <span>{text || APP_CONFIG.loadingDB.defaultText}</span>
+      {!empty && <span>{text || APP_CONFIG.loadingDB.defaultText}</span>}
     </div>
   );
 }
