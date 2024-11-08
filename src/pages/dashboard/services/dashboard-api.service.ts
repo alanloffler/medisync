@@ -1,5 +1,5 @@
-import type { IResponse } from "@core/interfaces/response.interface";
-import { APP_CONFIG } from "@config/app.config";
+import type { IResponse } from '@core/interfaces/response.interface';
+import { APP_CONFIG } from '@config/app.config';
 
 // TODO: get response status message from config file
 
@@ -10,8 +10,8 @@ export class DashboardApiService {
     const url1: string = `${this.API_URL}/dashboard/countAppointments`;
     const url2: string = `${this.API_URL}/dashboard/countAppointmentsLastMonth`;
 
-    const value1: IResponse = await this.getResponse(url1);
-    const value2: IResponse = await this.getResponse(url2);
+    const value1: IResponse = await this.fetch(url1, 'GET');
+    const value2: IResponse = await this.fetch(url2, 'GET');
 
     if (value1 instanceof Error || value2 instanceof Error) return { statusCode: 500, message: APP_CONFIG.error.server, data: undefined };
     if (value1.statusCode > 399 || value2.statusCode > 399) return { statusCode: value1.statusCode, message: value1.message, data: undefined };
@@ -23,8 +23,8 @@ export class DashboardApiService {
     const url1: string = `${this.API_URL}/dashboard/countUsers`;
     const url2: string = `${this.API_URL}/dashboard/countUsersLastMonth`;
 
-    const value1: IResponse = await this.getResponse(url1);
-    const value2: IResponse = await this.getResponse(url2);
+    const value1: IResponse = await this.fetch(url1, 'GET');
+    const value2: IResponse = await this.fetch(url2, 'GET');
 
     if (value1 instanceof Error || value2 instanceof Error) return { statusCode: 500, message: APP_CONFIG.error.server, data: undefined };
     if (value1.statusCode > 399 || value2.statusCode > 399) return { statusCode: value1.statusCode, message: value1.message, data: undefined };
@@ -34,21 +34,30 @@ export class DashboardApiService {
 
   public static async latestAppointments(limit: number) {
     const url: string = `${this.API_URL}/dashboard/latestAppointments?l=${limit}`;
-    return this.getResponse(url);
+    const method: string = 'GET';
+
+    return this.fetch(url, method);
   }
 
-  private static async getResponse(url: string) {
+  private static async fetch(url: string, method: string) {
     try {
       const query: Response = await fetch(url, {
+        method: method,
         headers: {
           'content-type': 'application/json;charset=UTF-8',
         },
-        method: 'GET',
       });
 
-      return await query.json();
+      const response: IResponse = await query.json();
+
+      if (!query.ok) throw new Error(response.message);
+
+      return response;
     } catch (error) {
-      return error;
+      if (error instanceof TypeError) {
+        throw new Error(APP_CONFIG.error.server);
+      }
+      throw error;
     }
   }
 }
