@@ -53,10 +53,10 @@ export function StatisticGroup() {
       >
         <Users size={24} strokeWidth={2} className='text-sky-400' />
       </Statistic>
-      <Statistic content='from last month' title='Sales' value1='+12,234' value2='+19%'>
+      <Statistic content='from last month' title='Sales' value1='12234' value2='19'>
         <CreditCard size={24} strokeWidth={2} className='text-emerald-400' />
       </Statistic>
-      <Statistic content='since last hour' title='Active Now' value1='+573' value2='+201'>
+      <Statistic content='since last hour' title='Active Now' value1='573' value2='201'>
         <Activity size={24} strokeWidth={2} className='text-rose-400' />
       </Statistic>
     </main>
