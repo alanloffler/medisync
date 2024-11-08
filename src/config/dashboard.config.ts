@@ -8,6 +8,7 @@ export const DASHBOARD_CONFIG = {
     title: 'Categorías',
   },
   latestAppos: {
+    loadingText: 'Cargando turnos',
     title: 'Últimos turnos creados',
-  }
+  },
 };
