@@ -13,19 +13,17 @@ export function StatisticGroup() {
 
   const {
     data: apposData,
-    isError: apposError,
+    error: apposError,
     isLoading: apposDataIsLoading,
   } = useQuery({
     queryKey: ['appos'],
     queryFn: async () => {
-      const result = await DashboardApiService.countAppointments();
-      // console.log(result);
-      return result;
+      return await DashboardApiService.countAppointments();
     },
     gcTime: 0, // No cached
   });
 
-  const { data: usersData, isLoading: usersDataIsLoading } = useQuery({
+  const { data: usersData, error: usersError, isLoading: usersDataIsLoading } = useQuery({
     queryKey: ['users'],
     queryFn: async () => {
       return await DashboardApiService.countAllUsers();
@@ -36,20 +34,21 @@ export function StatisticGroup() {
     <main className='grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4'>
       <Statistic
         content='el último mes'
+        error={apposError}
+        isLoading={apposDataIsLoading}
         title='Turnos'
         value1={apposData?.data?.value1}
         value2={apposData?.data?.value2}
-        isLoading={apposDataIsLoading}
-        isError={apposError}
       >
         <CalendarCheck size={24} strokeWidth={2} className='text-fuchsia-400' />
       </Statistic>
       <Statistic
         content='nuevos este mes'
+        error={usersError}
+        isLoading={usersDataIsLoading}
         title='Pacientes'
         value1={delimiter(usersData?.data?.value1, '.', 3)}
         value2={usersData?.data?.value2}
-        isLoading={usersDataIsLoading}
       >
         <Users size={24} strokeWidth={2} className='text-sky-400' />
       </Statistic>
