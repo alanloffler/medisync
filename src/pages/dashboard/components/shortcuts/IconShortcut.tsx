@@ -2,9 +2,11 @@
 import { motion } from 'framer-motion';
 // Imports
 import { useCapitalize } from '@core/hooks/useCapitalize';
+import { cn } from '@lib/utils';
 // Interface
 interface IIconShortcut {
   setAreaSelected: React.Dispatch<React.SetStateAction<string>>;
+  className?: string;
   icon: string;
   iconSize: number;
   itemHeight: number;
@@ -12,7 +14,7 @@ interface IIconShortcut {
   label: string;
 }
 // React component
-export function IconShortcut({ setAreaSelected, icon, iconSize, itemHeight, itemWidth, label }: IIconShortcut) {
+export function IconShortcut({ setAreaSelected, className, icon, iconSize, itemHeight, itemWidth, label }: IIconShortcut) {
   const capitalize = useCapitalize();
 
   const animation = {
@@ -53,7 +55,7 @@ export function IconShortcut({ setAreaSelected, icon, iconSize, itemHeight, item
       initial='initial'
       animate='initial'
       whileHover='animate'
-      className='flex select-none flex-col items-center justify-center space-y-2 rounded-md border p-2 shadow-sm'
+      className={cn('flex select-none flex-col items-center justify-center space-y-2 rounded-md border p-2 shadow-sm', className)}
       style={{ width: itemWidth, height: itemHeight, minWidth: itemWidth, minHeight: itemHeight }}
       onClick={() => setAreaSelected(label)}
     >
