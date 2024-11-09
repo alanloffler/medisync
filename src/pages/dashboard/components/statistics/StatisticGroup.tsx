@@ -1,7 +1,7 @@
 // Icons: https://lucide.dev/icons/
 import { Activity, CalendarCheck, CreditCard, Users } from 'lucide-react';
 // Components
-import { Statistic } from '@dashboard/components/Statistic';
+import { Statistic } from '@dashboard/components/statistics/Statistic';
 // External imports
 import { useQuery } from '@tanstack/react-query';
 // Imports
