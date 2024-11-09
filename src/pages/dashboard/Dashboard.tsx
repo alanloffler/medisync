@@ -4,7 +4,7 @@ import { Card } from '@core/components/ui/card';
 import { CategoriesShortcuts } from '@dashboard/components/shortcuts/CategoriesShortcuts';
 import { LatestAppos } from '@dashboard/components/latest/LatestAppos';
 import { PageHeader } from '@core/components/common/PageHeader';
-import { StatisticGroup } from '@dashboard/components/StatisticGroup';
+import { StatisticGroup } from '@dashboard/components/statistics/StatisticGroup';
 // Imports
 import { DASHBOARD_CONFIG } from '@config/dashboard.config';
 // React component
