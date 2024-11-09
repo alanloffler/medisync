@@ -5,6 +5,7 @@ import { Statistic } from '@dashboard/components/Statistic';
 // External imports
 import { useQuery } from '@tanstack/react-query';
 // Imports
+import { DASHBOARD_CONFIG } from '@config/dashboard.config';
 import { DashboardApiService } from '@dashboard/services/dashboard-api.service';
 import { useDelimiter } from '@core/hooks/useDelimiter';
 // React component
@@ -23,7 +24,11 @@ export function StatisticGroup() {
     gcTime: 0, // No cached
   });
 
-  const { data: usersData, error: usersError, isLoading: usersDataIsLoading } = useQuery({
+  const {
+    data: usersData,
+    error: usersError,
+    isLoading: usersDataIsLoading,
+  } = useQuery({
     queryKey: ['users'],
     queryFn: async () => {
       return await DashboardApiService.countAllUsers();
@@ -33,20 +38,20 @@ export function StatisticGroup() {
   return (
     <main className='grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4'>
       <Statistic
-        content='el último mes'
+        content={DASHBOARD_CONFIG.statisticGroup.items[0].content}
         error={apposError}
         isLoading={apposDataIsLoading}
-        title='Turnos'
+        title={DASHBOARD_CONFIG.statisticGroup.items[0].title}
         value1={apposData?.data?.value1}
         value2={apposData?.data?.value2}
       >
         <CalendarCheck size={24} strokeWidth={2} className='text-fuchsia-400' />
       </Statistic>
       <Statistic
-        content='nuevos este mes'
+        content={DASHBOARD_CONFIG.statisticGroup.items[1].content}
         error={usersError}
         isLoading={usersDataIsLoading}
-        title='Pacientes'
+        title={DASHBOARD_CONFIG.statisticGroup.items[1].title}
         value1={delimiter(usersData?.data?.value1, '.', 3)}
         value2={usersData?.data?.value2}
       >
