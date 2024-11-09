@@ -2,6 +2,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@core/components/ui/card';
 // External imports
 import { useEffect, useState } from 'react';
+// Components
+import { InfoCard } from '@core/components/common/InfoCard';
+import { LoadingDB } from '@core/components/common/LoadingDB';
 // Imports
 import type { IStatistic } from '@dashboard/interfaces/statistic.interface';
 // React component
@@ -55,27 +58,30 @@ export function Statistic({ children, content, error, isLoading, title, value1, 
 
   return (
     <Card>
-      <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-        <CardTitle className='flex bg-primary px-2 py-1 text-primary-foreground'>
-          <span className='text-xsm font-medium'>{title}</span>
-        </CardTitle>
-        {children}
-      </CardHeader>
-      <CardContent>
-        {error && <div className='pt-4 text-sm font-medium text-rose-500'>{error.message}</div>}
-        {isLoading ? (
-          <div className='text-2xl font-bold text-dark-default'>Cargando...</div>
-        ) : (
-          <>
-            <div className='flex flex-row items-center text-2xl font-bold text-dark-default'>
-              {displayedDigits.map((digit, index) => (
-                <span key={index}>{digit}</span>
-              ))}
-            </div>
-            <p className='text-xs text-dark-default'>{`${value2} ${content}`}</p>
-          </>
-        )}
-      </CardContent>
+      {isLoading ? (
+        <LoadingDB size='box' iconSize={32} empty className='relative top-1/2 -translate-y-1/2 p-6 py-6' />
+      ) : error ? (
+        <InfoCard text={error.message} type='error' className='relative top-1/2 -translate-y-1/2 p-6 text-xsm font-light text-dark-default' />
+      ) : (
+        <>
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+            <CardTitle className='flex bg-primary px-2 py-1 text-primary-foreground'>
+              <span className='text-xsm font-medium'>{title}</span>
+            </CardTitle>
+            {children}
+          </CardHeader>
+          <CardContent>
+            <>
+              <div className='flex flex-row items-center text-2xl font-bold text-dark-default'>
+                {displayedDigits.map((digit, index) => (
+                  <span key={index}>{digit}</span>
+                ))}
+              </div>
+              <p className='text-xs text-dark-default'>{`${value2} ${content}`}</p>
+            </>
+          </CardContent>
+        </>
+      )}
     </Card>
   );
 }
