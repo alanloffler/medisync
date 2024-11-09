@@ -85,7 +85,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
           </button>
         </div>
       ),
-      cell: ({ row }) => <div className='text-left'>{`${capitalize(row.original.lastName)}, ${capitalize(row.original.firstName)}`}</div>,
+      cell: ({ row }) => <div className='text-left'>{`${capitalize(row.original.firstName)} ${capitalize(row.original.lastName)}`}</div>,
     },
     {
       accessorKey: 'dni',

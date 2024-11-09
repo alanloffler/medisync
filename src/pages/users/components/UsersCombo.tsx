@@ -109,7 +109,7 @@ export function UsersCombo({
                     onClick={() => handleSelectedUser(user)}
                     className='w-full space-x-2 rounded-sm px-1.5 py-0.5 text-left hover:bg-slate-100 hover:transition-all'
                   >
-                    <span>{`${capitalize(user.lastName)}, ${capitalize(user.firstName)}`}</span>
+                    <span>{`${capitalize(user.firstName)} ${capitalize(user.lastName)}`}</span>
                     <span className='italic text-slate-500'>{`${APPO_CONFIG.dialog.userCombobox.dniLabel} ${delimiter(user.dni, '.', 3)}`}</span>
                   </button>
                 </li>
