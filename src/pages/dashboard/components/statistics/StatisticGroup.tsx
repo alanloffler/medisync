@@ -1,5 +1,6 @@
 // Icons: https://lucide.dev/icons/
-import { Activity, CalendarCheck, CreditCard, Users } from 'lucide-react';
+import { Activity, CalendarCheck, Users } from 'lucide-react';
+import { HealthBadgeId } from '@core/components/icons/HealthIcons';
 // Components
 import { Statistic } from '@dashboard/components/statistics/Statistic';
 // External imports
@@ -72,14 +73,14 @@ export function StatisticGroup() {
         error={professionalsError}
         isLoading={professionalsDataIsLoading}
         title={DASHBOARD_CONFIG.statisticGroup.items[2].title}
-        value1={professionalsData?.data}
-        value2='19'
+        value1={professionalsData?.data?.value1}
+        value2={professionalsData?.data?.value2}
       >
-        <CreditCard size={24} strokeWidth={2} className='text-emerald-400' />
+        <HealthBadgeId size={24} strokeWidth={2} className='text-emerald-400' />
       </Statistic>
-      <Statistic content='since last hour' title='Active Now' value1='573' value2='201'>
+      {/* <Statistic content='since last hour' title='Active Now' value1='573' value2='201'>
         <Activity size={24} strokeWidth={2} className='text-rose-400' />
-      </Statistic>
+      </Statistic> */}
     </main>
   );
 }
