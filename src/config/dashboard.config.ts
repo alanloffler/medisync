@@ -25,6 +25,10 @@ export const DASHBOARD_CONFIG = {
         content: 'nuevos este mes',
         title: 'Pacientes',
       },
+      {
+        content: 'nuevos este mes',
+        title: 'Profesionales',
+      },
     ],
     loadingText: 'Cargando estadística',
   },
