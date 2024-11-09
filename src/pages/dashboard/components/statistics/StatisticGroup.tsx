@@ -30,7 +30,18 @@ export function StatisticGroup() {
   } = useQuery({
     queryKey: ['dashboard', 'users'],
     queryFn: async () => {
-      return await DashboardApiService.countAllUsers();
+      return await DashboardApiService.countUsers();
+    },
+  });
+
+  const {
+    data: professionalsData,
+    error: professionalsError,
+    isLoading: professionalsDataIsLoading,
+  } = useQuery({
+    queryKey: ['dashboard', 'professionals'],
+    queryFn: async () => {
+      return await DashboardApiService.countProfessionals();
     },
   });
 
@@ -56,7 +67,14 @@ export function StatisticGroup() {
       >
         <Users size={24} strokeWidth={2} className='text-sky-400' />
       </Statistic>
-      <Statistic content='from last month' title='Sales' value1='12234' value2='19'>
+      <Statistic
+        content={DASHBOARD_CONFIG.statisticGroup.items[1].content}
+        error={professionalsError}
+        isLoading={professionalsDataIsLoading}
+        title={DASHBOARD_CONFIG.statisticGroup.items[2].title}
+        value1={professionalsData?.data}
+        value2='19'
+      >
         <CreditCard size={24} strokeWidth={2} className='text-emerald-400' />
       </Statistic>
       <Statistic content='since last hour' title='Active Now' value1='573' value2='201'>
