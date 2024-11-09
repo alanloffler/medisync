@@ -65,7 +65,7 @@ export function LatestUsers() {
                 className='flex w-fit flex-row items-center space-x-2 rounded-sm bg-orange-200 p-1 pr-2 text-orange-700'
               >
                 <CalendarPlus size={16} strokeWidth={1.5} />
-                <p className='text-xs'>{format(user.createdAt, 'DD MMM')}</p>
+                <p className='text-xs'>{`${format(user.createdAt, 'DD')} ${capitalize(format(user.createdAt, 'MMM'))}`}</p>
               </motion.div>
             </motion.button>
           ))}
