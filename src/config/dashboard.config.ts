@@ -11,6 +11,10 @@ export const DASHBOARD_CONFIG = {
     loadingText: 'Cargando turnos',
     title: 'Últimos turnos creados',
   },
+  latestUsers: {
+    loadingText: 'Cargando usuarios',
+    title: 'Usuarios recientes',
+  },
   statisticGroup: {
     items: [
       {
