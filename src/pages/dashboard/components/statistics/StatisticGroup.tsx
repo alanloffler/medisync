@@ -21,7 +21,6 @@ export function StatisticGroup() {
     queryFn: async () => {
       return await DashboardApiService.countAppointments();
     },
-    gcTime: 0, // No cached
   });
 
   const {
@@ -32,7 +31,7 @@ export function StatisticGroup() {
     queryKey: ['dashboard', 'users'],
     queryFn: async () => {
       return await DashboardApiService.countAllUsers();
-    }, // Cached by default
+    },
   });
 
   return (
