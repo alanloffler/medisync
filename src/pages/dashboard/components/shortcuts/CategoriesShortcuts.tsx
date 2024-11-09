@@ -138,13 +138,14 @@ export function CategoriesShortcuts({ className }: { className?: string }) {
   return (
     <main className='space-y-2'>
       <h2 className='text-xl font-medium text-dark-default'>{DASHBOARD_CONFIG.categoriesShortcuts.title}</h2>
-      <Card className={cn('relative flex items-center p-4', className)}>
+      <Card className={cn('relative flex items-center bg-primary p-4', className)}>
         {/* Section: Specializations shortcuts */}
         <section className='flex flex-row justify-start space-x-4 overflow-x-hidden' ref={scrollRef}>
           {isLoading && <LoadingDB text={DASHBOARD_CONFIG.categoriesShortcuts.loadingText} variant='default' />}
           {error && <InfoCard text={error.message} type='error' className='mx-auto' />}
           {specializations?.data.map((specialization: ISpecialization) => (
             <IconShortcut
+              className='border-none bg-card shadow-none'
               icon={specialization.icon}
               iconSize={28}
               itemHeight={80}
@@ -155,35 +156,27 @@ export function CategoriesShortcuts({ className }: { className?: string }) {
             />
           ))}
           {isOverflowing && reachedLeftEdge && (
-            <>
-              <div className='absolute -right-0 top-0 flex h-full w-12 rounded-r-lg bg-gradient-to-l from-white to-white/30'></div>
-              <motion.div
-                variants={animation.chevron}
-                animate='animate'
-                initial='initial'
-                className='absolute -right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 transform items-center justify-center rounded-full bg-dark-bg p-1 text-dark-default shadow-sm'
-              >
-                <ChevronRight size={20} strokeWidth={2} />
-              </motion.div>
-            </>
+            <motion.div
+              variants={animation.chevron}
+              animate='animate'
+              initial='initial'
+              className='absolute -right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 transform items-center justify-center rounded-full bg-dark-bg p-1 text-dark-default shadow-sm'
+            >
+              <ChevronRight size={20} strokeWidth={2} />
+            </motion.div>
           )}
           {isOverflowing && reachedRightEdge && (
-            <>
-              <div className='absolute -left-0 top-0 flex h-full w-12 rounded-l-lg bg-gradient-to-r from-white to-white/30'></div>
-              <motion.div
-                variants={animation.chevron}
-                animate='animate'
-                initial='initial'
-                className='absolute -left-7 top-1/2 flex h-6 w-6 -translate-y-1/2 transform items-center justify-center rounded-full bg-dark-bg p-1 text-dark-default shadow-sm'
-              >
-                <ChevronLeft size={20} strokeWidth={2} />
-              </motion.div>
-            </>
+            <motion.div
+              variants={animation.chevron}
+              animate='animate'
+              initial='initial'
+              className='absolute -left-7 top-1/2 flex h-6 w-6 -translate-y-1/2 transform items-center justify-center rounded-full bg-dark-bg p-1 text-dark-default shadow-sm'
+            >
+              <ChevronLeft size={20} strokeWidth={2} />
+            </motion.div>
           )}
           {isOverflowing && !reachedLeftEdge && !reachedRightEdge && (
             <>
-              <div className='absolute -right-0 top-0 flex h-full w-12 rounded-r-lg bg-gradient-to-l from-white to-white/30'></div>
-              <div className='absolute -left-0 top-0 flex h-full w-12 rounded-l-lg bg-gradient-to-r from-white to-white/30'></div>
               <motion.div
                 variants={animation.chevron}
                 animate='animate'
