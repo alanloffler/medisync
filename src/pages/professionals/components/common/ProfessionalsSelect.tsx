@@ -30,7 +30,7 @@ export function ProfessionalsSelect({
           <SelectGroup>
             {professionals.map((professional) => (
               <SelectItem key={crypto.randomUUID()} value={professional._id}>
-                {capitalize(professional.title.abbreviation)} {capitalize(professional.lastName)}, {capitalize(professional.firstName)}
+                {capitalize(professional.title.abbreviation)} {capitalize(professional.firstName)} {capitalize(professional.lastName)}
               </SelectItem>
             ))}
           </SelectGroup>

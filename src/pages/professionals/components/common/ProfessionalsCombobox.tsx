@@ -89,15 +89,15 @@ export function ProfessionalsCombobox({ onSelectProfessional, options, className
                   {professionals.map((professional) => (
                     <CommandItem
                       key={professional._id}
-                      value={`${professional.title.abbreviation} ${[professional.lastName, professional.firstName].join(', ')}`}
+                      value={`${professional.title.abbreviation} ${professional.firstName} ${professional.lastName}`}
                       onSelect={(currentValue) => {
                         setValue(currentValue === value ? '' : currentValue);
                         setOpenCombobox(false);
                         onSelectProfessional(professional);
                       }}
                     >
-                      <Check className={cn('mr-2 h-4 w-4', value === `${professional.title.abbreviation} ${[professional.lastName, professional.firstName].join(',')}` ? 'opacity-100' : 'opacity-0')} />
-                      {`${capitalize(professional.title.abbreviation)} ${capitalize(professional.lastName)}, ${capitalize(professional.firstName)}`}
+                      <Check className={cn('mr-2 h-4 w-4', value === `${professional.title.abbreviation} ${professional.firstName} ${professional.lastName}` ? 'opacity-100' : 'opacity-0')} />
+                      {`${capitalize(professional.title.abbreviation)} ${capitalize(professional.firstName)} ${capitalize(professional.lastName)}`}
                     </CommandItem>
                   ))}
                 </>
