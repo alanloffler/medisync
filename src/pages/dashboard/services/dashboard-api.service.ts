@@ -19,7 +19,12 @@ export class DashboardApiService {
     return { statusCode: 200, message: 'Appointments count found', data: { value1: value1.data, value2: value2.data } };
   }
 
-  public static async countAllUsers() {
+  public static async latestAppointments(limit: number) {
+    const url: string = `${this.API_URL}/dashboard/latestAppointments?l=${limit}`;
+    return this.fetch(url, 'GET');
+  }
+
+  public static async countUsers() {
     const url1: string = `${this.API_URL}/dashboard/countUsers`;
     const url2: string = `${this.API_URL}/dashboard/countUsersLastMonth`;
 
@@ -33,14 +38,14 @@ export class DashboardApiService {
     return { statusCode: 200, message: 'Users count found', data: { value1: value1.data, value2: value2.data } };
   }
 
-  public static async latestAppointments(limit: number) {
-    const url: string = `${this.API_URL}/dashboard/latestAppointments?l=${limit}`;
-    return this.fetch(url, 'GET');
-  }
-
   public static async latestUsers(limit: number) {
     const url: string = `${this.API_URL}/dashboard/latestUsers?l=${limit}`;
     return this.fetch(url, 'GET');
+  }
+
+  public static async countProfessionals() {
+    const url1: string = `${this.API_URL}/dashboard/countProfessionals`;
+    return this.fetch(url1, 'GET');
   }
 
   private static async fetch(url: string, method: string) {
