@@ -17,7 +17,7 @@ export function StatisticGroup() {
     error: apposError,
     isLoading: apposDataIsLoading,
   } = useQuery({
-    queryKey: ['appos'],
+    queryKey: ['dashboard', 'appos'],
     queryFn: async () => {
       return await DashboardApiService.countAppointments();
     },
@@ -29,7 +29,7 @@ export function StatisticGroup() {
     error: usersError,
     isLoading: usersDataIsLoading,
   } = useQuery({
-    queryKey: ['users'],
+    queryKey: ['dashboard', 'users'],
     queryFn: async () => {
       return await DashboardApiService.countAllUsers();
     }, // Cached by default
