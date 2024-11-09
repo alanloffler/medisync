@@ -233,7 +233,7 @@ export default function Appointments() {
             <div>
               {APPO_CONFIG.dialog.cancel.contentText}
               <span className='font-semibold'>
-                {capitalize(slot.appointment?.user.lastName)}, {capitalize(slot.appointment?.user.firstName)}
+                {capitalize(slot.appointment?.user.firstName)} {capitalize(slot.appointment?.user.lastName)}
               </span>
             </div>
             <div className='italic'>
@@ -261,7 +261,7 @@ export default function Appointments() {
           <ClipboardCheck className='h-5 w-5' strokeWidth={2} />
           <div className='flex flex-row items-center space-x-1'>
             <span>{APPO_CONFIG.dialog.reserve.summary.line1}</span>
-            <span className='font-bold'>{`${capitalize(userSelected.lastName)}, ${capitalize(userSelected.firstName)}`}</span>
+            <span className='font-bold'>{`${capitalize(userSelected.firstName)} ${capitalize(userSelected.lastName)}`}</span>
           </div>
         </div>
         <div className='flex items-center space-x-2'>
@@ -278,7 +278,7 @@ export default function Appointments() {
         </div>
         <div className='flex items-center space-x-2'>
           <BriefcaseMedical className='h-5 w-5' strokeWidth={2} />
-          <span className='font-semibold'>{`${capitalize(professionalSelected?.title.abbreviation)} ${capitalize(professionalSelected?.lastName)}, ${capitalize(professionalSelected?.firstName)}`}</span>
+          <span className='font-semibold'>{`${capitalize(professionalSelected?.title.abbreviation)} ${capitalize(professionalSelected?.firstName)} ${capitalize(professionalSelected?.lastName)}`}</span>
         </div>
       </div>
     );
@@ -384,7 +384,7 @@ export default function Appointments() {
                             <span>{APPO_CONFIG.table.title}</span>
                           </div>
                           {professionalSelected?._id && (
-                            <h1>{`${capitalize(professionalSelected?.title.abbreviation)} ${capitalize(professionalSelected?.lastName)}, ${capitalize(professionalSelected?.firstName)}`}</h1>
+                            <h1>{`${capitalize(professionalSelected?.title.abbreviation)} ${capitalize(professionalSelected?.firstName)} ${capitalize(professionalSelected?.lastName)}`}</h1>
                           )}
                         </section>
                       </CardTitle>
@@ -437,7 +437,7 @@ export default function Appointments() {
                                     {slot.appointment?.user ? (
                                       <>
                                         <TableCell>
-                                          <span className='font-medium'>{`${capitalize(slot.appointment.user.lastName)}, ${capitalize(slot.appointment.user.firstName)}`}</span>
+                                          <span className='font-medium'>{`${capitalize(slot.appointment.user.firstName)} ${capitalize(slot.appointment.user.lastName)}`}</span>
                                           <span></span>
                                         </TableCell>
                                         <TableCell>{delimiter(slot.appointment.user.dni, '.', 3)}</TableCell>
