@@ -140,10 +140,10 @@ export function CategoriesShortcuts({ className }: { className?: string }) {
       <h2 className='text-xl font-medium text-dark-default'>{DASHBOARD_CONFIG.categoriesShortcuts.title}</h2>
       <Card className={cn('relative flex items-center bg-primary p-4', className)}>
         {/* Section: Specializations shortcuts */}
-        <section className='flex flex-row justify-start space-x-4 overflow-x-hidden' ref={scrollRef}>
-          {isLoading && <LoadingDB text={DASHBOARD_CONFIG.categoriesShortcuts.loadingText} variant='default' />}
-          {error && <InfoCard text={error.message} type='error' className='mx-auto' />}
-          {specializations?.data.map((specialization: ISpecialization) => (
+        <section className='flex flex-row justify-start space-x-4 overflow-x-hidden mx-auto' ref={scrollRef}>
+          {isLoading && <LoadingDB text={DASHBOARD_CONFIG.categoriesShortcuts.loadingText} variant='default' spinnerColor='fill-white' className='text-white' />}
+          {error && <InfoCard text={error.message} type='error' className='text-white' />}
+          {!isLoading && !error && specializations?.data.map((specialization: ISpecialization) => (
             <IconShortcut
               className='border-none bg-card shadow-none'
               icon={specialization.icon}
