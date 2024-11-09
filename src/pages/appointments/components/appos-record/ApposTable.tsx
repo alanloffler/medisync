@@ -40,7 +40,7 @@ export function ApposTable({
       cell: ({ row }) => (
         <div>
           {capitalize(
-            `${row.original.professional?.title.abbreviation} ${row.original.professional?.lastName}, ${row.original.professional?.firstName}`,
+            `${row.original.professional?.title.abbreviation} ${row.original.professional?.firstName} ${row.original.professional?.lastName}`,
           )}
         </div>
       ),
