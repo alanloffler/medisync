@@ -35,9 +35,12 @@ export class DashboardApiService {
 
   public static async latestAppointments(limit: number) {
     const url: string = `${this.API_URL}/dashboard/latestAppointments?l=${limit}`;
-    const method: string = 'GET';
+    return this.fetch(url, 'GET');
+  }
 
-    return this.fetch(url, method);
+  public static async latestUsers(limit: number) {
+    const url: string = `${this.API_URL}/dashboard/latestUsers?l=${limit}`;
+    return this.fetch(url, 'GET');
   }
 
   private static async fetch(url: string, method: string) {
