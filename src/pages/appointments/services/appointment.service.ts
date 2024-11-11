@@ -1,4 +1,6 @@
 import type { IAppointmentForm } from '@appointments/interfaces/appointment.interface';
+import type { IResponse } from '@core/interfaces/response.interface';
+import { APP_CONFIG } from '@config/app.config';
 
 export class AppointmentApiService {
   private static readonly API_URL: string = import.meta.env.VITE_API_URL;
@@ -113,7 +115,7 @@ export class AppointmentApiService {
       return e;
     }
   }
-
+  // WIP: method for use with TRQ
   public static async remove(id: string) {
     const url: string = `${this.API_URL}/appointments/${id}`;
 
@@ -125,9 +127,15 @@ export class AppointmentApiService {
         },
       });
 
-      return await query.json();
-    } catch (e) {
-      return e;
+      const response: IResponse = await query.json();
+      if (!query.ok) throw new Error(response.message);
+
+      return response;
+    } catch (error) {
+      if (error instanceof TypeError) {
+        throw new Error(APP_CONFIG.error.server);
+      }
+      throw error;
     }
   }
 
