@@ -80,7 +80,7 @@ export function RemoveDialog({ action, help, dialogContent, dialogTexts, tooltip
                 <Button onClick={() => setOpenDialog(false)} variant='ghost'>
                   {dialogTexts.cancelButton}
                 </Button>
-                <Button onClick={handleAction} variant='remove'>
+                <Button variant='remove'>
                   {dialogTexts.removeButton}
                 </Button>
               </footer>
