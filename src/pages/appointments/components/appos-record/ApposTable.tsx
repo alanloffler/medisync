@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { FileText, MessageCircle, Trash2 } from 'lucide-react';
+import { Calendar, Clock, FileText, MessageCircle, Trash2 } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@core/components/ui/table';
@@ -75,7 +75,25 @@ export function ApposTable({
           <RemoveDialog
             action={() => AppointmentApiService.remove(row.original._id)}
             triggerButton={<Trash2 size={16} strokeWidth={1.5} />}
-            dialogContent={<section>This is the dialog content, appointment {row.original._id} to be deleted</section>}
+            dialogContent={
+              <section className='flex flex-col space-y-2'>
+                <section className='flex flex-row space-x-1'>
+                  <span>{REMOVE_DIALOG_CONFIG.appointment.content}</span>
+                  <span className='font-medium'>{`${capitalize(row.original.user.firstName)} ${capitalize(row.original.user.lastName)}`}</span>
+                </section>
+                <section className='flex flex-row space-x-2 font-medium'>
+                  <div className='flex items-center space-x-2 rounded-sm bg-slate-200 px-2 py-1 pl-1 text-xsm text-dark-default'>
+                    <Calendar size={16} strokeWidth={2} />
+                    <span>{format(row.original.day, 'DD/MM/YY')}</span>
+                  </div>
+                  <div className='flex items-center space-x-2 rounded-sm bg-slate-200 px-2 py-1 pl-1 text-xsm text-dark-default'>
+                    <Clock size={16} strokeWidth={2} />
+                    <span>{row.original.hour}</span>
+                  </div>
+                  <span className='font-medium'>{`${capitalize(row.original.professional.title.abbreviation)} ${capitalize(row.original.professional.firstName)} ${capitalize(row.original.professional.lastName)}`}</span>
+                </section>
+              </section>
+            }
             dialogTexts={{
               title: REMOVE_DIALOG_CONFIG.appointment.title,
               description: REMOVE_DIALOG_CONFIG.appointment.description,
