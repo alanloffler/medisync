@@ -1,15 +1,11 @@
-// Icons: https://lucide.dev/icons/
-import { Trash2 } from 'lucide-react';
 // Components
 import { CategoriesShortcuts } from '@dashboard/components/shortcuts/CategoriesShortcuts';
 import { LatestAppos } from '@dashboard/components/latest-appos/LatestAppos';
 import { LatestUsers } from '@dashboard/components/latest-users/LatestUsers';
 import { PageHeader } from '@core/components/common/PageHeader';
-import { RemoveDialog } from '@core/components/common/RemoveDialog';
 import { StatisticGroup } from '@dashboard/components/statistics/StatisticGroup';
 // Imports
 import { DASHBOARD_CONFIG } from '@config/dashboard.config';
-import { DashboardApiService } from './services/dashboard-api.service';
 // React component
 export default function Dashboard() {
   return (
@@ -26,11 +22,6 @@ export default function Dashboard() {
         <section className='col-span-1 md:col-span-5 lg:col-span-3 xl:col-span-3'>
           <LatestAppos />
         </section>
-        <RemoveDialog
-          action={() => DashboardApiService.countUsers()}
-          button={<Trash2 size={24} strokeWidth={2} />}
-          removeLabel='Eliminar'
-        />
       </section>
     </main>
   );
