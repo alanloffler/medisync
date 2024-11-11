@@ -35,6 +35,7 @@ export function RemoveDialog({ action, help, dialogContent, dialogTexts, tooltip
     queryFn: async () => {
       await action();
     },
+    enabled: false,
   });
 
   // async function handleAction(): Promise<void> {
