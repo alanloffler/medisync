@@ -20,9 +20,9 @@ import { USER_VIEW_CONFIG as UV_CONFIG } from '@config/user.config';
 import { UserApiService } from '@users/services/user-api.service';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useDelimiter } from '@core/hooks/useDelimiter';
+import { useHelpStore } from '@settings/stores/help.store';
 import { useLegibleDate } from '@core/hooks/useDateToString';
 import { useNotificationsStore } from '@core/stores/notifications.store';
-import { useHelpStore } from '@settings/stores/help.store';
 // React component
 export default function ViewUser() {
   const [emailObject, setEmailObject] = useState<IEmail>({} as IEmail);
