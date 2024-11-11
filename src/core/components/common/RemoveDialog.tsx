@@ -6,8 +6,8 @@ import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
-import { ReactNode, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { ReactNode, useEffect, useState } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 // Imports
 import type { IResponse } from '@core/interfaces/response.interface';
 import { REMOVE_DIALOG_CONFIG } from '@config/common.config';
@@ -30,15 +30,19 @@ interface IDialogTexts {
 // React component
 export function RemoveDialog({ action, help, dialogContent, dialogTexts, tooltip, triggerButton }: IRemoveDialog) {
   const [openDialog, setOpenDialog] = useState(false);
+  const queryClient = useQueryClient();
 
-  const { error, isFetching, refetch } = useQuery({
-    queryKey: ['remove-dialog'],
-    queryFn: async () => {
-      await action();
-    },
+  const { error, isError, isFetching, refetch } = useQuery({
+    queryKey: ['remove-dialog', 'appointment'],
+    queryFn: async () => await action(),
     enabled: false,
-    // retry: 1,
+    refetchOnWindowFocus: false,
+    retry: 1,
   });
+
+  useEffect(() => {
+    queryClient.resetQueries({ queryKey: ['remove-dialog', 'appointment'], exact: true });
+  }, [openDialog, queryClient]);
 
   async function handleAction(): Promise<void> {
     refetch();
@@ -48,10 +52,7 @@ export function RemoveDialog({ action, help, dialogContent, dialogTexts, tooltip
     <>
       <TooltipWrapper tooltip={tooltip} help={help}>
         <Button
-          onClick={() => {
-            setOpenDialog(true);
-            console.log(dialogContent);
-          }}
+          onClick={() => setOpenDialog(true)}
           variant='tableHeader'
           size='miniIcon'
           className='border border-slate-300 bg-white transition-transform hover:scale-110 hover:border-sky-500 hover:bg-white hover:text-sky-500 hover:animate-in'
@@ -66,8 +67,15 @@ export function RemoveDialog({ action, help, dialogContent, dialogTexts, tooltip
             <DialogDescription>{dialogTexts.description || REMOVE_DIALOG_CONFIG.default.description}</DialogDescription>
             <section className='flex flex-col space-y-2 pt-2'>
               <section>{dialogContent}</section>
-              {error && <InfoCard text='Error al eliminar el turno' type='error' className='pt-6' />}
-              {isFetching && <LoadingDB size='xs' variant='default' text='Eliminando...' className='pt-6' />}
+              {isError && <InfoCard text={error.message} type='error' className='pt-6' />}
+              {isFetching && (
+                <LoadingDB
+                  size='xs'
+                  variant='default'
+                  text={REMOVE_DIALOG_CONFIG.appointment.deleting || REMOVE_DIALOG_CONFIG.default.deleting}
+                  className='pt-6'
+                />
+              )}
             </section>
             <footer className='flex justify-end space-x-4 pt-6'>
               <Button onClick={() => setOpenDialog(false)} variant='ghost'>
