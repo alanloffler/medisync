@@ -4,6 +4,7 @@ import { FileText, MessageCircle, Trash2 } from 'lucide-react';
 import { Button } from '@core/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@core/components/ui/table';
 // Components
+import { RemoveDialog } from '@core/components/common/RemoveDialog';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
 import { format } from '@formkit/tempo';
@@ -11,15 +12,15 @@ import { type Cell, type ColumnDef, flexRender, getCoreRowModel, type Row, useRe
 import { useNavigate } from 'react-router-dom';
 // Imports
 import type { IAppointmentView } from '@appointments/interfaces/appointment.interface';
-import type { IResponse } from '@core/interfaces/response.interface';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
+import { REMOVE_DIALOG_CONFIG } from '@config/common.config';
 import { USER_VIEW_CONFIG } from '@config/user.config';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useHelpStore } from '@settings/stores/help.store';
 // React component
 export function ApposTable({
   appointments,
-  setRefresh,
+  // setRefresh,
 }: {
   appointments: IAppointmentView[];
   setRefresh: React.Dispatch<React.SetStateAction<string>>;
@@ -71,16 +72,19 @@ export function ApposTable({
               <MessageCircle size={16} strokeWidth={1.5} />
             </Button>
           </TooltipWrapper>
-          <TooltipWrapper tooltip={USER_VIEW_CONFIG.apposRecord.table.tooltip.user.delete} help={help}>
-            <Button
-              onClick={() => handleDeleteAppointment(row.original._id)}
-              variant='tableHeader'
-              size='miniIcon'
-              className='border border-slate-300 bg-white transition-transform hover:scale-110 hover:border-red-500 hover:bg-white hover:text-red-500 hover:animate-in'
-            >
-              <Trash2 size={16} strokeWidth={1.5} />
-            </Button>
-          </TooltipWrapper>
+          <RemoveDialog
+            action={() => AppointmentApiService.remove(row.original._id)}
+            triggerButton={<Trash2 size={16} strokeWidth={1.5} />}
+            dialogContent={<section>This is the dialog content, appointment {row.original._id} to be deleted</section>}
+            dialogTexts={{
+              title: REMOVE_DIALOG_CONFIG.appointment.title,
+              description: REMOVE_DIALOG_CONFIG.appointment.description,
+              cancelButton: REMOVE_DIALOG_CONFIG.appointment.cancelButton,
+              removeButton: REMOVE_DIALOG_CONFIG.appointment.removeButton,
+            }}
+            help={help}
+            tooltip={USER_VIEW_CONFIG.apposRecord.table.tooltip.user.delete}
+          />
         </div>
       ),
       header: () => <div className='text-center'>{USER_VIEW_CONFIG.apposRecord.table.headers[2]}</div>,
@@ -97,14 +101,14 @@ export function ApposTable({
     if (cell.column.getIndex() < row.getAllCells().length - 1) navigate(`/appointments/${row.original._id}`);
   }
 
-  function handleDeleteAppointment(id: string): void {
-    // TODO: handle response and errors
-    AppointmentApiService.remove(id).then((response: IResponse) => {
-      console.log(response);
-      setRefresh(crypto.randomUUID());
-      console.log();
-    });
-  }
+  // function handleDeleteAppointment(id: string): void {
+  //   // TODO: handle response and errors
+  //   AppointmentApiService.remove(id).then((response: IResponse) => {
+  //     console.log(response);
+  //     setRefresh(crypto.randomUUID());
+  //     console.log();
+  //   });
+  // }
 
   return (
     <Table>
