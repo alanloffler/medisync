@@ -4,6 +4,7 @@ import { HealthBadgeId } from '@core/components/icons/HealthIcons';
 // Components
 import { DashboardTitle } from '@dashboard/components/common/DashboardTitle';
 import { Statistic } from '@dashboard/components/statistics/Statistic';
+import { StatisticChart } from '@dashboard/components/statistics/StatisticChart';
 // External imports
 import { useQuery } from '@tanstack/react-query';
 // Imports
@@ -84,9 +85,7 @@ export function StatisticGroup() {
         >
           <HealthBadgeId size={24} strokeWidth={2} className='text-emerald-400' />
         </Statistic>
-        {/* <Statistic content='since last hour' title='Active Now' value1='573' value2='201'>
-        <Activity size={24} strokeWidth={2} className='text-rose-400' />
-      </Statistic> */}
+        <StatisticChart />
       </section>
     </section>
   );
