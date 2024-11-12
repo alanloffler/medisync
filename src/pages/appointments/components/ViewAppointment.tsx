@@ -45,7 +45,7 @@ export default function ViewAppointment() {
           const legibleDate: string = format(appointment.day, 'full');
           const capitalized = capitalizeFirst(legibleDate);
           capitalized && setDate(capitalized);
-          
+
           // FIXME: check if user has email and removed default email
           setEmail({
             to: response.data.user.email || 'alanmatiasloffler@gmail.com',
@@ -55,7 +55,7 @@ export default function ViewAppointment() {
         })
         .finally(() => setDataIsLoading(false));
     }
-  }, [appointment.day, capitalize, id, legibleDate]);
+  }, [appointment.day, capitalize, capitalizeFirst, id, legibleDate]);
 
   function downloadPDF(): void {
     const input: HTMLDivElement | null = pdfRef.current;
@@ -105,13 +105,13 @@ export default function ViewAppointment() {
                     <CalendarDays className='h-4 w-4' />
                     <span>{VA_CONFIG.cardTitle}</span>
                   </div>
-                  <div className='flex flex-row items-center'>{`${capitalize(appointment.professional?.title.abbreviation)} ${capitalize(appointment.professional?.lastName)}, ${capitalize(appointment.professional?.firstName)}`}</div>
+                  <div className='flex flex-row items-center'>{`${capitalize(appointment.professional?.title.abbreviation)} ${capitalize(appointment.professional?.firstName)} ${capitalize(appointment.professional?.lastName)}`}</div>
                 </header>
               </CardTitle>
             </CardHeader>
             <CardContent className='mt-4 space-y-4'>
               <h1 className='flex items-center justify-center gap-2 text-center text-2xl font-semibold'>
-                <span>{`${capitalize(appointment.user?.lastName)}, ${capitalize(appointment.user?.firstName)}`}</span>
+                <span>{`${capitalize(appointment.user?.firstName)} ${capitalize(appointment.user?.lastName)}`}</span>
                 <Link to={`/users/${appointment.user?._id}`}>
                   <LinkIcon className='h-3.5 w-3.5' strokeWidth={2} />
                 </Link>
