@@ -27,5 +27,6 @@ export const DASHBOARD_CONFIG = {
       },
     ],
     loadingText: 'Cargando estadística',
+    title: 'Estadísticas',
   },
 };
