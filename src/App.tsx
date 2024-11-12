@@ -30,8 +30,9 @@ export default function App() {
   const router = createBrowserRouter([
     { path: '/', element: <Layout />, children: 
       [
+        { index: true, element: (<Suspense fallback={<Loading />}><Dashboard /></Suspense>) },
         { path: '/dashboard', element: (<Suspense fallback={<Loading />}><Dashboard /></Suspense>) },
-        { path: '/', element: (<Suspense fallback={<Loading />}><Appointments /></Suspense>) },
+        { path: '/appointments', element: (<Suspense fallback={<Loading />}><Appointments /></Suspense>) },
         { path: '/appointments/:id', element: (<Suspense fallback={<Loading />}><ViewAppointment /></Suspense>) },
         { path: '/professionals', element: (<Suspense fallback={<Loading />}><Professionals /></Suspense>) },
         { path: '/professionals/:id', element: (<Suspense fallback={<Loading />}><ViewProfessional /></Suspense>) },
