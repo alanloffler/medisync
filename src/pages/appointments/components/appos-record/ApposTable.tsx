@@ -20,7 +20,7 @@ import { useHelpStore } from '@settings/stores/help.store';
 // React component
 export function ApposTable({
   appointments,
-  // setRefresh,
+  setRefresh,
 }: {
   appointments: IAppointmentView[];
   setRefresh: React.Dispatch<React.SetStateAction<string>>;
@@ -74,6 +74,7 @@ export function ApposTable({
           </TooltipWrapper>
           <RemoveDialog
             action={() => AppointmentApiService.remove(row.original._id)}
+            callback={handleRefresh}
             triggerButton={<Trash2 size={16} strokeWidth={1.5} />}
             dialogContent={
               <section className='flex flex-col space-y-2'>
@@ -82,11 +83,11 @@ export function ApposTable({
                   <span className='font-medium'>{`${capitalize(row.original.user.firstName)} ${capitalize(row.original.user.lastName)}`}</span>
                 </section>
                 <section className='flex flex-row space-x-2 font-medium'>
-                  <div className='flex items-center space-x-2 rounded-sm bg-slate-200 px-2 py-1 pl-1 text-xsm text-dark-default'>
+                  <div className='flex items-center space-x-2 rounded-sm bg-sky-100 px-2 py-1 pl-1 text-xsm text-sky-600'>
                     <Calendar size={16} strokeWidth={2} />
                     <span>{format(row.original.day, 'DD/MM/YY')}</span>
                   </div>
-                  <div className='flex items-center space-x-2 rounded-sm bg-slate-200 px-2 py-1 pl-1 text-xsm text-dark-default'>
+                  <div className='flex items-center space-x-2 rounded-sm bg-emerald-100 px-2 py-1 pl-1 text-xsm text-emerald-600'>
                     <Clock size={16} strokeWidth={2} />
                     <span>{row.original.hour}</span>
                   </div>
@@ -119,14 +120,9 @@ export function ApposTable({
     if (cell.column.getIndex() < row.getAllCells().length - 1) navigate(`/appointments/${row.original._id}`);
   }
 
-  // function handleDeleteAppointment(id: string): void {
-  //   // TODO: handle response and errors
-  //   AppointmentApiService.remove(id).then((response: IResponse) => {
-  //     console.log(response);
-  //     setRefresh(crypto.randomUUID());
-  //     console.log();
-  //   });
-  // }
+  function handleRefresh(): void {
+    setRefresh(crypto.randomUUID());
+  }
 
   return (
     <Table>
