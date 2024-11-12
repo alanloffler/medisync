@@ -23,10 +23,11 @@ interface IRemoveDialog {
 }
 
 interface IDialogTexts {
-  title?: string;
+  cancelButton?: string;
+  deleting?: string;
   description?: string;
   removeButton?: string;
-  cancelButton?: string;
+  title?: string;
 }
 // React component
 export function RemoveDialog({ action, callback, dialogContent, dialogTexts, help, tooltip, triggerButton }: IRemoveDialog) {
@@ -73,12 +74,7 @@ export function RemoveDialog({ action, callback, dialogContent, dialogTexts, hel
               <section>{dialogContent}</section>
               {isError && <InfoCard text={error.message} type='error' className='pt-6' />}
               {isPending && (
-                <LoadingDB
-                  size='xs'
-                  variant='default'
-                  text={REMOVE_DIALOG_CONFIG.appointment.deleting || REMOVE_DIALOG_CONFIG.default.deleting}
-                  className='pt-6'
-                />
+                <LoadingDB size='xs' variant='default' text={dialogTexts.deleting || REMOVE_DIALOG_CONFIG.default.deleting} className='pt-6' />
               )}
             </section>
             <footer className='flex justify-end space-x-4 pt-6'>
