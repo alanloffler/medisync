@@ -525,16 +525,16 @@ export default function Appointments() {
               {dialogContent.action === DialogAction.CANCEL && dialogContent.content}
             </section>
             <footer className='flex justify-end gap-6 pt-4'>
-              <Button variant={'secondary'} size={'default'} onClick={() => handleResetDialog()}>
+              <Button variant='secondary' size={'default'} onClick={() => handleResetDialog()}>
                 {APPO_CONFIG.buttons.cancelAppointment}
               </Button>
               {dialogContent.action === DialogAction.RESERVE && (
-                <Button variant={'default'} size={'default'} onClick={() => handleReserveAppointment(selectedSlot)}>
+                <Button variant='default' size='default' disabled={!userSelected._id} onClick={() => handleReserveAppointment(selectedSlot)}>
                   {APPO_CONFIG.dialog.reserve.buttons.save}
                 </Button>
               )}
               {dialogContent.action === DialogAction.CANCEL && (
-                <Button variant={'default'} size={'default'} onClick={() => handleCancelAppointment(selectedSlot)}>
+                <Button variant='default' size='default' onClick={() => handleCancelAppointment(selectedSlot)}>
                   {APPO_CONFIG.dialog.cancel.buttons.save}
                 </Button>
               )}
