@@ -1,7 +1,6 @@
 // Icons: https://lucide.dev/icons
-import { ArrowLeft, CalendarDays, Clock, Link as LinkIcon, Printer, Send } from 'lucide-react';
+import { CalendarDays, Clock, Link as LinkIcon, Printer, Send } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
-import { Button } from '@core/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@core/components/ui/card';
 // Components
 import { LoadingDB } from '@core/components/common/LoadingDB';
@@ -11,7 +10,7 @@ import * as htmlToImage from 'html-to-image';
 import jsPDF from 'jspdf';
 import { format } from '@formkit/tempo';
 import { useEffect, useRef, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 // Imports
 import type { IAppointmentView } from '@appointments/interfaces/appointment.interface';
 import type { IEmail } from '@core/interfaces/email.interface';
@@ -20,6 +19,7 @@ import { VIEW_APPOINTMENT_CONFIG as VA_CONFIG } from '@config/appointment.config
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useCapitalizeFirstLetter } from '@core/hooks/useCapitalizeFirstLetter';
 import { useLegibleDate } from '@core/hooks/useDateToString';
+import { BackButton } from '@core/components/common/BackButton';
 // React component
 export default function ViewAppointment() {
   const [appointment, setAppointment] = useState<IAppointmentView>({} as IAppointmentView);
@@ -30,7 +30,6 @@ export default function ViewAppointment() {
   const capitalize = useCapitalize();
   const capitalizeFirst = useCapitalizeFirstLetter();
   const legibleDate = useLegibleDate();
-  const navigate = useNavigate();
   const pdfRef = useRef<HTMLDivElement>(null);
   const { id } = useParams();
 
@@ -87,10 +86,7 @@ export default function ViewAppointment() {
       {/* Section: Page Header */}
       <section className='flex items-center justify-between'>
         <PageHeader title={VA_CONFIG.title} breadcrumb={VA_CONFIG.breadcrumb} />
-        <Button variant={'outline'} size={'sm'} className='gap-2' onClick={() => navigate(-1)}>
-          <ArrowLeft className='h-4 w-4' />
-          {VA_CONFIG.button.back}
-        </Button>
+        <BackButton label={VA_CONFIG.button.back} />
       </section>
       {/* Section: Page content (Appo details card) */}
       {dataIsLoading ? (
