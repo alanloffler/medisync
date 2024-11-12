@@ -2,12 +2,12 @@ export const HEADER_CONFIG = {
   appName: 'MediSync',
   headerMenu: [
     { id: 1, title: 'Tablero', path: '/dashboard' },
-    { id: 2, title: 'Turnos', path: '/' },
+    { id: 2, title: 'Turnos', path: '/appointments' },
     { id: 3, title: 'Profesionales', path: '/professionals' },
     { id: 4, title: 'Pacientes', path: '/users' },
   ],
   actionsButton: [
-    { id: 1, menuId: 2, title: 'Turno', path: '/', default: true },
+    { id: 1, menuId: 2, title: 'Turno', path: '/dashboard', default: true },
     { id: 2, menuId: 4, title: 'Paciente', path: '/users/create' },
     { id: 3, menuId: 3, title: 'Profesional', path: '/professionals/create' },
   ],
