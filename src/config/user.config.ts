@@ -106,6 +106,14 @@ export const USER_CREATE_CONFIG = {
 
 export const USER_VIEW_CONFIG = {
   apposRecord: {
+    dialog: {
+      cancelButton: 'Cancelar',
+      content: 'Vas a eliminar el turno del paciente',
+      deleting: 'Eliminando turno',
+      description: 'Esta acción es irreversible. Vas a eliminar un turno.',
+      removeButton: 'Eliminar',
+      title: 'Eliminación de turno',
+    },
     filters: {
       button: {
         clear: 'Borrar filtros',
@@ -159,10 +167,10 @@ export const USER_VIEW_CONFIG = {
   },
   title: 'Detalles del paciente',
   tooltip: {
-   deleteUser: 'Eliminar paciente',
-   sendEmail: 'Enviar e-mail',
-   sendWhatsApp: 'Enviar WhatsApp',
-   updateUser: 'Editar paciente',
+    deleteUser: 'Eliminar paciente',
+    sendEmail: 'Enviar e-mail',
+    sendWhatsApp: 'Enviar WhatsApp',
+    updateUser: 'Editar paciente',
   },
 };
 
