@@ -73,7 +73,7 @@ export function StatisticGroup() {
           <Users size={24} strokeWidth={2} className='text-sky-400' />
         </Statistic>
         <Statistic
-          content={DASHBOARD_CONFIG.statisticGroup.items[1].content}
+          content={DASHBOARD_CONFIG.statisticGroup.items[2].content}
           error={professionalsError}
           isLoading={professionalsDataIsLoading}
           path={DASHBOARD_CONFIG.statisticGroup.items[2].path}
