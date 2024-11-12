@@ -22,8 +22,7 @@ import { PageHeader } from '@core/components/common/PageHeader';
 import { WorkingDays } from '@professionals/components/common/WorkingDays';
 // External imports
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { spring } from 'framer-motion';
-import { useAnimate } from 'framer-motion/mini';
+import { spring, useAnimate } from 'motion/react';
 import { useEffect, useState, MouseEvent, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';

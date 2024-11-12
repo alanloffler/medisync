@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
-import { animate, spring } from 'framer-motion';
+import { animate, spring } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 // Imports
 import type { IApposFilters } from '@appointments/interfaces/appos-filters.interface';

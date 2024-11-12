@@ -6,7 +6,7 @@ import { HeaderMenu } from '@layout/components/HeaderMenu';
 import { User } from '@layout/components/User';
 // External imports
 import { Link } from 'react-router-dom';
-import { useAnimate } from 'framer-motion/mini';
+import { useAnimate } from 'motion/react';
 // Imports
 import type { ILinks } from '@layout/interfaces/links.interface';
 import { HEADER_CONFIG } from '@config/layout/header.config';

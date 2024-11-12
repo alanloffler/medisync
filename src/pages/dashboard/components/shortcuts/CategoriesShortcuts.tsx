@@ -8,7 +8,7 @@ import { IconShortcut } from '@dashboard/components/shortcuts/IconShortcut';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 // Imports

@@ -4,8 +4,7 @@ import { ChevronDown, Plus } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@core/components/ui/dropdown-menu';
 import { Separator } from '@core/components/ui/separator';
 // External imports
-import { spring } from 'framer-motion';
-import { useAnimate } from 'framer-motion/mini';
+import { spring, useAnimate } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // Imports

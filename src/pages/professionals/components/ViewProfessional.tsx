@@ -14,8 +14,7 @@ import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
 // External imports
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { spring } from 'framer-motion';
-import { useAnimate } from 'framer-motion/mini';
+import { spring, useAnimate } from 'motion/react';
 import { useEffect, useState } from 'react';
 // Imports
 import type { IEmail } from '@core/interfaces/email.interface';

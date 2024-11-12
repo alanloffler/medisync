@@ -11,8 +11,7 @@ import { UsersDataTable } from '@users/components/UsersDataTable';
 // External imports
 import { ChangeEvent, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { spring } from 'framer-motion';
-import { useAnimate } from 'framer-motion/mini';
+import { spring, useAnimate } from 'motion/react';
 // Imports
 import { EUserSearch, type IUserSearch } from '@users/interfaces/user-search.interface';
 import { HEADER_CONFIG } from '@config/layout/header.config';

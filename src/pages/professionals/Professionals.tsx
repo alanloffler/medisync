@@ -20,8 +20,7 @@ import { ProfessionalsDataTable } from '@professionals/components/ProfessionalsD
 // External imports
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { spring } from 'framer-motion';
-import { useAnimate } from 'framer-motion/mini';
+import { spring, useAnimate } from 'motion/react';
 // Imports
 import type { IArea } from '@core/interfaces/area.interface';
 import type { ISpecialization } from '@core/interfaces/specialization.interface';

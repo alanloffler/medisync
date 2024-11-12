@@ -1,5 +1,5 @@
 // External imports
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 // Imports
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { cn } from '@lib/utils';

@@ -4,8 +4,7 @@ import { ChevronRight } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@core/components/ui/dropdown-menu';
 import { ScrollArea } from '@core/components/ui/scroll-area';
 // External imports
-import { spring } from 'framer-motion';
-import { useAnimate } from 'framer-motion/mini';
+import { spring, useAnimate } from 'motion/react';
 import { useEffect, useState } from 'react';
 // Imports
 import { useNotificationsStore } from '@core/stores/notifications.store';
