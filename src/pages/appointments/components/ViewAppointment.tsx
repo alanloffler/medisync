@@ -15,11 +15,13 @@ import { useParams, Link } from 'react-router-dom';
 import type { IAppointmentView } from '@appointments/interfaces/appointment.interface';
 import type { IEmail } from '@core/interfaces/email.interface';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
+import { BackButton } from '@core/components/common/BackButton';
+import { HEADER_CONFIG } from '@config/layout/header.config';
 import { VIEW_APPOINTMENT_CONFIG as VA_CONFIG } from '@config/appointment.config';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useCapitalizeFirstLetter } from '@core/hooks/useCapitalizeFirstLetter';
+import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 import { useLegibleDate } from '@core/hooks/useDateToString';
-import { BackButton } from '@core/components/common/BackButton';
 // React component
 export default function ViewAppointment() {
   const [appointment, setAppointment] = useState<IAppointmentView>({} as IAppointmentView);
@@ -31,7 +33,12 @@ export default function ViewAppointment() {
   const capitalizeFirst = useCapitalizeFirstLetter();
   const legibleDate = useLegibleDate();
   const pdfRef = useRef<HTMLDivElement>(null);
+  const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
   const { id } = useParams();
+
+  useEffect(() => {
+    setItemSelected(HEADER_CONFIG.headerMenu[1].id);
+  }, [setItemSelected]);
 
   useEffect(() => {
     if (id) {
