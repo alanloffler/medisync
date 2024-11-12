@@ -20,13 +20,13 @@ export const DASHBOARD_CONFIG = {
       },
       {
         content: 'nuevos este mes',
-        path: '/users',
-        title: 'Pacientes',
+        path: '/professionals',
+        title: 'Profesionales',
       },
       {
         content: 'nuevos este mes',
-        path: '/professionals',
-        title: 'Profesionales',
+        path: '/users',
+        title: 'Pacientes',
       },
     ],
     title: 'Estadísticas',
