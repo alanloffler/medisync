@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { Activity, CalendarCheck, Users } from 'lucide-react';
+import { CalendarCheck, Users } from 'lucide-react';
 import { HealthBadgeId } from '@core/components/icons/HealthIcons';
 // Components
 import { Statistic } from '@dashboard/components/statistics/Statistic';
@@ -19,9 +19,9 @@ export function StatisticGroup() {
     isLoading: apposDataIsLoading,
   } = useQuery({
     queryKey: ['dashboard', 'appos'],
-    queryFn: async () => {
-      return await DashboardApiService.countAppointments();
-    },
+    queryFn: async () => await DashboardApiService.countAppointments(),
+    refetchOnWindowFocus: false,
+    retry: 1,
   });
 
   const {
@@ -30,9 +30,9 @@ export function StatisticGroup() {
     isLoading: usersDataIsLoading,
   } = useQuery({
     queryKey: ['dashboard', 'users'],
-    queryFn: async () => {
-      return await DashboardApiService.countUsers();
-    },
+    queryFn: async () => await DashboardApiService.countUsers(),
+    refetchOnWindowFocus: false,
+    retry: 1,
   });
 
   const {
@@ -41,9 +41,9 @@ export function StatisticGroup() {
     isLoading: professionalsDataIsLoading,
   } = useQuery({
     queryKey: ['dashboard', 'professionals'],
-    queryFn: async () => {
-      return await DashboardApiService.countProfessionals();
-    },
+    queryFn: async () => await DashboardApiService.countProfessionals(),
+    refetchOnWindowFocus: false,
+    retry: 1,
   });
 
   return (
