@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 // External components: http://ui.shadcn.com/docs/components
 import { Card } from '@core/components/ui/card';
 // Components
+import { DashboardTitle } from '@dashboard/components/common/DashboardTitle';
 import { IconShortcut } from '@dashboard/components/shortcuts/IconShortcut';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
@@ -137,24 +138,28 @@ export function CategoriesShortcuts({ className }: { className?: string }) {
 
   return (
     <main className='space-y-2'>
-      <h2 className='text-xl font-medium text-dark-default'>{DASHBOARD_CONFIG.categoriesShortcuts.title}</h2>
+      <DashboardTitle title={DASHBOARD_CONFIG.categoriesShortcuts.title} />
       <Card className={cn('relative flex items-center bg-primary p-4', className)}>
         {/* Section: Specializations shortcuts */}
-        <section className='flex flex-row justify-start space-x-4 overflow-x-hidden mx-auto' ref={scrollRef}>
-          {isLoading && <LoadingDB text={DASHBOARD_CONFIG.categoriesShortcuts.loadingText} variant='default' spinnerColor='fill-white' className='text-white' />}
+        <section className='mx-auto flex flex-row justify-start space-x-4 overflow-x-hidden' ref={scrollRef}>
+          {isLoading && (
+            <LoadingDB text={DASHBOARD_CONFIG.categoriesShortcuts.loadingText} variant='default' spinnerColor='fill-white' className='text-white' />
+          )}
           {error && <InfoCard text={error.message} type='error' className='text-white' />}
-          {!isLoading && !error && specializations?.data.map((specialization: ISpecialization) => (
-            <IconShortcut
-              className='border-none bg-card shadow-none'
-              icon={specialization.icon}
-              iconSize={28}
-              itemHeight={80}
-              itemWidth={120}
-              key={crypto.randomUUID()}
-              label={specialization.name}
-              setAreaSelected={setAreaSelected}
-            />
-          ))}
+          {!isLoading &&
+            !error &&
+            specializations?.data.map((specialization: ISpecialization) => (
+              <IconShortcut
+                className='border-none bg-card shadow-none'
+                icon={specialization.icon}
+                iconSize={28}
+                itemHeight={80}
+                itemWidth={120}
+                key={crypto.randomUUID()}
+                label={specialization.name}
+                setAreaSelected={setAreaSelected}
+              />
+            ))}
           {isOverflowing && reachedLeftEdge && (
             <motion.div
               variants={animation.chevron}

@@ -2,6 +2,7 @@
 import { CalendarCheck, Users } from 'lucide-react';
 import { HealthBadgeId } from '@core/components/icons/HealthIcons';
 // Components
+import { DashboardTitle } from '@dashboard/components/common/DashboardTitle';
 import { Statistic } from '@dashboard/components/statistics/Statistic';
 // External imports
 import { useQuery } from '@tanstack/react-query';
@@ -48,7 +49,7 @@ export function StatisticGroup() {
 
   return (
     <section className='flex flex-col space-y-2'>
-      <h2 className='text-xl font-medium text-dark-default'>{DASHBOARD_CONFIG.statisticGroup.title}</h2>
+      <DashboardTitle title={DASHBOARD_CONFIG.statisticGroup.title} />
       <section className='grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4'>
         <Statistic
           content={DASHBOARD_CONFIG.statisticGroup.items[0].content}

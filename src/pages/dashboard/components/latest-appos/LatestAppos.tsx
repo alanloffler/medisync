@@ -8,6 +8,7 @@ import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
 import { format } from '@formkit/tempo';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 // Imports
 import type { IAppointmentView } from '@appointments/interfaces/appointment.interface';
@@ -17,7 +18,7 @@ import { DashboardApiService } from '@dashboard/services/dashboard-api.service';
 import { USER_CREATE_CONFIG } from '@config/user.config';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useDelimiter } from '@core/hooks/useDelimiter';
-import { useNavigate } from 'react-router-dom';
+import { DashboardTitle } from '../common/DashboardTitle';
 // React component
 export function LatestAppos() {
   const capitalize = useCapitalize();
@@ -53,7 +54,7 @@ export function LatestAppos() {
 
   return (
     <main className='space-y-2'>
-      <h2 className='text-xl font-medium text-dark-default'>{DASHBOARD_CONFIG.latestAppos.title}</h2>
+      <DashboardTitle title={DASHBOARD_CONFIG.latestAppos.title} />
       <Card>
         <CardContent className='grid gap-2 pt-6'>
           {isLoading && <LoadingDB text={DASHBOARD_CONFIG.latestAppos.loadingText} variant='default' />}

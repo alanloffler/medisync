@@ -3,6 +3,7 @@ import { CircleChevronRight, CalendarPlus } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Card, CardContent } from '@core/components/ui/card';
 // Components
+import { DashboardTitle } from '@dashboard/components/common/DashboardTitle';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
@@ -50,7 +51,7 @@ export function LatestUsers() {
 
   return (
     <main className='space-y-2'>
-      <h2 className='text-xl font-medium text-dark-default'>{DASHBOARD_CONFIG.latestUsers.title}</h2>
+      <DashboardTitle title={DASHBOARD_CONFIG.latestUsers.title} />
       <Card>
         <CardContent className='flex flex-col space-y-1 pt-6'>
           {error && <InfoCard text={error.message} type='error' />}
