@@ -13,7 +13,6 @@ import { useNavigate } from 'react-router-dom';
 // Imports
 import type { IAppointmentView } from '@appointments/interfaces/appointment.interface';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
-import { REMOVE_DIALOG_CONFIG } from '@config/common.config';
 import { USER_VIEW_CONFIG } from '@config/user.config';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useHelpStore } from '@settings/stores/help.store';
@@ -79,7 +78,7 @@ export function ApposTable({
             dialogContent={
               <section className='flex flex-col space-y-2'>
                 <section className='flex flex-row space-x-1'>
-                  <span>{REMOVE_DIALOG_CONFIG.appointment.content}</span>
+                  <span>{USER_VIEW_CONFIG.apposRecord.dialog.content}</span>
                   <span className='font-medium'>{`${capitalize(row.original.user.firstName)} ${capitalize(row.original.user.lastName)}`}</span>
                 </section>
                 <section className='flex flex-row space-x-2 font-medium'>
@@ -96,10 +95,11 @@ export function ApposTable({
               </section>
             }
             dialogTexts={{
-              title: REMOVE_DIALOG_CONFIG.appointment.title,
-              description: REMOVE_DIALOG_CONFIG.appointment.description,
-              cancelButton: REMOVE_DIALOG_CONFIG.appointment.cancelButton,
-              removeButton: REMOVE_DIALOG_CONFIG.appointment.removeButton,
+              cancelButton: USER_VIEW_CONFIG.apposRecord.dialog.cancelButton,
+              deleting: USER_VIEW_CONFIG.apposRecord.dialog.deleting,
+              description: USER_VIEW_CONFIG.apposRecord.dialog.description,
+              removeButton: USER_VIEW_CONFIG.apposRecord.dialog.removeButton,
+              title: USER_VIEW_CONFIG.apposRecord.dialog.title,
             }}
             help={help}
             tooltip={USER_VIEW_CONFIG.apposRecord.table.tooltip.user.delete}
