@@ -54,6 +54,7 @@ export function StatisticGroup() {
           content={DASHBOARD_CONFIG.statisticGroup.items[0].content}
           error={apposError}
           isLoading={apposDataIsLoading}
+          path={DASHBOARD_CONFIG.statisticGroup.items[0].path}
           title={DASHBOARD_CONFIG.statisticGroup.items[0].title}
           value1={apposData?.data?.value1}
           value2={apposData?.data?.value2}
@@ -64,6 +65,7 @@ export function StatisticGroup() {
           content={DASHBOARD_CONFIG.statisticGroup.items[1].content}
           error={usersError}
           isLoading={usersDataIsLoading}
+          path={DASHBOARD_CONFIG.statisticGroup.items[1].path}
           title={DASHBOARD_CONFIG.statisticGroup.items[1].title}
           value1={delimiter(usersData?.data?.value1, '.', 3)}
           value2={usersData?.data?.value2}
@@ -74,6 +76,7 @@ export function StatisticGroup() {
           content={DASHBOARD_CONFIG.statisticGroup.items[1].content}
           error={professionalsError}
           isLoading={professionalsDataIsLoading}
+          path={DASHBOARD_CONFIG.statisticGroup.items[2].path}
           title={DASHBOARD_CONFIG.statisticGroup.items[2].title}
           value1={professionalsData?.data?.value1}
           value2={professionalsData?.data?.value2}
