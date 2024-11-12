@@ -15,18 +15,20 @@ export const DASHBOARD_CONFIG = {
     items: [
       {
         content: 'el último mes',
+        path: '/appointments',
         title: 'Turnos',
       },
       {
         content: 'nuevos este mes',
+        path: '/users',
         title: 'Pacientes',
       },
       {
         content: 'nuevos este mes',
+        path: '/professionals',
         title: 'Profesionales',
       },
     ],
-    loadingText: 'Cargando estadística',
     title: 'Estadísticas',
   },
 };
