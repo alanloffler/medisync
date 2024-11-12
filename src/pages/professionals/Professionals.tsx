@@ -28,9 +28,11 @@ import type { ISpecialization } from '@core/interfaces/specialization.interface'
 import { APP_CONFIG } from '@config/app.config';
 import { AreaService } from '@core/services/area.service';
 import { EProfessionalSearch, type IProfessionalSearch } from '@professionals/interfaces/professional-search.interface';
+import { HEADER_CONFIG } from '@config/layout/header.config';
 import { PROF_CONFIG } from '@config/professionals.config';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useDebounce } from '@core/hooks/useDebounce';
+import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export default function Professionals() {
@@ -47,6 +49,7 @@ export default function Professionals() {
   const capitalize = useCapitalize();
   const debouncedSearch = useDebounce<IProfessionalSearch>(search, PROF_CONFIG.search.debounceTime);
   const navigate = useNavigate();
+  const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
 
   function handleSearchByProfessional(event: ChangeEvent<HTMLInputElement>): void {
     setSearch({ value: event.target.value, type: EProfessionalSearch.INPUT });
@@ -67,6 +70,10 @@ export default function Professionals() {
     setSearch({ value: '', type: EProfessionalSearch.INPUT });
     setReload(Math.random());
   }
+
+  useEffect(() => {
+    setItemSelected(HEADER_CONFIG.headerMenu[2].id);
+  }, [setItemSelected]);
 
   useEffect(() => {
     AreaService.findAll().then((response) => {

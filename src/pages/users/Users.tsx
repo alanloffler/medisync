@@ -9,14 +9,16 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@core/
 import { PageHeader } from '@core/components/common/PageHeader';
 import { UsersDataTable } from '@users/components/UsersDataTable';
 // External imports
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { spring } from 'framer-motion';
 import { useAnimate } from 'framer-motion/mini';
 // Imports
 import { EUserSearch, type IUserSearch } from '@users/interfaces/user-search.interface';
+import { HEADER_CONFIG } from '@config/layout/header.config';
 import { USER_CONFIG } from '@config/user.config';
 import { useDebounce } from '@core/hooks/useDebounce';
+import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 import { useHelpStore } from '@settings/stores/help.store';
 // React component
 export default function Users() {
@@ -28,7 +30,12 @@ export default function Users() {
   const [reloadScope, reloadAnimation] = useAnimate();
   const debouncedSearch = useDebounce<IUserSearch>(search, USER_CONFIG.search.debounceTime);
   const navigate = useNavigate();
+  const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
   const { help } = useHelpStore();
+
+  useEffect(() => {
+    setItemSelected(HEADER_CONFIG.headerMenu[3].id);
+  }, [setItemSelected]);
 
   function handleSearchByName(event: ChangeEvent<HTMLInputElement>): void {
     setSearch({ value: event.target.value, type: EUserSearch.NAME });

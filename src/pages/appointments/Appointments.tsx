@@ -29,10 +29,12 @@ import { APP_CONFIG } from '@config/app.config';
 import { AppoSchedule } from '@appointments/services/schedule.service';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { CalendarService } from '@appointments/services/calendar.service';
+import { HEADER_CONFIG } from '@config/layout/header.config';
 import { cn } from '@lib/utils';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useCapitalizeFirstLetter } from '@core/hooks/useCapitalizeFirstLetter';
 import { useDelimiter } from '@core/hooks/useDelimiter';
+import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // Enum
 enum DialogAction {
@@ -71,7 +73,12 @@ export default function Appointments() {
   const capitalizeFirstLetter = useCapitalizeFirstLetter();
   const delimiter = useDelimiter();
   const navigate = useNavigate();
+  const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
   // #region professionalSelected actions
+  useEffect(() => {
+    setItemSelected(HEADER_CONFIG.headerMenu[1].id);
+  }, [setItemSelected]);
+
   useEffect(() => {
     if (professionalSelected) {
       const calendarDisabledDays: number[] = CalendarService.getDisabledDays(professionalSelected.configuration.workingDays);
