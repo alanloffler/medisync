@@ -2,15 +2,11 @@
 import { CategoriesShortcuts } from '@dashboard/components/shortcuts/CategoriesShortcuts';
 import { LatestAppos } from '@dashboard/components/latest-appos/LatestAppos';
 import { LatestUsers } from '@dashboard/components/latest-users/LatestUsers';
-import { PageHeader } from '@core/components/common/PageHeader';
 import { StatisticGroup } from '@dashboard/components/statistics/StatisticGroup';
-// Imports
-import { DASHBOARD_CONFIG } from '@config/dashboard.config';
 // React component
 export default function Dashboard() {
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8'>
-      <PageHeader title='Dashboard' breadcrumb={DASHBOARD_CONFIG.breadcrumb} />
       {/* Section: Statistic Group */}
       <StatisticGroup />
       {/* Section: Container */}
