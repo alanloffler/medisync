@@ -51,7 +51,7 @@ export function StatisticGroup() {
   return (
     <section className='flex flex-col space-y-2'>
       <DashboardTitle title={DASHBOARD_CONFIG.statisticGroup.title} />
-      <section className='grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4'>
+      <section className='grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4 lg:gap-8'>
         <Statistic
           content={DASHBOARD_CONFIG.statisticGroup.items[0].content}
           error={apposError}
@@ -85,7 +85,7 @@ export function StatisticGroup() {
         >
           <HealthBadgeId size={24} strokeWidth={2} className='text-emerald-400' />
         </Statistic>
-        <StatisticChart />
+        <StatisticChart title={DASHBOARD_CONFIG.statisticGroup.charts[0].title} />
       </section>
     </section>
   );
