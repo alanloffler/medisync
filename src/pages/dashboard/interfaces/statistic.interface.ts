@@ -12,7 +12,13 @@ export interface IStatistic {
 }
 
 export interface IStatisticChart {
-  title: string;
+  data: IChartData[];
+  height: number;
+  labels?: IChartLabels;
+  margin?: IChartMargin;
+  options?: any;
+  path?: string;
+  title?: string;
 }
 
 export interface IChartData {
@@ -30,4 +36,9 @@ export interface IChartMargin {
   right: number;
   bottom: number;
   left: number;
+}
+
+interface IChartLabels {
+  x: string;
+  y: string;
 }
