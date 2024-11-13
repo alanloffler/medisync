@@ -4,38 +4,33 @@ import { Card, CardHeader, CardTitle } from '@core/components/ui/card';
 import * as d3 from 'd3';
 import { motion } from 'motion/react';
 import { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 // Imports
-import type { IStatisticChart, IChartData, IChartDataProcessed, IChartMargin } from '@dashboard/interfaces/statistic.interface';
+import type { IStatisticChart, IChartDataProcessed, IChartMargin } from '@dashboard/interfaces/statistic.interface';
 // React component
-export function StatisticChart({ title }: IStatisticChart) {
+export function StatisticChart({ data, height, labels, margin, options, path, title }: IStatisticChart) {
+  const navigate = useNavigate();
   const lineChartRef = useRef<HTMLDivElement>(null);
-
-  const data: IChartData[] = [
-    { date: '2024-05-01', value: 139.89 },
-    { date: '2024-05-02', value: 125.6 },
-    { date: '2024-05-03', value: 108.13 },
-    { date: '2024-05-04', value: 115 },
-    { date: '2024-05-05', value: 118.8 },
-    { date: '2024-05-06', value: 124.66 },
-    { date: '2024-05-07', value: 113.44 },
-    { date: '2024-05-08', value: 115.78 },
-    { date: '2024-05-09', value: 122 },
-    { date: '2024-05-10', value: 135.98 },
-    { date: '2024-05-11', value: 147.49 },
-  ];
 
   const processedData: IChartDataProcessed[] = data.map((d) => ({
     date: new Date(d.date),
     value: d.value,
   }));
 
+  let _margin: IChartMargin;
+  margin ? (_margin = margin) : (_margin = { top: 20, right: 20, bottom: 20, left: 20 });
+
+  let _height: number;
+  height ? (_height = height - _margin.top - _margin.bottom) : (_height = 130 - _margin.top - _margin.bottom);
+
   const minRange: number = d3.min(data, (d) => d.value) || 0;
-  const margin: IChartMargin = { top: 10, right: 20, bottom: 20, left: 20 };
-  const height: number = 80 - margin.top - margin.bottom;
+
+  if (title) _margin.top = 10;
+  if (!labels) labels = { x: '', y: '' };
 
   useEffect(() => {
-    const y = d3.scaleLinear().range([height, 0]);
-    y.domain([minRange ? minRange - margin.bottom : 0 - margin.bottom, d3.max(processedData, (d) => d.value) ?? 0]);
+    const y = d3.scaleLinear().range([_height, 0]);
+    y.domain([minRange ? minRange - _margin.bottom : 0 - _margin.bottom, d3.max(processedData, (d) => d.value) ?? 0]);
 
     function drawChart(): void {
       const lineChart = lineChartRef.current;
@@ -45,7 +40,7 @@ export function StatisticChart({ title }: IStatisticChart) {
         if (svgElement) svgElement.remove();
       }
 
-      const currentWidth: number = parseInt(d3.select('#line-chart').style('width'), 10) - margin.left - margin.right;
+      const currentWidth: number = parseInt(d3.select('#line-chart').style('width'), 10) - _margin.left - _margin.right;
 
       const x = d3.scaleTime().range([0, currentWidth]);
 
@@ -54,39 +49,42 @@ export function StatisticChart({ title }: IStatisticChart) {
       const svg = d3
         .select('#line-chart')
         .append('svg')
-        .attr('width', currentWidth + margin.left + margin.right)
-        .attr('height', height + margin.top + margin.bottom)
+        .attr('width', currentWidth + _margin.left + _margin.right)
+        .attr('height', _height + _margin.top + _margin.bottom)
         .append('g')
-        .attr('transform', `translate(${margin.left}, ${margin.top})`);
+        .attr('transform', `translate(${_margin.left}, ${_margin.top})`);
 
-      svg
-        .append('g')
-        .attr('transform', `translate(0, ${height})`)
-        .attr('stroke-width', 1.5)
-        .attr('color', '#6ee7b7')
-        .call(d3.axisBottom(x).ticks(0).tickSizeOuter(0));
+      if (options && options.axisY)
+        svg
+          .append('g')
+          .attr('transform', `translate(0, ${_height})`)
+          .attr('stroke-width', 1.5)
+          .attr('color', '#6ee7b7')
+          .call(d3.axisBottom(x).ticks(0).tickSizeOuter(0));
 
-      svg.append('g').attr('stroke-width', 1.5).attr('color', '#6ee7b7').call(d3.axisLeft(y).ticks(0).tickSizeOuter(0));
+      if (options && options.axisX) svg.append('g').attr('stroke-width', 1.5).attr('color', '#6ee7b7').call(d3.axisLeft(y).ticks(0).tickSizeOuter(0));
 
-      svg
-        .append('text')
-        .attr('x', currentWidth - margin.right / 2)
-        .attr('y', height - 5)
-        .style('text-anchor', 'middle')
-        .style('font-size', '11px')
-        .style('font-weight', '600')
-        .style('fill', '#6ee7b7')
-        .text('F');
+      if (labels) {
+        svg
+          .append('text')
+          .attr('x', currentWidth - 5)
+          .attr('y', _height - 5)
+          .style('text-anchor', 'middle')
+          .style('font-size', '11px')
+          .style('font-weight', '600')
+          .style('fill', '#6ee7b7')
+          .text(labels.x);
 
-      svg
-        .append('text')
-        .attr('x', 10)
-        .attr('y', 5)
-        .style('text-anchor', 'middle')
-        .style('font-size', '11px')
-        .style('font-weight', '600')
-        .style('fill', '#6ee7b7')
-        .text('T');
+        svg
+          .append('text')
+          .attr('x', 10)
+          .attr('y', 5)
+          .style('text-anchor', 'middle')
+          .style('font-size', '11px')
+          .style('font-weight', '600')
+          .style('fill', '#6ee7b7')
+          .text(labels.y);
+      }
 
       const valueLine = d3
         .line<{ date: Date; value: number }>()
@@ -99,7 +97,7 @@ export function StatisticChart({ title }: IStatisticChart) {
         .attr('class', 'line')
         .attr('fill', 'none')
         .attr('stroke', '#a3e635')
-        .attr('stroke-width', 2.5)
+        .attr('stroke-width', 2)
         .attr('stroke-linecap', 'round')
         .attr('stroke-linejoin', 'round')
         .attr('d', valueLine);
@@ -127,13 +125,16 @@ export function StatisticChart({ title }: IStatisticChart) {
       animate='initial'
       whileHover='animate'
       variants={animation.item}
+      onClick={() => path && path !== '' && navigate(path)}
     >
-      <Card className='bg-emerald-500'>
-        <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-          <CardTitle className='flex bg-emerald-600 px-2 py-1 text-primary-foreground'>
-            <span className='text-xsm font-medium'>{title}</span>
-          </CardTitle>
-        </CardHeader>
+      <Card className='h-full bg-emerald-500'>
+        {title && (
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+            <CardTitle className='flex bg-emerald-600 px-2 py-1 text-primary-foreground'>
+              <span className='text-xsm font-medium'>{title}</span>
+            </CardTitle>
+          </CardHeader>
+        )}
         <section id='line-chart' ref={lineChartRef}></section>
       </Card>
     </motion.button>
