@@ -5,36 +5,46 @@ import * as d3 from 'd3';
 import { motion } from 'motion/react';
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 // Imports
-import type { IStatisticChart, IChartDataProcessed, IChartMargin } from '@dashboard/interfaces/statistic.interface';
+import type { IStatisticChart, IChartDataProcessed, IChartMargin, IChartData } from '@dashboard/interfaces/statistic.interface';
+import { DashboardApiService } from '@dashboard/services/dashboard-api.service';
 // React component
-export function StatisticChart({ data, height, labels, margin, options, path, title }: IStatisticChart) {
+export function StatisticChart({ height, labels, margin, options, path, title }: IStatisticChart) {
   const navigate = useNavigate();
   const lineChartRef = useRef<HTMLDivElement>(null);
+  
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['dashboard', 'appos-chart'],
+    queryFn: async () => await DashboardApiService.apposChartData(),
+    refetchOnWindowFocus: false,
+    retry: 1,
+  });
 
-  const processedData: IChartDataProcessed[] = data.map((d) => ({
-    date: new Date(d.date),
-    value: d.value,
-  }));
+  const processedData: IChartDataProcessed[] = Array.isArray(data?.data) 
+    ? data.data.map((d: IChartData) => ({
+        date: new Date(d.date),
+        value: d.value,
+      }))
+    : [];
 
-  let _margin: IChartMargin;
-  margin ? (_margin = margin) : (_margin = { top: 20, right: 20, bottom: 20, left: 20 });
+  const _margin: IChartMargin = margin || { top: 20, right: 20, bottom: 20, left: 20 };
+  const _height: number = (height ? height : 130) - _margin.top - _margin.bottom;
 
-  let _height: number;
-  height ? (_height = height - _margin.top - _margin.bottom) : (_height = 130 - _margin.top - _margin.bottom);
-
-  const minRange: number = d3.min(data, (d) => d.value) || 0;
+  const minRange: number = d3.min(processedData, (d) => d.value) || 0;
 
   if (title) _margin.top = 10;
+
   if (!labels) labels = { x: '', y: '' };
 
   useEffect(() => {
+    if (!processedData || processedData.length === 0) return;
+
     const y = d3.scaleLinear().range([_height, 0]);
     y.domain([minRange ? minRange - _margin.bottom : 0 - _margin.bottom, d3.max(processedData, (d) => d.value) ?? 0]);
 
     function drawChart(): void {
       const lineChart = lineChartRef.current;
-
       if (lineChart) {
         const svgElement = lineChart.querySelector('svg');
         if (svgElement) svgElement.remove();
@@ -43,7 +53,6 @@ export function StatisticChart({ data, height, labels, margin, options, path, ti
       const currentWidth: number = parseInt(d3.select('#line-chart').style('width'), 10) - _margin.left - _margin.right;
 
       const x = d3.scaleTime().range([0, currentWidth]);
-
       x.domain(d3.extent(processedData, (d) => d.date) as [Date, Date]);
 
       const svg = d3
@@ -62,7 +71,8 @@ export function StatisticChart({ data, height, labels, margin, options, path, ti
           .attr('color', '#6ee7b7')
           .call(d3.axisBottom(x).ticks(0).tickSizeOuter(0));
 
-      if (options && options.axisX) svg.append('g').attr('stroke-width', 1.5).attr('color', '#6ee7b7').call(d3.axisLeft(y).ticks(0).tickSizeOuter(0));
+      if (options && options.axisX)
+        svg.append('g').attr('stroke-width', 1.5).attr('color', '#6ee7b7').call(d3.axisLeft(y).ticks(0).tickSizeOuter(0));
 
       if (labels) {
         svg
@@ -106,37 +116,42 @@ export function StatisticChart({ data, height, labels, margin, options, path, ti
     drawChart();
 
     addEventListener('resize', drawChart);
-
+    
     return () => removeEventListener('resize', drawChart);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
 
   const animation = {
     item: {
       initial: { scale: 1 },
-      animate: { scale: 1.05, transition: { type: 'spring', stiffness: 800, damping: 20, duration: 0.2, delay: 0 } }, // slate-200
+      animate: { scale: 1.05, transition: { type: 'spring', stiffness: 800, damping: 20, duration: 0.2, delay: 0 } },
     },
   };
 
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading data</div>;
+
   return (
-    <motion.button
-      className='rounded-lg border border-transparent'
-      initial='initial'
-      animate='initial'
-      whileHover='animate'
-      variants={animation.item}
-      onClick={() => path && path !== '' && navigate(path)}
-    >
-      <Card className='h-full bg-emerald-500'>
-        {title && (
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='flex bg-emerald-600 px-2 py-1 text-primary-foreground'>
-              <span className='text-xsm font-medium'>{title}</span>
-            </CardTitle>
-          </CardHeader>
-        )}
-        <section id='line-chart' ref={lineChartRef}></section>
-      </Card>
-    </motion.button>
+    data && data?.data?.length > 0 ? (
+      <motion.button
+        className='rounded-lg border border-transparent'
+        initial='initial'
+        animate='initial'
+        whileHover='animate'
+        variants={animation.item}
+        onClick={() => path && path !== '' && navigate(path)}
+      >
+        <Card className='h-full bg-emerald-500'>
+          {title && (
+            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+              <CardTitle className='flex bg-emerald-600 px-2 py-1 text-primary-foreground'>
+                <span className='text-xsm font-medium'>{title}</span>
+              </CardTitle>
+            </CardHeader>
+          )}
+          <section id='line-chart' ref={lineChartRef}></section>
+        </Card>
+      </motion.button>
+    ) : null
   );
 }
