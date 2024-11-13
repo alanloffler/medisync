@@ -21,7 +21,7 @@ export class DashboardApiService {
 
   public static async latestAppointments(limit: number) {
     const url: string = `${this.API_URL}/dashboard/latestAppointments?l=${limit}`;
-    return this.fetch(url, 'GET');
+    return await this.fetch(url, 'GET');
   }
 
   public static async countUsers() {
@@ -40,7 +40,7 @@ export class DashboardApiService {
 
   public static async latestUsers(limit: number) {
     const url: string = `${this.API_URL}/dashboard/latestUsers?l=${limit}`;
-    return this.fetch(url, 'GET');
+    return await this.fetch(url, 'GET');
   }
 
   public static async countProfessionals() {
@@ -55,6 +55,11 @@ export class DashboardApiService {
     if (value2.statusCode > 399) return { statusCode: value2.statusCode, message: value2.message, data: undefined };
 
     return { statusCode: 200, message: 'Professionals count found', data: { value1: value1.data, value2: value2.data } };
+  }
+
+  public static async apposChartData() {
+    const url: string = `${this.API_URL}/dashboard/apposChartData`;
+    return await this.fetch(url, 'GET');
   }
 
   private static async fetch(url: string, method: string) {
