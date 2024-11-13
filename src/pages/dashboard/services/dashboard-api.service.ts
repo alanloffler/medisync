@@ -57,8 +57,8 @@ export class DashboardApiService {
     return { statusCode: 200, message: 'Professionals count found', data: { value1: value1.data, value2: value2.data } };
   }
 
-  public static async apposChartData() {
-    const url: string = `${this.API_URL}/dashboard/apposChartData`;
+  public static async apposDaysCount(days: number) {
+    const url: string = `${this.API_URL}/dashboard/apposDaysCount?d=${days}`;
     return await this.fetch(url, 'GET');
   }
 
