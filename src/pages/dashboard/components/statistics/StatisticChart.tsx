@@ -16,7 +16,7 @@ export function StatisticChart({ height, labels, margin, options, path, title }:
   
   const { data, isLoading, error } = useQuery({
     queryKey: ['dashboard', 'appos-chart'],
-    queryFn: async () => await DashboardApiService.apposChartData(),
+    queryFn: async () => await DashboardApiService.apposDaysCount(30),
     refetchOnWindowFocus: false,
     retry: 1,
   });
@@ -41,7 +41,7 @@ export function StatisticChart({ height, labels, margin, options, path, title }:
     if (!processedData || processedData.length === 0) return;
 
     const y = d3.scaleLinear().range([_height, 0]);
-    y.domain([minRange ? minRange - _margin.bottom : 0 - _margin.bottom, d3.max(processedData, (d) => d.value) ?? 0]);
+    y.domain([minRange ? minRange - (minRange / 2) : 0 - _margin.bottom, d3.max(processedData, (d) => d.value) ?? 0]);
 
     function drawChart(): void {
       const lineChart = lineChartRef.current;
@@ -116,7 +116,7 @@ export function StatisticChart({ height, labels, margin, options, path, title }:
     drawChart();
 
     addEventListener('resize', drawChart);
-    
+
     return () => removeEventListener('resize', drawChart);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
