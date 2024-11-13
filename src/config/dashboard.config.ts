@@ -12,10 +12,18 @@ export const DASHBOARD_CONFIG = {
     title: 'Usuarios recientes',
   },
   statisticGroup: {
-    charts:[
+    charts: [
       {
+        height: 80,
+        label: {
+          x: 'F',
+          y: 'T',
+        },
+        margin: { top: 20, right: 50, bottom: 10, left: 50 },
+        options: { axisX: true, axisY: true },
+        path: '/appointments',
         title: 'Turnos diarios',
-      }
+      },
     ],
     items: [
       {
