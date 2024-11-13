@@ -75,7 +75,7 @@ export function Statistic({ children, content, error, isLoading, path, title, va
       whileHover='animate'
       variants={animation.item}
     >
-      <Card>
+      <Card className='h-full'>
         {isLoading ? (
           <LoadingDB size='box' iconSize={32} empty className='relative top-1/2 -translate-y-1/2 p-6 py-6' />
         ) : error ? (
