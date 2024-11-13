@@ -1,15 +1,16 @@
-// Icons: https://lucide.dev
-// import { LineChart } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
-import { Card } from '@core/components/ui/card';
+import { Card, CardHeader, CardTitle } from '@core/components/ui/card';
 // External imports
 import * as d3 from 'd3';
+import { motion } from 'motion/react';
 import { useEffect, useRef } from 'react';
+// Imports
+import type { IStatisticChart, IChartData, IChartDataProcessed, IChartMargin } from '@dashboard/interfaces/statistic.interface';
 // React component
-export function StatisticChart() {
+export function StatisticChart({ title }: IStatisticChart) {
   const lineChartRef = useRef<HTMLDivElement>(null);
 
-  const data: { date: string; value: number }[] = [
+  const data: IChartData[] = [
     { date: '2024-05-01', value: 139.89 },
     { date: '2024-05-02', value: 125.6 },
     { date: '2024-05-03', value: 108.13 },
@@ -23,40 +24,40 @@ export function StatisticChart() {
     { date: '2024-05-11', value: 147.49 },
   ];
 
+  const processedData: IChartDataProcessed[] = data.map((d) => ({
+    date: new Date(d.date),
+    value: d.value,
+  }));
+
+  const minRange: number = d3.min(data, (d) => d.value) || 0;
+  const margin: IChartMargin = { top: 10, right: 20, bottom: 20, left: 20 };
+  const height: number = 80 - margin.top - margin.bottom;
+
   useEffect(() => {
-    const lineChart = lineChartRef.current;
+    const y = d3.scaleLinear().range([height, 0]);
+    y.domain([minRange ? minRange - margin.bottom : 0 - margin.bottom, d3.max(processedData, (d) => d.value) ?? 0]);
 
-    if (lineChart) {
-      const svgElement = lineChart.querySelector('svg');
-      if (svgElement) svgElement.remove();
-    }
+    function drawChart(): void {
+      const lineChart = lineChartRef.current;
 
-    const minRange = d3.min(data, (d) => d.value);
+      if (lineChart) {
+        const svgElement = lineChart.querySelector('svg');
+        if (svgElement) svgElement.remove();
+      }
 
-    async function createGraph(): Promise<void> {
-      const processedData = data.map((d) => ({
-        date: new Date(d.date),
-        value: d.value,
-      }));
+      const currentWidth: number = parseInt(d3.select('#line-chart').style('width'), 10) - margin.left - margin.right;
 
-      // TODO: Make chart responsive
-      const margin = { top: 20, right: 10, bottom: 10, left: 10 },
-        width = 230 - margin.left - margin.right,
-        height = 85 - margin.top - margin.bottom;
+      const x = d3.scaleTime().range([0, currentWidth]);
+
+      x.domain(d3.extent(processedData, (d) => d.date) as [Date, Date]);
 
       const svg = d3
         .select('#line-chart')
         .append('svg')
-        .attr('width', width + margin.left + margin.right)
+        .attr('width', currentWidth + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom)
         .append('g')
         .attr('transform', `translate(${margin.left}, ${margin.top})`);
-
-      const x = d3.scaleTime().range([0, width]);
-      const y = d3.scaleLinear().range([height, 0]);
-
-      x.domain(d3.extent(processedData, (d) => d.date) as [Date, Date]);
-      y.domain([minRange ? minRange - margin.bottom : 0 - margin.bottom, d3.max(processedData, (d) => d.value) ?? 0]);
 
       svg
         .append('g')
@@ -69,7 +70,7 @@ export function StatisticChart() {
 
       svg
         .append('text')
-        .attr('x', width - margin.right / 2)
+        .attr('x', currentWidth - margin.right / 2)
         .attr('y', height - 5)
         .style('text-anchor', 'middle')
         .style('font-size', '11px')
@@ -79,7 +80,6 @@ export function StatisticChart() {
 
       svg
         .append('text')
-        // .attr('transform', 'rotate(-90)')
         .attr('x', 10)
         .attr('y', 5)
         .style('text-anchor', 'middle')
@@ -100,21 +100,42 @@ export function StatisticChart() {
         .attr('fill', 'none')
         .attr('stroke', '#a3e635')
         .attr('stroke-width', 2.5)
-        .attr('stroke-linejoin', 'round')
         .attr('stroke-linecap', 'round')
+        .attr('stroke-linejoin', 'round')
         .attr('d', valueLine);
     }
 
-    createGraph();
+    drawChart();
+
+    addEventListener('resize', drawChart);
+
+    return () => removeEventListener('resize', drawChart);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const animation = {
+    item: {
+      initial: { scale: 1 },
+      animate: { scale: 1.05, transition: { type: 'spring', stiffness: 800, damping: 20, duration: 0.2, delay: 0 } }, // slate-200
+    },
+  };
+
   return (
-    <Card className='bg-emerald-500 p-3'>
-      <header className='w-fit rounded-md bg-emerald-600 px-2 py-1 text-left text-xsm font-medium text-emerald-100'>
-        <span>Turnos diarios</span>
-      </header>
-      <section id='line-chart' ref={lineChartRef}></section>
-    </Card>
+    <motion.button
+      className='rounded-lg border border-transparent'
+      initial='initial'
+      animate='initial'
+      whileHover='animate'
+      variants={animation.item}
+    >
+      <Card className='bg-emerald-500'>
+        <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+          <CardTitle className='flex bg-emerald-600 px-2 py-1 text-primary-foreground'>
+            <span className='text-xsm font-medium'>{title}</span>
+          </CardTitle>
+        </CardHeader>
+        <section id='line-chart' ref={lineChartRef}></section>
+      </Card>
+    </motion.button>
   );
 }
