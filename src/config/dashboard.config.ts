@@ -12,6 +12,11 @@ export const DASHBOARD_CONFIG = {
     title: 'Usuarios recientes',
   },
   statisticGroup: {
+    charts:[
+      {
+        title: 'Turnos diarios',
+      }
+    ],
     items: [
       {
         content: 'el último mes',
