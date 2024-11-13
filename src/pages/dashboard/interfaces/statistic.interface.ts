@@ -10,3 +10,24 @@ export interface IStatistic {
   value1?: string;
   value2?: string;
 }
+
+export interface IStatisticChart {
+  title: string;
+}
+
+export interface IChartData {
+  date: string;
+  value: number;
+}
+
+export interface IChartDataProcessed {
+  date: Date;
+  value: number;
+}
+
+export interface IChartMargin {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+}
