@@ -158,8 +158,8 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
 
   if (isError) {
     return (
-      <Card className={cn('flex flex-col items-center justify-center p-3', mediumColor)}>
-        <InfoCard text={error.name} type='error' />
+      <Card className='flex flex-col items-center justify-center p-3'>
+        <InfoCard text={error.name} type='error' className='font-light' />
       </Card>
     );
   }
@@ -183,7 +183,11 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
               <section className={cn('flex flex-row space-x-1 text-[11px] font-normal', lightColor)}>
                 {days.length > 0 &&
                   days.map((day) => (
-                    <button className={`rounded-sm p-1 leading-none ${daysAgo === day.value && darkColor}`} onClick={() => setDaysAgo(day.value)}>
+                    <button
+                      className={`rounded-sm p-1 leading-none ${daysAgo === day.value && darkColor}`}
+                      key={crypto.randomUUID()}
+                      onClick={() => setDaysAgo(day.value)}
+                    >
                       {day.text}
                     </button>
                   ))}
