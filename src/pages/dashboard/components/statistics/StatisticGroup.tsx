@@ -8,25 +8,9 @@ import { StatisticChart } from '@dashboard/components/statistics/StatisticChart'
 // External imports
 import { useQuery } from '@tanstack/react-query';
 // Imports
-// import type { IChartData } from '@dashboard/interfaces/statistic.interface';
 import { DASHBOARD_CONFIG } from '@config/dashboard.config';
 import { DashboardApiService } from '@dashboard/services/dashboard-api.service';
 import { useDelimiter } from '@core/hooks/useDelimiter';
-
-// const data: IChartData[] = [
-//   { date: '2024-05-01', value: 139.89 },
-//   { date: '2024-05-02', value: 125.6 },
-//   { date: '2024-05-03', value: 108.13 },
-//   { date: '2024-05-04', value: 115 },
-//   { date: '2024-05-05', value: 118.8 },
-//   { date: '2024-05-06', value: 124.66 },
-//   { date: '2024-05-07', value: 113.44 },
-//   { date: '2024-05-08', value: 115.78 },
-//   { date: '2024-05-09', value: 122 },
-//   { date: '2024-05-10', value: 135.98 },
-//   { date: '2024-05-11', value: 147.49 },
-// ];
-
 // React component
 export function StatisticGroup() {
   const delimiter = useDelimiter();
