@@ -43,3 +43,9 @@ interface IChartLabels {
   x: string;
   y: string;
 }
+
+export interface IChartDays {
+  text: string;
+  value: number;
+  default?: boolean;
+}
