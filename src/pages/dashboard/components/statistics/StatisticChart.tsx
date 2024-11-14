@@ -1,5 +1,8 @@
 // External components: https://ui.shadcn.com/docs/components
 import { Card, CardHeader, CardTitle } from '@core/components/ui/card';
+// Components
+import { InfoCard } from '@core/components/common/InfoCard';
+import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
 import * as d3 from 'd3';
 import { motion } from 'motion/react';
@@ -13,15 +16,15 @@ import { DashboardApiService } from '@dashboard/services/dashboard-api.service';
 export function StatisticChart({ height, labels, margin, options, path, title }: IStatisticChart) {
   const navigate = useNavigate();
   const lineChartRef = useRef<HTMLDivElement>(null);
-  
-  const { data, isLoading, error } = useQuery({
+
+  const { data, isError, isLoading, isSuccess, error } = useQuery({
     queryKey: ['dashboard', 'appos-chart'],
     queryFn: async () => await DashboardApiService.apposDaysCount(30),
     refetchOnWindowFocus: false,
     retry: 1,
   });
 
-  const processedData: IChartDataProcessed[] = Array.isArray(data?.data) 
+  const processedData: IChartDataProcessed[] = Array.isArray(data?.data)
     ? data.data.map((d: IChartData) => ({
         date: new Date(d.date),
         value: d.value,
@@ -38,10 +41,10 @@ export function StatisticChart({ height, labels, margin, options, path, title }:
   if (!labels) labels = { x: '', y: '' };
 
   useEffect(() => {
-    if (!processedData || processedData.length === 0) return;
+    if (!processedData || (processedData.length === 0 && !isSuccess)) return;
 
     const y = d3.scaleLinear().range([_height, 0]);
-    y.domain([minRange ? minRange - (minRange / 2) : 0 - _margin.bottom, d3.max(processedData, (d) => d.value) ?? 0]);
+    y.domain([minRange ? minRange - minRange / 2 : 0 - _margin.bottom, d3.max(processedData, (d) => d.value) ?? 0]);
 
     function drawChart(): void {
       const lineChart = lineChartRef.current;
@@ -71,8 +74,7 @@ export function StatisticChart({ height, labels, margin, options, path, title }:
           .attr('color', '#6ee7b7')
           .call(d3.axisBottom(x).ticks(0).tickSizeOuter(0));
 
-      if (options && options.axisX)
-        svg.append('g').attr('stroke-width', 1.5).attr('color', '#6ee7b7').call(d3.axisLeft(y).ticks(0).tickSizeOuter(0));
+      if (options && options.axisX) svg.append('g').attr('stroke-width', 1.5).attr('color', '#6ee7b7').call(d3.axisLeft(y).ticks(0).tickSizeOuter(0));
 
       if (labels) {
         svg
@@ -118,7 +120,7 @@ export function StatisticChart({ height, labels, margin, options, path, title }:
     addEventListener('resize', drawChart);
 
     return () => removeEventListener('resize', drawChart);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   const animation = {
@@ -128,30 +130,41 @@ export function StatisticChart({ height, labels, margin, options, path, title }:
     },
   };
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error loading data</div>;
+  if (isLoading) {
+    return (
+      <Card className='flex flex-col items-center justify-center p-3'>
+        <LoadingDB size='box' iconSize={32} empty />
+      </Card>
+    );
+  }
 
-  return (
-    data && data?.data?.length > 0 ? (
-      <motion.button
-        className='rounded-lg border border-transparent'
-        initial='initial'
-        animate='initial'
-        whileHover='animate'
-        variants={animation.item}
-        onClick={() => path && path !== '' && navigate(path)}
-      >
-        <Card className='h-full bg-emerald-500'>
-          {title && (
-            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className='flex bg-emerald-600 px-2 py-1 text-primary-foreground'>
-                <span className='text-xsm font-medium'>{title}</span>
-              </CardTitle>
-            </CardHeader>
-          )}
-          <section id='line-chart' ref={lineChartRef}></section>
-        </Card>
-      </motion.button>
-    ) : null
-  );
+  if (isError) {
+    return (
+      <Card className='flex flex-col items-center justify-center p-3'>
+        <InfoCard text={error.name} type='error' />
+      </Card>
+    );
+  }
+
+  return data && data?.data?.length > 0 ? (
+    <motion.button
+      className='rounded-lg border border-transparent'
+      initial='initial'
+      animate='initial'
+      whileHover='animate'
+      variants={animation.item}
+      onClick={() => path && path !== '' && navigate(path)}
+    >
+      <Card className='h-full bg-emerald-500'>
+        {title && (
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+            <CardTitle className='flex bg-emerald-600 px-2 py-1 text-primary-foreground'>
+              <span className='text-xsm font-medium'>{title}</span>
+            </CardTitle>
+          </CardHeader>
+        )}
+        <section id='line-chart' ref={lineChartRef}></section>
+      </Card>
+    </motion.button>
+  ) : null;
 }
