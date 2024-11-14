@@ -1,3 +1,4 @@
+import type { IResponse } from '@core/interfaces/response.interface';
 import type { ReactNode } from 'react';
 
 export interface IStatistic {
@@ -12,6 +13,7 @@ export interface IStatistic {
 }
 
 export interface IStatisticChart {
+  fetchChartData: (days: number) => Promise<IResponse>;
   height?: number;
   labels?: IChartLabels;
   margin?: IChartMargin;
