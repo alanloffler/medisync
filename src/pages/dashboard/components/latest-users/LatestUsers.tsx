@@ -43,6 +43,10 @@ export function LatestUsers() {
       initial: { x: 0 },
       animate: { x: -5 },
     },
+    line: {
+      initial: { scaleX: 1, x: 0 },
+      animate: { scaleX: 0.9, x: 5 },
+    },
     user: {
       initial: { x: 0 },
       animate: { x: 15 },
@@ -60,7 +64,7 @@ export function LatestUsers() {
             !isLoading &&
             latestUsers?.data.map((user: IUser) => (
               <motion.button
-                className='-ml-6 flex flex-row items-center justify-between space-x-2 p-1 text-sm'
+                className='-ml-6 flex flex-row items-center space-x-3 p-1 text-sm'
                 key={crypto.randomUUID()}
                 onClick={() => navigate(`/users/${user._id}`)}
                 animate='initial'
@@ -73,9 +77,10 @@ export function LatestUsers() {
                   </motion.span>
                   <span>{`${capitalize(user.firstName)} ${capitalize(user.lastName)}`}</span>
                 </motion.div>
+                <motion.div className='h-[1px] grow bg-slate-200' variants={animation.line}></motion.div>
                 <motion.div
                   variants={animation.date}
-                  className='flex w-fit flex-row items-center space-x-2 rounded-sm bg-orange-200 p-1 pr-2 text-orange-700'
+                  className='flex flex-row items-center space-x-2 rounded-sm bg-orange-200 p-1 pr-2 text-orange-700'
                 >
                   <CalendarPlus size={16} strokeWidth={1.5} />
                   <p className='text-xs'>{`${format(user.createdAt, 'DD')} ${capitalize(format(user.createdAt, 'MMM'))}`}</p>
