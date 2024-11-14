@@ -6,20 +6,22 @@ import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
 import * as d3 from 'd3';
 import { motion } from 'motion/react';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 // Imports
-import type { IStatisticChart, IChartDataProcessed, IChartMargin, IChartData } from '@dashboard/interfaces/statistic.interface';
-import { DashboardApiService } from '@dashboard/services/dashboard-api.service';
+import type { IStatisticChart, IChartDataProcessed, IChartMargin, IChartData, IChartDays } from '@dashboard/interfaces/statistic.interface';
+import { DASHBOARD_CONFIG } from '@config/dashboard.config';
 // React component
-export function StatisticChart({ height, labels, margin, options, path, title }: IStatisticChart) {
+export function StatisticChart({ fetchChartData, height, labels, margin, options, path, title }: IStatisticChart) {
+  const days: IChartDays[] = DASHBOARD_CONFIG.statisticGroup.charts[0].days;
+  const [daysAgo, setDaysAgo] = useState<number>(days.find((d) => d.default)?.value || days[0].value);
   const navigate = useNavigate();
   const lineChartRef = useRef<HTMLDivElement>(null);
 
   const { data, isError, isLoading, isSuccess, error } = useQuery({
-    queryKey: ['dashboard', 'appos-chart'],
-    queryFn: async () => await DashboardApiService.apposDaysCount(30),
+    queryKey: ['dashboard', 'appos-chart', daysAgo],
+    queryFn: () => fetchChartData(daysAgo),
     refetchOnWindowFocus: false,
     retry: 1,
   });
@@ -146,25 +148,42 @@ export function StatisticChart({ height, labels, margin, options, path, title }:
     );
   }
 
-  return data && data?.data?.length > 0 ? (
-    <motion.button
-      className='rounded-lg border border-transparent'
-      initial='initial'
-      animate='initial'
-      whileHover='animate'
-      variants={animation.item}
-      onClick={() => path && path !== '' && navigate(path)}
-    >
-      <Card className='h-full bg-emerald-500'>
-        {title && (
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='flex bg-emerald-600 px-2 py-1 text-primary-foreground'>
-              <span className='text-xsm font-medium'>{title}</span>
-            </CardTitle>
-          </CardHeader>
-        )}
-        <section id='line-chart' ref={lineChartRef}></section>
-      </Card>
-    </motion.button>
-  ) : null;
+  return (
+    data &&
+    data?.data?.length > 0 && (
+      <motion.section
+        className='rounded-lg border border-transparent'
+        initial='initial'
+        animate='initial'
+        variants={animation.item}
+        whileHover='animate'
+      >
+        <Card className='h-full bg-emerald-500'>
+          {title && (
+            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+              <CardTitle className='flex bg-emerald-600 px-2 py-1 text-primary-foreground'>
+                <span className='text-xsm font-medium'>{title}</span>
+              </CardTitle>
+              <section className='flex flex-row space-x-1 text-[11px] font-normal text-lime-400'>
+                {DASHBOARD_CONFIG.statisticGroup.charts[0].days.map((day) => (
+                  <button
+                    className={`rounded-sm p-1 leading-none ${daysAgo === day.value && 'bg-emerald-600'}`}
+                    onClick={() => setDaysAgo(day.value)}
+                  >
+                    {day.text}
+                  </button>
+                ))}
+              </section>
+            </CardHeader>
+          )}
+          <motion.section
+            className='cursor-pointer'
+            id='line-chart'
+            ref={lineChartRef}
+            onClick={() => path && path !== '' && navigate(path)}
+          ></motion.section>
+        </Card>
+      </motion.section>
+    )
+  );
 }
