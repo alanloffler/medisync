@@ -12,8 +12,15 @@ import { useQuery } from '@tanstack/react-query';
 // Imports
 import type { IStatisticChart, IChartDataProcessed, IChartMargin, IChartData, IChartDays } from '@dashboard/interfaces/statistic.interface';
 import { DASHBOARD_CONFIG } from '@config/dashboard.config';
+import { cn } from '@lib/utils';
 // Constants
 const days: IChartDays[] = DASHBOARD_CONFIG.statisticGroup.charts[0].days;
+const extralightColor: string = 'fill-emerald-100';
+const lightColor: string = 'text-lime-400';
+const mediumColor: string = 'bg-emerald-500';
+const darkColor: string = 'bg-emerald-600';
+const axisColor: string = '#a7f3d0';
+const lineColor: string = '#a3e635';
 // React component
 export function StatisticChart({ fetchChartData, height, labels, margin, options, path, title }: IStatisticChart) {
   const [daysAgo, setDaysAgo] = useState<number>(handleDaysAgo());
@@ -81,11 +88,11 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
         svg
           .append('g')
           .attr('transform', `translate(0, ${_height})`)
-          .attr('stroke-width', 1.5)
-          .attr('color', '#6ee7b7')
+          .attr('stroke-width', 1)
+          .attr('color', axisColor)
           .call(d3.axisBottom(x).ticks(0).tickSizeOuter(0));
 
-      if (options && options.axisX) svg.append('g').attr('stroke-width', 1.5).attr('color', '#6ee7b7').call(d3.axisLeft(y).ticks(0).tickSizeOuter(0));
+      if (options && options.axisX) svg.append('g').attr('stroke-width', 1).attr('color', axisColor).call(d3.axisLeft(y).ticks(0).tickSizeOuter(0));
 
       if (labels) {
         svg
@@ -95,7 +102,7 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
           .style('text-anchor', 'middle')
           .style('font-size', '11px')
           .style('font-weight', '600')
-          .style('fill', '#6ee7b7')
+          .style('fill', axisColor)
           .text(labels.x);
 
         svg
@@ -105,7 +112,7 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
           .style('text-anchor', 'middle')
           .style('font-size', '11px')
           .style('font-weight', '600')
-          .style('fill', '#6ee7b7')
+          .style('fill', axisColor)
           .text(labels.y);
       }
 
@@ -119,7 +126,7 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
         .datum(processedData)
         .attr('class', 'line')
         .attr('fill', 'none')
-        .attr('stroke', '#a3e635')
+        .attr('stroke', lineColor)
         .attr('stroke-width', 2)
         .attr('stroke-linecap', 'round')
         .attr('stroke-linejoin', 'round')
@@ -143,15 +150,15 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
 
   if (isLoading) {
     return (
-      <Card className='flex flex-col items-center justify-center p-3'>
-        <LoadingDB size='box' iconSize={32} empty />
+      <Card className={cn('flex flex-col items-center justify-center p-3', mediumColor)}>
+        <LoadingDB size='box' iconSize={32} empty spinnerColor={extralightColor} />
       </Card>
     );
   }
 
   if (isError) {
     return (
-      <Card className='flex flex-col items-center justify-center p-3'>
+      <Card className={cn('flex flex-col items-center justify-center p-3', mediumColor)}>
         <InfoCard text={error.name} type='error' />
       </Card>
     );
@@ -167,19 +174,16 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
         variants={animation.item}
         whileHover='animate'
       >
-        <Card className='h-full bg-emerald-500'>
+        <Card className={cn('h-full', mediumColor)}>
           {title && (
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className='flex bg-emerald-600 px-2 py-1 text-primary-foreground'>
+              <CardTitle className={cn('flex px-2 py-1 text-primary-foreground', darkColor)}>
                 <span className='text-xsm font-medium'>{title}</span>
               </CardTitle>
-              <section className='flex flex-row space-x-1 text-[11px] font-normal text-lime-400'>
+              <section className={cn('flex flex-row space-x-1 text-[11px] font-normal', lightColor)}>
                 {days.length > 0 &&
                   days.map((day) => (
-                    <button
-                      className={`rounded-sm p-1 leading-none ${daysAgo === day.value && 'bg-emerald-600'}`}
-                      onClick={() => setDaysAgo(day.value)}
-                    >
+                    <button className={`rounded-sm p-1 leading-none ${daysAgo === day.value && darkColor}`} onClick={() => setDaysAgo(day.value)}>
                       {day.text}
                     </button>
                   ))}
