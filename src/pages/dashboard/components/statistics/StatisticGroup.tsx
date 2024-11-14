@@ -102,6 +102,7 @@ export function StatisticGroup() {
           <HealthBadgeId size={24} strokeWidth={2} className='text-emerald-400' />
         </Statistic>
         <StatisticChart
+          fetchChartData={async (days) => await DashboardApiService.apposDaysCount(days)}
           height={DASHBOARD_CONFIG.statisticGroup.charts[0].height}
           labels={DASHBOARD_CONFIG.statisticGroup.charts[0].label}
           margin={DASHBOARD_CONFIG.statisticGroup.charts[0].margin}
