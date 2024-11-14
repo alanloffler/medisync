@@ -12,12 +12,21 @@ import { useQuery } from '@tanstack/react-query';
 // Imports
 import type { IStatisticChart, IChartDataProcessed, IChartMargin, IChartData, IChartDays } from '@dashboard/interfaces/statistic.interface';
 import { DASHBOARD_CONFIG } from '@config/dashboard.config';
+// Constants
+const days: IChartDays[] = DASHBOARD_CONFIG.statisticGroup.charts[0].days;
 // React component
 export function StatisticChart({ fetchChartData, height, labels, margin, options, path, title }: IStatisticChart) {
-  const days: IChartDays[] = DASHBOARD_CONFIG.statisticGroup.charts[0].days;
-  const [daysAgo, setDaysAgo] = useState<number>(days.find((d) => d.default)?.value || days[0].value);
+  const [daysAgo, setDaysAgo] = useState<number>(handleDaysAgo());
   const navigate = useNavigate();
   const lineChartRef = useRef<HTMLDivElement>(null);
+
+  function handleDaysAgo(): number {
+    if (days.length > 0) {
+      return days.find((d) => d.default)?.value || days[0].value;
+    } else {
+      return 7;
+    }
+  }
 
   const { data, isError, isLoading, isSuccess, error } = useQuery({
     queryKey: ['dashboard', 'appos-chart', daysAgo],
@@ -165,14 +174,15 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
                 <span className='text-xsm font-medium'>{title}</span>
               </CardTitle>
               <section className='flex flex-row space-x-1 text-[11px] font-normal text-lime-400'>
-                {DASHBOARD_CONFIG.statisticGroup.charts[0].days.map((day) => (
-                  <button
-                    className={`rounded-sm p-1 leading-none ${daysAgo === day.value && 'bg-emerald-600'}`}
-                    onClick={() => setDaysAgo(day.value)}
-                  >
-                    {day.text}
-                  </button>
-                ))}
+                {days.length > 0 &&
+                  days.map((day) => (
+                    <button
+                      className={`rounded-sm p-1 leading-none ${daysAgo === day.value && 'bg-emerald-600'}`}
+                      onClick={() => setDaysAgo(day.value)}
+                    >
+                      {day.text}
+                    </button>
+                  ))}
               </section>
             </CardHeader>
           )}
