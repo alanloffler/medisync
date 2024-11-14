@@ -14,6 +14,11 @@ export const DASHBOARD_CONFIG = {
   statisticGroup: {
     charts: [
       {
+        days: [
+          { text: '7d', value: 7, default: true },
+          { text: '1m', value: 30 },
+          { text: '1y', value: 365 },
+        ],
         height: 80,
         label: {
           x: 'F',
