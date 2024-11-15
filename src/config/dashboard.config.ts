@@ -25,7 +25,7 @@ export const DASHBOARD_CONFIG = {
           y: 'T',
         },
         margin: { top: 20, right: 20, bottom: 20, left: 20 },
-        options: { axisX: true, axisY: true },
+        options: { axisX: false, axisY: false },
         path: '/appointments',
         title: 'Turnos diarios',
       },
