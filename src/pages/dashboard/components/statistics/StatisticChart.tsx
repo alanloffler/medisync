@@ -15,7 +15,7 @@ import { DASHBOARD_CONFIG } from '@config/dashboard.config';
 import { cn } from '@lib/utils';
 // Constants
 const days: IChartDays[] = DASHBOARD_CONFIG.statisticGroup.charts[0].days;
-const axisColor: string = '#0ea5e900'; // '#f0f9ff'
+const axisColor: string = '#f0f9ff';
 const bgColor: string = 'bg-sky-200';
 const darkColor: string = 'bg-sky-500';
 const darkTextColor: string = 'text-sky-500';
@@ -112,7 +112,7 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
 
       if (options && options.axisX) svg.append('g').attr('stroke-width', 1).attr('color', axisColor).call(d3.axisLeft(y).ticks(0).tickSizeOuter(0));
 
-      if (labels) {
+      if (labels && options.axisX && options.axisY) {
         svg
           .append('text')
           .attr('x', currentWidth - 5)
