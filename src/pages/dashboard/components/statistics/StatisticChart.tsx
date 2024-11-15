@@ -15,12 +15,14 @@ import { DASHBOARD_CONFIG } from '@config/dashboard.config';
 import { cn } from '@lib/utils';
 // Constants
 const days: IChartDays[] = DASHBOARD_CONFIG.statisticGroup.charts[0].days;
-const extralightColor: string = 'fill-emerald-100';
-const lightColor: string = 'text-lime-400';
-const mediumColor: string = 'bg-emerald-500';
-const darkColor: string = 'bg-emerald-600';
-const axisColor: string = '#a7f3d0';
-const lineColor: string = '#a3e635';
+const axisColor: string = '#0ea5e900'; // '#f0f9ff'
+const bgColor: string = 'bg-sky-200';
+const darkColor: string = 'bg-sky-500';
+const darkTextColor: string = 'text-sky-500';
+const lightTextColor: string = 'text-sky-100';
+const lineColor: string = '#ec4899'; // '#f472b6'
+const spinnerColor: string = 'fill-sky-500';
+const titleColor: string = 'text-white';
 // React component
 export function StatisticChart({ fetchChartData, height, labels, margin, options, path, title }: IStatisticChart) {
   const [daysAgo, setDaysAgo] = useState<number>(handleDaysAgo());
@@ -84,6 +86,22 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
         .append('g')
         .attr('transform', `translate(${_margin.left}, ${_margin.top})`);
 
+      const valueLine = d3
+        .line<{ date: Date; value: number }>()
+        .x((d) => x(d.date))
+        .y((d) => y(d.value));
+
+      svg
+        .append('path')
+        .datum(processedData)
+        .attr('class', 'line')
+        .attr('fill', 'none')
+        .attr('stroke', lineColor)
+        .attr('stroke-width', 1.5)
+        .attr('stroke-linecap', 'round')
+        .attr('stroke-linejoin', 'round')
+        .attr('d', valueLine);
+
       if (options && options.axisY)
         svg
           .append('g')
@@ -115,22 +133,6 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
           .style('fill', axisColor)
           .text(labels.y);
       }
-
-      const valueLine = d3
-        .line<{ date: Date; value: number }>()
-        .x((d) => x(d.date))
-        .y((d) => y(d.value));
-
-      svg
-        .append('path')
-        .datum(processedData)
-        .attr('class', 'line')
-        .attr('fill', 'none')
-        .attr('stroke', lineColor)
-        .attr('stroke-width', 2)
-        .attr('stroke-linecap', 'round')
-        .attr('stroke-linejoin', 'round')
-        .attr('d', valueLine);
     }
 
     drawChart();
@@ -150,8 +152,8 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
 
   if (isLoading) {
     return (
-      <Card className={cn('flex flex-col items-center justify-center p-3', mediumColor)}>
-        <LoadingDB size='box' iconSize={32} empty spinnerColor={extralightColor} />
+      <Card className={cn('flex flex-col items-center justify-center p-3', bgColor)}>
+        <LoadingDB size='box' iconSize={32} empty spinnerColor={spinnerColor} />
       </Card>
     );
   }
@@ -174,17 +176,17 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
         variants={animation.item}
         whileHover='animate'
       >
-        <Card className={cn('h-full', mediumColor)}>
+        <Card className={cn('h-full', bgColor)}>
           {title && (
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className={cn('flex px-2 py-1 text-primary-foreground', darkColor)}>
+              <CardTitle className={cn('flex px-2 py-1 text-primary-foreground', darkColor, titleColor)}>
                 <span className='text-xsm font-medium'>{title}</span>
               </CardTitle>
-              <section className={cn('flex flex-row space-x-1 text-[11px] font-normal', lightColor)}>
+              <section className={cn('flex flex-row space-x-1 text-[11px] font-normal', darkTextColor)}>
                 {days.length > 0 &&
                   days.map((day) => (
                     <button
-                      className={`rounded-sm p-1 leading-none ${daysAgo === day.value && darkColor}`}
+                      className={`rounded-sm p-1 leading-none ${daysAgo === day.value && `${darkColor} ${lightTextColor}`}`}
                       key={crypto.randomUUID()}
                       onClick={() => setDaysAgo(day.value)}
                     >
