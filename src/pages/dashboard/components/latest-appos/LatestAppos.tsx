@@ -1,8 +1,9 @@
 // Icons: https://lucide.dev/icons/
-import { CalendarClock, CalendarPlus } from 'lucide-react';
+import { Clock, CalendarPlus } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Card, CardContent } from '@core/components/ui/card';
 // Components
+import { DashboardTitle } from '@dashboard/components/common/DashboardTitle';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
@@ -18,7 +19,6 @@ import { DashboardApiService } from '@dashboard/services/dashboard-api.service';
 import { USER_CREATE_CONFIG } from '@config/user.config';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useDelimiter } from '@core/hooks/useDelimiter';
-import { DashboardTitle } from '../common/DashboardTitle';
 // React component
 export function LatestAppos() {
   const capitalize = useCapitalize();
@@ -90,10 +90,10 @@ export function LatestAppos() {
                   </motion.div>
                   <motion.div
                     variants={animation.item}
-                    className='flex flex-row items-center space-x-2 rounded-sm bg-emerald-100 p-1 pr-2 text-emerald-600'
+                    className='flex flex-row items-center space-x-1 rounded-sm bg-emerald-100 p-1 pr-2 text-emerald-600'
                   >
-                    <CalendarClock size={16} strokeWidth={1.5} />
-                    <p>{`${format(appo.day, 'DD/MM')} - ${appo.hour}`}</p>
+                    <Clock size={16} strokeWidth={1.5} />
+                    <p>{appo.hour}</p>
                   </motion.div>
                 </div>
               </motion.button>
