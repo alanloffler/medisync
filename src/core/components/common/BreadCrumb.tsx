@@ -12,14 +12,14 @@ export function BreadCrumb({ paths }: { paths: IBreadcrumb[] }) {
       <BreadcrumbList>
         {paths.map((item, index) =>
           index !== paths.length - 1 ? (
-            <BreadcrumbItem key={item.id}>
+            <BreadcrumbItem key={item.id} className='text-xsm'>
               <BreadcrumbLink asChild>
                 <Link to={item.path}>{item.name}</Link>
               </BreadcrumbLink>
               <ChevronRight className='h-3.5 w-3.5' />
             </BreadcrumbItem>
           ) : (
-            <BreadcrumbItem key={item.id}>
+            <BreadcrumbItem key={item.id} className='text-xsm'>
               <BreadcrumbPage>{item.name}</BreadcrumbPage>
             </BreadcrumbItem>
           ),
