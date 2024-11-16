@@ -84,7 +84,7 @@ export const APPO_CONFIG = {
 export const VIEW_APPOINTMENT_CONFIG = {
   breadcrumb: [
     { id: 1, name: 'Inicio', path: '/' },
-    { id: 2, name: 'Turnos', path: '/' },
+    { id: 2, name: 'Turnos', path: '/appointments' },
     { id: 3, name: 'Detalle', path: '' },
   ],
   button: {
