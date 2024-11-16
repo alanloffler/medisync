@@ -1,9 +1,9 @@
 // Icons: https://lucide.dev/icons/
-import { CalendarClock, CalendarDays, Mail, Menu, Quote, Smartphone } from 'lucide-react';
+import { CalendarClock, CalendarDays, Mail, Menu, Quote, Smartphone, Tag, Trash2 } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Badge } from '@core/components/ui/badge';
 import { Button } from '@core/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@core/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@core/components/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '@core/components/ui/dropdown-menu';
 import { Separator } from '@core/components/ui/separator';
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@core/components/ui/tooltip';
@@ -12,6 +12,7 @@ import { BackButton } from '@core/components/common/BackButton';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
+import { RemoveDialog } from '@core/components/common/RemoveDialog';
 // External imports
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { spring, useAnimate } from 'motion/react';
@@ -25,6 +26,7 @@ import { APP_CONFIG } from '@config/app.config';
 import { CalendarService } from '@appointments/services/calendar.service';
 import { PROF_VIEW_CONFIG as PV_CONFIG } from '@config/professionals.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
+import { USER_VIEW_CONFIG } from '@config/user.config';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useCapitalizeFirstLetter } from '@core/hooks/useCapitalizeFirstLetter';
 import { useDelimiter } from '@core/hooks/useDelimiter';
@@ -150,62 +152,75 @@ export default function ViewProfessional() {
             <LoadingDB text={APP_CONFIG.loadingDB.findOneUser} className='-mt-12 py-6' />
           ) : (
             showCard && (
-              <CardContent className='mt-3 space-y-3'>
-                {professional.description && (
-                  <div className='flex flex-row items-center space-x-1'>
-                    <Quote size={8} strokeWidth={0} className='relative bottom-1 rotate-180 fill-black' />
-                    <blockquote className='text-pretty text-base font-normal italic'>{`${capitalizeFirstLetter(professional.description)}`}</blockquote>
-                    <Quote size={8} strokeWidth={0} className='relative bottom-1 fill-black' />
-                  </div>
-                )}
-                <h2 className='pt-2 text-base font-semibold underline underline-offset-4'>{PV_CONFIG.phrases.scheduleTitle}</h2>
-                {professional.configuration?.workingDays && (
-                  <div className='flex items-center space-x-4'>
-                    <CalendarDays size={20} strokeWidth={2} />
-                    <span className='text-base'>{legibleWorkingDays}</span>
-                  </div>
-                )}
-                {professional.configuration?.scheduleTimeInit && professional.configuration?.scheduleTimeEnd && (
-                  <div className='flex items-center space-x-4'>
-                    <CalendarClock size={20} strokeWidth={2} />
-                    <span className='text-base'>
-                      {professional.configuration?.scheduleTimeInit &&
-                        professional.configuration?.scheduleTimeEnd &&
-                        !professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableInit &&
-                        !professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableEnd &&
-                        `${professional.configuration.scheduleTimeInit} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.scheduleTimeEnd}`}
-                      {professional.configuration?.scheduleTimeInit &&
-                        professional.configuration?.scheduleTimeEnd &&
-                        professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableInit &&
-                        professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableEnd &&
-                        `${professional.configuration.scheduleTimeInit} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.unavailableTimeSlot?.timeSlotUnavailableInit} ${PV_CONFIG.words.slotsSeparator} ${professional.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.scheduleTimeEnd}`}
-                    </span>
-                  </div>
-                )}
-                <h2 className='pt-2 text-base font-semibold underline underline-offset-4'>{PV_CONFIG.phrases.contactTitle}</h2>
-                {professional.phone && (
-                  <div className='flex items-center space-x-4'>
-                    <Smartphone size={20} strokeWidth={2} />
-                    <span className='text-base font-medium'>{delimiter(professional.phone, '-', 6)}</span>
-                  </div>
-                )}
-                {professional.email && (
-                  <div className='flex items-center space-x-4'>
-                    <Mail size={20} strokeWidth={2} />
-                    <span className='text-base font-medium'>{professional.email}</span>
-                  </div>
-                )}
-                {professional.area && professional.specialization && (
-                  <div className='flex justify-end space-x-4 pt-3'>
-                    <Badge variant='secondary' className='border border-slate-200 text-sm font-medium'>
-                      {capitalize(professional.area.name)}
-                    </Badge>
-                    <Badge variant='secondary' className='border border-slate-200 text-sm font-medium'>
-                      {capitalize(professional.specialization.name)}
-                    </Badge>
-                  </div>
-                )}
-              </CardContent>
+              <>
+                <CardContent className='mt-3 space-y-3'>
+                  {professional.description && (
+                    <div className='flex flex-row items-center space-x-1'>
+                      <Quote size={8} strokeWidth={0} className='relative bottom-1 rotate-180 fill-black' />
+                      <blockquote className='text-pretty text-base font-normal italic'>{`${capitalizeFirstLetter(professional.description)}`}</blockquote>
+                      <Quote size={8} strokeWidth={0} className='relative bottom-1 fill-black' />
+                    </div>
+                  )}
+                  <h2 className='pt-2 text-base font-semibold underline underline-offset-4'>{PV_CONFIG.phrases.scheduleTitle}</h2>
+                  {professional.configuration?.workingDays && (
+                    <div className='flex items-center space-x-4'>
+                      <CalendarDays size={20} strokeWidth={2} />
+                      <span className='text-base'>{legibleWorkingDays}</span>
+                    </div>
+                  )}
+                  {professional.configuration?.scheduleTimeInit && professional.configuration?.scheduleTimeEnd && (
+                    <div className='flex items-center space-x-4'>
+                      <CalendarClock size={20} strokeWidth={2} />
+                      <span className='text-base'>
+                        {professional.configuration?.scheduleTimeInit &&
+                          professional.configuration?.scheduleTimeEnd &&
+                          !professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableInit &&
+                          !professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableEnd &&
+                          `${professional.configuration.scheduleTimeInit} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.scheduleTimeEnd}`}
+                        {professional.configuration?.scheduleTimeInit &&
+                          professional.configuration?.scheduleTimeEnd &&
+                          professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableInit &&
+                          professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableEnd &&
+                          `${professional.configuration.scheduleTimeInit} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.unavailableTimeSlot?.timeSlotUnavailableInit} ${PV_CONFIG.words.slotsSeparator} ${professional.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.scheduleTimeEnd}`}
+                      </span>
+                    </div>
+                  )}
+                  <h2 className='pt-2 text-base font-semibold underline underline-offset-4'>{PV_CONFIG.phrases.contactTitle}</h2>
+                  {professional.phone && (
+                    <div className='flex items-center space-x-4'>
+                      <Smartphone size={20} strokeWidth={2} />
+                      <span className='text-base font-medium'>{delimiter(professional.phone, '-', 6)}</span>
+                    </div>
+                  )}
+                  {professional.email && (
+                    <div className='flex items-center space-x-4'>
+                      <Mail size={20} strokeWidth={2} />
+                      <span className='text-base font-medium'>{professional.email}</span>
+                    </div>
+                  )}
+                  {professional.area && professional.specialization && (
+                    <div className='flex justify-end space-x-4 pt-3'>
+                      <Badge variant='default'>
+                        <Tag size={13} strokeWidth={2} className='stroke-slate-600' />
+                        <span>{capitalize(professional.area.name)}</span>
+                      </Badge>
+                      <Badge variant='default'>
+                        <Tag size={13} strokeWidth={2} className='stroke-slate-600' />
+                        <span>{capitalize(professional.specialization.name)}</span>
+                      </Badge>
+                    </div>
+                  )}
+                </CardContent>
+                <CardFooter className='justify-end space-x-4 border-t p-2'>
+                  <RemoveDialog
+                    dialogContent='Contenido del diálogo'
+                    dialogTexts={{ title: USER_VIEW_CONFIG.apposRecord.dialog.title, removeButton: 'Eliminar' }}
+                    help={true}
+                    tooltip='Eliminar'
+                    triggerButton={<Trash2 size={16} strokeWidth={1.5} />}
+                  />
+                </CardFooter>
+              </>
             )
           )}
         </Card>
