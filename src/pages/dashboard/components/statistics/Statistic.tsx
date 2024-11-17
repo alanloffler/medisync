@@ -1,5 +1,5 @@
 // External components: https://ui.shadcn.com/docs/components
-import { Card, CardContent, CardHeader, CardTitle } from '@core/components/ui/card';
+import { Card, CardContent } from '@core/components/ui/card';
 // Components
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
@@ -82,14 +82,12 @@ export function Statistic({ children, content, error, isLoading, path, title, va
           <InfoCard text={error.message} type='error' className='relative top-1/2 -translate-y-1/2 p-6 text-xsm font-light text-dark-default' />
         ) : (
           <>
-            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className='flex bg-primary px-2 py-1 text-primary-foreground'>
-                <span className='text-xsm font-medium'>{title}</span>
-              </CardTitle>
-              {children}
-            </CardHeader>
-            <CardContent className='space-y-2 p-4 pt-2'>
-              <div className='flex flex-row items-center text-2xl font-bold text-dark-default'>
+            <section className='flex flex-row items-center justify-between p-4 pb-2'>
+              <span className='text-xsm font-semibold uppercase leading-none text-dark-default'>{title}</span>
+              <div>{children}</div>
+            </section>
+            <CardContent className='space-y-2 p-4 pt-0'>
+              <div className='flex flex-row items-center text-3xl font-bold text-dark-default'>
                 {displayedDigits.map((digit, index) => (
                   <span key={index}>{digit}</span>
                 ))}
