@@ -26,7 +26,6 @@ import { APP_CONFIG } from '@config/app.config';
 import { CalendarService } from '@appointments/services/calendar.service';
 import { PROF_VIEW_CONFIG as PV_CONFIG } from '@config/professionals.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
-import { USER_VIEW_CONFIG } from '@config/user.config';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useCapitalizeFirstLetter } from '@core/hooks/useCapitalizeFirstLetter';
 import { useDelimiter } from '@core/hooks/useDelimiter';
@@ -213,8 +212,17 @@ export default function ViewProfessional() {
                 </CardContent>
                 <CardFooter className='justify-end space-x-4 border-t p-2'>
                   <RemoveDialog
-                    dialogContent='Contenido del diálogo'
-                    dialogTexts={{ title: USER_VIEW_CONFIG.apposRecord.dialog.title, removeButton: 'Eliminar' }}
+                    dialogContent={
+                      <section>
+                        Vas a eliminar al profesional <span className='font-semibold'>{`${capitalize(professional.title.abbreviation)} ${capitalize(professional.firstName)} ${capitalize(professional.lastName)}`}</span>
+                      </section>
+                    }
+                    dialogTexts={{
+                      title: PV_CONFIG.dialog.title,
+                      description: PV_CONFIG.dialog.description,
+                      cancelButton: PV_CONFIG.button.cancel,
+                      removeButton: PV_CONFIG.button.deleteProfessional,
+                    }}
                     help={true}
                     tooltip='Eliminar'
                     triggerButton={<Trash2 size={16} strokeWidth={1.5} />}
