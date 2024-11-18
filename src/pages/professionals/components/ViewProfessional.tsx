@@ -1,21 +1,18 @@
 // Icons: https://lucide.dev/icons/
-import { CalendarClock, CalendarDays, Mail, Menu, Quote, Smartphone, Tag, Trash2 } from 'lucide-react';
+import { CalendarClock, CalendarDays, Mail, Smartphone, Tag, Trash2 } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Badge } from '@core/components/ui/badge';
 import { Button } from '@core/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@core/components/ui/card';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '@core/components/ui/dropdown-menu';
-import { Separator } from '@core/components/ui/separator';
-import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@core/components/ui/tooltip';
+import { Card, CardContent, CardFooter } from '@core/components/ui/card';
 // Components
 import { BackButton } from '@core/components/common/BackButton';
+import { IconMedic } from '@core/components/icons/IconMedic';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
 import { RemoveDialog } from '@core/components/common/RemoveDialog';
 // External imports
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { spring, useAnimate } from 'motion/react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 // Imports
 import type { IEmail } from '@core/interfaces/email.interface';
@@ -38,7 +35,6 @@ export default function ViewProfessional() {
   const [legibleWorkingDays, setLegibleWorkingDays] = useState<string>('');
   const [professional, setProfessional] = useState<IProfessional>({} as IProfessional);
   const [showCard, setShowCard] = useState<boolean>(false);
-  const [dropdownScope, dropdownAnimation] = useAnimate();
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const capitalizeFirstLetter = useCapitalizeFirstLetter();
@@ -89,61 +85,9 @@ export default function ViewProfessional() {
       <section className='mx-auto mt-4 flex w-full flex-row px-2 md:w-[500px]'>
         <Card className='w-full'>
           {showCard ? (
-            <CardHeader>
-              <CardTitle>
-                <div className='relative flex items-center justify-center'>
-                  <h1 className='text-center text-2xl font-bold'>{`${capitalize(professional.title.abbreviation)} ${capitalize(professional.firstName)} ${capitalize(professional.lastName)}`}</h1>
-                  <TooltipProvider delayDuration={0.3}>
-                    <Tooltip>
-                      <DropdownMenu>
-                        <TooltipTrigger asChild>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              className='absolute right-1 flex items-center'
-                              ref={dropdownScope}
-                              size='miniIcon'
-                              variant='tableHeader'
-                              onMouseOver={() =>
-                                dropdownAnimation(dropdownScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                              }
-                              onMouseOut={() =>
-                                dropdownAnimation(dropdownScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                              }
-                            >
-                              <Menu size={16} strokeWidth={2} />
-                            </Button>
-                          </DropdownMenuTrigger>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p className='text-xs font-medium'>{PV_CONFIG.tooltip.dropdown}</p>
-                        </TooltipContent>
-                        <DropdownMenuContent className='w-fit' align='end'>
-                          <DropdownMenuGroup>
-                            {/* Send email */}
-                            <Link
-                              to={`https://mail.google.com/mail/?view=cm&to=${emailObject.to}&su=${emailObject.subject}&body=${emailObject.body}`}
-                              target='_blank'
-                              className='transition-colors hover:text-indigo-500'
-                            >
-                              <DropdownMenuItem>{PV_CONFIG.dropdownMenu[0].name}</DropdownMenuItem>
-                            </Link>
-                            {/* Send whatsapp */}
-                            <Link to={`/whatsapp/professional/${professional._id}`}>
-                              <DropdownMenuItem>{PV_CONFIG.dropdownMenu[1].name}</DropdownMenuItem>
-                            </Link>
-                            {/* Edit user */}
-                            <Separator />
-                            <Link to={`/professionals/update/${professional._id}`}>
-                              <DropdownMenuItem>{PV_CONFIG.dropdownMenu[2].name}</DropdownMenuItem>
-                            </Link>
-                          </DropdownMenuGroup>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </Tooltip>
-                  </TooltipProvider>
-                </div>
-              </CardTitle>
-            </CardHeader>
+            <div className='relative flex items-center justify-center rounded-t-lg bg-slate-200 p-3 text-slate-700'>
+              <h1 className='text-center text-xl font-bold'>{`${capitalize(professional.title.abbreviation)} ${capitalize(professional.firstName)} ${capitalize(professional.lastName)}`}</h1>
+            </div>
           ) : (
             <InfoCard type={infoCard.type} text={infoCard.text} className='py-6' />
           )}
@@ -152,69 +96,83 @@ export default function ViewProfessional() {
           ) : (
             showCard && (
               <>
-                <CardContent className='mt-3 space-y-3'>
+                <CardContent className='mt-6 space-y-6'>
                   {professional.description && (
-                    <div className='flex flex-row items-center space-x-1'>
-                      <Quote size={8} strokeWidth={0} className='relative bottom-1 rotate-180 fill-black' />
-                      <blockquote className='text-pretty text-base font-normal italic'>{`${capitalizeFirstLetter(professional.description)}`}</blockquote>
-                      <Quote size={8} strokeWidth={0} className='relative bottom-1 fill-black' />
-                    </div>
+                    <section className='flex text-ellipsis rounded-md bg-slate-100 px-4 py-3 italic space-x-4 text-slate-600'>
+                      <IconMedic name={professional.specialization.icon} size={20} />
+                      <span>{`${capitalizeFirstLetter(professional.description)}`}</span>
+                    </section>
                   )}
-                  <h2 className='pt-2 text-base font-semibold underline underline-offset-4'>{PV_CONFIG.phrases.scheduleTitle}</h2>
-                  {professional.configuration?.workingDays && (
-                    <div className='flex items-center space-x-4'>
-                      <CalendarDays size={20} strokeWidth={2} />
-                      <span className='text-base'>{legibleWorkingDays}</span>
-                    </div>
-                  )}
-                  {professional.configuration?.scheduleTimeInit && professional.configuration?.scheduleTimeEnd && (
-                    <div className='flex items-center space-x-4'>
-                      <CalendarClock size={20} strokeWidth={2} />
-                      <span className='text-base'>
-                        {professional.configuration?.scheduleTimeInit &&
-                          professional.configuration?.scheduleTimeEnd &&
-                          !professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableInit &&
-                          !professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableEnd &&
-                          `${professional.configuration.scheduleTimeInit} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.scheduleTimeEnd}`}
-                        {professional.configuration?.scheduleTimeInit &&
-                          professional.configuration?.scheduleTimeEnd &&
-                          professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableInit &&
-                          professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableEnd &&
-                          `${professional.configuration.scheduleTimeInit} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.unavailableTimeSlot?.timeSlotUnavailableInit} ${PV_CONFIG.words.slotsSeparator} ${professional.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.scheduleTimeEnd}`}
-                      </span>
-                    </div>
-                  )}
-                  <h2 className='pt-2 text-base font-semibold underline underline-offset-4'>{PV_CONFIG.phrases.contactTitle}</h2>
-                  {professional.phone && (
-                    <div className='flex items-center space-x-4'>
-                      <Smartphone size={20} strokeWidth={2} />
-                      <span className='text-base font-medium'>{delimiter(professional.phone, '-', 6)}</span>
-                    </div>
-                  )}
-                  {professional.email && (
-                    <div className='flex items-center space-x-4'>
-                      <Mail size={20} strokeWidth={2} />
-                      <span className='text-base font-medium'>{professional.email}</span>
-                    </div>
-                  )}
-                  {professional.area && professional.specialization && (
-                    <div className='flex justify-end space-x-4 pt-3'>
-                      <Badge variant='default'>
-                        <Tag size={13} strokeWidth={2} className='stroke-slate-600' />
-                        <span>{capitalize(professional.area.name)}</span>
-                      </Badge>
-                      <Badge variant='default'>
-                        <Tag size={13} strokeWidth={2} className='stroke-slate-600' />
-                        <span>{capitalize(professional.specialization.name)}</span>
-                      </Badge>
-                    </div>
-                  )}
+
+                  <section className='space-y-3'>
+                    <h2 className='pt-2 text-xsm font-bold uppercase text-slate-700'>{PV_CONFIG.phrases.scheduleTitle}</h2>
+                    {professional.configuration?.workingDays && (
+                      <div className='flex items-center space-x-3'>
+                        <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
+                          <CalendarDays size={17} strokeWidth={2} />
+                        </div>
+                        <span className='text-sm'>{legibleWorkingDays}</span>
+                      </div>
+                    )}
+                    {professional.configuration?.scheduleTimeInit && professional.configuration?.scheduleTimeEnd && (
+                      <div className='flex items-center space-x-3'>
+                        <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
+                          <CalendarClock size={17} strokeWidth={2} />
+                        </div>
+                        <span className='text-sm'>
+                          {professional.configuration?.scheduleTimeInit &&
+                            professional.configuration?.scheduleTimeEnd &&
+                            !professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableInit &&
+                            !professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableEnd &&
+                            `${professional.configuration.scheduleTimeInit} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.scheduleTimeEnd}`}
+                          {professional.configuration?.scheduleTimeInit &&
+                            professional.configuration?.scheduleTimeEnd &&
+                            professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableInit &&
+                            professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableEnd &&
+                            `${professional.configuration.scheduleTimeInit} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.unavailableTimeSlot?.timeSlotUnavailableInit} ${PV_CONFIG.words.slotsSeparator} ${professional.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.scheduleTimeEnd}`}
+                        </span>
+                      </div>
+                    )}
+                  </section>
+                  <section className='space-y-3'>
+                    <h2 className='pt-2 text-xsm font-bold uppercase text-slate-700'>{PV_CONFIG.phrases.contactTitle}</h2>
+                    {professional.phone && (
+                      <div className='flex items-center space-x-3'>
+                        <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
+                          <Smartphone size={17} strokeWidth={2} />
+                        </div>
+                        <span className='text-sm'>{delimiter(professional.phone, '-', 6)}</span>
+                      </div>
+                    )}
+                    {professional.email && (
+                      <div className='flex items-center space-x-3'>
+                        <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
+                          <Mail size={17} strokeWidth={2} />
+                        </div>
+                        <span className='text-sm'>{professional.email}</span>
+                      </div>
+                    )}
+                    {professional.area && professional.specialization && (
+                      <div className='flex justify-end space-x-4 pt-3'>
+                        <Badge variant='default'>
+                          <Tag size={13} strokeWidth={2} className='stroke-slate-600' />
+                          <span>{capitalize(professional.area.name)}</span>
+                        </Badge>
+                        <Badge variant='default'>
+                          <Tag size={13} strokeWidth={2} className='stroke-slate-600' />
+                          <span>{capitalize(professional.specialization.name)}</span>
+                        </Badge>
+                      </div>
+                    )}
+                  </section>
                 </CardContent>
                 <CardFooter className='justify-end space-x-4 border-t p-2'>
                   <RemoveDialog
+                    action={async () => await console.log('action method')}
                     dialogContent={
                       <section>
-                        Vas a eliminar al profesional <span className='font-semibold'>{`${capitalize(professional.title.abbreviation)} ${capitalize(professional.firstName)} ${capitalize(professional.lastName)}`}</span>
+                        Vas a eliminar al profesional{' '}
+                        <span className='font-semibold'>{`${capitalize(professional.title.abbreviation)} ${capitalize(professional.firstName)} ${capitalize(professional.lastName)}`}</span>
                       </section>
                     }
                     dialogTexts={{
