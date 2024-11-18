@@ -204,7 +204,14 @@ export const PROF_VIEW_CONFIG = {
   ],
   button: {
     back: 'Volver',
+    cancel: 'Cancelar',
+    deleteProfessional: 'Eliminar profesional',
     goToProfessionals: 'Ir a profesionales',
+  },
+  dialog: {
+    title: 'Eliminar profesional',
+    description: 'Acción irreversible. Al eliminar al profesional no vas a poder restaurar sus datos.'
+
   },
   dropdownMenu: [
     { id: 1, name: 'Enviar e-mail' },
