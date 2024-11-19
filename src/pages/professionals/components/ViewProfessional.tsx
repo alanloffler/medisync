@@ -5,6 +5,7 @@ import { Badge } from '@core/components/ui/badge';
 import { Button } from '@core/components/ui/button';
 import { Card, CardContent, CardFooter } from '@core/components/ui/card';
 // Components
+import { AvailableProfessional } from '@professionals/components/common/AvailableProfessional';
 import { BackButton } from '@core/components/common/BackButton';
 import { IconMedic } from '@core/components/icons/IconMedic';
 import { InfoCard } from '@core/components/common/InfoCard';
@@ -103,7 +104,6 @@ export default function ViewProfessional() {
                       <span>{`${capitalizeFirstLetter(professional.description)}`}</span>
                     </section>
                   )}
-
                   <section className='space-y-3'>
                     <h2 className='pt-2 text-xsm font-semibold uppercase leading-none text-slate-700'>{PV_CONFIG.phrases.scheduleTitle}</h2>
                     {professional.configuration?.workingDays && (
@@ -166,36 +166,43 @@ export default function ViewProfessional() {
                     )}
                   </section>
                 </CardContent>
-                <CardFooter className='justify-end space-x-2 border-t p-2'>
-                  <Button variant='ghost' size='miniIcon' className='transition-transform hover:scale-110 hover:bg-white hover:text-sky-400 hover:animate-in' >
-                    <Share2 size={18} strokeWidth={1.5} />
-                  </Button>
-                  <Button
-                    variant='ghost'
-                    size='miniIcon'
-                    onClick={() => navigate(`/professionals/update/${professional._id}`)}
-                    className='transition-transform hover:scale-110 hover:bg-white hover:text-orange-400 hover:animate-in'
-                  >
-                    <PencilLine size={18} strokeWidth={1.5} />
-                  </Button>
-                  <RemoveDialog
-                    // action={() => console.log({ 'action'})}
-                    dialogContent={
-                      <section>
-                        Vas a eliminar al profesional{' '}
-                        <span className='font-semibold'>{`${capitalize(professional.title.abbreviation)} ${capitalize(professional.firstName)} ${capitalize(professional.lastName)}`}</span>
-                      </section>
-                    }
-                    dialogTexts={{
-                      title: PV_CONFIG.dialog.title,
-                      description: PV_CONFIG.dialog.description,
-                      cancelButton: PV_CONFIG.button.cancel,
-                      removeButton: PV_CONFIG.button.deleteProfessional,
-                    }}
-                    help={true}
-                    tooltip='Eliminar'
-                    triggerButton={<Trash2 size={18} strokeWidth={1.5} />}
-                  />
+                <CardFooter className='justify-between border-t p-2'>
+                  <AvailableProfessional items={PV_CONFIG.select} defaultValue={professional.available.toString()} />
+                  <section className='space-x-2'>
+                    <Button
+                      variant='ghost'
+                      size='miniIcon'
+                      className='transition-transform hover:scale-110 hover:bg-white hover:text-sky-400 hover:animate-in'
+                    >
+                      <Share2 size={18} strokeWidth={1.5} />
+                    </Button>
+                    <Button
+                      variant='ghost'
+                      size='miniIcon'
+                      onClick={() => navigate(`/professionals/update/${professional._id}`)}
+                      className='transition-transform hover:scale-110 hover:bg-white hover:text-orange-400 hover:animate-in'
+                    >
+                      <PencilLine size={18} strokeWidth={1.5} />
+                    </Button>
+                    <RemoveDialog
+                      // action={() => console.log({ 'action'})}
+                      dialogContent={
+                        <section>
+                          Vas a eliminar al profesional{' '}
+                          <span className='font-semibold'>{`${capitalize(professional.title.abbreviation)} ${capitalize(professional.firstName)} ${capitalize(professional.lastName)}`}</span>
+                        </section>
+                      }
+                      dialogTexts={{
+                        title: PV_CONFIG.dialog.title,
+                        description: PV_CONFIG.dialog.description,
+                        cancelButton: PV_CONFIG.button.cancel,
+                        removeButton: PV_CONFIG.button.deleteProfessional,
+                      }}
+                      help={true}
+                      tooltip='Eliminar'
+                      triggerButton={<Trash2 size={18} strokeWidth={1.5} />}
+                    />
+                  </section>
                 </CardFooter>
               </>
             )
