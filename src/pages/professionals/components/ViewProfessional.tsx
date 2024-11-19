@@ -167,7 +167,7 @@ export default function ViewProfessional() {
                   </section>
                 </CardContent>
                 <CardFooter className='justify-between border-t p-2'>
-                  <AvailableProfessional items={PV_CONFIG.select} defaultValue={professional.available.toString()} />
+                  <AvailableProfessional items={PV_CONFIG.select} data={{ _id: professional._id, available: professional.available }} />
                   <section className='space-x-2'>
                     <Button
                       variant='ghost'
