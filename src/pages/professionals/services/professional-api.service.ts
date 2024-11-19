@@ -1,5 +1,7 @@
 import type { IProfessionalForm } from '@professionals/interfaces/professional.interface';
+import type { IResponse } from '@core/interfaces/response.interface';
 import type { SortingState } from '@tanstack/react-table';
+import { APP_CONFIG } from '@config/app.config';
 import { ProfessionalUtils } from '@professionals/services/professional.utils';
 
 export class ProfessionalApiService {
@@ -107,6 +109,31 @@ export class ProfessionalApiService {
       return await query.json();
     } catch (e) {
       return e;
+    }
+  }
+  // TanStack query response format
+  public static async updateAvailability(id: string, availability: string) {
+    const url: string = `${this.API_URL}/professionals/${id}/availability`;
+
+    try {
+      const query: Response = await fetch(url, {
+        method: 'PATCH',
+        headers: {
+          'content-type': 'application/json;charset=UTF-8',
+        },
+        body: JSON.stringify({ available: availability }),
+      });
+
+      const response: IResponse = await query.json();
+      if (!query.ok) throw new Error(response.message);
+
+      return response;
+    } catch (error) {
+      if (error instanceof TypeError) {
+        throw new Error(APP_CONFIG.error.server);
+      }
+
+      throw error;
     }
   }
 
