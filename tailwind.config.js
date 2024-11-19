@@ -17,7 +17,7 @@ module.exports = {
       },
       colors: {
         border: 'hsl(var(--border))',
-        input: 'hsl(var(--input))',
+        input: '#f1f5f9', // slate-100
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
