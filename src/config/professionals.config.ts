@@ -210,8 +210,7 @@ export const PROF_VIEW_CONFIG = {
   },
   dialog: {
     title: 'Eliminar profesional',
-    description: 'Acción irreversible. Al eliminar al profesional no vas a poder restaurar sus datos.'
-
+    description: 'Acción irreversible. Al eliminar al profesional no vas a poder restaurar sus datos.',
   },
   dropdownMenu: [
     { id: 1, name: 'Enviar e-mail' },
@@ -226,6 +225,10 @@ export const PROF_VIEW_CONFIG = {
     scheduleTitle: 'Días y horario de atención',
     contactTitle: 'Contacto',
   },
+  select: [
+    { id: 0, label: 'Activo', value: true },
+    { id: 1, label: 'Inactivo', value: false },
+  ],
   title: 'Detalles del profesional',
   tooltip: {
     dropdown: 'Acciones',
