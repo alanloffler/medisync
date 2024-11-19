@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { CalendarClock, CalendarDays, Mail, Smartphone, Tag, Trash2 } from 'lucide-react';
+import { CalendarClock, CalendarDays, Mail, PencilLine, Share2, Smartphone, Tag, Trash2 } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Badge } from '@core/components/ui/badge';
 import { Button } from '@core/components/ui/button';
@@ -98,14 +98,14 @@ export default function ViewProfessional() {
               <>
                 <CardContent className='mt-6 space-y-6'>
                   {professional.description && (
-                    <section className='flex text-ellipsis rounded-md bg-slate-100 px-4 py-3 italic space-x-4 text-slate-600'>
+                    <section className='flex space-x-4 text-ellipsis rounded-md bg-slate-100 px-4 py-3 italic text-slate-600'>
                       <IconMedic name={professional.specialization.icon} size={20} />
                       <span>{`${capitalizeFirstLetter(professional.description)}`}</span>
                     </section>
                   )}
 
                   <section className='space-y-3'>
-                    <h2 className='pt-2 text-xsm font-bold uppercase text-slate-700'>{PV_CONFIG.phrases.scheduleTitle}</h2>
+                    <h2 className='pt-2 text-xsm font-semibold uppercase leading-none text-slate-700'>{PV_CONFIG.phrases.scheduleTitle}</h2>
                     {professional.configuration?.workingDays && (
                       <div className='flex items-center space-x-3'>
                         <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
@@ -135,7 +135,7 @@ export default function ViewProfessional() {
                     )}
                   </section>
                   <section className='space-y-3'>
-                    <h2 className='pt-2 text-xsm font-bold uppercase text-slate-700'>{PV_CONFIG.phrases.contactTitle}</h2>
+                    <h2 className='pt-2 text-xsm font-semibold uppercase leading-none text-slate-700'>{PV_CONFIG.phrases.contactTitle}</h2>
                     {professional.phone && (
                       <div className='flex items-center space-x-3'>
                         <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
@@ -166,9 +166,20 @@ export default function ViewProfessional() {
                     )}
                   </section>
                 </CardContent>
-                <CardFooter className='justify-end space-x-4 border-t p-2'>
+                <CardFooter className='justify-end space-x-2 border-t p-2'>
+                  <Button variant='ghost' size='miniIcon' className='transition-transform hover:scale-110 hover:bg-white hover:text-sky-400 hover:animate-in' >
+                    <Share2 size={18} strokeWidth={1.5} />
+                  </Button>
+                  <Button
+                    variant='ghost'
+                    size='miniIcon'
+                    onClick={() => navigate(`/professionals/update/${professional._id}`)}
+                    className='transition-transform hover:scale-110 hover:bg-white hover:text-orange-400 hover:animate-in'
+                  >
+                    <PencilLine size={18} strokeWidth={1.5} />
+                  </Button>
                   <RemoveDialog
-                    action={async () => await console.log('action method')}
+                    // action={() => console.log({ 'action'})}
                     dialogContent={
                       <section>
                         Vas a eliminar al profesional{' '}
@@ -183,7 +194,7 @@ export default function ViewProfessional() {
                     }}
                     help={true}
                     tooltip='Eliminar'
-                    triggerButton={<Trash2 size={16} strokeWidth={1.5} />}
+                    triggerButton={<Trash2 size={18} strokeWidth={1.5} />}
                   />
                 </CardFooter>
               </>
