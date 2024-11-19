@@ -1,10 +1,19 @@
 // External components: https://ui.shadcn.com/docs/components
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@core/components/ui/select';
 // External imports
+import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
+// Imports
+import type { IProfessional } from '@professionals/interfaces/professional.interface';
+import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 // React component
-export function AvailableProfessional({ items, defaultValue }: { items: { id: number; label: string; value: boolean }[]; defaultValue: string }) {
-  const [value, setValue] = useState<string>(defaultValue);
+export function AvailableProfessional({ items, data }: { items: { id: number; label: string; value: boolean }[]; data: Partial<IProfessional> }) {
+  const { _id, available } = data;
+  const [value, setValue] = useState<string>(String(available));
+
+  const { mutateAsync: updateAvailability } = useMutation({
+    mutationFn: async () => await ProfessionalApiService.updateAvailability(_id!, value),
+  });
 
   return (
     <Select value={value} onValueChange={setValue}>
