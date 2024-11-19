@@ -58,9 +58,9 @@ export function RemoveDialog({ action, callback, dialogContent, dialogTexts, hel
       <TooltipWrapper tooltip={tooltip} help={help}>
         <Button
           onClick={() => setOpenDialog(true)}
-          variant='tableHeader'
+          variant='ghost'
           size='miniIcon'
-          className='border border-slate-300 bg-white transition-transform hover:scale-110 hover:border-rose-500 hover:bg-white hover:text-rose-500 hover:animate-in'
+          className='transition-transform hover:scale-110 hover:bg-white hover:text-rose-400 hover:animate-in'
         >
           {triggerButton}
         </Button>
