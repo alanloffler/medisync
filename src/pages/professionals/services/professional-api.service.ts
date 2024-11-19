@@ -121,7 +121,7 @@ export class ProfessionalApiService {
         headers: {
           'content-type': 'application/json;charset=UTF-8',
         },
-        body: JSON.stringify({ available: availability }),
+        body: JSON.stringify({ available: availability === 'true' ? true : false }),
       });
 
       const response: IResponse = await query.json();
