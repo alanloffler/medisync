@@ -5,24 +5,25 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 // Imports
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
+import type { IResponse } from '@core/interfaces/response.interface';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
+import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export function AvailableProfessional({ items, data }: { items: { id: number; label: string; value: boolean }[]; data: Partial<IProfessional> }) {
   const { _id, available } = data;
   const [value, setValue] = useState<string>(String(available));
   const [prevValue, setPrevValue] = useState<string>(String(available));
-  // TODO: manage responses with isSuccess and isError
-  const { mutateAsync: updateAvailability } = useMutation({
-    mutationFn: async (value: string) => ProfessionalApiService.updateAvailability(_id as string, value),
-    onSuccess: () => {
-      console.log('Availability updated')
+  const addNotification = useNotificationsStore((state) => state.addNotification);
+ 
+  const { mutateAsync: updateAvailability } = useMutation<IResponse, Error, string>({
+    mutationFn: async (value: string) => await ProfessionalApiService.updateAvailability(_id as string, value),
+    onSuccess: (response, value) => {
       setPrevValue(value);
-      // TODO: addNotification success
+      addNotification({ type: 'success', message: response.message });
     },
-    onError: () => {
-      console.log('Error updating availability');
+    onError: (error) => {
       setValue(prevValue);
-      // TODO: addNotification error
+      addNotification({ type: 'error', message: error.message });
     },
   });
 
