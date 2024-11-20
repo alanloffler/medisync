@@ -10,13 +10,29 @@ import { ProfessionalApiService } from '@professionals/services/professional-api
 export function AvailableProfessional({ items, data }: { items: { id: number; label: string; value: boolean }[]; data: Partial<IProfessional> }) {
   const { _id, available } = data;
   const [value, setValue] = useState<string>(String(available));
-
+  const [prevValue, setPrevValue] = useState<string>(String(available));
+  // TODO: manage responses with isSuccess and isError
   const { mutateAsync: updateAvailability } = useMutation({
-    mutationFn: async () => await ProfessionalApiService.updateAvailability(_id!, value),
+    mutationFn: async (value: string) => ProfessionalApiService.updateAvailability(_id as string, value),
+    onSuccess: () => {
+      console.log('Availability updated')
+      setPrevValue(value);
+      // TODO: addNotification success
+    },
+    onError: () => {
+      console.log('Error updating availability');
+      setValue(prevValue);
+      // TODO: addNotification error
+    },
   });
 
+  function handleValueChange(newValue: string): void {
+    setValue(newValue);
+    updateAvailability(newValue);
+  }
+
   return (
-    <Select value={value} onValueChange={setValue}>
+    <Select value={value} onValueChange={handleValueChange}>
       <SelectTrigger className='h-8 w-fit space-x-2 bg-transparent px-2 py-1 text-xs hover:bg-input'>
         <SelectValue placeholder='Select a fruit' />
       </SelectTrigger>
