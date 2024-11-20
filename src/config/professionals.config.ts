@@ -42,6 +42,12 @@ export const PROF_CONFIG = {
     },
     rowsPerPage: 'Filas por página',
     title: 'Listado de Profesionales',
+    tooltip: {
+      delete: 'Eliminar',
+      edit: 'Editar',
+      sendWhatsApp: 'Enviar WhatsApp',
+      view: 'Ver detalles',
+    },
   },
   title: 'Profesionales',
 };
