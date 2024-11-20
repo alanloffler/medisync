@@ -84,7 +84,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
                 onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
               >
                 {PROF_CONFIG.table.headers[0]}
-                <ArrowDownUp className='h-3 w-3' />
+                <ArrowDownUp size={12} strokeWidth={2} />
               </button>
             </TooltipWrapper>
           )}
@@ -108,7 +108,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
                 onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
               >
                 {PROF_CONFIG.table.headers[1]}
-                <ArrowDownUp className='h-3 w-3' />
+                <ArrowDownUp size={12} strokeWidth={2} />
               </button>
             </TooltipWrapper>
           )}
@@ -130,7 +130,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
                 onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
               >
                 {PROF_CONFIG.table.headers[2]}
-                <ArrowDownUp className='h-3 w-3' />
+                <ArrowDownUp size={12} strokeWidth={2} />
               </button>
             </TooltipWrapper>
           )}
@@ -152,7 +152,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
                 onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
               >
                 {PROF_CONFIG.table.headers[3]}
-                <ArrowDownUp className='h-3 w-3' />
+                <ArrowDownUp size={12} strokeWidth={2} />
               </button>
             </TooltipWrapper>
           )}
