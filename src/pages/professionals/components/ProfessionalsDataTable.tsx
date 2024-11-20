@@ -78,13 +78,15 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
           {totalItems === 1 ? (
             PROF_CONFIG.table.headers[0]
           ) : (
-            <button
-              className='flex items-center gap-2 hover:text-accent-foreground'
-              onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-            >
-              {PROF_CONFIG.table.headers[0]}
-              <ArrowDownUp className='h-3 w-3' />
-            </button>
+            <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.sortBy.name} help={help}>
+              <button
+                className='flex items-center gap-2 hover:text-accent-foreground'
+                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+              >
+                {PROF_CONFIG.table.headers[0]}
+                <ArrowDownUp className='h-3 w-3' />
+              </button>
+            </TooltipWrapper>
           )}
         </div>
       ),
@@ -100,13 +102,15 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
           {totalItems === 1 ? (
             PROF_CONFIG.table.headers[1]
           ) : (
-            <button
-              className='flex items-center gap-2 hover:text-accent-foreground'
-              onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-            >
-              {PROF_CONFIG.table.headers[1]}
-              <ArrowDownUp className='h-3 w-3' />
-            </button>
+            <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.sortBy.area} help={help}>
+              <button
+                className='flex items-center gap-2 hover:text-accent-foreground'
+                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+              >
+                {PROF_CONFIG.table.headers[1]}
+                <ArrowDownUp className='h-3 w-3' />
+              </button>
+            </TooltipWrapper>
           )}
         </div>
       ),
@@ -120,13 +124,15 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
           {totalItems === 1 ? (
             PROF_CONFIG.table.headers[2]
           ) : (
-            <button
-              className='flex items-center gap-2 hover:text-accent-foreground'
-              onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-            >
-              {PROF_CONFIG.table.headers[2]}
-              <ArrowDownUp className='h-3 w-3' />
-            </button>
+            <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.sortBy.specialization} help={help}>
+              <button
+                className='flex items-center gap-2 hover:text-accent-foreground'
+                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+              >
+                {PROF_CONFIG.table.headers[2]}
+                <ArrowDownUp className='h-3 w-3' />
+              </button>
+            </TooltipWrapper>
           )}
         </div>
       ),
@@ -140,13 +146,15 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
           {totalItems === 1 ? (
             PROF_CONFIG.table.headers[3]
           ) : (
-            <button
-              className='flex items-center gap-2 hover:text-accent-foreground'
-              onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-            >
-              {PROF_CONFIG.table.headers[3]}
-              <ArrowDownUp className='h-3 w-3' />
-            </button>
+            <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.sortBy.availability} help={help}>
+              <button
+                className='flex items-center gap-2 hover:text-accent-foreground'
+                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+              >
+                {PROF_CONFIG.table.headers[3]}
+                <ArrowDownUp className='h-3 w-3' />
+              </button>
+            </TooltipWrapper>
           )}
         </div>
       ),
@@ -165,7 +173,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
       header: () => <div className='text-center'>{PROF_CONFIG.table.headers[4]}</div>,
       cell: ({ row }) => (
         <div className='flex flex-row items-center justify-center space-x-2'>
-          <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.view} help={help}>
+          <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.button.view} help={help}>
             <Button
               variant='ghost'
               size='miniIcon'
@@ -175,7 +183,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
               <FileText size={18} strokeWidth={1.5} />
             </Button>
           </TooltipWrapper>
-          <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.edit} help={help}>
+          <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.button.edit} help={help}>
             <Button
               variant={'ghost'}
               size={'miniIcon'}
@@ -185,7 +193,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
               <PencilLine size={18} strokeWidth={1.5} />
             </Button>
           </TooltipWrapper>
-          <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.delete} help={help}>
+          <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.button.delete} help={help}>
             <Button
               variant='ghost'
               size='miniIcon'
@@ -195,7 +203,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
               <Trash2 size={18} strokeWidth={1.5} />
             </Button>
           </TooltipWrapper>
-          <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.sendWhatsApp} help={help}>
+          <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.button.sendWhatsApp} help={help}>
             <Button
               disabled={!row.original.phone}
               variant='ghost'
