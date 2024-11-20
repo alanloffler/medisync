@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { ArrowDownUp, ArrowLeftIcon, ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon, FilePen, FileText, Trash2 } from 'lucide-react';
+import { ArrowDownUp, ArrowLeftIcon, ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon, FileText, PencilLine, Trash2 } from 'lucide-react';
 // External components:
 // https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
@@ -163,38 +163,41 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
       cell: ({ row }) => (
         <div className='flex flex-row items-center justify-center space-x-2'>
           <Button
-            variant={'ghost'}
-            size={'miniIcon'}
+            variant='ghost'
+            size='miniIcon'
             onClick={() => navigate(`/professionals/${row.original._id}`)}
-            className='hover:bg-transparent hover:text-fuchsia-500'
+            className='transition-transform duration-100 ease-in-out animate-in hover:scale-110 hover:bg-transparent hover:text-sky-400'
           >
-            <FileText size={16} strokeWidth={2} />
+            <FileText size={18} strokeWidth={1.5} />
           </Button>
           <Button
             variant={'ghost'}
             size={'miniIcon'}
             onClick={() => navigate(`/professionals/update/${row.original._id}`)}
-            className='hover:bg-transparent hover:text-indigo-500'
+            className='transition-transform duration-100 ease-in-out animate-in hover:scale-110 hover:bg-transparent hover:text-orange-400'
           >
-            <FilePen size={16} strokeWidth={2} />
+            <PencilLine size={18} strokeWidth={1.5} />
           </Button>
           <Button
-            variant={'ghost'}
-            size={'miniIcon'}
+            variant='ghost'
+            size='miniIcon'
             onClick={() => handleRemoveDialog(row.original)}
-            className='hover:bg-transparent hover:text-red-500'
+            className='transition-transform duration-100 ease-in-out animate-in hover:scale-110 hover:bg-transparent hover:text-rose-400'
           >
-            <Trash2 size={16} strokeWidth={2} />
+            <Trash2 size={18} strokeWidth={1.5} />
           </Button>
           <Button
             disabled={!row.original.phone}
-            variant={'ghost'}
-            size={'miniIcon'}
-            className='fill-current hover:bg-transparent hover:fill-green-500'
+            variant='ghost'
+            size='miniIcon'
+            className='transition-transform duration-100 ease-in-out animate-in hover:scale-110 hover:bg-transparent hover:fill-green-500'
             onClick={() => navigate(`/whatsapp/professional/${row.original._id}`)}
           >
-            <svg width='100' height='100' viewBox='0 0 464 488' className='h-4 w-4'>
-              <path d='M462 228q0 93-66 159t-160 66q-56 0-109-28L2 464l40-120q-32-54-32-116q0-93 66-158.5T236 4t160 65.5T462 228zM236 39q-79 0-134.5 55.5T46 228q0 62 36 111l-24 70l74-23q49 31 104 31q79 0 134.5-55.5T426 228T370.5 94.5T236 39zm114 241q-1-1-10-7q-3-1-19-8.5t-19-8.5q-9-3-13 2q-1 3-4.5 7.5t-7.5 9t-5 5.5q-4 6-12 1q-34-17-45-27q-7-7-13.5-15t-12-15t-5.5-8q-3-7 3-11q4-6 8-10l6-9q2-5-1-10q-4-13-17-41q-3-9-12-9h-11q-9 0-15 7q-19 19-19 45q0 24 22 57l2 3q2 3 4.5 6.5t7 9t9 10.5t10.5 11.5t13 12.5t14.5 11.5t16.5 10t18 8.5q16 6 27.5 10t18 5t9.5 1t7-1t5-1q9-1 21.5-9t15.5-17q8-21 3-26z' />
+            <svg width={16} height={16} viewBox='0 0 32 32'>
+              <path
+                d='M25.873,6.069c-2.619-2.623-6.103-4.067-9.814-4.069C8.411,2,2.186,8.224,2.184,15.874c-.001,2.446,.638,4.833,1.852,6.936l-1.969,7.19,7.355-1.929c2.026,1.106,4.308,1.688,6.63,1.689h.006c7.647,0,13.872-6.224,13.874-13.874,.001-3.708-1.44-7.193-4.06-9.815h0Zm-9.814,21.347h-.005c-2.069,0-4.099-.557-5.87-1.607l-.421-.25-4.365,1.145,1.165-4.256-.274-.436c-1.154-1.836-1.764-3.958-1.763-6.137,.003-6.358,5.176-11.531,11.537-11.531,3.08,.001,5.975,1.202,8.153,3.382,2.177,2.179,3.376,5.077,3.374,8.158-.003,6.359-5.176,11.532-11.532,11.532h0Zm6.325-8.636c-.347-.174-2.051-1.012-2.369-1.128-.318-.116-.549-.174-.78,.174-.231,.347-.895,1.128-1.098,1.359-.202,.232-.405,.26-.751,.086-.347-.174-1.464-.54-2.788-1.72-1.03-.919-1.726-2.054-1.929-2.402-.202-.347-.021-.535,.152-.707,.156-.156,.347-.405,.52-.607,.174-.202,.231-.347,.347-.578,.116-.232,.058-.434-.029-.607-.087-.174-.78-1.88-1.069-2.574-.281-.676-.567-.584-.78-.595-.202-.01-.433-.012-.665-.012s-.607,.086-.925,.434c-.318,.347-1.213,1.186-1.213,2.892s1.242,3.355,1.416,3.587c.174,.232,2.445,3.733,5.922,5.235,.827,.357,1.473,.571,1.977,.73,.83,.264,1.586,.227,2.183,.138,.666-.1,2.051-.839,2.34-1.649,.289-.81,.289-1.504,.202-1.649s-.318-.232-.665-.405h0Z'
+                fill='#currentColor'
+              ></path>
             </svg>
           </Button>
         </div>
