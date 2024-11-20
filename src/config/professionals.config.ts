@@ -235,6 +235,7 @@ export const PROF_VIEW_CONFIG = {
   },
   words: {
     and: 'y',
+    error: 'Error',
     hoursSeparator: 'a',
     slotsSeparator: '-',
   },
