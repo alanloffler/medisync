@@ -49,6 +49,13 @@ export const PROF_CONFIG = {
         sendWhatsApp: 'Enviar WhatsApp',
         view: 'Ver detalles',
       },
+      pagination: {
+        firstPage: 'Primera página',
+        itemsPerPage: 'Filas por página',
+        lastPage: 'Última página',
+        nextPage: 'Página siguiente',
+        prevPage: 'Página anterior',
+      },
       sortBy: {
         area: 'Ordenar por área',
         availability: 'Ordenar por disponibilidad',
