@@ -12,6 +12,7 @@ import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
 import { RemoveDialog } from '@core/components/common/RemoveDialog';
+import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -28,6 +29,7 @@ import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useCapitalizeFirstLetter } from '@core/hooks/useCapitalizeFirstLetter';
 import { useDelimiter } from '@core/hooks/useDelimiter';
 import { useNotificationsStore } from '@core/stores/notifications.store';
+import { useHelpStore } from '@settings/stores/help.store';
 // React component
 export default function ViewProfessional() {
   const [emailObject, setEmailObject] = useState<IEmail>({} as IEmail);
@@ -41,6 +43,7 @@ export default function ViewProfessional() {
   const capitalizeFirstLetter = useCapitalizeFirstLetter();
   const delimiter = useDelimiter();
   const navigate = useNavigate();
+  const { help } = useHelpStore();
   const { id } = useParams();
 
   useEffect(() => {
@@ -169,21 +172,25 @@ export default function ViewProfessional() {
                 <CardFooter className='justify-between border-t p-2'>
                   <AvailableProfessional items={PV_CONFIG.select} data={{ _id: professional._id, available: professional.available }} />
                   <section className='space-x-2'>
-                    <Button
-                      variant='ghost'
-                      size='miniIcon'
-                      className='transition-transform hover:scale-110 hover:bg-white hover:text-sky-400 hover:animate-in'
-                    >
-                      <Share2 size={18} strokeWidth={1.5} />
-                    </Button>
-                    <Button
-                      variant='ghost'
-                      size='miniIcon'
-                      onClick={() => navigate(`/professionals/update/${professional._id}`)}
-                      className='transition-transform hover:scale-110 hover:bg-white hover:text-orange-400 hover:animate-in'
-                    >
-                      <PencilLine size={18} strokeWidth={1.5} />
-                    </Button>
+                    <TooltipWrapper tooltip={PV_CONFIG.tooltip.share} help={help}>
+                      <Button
+                        variant='ghost'
+                        size='miniIcon'
+                        className='transition-transform hover:scale-110 hover:bg-white hover:text-sky-400 hover:animate-in'
+                      >
+                        <Share2 size={18} strokeWidth={1.5} />
+                      </Button>
+                    </TooltipWrapper>
+                    <TooltipWrapper tooltip={PV_CONFIG.tooltip.edit} help={help}>
+                      <Button
+                        variant='ghost'
+                        size='miniIcon'
+                        onClick={() => navigate(`/professionals/update/${professional._id}`)}
+                        className='transition-transform hover:scale-110 hover:bg-white hover:text-orange-400 hover:animate-in'
+                      >
+                        <PencilLine size={18} strokeWidth={1.5} />
+                      </Button>
+                    </TooltipWrapper>
                     <RemoveDialog
                       // action={() => console.log({ 'action'})}
                       dialogContent={
@@ -198,8 +205,8 @@ export default function ViewProfessional() {
                         cancelButton: PV_CONFIG.button.cancel,
                         removeButton: PV_CONFIG.button.deleteProfessional,
                       }}
-                      help={true}
-                      tooltip='Eliminar'
+                      help={help}
+                      tooltip={PV_CONFIG.tooltip.delete}
                       triggerButton={<Trash2 size={18} strokeWidth={1.5} />}
                     />
                   </section>
