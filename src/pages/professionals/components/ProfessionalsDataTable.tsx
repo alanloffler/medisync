@@ -396,9 +396,11 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
             <div className='flex items-center space-x-2'>
               <p className='text-xs font-normal text-slate-400'>{PROF_CONFIG.table.rowsPerPage}</p>
               <Select value={`${table.getState().pagination.pageSize}`} onValueChange={(e) => setPagination({ pageIndex: 0, pageSize: parseInt(e) })}>
-                <SelectTrigger className='h-8 w-[65px] text-xs font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring/40 focus-visible:ring-offset-0'>
-                  <SelectValue placeholder={table.getState().pagination.pageSize} />
-                </SelectTrigger>
+                <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.pagination.itemsPerPage} help={help}>
+                  <SelectTrigger className='h-8 w-[65px] text-xs bg-input hover:bg-slate-200/70 font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring/40 focus-visible:ring-offset-0'>
+                    <SelectValue placeholder={table.getState().pagination.pageSize} />
+                  </SelectTrigger>
+                </TooltipWrapper>
                 <SelectContent side='top' className='min-w-[4rem]'>
                   {PROF_CONFIG.table.itemsPerPage.map((pageSize) => (
                     <SelectItem key={pageSize} value={`${pageSize}`} className='text-xs'>
@@ -413,42 +415,46 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
             </div>
             {table.getPageCount() > 1 && (
               <div className='flex items-center space-x-2'>
-                <Button
-                  variant='ghost'
-                  className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800'
-                  onClick={() => table.setPageIndex(0)}
-                  disabled={!table.getCanPreviousPage()}
-                >
-                  <span className='sr-only'>Go to first page</span>
-                  <ArrowLeftIcon size={16} strokeWidth={2} />
-                </Button>
-                <Button
-                  variant='ghost'
-                  className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 dark:bg-neutral-950 dark:hover:bg-neutral-800'
-                  onClick={() => table.previousPage()}
-                  disabled={!table.getCanPreviousPage()}
-                >
-                  <span className='sr-only'>Go to previous page</span>
-                  <ChevronLeftIcon size={16} strokeWidth={2} />
-                </Button>
-                <Button
-                  variant='ghost'
-                  className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 dark:bg-neutral-950 dark:hover:bg-neutral-800'
-                  onClick={() => table.nextPage()}
-                  disabled={!table.getCanNextPage()}
-                >
-                  <span className='sr-only'>Go to next page</span>
-                  <ChevronRightIcon size={16} strokeWidth={2} />
-                </Button>
-                <Button
-                  variant='ghost'
-                  className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800'
-                  onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                  disabled={!table.getCanNextPage()}
-                >
-                  <span className='sr-only'>Go to last page</span>
-                  <ArrowRightIcon size={16} strokeWidth={2} />
-                </Button>
+                <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.pagination.firstPage} help={help}>
+                  <Button
+                    variant='ghost'
+                    className='h-8 w-8 bg-input p-0 hover:bg-input-hover lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800'
+                    onClick={() => table.setPageIndex(0)}
+                    disabled={!table.getCanPreviousPage()}
+                  >
+                    <ArrowLeftIcon size={16} strokeWidth={2} />
+                  </Button>
+                </TooltipWrapper>
+                <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.pagination.prevPage} help={help}>
+                  <Button
+                    variant='ghost'
+                    className='h-8 w-8 bg-input p-0 hover:bg-input-hover dark:bg-neutral-950 dark:hover:bg-neutral-800'
+                    onClick={() => table.previousPage()}
+                    disabled={!table.getCanPreviousPage()}
+                  >
+                    <ChevronLeftIcon size={16} strokeWidth={2} />
+                  </Button>
+                </TooltipWrapper>
+                <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.pagination.nextPage} help={help}>
+                  <Button
+                    variant='ghost'
+                    className='h-8 w-8 bg-input p-0 hover:bg-input-hover dark:bg-neutral-950 dark:hover:bg-neutral-800'
+                    onClick={() => table.nextPage()}
+                    disabled={!table.getCanNextPage()}
+                  >
+                    <ChevronRightIcon size={16} strokeWidth={2} />
+                  </Button>
+                </TooltipWrapper>
+                <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.pagination.lastPage} help={help}>
+                  <Button
+                    variant='ghost'
+                    className='h-8 w-8 bg-input p-0 hover:bg-input-hover lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800'
+                    onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+                    disabled={!table.getCanNextPage()}
+                  >
+                    <ArrowRightIcon size={16} strokeWidth={2} />
+                  </Button>
+                </TooltipWrapper>
               </div>
             )}
           </div>
