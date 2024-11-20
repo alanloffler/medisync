@@ -30,7 +30,7 @@ export const PROF_CONFIG = {
     placeholder: 'Buscar profesional',
   },
   table: {
-    defaultPageSize: 5,
+    defaultPageSize: 10,
     defaultSortingId: 'lastName',
     defaultSortingType: false, // desc: true | false
     headers: ['Nombre', 'Área', 'Espec.', 'Disp.', 'Acciones'],
@@ -58,6 +58,10 @@ export const PROF_CONFIG = {
     },
   },
   title: 'Profesionales',
+  tooltip: {
+    addProfessional: 'Agregar profesional',
+    reload: 'Recargar',
+  },
 };
 
 export const PROF_CREATE_CONFIG = {
