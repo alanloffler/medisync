@@ -231,7 +231,11 @@ export const PROF_VIEW_CONFIG = {
   ],
   title: 'Detalles del profesional',
   tooltip: {
-    dropdown: 'Acciones',
+    delete: 'Eliminar',
+    edit: 'Editar',
+    sendEmail: 'Enviar e-mail',
+    sendWhatsApp: 'Enviar WhatsApp',
+    share: 'Compartir',
   },
   words: {
     and: 'y',
