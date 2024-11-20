@@ -17,6 +17,7 @@ import { Input } from '@core/components/ui/input';
 // Components
 import { PageHeader } from '@core/components/common/PageHeader';
 import { ProfessionalsDataTable } from '@professionals/components/ProfessionalsDataTable';
+import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -32,6 +33,7 @@ import { PROF_CONFIG } from '@config/professionals.config';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useDebounce } from '@core/hooks/useDebounce';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
+import { useHelpStore } from '@settings/stores/help.store';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export default function Professionals() {
@@ -49,6 +51,7 @@ export default function Professionals() {
   const debouncedSearch = useDebounce<IProfessionalSearch>(search, PROF_CONFIG.search.debounceTime);
   const navigate = useNavigate();
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
+  const { help } = useHelpStore();
 
   function handleSearchByProfessional(event: ChangeEvent<HTMLInputElement>): void {
     setSearch({ value: event.target.value, type: EProfessionalSearch.INPUT });
@@ -199,34 +202,38 @@ export default function Professionals() {
                     {PROF_CONFIG.table.title}
                   </div>
                   <div className='flex items-center gap-2'>
-                    <Button
-                      ref={reloadScope}
-                      size={'miniIcon'}
-                      variant={'tableHeader'}
-                      onClick={handleReload}
-                      onMouseOver={() =>
-                        reloadAnimation(reloadScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                      }
-                      onMouseOut={() =>
-                        reloadAnimation(reloadScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                      }
-                    >
-                      <ListRestart size={16} strokeWidth={2} />
-                    </Button>
-                    <Button
-                      ref={createMiniScope}
-                      size={'miniIcon'}
-                      variant={'tableHeaderPrimary'}
-                      onClick={() => navigate('/professionals/create')}
-                      onMouseOver={() =>
-                        createMiniAnimation(createMiniScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                      }
-                      onMouseOut={() =>
-                        createMiniAnimation(createMiniScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                      }
-                    >
-                      <CirclePlus size={16} strokeWidth={2} />
-                    </Button>
+                    <TooltipWrapper tooltip={PROF_CONFIG.tooltip.reload} help={help}>
+                      <Button
+                        ref={reloadScope}
+                        size='miniIcon'
+                        variant='tableHeader'
+                        onClick={handleReload}
+                        onMouseOver={() =>
+                          reloadAnimation(reloadScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                        }
+                        onMouseOut={() =>
+                          reloadAnimation(reloadScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                        }
+                      >
+                        <ListRestart size={16} strokeWidth={2} />
+                      </Button>
+                    </TooltipWrapper>
+                    <TooltipWrapper tooltip={PROF_CONFIG.tooltip.addProfessional} help={help}>
+                      <Button
+                        ref={createMiniScope}
+                        size='miniIcon'
+                        variant='tableHeaderPrimary'
+                        onClick={() => navigate('/professionals/create')}
+                        onMouseOver={() =>
+                          createMiniAnimation(createMiniScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                        }
+                        onMouseOut={() =>
+                          createMiniAnimation(createMiniScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                        }
+                      >
+                        <CirclePlus size={16} strokeWidth={2} />
+                      </Button>
+                    </TooltipWrapper>
                   </div>
                 </CardTitle>
               </div>
