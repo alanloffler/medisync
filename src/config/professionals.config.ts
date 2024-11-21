@@ -9,8 +9,6 @@ export const PROF_CONFIG = {
     isRemoving: 'Eliminando profesional',
     remove: 'Eliminar profesional',
   },
-  dbProfessionalPlural: 'profesionales en la base de datos',
-  dbProfessionalSingular: 'profesional en la base de datos',
   filter: {
     title: 'Filtrar',
   },
@@ -30,6 +28,14 @@ export const PROF_CONFIG = {
     placeholder: 'Buscar profesional',
   },
   table: {
+    databaseCount: {
+      availablePlural: 'activos',
+      availableSingular: 'activo',
+      notAvailablePlural: 'inactivos',
+      notAvailableSingular: 'inactivo',
+      totalPlural: 'profesionales en total',
+      totalSingular: 'profesional en total',
+    },
     defaultPageSize: 10,
     defaultSortingId: 'lastName',
     defaultSortingType: false, // desc: true | false
