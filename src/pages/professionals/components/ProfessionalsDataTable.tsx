@@ -397,7 +397,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
               <p className='text-xs font-normal text-slate-400'>{PROF_CONFIG.table.rowsPerPage}</p>
               <Select value={`${table.getState().pagination.pageSize}`} onValueChange={(e) => setPagination({ pageIndex: 0, pageSize: parseInt(e) })}>
                 <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.pagination.itemsPerPage} help={help}>
-                  <SelectTrigger className='h-8 w-[65px] text-xs bg-input hover:bg-slate-200/70 font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring/40 focus-visible:ring-offset-0'>
+                  <SelectTrigger className='h-8 w-[65px] bg-input text-xs font-medium hover:bg-slate-200/70 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring/40 focus-visible:ring-offset-0'>
                     <SelectValue placeholder={table.getState().pagination.pageSize} />
                   </SelectTrigger>
                 </TooltipWrapper>
@@ -418,7 +418,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
                 <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.pagination.firstPage} help={help}>
                   <Button
                     variant='ghost'
-                    className='h-8 w-8 bg-input p-0 hover:bg-input-hover lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800'
+                    className='hover:bg-input-hover h-8 w-8 bg-input p-0 lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800'
                     onClick={() => table.setPageIndex(0)}
                     disabled={!table.getCanPreviousPage()}
                   >
@@ -428,7 +428,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
                 <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.pagination.prevPage} help={help}>
                   <Button
                     variant='ghost'
-                    className='h-8 w-8 bg-input p-0 hover:bg-input-hover dark:bg-neutral-950 dark:hover:bg-neutral-800'
+                    className='hover:bg-input-hover h-8 w-8 bg-input p-0 dark:bg-neutral-950 dark:hover:bg-neutral-800'
                     onClick={() => table.previousPage()}
                     disabled={!table.getCanPreviousPage()}
                   >
@@ -438,7 +438,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
                 <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.pagination.nextPage} help={help}>
                   <Button
                     variant='ghost'
-                    className='h-8 w-8 bg-input p-0 hover:bg-input-hover dark:bg-neutral-950 dark:hover:bg-neutral-800'
+                    className='hover:bg-input-hover h-8 w-8 bg-input p-0 dark:bg-neutral-950 dark:hover:bg-neutral-800'
                     onClick={() => table.nextPage()}
                     disabled={!table.getCanNextPage()}
                   >
@@ -448,7 +448,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
                 <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.pagination.lastPage} help={help}>
                   <Button
                     variant='ghost'
-                    className='h-8 w-8 bg-input p-0 hover:bg-input-hover lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800'
+                    className='hover:bg-input-hover h-8 w-8 bg-input p-0 lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800'
                     onClick={() => table.setPageIndex(table.getPageCount() - 1)}
                     disabled={!table.getCanNextPage()}
                   >
