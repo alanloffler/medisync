@@ -69,7 +69,9 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
       accessorKey: 'index',
       size: 50,
       header: () => <div className='text-center'>#</div>,
-      cell: ({ row }) => <div className='text-center text-sm'>{truncate(row.original._id, -4)}</div>,
+      cell: ({ row }) => (
+        <div className='mx-auto w-fit rounded-md bg-slate-100 px-1.5 py-1 text-center text-xs text-slate-400'>{truncate(row.original._id, -3)}</div>
+      ),
     },
     {
       accessorKey: 'lastName',
@@ -172,7 +174,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
       size: 100,
       header: () => <div className='text-center'>{PROF_CONFIG.table.headers[4]}</div>,
       cell: ({ row }) => (
-        <div className='flex flex-row items-center justify-center space-x-2'>
+        <div className='mx-auto flex w-fit flex-row items-center justify-center space-x-1'>
           <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.button.view} help={help}>
             <Button
               variant='ghost'
@@ -180,7 +182,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
               onClick={() => navigate(`/professionals/${row.original._id}`)}
               className='transition-transform duration-100 ease-in-out animate-in hover:scale-110 hover:bg-transparent hover:text-sky-400'
             >
-              <FileText size={18} strokeWidth={1.5} />
+              <FileText size={16} strokeWidth={1.5} />
             </Button>
           </TooltipWrapper>
           <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.button.edit} help={help}>
@@ -190,7 +192,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
               onClick={() => navigate(`/professionals/update/${row.original._id}`)}
               className='transition-transform duration-100 ease-in-out animate-in hover:scale-110 hover:bg-transparent hover:text-orange-400'
             >
-              <PencilLine size={18} strokeWidth={1.5} />
+              <PencilLine size={16} strokeWidth={1.5} />
             </Button>
           </TooltipWrapper>
           <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.button.delete} help={help}>
@@ -200,7 +202,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
               onClick={() => handleRemoveDialog(row.original)}
               className='transition-transform duration-100 ease-in-out animate-in hover:scale-110 hover:bg-transparent hover:text-rose-400'
             >
-              <Trash2 size={18} strokeWidth={1.5} />
+              <Trash2 size={16} strokeWidth={1.5} />
             </Button>
           </TooltipWrapper>
           <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.button.sendWhatsApp} help={help}>
