@@ -1,5 +1,8 @@
+import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUserForm } from '@users/interfaces/user.interface';
 import type { SortingState } from '@tanstack/react-table';
+import { APP_CONFIG } from '@config/app.config';
+import { EMethods } from '@core/enums/methods.enum';
 import { UserUtils } from '@users/services/user.utils';
 
 export class UserApiService {
@@ -108,6 +111,34 @@ export class UserApiService {
       return await query.json();
     } catch (error) {
       return error;
+    }
+  }
+
+  // TODO: make backend for this
+  public static async databaseCount() {
+    const url: string = `${this.API_URL}/users/databaseCount`;
+    return await this.fetch(url, EMethods.GET);
+  }
+
+  private static async fetch(url: string, method: EMethods, body?: any) {
+    try {
+      const query: Response = await fetch(url, {
+        method: method,
+        headers: {
+          'content-type': 'application/json;charset=UTF-8',
+        },
+        body: JSON.stringify(body),
+      });
+
+      const response: IResponse = await query.json();
+      if (!query.ok) throw new Error(response.message);
+
+      return response;
+    } catch (error) {
+      if (error instanceof TypeError) {
+        throw new Error(APP_CONFIG.error.server);
+      }
+      throw error;
     }
   }
 }
