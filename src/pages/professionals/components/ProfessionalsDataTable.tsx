@@ -367,7 +367,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
         <LoadingDB text={APP_CONFIG.loadingDB.findProfesionals} className='mt-3' />
       ) : table.getRowModel().rows?.length > 0 ? (
         <>
-          <div className='flex items-center justify-end text-sm font-medium text-slate-400'>{`${totalItems} ${totalItems === 1 ? PROF_CONFIG.dbProfessionalSingular : PROF_CONFIG.dbProfessionalPlural}`}</div>
+          <div className='flex items-center justify-end py-2 text-sm font-medium text-slate-400'>{`${totalItems} ${totalItems === 1 ? PROF_CONFIG.dbProfessionalSingular : PROF_CONFIG.dbProfessionalPlural}`}</div>
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
