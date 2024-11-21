@@ -6,7 +6,6 @@ import { Button } from '@core/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@core/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@core/components/ui/table';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@core/components/ui/tooltip';
 // Tanstack Data Table: https://tanstack.com/table/latest
 import {
   flexRender,
@@ -82,7 +81,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
             {USER_CONFIG.table.headers[0]}
-            <ArrowDownUp className='h-3 w-3' />
+            <ArrowDownUp size={12} strokeWidth={2} />
           </button>
         </div>
       ),
@@ -98,7 +97,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
             {USER_CONFIG.table.headers[1]}
-            <ArrowDownUp className='h-3 w-3' />
+            <ArrowDownUp size={12} strokeWidth={2} />
           </button>
         </div>
       ),
@@ -114,7 +113,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
             {USER_CONFIG.table.headers[2]}
-            <ArrowDownUp className='h-3 w-3' />
+            <ArrowDownUp size={12} strokeWidth={2} />
           </button>
         </div>
       ),
@@ -126,123 +125,41 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
       header: () => <div className='text-center'>{USER_CONFIG.table.headers[3]}</div>,
       cell: ({ row }) => (
         <div className='flex flex-row items-center justify-center space-x-2'>
-          {help ? (
-            <>
-              {/* View User */}
-              <TooltipProvider delayDuration={0.3}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant={'ghost'}
-                      size={'miniIcon'}
-                      onClick={() => navigate(`/users/${row.original._id}`)}
-                      className='hover:bg-transparent hover:text-fuchsia-500'
-                    >
-                      <FileText size={16} strokeWidth={2} />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className='text-xs font-medium'>{USER_CONFIG.tooltip.actions.viewUser}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              {/* Update User */}
-              <TooltipProvider delayDuration={0.3}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant={'ghost'}
-                      size={'miniIcon'}
-                      onClick={() => navigate(`/users/update/${row.original._id}`)}
-                      className='hover:bg-transparent hover:text-indigo-500'
-                    >
-                      <FilePen size={16} strokeWidth={2} />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className='text-xs font-medium'>{USER_CONFIG.tooltip.actions.updateUser}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              {/* Delete User */}
-              <TooltipProvider delayDuration={0.3}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant={'ghost'}
-                      size={'miniIcon'}
-                      onClick={() => handleRemoveUserDialog(row.original)}
-                      className='hover:bg-transparent hover:text-red-500'
-                    >
-                      <Trash2 size={16} strokeWidth={2} />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className='text-xs font-medium'>{USER_CONFIG.tooltip.actions.removeUser}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              {/* Send WhatsApp message */}
-              <TooltipProvider delayDuration={0.3}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      disabled={!row.original.phone}
-                      variant={'ghost'}
-                      size={'miniIcon'}
-                      className='fill-current hover:bg-transparent hover:fill-green-500'
-                      onClick={() => navigate(`/whatsapp/user/${row.original._id}`)}
-                    >
-                      <svg width='100' height='100' viewBox='0 0 464 488' className='h-4 w-4'>
-                        <path d='M462 228q0 93-66 159t-160 66q-56 0-109-28L2 464l40-120q-32-54-32-116q0-93 66-158.5T236 4t160 65.5T462 228zM236 39q-79 0-134.5 55.5T46 228q0 62 36 111l-24 70l74-23q49 31 104 31q79 0 134.5-55.5T426 228T370.5 94.5T236 39zm114 241q-1-1-10-7q-3-1-19-8.5t-19-8.5q-9-3-13 2q-1 3-4.5 7.5t-7.5 9t-5 5.5q-4 6-12 1q-34-17-45-27q-7-7-13.5-15t-12-15t-5.5-8q-3-7 3-11q4-6 8-10l6-9q2-5-1-10q-4-13-17-41q-3-9-12-9h-11q-9 0-15 7q-19 19-19 45q0 24 22 57l2 3q2 3 4.5 6.5t7 9t9 10.5t10.5 11.5t13 12.5t14.5 11.5t16.5 10t18 8.5q16 6 27.5 10t18 5t9.5 1t7-1t5-1q9-1 21.5-9t15.5-17q8-21 3-26z' />
-                      </svg>
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className='text-xs font-medium'>{USER_CONFIG.tooltip.actions.sendWhatsAppMessage}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </>
-          ) : (
-            <>
-              <Button
-                variant={'ghost'}
-                size={'miniIcon'}
-                onClick={() => navigate(`/users/${row.original._id}`)}
-                className='hover:bg-transparent hover:text-fuchsia-500'
-              >
-                <FileText size={16} strokeWidth={2} />
-              </Button>
-              <Button
-                variant={'ghost'}
-                size={'miniIcon'}
-                onClick={() => navigate(`/users/update/${row.original._id}`)}
-                className='hover:bg-transparent hover:text-indigo-500'
-              >
-                <FilePen size={16} strokeWidth={2} />
-              </Button>
-              <Button
-                variant={'ghost'}
-                size={'miniIcon'}
-                onClick={() => handleRemoveUserDialog(row.original)}
-                className='hover:bg-transparent hover:text-red-500'
-              >
-                <Trash2 size={16} strokeWidth={2} />
-              </Button>
-              <Button
-                disabled={!row.original.phone}
-                variant={'ghost'}
-                size={'miniIcon'}
-                className='fill-current hover:bg-transparent hover:fill-green-500'
-                onClick={() => navigate(`/whatsapp/user/${row.original._id}`)}
-              >
-                <svg width='100' height='100' viewBox='0 0 464 488' className='h-4 w-4'>
-                  <path d='M462 228q0 93-66 159t-160 66q-56 0-109-28L2 464l40-120q-32-54-32-116q0-93 66-158.5T236 4t160 65.5T462 228zM236 39q-79 0-134.5 55.5T46 228q0 62 36 111l-24 70l74-23q49 31 104 31q79 0 134.5-55.5T426 228T370.5 94.5T236 39zm114 241q-1-1-10-7q-3-1-19-8.5t-19-8.5q-9-3-13 2q-1 3-4.5 7.5t-7.5 9t-5 5.5q-4 6-12 1q-34-17-45-27q-7-7-13.5-15t-12-15t-5.5-8q-3-7 3-11q4-6 8-10l6-9q2-5-1-10q-4-13-17-41q-3-9-12-9h-11q-9 0-15 7q-19 19-19 45q0 24 22 57l2 3q2 3 4.5 6.5t7 9t9 10.5t10.5 11.5t13 12.5t14.5 11.5t16.5 10t18 8.5q16 6 27.5 10t18 5t9.5 1t7-1t5-1q9-1 21.5-9t15.5-17q8-21 3-26z' />
-                </svg>
-              </Button>
-            </>
-          )}
+          <Button
+            variant={'ghost'}
+            size={'miniIcon'}
+            onClick={() => navigate(`/users/${row.original._id}`)}
+            className='hover:bg-transparent hover:text-fuchsia-500'
+          >
+            <FileText size={16} strokeWidth={2} />
+          </Button>
+          <Button
+            variant={'ghost'}
+            size={'miniIcon'}
+            onClick={() => navigate(`/users/update/${row.original._id}`)}
+            className='hover:bg-transparent hover:text-indigo-500'
+          >
+            <FilePen size={16} strokeWidth={2} />
+          </Button>
+          <Button
+            variant={'ghost'}
+            size={'miniIcon'}
+            onClick={() => handleRemoveUserDialog(row.original)}
+            className='hover:bg-transparent hover:text-red-500'
+          >
+            <Trash2 size={16} strokeWidth={2} />
+          </Button>
+          <Button
+            disabled={!row.original.phone}
+            variant={'ghost'}
+            size={'miniIcon'}
+            className='fill-current hover:bg-transparent hover:fill-green-500'
+            onClick={() => navigate(`/whatsapp/user/${row.original._id}`)}
+          >
+            <svg width='100' height='100' viewBox='0 0 464 488' className='h-4 w-4'>
+              <path d='M462 228q0 93-66 159t-160 66q-56 0-109-28L2 464l40-120q-32-54-32-116q0-93 66-158.5T236 4t160 65.5T462 228zM236 39q-79 0-134.5 55.5T46 228q0 62 36 111l-24 70l74-23q49 31 104 31q79 0 134.5-55.5T426 228T370.5 94.5T236 39zm114 241q-1-1-10-7q-3-1-19-8.5t-19-8.5q-9-3-13 2q-1 3-4.5 7.5t-7.5 9t-5 5.5q-4 6-12 1q-34-17-45-27q-7-7-13.5-15t-12-15t-5.5-8q-3-7 3-11q4-6 8-10l6-9q2-5-1-10q-4-13-17-41q-3-9-12-9h-11q-9 0-15 7q-19 19-19 45q0 24 22 57l2 3q2 3 4.5 6.5t7 9t9 10.5t10.5 11.5t13 12.5t14.5 11.5t16.5 10t18 8.5q16 6 27.5 10t18 5t9.5 1t7-1t5-1q9-1 21.5-9t15.5-17q8-21 3-26z' />
+            </svg>
+          </Button>
         </div>
       ),
     },
