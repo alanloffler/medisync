@@ -45,6 +45,21 @@ export const USER_CONFIG = {
     },
     rowsPerPage: 'Pacientes por página',
     title: 'Listado de Pacientes',
+    tooltip: {
+      button: {
+        delete: 'Eliminar',
+        edit: 'Editar',
+        sendWhatsApp: 'Enviar WhatsApp',
+        view: 'Ver detalles',
+      },
+      pagination: {
+        firstPage: 'Primera página',
+        itemsPerPage: 'Filas por página',
+        lastPage: 'Última página',
+        nextPage: 'Página siguiente',
+        prevPage: 'Página anterior',
+      },
+    },
   },
   title: 'Pacientes',
   tooltip: {
@@ -56,13 +71,6 @@ export const USER_CONFIG = {
       viewUser: 'Ver paciente',
     },
     createUser: 'Agregar paciente',
-    pagination: {
-      firstPage: 'Primera página',
-      lastPage: 'Última página',
-      nextPage: 'Siguiente página',
-      pageSize: 'Pacientes por página',
-      prevPage: 'Anterior página',
-    },
     reload: 'Recargar',
     sort: 'Ordernar',
   },
