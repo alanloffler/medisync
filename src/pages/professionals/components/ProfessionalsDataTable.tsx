@@ -1,5 +1,14 @@
 // Icons: https://lucide.dev/icons/
-import { ArrowDownUp, ArrowLeftIcon, ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon, FileText, PencilLine, Trash2 } from 'lucide-react';
+import {
+  ArrowDownUp,
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  FileText,
+  PencilLine,
+  Trash2,
+} from 'lucide-react';
 // External components:
 // https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
@@ -20,6 +29,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 // Components
+import { DBCountProfessional } from '@professionals/components/common/DBCountProfessional';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
@@ -369,13 +379,13 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
         <LoadingDB text={APP_CONFIG.loadingDB.findProfesionals} className='mt-3' />
       ) : table.getRowModel().rows?.length > 0 ? (
         <>
-          <div className='flex items-center justify-end py-2 text-sm font-medium text-slate-400'>{`${totalItems} ${totalItems === 1 ? PROF_CONFIG.dbProfessionalSingular : PROF_CONFIG.dbProfessionalPlural}`}</div>
+          <DBCountProfessional />
           <Table>
-            <TableHeader>
+            <TableHeader className='bg-slate-100'>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id} style={{ width: `${header.getSize()}px` }}>
+                    <TableHead key={header.id} style={{ width: `${header.getSize()}px` }} className='h-10'>
                       {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
                   ))}
