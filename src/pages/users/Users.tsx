@@ -4,7 +4,6 @@ import { CirclePlus, List, ListRestart, PlusCircle, Search, X } from 'lucide-rea
 import { Button } from '@core/components/ui/button';
 import { Card, CardContent, CardTitle } from '@core/components/ui/card';
 import { Input } from '@core/components/ui/input';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@core/components/ui/tooltip';
 // Components
 import { PageHeader } from '@core/components/common/PageHeader';
 import { UsersDataTable } from '@users/components/UsersDataTable';
@@ -52,11 +51,11 @@ export default function Users() {
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
       {/* Section: Page Header */}
-      <div className='flex items-center justify-between'>
+      <header className='flex items-center justify-between'>
         <PageHeader title={USER_CONFIG.title} breadcrumb={USER_CONFIG.breadcrumb} />
-      </div>
+      </header>
       {/* Section: Page content */}
-      <div className='grid gap-6 md:grid-cols-4 md:gap-8 lg:grid-cols-4 xl:grid-cols-4'>
+      <section className='grid gap-6 md:grid-cols-4 md:gap-8 lg:grid-cols-4 xl:grid-cols-4'>
         {/* Section: Left side content */}
         <Card className='col-span-1 border-none bg-slate-200 bg-transparent shadow-none md:col-span-4 lg:col-span-1 xl:col-span-1'>
           <CardContent className='p-0'>
@@ -126,98 +125,39 @@ export default function Users() {
         </Card>
         {/* Section: Right side content */}
         <Card className='col-span-1 h-fit overflow-y-auto md:col-span-4 lg:col-span-3 xl:col-span-3'>
-          <header className='bg-card-header grid gap-2 rounded-t-lg text-slate-700'>
-            <CardTitle className='flex items-center justify-between'>
-              <div className='flex items-center gap-3.5 px-2'>
-                <List size={16} strokeWidth={2} />
-                {USER_CONFIG.table.title}
-              </div>
-              <div className='flex items-center gap-2'>
-                {/* Reload */}
-                {help ? (
-                  <TooltipProvider delayDuration={0.3}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          ref={reloadScope}
-                          size={'miniIcon'}
-                          variant={'tableHeader'}
-                          onClick={handleReload}
-                          onMouseOver={() =>
-                            reloadAnimation(reloadScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                          }
-                          onMouseOut={() =>
-                            reloadAnimation(reloadScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                          }
-                        >
-                          <ListRestart size={16} strokeWidth={2} />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p className='text-xs font-medium'>{USER_CONFIG.tooltip.reload}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                ) : (
-                  <Button
-                    size={'miniIcon'}
-                    variant={'tableHeader'}
-                    ref={reloadScope}
-                    onClick={handleReload}
-                    onMouseOver={() =>
-                      reloadAnimation(reloadScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                    }
-                    onMouseOut={() =>
-                      reloadAnimation(reloadScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                    }
-                  >
-                    <ListRestart size={16} strokeWidth={2} />
-                  </Button>
-                )}
-                {/* Create user */}
-                {help ? (
-                  <TooltipProvider delayDuration={0.3}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          size={'miniIcon'}
-                          variant={'tableHeaderPrimary'}
-                          ref={createMiniScope}
-                          onClick={() => navigate('/users/create')}
-                          onMouseOver={() =>
-                            createMiniAnimation(createMiniScope.current, { scale: 1.2 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                          }
-                          onMouseOut={() =>
-                            createMiniAnimation(createMiniScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                          }
-                        >
-                          <CirclePlus size={16} strokeWidth={2} />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p className='text-xs font-medium'>{USER_CONFIG.tooltip.createUser}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                ) : (
-                  <Button
-                    ref={createMiniScope}
-                    size={'miniIcon'}
-                    variant={'tableHeaderPrimary'}
-                    onClick={() => navigate('/users/create')}
-                    onMouseOver={() =>
-                      createMiniAnimation(createMiniScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                    }
-                    onMouseOut={() =>
-                      createMiniAnimation(createMiniScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                    }
-                  >
-                    <CirclePlus size={16} strokeWidth={2} />
-                  </Button>
-                )}
-              </div>
-            </CardTitle>
-          </header>
+          <CardTitle className='bg-card-header flex items-center justify-between gap-2 rounded-b-none text-slate-700'>
+            <header className='flex items-center gap-3.5 px-2'>
+              <List size={16} strokeWidth={2} />
+              {USER_CONFIG.table.title}
+            </header>
+            <section className='flex items-center gap-2'>
+              <Button
+                size={'miniIcon'}
+                variant={'tableHeader'}
+                ref={reloadScope}
+                onClick={handleReload}
+                onMouseOver={() => reloadAnimation(reloadScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })}
+                onMouseOut={() => reloadAnimation(reloadScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })}
+              >
+                <ListRestart size={16} strokeWidth={2} />
+              </Button>
+
+              <Button
+                ref={createMiniScope}
+                size={'miniIcon'}
+                variant={'tableHeaderPrimary'}
+                onClick={() => navigate('/users/create')}
+                onMouseOver={() =>
+                  createMiniAnimation(createMiniScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                }
+                onMouseOut={() =>
+                  createMiniAnimation(createMiniScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                }
+              >
+                <CirclePlus size={16} strokeWidth={2} />
+              </Button>
+            </section>
+          </CardTitle>
           {/* Table */}
           <CardContent className='px-3'>
             <UsersDataTable
@@ -230,7 +170,7 @@ export default function Users() {
             />
           </CardContent>
         </Card>
-      </div>
+      </section>
     </main>
   );
 }
