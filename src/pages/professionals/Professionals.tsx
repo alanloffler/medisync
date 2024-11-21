@@ -195,48 +195,46 @@ export default function Professionals() {
           </section>
           {/* Section: Professionals Table */}
           <Card>
-            <header className='bg-card-header grid gap-2 rounded-t-lg text-slate-700'>
-              <CardTitle className='flex items-center justify-between'>
-                <div className='flex items-center gap-3.5 px-2'>
-                  <List size={16} strokeWidth={2} />
-                  {PROF_CONFIG.table.title}
-                </div>
-                <div className='flex items-center gap-2'>
-                  <TooltipWrapper tooltip={PROF_CONFIG.tooltip.reload} help={help}>
-                    <Button
-                      ref={reloadScope}
-                      size='miniIcon'
-                      variant='tableHeader'
-                      onClick={handleReload}
-                      onMouseOver={() =>
-                        reloadAnimation(reloadScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                      }
-                      onMouseOut={() =>
-                        reloadAnimation(reloadScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                      }
-                    >
-                      <ListRestart size={16} strokeWidth={2} />
-                    </Button>
-                  </TooltipWrapper>
-                  <TooltipWrapper tooltip={PROF_CONFIG.tooltip.addProfessional} help={help}>
-                    <Button
-                      ref={createMiniScope}
-                      size='miniIcon'
-                      variant='tableHeaderPrimary'
-                      onClick={() => navigate('/professionals/create')}
-                      onMouseOver={() =>
-                        createMiniAnimation(createMiniScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                      }
-                      onMouseOut={() =>
-                        createMiniAnimation(createMiniScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                      }
-                    >
-                      <CirclePlus size={16} strokeWidth={2} />
-                    </Button>
-                  </TooltipWrapper>
-                </div>
-              </CardTitle>
-            </header>
+            <CardTitle className='bg-card-header flex items-center justify-between gap-2 rounded-b-none text-slate-700'>
+              <header className='flex items-center gap-3.5 px-2'>
+                <List size={16} strokeWidth={2} />
+                {PROF_CONFIG.table.title}
+              </header>
+              <section className='flex items-center gap-2'>
+                <TooltipWrapper tooltip={PROF_CONFIG.tooltip.reload} help={help}>
+                  <Button
+                    ref={reloadScope}
+                    size='miniIcon'
+                    variant='tableHeader'
+                    onClick={handleReload}
+                    onMouseOver={() =>
+                      reloadAnimation(reloadScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                    }
+                    onMouseOut={() =>
+                      reloadAnimation(reloadScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                    }
+                  >
+                    <ListRestart size={16} strokeWidth={2} />
+                  </Button>
+                </TooltipWrapper>
+                <TooltipWrapper tooltip={PROF_CONFIG.tooltip.addProfessional} help={help}>
+                  <Button
+                    ref={createMiniScope}
+                    size='miniIcon'
+                    variant='tableHeaderPrimary'
+                    onClick={() => navigate('/professionals/create')}
+                    onMouseOver={() =>
+                      createMiniAnimation(createMiniScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                    }
+                    onMouseOut={() =>
+                      createMiniAnimation(createMiniScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                    }
+                  >
+                    <CirclePlus size={16} strokeWidth={2} />
+                  </Button>
+                </TooltipWrapper>
+              </section>
+            </CardTitle>
             <CardContent className='px-3'>
               {/* TODO: must send to component the state of search, when is from a filter or not, then manage the sorting state on datatable
               If is by filter then set skip to default (ex: 10), if not the datatable must manage the skip */}
