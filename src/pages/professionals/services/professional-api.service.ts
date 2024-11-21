@@ -2,14 +2,8 @@ import type { IProfessionalForm } from '@professionals/interfaces/professional.i
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { SortingState } from '@tanstack/react-table';
 import { APP_CONFIG } from '@config/app.config';
+import { EMethods } from '@core/enums/methods.enum';
 import { ProfessionalUtils } from '@professionals/services/professional.utils';
-
-enum EMethods {
-  GET = 'GET',
-  POST = 'POST',
-  PUT = 'PUT',
-  DELETE = 'DELETE',
-}
 
 export class ProfessionalApiService {
   private static readonly API_URL: string = import.meta.env.VITE_API_URL;
