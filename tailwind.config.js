@@ -49,6 +49,7 @@ module.exports = {
         card: {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
+          header: '#e2e8f0', // slate-200
         },
         'dark-bg': '#DFDFFF',
         'dark-bg-border': '#C6C6FF',
