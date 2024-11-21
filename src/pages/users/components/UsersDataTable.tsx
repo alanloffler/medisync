@@ -23,6 +23,7 @@ import {
 // Components
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
+import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -383,7 +384,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
       {isLoading ? (
         <LoadingDB text={APP_CONFIG.loadingDB.findUsers} className='mt-3' />
       ) : table.getRowModel().rows?.length > 0 ? (
-        <section>
+        <>
           <div className='flex items-center justify-end py-2 text-sm font-medium text-slate-400'>
             {totalItems === 1 ? `${totalItems} ${USER_CONFIG.dbUsersSingular}` : `${totalItems} ${USER_CONFIG.dbUsersPlural}`}
           </div>
@@ -415,162 +416,69 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
             <div className='flex items-center space-x-2'>
               <p className='text-xs font-normal text-slate-400'>{USER_CONFIG.table.rowsPerPage}</p>
               <Select value={`${table.getState().pagination.pageSize}`} onValueChange={(e) => setPagination({ pageIndex: 0, pageSize: parseInt(e) })}>
-                {help ? (
-                  <TooltipProvider delayDuration={0.3}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <SelectTrigger className='h-8 w-[65px] text-xs font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring/40 focus-visible:ring-offset-0'>
-                          <SelectValue placeholder={table.getState().pagination.pageSize} />
-                        </SelectTrigger>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p className='text-xs font-medium'>{USER_CONFIG.tooltip.pagination.pageSize}</p>
-                      </TooltipContent>
-                      <SelectContent side='top' className='min-w-[4rem]'>
-                        {USER_CONFIG.table.itemsPerPage.map((pageSize) => (
-                          <SelectItem key={pageSize} value={`${pageSize}`} className='text-xs'>
-                            {pageSize}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                ) : (
-                  <>
-                    <SelectTrigger className='h-8 w-[65px] text-xs font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring/40 focus-visible:ring-offset-0'>
-                      <SelectValue placeholder={table.getState().pagination.pageSize} />
-                    </SelectTrigger>
-                    <SelectContent side='top' className='min-w-[4rem]'>
-                      {USER_CONFIG.table.itemsPerPage.map((pageSize) => (
-                        <SelectItem key={pageSize} value={`${pageSize}`} className='text-xs'>
-                          {pageSize}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </>
-                )}
+                <TooltipWrapper tooltip={USER_CONFIG.table.tooltip.pagination.itemsPerPage} help={help}>
+                  <SelectTrigger className='hover:bg-input-hover h-8 w-[65px] bg-input text-xs font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring/40 focus-visible:ring-offset-0'>
+                    <SelectValue placeholder={table.getState().pagination.pageSize} />
+                  </SelectTrigger>
+                </TooltipWrapper>
+                <SelectContent side='top' className='min-w-[4rem]' onCloseAutoFocus={(e) => e.preventDefault()}>
+                  {USER_CONFIG.table.itemsPerPage.map((pageSize) => (
+                    <SelectItem key={pageSize} value={`${pageSize}`} className='text-xs'>
+                      {pageSize}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
               </Select>
             </div>
             <div className='flex w-[100px] items-center justify-center text-xs font-normal text-slate-400'>
               {USER_CONFIG.table.pagination.page} {pagination.pageIndex + 1} {USER_CONFIG.table.pagination.of} {table.getPageCount()}
             </div>
             {table.getPageCount() > 1 && (
-              <div className='flex items-center space-x-2'>
-                {help ? (
-                  <>
-                    {/* First page */}
-                    <TooltipProvider delayDuration={0.3}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant='ghost'
-                            className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800'
-                            onClick={() => table.setPageIndex(0)}
-                            disabled={!table.getCanPreviousPage()}
-                          >
-                            <ArrowLeftIcon size={16} strokeWidth={2} />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p className='text-xs font-medium'>{USER_CONFIG.tooltip.pagination.firstPage}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                    {/* Previous page */}
-                    <TooltipProvider delayDuration={0.3}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant='ghost'
-                            className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 dark:bg-neutral-950 dark:hover:bg-neutral-800'
-                            onClick={() => table.previousPage()}
-                            disabled={!table.getCanPreviousPage()}
-                          >
-                            <ChevronLeftIcon size={16} strokeWidth={2} />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p className='text-xs font-medium'>{USER_CONFIG.tooltip.pagination.prevPage}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                    {/* Next page */}
-                    <TooltipProvider delayDuration={0.3}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant='ghost'
-                            className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 dark:bg-neutral-950 dark:hover:bg-neutral-800'
-                            onClick={() => table.nextPage()}
-                            disabled={!table.getCanNextPage()}
-                          >
-                            <ChevronRightIcon size={16} strokeWidth={2} />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p className='text-xs font-medium'>{USER_CONFIG.tooltip.pagination.nextPage}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                    {/* Last page */}
-                    <TooltipProvider delayDuration={0.3}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant='ghost'
-                            className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800'
-                            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                            disabled={!table.getCanNextPage()}
-                          >
-                            <ArrowRightIcon size={16} strokeWidth={2} />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p className='text-xs font-medium'>{USER_CONFIG.tooltip.pagination.lastPage}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </>
-                ) : (
-                  <>
-                    <Button
-                      variant='ghost'
-                      className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800'
-                      onClick={() => table.setPageIndex(0)}
-                      disabled={!table.getCanPreviousPage()}
-                    >
-                      <ArrowLeftIcon size={16} strokeWidth={2} />
-                    </Button>
-                    <Button
-                      variant='ghost'
-                      className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 dark:bg-neutral-950 dark:hover:bg-neutral-800'
-                      onClick={() => table.previousPage()}
-                      disabled={!table.getCanPreviousPage()}
-                    >
-                      <ChevronLeftIcon size={16} strokeWidth={2} />
-                    </Button>
-                    <Button
-                      variant='ghost'
-                      className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 dark:bg-neutral-950 dark:hover:bg-neutral-800'
-                      onClick={() => table.nextPage()}
-                      disabled={!table.getCanNextPage()}
-                    >
-                      <ChevronRightIcon size={16} strokeWidth={2} />
-                    </Button>
-                    <Button
-                      variant='ghost'
-                      className='h-8 w-8 bg-slate-200/50 p-0 hover:bg-slate-200 lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800'
-                      onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                      disabled={!table.getCanNextPage()}
-                    >
-                      <ArrowRightIcon size={16} strokeWidth={2} />
-                    </Button>
-                  </>
-                )}
-              </div>
+              <section className='flex items-center space-x-2'>
+                <TooltipWrapper tooltip={USER_CONFIG.table.tooltip.pagination.firstPage} help={help}>
+                  <Button
+                    variant='ghost'
+                    className='hover:bg-input-hover h-8 w-8 bg-input p-0 lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800'
+                    onClick={() => table.setPageIndex(0)}
+                    disabled={!table.getCanPreviousPage()}
+                  >
+                    <ArrowLeftIcon size={16} strokeWidth={2} />
+                  </Button>
+                </TooltipWrapper>
+                <TooltipWrapper tooltip={USER_CONFIG.table.tooltip.pagination.prevPage} help={help}>
+                  <Button
+                    variant='ghost'
+                    className='hover:bg-input-hover h-8 w-8 bg-input p-0 dark:bg-neutral-950 dark:hover:bg-neutral-800'
+                    onClick={() => table.previousPage()}
+                    disabled={!table.getCanPreviousPage()}
+                  >
+                    <ChevronLeftIcon size={16} strokeWidth={2} />
+                  </Button>
+                </TooltipWrapper>
+                <TooltipWrapper tooltip={USER_CONFIG.table.tooltip.pagination.nextPage} help={help}>
+                  <Button
+                    variant='ghost'
+                    className='hover:bg-input-hover h-8 w-8 bg-input p-0 dark:bg-neutral-950 dark:hover:bg-neutral-800'
+                    onClick={() => table.nextPage()}
+                    disabled={!table.getCanNextPage()}
+                  >
+                    <ChevronRightIcon size={16} strokeWidth={2} />
+                  </Button>
+                </TooltipWrapper>
+                <TooltipWrapper tooltip={USER_CONFIG.table.tooltip.pagination.lastPage} help={help}>
+                  <Button
+                    variant='ghost'
+                    className='hover:bg-input-hover h-8 w-8 bg-input p-0 lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800'
+                    onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+                    disabled={!table.getCanNextPage()}
+                  >
+                    <ArrowRightIcon size={16} strokeWidth={2} />
+                  </Button>
+                </TooltipWrapper>
+              </section>
             )}
           </section>
-        </section>
+        </>
       ) : (
         <InfoCard text={infoCardContent.text} type={infoCardContent.type} className='mt-3' />
       )}
