@@ -63,16 +63,8 @@ export const USER_CONFIG = {
   },
   title: 'Pacientes',
   tooltip: {
-    enabled: false,
-    actions: {
-      removeUser: 'Eliminar paciente',
-      sendWhatsAppMessage: 'Enviar WhatsApp',
-      updateUser: 'Editar paciente',
-      viewUser: 'Ver paciente',
-    },
-    createUser: 'Agregar paciente',
+    addUser: 'Agregar paciente',
     reload: 'Recargar',
-    sort: 'Ordernar',
   },
 };
 
