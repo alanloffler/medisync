@@ -208,8 +208,8 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
               disabled={!row.original.phone}
               variant='ghost'
               size='miniIcon'
-              className='transition-transform duration-100 ease-in-out animate-in hover:scale-110 hover:bg-transparent hover:fill-green-500'
               onClick={() => navigate(`/whatsapp/professional/${row.original._id}`)}
+              className='transition-transform duration-100 ease-in-out animate-in hover:scale-110 hover:bg-transparent hover:fill-green-500'
             >
               <svg width={16} height={16} viewBox='0 0 32 32'>
                 <path
