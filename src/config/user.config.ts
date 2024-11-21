@@ -33,6 +33,10 @@ export const USER_CONFIG = {
     },
   },
   table: {
+    databaseCount: {
+      totalPlural: 'usuarios en total',
+      totalSingular: 'usuarios en total',
+    },
     defaultPageSize: 10,
     defaultSortingId: 'lastName',
     defaultSortingType: false, // desc: true | false
