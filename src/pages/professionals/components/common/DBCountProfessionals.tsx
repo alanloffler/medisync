@@ -8,7 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 import { PROF_CONFIG } from '@config/professionals.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 // React component
-export function DBCountProfessional() {
+export function DBCountProfessionals() {
   const {
     data: dbCount,
     isLoading,
