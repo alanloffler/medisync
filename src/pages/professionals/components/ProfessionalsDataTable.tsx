@@ -29,7 +29,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 // Components
-import { DBCountProfessional } from '@professionals/components/common/DBCountProfessional';
+import { DBCountProfessionals } from '@professionals/components/common/DBCountProfessionals';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
@@ -379,7 +379,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
         <LoadingDB text={APP_CONFIG.loadingDB.findProfesionals} className='mt-3' />
       ) : table.getRowModel().rows?.length > 0 ? (
         <>
-          <DBCountProfessional />
+          <DBCountProfessionals />
           <Table>
             <TableHeader className='bg-slate-100'>
               {table.getHeaderGroups().map((headerGroup) => (
