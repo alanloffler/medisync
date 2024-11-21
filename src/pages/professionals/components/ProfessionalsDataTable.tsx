@@ -401,7 +401,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
                     <SelectValue placeholder={table.getState().pagination.pageSize} />
                   </SelectTrigger>
                 </TooltipWrapper>
-                <SelectContent side='top' className='min-w-[4rem]'>
+                <SelectContent side='top' className='min-w-[4rem]' onCloseAutoFocus={(e) => e.preventDefault()}>
                   {PROF_CONFIG.table.itemsPerPage.map((pageSize) => (
                     <SelectItem key={pageSize} value={`${pageSize}`} className='text-xs'>
                       {pageSize}
