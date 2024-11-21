@@ -70,7 +70,9 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
       accessorKey: 'index',
       size: 50,
       header: () => <div className='text-center'>#</div>,
-      cell: ({ row }) => <div className='text-center text-sm'>{truncate(row.original._id, -4)}</div>,
+      cell: ({ row }) => (
+        <div className='mx-auto w-fit rounded-md bg-slate-100 px-1.5 py-1 text-center text-xs text-slate-400'>{truncate(row.original._id, -3)}</div>
+      ),
     },
     {
       accessorKey: 'lastName',
@@ -124,7 +126,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
       size: 100,
       header: () => <div className='text-center'>{USER_CONFIG.table.headers[3]}</div>,
       cell: ({ row }) => (
-        <div className='flex flex-row items-center justify-center space-x-2'>
+        <div className='mx-auto flex w-fit flex-row items-center justify-center space-x-1'>
           <TooltipWrapper tooltip={USER_CONFIG.table.tooltip.button.view} help={help}>
             <Button
               variant='ghost'
