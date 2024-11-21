@@ -6,6 +6,7 @@ import { Card, CardContent, CardTitle } from '@core/components/ui/card';
 import { Input } from '@core/components/ui/input';
 // Components
 import { PageHeader } from '@core/components/common/PageHeader';
+import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 import { UsersDataTable } from '@users/components/UsersDataTable';
 // External imports
 import { ChangeEvent, useEffect, useState } from 'react';
@@ -131,35 +132,40 @@ export default function Users() {
               {USER_CONFIG.table.title}
             </header>
             <section className='flex items-center gap-2'>
-              <Button
-                size={'miniIcon'}
-                variant={'tableHeader'}
-                ref={reloadScope}
-                onClick={handleReload}
-                onMouseOver={() => reloadAnimation(reloadScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })}
-                onMouseOut={() => reloadAnimation(reloadScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })}
-              >
-                <ListRestart size={16} strokeWidth={2} />
-              </Button>
-
-              <Button
-                ref={createMiniScope}
-                size={'miniIcon'}
-                variant={'tableHeaderPrimary'}
-                onClick={() => navigate('/users/create')}
-                onMouseOver={() =>
-                  createMiniAnimation(createMiniScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                }
-                onMouseOut={() =>
-                  createMiniAnimation(createMiniScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                }
-              >
-                <CirclePlus size={16} strokeWidth={2} />
-              </Button>
+              <TooltipWrapper tooltip={USER_CONFIG.tooltip.reload} help={help}>
+                <Button
+                  size='miniIcon'
+                  variant='tableHeader'
+                  ref={reloadScope}
+                  onClick={handleReload}
+                  onMouseOver={() =>
+                    reloadAnimation(reloadScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                  }
+                  onMouseOut={() => reloadAnimation(reloadScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })}
+                >
+                  <ListRestart size={16} strokeWidth={2} />
+                </Button>
+              </TooltipWrapper>
+              <TooltipWrapper tooltip={USER_CONFIG.tooltip.addUser} help={help}>
+                <Button
+                  ref={createMiniScope}
+                  size='miniIcon'
+                  variant='tableHeaderPrimary'
+                  onClick={() => navigate('/users/create')}
+                  onMouseOver={() =>
+                    createMiniAnimation(createMiniScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                  }
+                  onMouseOut={() =>
+                    createMiniAnimation(createMiniScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                  }
+                >
+                  <CirclePlus size={16} strokeWidth={2} />
+                </Button>
+              </TooltipWrapper>
             </section>
           </CardTitle>
           {/* Table */}
-          <CardContent className='px-3'>
+          <CardContent>
             <UsersDataTable
               help={help}
               key={reload}
