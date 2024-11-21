@@ -17,8 +17,10 @@ module.exports = {
       },
       colors: {
         border: 'hsl(var(--border))',
-        input: '#f1f5f9', // slate-100
-        'input-hover': 'rgb(226 232 240 / 0.7)',
+        input: {
+          DEFAULT: '#f1f5f9', // slate-100
+          hover: 'rgb(226 232 240 / 0.7)',
+        },
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
