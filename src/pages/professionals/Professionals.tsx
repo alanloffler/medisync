@@ -235,7 +235,7 @@ export default function Professionals() {
                 </TooltipWrapper>
               </section>
             </CardTitle>
-            <CardContent className='px-3'>
+            <CardContent>
               {/* TODO: must send to component the state of search, when is from a filter or not, then manage the sorting state on datatable
               If is by filter then set skip to default (ex: 10), if not the datatable must manage the skip */}
               <ProfessionalsDataTable key={reload} reload={reload} search={debouncedSearch} setErrorMessage={setErrorMessage} setReload={setReload} />
