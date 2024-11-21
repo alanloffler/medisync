@@ -4,6 +4,13 @@ import type { SortingState } from '@tanstack/react-table';
 import { APP_CONFIG } from '@config/app.config';
 import { ProfessionalUtils } from '@professionals/services/professional.utils';
 
+enum EMethods {
+  GET = 'GET',
+  POST = 'POST',
+  PUT = 'PUT',
+  DELETE = 'DELETE',
+}
+
 export class ProfessionalApiService {
   private static readonly API_URL: string = import.meta.env.VITE_API_URL;
 
@@ -133,6 +140,34 @@ export class ProfessionalApiService {
         throw new Error(APP_CONFIG.error.server);
       }
 
+      throw error;
+    }
+  }
+
+  // TanStack query response format
+  public static async databaseCount() {
+    const url: string = `${this.API_URL}/professionals/databaseCount`;
+    return await this.fetch(url, EMethods.GET);
+  }
+
+  private static async fetch(url: string, method: EMethods, body?: any) {
+    try {
+      const query: Response = await fetch(url, {
+        method: method,
+        headers: {
+          'content-type': 'application/json;charset=UTF-8',
+        },
+        body: JSON.stringify(body),
+      });
+
+      const response: IResponse = await query.json();
+      if (!query.ok) throw new Error(response.message);
+
+      return response;
+    } catch (error) {
+      if (error instanceof TypeError) {
+        throw new Error(APP_CONFIG.error.server);
+      }
       throw error;
     }
   }
