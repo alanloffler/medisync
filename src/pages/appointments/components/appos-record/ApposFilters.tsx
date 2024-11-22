@@ -89,11 +89,11 @@ export function ApposFilters({ userId }: { userId: string }) {
   }
 
   return (
-    <main className='flex w-full items-center justify-between rounded-md border border-slate-300 bg-slate-200 px-4 py-2 shadow-sm'>
+    <main className='flex w-full items-center justify-between rounded-md border border-slate-200 bg-slate-100 px-2 py-1'>
       <section className='flex items-center justify-start space-x-4'>
         <section className='flex items-center space-x-2'>
-          <Filter size={16} strokeWidth={2} />
-          <h1 className='text-sm font-medium'>{USER_VIEW_CONFIG.apposRecord.filters.title}</h1>
+          <Filter size={14} strokeWidth={1.5} />
+          <h1 className='text-xsm font-medium'>{USER_VIEW_CONFIG.apposRecord.filters.title}</h1>
         </section>
         <Select
           disabled={professionalError || professionals.length === 0}
@@ -101,7 +101,7 @@ export function ApposFilters({ userId }: { userId: string }) {
           onValueChange={(e) => setFilters({ professional: e as IApposFilters['professional'] })}
         >
           <TooltipWrapper tooltip={USER_VIEW_CONFIG.apposRecord.filters.select.professional.tooltip} help={help}>
-            <SelectTrigger className={'h-7 w-fit space-x-3 border border-slate-300 bg-white text-xsm shadow-sm'}>
+            <SelectTrigger className={'h-7 w-fit space-x-3 border border-slate-300 bg-white text-xsm shadow-none'}>
               {loadingProfessionals ? (
                 <LoadingDB
                   variant='default'
@@ -131,7 +131,7 @@ export function ApposFilters({ userId }: { userId: string }) {
           onValueChange={(e) => setFilters({ year: e as IApposFilters['year'] })}
         >
           <TooltipWrapper tooltip={USER_VIEW_CONFIG.apposRecord.filters.select.year.tooltip} help={help}>
-            <SelectTrigger className={'h-7 w-fit space-x-3 border border-slate-300 bg-white text-xsm shadow-sm'}>
+            <SelectTrigger className={'h-7 w-fit space-x-3 border border-slate-300 bg-white text-xsm shadow-none'}>
               {loadingYears ? (
                 <LoadingDB
                   variant='default'
