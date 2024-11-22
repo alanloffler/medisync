@@ -15,7 +15,7 @@ export function DBCountProfessionals() {
     isError,
   } = useQuery({
     queryKey: ['professionals', 'db-count'],
-    queryFn: async () => await ProfessionalApiService.databaseCount(),
+    queryFn: async () => await ProfessionalApiService.countAll(),
   });
 
   const total: number = dbCount?.data.total;
