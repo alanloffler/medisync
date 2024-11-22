@@ -1,4 +1,7 @@
+// Icons: https://lucide.dev/icons/
+import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
+import { Button } from '@core/components/ui/button';
 import { Card, CardContent } from '@core/components/ui/card';
 // Components
 import { PageHeader } from '@core/components/common/PageHeader';
@@ -60,26 +63,33 @@ export default function Appointments() {
               Página {page + 1}/{totalPages}
             </div>
             <div className='flex space-x-4'>
-              <button className='bg-input px-2 py-1 disabled:opacity-50' onClick={() => setPage(0)} disabled={page === 0}>
-                Primer página
-              </button>
-              <button className='bg-input px-2 py-1 disabled:opacity-50' onClick={() => setPage((old) => Math.max(old - 1, 0))} disabled={page === 0}>
-                Menos
-              </button>
-              <button
-                className='bg-input px-2 py-1 disabled:opacity-50'
-                onClick={() => setPage((old) => Math.max(old + 1, 0))}
-                disabled={!appointments.pagination?.hasMore}
+              <Button className='h-8 w-8 bg-input p-0 hover:bg-input-hover' variant='ghost' disabled={page === 0} onClick={() => setPage(0)}>
+                <ArrowLeft size={16} strokeWidth={2} />
+              </Button>
+              <Button
+                className='h-8 w-8 bg-input p-0 hover:bg-input-hover'
+                variant='ghost'
+                disabled={page === 0}
+                onClick={() => setPage((old) => Math.max(old - 1, 0))}
               >
-                Más
-              </button>
-              <button
-                className='bg-input px-2 py-1 disabled:opacity-50'
+                <ChevronLeft size={16} strokeWidth={2} />
+              </Button>
+              <Button
+                className='h-8 w-8 bg-input p-0 hover:bg-input-hover'
+                variant='ghost'
+                disabled={!appointments.pagination?.hasMore}
+                onClick={() => setPage((old) => Math.max(old + 1, 0))}
+              >
+                <ChevronRight size={16} strokeWidth={2} />
+              </Button>
+              <Button
+                className='h-8 w-8 bg-input p-0 hover:bg-input-hover'
+                variant='ghost'
                 onClick={() => totalPages && setPage(Math.ceil(totalPages - 1))}
                 disabled={!appointments.pagination?.hasMore}
               >
-                Última página
-              </button>
+                <ArrowRight size={16} strokeWidth={2} />
+              </Button>
             </div>
           </section>
         </Card>
