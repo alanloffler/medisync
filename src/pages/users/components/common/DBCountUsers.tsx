@@ -35,14 +35,15 @@ export function DBCountUsers() {
           <Database size={16} strokeWidth={2} className='text-blue-400' />
           <span>{`${total} ${total === 1 ? USER_CONFIG.table.databaseCount.totalSingular : USER_CONFIG.table.databaseCount.totalPlural}`}</span>
         </section>
-        <section className='flex items-center space-x-1'>
+        {diffPrevMonth && <section className='flex items-center space-x-1'>
           {diffPrevMonth && diffPrevMonth >= 0 ? (
             <TrendingUp size={16} strokeWidth={2} className='text-emerald-400' />
           ) : (
             <TrendingDown size={16} strokeWidth={2} className='text-rose-400' />
           )}
-          <span>{`${diffPrevMonth && diffPrevMonth >= 0 ? '+' : ''}${diffPrevMonth}% que el mes pasado`}</span>
-        </section>
+          {/* TODO: from database or localStorage to use comma or dot for decimals */}
+          <span>{`${diffPrevMonth >= 0 ? '+' : ''}${diffPrevMonth % 1 === 0 ? diffPrevMonth : diffPrevMonth.toFixed(1)}% ${USER_CONFIG.table.databaseCount.difference}`}</span>
+        </section>}
       </main>
     )
   );
