@@ -34,6 +34,7 @@ export const USER_CONFIG = {
   },
   table: {
     databaseCount: {
+      difference: 'que el mes pasado',
       totalPlural: 'usuarios en total',
       totalSingular: 'usuario en total',
     },
