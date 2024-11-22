@@ -114,10 +114,26 @@ export class UserApiService {
     }
   }
 
-  // TODO: make backend for this
-  public static async databaseCount() {
+  public static async countAll() {
     const url: string = `${this.API_URL}/users/databaseCount`;
     return await this.fetch(url, EMethods.GET);
+  }
+
+  public static async countByMonth(month: number, year: number) {
+    const url: string = `${this.API_URL}/users/countByMonth?m=${month}&y=${year}`;
+    return await this.fetch(url, EMethods.GET);
+  }
+
+  public static async differenceBetweenMonths(month: number, year: number) {
+    const actualMonth = this.countByMonth(month, year);
+    const prevMonth = this.countByMonth(month - 1, year);
+
+    const response = await Promise.all([actualMonth, prevMonth]);
+    
+    let percentage: number;
+    (response[0].data.total >= response[1].data.total) ? percentage = 100 : percentage = -100;
+    
+    return response[0].data.total / response[1].data.total * percentage;
   }
 
   private static async fetch(url: string, method: EMethods, body?: any) {
