@@ -16,14 +16,14 @@ module.exports = {
         'xsm': ['13px', '15px']
       },
       colors: {
+        background: '#ffffff',
+        foreground: '#020817',
         border: 'hsl(var(--border))',
         input: {
           DEFAULT: '#f1f5f9', // slate-100
           hover: 'rgb(226 232 240 / 0.7)',
         },
         ring: 'hsl(var(--ring))',
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
         primary: {
           DEFAULT: '#5555F0',
           foreground: '#FFFFFF',
