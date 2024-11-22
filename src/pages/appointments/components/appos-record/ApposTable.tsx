@@ -33,9 +33,9 @@ export function ApposTable({
       accessorKey: 'day',
       size: 80,
       cell: ({ row }) => (
-        <section className='mx-auto flex w-fit items-center justify-center space-x-2 rounded-sm bg-slate-600 p-1 pr-2 text-slate-50'>
-          <Calendar size={16} strokeWidth={1.5} />
-          <span className='text-xsm font-light'>{format(row.original.day, 'DD/MM/YY')}</span>
+        <section className='mx-auto flex w-fit items-center justify-center space-x-2 rounded-sm bg-slate-200 p-1 pr-2 text-slate-600'>
+          <Calendar size={16} strokeWidth={2} />
+          <span className='text-xsm font-normal'>{format(row.original.day, 'DD/MM/YY')}</span>
         </section>
       ),
       header: () => <div className='text-center'>{USER_VIEW_CONFIG.apposRecord.table.headers[0]}</div>,
