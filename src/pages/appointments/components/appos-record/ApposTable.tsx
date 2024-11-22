@@ -54,9 +54,9 @@ export function ApposTable({
           <TooltipWrapper tooltip={USER_VIEW_CONFIG.apposRecord.table.tooltip.user.details} help={help}>
             <Button
               onClick={() => navigate(`/appointments/${row.original._id}`)}
-              variant='tableHeader'
+              variant='secondary'
               size='miniIcon'
-              className='border border-slate-300 bg-white transition-transform hover:scale-110 hover:border-sky-500 hover:bg-white hover:text-sky-500 hover:animate-in'
+              className='bg-transparent transition-transform hover:scale-110 hover:bg-transparent hover:text-sky-500 hover:animate-in'
             >
               <FileText size={16} strokeWidth={1.5} />
             </Button>
@@ -64,9 +64,9 @@ export function ApposTable({
           <TooltipWrapper tooltip={USER_VIEW_CONFIG.apposRecord.table.tooltip.user.message} help={help}>
             <Button
               // onClick={}
-              variant='tableHeader'
+              variant='secondary'
               size='miniIcon'
-              className='border border-slate-300 bg-white transition-transform hover:scale-110 hover:border-emerald-500 hover:bg-white hover:text-emerald-500 hover:animate-in'
+              className='bg-transparent transition-transform hover:scale-110 hover:bg-transparent hover:text-emerald-500 hover:animate-in'
             >
               <MessageCircle size={16} strokeWidth={1.5} />
             </Button>
@@ -139,7 +139,7 @@ export function ApposTable({
       </TableHeader>
       <TableBody className='text-sm'>
         {table.getRowModel().rows.map((row) => (
-          <TableRow key={row.id} className='hover:bg-slate-100/50'>
+          <TableRow key={row.id} className='hover:bg-slate-50/70'>
             {row.getVisibleCells().map((cell) => (
               <TableCell
                 onClick={() => handleRowClick(row, cell)}
