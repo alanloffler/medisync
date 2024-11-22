@@ -7,7 +7,7 @@ export const HEADER_CONFIG = {
     { id: 4, title: 'Pacientes', path: '/users' },
   ],
   actionsButton: [
-    { id: 1, menuId: 2, title: 'Turno', path: '/dashboard', default: true },
+    { id: 1, menuId: 2, title: 'Turno', path: '/reserve', default: true },
     { id: 2, menuId: 4, title: 'Paciente', path: '/users/create' },
     { id: 3, menuId: 3, title: 'Profesional', path: '/professionals/create' },
   ],
