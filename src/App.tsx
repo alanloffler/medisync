@@ -7,6 +7,7 @@ import Layout from '@layout/Layout';
 import { Loading } from '@core/components/common/Loading';
 // Lazy loaded components
 const Appointments = lazy(() => import('./pages/appointments/Appointments'));
+const ReserveAppointments = lazy(() => import('./pages/appointments/components/ReserveAppointments'));
 const ViewAppointment = lazy(() => import('./pages/appointments/components/ViewAppointment'));
 const Dashboard = lazy(() => import('./pages/dashboard/Dashboard'));
 
@@ -34,7 +35,7 @@ export default function App() {
         { index: true, element: (<Suspense fallback={<Loading />}><Dashboard /></Suspense>) },
         { path: '/dashboard', element: (<Suspense fallback={<Loading />}><Dashboard /></Suspense>) },
         { path: '/appointments', element: (<Suspense fallback={<Loading />}><Appointments /></Suspense>) },
-        { path: '/reserve', element: (<Suspense fallback={<Loading />}><Appointments /></Suspense>) },
+        { path: '/reserve', element: (<Suspense fallback={<Loading />}><ReserveAppointments /></Suspense>) },
         { path: '/appointments/:id', element: (<Suspense fallback={<Loading />}><ViewAppointment /></Suspense>) },
         { path: '/professionals', element: (<Suspense fallback={<Loading />}><Professionals /></Suspense>) },
         { path: '/professionals/:id', element: (<Suspense fallback={<Loading />}><ViewProfessional /></Suspense>) },
