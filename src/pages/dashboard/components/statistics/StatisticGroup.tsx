@@ -64,7 +64,9 @@ export function StatisticGroup() {
           value1={apposData?.data?.value1}
           value2={apposData?.data?.value2}
         >
-          <CalendarCheck size={24} strokeWidth={2} className='text-fuchsia-400' />
+          <div className='rounded-full bg-fuchsia-100 p-2'>
+            <CalendarCheck size={18} strokeWidth={2} className='text-fuchsia-400' />
+          </div>
         </Statistic>
         <Statistic
           content={DASHBOARD_CONFIG.statisticGroup.items[2].content}
@@ -75,7 +77,9 @@ export function StatisticGroup() {
           value1={delimiter(usersData?.data?.value1, '.', 3)}
           value2={usersData?.data?.value2}
         >
-          <Users size={24} strokeWidth={2} className='text-sky-400' />
+          <div className='rounded-full bg-sky-100 p-2'>
+            <Users size={18} strokeWidth={2} className='text-sky-400' />
+          </div>
         </Statistic>
         <Statistic
           content={DASHBOARD_CONFIG.statisticGroup.items[1].content}
@@ -86,7 +90,9 @@ export function StatisticGroup() {
           value1={professionalsData?.data?.value1}
           value2={professionalsData?.data?.value2}
         >
-          <HealthBadgeId size={24} strokeWidth={2} className='text-emerald-400' />
+          <div className='rounded-full bg-emerald-100 p-2'>
+            <HealthBadgeId size={18} strokeWidth={2} className='text-emerald-400' />
+          </div>
         </Statistic>
         <StatisticChart
           fetchChartData={async (days) => await DashboardApiService.apposDaysCount(days)}
