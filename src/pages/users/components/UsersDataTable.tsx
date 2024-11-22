@@ -20,6 +20,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 // Components
+import { DBCountUsers } from '@users/components/common/DBCountUsers';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
@@ -315,9 +316,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
         <LoadingDB text={APP_CONFIG.loadingDB.findUsers} className='mt-3' />
       ) : table.getRowModel().rows?.length > 0 ? (
         <>
-          <div className='flex items-center justify-end py-2 text-sm font-medium text-slate-400'>
-            {totalItems === 1 ? `${totalItems} ${USER_CONFIG.dbUsersSingular}` : `${totalItems} ${USER_CONFIG.dbUsersPlural}`}
-          </div>
+          <DBCountUsers />
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -347,7 +346,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
               <p className='text-xs font-normal text-slate-400'>{USER_CONFIG.table.rowsPerPage}</p>
               <Select value={`${table.getState().pagination.pageSize}`} onValueChange={(e) => setPagination({ pageIndex: 0, pageSize: parseInt(e) })}>
                 <TooltipWrapper tooltip={USER_CONFIG.table.tooltip.pagination.itemsPerPage} help={help}>
-                  <SelectTrigger className='hover:bg-input-hover h-8 w-[65px] bg-input text-xs font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring/40 focus-visible:ring-offset-0'>
+                  <SelectTrigger className='h-8 w-[65px] bg-input text-xs font-medium hover:bg-input-hover focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring/40 focus-visible:ring-offset-0'>
                     <SelectValue placeholder={table.getState().pagination.pageSize} />
                   </SelectTrigger>
                 </TooltipWrapper>
@@ -368,7 +367,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
                 <TooltipWrapper tooltip={USER_CONFIG.table.tooltip.pagination.firstPage} help={help}>
                   <Button
                     variant='ghost'
-                    className='hover:bg-input-hover h-8 w-8 bg-input p-0 lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800'
+                    className='h-8 w-8 bg-input p-0 hover:bg-input-hover lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800'
                     onClick={() => table.setPageIndex(0)}
                     disabled={!table.getCanPreviousPage()}
                   >
@@ -378,7 +377,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
                 <TooltipWrapper tooltip={USER_CONFIG.table.tooltip.pagination.prevPage} help={help}>
                   <Button
                     variant='ghost'
-                    className='hover:bg-input-hover h-8 w-8 bg-input p-0 dark:bg-neutral-950 dark:hover:bg-neutral-800'
+                    className='h-8 w-8 bg-input p-0 hover:bg-input-hover dark:bg-neutral-950 dark:hover:bg-neutral-800'
                     onClick={() => table.previousPage()}
                     disabled={!table.getCanPreviousPage()}
                   >
@@ -388,7 +387,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
                 <TooltipWrapper tooltip={USER_CONFIG.table.tooltip.pagination.nextPage} help={help}>
                   <Button
                     variant='ghost'
-                    className='hover:bg-input-hover h-8 w-8 bg-input p-0 dark:bg-neutral-950 dark:hover:bg-neutral-800'
+                    className='h-8 w-8 bg-input p-0 hover:bg-input-hover dark:bg-neutral-950 dark:hover:bg-neutral-800'
                     onClick={() => table.nextPage()}
                     disabled={!table.getCanNextPage()}
                   >
@@ -398,7 +397,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
                 <TooltipWrapper tooltip={USER_CONFIG.table.tooltip.pagination.lastPage} help={help}>
                   <Button
                     variant='ghost'
-                    className='hover:bg-input-hover h-8 w-8 bg-input p-0 lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800'
+                    className='h-8 w-8 bg-input p-0 hover:bg-input-hover lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800'
                     onClick={() => table.setPageIndex(table.getPageCount() - 1)}
                     disabled={!table.getCanNextPage()}
                   >
