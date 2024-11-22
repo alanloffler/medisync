@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { CreditCard, FilePen, Mail, MessageCircle, Send, Smartphone, Trash2 } from 'lucide-react';
+import { CreditCard, Mail, MessageCircle, PencilLine, Send, Smartphone, Trash2 } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
 import { Card, CardContent } from '@core/components/ui/card';
@@ -141,7 +141,7 @@ export default function ViewUser() {
                     size='miniIcon'
                     className='bg-transparent transition-transform hover:scale-125 hover:bg-transparent hover:text-amber-500 hover:animate-in'
                   >
-                    <FilePen size={18} strokeWidth={1.5} />
+                    <PencilLine size={18} strokeWidth={1.5} />
                   </Button>
                 </TooltipWrapper>
                 {/* TODO: create dialog for user delete */}
