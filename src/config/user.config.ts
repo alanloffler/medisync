@@ -35,8 +35,8 @@ export const USER_CONFIG = {
   table: {
     databaseCount: {
       difference: 'que el mes pasado',
-      totalPlural: 'usuarios en total',
-      totalSingular: 'usuario en total',
+      totalPlural: 'pacientes en total',
+      totalSingular: 'paciente en total',
     },
     defaultPageSize: 10,
     defaultSortingId: 'lastName',
