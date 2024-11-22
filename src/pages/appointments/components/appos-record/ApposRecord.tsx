@@ -1,5 +1,7 @@
+// Icons: https://lucide.dev/icons/
+import { CalendarClock } from 'lucide-react';
 // External components
-import { Card, CardContent, CardHeader, CardTitle } from '@core/components/ui/card';
+import { Card, CardContent } from '@core/components/ui/card';
 // Components
 import { ApposFilters } from '@appointments/components/appos-record/ApposFilters';
 import { ApposTable } from '@appointments/components/appos-record/ApposTable';
@@ -52,10 +54,11 @@ export function ApposRecord({ userId }: { userId: string }) {
 
   return (
     <main>
-      <Card className='flex w-full flex-col gap-3 border'>
-        <CardHeader>
-          <CardTitle>{USER_VIEW_CONFIG.apposRecord.title}</CardTitle>
-        </CardHeader>
+      <Card className='flex w-full flex-col gap-3'>
+        <section className='flex flex-row items-center border-b border-slate-200 p-3 space-x-2'>
+          <CalendarClock size={18} strokeWidth={2} />
+          <span className='text-xsm font-semibold uppercase'>{USER_VIEW_CONFIG.apposRecord.title}</span>
+        </section>
         <CardContent className='flex flex-col gap-3'>
           <ApposFilters userId={userId} />
           {isLoading && <LoadingDB variant='default' text={USER_VIEW_CONFIG.apposRecord.table.loadingText} />}
