@@ -1,6 +1,7 @@
 import type { IAppointmentForm } from '@appointments/interfaces/appointment.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import { APP_CONFIG } from '@config/app.config';
+import { EMethods } from '@core/enums/methods.enum';
 
 export class AppointmentApiService {
   private static readonly API_URL: string = import.meta.env.VITE_API_URL;
@@ -37,6 +38,11 @@ export class AppointmentApiService {
     } catch (error) {
       return error;
     }
+  }
+  // WIP: TQ method implemented on appointments page
+  public static async findAll(page: number, limit: number) {
+    const url: string = `${this.API_URL}/appointments?p=${page}&l=${limit}`;
+    return this.fetch(url, EMethods.GET);
   }
 
   // FIXME: check if is unused method
@@ -188,6 +194,29 @@ export class AppointmentApiService {
       return await query.json();
     } catch (error) {
       return error;
+    }
+  }
+
+  // Generic fetch method
+  private static async fetch(url: string, method: EMethods, body?: any) {
+    try {
+      const query: Response = await fetch(url, {
+        method: method,
+        headers: {
+          'content-type': 'application/json;charset=UTF-8',
+        },
+        body: JSON.stringify(body),
+      });
+
+      const response: IResponse = await query.json();
+      if (!query.ok) throw new Error(response.message);
+
+      return response;
+    } catch (error) {
+      if (error instanceof TypeError) {
+        throw new Error(APP_CONFIG.error.server);
+      }
+      throw error;
     }
   }
 }
