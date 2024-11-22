@@ -2,7 +2,7 @@
 import { CreditCard, FilePen, Mail, MessageCircle, Send, Smartphone, Trash2 } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@core/components/ui/card';
+import { Card, CardContent } from '@core/components/ui/card';
 // Components
 import { ApposRecord } from '@appointments/components/appos-record/ApposRecord';
 import { BackButton } from '@core/components/common/BackButton';
@@ -81,30 +81,32 @@ export default function ViewUser() {
           <LoadingDB text={APP_CONFIG.loadingDB.findOneUser} variant='card' className='border' />
         ) : (
           showCard && (
-            <Card className='col-span-1 mx-auto h-fit w-full border md:col-span-2 lg:col-span-2 xl:col-span-2'>
-              <CardHeader>
-                <CardTitle>
-                  <div className='relative flex items-center justify-center'>
-                    <h1 className='text-center text-xl font-bold'>
-                      {capitalize(user.firstName)} {capitalize(user.lastName)}
-                    </h1>
-                  </div>
-                </CardTitle>
-              </CardHeader>
+            <Card className='col-span-1 mx-auto h-fit w-full md:col-span-2 lg:col-span-2 xl:col-span-2'>
+              <header className='relative flex items-center justify-center rounded-t-lg bg-slate-200 p-3 text-slate-700'>
+                <h1 className='text-center text-xl font-bold'>
+                  {capitalize(user.firstName)} {capitalize(user.lastName)}
+                </h1>
+              </header>
               <CardContent className='mt-3 space-y-3 overflow-auto'>
                 <section className='flex items-center space-x-3'>
-                  <CreditCard size={18} strokeWidth={1.5} />
-                  <span className='text-base font-normal'>{delimiter(user.dni, '.', 3)}</span>
+                  <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
+                    <CreditCard size={17} strokeWidth={2} />
+                  </div>
+                  <span className='text-sm'>{delimiter(user.dni, '.', 3)}</span>
                 </section>
                 <section className='flex items-center space-x-3'>
-                  <Smartphone size={18} strokeWidth={1.5} />
-                  <span className='text-base font-normal'>{delimiter(user.phone, '-', 6)}</span>
+                  <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
+                    <Smartphone size={17} strokeWidth={2} />
+                  </div>
+                  <span className='text-sm'>{delimiter(user.phone, '-', 6)}</span>
                 </section>
                 <section className='flex items-center space-x-3'>
-                  <Mail size={18} strokeWidth={1.5} />
-                  <span className='text-base font-normal'>{user.email}</span>
+                  <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
+                    <Mail size={17} strokeWidth={2} />
+                  </div>
+                  <span className='text-sm'>{user.email}</span>
                 </section>
-                <section className='pt-2 text-base'>{`${UV_CONFIG.phrase.userSince} ${legibleDate(new Date(user.createdAt), 'short')}`}</section>
+                <section className='pt-2 text-sm'>{`${UV_CONFIG.phrase.userSince} ${legibleDate(new Date(user.createdAt), 'short')}`}</section>
               </CardContent>
               <section className='flex justify-end space-x-2 border-t p-2'>
                 <TooltipWrapper tooltip={UV_CONFIG.tooltip.sendEmail} help={help}>
