@@ -8,9 +8,16 @@ import type { IProfessional } from '@professionals/interfaces/professional.inter
 import type { IResponse } from '@core/interfaces/response.interface';
 import { PROF_VIEW_CONFIG } from '@config/professionals.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
+import { cn } from '@lib/utils';
 import { useNotificationsStore } from '@core/stores/notifications.store';
+// Interface
+interface IAvailableProfessional {
+  className?: string;
+  data: Partial<IProfessional>;
+  items: { id: number; label: string; value: boolean }[];
+}
 // React component
-export function AvailableProfessional({ items, data }: { items: { id: number; label: string; value: boolean }[]; data: Partial<IProfessional> }) {
+export function AvailableProfessional({ className, data, items }: IAvailableProfessional) {
   const { _id, available } = data;
   const [prevValue, setPrevValue] = useState<string>(String(available));
   const [showError, setShowError] = useState<boolean>(false);
@@ -43,7 +50,7 @@ export function AvailableProfessional({ items, data }: { items: { id: number; la
   return (
     <main className='flex flex-row items-center space-x-1'>
       <Select value={value} onValueChange={handleValueChange}>
-        <SelectTrigger className='h-8 w-fit space-x-2 bg-transparent px-2 py-1 text-xs hover:bg-input'>
+        <SelectTrigger className={cn('h-8 w-fit space-x-2 bg-transparent px-2 py-1 text-xs hover:bg-input', className)}>
           <SelectValue placeholder='Select a fruit' />
         </SelectTrigger>
         <SelectContent onCloseAutoFocus={(e) => e.preventDefault()}>
