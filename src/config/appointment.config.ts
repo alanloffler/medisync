@@ -1,4 +1,8 @@
 export const APPO_CONFIG = {
+  breadcrumb: [
+    { id: 1, name: 'Inicio', path: '/' },
+    { id: 2, name: 'Turnos', path: '' },
+  ],
   buttons: {
     addAppointment: 'Reservar',
     cancelAppointment: 'Cancelar',
@@ -67,6 +71,7 @@ export const APPO_CONFIG = {
     headers: ['Turno', 'Horario', 'Nombre del paciente', 'DNI', 'Acciones'],
     title: 'Turnos diarios',
   },
+  title: 'Turnos',
   warning: {
     selectWorkingDay: 'Seleccione un día laborable',
   },
