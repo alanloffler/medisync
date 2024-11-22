@@ -1,14 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import {
-  ArrowDownUp,
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  FileText,
-  PencilLine,
-  Trash2,
-} from 'lucide-react';
+import { ArrowDownUp, ArrowLeftIcon, ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon, FileText, PencilLine, Trash2 } from 'lucide-react';
 // External components:
 // https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
@@ -43,12 +34,13 @@ import type { IProfessional } from '@professionals/interfaces/professional.inter
 import type { IResponse } from '@core/interfaces/response.interface';
 import { APP_CONFIG } from '@config/app.config';
 import { EProfessionalSearch, type IProfessionalSearch } from '@professionals/interfaces/professional-search.interface';
-import { PROF_CONFIG } from '@config/professionals.config';
+import { PROF_CONFIG, PROF_VIEW_CONFIG } from '@config/professionals.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useHelpStore } from '@settings/stores/help.store';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 import { useTruncateText } from '@core/hooks/useTruncateText';
+import { AvailableProfessional } from './common/AvailableProfessional';
 // import { useMediaQuery } from '@uidotdev/usehooks';
 // Default values for pagination and sorting
 const defaultSorting: SortingState = [{ id: PROF_CONFIG.table.defaultSortingId, desc: PROF_CONFIG.table.defaultSortingType }];
@@ -132,7 +124,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
       accessorKey: 'specialization',
       size: 80,
       header: ({ column }) => (
-        <div className='text-center'>
+        <div className='flex justify-center'>
           {totalItems === 1 ? (
             PROF_CONFIG.table.headers[2]
           ) : (
@@ -154,7 +146,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
       accessorKey: 'available',
       size: 50,
       header: ({ column }) => (
-        <div className='text-center'>
+        <div className='flex justify-center'>
           {totalItems === 1 ? (
             PROF_CONFIG.table.headers[3]
           ) : (
@@ -171,12 +163,13 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
         </div>
       ),
       cell: ({ row }) => (
-        <div className='flex flex-row items-center justify-start space-x-2 text-xs'>
-          <div className={`flex ${row.original.available ? 'h-2 w-2 rounded-full bg-green-400' : 'h-2 w-2 rounded-full bg-red-400'}`}></div>
-          <div className={`flex ${row.original.available ? 'text-slate-800' : 'text-slate-400'}`}>
-            {row.original.available ? 'Activo' : 'Inactivo'}
-          </div>
-        </div>
+        <section className='flex flex-row items-center justify-center'>
+          <AvailableProfessional
+            items={PROF_VIEW_CONFIG.select}
+            data={{ _id: row.original._id, available: row.original.available }}
+            className='h-6'
+          />
+        </section>
       ),
     },
     {
@@ -430,7 +423,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
                 <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.pagination.firstPage} help={help}>
                   <Button
                     variant='ghost'
-                    className='hover:bg-input-hover h-8 w-8 bg-input p-0 lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800'
+                    className='h-8 w-8 bg-input p-0 hover:bg-input-hover lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800'
                     onClick={() => table.setPageIndex(0)}
                     disabled={!table.getCanPreviousPage()}
                   >
@@ -440,7 +433,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
                 <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.pagination.prevPage} help={help}>
                   <Button
                     variant='ghost'
-                    className='hover:bg-input-hover h-8 w-8 bg-input p-0 dark:bg-neutral-950 dark:hover:bg-neutral-800'
+                    className='h-8 w-8 bg-input p-0 hover:bg-input-hover dark:bg-neutral-950 dark:hover:bg-neutral-800'
                     onClick={() => table.previousPage()}
                     disabled={!table.getCanPreviousPage()}
                   >
@@ -450,7 +443,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
                 <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.pagination.nextPage} help={help}>
                   <Button
                     variant='ghost'
-                    className='hover:bg-input-hover h-8 w-8 bg-input p-0 dark:bg-neutral-950 dark:hover:bg-neutral-800'
+                    className='h-8 w-8 bg-input p-0 hover:bg-input-hover dark:bg-neutral-950 dark:hover:bg-neutral-800'
                     onClick={() => table.nextPage()}
                     disabled={!table.getCanNextPage()}
                   >
@@ -460,7 +453,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
                 <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.pagination.lastPage} help={help}>
                   <Button
                     variant='ghost'
-                    className='hover:bg-input-hover h-8 w-8 bg-input p-0 lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800'
+                    className='h-8 w-8 bg-input p-0 hover:bg-input-hover lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800'
                     onClick={() => table.setPageIndex(table.getPageCount() - 1)}
                     disabled={!table.getCanNextPage()}
                   >
