@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { Database } from 'lucide-react';
+import { Database, TrendingDown, TrendingUp } from 'lucide-react';
 // Components
 import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
@@ -15,7 +15,12 @@ export function DBCountUsers() {
     isError,
   } = useQuery({
     queryKey: ['users', 'db-count'],
-    queryFn: async () => await UserApiService.databaseCount(),
+    queryFn: async () => await UserApiService.countAll(),
+  });
+
+  const { data: diffPrevMonth } = useQuery({
+    queryKey: ['users', 'diffPrevMonth'],
+    queryFn: async () => await UserApiService.differenceBetweenMonths(new Date().getMonth() + 1, new Date().getFullYear()),
   });
 
   const total: number = dbCount?.data.total;
@@ -24,13 +29,21 @@ export function DBCountUsers() {
   if (isError) return <main className='py-2'></main>;
 
   return (
-    <main className='flex flex-row justify-end gap-2 py-3 text-xsm font-normal text-slate-400'>
-      {total && (
+    total && (
+      <main className='flex flex-row justify-end gap-2 py-3 text-xsm font-normal text-slate-400'>
         <section className='flex items-center space-x-1'>
           <Database size={16} strokeWidth={2} className='text-blue-400' />
           <span>{`${total} ${total === 1 ? USER_CONFIG.table.databaseCount.totalSingular : USER_CONFIG.table.databaseCount.totalPlural}`}</span>
         </section>
-      )}
-    </main>
+        <section className='flex items-center space-x-1'>
+          {diffPrevMonth && diffPrevMonth >= 0 ? (
+            <TrendingUp size={16} strokeWidth={2} className='text-emerald-400' />
+          ) : (
+            <TrendingDown size={16} strokeWidth={2} className='text-rose-400' />
+          )}
+          <span>{`${diffPrevMonth && diffPrevMonth >= 0 ? '+' : ''}${diffPrevMonth}% que el mes pasado`}</span>
+        </section>
+      </main>
+    )
   );
 }
