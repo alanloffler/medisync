@@ -23,9 +23,10 @@ const UpdateUser = lazy(() => import('./pages/users/components/UpdateUser'));
 const ViewUser = lazy(() => import('./pages/users/components/ViewUser'));
 
 const WhatsApp = lazy(() => import('./pages/whatsapp/WhatsApp'));
+// TanStack query client
+const queryClient = new QueryClient();
 // React component
 export default function App() {
-  const queryClient = new QueryClient();
   // prettier-ignore
   const router = createBrowserRouter([
     { path: '/', element: <Layout />, children: 
@@ -33,6 +34,7 @@ export default function App() {
         { index: true, element: (<Suspense fallback={<Loading />}><Dashboard /></Suspense>) },
         { path: '/dashboard', element: (<Suspense fallback={<Loading />}><Dashboard /></Suspense>) },
         { path: '/appointments', element: (<Suspense fallback={<Loading />}><Appointments /></Suspense>) },
+        { path: '/reserve', element: (<Suspense fallback={<Loading />}><Appointments /></Suspense>) },
         { path: '/appointments/:id', element: (<Suspense fallback={<Loading />}><ViewAppointment /></Suspense>) },
         { path: '/professionals', element: (<Suspense fallback={<Loading />}><Professionals /></Suspense>) },
         { path: '/professionals/:id', element: (<Suspense fallback={<Loading />}><ViewProfessional /></Suspense>) },
