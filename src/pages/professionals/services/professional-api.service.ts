@@ -139,7 +139,7 @@ export class ProfessionalApiService {
   }
 
   // TanStack query response format
-  public static async databaseCount() {
+  public static async countAll() {
     const url: string = `${this.API_URL}/professionals/databaseCount`;
     return await this.fetch(url, EMethods.GET);
   }
