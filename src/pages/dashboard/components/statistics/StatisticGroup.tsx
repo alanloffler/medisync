@@ -24,6 +24,7 @@ export function StatisticGroup() {
     queryFn: async () => await DashboardApiService.countAppointments(),
     refetchOnWindowFocus: false,
     retry: 1,
+    staleTime: 0,
   });
 
   const {
@@ -35,6 +36,7 @@ export function StatisticGroup() {
     queryFn: async () => await DashboardApiService.countUsers(),
     refetchOnWindowFocus: false,
     retry: 1,
+    staleTime: 0,
   });
 
   const {
@@ -46,6 +48,7 @@ export function StatisticGroup() {
     queryFn: async () => await DashboardApiService.countProfessionals(),
     refetchOnWindowFocus: false,
     retry: 1,
+    staleTime: 0,
   });
 
   return (
@@ -64,22 +67,22 @@ export function StatisticGroup() {
           <CalendarCheck size={24} strokeWidth={2} className='text-fuchsia-400' />
         </Statistic>
         <Statistic
-          content={DASHBOARD_CONFIG.statisticGroup.items[1].content}
+          content={DASHBOARD_CONFIG.statisticGroup.items[2].content}
           error={usersError}
           isLoading={usersDataIsLoading}
-          path={DASHBOARD_CONFIG.statisticGroup.items[1].path}
-          title={DASHBOARD_CONFIG.statisticGroup.items[1].title}
+          path={DASHBOARD_CONFIG.statisticGroup.items[2].path}
+          title={DASHBOARD_CONFIG.statisticGroup.items[2].title}
           value1={delimiter(usersData?.data?.value1, '.', 3)}
           value2={usersData?.data?.value2}
         >
           <Users size={24} strokeWidth={2} className='text-sky-400' />
         </Statistic>
         <Statistic
-          content={DASHBOARD_CONFIG.statisticGroup.items[2].content}
+          content={DASHBOARD_CONFIG.statisticGroup.items[1].content}
           error={professionalsError}
           isLoading={professionalsDataIsLoading}
-          path={DASHBOARD_CONFIG.statisticGroup.items[2].path}
-          title={DASHBOARD_CONFIG.statisticGroup.items[2].title}
+          path={DASHBOARD_CONFIG.statisticGroup.items[1].path}
+          title={DASHBOARD_CONFIG.statisticGroup.items[1].title}
           value1={professionalsData?.data?.value1}
           value2={professionalsData?.data?.value2}
         >
