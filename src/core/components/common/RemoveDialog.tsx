@@ -60,7 +60,7 @@ export function RemoveDialog({ action, callback, dialogContent, dialogTexts, hel
           onClick={() => setOpenDialog(true)}
           variant='ghost'
           size='miniIcon'
-          className='transition-transform hover:scale-110 hover:bg-white hover:text-rose-400 hover:animate-in'
+          className='transition-transform hover:scale-110 hover:bg-transparent hover:text-rose-400 hover:animate-in'
         >
           {triggerButton}
         </Button>
