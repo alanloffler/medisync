@@ -80,7 +80,7 @@ export default function Appointments() {
                   page={page}
                   setPage={setPage}
                   isPlaceholderData={isPlaceholderData}
-                  // TODO: className so put the padding top and the border top
+                  className='mt-4 !text-xsm text-slate-400'
                 />
               </>
             )}
