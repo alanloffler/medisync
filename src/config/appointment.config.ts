@@ -77,6 +77,7 @@ export const APPO_CONFIG = {
   },
   table: {
     headers: ['Turno', 'Horario', 'Nombre del paciente', 'DNI', 'Acciones'],
+    totalItems: 'turnos en total',
     title: 'Turnos diarios',
   },
   title: {
