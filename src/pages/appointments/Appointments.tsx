@@ -1,11 +1,13 @@
 // External components: https://ui.shadcn.com/docs/components
 import { Card, CardContent } from '@core/components/ui/card';
 // Components
+import { AppoItemMini } from '@appointments/components/AppoItemMini';
+import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
 // External imports
-import { useEffect, useState } from 'react';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
 // Imports
 import type { IAppointment } from './interfaces/appointment.interface';
 import { APPO_CONFIG } from '@config/appointment.config';
@@ -14,7 +16,6 @@ import { HEADER_CONFIG } from '@config/layout/header.config';
 import { PaginationTQ } from '@core/components/common/PaginationTQ';
 import { queryClient } from '@lib/react-query';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
-import { InfoCard } from '@core/components/common/InfoCard';
 // React component
 export default function Appointments() {
   const [page, setPage] = useState<number>(0);
@@ -52,7 +53,7 @@ export default function Appointments() {
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
       {/* Section: Page Header */}
       <header className='flex items-center justify-between'>
-        <PageHeader title={APPO_CONFIG.title} breadcrumb={APPO_CONFIG.breadcrumb} />
+        <PageHeader title={APPO_CONFIG.title.page} breadcrumb={APPO_CONFIG.breadcrumb} />
       </header>
       {/* Section: Page content */}
       <section className='grid gap-6 md:grid-cols-4 md:gap-8 lg:grid-cols-4 xl:grid-cols-4'>
@@ -63,18 +64,16 @@ export default function Appointments() {
         {/* Section: Right side content */}
         <Card className='col-span-1 h-fit space-y-4 overflow-y-auto p-0 md:col-span-4 lg:col-span-3 xl:col-span-3'>
           <div className='relative flex items-center justify-center rounded-t-lg bg-slate-200 p-3 text-slate-700'>
-            <h1 className='text-center text-xl font-bold'>{APPO_CONFIG.title}</h1>
+            <h1 className='text-center text-xl font-bold'>{APPO_CONFIG.title.list}</h1>
           </div>
           <CardContent className='pt-2'>
             {isLoading && <LoadingDB variant='default' text={APPO_CONFIG.loading.appointments} />}
             {isError && <InfoCard text={error.message} type='error' />}
             {!isError && !isLoading && appointments && (
               <>
-                <section>
+                <section className='[&_button]:hover:opacity-50 [&_button]:hover:blur-[2px]'>
                   {appointments?.data.map((appointment: IAppointment) => (
-                    <div key={appointment._id}>
-                      <span>{`${appointment.day} / ${appointment.hour}`}</span>
-                    </div>
+                    <AppoItemMini key={appointment._id} data={appointment} />
                   ))}
                 </section>
                 <PaginationTQ
