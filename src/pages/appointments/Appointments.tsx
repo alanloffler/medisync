@@ -1,3 +1,5 @@
+// Icons: https://lucide.dev/icons/
+import { Database } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Card, CardContent } from '@core/components/ui/card';
 // Components
@@ -5,6 +7,7 @@ import { AppoItemMini } from '@appointments/components/AppoItemMini';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
+import { PaginationTQ } from '@core/components/common/PaginationTQ';
 // External imports
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
@@ -13,7 +16,6 @@ import type { IAppointment } from './interfaces/appointment.interface';
 import { APPO_CONFIG } from '@config/appointment.config';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { HEADER_CONFIG } from '@config/layout/header.config';
-import { PaginationTQ } from '@core/components/common/PaginationTQ';
 import { queryClient } from '@lib/react-query';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 // React component
@@ -66,17 +68,20 @@ export default function Appointments() {
           <div className='relative flex items-center justify-center rounded-t-lg bg-slate-200 p-3 text-slate-700'>
             <h1 className='text-center text-xl font-bold'>{APPO_CONFIG.title.list}</h1>
           </div>
-          <CardContent className='pt-2'>
+          <CardContent className='pt-0 space-y-2'>
             {isLoading && <LoadingDB variant='default' text={APPO_CONFIG.loading.appointments} />}
             {isError && <InfoCard text={error.message} type='error' />}
             {!isError && !isLoading && appointments && (
               <>
-                <section>{appointments?.pagination?.totalItems}</section>
+                <section className='flex items-center justify-end space-x-1 px-1'>
+                  <Database size={16} strokeWidth={2} className='text-blue-400' />
+                  <span className='text-xsm text-slate-400'>{`${appointments?.pagination?.totalItems} ${APPO_CONFIG.table.totalItems}`}</span>
+                </section>
                 <section className='flex flex-col'>
                   {appointments?.data.map((appointment: IAppointment) => <AppoItemMini key={appointment._id} data={appointment} />)}
                 </section>
                 <PaginationTQ
-                  className='mt-4 !text-xsm text-slate-400'
+                  className='pt-2 !text-xsm text-slate-400'
                   isPlaceholderData={isPlaceholderData}
                   limit={limit}
                   page={page}
