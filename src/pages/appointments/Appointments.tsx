@@ -18,8 +18,8 @@ import { queryClient } from '@lib/react-query';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 // React component
 export default function Appointments() {
+  const [limit, setLimit] = useState<number>(10);
   const [page, setPage] = useState<number>(0);
-  const limit: number = 10;
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
 
   useEffect(() => {
@@ -47,7 +47,7 @@ export default function Appointments() {
         queryFn: () => AppointmentApiService.findAll(page + 1, limit),
       });
     }
-  }, [appointments, isPlaceholderData, page]);
+  }, [appointments, isPlaceholderData, limit, page]);
 
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
@@ -71,7 +71,8 @@ export default function Appointments() {
             {isError && <InfoCard text={error.message} type='error' />}
             {!isError && !isLoading && appointments && (
               <>
-                <section className='[&_button]:hover:opacity-50 [&_button]:hover:blur-[2px]'>
+                <section>{appointments?.pagination?.totalItems}</section>
+                <section className='flex flex-col'>
                   {appointments?.data.map((appointment: IAppointment) => <AppoItemMini key={appointment._id} data={appointment} />)}
                 </section>
                 <PaginationTQ
@@ -80,6 +81,7 @@ export default function Appointments() {
                   limit={limit}
                   page={page}
                   pagination={appointments?.pagination}
+                  setLimit={setLimit}
                   setPage={setPage}
                   texts={APPO_CONFIG.pagination}
                 />
