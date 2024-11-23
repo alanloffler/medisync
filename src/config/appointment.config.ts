@@ -57,6 +57,11 @@ export const APPO_CONFIG = {
   loading: {
     appointments: 'Cargando turnos',
   },
+  pagination: {
+    of: 'de',
+    page: 'Página',
+    rowsPerPage: 'Turnos por página',
+  },
   phrases: {
     alreadyReservedPlural: 'turnos reservados',
     alreadyReservedSingular: 'turno reservado',
