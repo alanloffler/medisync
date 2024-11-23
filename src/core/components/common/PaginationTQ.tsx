@@ -4,26 +4,29 @@ import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@core/components/ui/button';
 // External imports
 import { Dispatch, SetStateAction } from 'react';
+import { cn } from '@lib/utils';
 // React component
 export function PaginationTQ({
-  pagination,
+  className,
+  isPlaceholderData,
   limit,
   page,
+  pagination,
   setPage,
-  isPlaceholderData,
 }: {
-  page: number;
-  setPage: Dispatch<SetStateAction<number>>;
-  pagination: { totalPages: number; hasMore: boolean } | undefined;
-  limit: number;
+  className?: string;
   isPlaceholderData: boolean;
+  limit: number;
+  page: number;
+  pagination: { totalPages: number; hasMore: boolean } | undefined;
+  setPage: Dispatch<SetStateAction<number>>;
 }) {
   const totalPages: number | undefined = pagination && Math.ceil(pagination.totalPages / limit);
 
   return (
-    <section className='flex items-center justify-between'>
+    <section className={cn('flex items-center justify-between text-sm text-foreground', className)}>
       <section>Here select</section>
-      <section className='text-xsm font-normal text-slate-400'>
+      <section>
         Página {page + 1} de {totalPages}
       </section>
       <section className='flex space-x-4'>
