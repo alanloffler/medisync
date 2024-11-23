@@ -1,19 +1,20 @@
-// Icons: https://lucide.dev/icons/
-import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
-import { Button } from '@core/components/ui/button';
 import { Card, CardContent } from '@core/components/ui/card';
 // Components
+import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
 // External imports
 import { useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 // Imports
 import type { IAppointment } from './interfaces/appointment.interface';
 import { APPO_CONFIG } from '@config/appointment.config';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { HEADER_CONFIG } from '@config/layout/header.config';
+import { PaginationTQ } from '@core/components/common/PaginationTQ';
+import { queryClient } from '@lib/react-query';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
+import { InfoCard } from '@core/components/common/InfoCard';
 // React component
 export default function Appointments() {
   const [page, setPage] = useState<number>(0);
@@ -24,17 +25,28 @@ export default function Appointments() {
     setItemSelected(HEADER_CONFIG.headerMenu[1].id);
   }, [setItemSelected]);
 
-  const { data: appointments, status } = useQuery({
+  const {
+    data: appointments,
+    error,
+    isError,
+    isLoading,
+    isPlaceholderData,
+  } = useQuery({
     queryKey: ['appointments', 'listAll', page, limit],
     queryFn: () => AppointmentApiService.findAll(page, limit),
+    placeholderData: keepPreviousData,
     refetchOnWindowFocus: 'always',
     retry: 1,
   });
 
-  const totalPages = appointments?.pagination && Math.ceil(appointments?.pagination?.totalPages / limit);
-
-  if (status === 'error') return <>Error</>;
-  if (status === 'pending') return <>Loading</>;
+  useEffect(() => {
+    if (!isPlaceholderData && appointments?.pagination?.hasMore) {
+      queryClient.prefetchQuery({
+        queryKey: ['appointments', 'listAll', page + 1, limit],
+        queryFn: () => AppointmentApiService.findAll(page + 1, limit),
+      });
+    }
+  }, [appointments, isPlaceholderData, page]);
 
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
@@ -49,49 +61,32 @@ export default function Appointments() {
           <CardContent className='p-0'>This is the left side content</CardContent>
         </Card>
         {/* Section: Right side content */}
-        <Card className='col-span-1 h-fit space-y-4 overflow-y-auto p-4 md:col-span-4 lg:col-span-3 xl:col-span-3'>
-          <h1>This is the right side content</h1>
-          <section>
-            {appointments.data.map((appointment: IAppointment) => (
-              <div key={appointment._id}>
-                <span>{`${appointment.day} / ${appointment.hour}`}</span>
-              </div>
-            ))}
-          </section>
-          <section className='flex justify-between'>
-            <div>
-              Página {page + 1}/{totalPages}
-            </div>
-            <div className='flex space-x-4'>
-              <Button className='h-8 w-8 bg-input p-0 hover:bg-input-hover' variant='ghost' disabled={page === 0} onClick={() => setPage(0)}>
-                <ArrowLeft size={16} strokeWidth={2} />
-              </Button>
-              <Button
-                className='h-8 w-8 bg-input p-0 hover:bg-input-hover'
-                variant='ghost'
-                disabled={page === 0}
-                onClick={() => setPage((old) => Math.max(old - 1, 0))}
-              >
-                <ChevronLeft size={16} strokeWidth={2} />
-              </Button>
-              <Button
-                className='h-8 w-8 bg-input p-0 hover:bg-input-hover'
-                variant='ghost'
-                disabled={!appointments.pagination?.hasMore}
-                onClick={() => setPage((old) => Math.max(old + 1, 0))}
-              >
-                <ChevronRight size={16} strokeWidth={2} />
-              </Button>
-              <Button
-                className='h-8 w-8 bg-input p-0 hover:bg-input-hover'
-                variant='ghost'
-                onClick={() => totalPages && setPage(Math.ceil(totalPages - 1))}
-                disabled={!appointments.pagination?.hasMore}
-              >
-                <ArrowRight size={16} strokeWidth={2} />
-              </Button>
-            </div>
-          </section>
+        <Card className='col-span-1 h-fit space-y-4 overflow-y-auto p-0 md:col-span-4 lg:col-span-3 xl:col-span-3'>
+          <div className='relative flex items-center justify-center rounded-t-lg bg-slate-200 p-3 text-slate-700'>
+            <h1 className='text-center text-xl font-bold'>{APPO_CONFIG.title}</h1>
+          </div>
+          <CardContent className='pt-2'>
+            {isLoading && <LoadingDB variant='default' text={APPO_CONFIG.loading.appointments} />}
+            {isError && <InfoCard text={error.message} type='error' />}
+            {!isError && !isLoading && appointments && (
+              <>
+                <section>
+                  {appointments?.data.map((appointment: IAppointment) => (
+                    <div key={appointment._id}>
+                      <span>{`${appointment.day} / ${appointment.hour}`}</span>
+                    </div>
+                  ))}
+                </section>
+                <PaginationTQ
+                  pagination={appointments?.pagination}
+                  limit={limit}
+                  page={page}
+                  setPage={setPage}
+                  isPlaceholderData={isPlaceholderData}
+                />
+              </>
+            )}
+          </CardContent>
         </Card>
       </section>
     </main>
