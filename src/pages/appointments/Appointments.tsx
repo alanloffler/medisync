@@ -7,7 +7,7 @@ import { AppoItemMini } from '@appointments/components/AppoItemMini';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
-import { PaginationTQ } from '@core/components/common/PaginationTQ';
+import { TQPagination } from '@core/components/common/TQPagination';
 // External imports
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
@@ -80,7 +80,7 @@ export default function Appointments() {
                 <section className='flex flex-col'>
                   {appointments?.data.map((appointment: IAppointment) => <AppoItemMini key={appointment._id} data={appointment} />)}
                 </section>
-                <PaginationTQ
+                <TQPagination
                   className='pt-2 !text-xsm text-slate-400'
                   isPlaceholderData={isPlaceholderData}
                   limit={limit}

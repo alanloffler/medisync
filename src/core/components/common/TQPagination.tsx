@@ -29,7 +29,7 @@ interface ITQPaginationTexts {
   rowsPerPage: string;
 }
 // React component
-export function PaginationTQ({ className, isPlaceholderData, limit, page, pagination, setLimit, setPage, texts }: ITQPagination) {
+export function TQPagination({ className, isPlaceholderData, limit, page, pagination, setLimit, setPage, texts }: ITQPagination) {
   const totalPages: number | undefined = pagination && Math.ceil(pagination.totalItems / limit);
 
   return (
