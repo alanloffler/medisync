@@ -74,7 +74,10 @@ export const APPO_CONFIG = {
     headers: ['Turno', 'Horario', 'Nombre del paciente', 'DNI', 'Acciones'],
     title: 'Turnos diarios',
   },
-  title: 'Turnos',
+  title: {
+    page: 'Turnos',
+    list: 'Listado general de turnos',
+  },
   warning: {
     selectWorkingDay: 'Seleccione un día laborable',
   },
