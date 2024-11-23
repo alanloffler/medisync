@@ -72,9 +72,7 @@ export default function Appointments() {
             {!isError && !isLoading && appointments && (
               <>
                 <section className='[&_button]:hover:opacity-50 [&_button]:hover:blur-[2px]'>
-                  {appointments?.data.map((appointment: IAppointment) => (
-                    <AppoItemMini key={appointment._id} data={appointment} />
-                  ))}
+                  {appointments?.data.map((appointment: IAppointment) => <AppoItemMini key={appointment._id} data={appointment} />)}
                 </section>
                 <PaginationTQ
                   pagination={appointments?.pagination}
@@ -82,6 +80,7 @@ export default function Appointments() {
                   page={page}
                   setPage={setPage}
                   isPlaceholderData={isPlaceholderData}
+                  // TODO: className so put the padding top and the border top
                 />
               </>
             )}
