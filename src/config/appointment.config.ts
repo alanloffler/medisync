@@ -54,6 +54,9 @@ export const APPO_CONFIG = {
   errors: {
     configurationUnavailable: 'El profesional no tiene configuración de agenda',
   },
+  loading: {
+    appointments: 'Cargando turnos',
+  },
   phrases: {
     alreadyReservedPlural: 'turnos reservados',
     alreadyReservedSingular: 'turno reservado',
