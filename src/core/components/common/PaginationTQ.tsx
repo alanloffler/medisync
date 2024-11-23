@@ -5,30 +5,35 @@ import { Button } from '@core/components/ui/button';
 // External imports
 import { Dispatch, SetStateAction } from 'react';
 import { cn } from '@lib/utils';
-// React component
-export function PaginationTQ({
-  className,
-  isPlaceholderData,
-  limit,
-  page,
-  pagination,
-  setPage,
-}: {
+// Interface
+interface ITQPagination {
   className?: string;
   isPlaceholderData: boolean;
   limit: number;
   page: number;
-  pagination: { totalPages: number; hasMore: boolean } | undefined;
+  pagination: ITQPaginationPagination | undefined;
   setPage: Dispatch<SetStateAction<number>>;
-}) {
+  texts: ITQPaginationTexts;
+}
+
+interface ITQPaginationPagination {
+  hasMore: boolean;
+  totalPages: number;
+}
+
+interface ITQPaginationTexts {
+  of: string;
+  page: string;
+  rowsPerPage: string;
+}
+// React component
+export function PaginationTQ({ className, isPlaceholderData, limit, page, pagination, setPage, texts }: ITQPagination) {
   const totalPages: number | undefined = pagination && Math.ceil(pagination.totalPages / limit);
 
   return (
     <section className={cn('flex items-center justify-between text-sm text-foreground', className)}>
-      <section>Here select</section>
-      <section>
-        Página {page + 1} de {totalPages}
-      </section>
+      <section>{texts?.rowsPerPage ? texts.rowsPerPage : 'Rows per page'}</section>
+      <section>{`${texts?.page ? texts.page : 'Page'} ${page + 1} ${texts?.of ? texts.of : 'of'} ${totalPages}`}</section>
       <section className='flex space-x-4'>
         <Button className='h-8 w-8 bg-input p-0 hover:bg-input-hover' variant='ghost' disabled={page === 0} onClick={() => setPage(0)}>
           <ArrowLeft size={16} strokeWidth={2} />
