@@ -3,7 +3,7 @@ export interface IResponse {
   message: string;
   pagination?: {
     hasMore: boolean;
-    totalPages: number;
+    totalItems: number;
   };
   statusCode: number;
 }
