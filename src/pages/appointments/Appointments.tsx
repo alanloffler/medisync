@@ -75,12 +75,13 @@ export default function Appointments() {
                   {appointments?.data.map((appointment: IAppointment) => <AppoItemMini key={appointment._id} data={appointment} />)}
                 </section>
                 <PaginationTQ
-                  pagination={appointments?.pagination}
+                  className='mt-4 !text-xsm text-slate-400'
+                  isPlaceholderData={isPlaceholderData}
                   limit={limit}
                   page={page}
+                  pagination={appointments?.pagination}
                   setPage={setPage}
-                  isPlaceholderData={isPlaceholderData}
-                  className='mt-4 !text-xsm text-slate-400'
+                  texts={APPO_CONFIG.pagination}
                 />
               </>
             )}
