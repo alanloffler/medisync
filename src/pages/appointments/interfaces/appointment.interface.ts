@@ -10,7 +10,7 @@ export interface IAppointmentForm {
   user: string;
 }
 
-export interface IAppointment extends IAppointmentForm {
+export interface IAppointment extends IAppointmentView {
   _id: string;
 }
 
