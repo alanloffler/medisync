@@ -20,7 +20,11 @@ import { queryClient } from '@lib/react-query';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 // React component
 export default function Appointments() {
-  const [limit, setLimit] = useState<number>(10);
+  const _limit: number =
+    APPO_CONFIG.appointmentComponent.pagination.defaultItemsPerPage && APPO_CONFIG.appointmentComponent.pagination.defaultItemsPerPage > 0
+      ? APPO_CONFIG.appointmentComponent.pagination.defaultItemsPerPage
+      : 10;
+  const [limit, setLimit] = useState<number>(_limit);
   const [page, setPage] = useState<number>(0);
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
 
@@ -68,7 +72,7 @@ export default function Appointments() {
           <div className='relative flex items-center justify-center rounded-t-lg bg-slate-200 p-3 text-slate-700'>
             <h1 className='text-center text-xl font-bold'>{APPO_CONFIG.title.list}</h1>
           </div>
-          <CardContent className='pt-0 space-y-2'>
+          <CardContent className='space-y-2 pt-0'>
             {isLoading && <LoadingDB variant='default' text={APPO_CONFIG.loading.appointments} />}
             {isError && <InfoCard text={error.message} type='error' />}
             {!isError && !isLoading && appointments && (
