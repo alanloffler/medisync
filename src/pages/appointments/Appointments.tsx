@@ -87,6 +87,7 @@ export default function Appointments() {
                 <TQPagination
                   className='pt-2 !text-xsm text-slate-400'
                   isPlaceholderData={isPlaceholderData}
+                  itemsPerPage={APPO_CONFIG.appointmentComponent.pagination.itemsPerPage}
                   limit={limit}
                   page={page}
                   pagination={appointments?.pagination}
