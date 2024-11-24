@@ -10,6 +10,7 @@ import { cn } from '@lib/utils';
 interface ITQPagination {
   className?: string;
   isPlaceholderData: boolean;
+  itemsPerPage: number[];
   limit: number;
   setLimit: Dispatch<SetStateAction<number>>;
   page: number;
@@ -29,7 +30,9 @@ interface ITQPaginationTexts {
   rowsPerPage: string;
 }
 // React component
-export function TQPagination({ className, isPlaceholderData, limit, page, pagination, setLimit, setPage, texts }: ITQPagination) {
+export function TQPagination({ className, isPlaceholderData, itemsPerPage, limit, page, pagination, setLimit, setPage, texts }: ITQPagination) {
+  const defaultItemsPerPage: number[] = [10, 20, 50, 100];
+  const _itemsPerPage: number[] = itemsPerPage && itemsPerPage.length > 0 ? itemsPerPage : defaultItemsPerPage;
   const totalPages: number | undefined = pagination && Math.ceil(pagination.totalItems / limit);
 
   return (
@@ -37,25 +40,28 @@ export function TQPagination({ className, isPlaceholderData, limit, page, pagina
       <section className='flex w-fit flex-row items-center space-x-4'>
         <div className='w-fit'>{texts?.rowsPerPage ? texts.rowsPerPage : 'Rows per page'}</div>
         <Select defaultValue={limit.toString()} onValueChange={(e) => setLimit(parseInt(e))}>
-          <SelectTrigger className='h-8 w-20'>
+          <SelectTrigger className='h-8 w-16 bg-input text-xs text-slate-700 hover:bg-input-hover [&_svg]:opacity-100'>
             <SelectValue placeholder={`${limit}`} />
           </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem value='5'>5</SelectItem>
-              <SelectItem value='10'>10</SelectItem>
-              <SelectItem value='20'>20</SelectItem>
+          <SelectContent className='w-[65px] min-w-px' onCloseAutoFocus={(e) => e.preventDefault()}>
+            {/* [&_svg]:hidden -> items: justify-center */}
+            <SelectGroup className='[&_svg]:h-4 [&_svg]:w-4'>
+              {_itemsPerPage.map((item) => (
+                <SelectItem key={item} value={item.toString()} className='justify-between text-xs'>
+                  {item}
+                </SelectItem>
+              ))}
             </SelectGroup>
           </SelectContent>
         </Select>
       </section>
       <section>{`${texts?.page ? texts.page : 'Page'} ${page + 1} ${texts?.of ? texts.of : 'of'} ${totalPages}`}</section>
-      <section className='flex space-x-4'>
+      <section className={`flex space-x-4 ${pagination?.totalItems && pagination?.totalItems < limit && 'opacity-0'}`}>
         <Button className='h-8 w-8 bg-input p-0 text-slate-700 hover:bg-input-hover' variant='ghost' disabled={page === 0} onClick={() => setPage(0)}>
           <ArrowLeft size={16} strokeWidth={2} />
         </Button>
         <Button
-          className='hover:bg-input-hover h-8 w-8 bg-input p-0 text-slate-700'
+          className='h-8 w-8 bg-input p-0 text-slate-700 hover:bg-input-hover'
           variant='ghost'
           disabled={page === 0}
           onClick={() => setPage((old: number) => Math.max(old - 1, 0))}
