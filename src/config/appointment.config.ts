@@ -1,4 +1,10 @@
 export const APPO_CONFIG = {
+  appointmentComponent: {
+    pagination: {
+      defaultItemsPerPage: 20,
+      itemsPerPage: [10, 20, 50],
+    },
+  },
   breadcrumb: [
     { id: 1, name: 'Inicio', path: '/' },
     { id: 2, name: 'Turnos', path: '' },
