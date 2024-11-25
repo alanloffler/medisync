@@ -1,5 +1,10 @@
 {
   "appName": "MediSync",
+  "button": {
+    "cancel": "Cancel",
+    "reserve": "Reserve",
+    "reserveAppointment": "Reserve appointment"
+  },
   "headerMenu": {
     "dashboard": "Dashboard",
     "appointments": "Appointments",

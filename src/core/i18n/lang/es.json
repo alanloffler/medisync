@@ -1,5 +1,10 @@
 {
   "appName": "MediSync",
+  "button": {
+    "cancel": "Cancelar",
+    "reserve": "Reservar",
+    "reserveAppointment": "Reservar turno"
+  },
   "headerMenu": {
     "dashboard": "Tablero",
     "appointments": "Turnos",
