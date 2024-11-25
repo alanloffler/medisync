@@ -1,5 +1,17 @@
 // Icons: https://lucide.dev/icons
-import { Bookmark, BriefcaseMedical, IdCard, CalendarCheck, CalendarClock, CalendarDays, ClipboardCheck, Clock, ClockAlert, FileWarning } from 'lucide-react';
+import {
+  Bookmark,
+  BriefcaseMedical,
+  IdCard,
+  CalendarCheck,
+  CalendarClock,
+  CalendarDays,
+  ClipboardCheck,
+  Clock,
+  ClockAlert,
+  FileWarning,
+  X,
+} from 'lucide-react';
 // External Components: https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
 import { Calendar } from '@core/components/ui/calendar';
@@ -513,10 +525,10 @@ export default function ReserveAppointments() {
                           slot.available ? (
                             <section
                               key={crypto.randomUUID()}
-                              className={`flex h-10 flex-row items-center space-x-6 text-xsm ${slot.available ? 'text-foreground' : 'bg-slate-100 text-slate-400'}`}
+                              className={`grid h-10 w-full grid-cols-7 items-center border-b text-xsm [&:last-child]:border-b-0 ${slot.available ? 'text-foreground' : 'bg-slate-100 text-slate-400'}`}
                             >
-                              <div className='w-40 flex flex-row items-center justify-between'>
-                                <div className='h-fit w-fit rounded-sm bg-slate-200 py-1 px-1.5 text-xs text-slate-600 leading-3'>
+                              <div className='col-span-1 flex flex-row items-center justify-between space-x-2'>
+                                <div className='h-fit w-fit rounded-sm bg-slate-200 px-1.5 py-1 text-xs leading-3 text-slate-600'>
                                   {`${APPO_CONFIG.words.shiftPrefix}${slot.id < 10 ? `0${slot.id}` : slot.id}`}
                                 </div>
                                 <div className='flex h-fit w-fit flex-row items-center space-x-1 rounded-sm bg-purple-100 p-1 pr-1.5 text-purple-600'>
@@ -526,63 +538,60 @@ export default function ReserveAppointments() {
                               </div>
 
                               {slot.appointment?.user ? (
-                                <div className='relative flex flex-row items-center w-full'>
-                                  <div className='absolute top-1/2 h-[1px] w-full -translate-y-1/2 bg-orange-200'></div>
-                                  <div className='relative flex h-fit w-fit flex-row items-center space-x-4 pl-10 text-xsm leading-none text-slate-600'>
-                                    <div className='flex space-x-2 items-center rounded-sm border border-orange-200 bg-white p-2 font-medium'>
+                                <div className='col-span-4 flex flex-row items-center'>
+                                  <div className='flex h-fit flex-row items-center space-x-4 px-2 text-xsm leading-none text-slate-600'>
+                                    <div className='flex items-center justify-start space-x-2 p-2 font-medium'>
                                       <span>{`${capitalize(slot.appointment.user.firstName)} ${capitalize(slot.appointment.user.lastName)}`}</span>
                                       <Bookmark size={13} strokeWidth={2} className='fill-orange-400 text-orange-400' />
                                     </div>
-                                    {/* <div className='bg-background text-muted-foreground px-2 '>{`${APPO_CONFIG.table.headers[3]} ${delimiter(slot.appointment.user.dni, '.', 3)}`}</div> */}
-                                    <div className='flex items-center space-x-2 bg-background text-muted-foreground px-2 '>
+                                    <div className='flex items-center justify-start space-x-2 bg-background px-2 text-muted-foreground'>
                                       <IdCard size={18} strokeWidth={1.5} />
                                       <span>{delimiter(slot.appointment.user.dni, '.', 3)}</span>
                                     </div>
                                   </div>
                                 </div>
                               ) : (
-                                <div className='relative flex w-full flex-row items-center'>
-                                  <div className='absolute top-1/2 h-[1px] w-full -translate-y-1/2 bg-slate-200'></div>
+                                <div className='relative col-span-4 flex flex-row items-center justify-end'>
+                                  {/* <div className='absolute top-1/2 h-[1px] w-full -translate-y-1/2 bg-slate-200'></div> */}
                                 </div>
                               )}
-                              <div className='flex items-center justify-start space-x-4 w-48'>
+                              <div className='col-span-2 flex flex-row items-center justify-end space-x-2.5'>
                                 {/* Time slot reserve button */}
                                 {!slot.appointment?.user && AppoSchedule.isDatetimeInFuture(date, slot.begin) && (
                                   <Button
-                                    onClick={() => handleDialog(DialogAction.RESERVE, slot)}
-                                    variant='default'
+                                    variant='ghost'
                                     size='xs'
-                                    className='border border-emerald-300/50 bg-emerald-200 px-2 py-1 text-xs text-emerald-700 shadow-none hover:bg-emerald-300'
+                                    className='space-x-1.5 bg-emerald-400 py-1.5 pl-1.5 pr-2.5 text-emerald-50 hover:bg-emerald-500 hover:text-emerald-50'
                                   >
-                                    {APPO_CONFIG.buttons.addAppointment}
+                                    <CalendarCheck size={16} strokeWidth={2} />
+                                    <span className='text-xs font-normal'>Reservar</span>
                                   </Button>
                                 )}
                                 {/* Time slot view button */}
-                                {slot.appointment?.user && (
-                                  <Button
-                                    onClick={() => navigate(`/appointments/${slot.appointment?._id}`)}
-                                    variant='table'
-                                    size='xs'
-                                    className='border border-sky-300/50 bg-sky-200 px-2 py-1 text-xs text-sky-700 shadow-none hover:bg-sky-300'
-                                  >
-                                    {APPO_CONFIG.buttons.viewAppointment}
+                                {/* {slot.appointment?.user && (
+                                  <Button variant='ghost' size='xs' className='bg-sky-400 space-x-1.5 py-1.5 pl-1.5 pr-2.5 text-sky-100 hover:bg-sky-500 hover:text-sky-100'>
+                                    <FileText size={16} strokeWidth={2} />
+                                    <span className='text-xs font-normal'>Detalles</span>
                                   </Button>
-                                )}
+                                )} */}
                                 {/* Time slot cancel button */}
                                 {slot.appointment?.user && AppoSchedule.isDatetimeInFuture(date, slot.begin) && (
                                   <Button
-                                    onClick={() => handleDialog(DialogAction.CANCEL, slot)}
-                                    variant='table'
+                                    variant='ghost'
                                     size='xs'
-                                    className='border border-rose-300/50 bg-rose-200 px-2 py-1 text-xs text-rose-700 shadow-none hover:bg-rose-300'
+                                    className='space-x-1.5 bg-rose-400 py-1.5 pl-1.5 pr-2.5 text-rose-100 hover:bg-rose-500 hover:text-rose-100'
                                   >
-                                    {APPO_CONFIG.buttons.cancelAppointment}
+                                    <X size={16} strokeWidth={2} />
+                                    <span className='text-xs font-normal'>Cancelar</span>
                                   </Button>
                                 )}
                               </div>
                             </section>
                           ) : (
-                            <section key={crypto.randomUUID()} className='mx-auto flex py-1 items-center bg-slate-100 w-fit text-center text-xsm text-slate-500 rounded-md px-2 space-x-2'>
+                            <section
+                              key={crypto.randomUUID()}
+                              className='mx-auto flex w-fit items-center space-x-2 rounded-md bg-slate-100 px-2 py-1 text-center text-xsm text-slate-500'
+                            >
                               <ClockAlert size={16} strokeWidth={2} className='text-rose-400' />
                               <div>
                                 {slot.available
