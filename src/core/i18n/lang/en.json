@@ -5,5 +5,9 @@
     "appointments": "Appointments",
     "professionals": "Professionals",
     "users": "Patients"
+  },
+  "user": {
+    "title": "My account",
+    "menuItems": { "profile": "Profile", "settings": "Settings", "logout": "Logout" }
   }
 }

@@ -5,5 +5,9 @@
     "appointments": "Turnos",
     "professionals": "Profesionales",
     "users": "Pacientes"
+  },
+  "user": {
+    "title": "Mi cuenta",
+    "menuItems": { "profile": "Perfil", "settings": "Configuraciones", "logout": "Salir" }
   }
 }
