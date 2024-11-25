@@ -6,6 +6,34 @@
     "professionals": "Professionals",
     "users": "Patients"
   },
+  "dialog": {
+    "reserveAppointment": {
+      "title": "Appointment reservation",
+      "description": "By confirming, you will make a reservation"
+    },
+    "deleteAppointment": {
+      "title": "Remove appointment",
+      "description": "By confirming, you will remove the appointment",
+      "contentText": "Appointment cancellation for {{firstName}} {{lastName}}"
+    }
+  },
+  "section": {
+    "appointments": {
+      "reserve": {
+        "error": {
+          "unavailableConfiguration": "Unavailable professional's configuration"
+        },
+        "steps": {
+          "title1": "Select professional",
+          "title2": "Select date",
+          "title3": "Select appointment"
+        }
+      }
+    }
+  },
+  "placeholder": {
+    "userCombobox": "Search by DNI"
+  },
   "user": {
     "title": "My account",
     "menuItems": { "profile": "Profile", "settings": "Settings", "logout": "Logout" }

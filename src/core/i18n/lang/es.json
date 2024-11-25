@@ -6,6 +6,34 @@
     "professionals": "Profesionales",
     "users": "Pacientes"
   },
+  "dialog": {
+    "reserveAppointment": {
+      "title": "Reserva de turno",
+      "description": "Al confirmar, vas a realizar una reserva de turno"
+    },
+    "deleteAppointment": {
+      "title": "Eliminar turno",
+      "description": "Al confirmar, vas a eliminar un turno",
+      "contentText": "Cancelación de turno para {{firstName}} {{lastName}}"
+    }
+  },
+  "section": {
+    "appointments": {
+      "reserve": {
+        "error": {
+          "unavailableConfiguration": "Configuración del profesional no disponible"
+        },
+        "steps": {
+          "title1": "Seleccione profesional",
+          "title2": "Seleccione fecha",
+          "title3": "Seleccione turno"
+        }
+      }
+    }
+  },
+  "placeholder": {
+    "userCombobox": "Buscar por DNI"
+  },
   "user": {
     "title": "Mi cuenta",
     "menuItems": { "profile": "Perfil", "settings": "Configuraciones", "logout": "Salir" }
