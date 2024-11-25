@@ -31,8 +31,8 @@ export const APPO_CONFIG = {
   dialog: {
     reserve: {
       buttons: {
-        cancel: 'Cancelar',
-        save: 'Confirmar reserva',
+        // cancel: 'Cancelar',
+        // save: 'Confirmar reserva',
       },
       summary: {
         line1: 'Reserva de turno para',
