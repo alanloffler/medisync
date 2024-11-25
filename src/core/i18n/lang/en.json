@@ -1,0 +1,9 @@
+{
+  "appName": "MediSync",
+  "headerMenu": {
+    "dashboard": "Dashboard",
+    "appointments": "Appointments",
+    "professionals": "Professionals",
+    "users": "Patients"
+  }
+}
