@@ -484,7 +484,7 @@ export default function ReserveAppointments() {
                                       onClick={() => handleDialog(DialogAction.RESERVE, slot)}
                                     >
                                       <CalendarCheck size={16} strokeWidth={2} />
-                                      <span className='hidden text-xs font-normal md:block'>Reservar</span>
+                                      <span className='hidden text-xs font-normal md:block'>{t('button.reserve')}</span>
                                     </Button>
                                   </div>
                                 )}
@@ -497,7 +497,7 @@ export default function ReserveAppointments() {
                                       onClick={() => handleDialog(DialogAction.CANCEL, slot)}
                                     >
                                       <X size={16} strokeWidth={2} />
-                                      <span className='hidden text-xs font-normal md:block'>Cancelar</span>
+                                      <span className='hidden text-xs font-normal md:block'>{t('button.cancel')}</span>
                                     </Button>
                                   </div>
                                 )}
@@ -553,7 +553,7 @@ export default function ReserveAppointments() {
               </Button>
               {dialogContent.action === DialogAction.RESERVE && (
                 <Button variant='default' size='default' disabled={!userSelected._id} onClick={() => handleReserveAppointment(selectedSlot)}>
-                  {APPO_CONFIG.dialog.reserve.buttons.save}
+                  {t('button.reserveAppointment')}
                 </Button>
               )}
               {dialogContent.action === DialogAction.CANCEL && (
