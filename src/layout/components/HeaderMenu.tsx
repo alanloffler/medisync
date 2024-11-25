@@ -3,17 +3,18 @@ import { Menu, Package2 } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@core/components/ui/sheet';
-// Components
-import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 // External imports
 import { Link } from 'react-router-dom';
 import { MouseEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 // Imports
 import { HEADER_CONFIG } from '@config/layout/header.config';
+import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 // React component
 export function HeaderMenu() {
   const itemSelected = useHeaderMenuStore((state) => state.headerMenuSelected);
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
+  const { t } = useTranslation();
 
   function handleMenuItem(e: MouseEvent<HTMLElement>): void {
     setItemSelected(parseInt(e.currentTarget.id));
@@ -24,17 +25,17 @@ export function HeaderMenu() {
       <nav className='hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6'>
         <Link to='/' className='flex items-center gap-2 font-semibold md:text-base'>
           <Package2 className='h-6 w-6' />
-          <span>{HEADER_CONFIG.appName}</span>
+          <span>{t('appName')}</span>
         </Link>
         {HEADER_CONFIG.headerMenu.map((item) => (
           <Link
             id={`${item.id}`}
-            key={item.id}
+            key={crypto.randomUUID()}
             to={item.path}
             onClick={(e) => handleMenuItem(e)}
             className={`${itemSelected === item.id ? 'text-primary' : 'text-muted-foreground'} transition-colors hover:text-primary`}
           >
-            <span className='text-base'>{item.title}</span>
+            <span className='text-base'>{t(item.key)}</span>
           </Link>
         ))}
       </nav>
@@ -48,17 +49,17 @@ export function HeaderMenu() {
           <nav className='grid gap-6 text-lg font-medium'>
             <Link to='/' className='flex items-center gap-2 text-lg font-semibold'>
               <Package2 className='h-6 w-6' />
-              <span>{HEADER_CONFIG.appName}</span>
+              <span>{t('appName')}</span>
             </Link>
             {HEADER_CONFIG.headerMenu.map((item) => (
               <Link
                 id={`${item.id}`}
-                key={item.id}
+                key={crypto.randomUUID()}
                 to={item.path}
                 onClick={(e) => handleMenuItem(e)}
                 className={`${itemSelected === item.id ? 'text-primary' : 'text-muted-foreground'} transition-colors hover:text-primary`}
               >
-                {item.title}
+                {t(item.key)}
               </Link>
             ))}
           </nav>
