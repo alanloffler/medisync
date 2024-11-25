@@ -525,9 +525,9 @@ export default function ReserveAppointments() {
                           slot.available ? (
                             <section
                               key={crypto.randomUUID()}
-                              className={`grid h-10 w-full grid-cols-7 items-center border-b text-xsm [&:last-child]:border-b-0 ${slot.available ? 'text-foreground' : 'bg-slate-100 text-slate-400'}`}
+                              className={`flex h-10 flex-row items-center space-x-4 text-xsm ${slot.available ? 'text-foreground' : 'bg-slate-100 text-slate-400'}`}
                             >
-                              <div className='col-span-1 flex flex-row items-center justify-between space-x-2'>
+                              <div className='flex flex-row items-center justify-start space-x-4'>
                                 <div className='h-fit w-fit rounded-sm bg-slate-200 px-1.5 py-1 text-xs leading-3 text-slate-600'>
                                   {`${APPO_CONFIG.words.shiftPrefix}${slot.id < 10 ? `0${slot.id}` : slot.id}`}
                                 </div>
@@ -538,7 +538,7 @@ export default function ReserveAppointments() {
                               </div>
 
                               {slot.appointment?.user ? (
-                                <div className='col-span-4 flex flex-row items-center'>
+                                <div className='flex flex-1 flex-row items-center'>
                                   <div className='flex h-fit flex-row items-center space-x-4 px-2 text-xsm leading-none text-slate-600'>
                                     <div className='flex items-center justify-start space-x-2 p-2 font-medium'>
                                       <span>{`${capitalize(slot.appointment.user.firstName)} ${capitalize(slot.appointment.user.lastName)}`}</span>
@@ -551,17 +551,18 @@ export default function ReserveAppointments() {
                                   </div>
                                 </div>
                               ) : (
-                                <div className='relative col-span-4 flex flex-row items-center justify-end'>
+                                <div className='relative flex h-px flex-1 flex-row items-center justify-end bg-slate-200'>
                                   {/* <div className='absolute top-1/2 h-[1px] w-full -translate-y-1/2 bg-slate-200'></div> */}
                                 </div>
                               )}
-                              <div className='col-span-2 flex flex-row items-center justify-end space-x-2.5'>
+                              <div className='flex w-fit flex-row items-center justify-end'>
                                 {/* Time slot reserve button */}
                                 {!slot.appointment?.user && AppoSchedule.isDatetimeInFuture(date, slot.begin) && (
                                   <Button
-                                    variant='ghost'
-                                    size='xs'
                                     className='space-x-1.5 bg-emerald-400 py-1.5 pl-1.5 pr-2.5 text-emerald-50 hover:bg-emerald-500 hover:text-emerald-50'
+                                    size='xs'
+                                    variant='ghost'
+                                    onClick={() => handleDialog(DialogAction.RESERVE, slot)}
                                   >
                                     <CalendarCheck size={16} strokeWidth={2} />
                                     <span className='text-xs font-normal'>Reservar</span>
@@ -577,9 +578,10 @@ export default function ReserveAppointments() {
                                 {/* Time slot cancel button */}
                                 {slot.appointment?.user && AppoSchedule.isDatetimeInFuture(date, slot.begin) && (
                                   <Button
-                                    variant='ghost'
-                                    size='xs'
                                     className='space-x-1.5 bg-rose-400 py-1.5 pl-1.5 pr-2.5 text-rose-100 hover:bg-rose-500 hover:text-rose-100'
+                                    size='xs'
+                                    variant='ghost'
+                                    onClick={() => handleDialog(DialogAction.CANCEL, slot)}
                                   >
                                     <X size={16} strokeWidth={2} />
                                     <span className='text-xs font-normal'>Cancelar</span>
