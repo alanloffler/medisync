@@ -12,10 +12,13 @@ import {
 } from '@core/components/ui/dropdown-menu';
 // External imports
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 // Imports
 import { HEADER_CONFIG } from '@config/layout/header.config';
 // React component
 export function User() {
+  const { t } = useTranslation();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -24,12 +27,12 @@ export function User() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end'>
-        <DropdownMenuLabel>{HEADER_CONFIG.user.title}</DropdownMenuLabel>
+        <DropdownMenuLabel>{t('user.title')}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {HEADER_CONFIG.user.menuItems.map((item) => (
           <DropdownMenuItem key={item.id}>
             <Link key={item.id} to={item.path} className='w-full'>
-              {item.title}
+              {t(item.key)}
             </Link>
           </DropdownMenuItem>
         ))}
