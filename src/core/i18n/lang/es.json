@@ -1,0 +1,9 @@
+{
+  "appName": "MediSync",
+  "headerMenu": {
+    "dashboard": "Tablero",
+    "appointments": "Turnos",
+    "professionals": "Profesionales",
+    "users": "Pacientes"
+  }
+}
