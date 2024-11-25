@@ -47,6 +47,7 @@ import { useCapitalizeFirstLetter } from '@core/hooks/useCapitalizeFirstLetter';
 import { useDelimiter } from '@core/hooks/useDelimiter';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
+import { useTranslation } from 'react-i18next';
 // Enum
 enum DialogAction {
   CANCEL = 'cancel',
@@ -85,6 +86,7 @@ export default function ReserveAppointments() {
   const delimiter = useDelimiter();
   const navigate = useNavigate();
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
+  const { t } = useTranslation();
   // #region professionalSelected actions
   useEffect(() => {
     setItemSelected(HEADER_CONFIG.headerMenu[1].id);
@@ -122,8 +124,8 @@ export default function ReserveAppointments() {
   useEffect(() => {
     if (professionalSelected) {
       if (!professionalSelected.configuration) {
-        addNotification({ type: 'error', message: APPO_CONFIG.errors.configurationUnavailable });
-        setErrorMessage(APPO_CONFIG.errors.configurationUnavailable);
+        addNotification({ type: 'error', message: t('section.appointments.reserve.error.unavailableConfiguration') });
+        setErrorMessage(t('section.appointments.reserve.error.unavailableConfiguration'));
         return;
       }
 
@@ -233,9 +235,9 @@ export default function ReserveAppointments() {
     if (action === DialogAction.RESERVE) {
       const reserveDialogContent: IDialog = {
         action: DialogAction.RESERVE,
-        content: <UsersCombo searchBy='dni' searchResult={(e) => setUserSelected(e)} placeholder={APPO_CONFIG.dialog.userCombobox.placeholder} />,
-        description: APPO_CONFIG.dialog.reserve.description,
-        title: APPO_CONFIG.dialog.reserve.title,
+        content: <UsersCombo searchBy='dni' searchResult={(e) => setUserSelected(e)} placeholder={t('placeholder.userCombobox')} />,
+        description: t('dialog.reserveAppointment.description'),
+        title: t('dialog.reserveAppointment.title'),
       };
 
       setDialogContent(reserveDialogContent);
@@ -248,8 +250,13 @@ export default function ReserveAppointments() {
         action: DialogAction.CANCEL,
         content: (
           <div className='space-y-2'>
-            <div>
-              {APPO_CONFIG.dialog.cancel.contentText}
+            <div className='space-x-1'>
+              <span>
+                {t('dialog.deleteAppointment.contentText', {
+                  firstName: capitalize(slot.appointment?.user.firstName),
+                  lastName: capitalize(slot.appointment?.user.lastName),
+                })}
+              </span>
               <span className='font-semibold'>
                 {capitalize(slot.appointment?.user.firstName)} {capitalize(slot.appointment?.user.lastName)}
               </span>
@@ -259,8 +266,8 @@ export default function ReserveAppointments() {
             </div>
           </div>
         ),
-        description: APPO_CONFIG.dialog.cancel.description,
-        title: APPO_CONFIG.dialog.cancel.title,
+        description: t('dialog.deleteAppointment.description'),
+        title: t('dialog.deleteAppointment.title'),
       };
 
       setDialogContent(cancelDialogContent);
@@ -319,7 +326,7 @@ export default function ReserveAppointments() {
         <section className='flex h-fit flex-col gap-4 md:mx-auto md:w-1/3 md:gap-6 lg:mx-auto lg:w-1/3 lg:gap-6'>
           {/* Section: Select professional (Step 1) */}
           <section className='flex w-full flex-col space-y-4'>
-            <Steps text={APPO_CONFIG.steps.text1} step='1' />
+            <Steps text={t('section.appointments.reserve.steps.title1')} step='1' />
             <ProfessionalsCombobox
               onSelectProfessional={(professional) => setProfessionalSelected(professional)}
               options={{
@@ -346,7 +353,7 @@ export default function ReserveAppointments() {
           {/* Section: Calendar (Step 2) */}
           {professionalSelected && (
             <section className={cn('flex flex-col space-y-4', showCalendar ? 'pointer-events-auto' : 'pointer-events-none')}>
-              <Steps text={APPO_CONFIG.steps.text2} step='2' />
+              <Steps text={t('section.appointments.reserve.steps.title2')} step='2' />
               <Calendar
                 className='h-fit w-fit flex-row rounded-lg bg-card text-card-foreground shadow-sm'
                 defaultMonth={new Date(selectedYear, selectedMonth)}
@@ -388,7 +395,7 @@ export default function ReserveAppointments() {
           {professionalSelected && selectedDate && (
             <>
               {/* Section: Schedule (Step 3) */}
-              <Steps text={APPO_CONFIG.steps.text3} step='3' />
+              <Steps text={t('section.appointments.reserve.steps.title3')} step='3' />
               {todayIsWorkingDay ? (
                 loadingAppointments ? (
                   <LoadingDB text={'Cargando agenda'} variant='card' size='default' />
