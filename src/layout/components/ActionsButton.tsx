@@ -7,6 +7,7 @@ import { Separator } from '@core/components/ui/separator';
 import { spring, useAnimate } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 // Imports
 import type { ILinks } from '@layout/interfaces/links.interface';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
@@ -17,6 +18,7 @@ export function ActionsButton({ links }: { links: ILinks[] }) {
   const [plusScope, plusAnimation] = useAnimate();
   const navigate = useNavigate();
   const setMenuItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
+  const { t } = useTranslation();
 
   function handleClick(link: ILinks): void {
     navigate(link.path);
@@ -38,7 +40,7 @@ export function ActionsButton({ links }: { links: ILinks[] }) {
           className='flex h-8 w-fit items-center space-x-2 rounded-l-md bg-primary/75 px-3 py-1'
         >
           <Plus ref={plusScope} size={16} strokeWidth={2} />
-          <span>{links.find((link) => link.default)?.title || links[0].title}</span>
+          <span>{links.find((link) => link.default)?.key ? t(links.find((link) => link.default)!.key) : t(links[0].key)}</span>
         </button>
         <DropdownMenuTrigger
           onClick={() => setOpen(true)}
@@ -60,7 +62,7 @@ export function ActionsButton({ links }: { links: ILinks[] }) {
                 onClick={() => handleClick(link)}
               >
                 <Plus strokeWidth={2} className='h-4 w-4' />
-                <span>{link.title}</span>
+                <span>{t(link.key)}</span>
               </button>
               {index < links.length - 1 && <Separator className='bg-primary/50' />}
             </section>
