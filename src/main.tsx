@@ -1,3 +1,4 @@
+import './core/i18n/i18n.ts';
 import './index.css';
 import App from './App.tsx';
 // import React from 'react';
