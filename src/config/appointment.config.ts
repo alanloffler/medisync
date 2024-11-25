@@ -15,12 +15,12 @@ export const APPO_CONFIG = {
     viewAppointment: 'Ver',
   },
   calendar: {
-    language: 'es',
+    language: 'es', // ok, see to take from a global variable and use it for the entire app
     placeholder: {
       month: 'Mes',
       year: 'Año',
     },
-    yearsRange: 1,
+    yearsRange: 1, // ok
   },
   combobox: {
     loadingText: 'Cargando profesionales',
@@ -34,32 +34,24 @@ export const APPO_CONFIG = {
         cancel: 'Cancelar',
         save: 'Confirmar reserva',
       },
-      description: 'Al confirmar, vas a realizar una reserva de turno',
       summary: {
         line1: 'Reserva de turno para',
         line2: 'El día',
         line3: 'A las',
       },
-      title: 'Reserva de turno',
     },
     cancel: {
       buttons: {
         cancel: 'Cancelar',
         save: 'Cancelar reserva',
       },
-      contentText: 'Cancelación del turno para ',
-      description: 'Al confirmar, vas a cancelar la reserva de turno',
-      title: 'Cancelación de turno',
     },
     userCombobox: {
       dniLabel: '- DNI',
       noResults: 'Búsqueda sin resultados',
-      placeholder: 'Buscar por DNI',
     },
   },
-  errors: {
-    configurationUnavailable: 'El profesional no tiene configuración de agenda',
-  },
+
   loading: {
     appointments: 'Cargando turnos',
   },
@@ -75,11 +67,6 @@ export const APPO_CONFIG = {
     availableAppointmentSingular: 'turno disponible',
     availableDays: 'Días de atención:',
     notAvailable: 'No disponible',
-  },
-  steps: {
-    text1: 'Seleccionar profesional',
-    text2: 'Seleccionar fecha',
-    text3: 'Seleccionar turno',
   },
   table: {
     headers: ['Turno', 'Horario', 'Nombre del paciente', 'DNI', 'Acciones'],
