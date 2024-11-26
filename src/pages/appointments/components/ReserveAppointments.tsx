@@ -420,7 +420,7 @@ export default function ReserveAppointments() {
                         <section className='flex flex-row justify-between'>
                           <div className='flex flex-row items-center gap-2'>
                             <CalendarDays className='h-4 w-4' />
-                            <span>{APPO_CONFIG.table.title}</span>
+                            <span>{t('table.title.appointmentsReserve')}</span>
                           </div>
                           {professionalSelected?._id && (
                             <h1>{`${capitalize(professionalSelected?.title.abbreviation)} ${capitalize(professionalSelected?.firstName)} ${capitalize(professionalSelected?.lastName)}`}</h1>
@@ -542,7 +542,7 @@ export default function ReserveAppointments() {
               ) : (
                 <Card>
                   <CardContent className='pt-6'>
-                    <InfoCard type='warning' text={APPO_CONFIG.warning.selectWorkingDay} />
+                    <InfoCard type='warning' text={t('warning.selectWorkingDay')} />
                   </CardContent>
                 </Card>
               )}
@@ -562,8 +562,8 @@ export default function ReserveAppointments() {
               {dialogContent.action === DialogAction.CANCEL && dialogContent.content}
             </section>
             <footer className='flex justify-end gap-6 pt-4'>
-              <Button variant='secondary' size={'default'} onClick={() => handleResetDialog()}>
-                {APPO_CONFIG.buttons.cancelAppointment}
+              <Button variant='secondary' size='default' onClick={() => handleResetDialog()}>
+                {t('button.cancel')}
               </Button>
               {dialogContent.action === DialogAction.RESERVE && (
                 <Button variant='default' size='default' disabled={!userSelected._id} onClick={() => handleReserveAppointment(selectedSlot)}>
@@ -572,7 +572,7 @@ export default function ReserveAppointments() {
               )}
               {dialogContent.action === DialogAction.CANCEL && (
                 <Button variant='default' size='default' onClick={() => handleCancelAppointment(selectedSlot)}>
-                  {APPO_CONFIG.dialog.cancel.buttons.save}
+                  {t('button.cancelAppointment')}
                 </Button>
               )}
             </footer>
