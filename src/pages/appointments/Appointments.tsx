@@ -1,6 +1,7 @@
 // Icons: https://lucide.dev/icons/
-import { Database } from 'lucide-react';
+import { Database, PlusCircle } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
+import { Button } from '@core/components/ui/button';
 import { Card, CardContent } from '@core/components/ui/card';
 // Components
 import { AppoItemMini } from '@appointments/components/AppoItemMini';
@@ -10,7 +11,10 @@ import { PageHeader } from '@core/components/common/PageHeader';
 import { TQPagination } from '@core/components/common/TQPagination';
 // External imports
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { spring, useAnimate } from 'motion/react';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 // Imports
 import type { IAppointment } from './interfaces/appointment.interface';
 import { APPO_CONFIG } from '@config/appointment.config';
@@ -21,12 +25,13 @@ import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 // React component
 export default function Appointments() {
   const _limit: number =
-    APPO_CONFIG.appointmentComponent.pagination.defaultItemsPerPage && APPO_CONFIG.appointmentComponent.pagination.defaultItemsPerPage > 0
-      ? APPO_CONFIG.appointmentComponent.pagination.defaultItemsPerPage
-      : 10;
+    APPO_CONFIG.pagination.defaultItemsPerPage && APPO_CONFIG.pagination.defaultItemsPerPage > 0 ? APPO_CONFIG.pagination.defaultItemsPerPage : 10;
   const [limit, setLimit] = useState<number>(_limit);
   const [page, setPage] = useState<number>(0);
+  const [createScope, createAnimation] = useAnimate();
+  const navigate = useNavigate();
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
+  const { t } = useTranslation();
 
   useEffect(() => {
     setItemSelected(HEADER_CONFIG.headerMenu[1].id);
@@ -57,29 +62,37 @@ export default function Appointments() {
 
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
-      {/* Section: Page Header */}
       <header className='flex items-center justify-between'>
-        <PageHeader title={APPO_CONFIG.title.page} breadcrumb={APPO_CONFIG.breadcrumb} />
+        <PageHeader title={t('pageTitles.appointments')} breadcrumb={APPO_CONFIG.breadcrumb} />
       </header>
-      {/* Section: Page content */}
       <section className='grid gap-6 md:grid-cols-4 md:gap-8 lg:grid-cols-4 xl:grid-cols-4'>
-        {/* Section: Left side content */}
-        <Card className='col-span-1 border-none bg-slate-200 bg-transparent shadow-none md:col-span-4 lg:col-span-1 xl:col-span-1'>
-          <CardContent className='p-0'>This is the left side content</CardContent>
-        </Card>
-        {/* Section: Right side content */}
+        <section className='col-span-1 md:col-span-4 lg:col-span-1 xl:col-span-1'>
+          <Button
+            variant='default'
+            size='sm'
+            className='w-fit space-x-2'
+            onClick={() => navigate('/reserve')}
+            onMouseOver={() => createAnimation(createScope.current, { scale: 1.2 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })}
+            onMouseOut={() => createAnimation(createScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })}
+          >
+            <PlusCircle ref={createScope} size={16} strokeWidth={2} />
+            <span>{t('button.generateAppointment')}</span>
+          </Button>
+        </section>
         <Card className='col-span-1 h-fit space-y-4 overflow-y-auto p-0 md:col-span-4 lg:col-span-3 xl:col-span-3'>
           <div className='relative flex items-center justify-center rounded-t-lg bg-slate-200 p-3 text-slate-700'>
-            <h1 className='text-center text-xl font-bold'>{APPO_CONFIG.title.list}</h1>
+            <h1 className='text-center text-xl font-bold'>{t('table.title.appointmentsList')}</h1>
           </div>
           <CardContent className='space-y-2 pt-0'>
-            {isLoading && <LoadingDB variant='default' text={APPO_CONFIG.loading.appointments} />}
+            {isLoading && <LoadingDB variant='default' text={t('loading.appointments')} />}
             {isError && <InfoCard text={error.message} type='error' />}
             {!isError && !isLoading && appointments && (
               <>
                 <section className='flex items-center justify-end space-x-1 px-1'>
                   <Database size={16} strokeWidth={2} className='text-blue-400' />
-                  <span className='text-xsm text-slate-400'>{`${appointments?.pagination?.totalItems} ${APPO_CONFIG.table.totalItems}`}</span>
+                  <span className='text-xsm text-slate-400'>
+                    {t('table.totalItems.appointments', { totalItems: appointments?.pagination?.totalItems })}
+                  </span>
                 </section>
                 <section className='flex flex-col'>
                   {appointments?.data.map((appointment: IAppointment) => <AppoItemMini key={appointment._id} data={appointment} />)}
@@ -87,13 +100,12 @@ export default function Appointments() {
                 <TQPagination
                   className='pt-2 !text-xsm text-slate-400'
                   isPlaceholderData={isPlaceholderData}
-                  itemsPerPage={APPO_CONFIG.appointmentComponent.pagination.itemsPerPage}
+                  itemsPerPage={APPO_CONFIG.pagination.itemsPerPage}
                   limit={limit}
                   page={page}
                   pagination={appointments?.pagination}
                   setLimit={setLimit}
                   setPage={setPage}
-                  texts={APPO_CONFIG.pagination}
                 />
               </>
             )}
