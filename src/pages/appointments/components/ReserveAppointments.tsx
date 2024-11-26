@@ -30,6 +30,7 @@ import { format } from '@formkit/tempo';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // Imports
+import i18n from '@core/i18n/i18n';
 import type { IAppointment, ITimeSlot } from '@appointments/interfaces/appointment.interface';
 import type { IDialog } from '@core/interfaces/dialog.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
@@ -87,6 +88,15 @@ export default function ReserveAppointments() {
   const navigate = useNavigate();
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
   const { t } = useTranslation();
+
+  const selectedLocale = i18n.language;
+
+  useEffect(() => {
+    if (selectedDate) {
+      const legibleTodayDate: string = format(selectedDate, 'full', selectedLocale);
+      setSelectedLegibleDate(legibleTodayDate);
+    }
+  }, [selectedLocale, selectedDate]);
   // #region professionalSelected actions
   useEffect(() => {
     setItemSelected(HEADER_CONFIG.headerMenu[1].id);
@@ -144,8 +154,9 @@ export default function ReserveAppointments() {
         setTodayIsWorkingDay(todayIsWorkingDay);
 
         if (todayIsWorkingDay) {
-          const legibleTodayDate: string = format(selectedDate, 'full');
-          setSelectedLegibleDate(capitalizeFirstLetter(legibleTodayDate) || '');
+          // Deprecated: legible date is set on page load and on language change. Test it!
+          // const legibleTodayDate: string = format(selectedDate, 'full', selectedLocale);
+          // setSelectedLegibleDate(capitalizeFirstLetter(legibleTodayDate) || '');
 
           const scheduleDate: string = format(selectedDate, 'YYYY-MM-DD');
           setDate(selectedDate);
