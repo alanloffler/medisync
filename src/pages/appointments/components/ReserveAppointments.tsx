@@ -129,9 +129,9 @@ export default function ReserveAppointments() {
     const calendarYears: string[] = CalendarService.generateYearsRange(APPO_CONFIG.calendar.yearsRange);
     setCalendarYears(calendarYears);
 
-    const calendarMonths: string[] = CalendarService.generateMonths(APPO_CONFIG.calendar.language);
+    const calendarMonths: string[] = CalendarService.generateMonths(selectedLocale);
     setCalendarMonths(calendarMonths);
-  }, [professionalSelected]);
+  }, [professionalSelected, selectedLocale]);
   // #endregion
   // #region Load data, schedule creation, time slots generation and appointments insertion.
   useEffect(() => {
