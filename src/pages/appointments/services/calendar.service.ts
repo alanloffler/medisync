@@ -73,10 +73,7 @@ export class CalendarService {
 
     yearsRange.push(actualYear);
 
-    for (let i: number = 1; i <= rangeLimit; i++) {
-      yearsRange.push(actualYear + i);
-      yearsRange.push(actualYear - i);
-    }
+    for (let i: number = 1; i <= rangeLimit; i++) yearsRange.push(actualYear - i);
 
     const orderedYearsRange: string[] = yearsRange.sort((a, b) => a - b).map((year) => year.toString());
 
