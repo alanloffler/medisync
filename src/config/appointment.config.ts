@@ -1,27 +1,20 @@
 export const APPO_CONFIG = {
-  appointmentComponent: {
-    pagination: {
+  // In use
+  pagination: {
       defaultItemsPerPage: 20,
       itemsPerPage: [10, 20, 50],
-    },
   },
+  // In use
   breadcrumb: [
-    { id: 1, name: 'Inicio', path: '/' },
-    { id: 2, name: 'Turnos', path: '' },
+    { id: 1, name: 'breadcrumb.home', path: '/' },
+    { id: 2, name: 'breadcrumb.appointments', path: '' },
   ],
-  buttons: {
-    addAppointment: 'Reservar',
-    cancelAppointment: 'Cancelar',
-    viewAppointment: 'Ver',
-  },
+  // In use
   calendar: {
-    // language: 'es', // taked from i18n language
-    placeholder: {
-      month: 'Mes',
-      year: 'Año',
-    },
-    yearsRange: 1, // ok
+    yearsRange: 1,
   },
+
+  // This is for reserve appointment
   combobox: {
     loadingText: 'Cargando profesionales',
     notFoundText: 'Profesional no encontrado',
@@ -30,35 +23,18 @@ export const APPO_CONFIG = {
   },
   dialog: {
     reserve: {
-      buttons: {
-        // cancel: 'Cancelar',
-        // save: 'Confirmar reserva',
-      },
+
       summary: {
         line1: 'Reserva de turno para',
         line2: 'El día',
         line3: 'A las',
       },
     },
-    cancel: {
-      buttons: {
-        cancel: 'Cancelar',
-        save: 'Cancelar reserva',
-      },
-    },
+
     userCombobox: {
       dniLabel: '- DNI',
       noResults: 'Búsqueda sin resultados',
     },
-  },
-
-  loading: {
-    appointments: 'Cargando turnos',
-  },
-  pagination: {
-    of: 'de',
-    page: 'Página',
-    rowsPerPage: 'Turnos por página',
   },
   phrases: {
     alreadyReservedPlural: 'turnos reservados',
@@ -68,18 +44,7 @@ export const APPO_CONFIG = {
     availableDays: 'Días de atención:',
     notAvailable: 'No disponible',
   },
-  table: {
-    headers: ['Turno', 'Horario', 'Nombre del paciente', 'DNI', 'Acciones'],
-    totalItems: 'turnos en total',
-    title: 'Turnos diarios',
-  },
-  title: {
-    page: 'Turnos',
-    list: 'Listado general de turnos',
-  },
-  warning: {
-    selectWorkingDay: 'Seleccione un día laborable',
-  },
+
   words: {
     from: 'de',
     hours: 'hs.',
