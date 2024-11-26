@@ -57,7 +57,7 @@ enum DialogAction {
 // React component
 export default function ReserveAppointments() {
   const [appointments, setAppointments] = useState<IAppointment[]>([] as IAppointment[]);
-  const [availableSlotsToReserve, setAvailableSlotsToReserve] = useState<number | string>(0);
+  const [availableSlotsToReserve, setAvailableSlotsToReserve] = useState<number>(0);
   const [calendarKey, setCalendarKey] = useState<string>('');
   const [calendarLocale, setCalendarLocale] = useState<Locale>();
   const [calendarMonths, setCalendarMonths] = useState<string[]>([]);
@@ -276,7 +276,7 @@ export default function ReserveAppointments() {
               </span>
             </div>
             <div className='italic'>
-              {`${capitalizeFirstLetter(format(slot.appointment?.day as string, 'full'))} - ${slot.appointment?.hour} ${RA_CONFIG.words.hours}`}
+              {`${capitalizeFirstLetter(format(slot.appointment?.day as string, 'full'))} - ${slot.appointment?.hour} ${t('words.hoursAbbreviation')}`}
             </div>
           </div>
         ),
@@ -344,10 +344,10 @@ export default function ReserveAppointments() {
             <ProfessionalsCombobox
               onSelectProfessional={(professional) => setProfessionalSelected(professional)}
               options={{
-                loadingText: RA_CONFIG.combobox.loadingText,
-                notFoundText: RA_CONFIG.combobox.notFoundText,
-                placeholder: RA_CONFIG.combobox.placeholder,
-                searchText: RA_CONFIG.combobox.searchText,
+                loadingText: t('loading.professionals'),
+                notFoundText: t('error.notFoundDefault'),
+                placeholder: t('placeholder.professionalCombobox'),
+                searchText: t('search.default'),
               }}
               className='w-fit'
             />
@@ -432,7 +432,9 @@ export default function ReserveAppointments() {
                         <section className='flex justify-start space-x-3 px-3 pb-2 text-xsm font-normal'>
                           <div className='flex flex-row items-center space-x-1.5 rounded-sm bg-emerald-100 px-2 py-1'>
                             <div className='h-2.5 w-2.5 rounded-full border border-emerald-400 bg-emerald-300'></div>
-                            <span className='text-emerald-700'>{`${availableSlotsToReserve} ${availableSlotsToReserve === 1 ? RA_CONFIG.phrases.availableAppointmentSingular : RA_CONFIG.phrases.availableAppointmentPlural}`}</span>
+                            <span className='text-emerald-700'>
+                              {t('table.availableItems.appointments', { count: availableSlotsToReserve })}
+                            </span>
                           </div>
                           <div className='flex flex-row items-center space-x-1.5 rounded-sm bg-sky-100 px-2 py-1'>
                             <div className='h-2.5 w-2.5 rounded-full border border-sky-400 bg-sky-300'></div>
