@@ -15,7 +15,7 @@ export const APPO_CONFIG = {
     viewAppointment: 'Ver',
   },
   calendar: {
-    language: 'es', // ok, see to take from a global variable and use it for the entire app
+    // language: 'es', // taked from i18n language
     placeholder: {
       month: 'Mes',
       year: 'Año',
