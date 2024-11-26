@@ -1,19 +1,20 @@
-// External components
-// https://ui.shadcn.com/docs/components
+// External components: https://ui.shadcn.com/docs/components
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@core/components/ui/select';
+// External imports
+import { useTranslation } from 'react-i18next';
 // Imports
 import type { ICalendarFooter } from '@appointments/interfaces/calendar.interface';
-import { APPO_CONFIG } from '@config/appointment.config';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 // React component
 export function CalendarFooter({ calendarMonths, calendarYears, selectedMonth, selectedYear, selectMonth, selectYear }: ICalendarFooter) {
   const capitalize = useCapitalize();
+  const { t } = useTranslation();
 
   return (
     <main className='flex w-full space-x-3 pt-3 text-xs'>
       <Select value={selectedYear.toString()} onValueChange={selectYear}>
         <SelectTrigger className='h-7 w-1/2 border text-xs'>
-          <SelectValue placeholder={APPO_CONFIG.calendar.placeholder.year} />
+          <SelectValue placeholder={t('placeholder.year')} />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
@@ -27,7 +28,7 @@ export function CalendarFooter({ calendarMonths, calendarYears, selectedMonth, s
       </Select>
       <Select value={selectedMonth.toString()} onValueChange={selectMonth}>
         <SelectTrigger className='h-7 w-1/2 border text-xs'>
-          <SelectValue placeholder={APPO_CONFIG.calendar.placeholder.month} />
+          <SelectValue placeholder={t('placeholder.month')} />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
