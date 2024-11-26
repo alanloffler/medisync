@@ -36,7 +36,7 @@ import type { IDialog } from '@core/interfaces/dialog.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IUser } from '@users/interfaces/user.interface';
 import type { IWorkingDay } from '@professionals/interfaces/working-days.interface';
-import { APPO_CONFIG } from '@config/appointment.config';
+import { APPO_CONFIG } from '@config/appointments/appointments.config';
 import { APP_CONFIG } from '@config/app.config';
 import { AppoSchedule } from '@appointments/services/schedule.service';
 import { AppointmentApiService } from '@appointments/services/appointment.service';

@@ -17,7 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { IAppointment } from './interfaces/appointment.interface';
-import { APPO_CONFIG } from '@config/appointment.config';
+import { APPO_CONFIG } from '@config/appointments/appointments.config';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { queryClient } from '@lib/react-query';

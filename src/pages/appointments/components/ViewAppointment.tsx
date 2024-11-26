@@ -17,7 +17,7 @@ import type { IEmail } from '@core/interfaces/email.interface';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { BackButton } from '@core/components/common/BackButton';
 import { HEADER_CONFIG } from '@config/layout/header.config';
-import { VIEW_APPOINTMENT_CONFIG as VA_CONFIG } from '@config/appointment.config';
+import { VIEW_APPOINTMENT_CONFIG as VA_CONFIG } from '@config/appointments/appointments.config';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useCapitalizeFirstLetter } from '@core/hooks/useCapitalizeFirstLetter';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';

@@ -7,7 +7,7 @@ import { ScrollArea } from '@core/components/ui/scroll-area';
 import { ChangeEvent, useEffect, useState } from 'react';
 // Imports
 import type { IUser } from '@users/interfaces/user.interface';
-import { APPO_CONFIG } from '@config/appointment.config';
+import { APPO_CONFIG } from '@config/appointments/appointments.config';
 import { UserApiService } from '@users/services/user-api.service';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useDebounce } from '@core/hooks/useDebounce';
