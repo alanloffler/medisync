@@ -25,7 +25,7 @@ import { ProfessionalsCombobox } from '@professionals/components/common/Professi
 import { Steps } from '@core/components/common/Steps';
 import { UsersCombo } from '@users/components/UsersCombo';
 // External imports
-import { es, enUS } from 'date-fns/locale';
+import { es, enUS, Locale } from 'date-fns/locale';
 import { format } from '@formkit/tempo';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -59,6 +59,7 @@ export default function ReserveAppointments() {
   const [appointments, setAppointments] = useState<IAppointment[]>([] as IAppointment[]);
   const [availableSlotsToReserve, setAvailableSlotsToReserve] = useState<number | string>(0);
   const [calendarKey, setCalendarKey] = useState<string>('');
+  const [calendarLocale, setCalendarLocale] = useState<Locale>();
   const [calendarMonths, setCalendarMonths] = useState<string[]>([]);
   const [calendarYears, setCalendarYears] = useState<string[]>([]);
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -95,6 +96,8 @@ export default function ReserveAppointments() {
     if (selectedDate) {
       const legibleTodayDate: string = format(selectedDate, 'full', selectedLocale);
       setSelectedLegibleDate(legibleTodayDate);
+      if (i18n.language === 'es') setCalendarLocale(es);
+      if (i18n.language === 'en') setCalendarLocale(enUS);
     }
   }, [selectedLocale, selectedDate]);
   // #region professionalSelected actions
@@ -377,7 +380,7 @@ export default function ReserveAppointments() {
                 ]}
                 fromYear={Number(calendarYears[0])}
                 key={calendarKey}
-                locale={APPO_CONFIG.calendar.language === 'es' ? es : enUS}
+                locale={calendarLocale}
                 mode='single'
                 onDayClick={(event) => setSelectedDate(event)}
                 onMonthChange={(month) => {
