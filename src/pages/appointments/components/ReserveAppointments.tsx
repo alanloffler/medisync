@@ -36,7 +36,7 @@ import type { IDialog } from '@core/interfaces/dialog.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IUser } from '@users/interfaces/user.interface';
 import type { IWorkingDay } from '@professionals/interfaces/working-days.interface';
-import { APPO_CONFIG } from '@config/appointments/appointments.config';
+import { RESERVE_APPOINTMENT_CONFIG as RA_CONFIG } from '@config/appointments/reserve-appointments.config';
 import { APP_CONFIG } from '@config/app.config';
 import { AppoSchedule } from '@appointments/services/schedule.service';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
@@ -126,7 +126,7 @@ export default function ReserveAppointments() {
     setShowCalendar(true);
     setSelectedDate(new Date());
     // TODO: make both language and years range by admin configuration (db entity)
-    const calendarYears: string[] = CalendarService.generateYearsRange(APPO_CONFIG.calendar.yearsRange);
+    const calendarYears: string[] = CalendarService.generateYearsRange(RA_CONFIG.calendar.yearsRange);
     setCalendarYears(calendarYears);
 
     const calendarMonths: string[] = CalendarService.generateMonths(selectedLocale);
@@ -276,7 +276,7 @@ export default function ReserveAppointments() {
               </span>
             </div>
             <div className='italic'>
-              {`${capitalizeFirstLetter(format(slot.appointment?.day as string, 'full'))} - ${slot.appointment?.hour} ${APPO_CONFIG.words.hours}`}
+              {`${capitalizeFirstLetter(format(slot.appointment?.day as string, 'full'))} - ${slot.appointment?.hour} ${RA_CONFIG.words.hours}`}
             </div>
           </div>
         ),
@@ -299,20 +299,20 @@ export default function ReserveAppointments() {
         <div className='flex items-center space-x-2'>
           <ClipboardCheck className='h-5 w-5' strokeWidth={2} />
           <div className='flex flex-row items-center space-x-1'>
-            <span>{APPO_CONFIG.dialog.reserve.summary.line1}</span>
+            <span>{RA_CONFIG.dialog.reserve.summary.line1}</span>
             <span className='font-bold'>{`${capitalize(userSelected.firstName)} ${capitalize(userSelected.lastName)}`}</span>
           </div>
         </div>
         <div className='flex items-center space-x-2'>
           <CalendarCheck className='h-5 w-5' strokeWidth={2} />
           <span>
-            {APPO_CONFIG.dialog.reserve.summary.line2} {selectedLegibleDate}
+            {RA_CONFIG.dialog.reserve.summary.line2} {selectedLegibleDate}
           </span>
         </div>
         <div className='flex items-center space-x-2'>
           <Clock className='h-5 w-5' strokeWidth={2} />
           <span>
-            {APPO_CONFIG.dialog.reserve.summary.line3} {selectedSlot.begin}
+            {RA_CONFIG.dialog.reserve.summary.line3} {selectedSlot.begin}
           </span>
         </div>
         <div className='flex items-center space-x-2'>
@@ -344,10 +344,10 @@ export default function ReserveAppointments() {
             <ProfessionalsCombobox
               onSelectProfessional={(professional) => setProfessionalSelected(professional)}
               options={{
-                loadingText: APPO_CONFIG.combobox.loadingText,
-                notFoundText: APPO_CONFIG.combobox.notFoundText,
-                placeholder: APPO_CONFIG.combobox.placeholder,
-                searchText: APPO_CONFIG.combobox.searchText,
+                loadingText: RA_CONFIG.combobox.loadingText,
+                notFoundText: RA_CONFIG.combobox.notFoundText,
+                placeholder: RA_CONFIG.combobox.placeholder,
+                searchText: RA_CONFIG.combobox.searchText,
               }}
               className='w-fit'
             />
@@ -432,11 +432,11 @@ export default function ReserveAppointments() {
                         <section className='flex justify-start space-x-3 px-3 pb-2 text-xsm font-normal'>
                           <div className='flex flex-row items-center space-x-1.5 rounded-sm bg-emerald-100 px-2 py-1'>
                             <div className='h-2.5 w-2.5 rounded-full border border-emerald-400 bg-emerald-300'></div>
-                            <span className='text-emerald-700'>{`${availableSlotsToReserve} ${availableSlotsToReserve === 1 ? APPO_CONFIG.phrases.availableAppointmentSingular : APPO_CONFIG.phrases.availableAppointmentPlural}`}</span>
+                            <span className='text-emerald-700'>{`${availableSlotsToReserve} ${availableSlotsToReserve === 1 ? RA_CONFIG.phrases.availableAppointmentSingular : RA_CONFIG.phrases.availableAppointmentPlural}`}</span>
                           </div>
                           <div className='flex flex-row items-center space-x-1.5 rounded-sm bg-sky-100 px-2 py-1'>
                             <div className='h-2.5 w-2.5 rounded-full border border-sky-400 bg-sky-300'></div>
-                            <span className='text-sky-700'>{`${appointments.length} ${appointments.length === 1 ? APPO_CONFIG.phrases.alreadyReservedSingular : APPO_CONFIG.phrases.alreadyReservedPlural}`}</span>
+                            <span className='text-sky-700'>{`${appointments.length} ${appointments.length === 1 ? RA_CONFIG.phrases.alreadyReservedSingular : RA_CONFIG.phrases.alreadyReservedPlural}`}</span>
                           </div>
                         </section>
                       )}
@@ -460,7 +460,7 @@ export default function ReserveAppointments() {
                               {/* Slot info */}
                               <div className='flex w-[100px] flex-row items-center justify-between space-x-2'>
                                 <div className='h-fit w-fit rounded-sm bg-slate-200 px-1.5 py-1 text-xs leading-3 text-slate-600'>
-                                  {`${APPO_CONFIG.words.shiftPrefix}${slot.id < 10 ? `0${slot.id}` : slot.id}`}
+                                  {`${RA_CONFIG.words.shiftPrefix}${slot.id < 10 ? `0${slot.id}` : slot.id}`}
                                 </div>
                                 <div className='flex h-fit w-fit flex-row items-center space-x-1 rounded-sm bg-purple-100 p-1 pr-1.5 text-purple-600'>
                                   <Clock size={13} strokeWidth={2} />
@@ -531,7 +531,7 @@ export default function ReserveAppointments() {
                               <div>
                                 {slot.available
                                   ? slot.begin
-                                  : `${APPO_CONFIG.phrases.notAvailable} ${APPO_CONFIG.words.from} ${slot.begin} ${APPO_CONFIG.words.to} ${slot.end}`}
+                                  : `${RA_CONFIG.phrases.notAvailable} ${RA_CONFIG.words.from} ${slot.begin} ${RA_CONFIG.words.to} ${slot.end}`}
                               </div>
                             </section>
                           ),
