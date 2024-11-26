@@ -1,7 +1,13 @@
 {
   "appName": "MediSync",
+  "breadcrumb": {
+    "home": "Inicio",
+    "appointments": "Turnos"
+  },
   "button": {
     "cancel": "Cancelar",
+    "cancelAppointment": "Cancelar turno",
+    "generateAppointment": "Generar turno",
     "reserve": "Reservar",
     "reserveAppointment": "Reservar turno"
   },
@@ -22,6 +28,12 @@
       "contentText": "Cancelación de turno para {{firstName}} {{lastName}}"
     }
   },
+  "loading": {
+    "default": "Cargando",
+    "appointments": "Cargando turnos",
+    "professionals": "Cargando profesionales",
+    "users": "Cargando pacientes"
+  },
   "section": {
     "appointments": {
       "reserve": {
@@ -36,11 +48,33 @@
       }
     }
   },
+  "table": {
+    "title": {
+      "appointmentsList": "Lista de todos los turnos",
+      "appointmentsReserve": "Turnos diarios"
+    },
+    "totalItems": {
+      "appointments": "{{totalItems}} turnos en total"
+    }
+  },
+  "pageTitles": {
+    "appointments": "Turnos",
+    "professionals": "Profesionales",
+    "users": "Pacientes"
+  },
+  "pagination": {
+    "rowsPerPage": "Items por página",
+    "page": "Página",
+    "of": "de"
+  },
   "placeholder": {
     "userCombobox": "Buscar por DNI"
   },
   "user": {
     "title": "Mi cuenta",
     "menuItems": { "profile": "Perfil", "settings": "Configuraciones", "logout": "Salir" }
+  },
+  "warning": {
+    "selectWorkingDay": "Seleccione un día laborable"
   }
 }

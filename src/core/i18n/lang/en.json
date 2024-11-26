@@ -1,7 +1,13 @@
 {
   "appName": "MediSync",
+  "breadcrumb": {
+    "home": "Home",
+    "appointments": "Appointments"
+  },
   "button": {
     "cancel": "Cancel",
+    "cancelAppointment": "Cancel appointment",
+    "generateAppointment": "Generate appointment",
     "reserve": "Reserve",
     "reserveAppointment": "Reserve appointment"
   },
@@ -22,6 +28,12 @@
       "contentText": "Appointment cancellation for {{firstName}} {{lastName}}"
     }
   },
+  "loading": {
+    "default": "Loading",
+    "appointments": "Loading appointments",
+    "professionals": "Loading professionals",
+    "users": "Loading patients"
+  },
   "section": {
     "appointments": {
       "reserve": {
@@ -36,11 +48,33 @@
       }
     }
   },
+  "table": {
+    "title": {
+      "appointmentsList": "All appointments list",
+      "appointmentsReserve": "Dayly appointments"
+    },
+    "totalItems": {
+      "appointments": "{{totalItems}} appointments in total"
+    }
+  },
+  "pageTitles": {
+    "appointments": "Appointments",
+    "professionals": "Professionals",
+    "users": "Patients"
+  },
+  "pagination": {
+    "rowsPerPage": "Items per page",
+    "page": "Page",
+    "of": "of"
+  },
   "placeholder": {
     "userCombobox": "Search by DNI"
   },
   "user": {
     "title": "My account",
     "menuItems": { "profile": "Profile", "settings": "Settings", "logout": "Logout" }
+  },
+  "warning": {
+    "selectWorkingDay": "Select a working day"
   }
 }
