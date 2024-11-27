@@ -1,5 +1,6 @@
 // External imports
 import { range } from '@formkit/tempo';
+import i18next from 'i18next';
 // Imports
 import type { IWorkingDay } from '@professionals/interfaces/working-days.interface';
 import { PROF_VIEW_CONFIG as PV_CONFIG } from '@config/professionals.config';
@@ -20,8 +21,8 @@ export class CalendarService {
     return professionalNotWorkingDaysNumbers;
   }
   // Used on appointments professional selected
-  public static getLegibleWorkingDays(daysArray: IWorkingDay[], capitalized: boolean): string {
-    const stringDays: string[] = this.getStringWorkingDaysArray(daysArray, capitalized);
+  public static getLegibleWorkingDays(daysArray: IWorkingDay[], capitalized: boolean, locale: string): string {
+    const stringDays: string[] = this.getStringWorkingDaysArray(daysArray, capitalized, locale);
 
     if (!stringDays) return '';
 
@@ -30,7 +31,7 @@ export class CalendarService {
         if (arr.length === 1) {
           return item;
         } else {
-          if (index === arr.length - 1) return `${PV_CONFIG.words.and} ${item}`;
+          if (index === arr.length - 1) return `${i18next.t('words.and')} ${item}`;
           if (index === arr.length - 2) return `${item}`;
           return `${item},`;
         }
@@ -40,11 +41,11 @@ export class CalendarService {
     return legibleDays;
   }
   // Used on private getLegibleWorkingDays for string days conversion
-  private static getStringWorkingDaysArray(days: IWorkingDay[], capitalized: boolean): string[] {
+  private static getStringWorkingDaysArray(days: IWorkingDay[], capitalized: boolean, locale: string): string[] {
     if (!days) return [];
 
     // TODO: get language from database
-    let daysOfWeek: string[] = range('dddd', 'es');
+    let daysOfWeek: string[] = range('dddd', locale);
 
     if (capitalized) daysOfWeek = daysOfWeek.map((day) => day.charAt(0).toUpperCase() + day.slice(1));
 
