@@ -63,7 +63,7 @@ export default function Appointments() {
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
       <header className='flex items-center justify-between'>
-        <PageHeader title={t('pageTitles.appointments')} breadcrumb={APPO_CONFIG.breadcrumb} />
+        <PageHeader title={t('pageTitle.appointments')} breadcrumb={APPO_CONFIG.breadcrumb} />
       </header>
       <section className='grid gap-6 md:grid-cols-4 md:gap-8 lg:grid-cols-4 xl:grid-cols-4'>
         <section className='col-span-1 md:col-span-4 lg:col-span-1 xl:col-span-1'>
@@ -81,7 +81,7 @@ export default function Appointments() {
         </section>
         <Card className='col-span-1 h-fit space-y-4 overflow-y-auto p-0 md:col-span-4 lg:col-span-3 xl:col-span-3'>
           <div className='relative flex items-center justify-center rounded-t-lg bg-slate-200 p-3 text-slate-700'>
-            <h1 className='text-center text-xl font-bold'>{t('table.title.appointmentsList')}</h1>
+            <h1 className='text-center text-xl font-bold'>{t('cardTitle.appointmentsList')}</h1>
           </div>
           <CardContent className='space-y-2 pt-0'>
             {isLoading && <LoadingDB variant='default' text={t('loading.appointments')} />}

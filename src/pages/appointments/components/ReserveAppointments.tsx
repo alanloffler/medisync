@@ -433,7 +433,7 @@ export default function ReserveAppointments() {
                         <section className='flex flex-row justify-between'>
                           <div className='flex flex-row items-center gap-2'>
                             <CalendarDays className='h-4 w-4' />
-                            <span>{t('table.title.appointmentsReserve')}</span>
+                            <span>{t('cardTitle.appointmentsReserve')}</span>
                           </div>
                           {professionalSelected?._id && (
                             <h1>{`${capitalize(professionalSelected?.title.abbreviation)} ${capitalize(professionalSelected?.firstName)} ${capitalize(professionalSelected?.lastName)}`}</h1>
