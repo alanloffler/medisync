@@ -36,19 +36,19 @@ import type { IDialog } from '@core/interfaces/dialog.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IUser } from '@users/interfaces/user.interface';
 import type { IWorkingDay } from '@professionals/interfaces/working-days.interface';
-import { RESERVE_APPOINTMENT_CONFIG as RA_CONFIG } from '@config/appointments/reserve-appointments.config';
 import { APP_CONFIG } from '@config/app.config';
 import { AppoSchedule } from '@appointments/services/schedule.service';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { CalendarService } from '@appointments/services/calendar.service';
 import { HEADER_CONFIG } from '@config/layout/header.config';
+import { RESERVE_APPOINTMENT_CONFIG as RA_CONFIG } from '@config/appointments/reserve-appointments.config';
+import { Trans, useTranslation } from 'react-i18next';
 import { cn } from '@lib/utils';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useCapitalizeFirstLetter } from '@core/hooks/useCapitalizeFirstLetter';
 import { useDelimiter } from '@core/hooks/useDelimiter';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
-import { useTranslation } from 'react-i18next';
 // Enum
 enum DialogAction {
   CANCEL = 'cancel',
@@ -72,7 +72,7 @@ export default function ReserveAppointments() {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [professionalSelected, setProfessionalSelected] = useState<IProfessional>();
   const [refreshAppos, setRefreshAppos] = useState<string>('');
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date()); // here undefined
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedLegibleDate, setSelectedLegibleDate] = useState<string>('');
   const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth());
   const [selectedSlot, setSelectedSlot] = useState<ITimeSlot>({} as ITimeSlot);
@@ -110,7 +110,7 @@ export default function ReserveAppointments() {
       const calendarDisabledDays: number[] = CalendarService.getDisabledDays(professionalSelected.configuration.workingDays);
       setDisabledDays(calendarDisabledDays);
 
-      const legibleWorkingDays: string = CalendarService.getLegibleWorkingDays(professionalSelected.configuration.workingDays, true);
+      const legibleWorkingDays: string = CalendarService.getLegibleWorkingDays(professionalSelected.configuration.workingDays, true, selectedLocale);
       setLegibleWorkingDays(legibleWorkingDays);
 
       const legibleSchedule: string = CalendarService.getLegibleSchedule(
@@ -125,7 +125,7 @@ export default function ReserveAppointments() {
     setSelectedDate(undefined);
     setShowCalendar(true);
     setSelectedDate(new Date());
-    // TODO: make both language and years range by admin configuration (db entity)
+
     const calendarYears: string[] = CalendarService.generateYearsRange(RA_CONFIG.calendar.yearsRange);
     setCalendarYears(calendarYears);
 
@@ -264,20 +264,16 @@ export default function ReserveAppointments() {
         action: DialogAction.CANCEL,
         content: (
           <div className='space-y-2'>
-            <div className='space-x-1'>
-              <span>
-                {t('dialog.deleteAppointment.contentText', {
-                  firstName: capitalize(slot.appointment?.user.firstName),
-                  lastName: capitalize(slot.appointment?.user.lastName),
-                })}
-              </span>
-              <span className='font-semibold'>
-                {capitalize(slot.appointment?.user.firstName)} {capitalize(slot.appointment?.user.lastName)}
-              </span>
-            </div>
-            <div className='italic'>
-              {`${capitalizeFirstLetter(format(slot.appointment?.day as string, 'full'))} - ${slot.appointment?.hour} ${t('words.hoursAbbreviation')}`}
-            </div>
+            <Trans
+              i18nKey='dialog.deleteAppointment.contentText'
+              values={{ firstName: capitalize(slot.appointment?.user.firstName), lastName: capitalize(slot.appointment?.user.lastName) }}
+              components={{
+                strong: <span className='font-semibold' />,
+              }}
+            />
+            <p className='italic'>
+              {`${capitalizeFirstLetter(format(slot.appointment?.day as string, 'full', selectedLocale))} - ${slot.appointment?.hour} ${t('words.hoursAbbreviation')}`}
+            </p>
           </div>
         ),
         description: t('dialog.deleteAppointment.description'),
@@ -412,7 +408,7 @@ export default function ReserveAppointments() {
               <Steps text={t('section.appointments.reserve.steps.title3')} step='3' />
               {todayIsWorkingDay ? (
                 loadingAppointments ? (
-                  <LoadingDB text={'Cargando agenda'} variant='card' size='default' />
+                  <LoadingDB text={t('loading.schedule')} variant='card' size='default' />
                 ) : (
                   <Card className='w-full'>
                     <CardHeader>
@@ -427,18 +423,20 @@ export default function ReserveAppointments() {
                           )}
                         </section>
                       </CardTitle>
-                      {!errorMessage && <section className='py-2 text-center text-base font-semibold text-primary'>{selectedLegibleDate}</section>}
+                      {!errorMessage && (
+                        <section className='py-2 text-center text-base font-semibold text-primary'>
+                          {capitalizeFirstLetter(selectedLegibleDate)}
+                        </section>
+                      )}
                       {showTimeSlots && (
                         <section className='flex justify-start space-x-3 px-3 pb-2 text-xsm font-normal'>
-                          <div className='flex flex-row items-center space-x-1.5 rounded-sm bg-emerald-100 px-2 py-1'>
+                          <div className='flex flex-row items-center space-x-1.5 rounded-md bg-emerald-100 px-2 py-1'>
                             <div className='h-2.5 w-2.5 rounded-full border border-emerald-400 bg-emerald-300'></div>
-                            <span className='text-emerald-700'>
-                              {t('table.availableItems.appointments', { count: availableSlotsToReserve })}
-                            </span>
+                            <span className='text-emerald-700'>{t('table.availableItems.appointments', { count: availableSlotsToReserve })}</span>
                           </div>
-                          <div className='flex flex-row items-center space-x-1.5 rounded-sm bg-sky-100 px-2 py-1'>
+                          <div className='flex flex-row items-center space-x-1.5 rounded-md bg-sky-100 px-2 py-1'>
                             <div className='h-2.5 w-2.5 rounded-full border border-sky-400 bg-sky-300'></div>
-                            <span className='text-sky-700'>{`${appointments.length} ${appointments.length === 1 ? RA_CONFIG.phrases.alreadyReservedSingular : RA_CONFIG.phrases.alreadyReservedPlural}`}</span>
+                            <span className='text-sky-700'>{t('table.reservedItems.appointments', { count: appointments.length })}</span>
                           </div>
                         </section>
                       )}
@@ -462,7 +460,7 @@ export default function ReserveAppointments() {
                               {/* Slot info */}
                               <div className='flex w-[100px] flex-row items-center justify-between space-x-2'>
                                 <div className='h-fit w-fit rounded-sm bg-slate-200 px-1.5 py-1 text-xs leading-3 text-slate-600'>
-                                  {`${RA_CONFIG.words.shiftPrefix}${slot.id < 10 ? `0${slot.id}` : slot.id}`}
+                                  {`${t('words.appointmentPrefix')}${slot.id < 10 ? `0${slot.id}` : slot.id}`}
                                 </div>
                                 <div className='flex h-fit w-fit flex-row items-center space-x-1 rounded-sm bg-purple-100 p-1 pr-1.5 text-purple-600'>
                                   <Clock size={13} strokeWidth={2} />
@@ -530,11 +528,7 @@ export default function ReserveAppointments() {
                               className='mx-auto flex w-fit items-center space-x-2 rounded-md bg-slate-100 px-2 py-1 text-center text-xsm text-slate-500'
                             >
                               <ClockAlert size={16} strokeWidth={2} className='text-rose-400' />
-                              <div>
-                                {slot.available
-                                  ? slot.begin
-                                  : `${RA_CONFIG.phrases.notAvailable} ${RA_CONFIG.words.from} ${slot.begin} ${RA_CONFIG.words.to} ${slot.end}`}
-                              </div>
+                              <div>{slot.available ? slot.begin : t('warning.hourRangeNotAvailable', { begin: slot.begin, end: slot.end })}</div>
                             </section>
                           ),
                         )}
@@ -574,7 +568,7 @@ export default function ReserveAppointments() {
               )}
               {dialogContent.action === DialogAction.CANCEL && (
                 <Button variant='default' size='default' onClick={() => handleCancelAppointment(selectedSlot)}>
-                  {t('button.cancelAppointment')}
+                  {t('button.deleteAppointment')}
                 </Button>
               )}
             </footer>
