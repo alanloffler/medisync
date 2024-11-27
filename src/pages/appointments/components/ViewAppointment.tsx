@@ -11,13 +11,14 @@ import jsPDF from 'jspdf';
 import { format } from '@formkit/tempo';
 import { useEffect, useRef, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 // Imports
 import type { IAppointmentView } from '@appointments/interfaces/appointment.interface';
 import type { IEmail } from '@core/interfaces/email.interface';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { BackButton } from '@core/components/common/BackButton';
 import { HEADER_CONFIG } from '@config/layout/header.config';
-import { VIEW_APPOINTMENT_CONFIG as VA_CONFIG } from '@config/appointments/appointments.config';
+import { VIEW_APPOINTMENT_CONFIG as VA_CONFIG } from '@config/appointments/view-appointment.config';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useCapitalizeFirstLetter } from '@core/hooks/useCapitalizeFirstLetter';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
@@ -35,6 +36,7 @@ export default function ViewAppointment() {
   const pdfRef = useRef<HTMLDivElement>(null);
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
   const { id } = useParams();
+  const { i18n, t } = useTranslation();
 
   useEffect(() => {
     setItemSelected(HEADER_CONFIG.headerMenu[1].id);
@@ -48,7 +50,7 @@ export default function ViewAppointment() {
         .then((response) => {
           setAppointment(response.data);
 
-          const legibleDate: string = format(appointment.day, 'full');
+          const legibleDate: string = format(appointment.day, 'full', i18n.language);
           const capitalized = capitalizeFirst(legibleDate);
           capitalized && setDate(capitalized);
 
@@ -61,7 +63,7 @@ export default function ViewAppointment() {
         })
         .finally(() => setDataIsLoading(false));
     }
-  }, [appointment.day, capitalize, capitalizeFirst, id, legibleDate]);
+  }, [appointment.day, capitalize, capitalizeFirst, i18n.language, id, legibleDate]);
 
   function downloadPDF(): void {
     const input: HTMLDivElement | null = pdfRef.current;
@@ -92,12 +94,12 @@ export default function ViewAppointment() {
     <main ref={pdfRef} className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8'>
       {/* Section: Page Header */}
       <section className='flex items-center justify-between'>
-        <PageHeader title={VA_CONFIG.title} breadcrumb={VA_CONFIG.breadcrumb} />
-        <BackButton label={VA_CONFIG.button.back} />
+        <PageHeader title={t('pageTitle.viewAppointment')} breadcrumb={VA_CONFIG.breadcrumb} />
+        <BackButton label={t('button.back')} />
       </section>
       {/* Section: Page content (Appo details card) */}
       {dataIsLoading ? (
-        <LoadingDB variant='card' text={VA_CONFIG.loading.appointmentDetails} absolute />
+        <LoadingDB variant='card' text={t('loading.appointmentDetails')} absolute />
       ) : (
         <>
           <Card className='mx-auto w-full md:w-1/2 lg:w-1/2'>
@@ -106,7 +108,7 @@ export default function ViewAppointment() {
                 <header className='flex flex-row justify-between'>
                   <div className='flex flex-row items-center gap-2'>
                     <CalendarDays className='h-4 w-4' />
-                    <span>{VA_CONFIG.cardTitle}</span>
+                    <span>{t('cardTitle.viewAppointment')}</span>
                   </div>
                   <div className='flex flex-row items-center'>{`${capitalize(appointment.professional?.title.abbreviation)} ${capitalize(appointment.professional?.firstName)} ${capitalize(appointment.professional?.lastName)}`}</div>
                 </header>
@@ -126,7 +128,7 @@ export default function ViewAppointment() {
               <h2 className='flex items-center gap-5 text-base font-medium'>
                 <Clock className='h-5 w-5' strokeWidth={2} />
                 <span>
-                  {appointment.hour} {VA_CONFIG.words.hoursAbbreviation}
+                  {appointment.hour} {t('words.hoursAbbreviation')}
                 </span>
               </h2>
               <footer className='flex justify-end space-x-5'>
@@ -148,7 +150,7 @@ export default function ViewAppointment() {
               </footer>
             </CardContent>
           </Card>
-          {pdfIsGenerating && <LoadingDB variant='default' text='Generando PDF' className='text-slate-800' />}
+          {pdfIsGenerating && <LoadingDB variant='default' text={t('loading.generatingPDF')} className='text-slate-800' />}
         </>
       )}
     </main>
