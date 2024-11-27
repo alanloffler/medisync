@@ -268,7 +268,7 @@ export default function ReserveAppointments() {
               i18nKey='dialog.deleteAppointment.contentText'
               values={{ firstName: capitalize(slot.appointment?.user.firstName), lastName: capitalize(slot.appointment?.user.lastName) }}
               components={{
-                strong: <span className='font-semibold' />,
+                span: <span className='font-semibold' />,
               }}
             />
             <p className='italic'>
@@ -294,22 +294,39 @@ export default function ReserveAppointments() {
       <div className='space-y-2'>
         <div className='flex items-center space-x-2'>
           <ClipboardCheck className='h-5 w-5' strokeWidth={2} />
-          <div className='flex flex-row items-center space-x-1'>
-            <span>{RA_CONFIG.dialog.reserve.summary.line1}</span>
-            <span className='font-bold'>{`${capitalize(userSelected.firstName)} ${capitalize(userSelected.lastName)}`}</span>
+          <div className='flex flex-row items-center gap-1'>
+            <Trans
+              i18nKey='dialog.reserveAppointment.content.reservedTo'
+              values={{ firstName: capitalize(userSelected.firstName), lastName: capitalize(userSelected.lastName) }}
+              components={{
+                span: <span className='font-semibold' />,
+              }}
+            />
           </div>
         </div>
         <div className='flex items-center space-x-2'>
           <CalendarCheck className='h-5 w-5' strokeWidth={2} />
-          <span>
-            {RA_CONFIG.dialog.reserve.summary.line2} {selectedLegibleDate}
-          </span>
+          <div className='flex flex-row items-center gap-1'>
+            <Trans
+              i18nKey='dialog.reserveAppointment.content.date'
+              values={{ date: selectedLegibleDate }}
+              components={{
+                span: <span />,
+              }}
+            />
+          </div>
         </div>
         <div className='flex items-center space-x-2'>
           <Clock className='h-5 w-5' strokeWidth={2} />
-          <span>
-            {RA_CONFIG.dialog.reserve.summary.line3} {selectedSlot.begin}
-          </span>
+          <div className='flex flex-row items-center gap-1'>
+            <Trans
+              i18nKey='dialog.reserveAppointment.content.hour'
+              values={{ hour: selectedSlot.begin }}
+              components={{
+                span: <span />,
+              }}
+            />
+          </div>
         </div>
         <div className='flex items-center space-x-2'>
           <BriefcaseMedical className='h-5 w-5' strokeWidth={2} />
