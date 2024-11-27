@@ -4,9 +4,7 @@ export const VIEW_APPOINTMENT_CONFIG = {
     { id: 2, name: 'breadcrumb.appointments', path: '/appointments' },
     { id: 3, name: 'breadcrumb.appointmentDetails', path: '' },
   ],
-  // TODO: move to translations
   email: {
-    body: 'Este es el mensaje de tu turno',
-    subject: 'Tu turno para',
+    default: 'alanmatiasloffler@gmail.com',
   },
 };
