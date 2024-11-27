@@ -9,22 +9,25 @@ import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 // Imports
 import type { IAppointmentView } from '@appointments/interfaces/appointment.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import { APP_CONFIG } from '@config/app.config';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
-import { USER_VIEW_CONFIG } from '@config/user.config';
 import { useApposFilters } from '@appointments/hooks/useApposFilters';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export function ApposRecord({ userId }: { userId: string }) {
   const [appointments, setAppointments] = useState<IAppointmentView[]>([]);
+  const [disabledFilters, setDisabledFilters] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [refresh, setRefresh] = useState<string>('');
-  const { professional, year } = useApposFilters();
   const addNotification = useNotificationsStore((state) => state.addNotification);
+  const { i18n, t } = useTranslation();
+  const { professional, year } = useApposFilters();
 
   useEffect(() => {
     setIsLoading(true);
@@ -36,15 +39,17 @@ export function ApposRecord({ userId }: { userId: string }) {
             setAppointments(response.data);
           } else {
             setAppointments([]);
-            // TODO: useState here setDisabledFilters and pass to ApposFilters and disabled selects if no appos found
+            setDisabledFilters(true);
           }
         }
         if (response.statusCode > 399) {
           setError(true);
+          setErrorMessage(response.message);
           addNotification({ type: 'error', message: response.message });
         }
         if (response instanceof Error) {
           setError(true);
+          setErrorMessage(i18n.t('error.internalServer'));
           addNotification({ type: 'error', message: APP_CONFIG.error.server });
         }
       })
@@ -52,24 +57,28 @@ export function ApposRecord({ userId }: { userId: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [professional, year, userId, refresh]);
 
+  useEffect(() => {
+    setErrorMessage(i18n.t('error.internalServer'));
+  }, [i18n.language, i18n]);
+
   return (
     <main>
       <Card className='flex w-full flex-col gap-3'>
-        <section className='flex flex-row items-center border-b border-slate-200 p-3 space-x-2'>
+        <section className='flex flex-row items-center space-x-2 border-b border-slate-200 p-3'>
           <CalendarClock size={18} strokeWidth={2} />
-          <span className='text-xsm font-semibold uppercase'>{USER_VIEW_CONFIG.apposRecord.title}</span>
+          <span className='text-xsm font-semibold uppercase'>{t('cardTitle.appointmentsRecord')}</span>
         </section>
         <CardContent className='flex flex-col gap-3'>
-          <ApposFilters userId={userId} />
-          {isLoading && <LoadingDB variant='default' text={USER_VIEW_CONFIG.apposRecord.table.loadingText} />}
+          <ApposFilters userId={userId} disabled={disabledFilters} />
+          {isLoading && <LoadingDB variant='default' text={t('loading.appointments')} />}
           {!error ? (
             appointments.length > 0 ? (
               <ApposTable appointments={appointments} setRefresh={setRefresh} />
             ) : (
-              <InfoCard type='warning' text={USER_VIEW_CONFIG.apposRecord.table.emptyList} className='pt-5' />
+              <InfoCard type='warning' text={t('warning.emptyAppointments')} className='pt-5' />
             )
           ) : (
-            <InfoCard type='error' text={USER_VIEW_CONFIG.apposRecord.table.errorText} className='pt-5' />
+            <InfoCard type='error' text={errorMessage} className='pt-5' />
           )}
         </CardContent>
       </Card>
