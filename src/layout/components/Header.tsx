@@ -25,6 +25,7 @@ export function Header() {
   function onChangeLang(language: string): void {
     setSelectedLanguage(LANGUAGES.find((lang) => lang.code === language));
     i18n.changeLanguage(language);
+    localStorage.setItem('i18nextLng', language);
   }
 
   return (
