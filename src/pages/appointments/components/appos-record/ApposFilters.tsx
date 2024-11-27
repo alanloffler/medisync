@@ -13,7 +13,6 @@ import { useEffect, useRef, useState } from 'react';
 import type { IApposFilters } from '@appointments/interfaces/appos-filters.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
-import { APP_CONFIG } from '@config/app.config';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { useApposFilters } from '@appointments/hooks/useApposFilters';
 import { useCapitalize } from '@core/hooks/useCapitalize';
@@ -21,7 +20,7 @@ import { useHelpStore } from '@settings/stores/help.store';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 import { useTranslation } from 'react-i18next';
 // React component
-export function ApposFilters({ userId }: { userId: string }) {
+export function ApposFilters({ userId, disabled }: { userId: string; disabled: boolean }) {
   const [loadingProfessionals, setLoadingProfessionals] = useState<boolean>(false);
   const [loadingYears, setLoadingYears] = useState<boolean>(false);
   const [professionalError, setProfessionalError] = useState<boolean>(false);
@@ -33,8 +32,8 @@ export function ApposFilters({ userId }: { userId: string }) {
   const clearButtonRef = useRef(null);
   const clearLabelRef = useRef(null);
   const { help } = useHelpStore();
+  const { i18n, t } = useTranslation();
   const { professional, year, setFilters, clearFilters } = useApposFilters();
-  const { t } = useTranslation();
 
   useEffect(() => {
     setLoadingProfessionals(true);
@@ -49,7 +48,7 @@ export function ApposFilters({ userId }: { userId: string }) {
         }
         if (response instanceof Error) {
           setProfessionalError(true);
-          addNotification({ type: 'error', message: APP_CONFIG.error.server });
+          addNotification({ type: 'error', message: i18n.t('error.internalServer') });
         }
       })
       .finally(() => setLoadingProfessionals(false));
@@ -64,7 +63,7 @@ export function ApposFilters({ userId }: { userId: string }) {
         }
         if (response instanceof Error) {
           setYearError(true);
-          addNotification({ type: 'error', message: APP_CONFIG.error.server });
+          addNotification({ type: 'error', message: i18n.t('error.internalServer') });
         }
       })
       .finally(() => setLoadingYears(false));
@@ -97,7 +96,7 @@ export function ApposFilters({ userId }: { userId: string }) {
           <h1 className='text-xsm font-medium'>{t('search.filter.appointments')}</h1>
         </section>
         <Select
-          disabled={professionalError || professionals.length === 0}
+          disabled={disabled || professionalError || professionals.length === 0}
           value={professional ? professional : ''}
           onValueChange={(e) => setFilters({ professional: e as IApposFilters['professional'] })}
         >
@@ -123,7 +122,7 @@ export function ApposFilters({ userId }: { userId: string }) {
           </SelectContent>
         </Select>
         <Select
-          disabled={yearError || years.length === 0}
+          disabled={disabled || yearError || years.length === 0}
           value={year ? year : ''}
           onValueChange={(e) => setFilters({ year: e as IApposFilters['year'] })}
         >
