@@ -5,9 +5,9 @@ import { Input } from '@core/components/ui/input';
 import { ScrollArea } from '@core/components/ui/scroll-area';
 // External imports
 import { ChangeEvent, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 // Imports
 import type { IUser } from '@users/interfaces/user.interface';
-import { APPO_CONFIG } from '@config/appointments/appointments.config';
 import { UserApiService } from '@users/services/user-api.service';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useDebounce } from '@core/hooks/useDebounce';
@@ -30,6 +30,7 @@ export function UsersCombo({
   const capitalize = useCapitalize();
   const debouncedSearch = useDebounce<string>(search, DEBOUNCE_TIME);
   const delimiter = useDelimiter();
+  const { t } = useTranslation();
 
   function handleSearch(event: ChangeEvent<HTMLInputElement>): void {
     setSearch(event.target.value);
@@ -110,13 +111,13 @@ export function UsersCombo({
                     className='w-full space-x-2 rounded-sm px-1.5 py-0.5 text-left hover:bg-slate-100 hover:transition-all'
                   >
                     <span>{`${capitalize(user.firstName)} ${capitalize(user.lastName)}`}</span>
-                    <span className='italic text-slate-500'>{`${APPO_CONFIG.dialog.userCombobox.dniLabel} ${delimiter(user.dni, '.', 3)}`}</span>
+                    <span className='italic text-slate-500'>{`${t('words.identityCard')} ${delimiter(user.dni, '.', 3)}`}</span>
                   </button>
                 </li>
               ))}
             {showNoResults && (
               <li className='list-none'>
-                <span className='italic text-rose-500'>{APPO_CONFIG.dialog.userCombobox.noResults}</span>
+                <span className='italic text-rose-500'>{t('error.notFoundUser')}</span>
               </li>
             )}
           </ScrollArea>
