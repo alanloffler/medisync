@@ -123,21 +123,21 @@ export const USER_VIEW_CONFIG = {
       button: {
         clear: 'Borrar filtros',
       },
-      select: {
-        professional: {
-          errorText: 'Error',
-          loadingText: 'Cargando',
-          placeholder: 'Profesionales',
-          tooltip: 'Seleccionar profesional',
-        },
-        year: {
-          errorText: 'Error',
-          loadingText: 'Cargando',
-          placeholder: 'Año',
-          tooltip: 'Seleccionar año',
-        },
-      },
-      title: 'Filtrar turnos',
+      // select: {
+        // professional: {
+          // errorText: 'Error',
+          // loadingText: 'Cargando',
+          // placeholder: 'Profesionales',
+          // tooltip: 'Seleccionar profesional',
+        // },
+        // year: {
+          // errorText: 'Error',
+          // loadingText: 'Cargando',
+          // placeholder: 'Año',
+          // tooltip: 'Seleccionar año',
+        // },
+      // },
+      // title: 'Filtrar turnos',
     },
     table: {
       emptyList: 'No existen turnos para el paciente',
