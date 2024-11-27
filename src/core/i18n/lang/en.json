@@ -2,20 +2,21 @@
   "appName": "MediSync",
   "breadcrumb": {
     "home": "Home",
-    "appointments": "Appointments"
+    "appointments": "Appointments",
+    "appointmentDetails": "Details"
   },
   "button": {
+    "back": "Go back",
     "cancel": "Cancel",
     "deleteAppointment": "Delete appointment",
     "generateAppointment": "Generate appointment",
     "reserve": "Reserve",
     "reserveAppointment": "Reserve appointment"
   },
-  "headerMenu": {
-    "dashboard": "Dashboard",
-    "appointments": "Appointments",
-    "professionals": "Professionals",
-    "users": "Patients"
+  "cardTitle": {
+    "appointmentsList": "All appointments list",
+    "appointmentsReserve": "Dayly appointments",
+    "viewAppointment": "Appointment"
   },
   "dialog": {
     "reserveAppointment": {
@@ -37,12 +38,39 @@
     "notFoundDefault": "Not found",
     "notFoundUser": "Patient not found"
   },
+  "headerMenu": {
+    "dashboard": "Dashboard",
+    "appointments": "Appointments",
+    "professionals": "Professionals",
+    "users": "Patients",
+    "viewAppointment": "Appointment details"
+  },
   "loading": {
     "default": "Loading",
     "appointments": "Loading appointments",
+    "appointmentDetails": "Loading appointment details",
+    "generatingPDF": "Generating PDF",
     "professionals": "Loading professionals",
     "schedule": "Loading schedule",
     "users": "Loading patients"
+  },
+  "pageTitle": {
+    "appointments": "Appointments",
+    "professionals": "Professionals",
+    "users": "Patients",
+    "viewAppointment": "Appointment details"
+  },
+  "pagination": {
+    "rowsPerPage": "Items per page",
+    "page": "Page",
+    "of": "of"
+  },
+  "placeholder": {
+    "userCombobox": "Search by IC",
+    "professionalCombobox": "Professionals"
+  },
+  "search": {
+    "default": "Search"
   },
   "section": {
     "appointments": {
@@ -59,10 +87,6 @@
     }
   },
   "table": {
-    "title": {
-      "appointmentsList": "All appointments list",
-      "appointmentsReserve": "Dayly appointments"
-    },
     "totalItems": {
       "appointments": "{{totalItems}} appointments in total"
     },
@@ -74,23 +98,6 @@
       "appointments_one": "{{count}} reserved appointment",
       "appointments_other": "{{count}} reserved appointments"
     }
-  },
-  "pageTitles": {
-    "appointments": "Appointments",
-    "professionals": "Professionals",
-    "users": "Patients"
-  },
-  "pagination": {
-    "rowsPerPage": "Items per page",
-    "page": "Page",
-    "of": "of"
-  },
-  "placeholder": {
-    "userCombobox": "Search by IC",
-    "professionalCombobox": "Professionals"
-  },
-  "search": {
-    "default": "Search"
   },
   "user": {
     "title": "My account",

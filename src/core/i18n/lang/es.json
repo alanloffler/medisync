@@ -2,20 +2,21 @@
   "appName": "MediSync",
   "breadcrumb": {
     "home": "Inicio",
-    "appointments": "Turnos"
+    "appointments": "Turnos",
+    "appointmentDetails": "Detalles"
   },
   "button": {
+    "back": "Volver",
     "cancel": "Cancelar",
     "deleteAppointment": "Eliminar turno",
     "generateAppointment": "Generar turno",
     "reserve": "Reservar",
     "reserveAppointment": "Reservar turno"
   },
-  "headerMenu": {
-    "dashboard": "Tablero",
-    "appointments": "Turnos",
-    "professionals": "Profesionales",
-    "users": "Pacientes"
+  "cardTitle": {
+    "viewAppointment": "Turno",
+    "appointmentsList": "Lista de todos los turnos",
+    "appointmentsReserve": "Turnos diarios"
   },
   "dialog": {
     "reserveAppointment": {
@@ -37,12 +38,36 @@
     "notFoundDefault": "No encontrado",
     "notFoundUser": "Paciente no encontrado"
   },
+  "headerMenu": {
+    "dashboard": "Tablero",
+    "appointments": "Turnos",
+    "professionals": "Profesionales",
+    "users": "Pacientes",
+    "viewAppointment": "Detalles del turno"
+  },
   "loading": {
     "default": "Cargando",
     "appointments": "Cargando turnos",
+    "appointmentDetails": "Cargando detalles del turno",
+    "generatingPDF": "Generando PDF",
     "professionals": "Cargando profesionales",
     "schedule": "Cargando agenda",
     "users": "Cargando pacientes"
+  },
+  "pageTitle": {
+    "appointments": "Turnos",
+    "professionals": "Profesionales",
+    "users": "Pacientes",
+    "viewAppointment": "Detalles del turno"
+  },
+  "pagination": {
+    "rowsPerPage": "Items por página",
+    "page": "Página",
+    "of": "de"
+  },
+  "placeholder": {
+    "userCombobox": "Buscar por DNI",
+    "professionalCombobox": "Profesionales"
   },
   "search": {
     "default": "Buscar"
@@ -62,10 +87,6 @@
     }
   },
   "table": {
-    "title": {
-      "appointmentsList": "Lista de todos los turnos",
-      "appointmentsReserve": "Turnos diarios"
-    },
     "totalItems": {
       "appointments": "{{totalItems}} turnos en total"
     },
@@ -77,20 +98,6 @@
       "appointments_one": "{{count}} turno reservado",
       "appointments_other": "{{count}} turnos reservados"
     }
-  },
-  "pageTitles": {
-    "appointments": "Turnos",
-    "professionals": "Profesionales",
-    "users": "Pacientes"
-  },
-  "pagination": {
-    "rowsPerPage": "Items por página",
-    "page": "Página",
-    "of": "de"
-  },
-  "placeholder": {
-    "userCombobox": "Buscar por DNI",
-    "professionalCombobox": "Profesionales"
   },
   "user": {
     "title": "Mi cuenta",
