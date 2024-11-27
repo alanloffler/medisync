@@ -8,6 +8,7 @@
   "button": {
     "back": "Volver",
     "cancel": "Cancelar",
+    "clearFilters": "Limpiar filtros",
     "deleteAppointment": "Eliminar turno",
     "generateAppointment": "Generar turno",
     "reserve": "Reservar",
