@@ -3,7 +3,6 @@ import { range } from '@formkit/tempo';
 import i18next from 'i18next';
 // Imports
 import type { IWorkingDay } from '@professionals/interfaces/working-days.interface';
-import { PROF_VIEW_CONFIG as PV_CONFIG } from '@config/professionals.config';
 
 export class CalendarService {
   private static days: number[] = Array.from({ length: 7 }, (_, index) => index);
@@ -62,9 +61,9 @@ export class CalendarService {
     slotUnavailableTimeEnd?: string,
   ): string {
     if (slotUnavailableTimeInit && slotUnavailableTimeEnd) {
-      return `${slotTimeInit} ${PV_CONFIG.words.hoursSeparator} ${slotUnavailableTimeInit} ${PV_CONFIG.words.slotsSeparator} ${slotUnavailableTimeEnd} ${PV_CONFIG.words.hoursSeparator} ${slotTimeEnd}`;
+      return `${slotTimeInit} ${i18next.t('words.hoursSeparator')} ${slotUnavailableTimeInit} ${i18next.t('words.slotsSeparator')} ${slotUnavailableTimeEnd} ${i18next.t('words.hoursSeparator')} ${slotTimeEnd}`;
     } else {
-      return `${slotTimeInit} ${PV_CONFIG.words.hoursSeparator} ${slotTimeEnd}`;
+      return `${slotTimeInit} ${i18next.t('words.hoursSeparator')} ${slotTimeEnd}`;
     }
   }
   // Used on appointments
@@ -75,7 +74,7 @@ export class CalendarService {
     yearsRange.push(actualYear);
 
     if (rangeLimit > 0) for (let i: number = 1; i <= rangeLimit; i++) yearsRange.push(actualYear - i);
-    
+
     const orderedYearsRange: string[] = yearsRange.sort((a, b) => a - b).map((year) => year.toString());
 
     return orderedYearsRange;
