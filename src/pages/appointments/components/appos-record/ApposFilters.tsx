@@ -15,11 +15,11 @@ import type { IProfessional } from '@professionals/interfaces/professional.inter
 import type { IResponse } from '@core/interfaces/response.interface';
 import { APP_CONFIG } from '@config/app.config';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
-import { USER_VIEW_CONFIG } from '@config/user.config';
 import { useApposFilters } from '@appointments/hooks/useApposFilters';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useHelpStore } from '@settings/stores/help.store';
 import { useNotificationsStore } from '@core/stores/notifications.store';
+import { useTranslation } from 'react-i18next';
 // React component
 export function ApposFilters({ userId }: { userId: string }) {
   const [loadingProfessionals, setLoadingProfessionals] = useState<boolean>(false);
@@ -34,6 +34,7 @@ export function ApposFilters({ userId }: { userId: string }) {
   const clearLabelRef = useRef(null);
   const { help } = useHelpStore();
   const { professional, year, setFilters, clearFilters } = useApposFilters();
+  const { t } = useTranslation();
 
   useEffect(() => {
     setLoadingProfessionals(true);
@@ -93,25 +94,21 @@ export function ApposFilters({ userId }: { userId: string }) {
       <section className='flex items-center justify-start space-x-4'>
         <section className='flex items-center space-x-2'>
           <Filter size={14} strokeWidth={1.5} />
-          <h1 className='text-xsm font-medium'>{USER_VIEW_CONFIG.apposRecord.filters.title}</h1>
+          <h1 className='text-xsm font-medium'>{t('search.filter.appointments')}</h1>
         </section>
         <Select
           disabled={professionalError || professionals.length === 0}
           value={professional ? professional : ''}
           onValueChange={(e) => setFilters({ professional: e as IApposFilters['professional'] })}
         >
-          <TooltipWrapper tooltip={USER_VIEW_CONFIG.apposRecord.filters.select.professional.tooltip} help={help}>
+          <TooltipWrapper tooltip={t('tooltip.selectProfessional')} help={help}>
             <SelectTrigger className={'h-7 w-fit space-x-3 border border-slate-300 bg-white text-xsm shadow-none'}>
               {loadingProfessionals ? (
-                <LoadingDB
-                  variant='default'
-                  text={USER_VIEW_CONFIG.apposRecord.filters.select.professional.loadingText}
-                  className='h-7 px-0 text-xsm font-normal'
-                />
+                <LoadingDB variant='default' text={t('loading.default')} className='h-7 px-0 text-xsm font-normal' />
               ) : professionalError ? (
-                <span className='text-red-500'>{USER_VIEW_CONFIG.apposRecord.filters.select.professional.errorText}</span>
+                <span className='text-red-500'>{t('error.default')}</span>
               ) : (
-                <SelectValue placeholder={USER_VIEW_CONFIG.apposRecord.filters.select.professional.placeholder} />
+                <SelectValue placeholder={t('placeholder.professionalSelect')} />
               )}
             </SelectTrigger>
           </TooltipWrapper>
@@ -130,18 +127,14 @@ export function ApposFilters({ userId }: { userId: string }) {
           value={year ? year : ''}
           onValueChange={(e) => setFilters({ year: e as IApposFilters['year'] })}
         >
-          <TooltipWrapper tooltip={USER_VIEW_CONFIG.apposRecord.filters.select.year.tooltip} help={help}>
+          <TooltipWrapper tooltip={t('tooltip.selectYear')} help={help}>
             <SelectTrigger className={'h-7 w-fit space-x-3 border border-slate-300 bg-white text-xsm shadow-none'}>
               {loadingYears ? (
-                <LoadingDB
-                  variant='default'
-                  text={USER_VIEW_CONFIG.apposRecord.filters.select.year.loadingText}
-                  className='h-7 px-0 text-xsm font-normal'
-                />
+                <LoadingDB variant='default' text={t('loading.default')} className='h-7 px-0 text-xsm font-normal' />
               ) : yearError ? (
-                <span>{USER_VIEW_CONFIG.apposRecord.filters.select.year.errorText}</span>
+                <span className='text-red-500'>{t('error.default')}</span>
               ) : (
-                <SelectValue placeholder={USER_VIEW_CONFIG.apposRecord.filters.select.year.placeholder} />
+                <SelectValue placeholder={t('placeholder.yearSelect')} />
               )}
             </SelectTrigger>
           </TooltipWrapper>
@@ -159,7 +152,7 @@ export function ApposFilters({ userId }: { userId: string }) {
       {(professional || year) && (
         <section className='flex items-center space-x-2'>
           <span ref={clearLabelRef} className='text-xs text-slate-500 opacity-0'>
-            {USER_VIEW_CONFIG.apposRecord.filters.button.clear}
+            {t('button.clearFilters')}
           </span>
           <Button
             ref={clearButtonRef}
