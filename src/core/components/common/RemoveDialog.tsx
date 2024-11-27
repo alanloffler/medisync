@@ -70,14 +70,14 @@ export function RemoveDialog({ action, callback, dialogContent, dialogTexts, hel
           <DialogHeader>
             <DialogTitle className='text-xl'>{dialogTexts.title || REMOVE_DIALOG_CONFIG.default.title}</DialogTitle>
             <DialogDescription className='text-xsm text-muted-foreground'>{dialogTexts.description || REMOVE_DIALOG_CONFIG.default.description}</DialogDescription>
-            <section className='flex flex-col space-y-2 pt-2'>
-              <section className='text-sm'>{dialogContent}</section>
-              {isError && <InfoCard text={error.message} type='error' className='pt-6' />}
+            <section className='flex flex-col py-4'>
+              <section className='text-sm space-y-2'>{dialogContent}</section>
+              {isError && <InfoCard text={error.message} type='error' />}
               {isPending && (
-                <LoadingDB size='xs' variant='default' text={dialogTexts.deleting || REMOVE_DIALOG_CONFIG.default.deleting} className='pt-6' />
+                <LoadingDB size='xs' variant='default' text={dialogTexts.deleting || REMOVE_DIALOG_CONFIG.default.deleting} />
               )}
             </section>
-            <footer className='flex justify-end space-x-4 pt-6'>
+            <footer className='flex justify-end space-x-4'>
               <Button onClick={() => setOpenDialog(false)} variant='ghost' size='sm'>
                 {dialogTexts.cancelButton}
               </Button>
