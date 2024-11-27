@@ -41,6 +41,7 @@
     }
   },
   "error": {
+    "default": "Error",
     "notFoundDefault": "No encontrado",
     "notFoundUser": "Paciente no encontrado"
   },
@@ -73,10 +74,15 @@
   },
   "placeholder": {
     "userCombobox": "Buscar por DNI",
-    "professionalCombobox": "Profesionales"
+    "professionalCombobox": "Profesionales",
+    "professionalSelect": "Profesionales",
+    "yearSelect": "Año"
   },
   "search": {
-    "default": "Buscar"
+    "default": "Buscar",
+    "filter": {
+      "appointments":"Filtrar turnos"
+    }
   },
   "section": {
     "appointments": {
@@ -104,6 +110,10 @@
       "appointments_one": "{{count}} turno reservado",
       "appointments_other": "{{count}} turnos reservados"
     }
+  },
+  "tooltip": {
+    "selectProfessional": "Seleccionar profesional",
+    "selectYear": "Seleccionar año"
   },
   "user": {
     "title": "Mi cuenta",

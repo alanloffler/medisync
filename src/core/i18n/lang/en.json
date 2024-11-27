@@ -41,6 +41,7 @@
     }
   },
   "error": {
+    "default": "Error",
     "notFoundDefault": "Not found",
     "notFoundUser": "Patient not found"
   },
@@ -73,10 +74,15 @@
   },
   "placeholder": {
     "userCombobox": "Search by IC",
-    "professionalCombobox": "Professionals"
+    "professionalCombobox": "Professionals",
+    "professionalSelect": "Professionals",
+    "yearSelect": "Year"
   },
   "search": {
-    "default": "Search"
+    "default": "Search",
+    "filter": {
+      "appointments":"Filter appointments"
+    }
   },
   "section": {
     "appointments": {
@@ -104,6 +110,10 @@
       "appointments_one": "{{count}} reserved appointment",
       "appointments_other": "{{count}} reserved appointments"
     }
+  },
+  "tooltip": {
+    "selectProfessional": "Select professional",
+    "selectYear": "Select year"
   },
   "user": {
     "title": "My account",
