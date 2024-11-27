@@ -7,13 +7,15 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { RemoveDialog } from '@core/components/common/RemoveDialog';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
+import { Trans, useTranslation } from 'react-i18next';
 import { format } from '@formkit/tempo';
 import { type Cell, type ColumnDef, flexRender, getCoreRowModel, type Row, useReactTable } from '@tanstack/react-table';
 import { useNavigate } from 'react-router-dom';
 // Imports
+import i18n from '@core/i18n/i18n';
 import type { IAppointmentView } from '@appointments/interfaces/appointment.interface';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
-import { USER_VIEW_CONFIG } from '@config/user.config';
+import { USER_VIEW_CONFIG as UV_CONFIG } from '@config/user.config';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useHelpStore } from '@settings/stores/help.store';
 // React component
@@ -27,6 +29,7 @@ export function ApposTable({
   const capitalize = useCapitalize();
   const navigate = useNavigate();
   const { help } = useHelpStore();
+  const { t } = useTranslation();
 
   const columns: ColumnDef<IAppointmentView>[] = [
     {
@@ -38,7 +41,7 @@ export function ApposTable({
           <span className='text-xsm font-normal'>{format(row.original.day, 'DD/MM/YY')}</span>
         </section>
       ),
-      header: () => <div className='text-center'>{USER_VIEW_CONFIG.apposRecord.table.headers[0]}</div>,
+      header: () => <div className='text-center'>{t(UV_CONFIG.table.header[0])}</div>,
     },
     {
       accessorKey: 'lastName',
@@ -49,14 +52,14 @@ export function ApposTable({
           )}
         </div>
       ),
-      header: () => <div className='text-left'>{USER_VIEW_CONFIG.apposRecord.table.headers[1]}</div>,
+      header: () => <div className='text-left'>{t(UV_CONFIG.table.header[1])}</div>,
     },
     {
       accessorKey: 'actions',
       size: 100,
       cell: ({ row }) => (
         <div className='space-x-2 text-center'>
-          <TooltipWrapper tooltip={USER_VIEW_CONFIG.apposRecord.table.tooltip.user.details} help={help}>
+          <TooltipWrapper tooltip={t('tooltip.details')} help={help}>
             <Button
               onClick={() => navigate(`/appointments/${row.original._id}`)}
               variant='secondary'
@@ -66,7 +69,7 @@ export function ApposTable({
               <FileText size={16} strokeWidth={1.5} />
             </Button>
           </TooltipWrapper>
-          <TooltipWrapper tooltip={USER_VIEW_CONFIG.apposRecord.table.tooltip.user.message} help={help}>
+          <TooltipWrapper tooltip={t('tooltip.sendMessage')} help={help}>
             <Button
               // onClick={}
               variant='secondary'
@@ -81,15 +84,20 @@ export function ApposTable({
             callback={handleRefresh}
             triggerButton={<Trash2 size={16} strokeWidth={1.5} />}
             dialogContent={
-              <section className='flex flex-col space-y-2'>
-                <section className='flex flex-row space-x-1'>
-                  <span>{USER_VIEW_CONFIG.apposRecord.dialog.content}</span>
-                  <span className='font-medium'>{`${capitalize(row.original.user.firstName)} ${capitalize(row.original.user.lastName)}`}</span>
+              <section className='flex flex-col space-y-3'>
+                <section className='flex flex-row gap-1'>
+                  <Trans
+                    i18nKey={'dialog.deleteAppointment.contentText'}
+                    values={{ firstName: capitalize(row.original.user.firstName), lastName: capitalize(row.original.user.lastName) }}
+                    components={{
+                      span: <span className='font-semibold' />,
+                    }}
+                  />
                 </section>
                 <section className='flex flex-row space-x-2 font-medium'>
                   <div className='flex items-center space-x-2 rounded-sm bg-sky-100 px-2 py-1 pl-1 text-xsm text-sky-600'>
                     <Calendar size={16} strokeWidth={2} />
-                    <span>{format(row.original.day, 'DD/MM/YY')}</span>
+                    <span>{format(row.original.day, 'short', i18n.language)}</span>
                   </div>
                   <div className='flex items-center space-x-2 rounded-sm bg-emerald-100 px-2 py-1 pl-1 text-xsm text-emerald-600'>
                     <Clock size={16} strokeWidth={2} />
@@ -100,18 +108,18 @@ export function ApposTable({
               </section>
             }
             dialogTexts={{
-              cancelButton: USER_VIEW_CONFIG.apposRecord.dialog.cancelButton,
-              deleting: USER_VIEW_CONFIG.apposRecord.dialog.deleting,
-              description: USER_VIEW_CONFIG.apposRecord.dialog.description,
-              removeButton: USER_VIEW_CONFIG.apposRecord.dialog.removeButton,
-              title: USER_VIEW_CONFIG.apposRecord.dialog.title,
+              cancelButton: t('button.cancel'),
+              deleting: t('deleting.appointment'),
+              description: t('dialog.deleteAppointment.description'),
+              removeButton: t('button.deleteAppointment'),
+              title: t('dialog.deleteAppointment.title'),
             }}
             help={help}
-            tooltip={USER_VIEW_CONFIG.apposRecord.table.tooltip.user.delete}
+            tooltip={t('tooltip.delete')}
           />
         </div>
       ),
-      header: () => <div className='text-center'>{USER_VIEW_CONFIG.apposRecord.table.headers[2]}</div>,
+      header: () => <div className='text-center'>{t(UV_CONFIG.table.header[2])}</div>,
     },
   ];
 
