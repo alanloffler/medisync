@@ -6,7 +6,7 @@
   },
   "button": {
     "cancel": "Cancel",
-    "cancelAppointment": "Cancel appointment",
+    "deleteAppointment": "Delete appointment",
     "generateAppointment": "Generate appointment",
     "reserve": "Reserve",
     "reserveAppointment": "Reserve appointment"
@@ -20,18 +20,28 @@
   "dialog": {
     "reserveAppointment": {
       "title": "Appointment reservation",
-      "description": "By confirming, you will make a reservation"
+      "description": "By confirming, you will make a reservation",
+      "content": {
+        "reservedTo": "Appointment reservation to <span>{{firstName}} {{lastName}}</span>",
+        "date": "On day <span>{{date}}</span>",
+        "hour": "At <span>{{hour}}</span> hours"
+      }
     },
     "deleteAppointment": {
-      "title": "Remove appointment",
-      "description": "By confirming, you will remove the appointment",
-      "contentText": "Appointment cancellation for {{firstName}} {{lastName}}"
+      "title": "Delete appointment",
+      "description": "By confirming, you will delete the appointment",
+      "contentText": "Appointment cancellation for <span>{{firstName}} {{lastName}}</span>"
     }
+  },
+  "error": {
+    "notFoundDefault": "Not found",
+    "notFoundUser": "Patient not found"
   },
   "loading": {
     "default": "Loading",
     "appointments": "Loading appointments",
     "professionals": "Loading professionals",
+    "schedule": "Loading schedule",
     "users": "Loading patients"
   },
   "section": {
@@ -55,6 +65,14 @@
     },
     "totalItems": {
       "appointments": "{{totalItems}} appointments in total"
+    },
+    "availableItems": {
+      "appointments_one": "{{totalItems}} available appointment",
+      "appointments_other": "{{count}} available appointments"
+    },
+    "reservedItems": {
+      "appointments_one": "{{count}} reserved appointment",
+      "appointments_other": "{{count}} reserved appointments"
     }
   },
   "pageTitles": {
@@ -68,13 +86,26 @@
     "of": "of"
   },
   "placeholder": {
-    "userCombobox": "Search by DNI"
+    "userCombobox": "Search by IC",
+    "professionalCombobox": "Professionals"
+  },
+  "search": {
+    "default": "Search"
   },
   "user": {
     "title": "My account",
     "menuItems": { "profile": "Profile", "settings": "Settings", "logout": "Logout" }
   },
   "warning": {
+    "hourRangeNotAvailable": "Not available from {{begin}} to {{end}}",
     "selectWorkingDay": "Select a working day"
+  },
+  "words": {
+    "and": "and",
+    "appointmentPrefix": "A",
+    "hoursAbbreviation": "h.",
+    "hoursSeparator": "to",
+    "identityCard": "IC",
+    "slotsSeparator": "and"
   }
 }

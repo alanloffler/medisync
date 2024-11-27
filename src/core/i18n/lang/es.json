@@ -6,7 +6,7 @@
   },
   "button": {
     "cancel": "Cancelar",
-    "cancelAppointment": "Cancelar turno",
+    "deleteAppointment": "Eliminar turno",
     "generateAppointment": "Generar turno",
     "reserve": "Reservar",
     "reserveAppointment": "Reservar turno"
@@ -20,7 +20,12 @@
   "dialog": {
     "reserveAppointment": {
       "title": "Reserva de turno",
-      "description": "Al confirmar, vas a realizar una reserva de turno"
+      "description": "Al confirmar, vas a realizar una reserva de turno",
+      "content": {
+        "reservedTo": "Reserva de turno para <span>{{firstName}} {{lastName}}</span>",
+        "date": "El día <span>{{date}}</span>",
+        "hour": "A las <span>{{hour}}</span> horas"
+      }
     },
     "deleteAppointment": {
       "title": "Eliminar turno",
@@ -28,11 +33,19 @@
       "contentText": "Cancelación de turno para {{firstName}} {{lastName}}"
     }
   },
+  "error": {
+    "notFoundDefault": "No encontrado",
+    "notFoundUser": "Paciente no encontrado"
+  },
   "loading": {
     "default": "Cargando",
     "appointments": "Cargando turnos",
     "professionals": "Cargando profesionales",
+    "schedule": "Cargando agenda",
     "users": "Cargando pacientes"
+  },
+  "search": {
+    "default": "Buscar"
   },
   "section": {
     "appointments": {
@@ -55,6 +68,14 @@
     },
     "totalItems": {
       "appointments": "{{totalItems}} turnos en total"
+    },
+    "availableItems": {
+      "appointments_one": "{{count}} turno disponible",
+      "appointments_other": "{{count}} turnos disponibles"
+    },
+    "reservedItems": {
+      "appointments_one": "{{count}} turno reservado",
+      "appointments_other": "{{count}} turnos reservados"
     }
   },
   "pageTitles": {
@@ -68,13 +89,23 @@
     "of": "de"
   },
   "placeholder": {
-    "userCombobox": "Buscar por DNI"
+    "userCombobox": "Buscar por DNI",
+    "professionalCombobox": "Profesionales"
   },
   "user": {
     "title": "Mi cuenta",
     "menuItems": { "profile": "Perfil", "settings": "Configuraciones", "logout": "Salir" }
   },
   "warning": {
+    "hourRangeNotAvailable": "No disponible de {{begin}} a {{end}}",
     "selectWorkingDay": "Seleccione un día laborable"
+  },
+  "words": {
+    "and": "y",
+    "appointmentPrefix": "T",
+    "hoursAbbreviation": "hs.",
+    "hoursSeparator": "a",
+    "identityCard": "DNI",
+    "slotsSeparator": "y"
   }
 }
