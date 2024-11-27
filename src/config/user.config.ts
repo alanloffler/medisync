@@ -119,10 +119,10 @@ export const USER_VIEW_CONFIG = {
       removeButton: 'Eliminar',
       title: 'Eliminación de turno',
     },
-    filters: {
-      button: {
-        clear: 'Borrar filtros',
-      },
+    // filters: {
+      // button: {
+      //   clear: 'Borrar filtros',
+      // },
       // select: {
         // professional: {
           // errorText: 'Error',
@@ -138,7 +138,7 @@ export const USER_VIEW_CONFIG = {
         // },
       // },
       // title: 'Filtrar turnos',
-    },
+    // },
     table: {
       emptyList: 'No existen turnos para el paciente',
       errorText: 'Error cargando turnos',
