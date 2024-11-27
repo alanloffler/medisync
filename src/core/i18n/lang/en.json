@@ -34,6 +34,12 @@
       "contentText": "Appointment cancellation for <span>{{firstName}} {{lastName}}</span>"
     }
   },
+  "email": {
+    "sendAppointment": {
+      "subject": "Appointment confirmation",
+      "body": "Hi {{firstName}},"
+    }
+  },
   "error": {
     "notFoundDefault": "Not found",
     "notFoundUser": "Patient not found"

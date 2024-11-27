@@ -34,6 +34,12 @@
       "contentText": "Cancelación de turno para {{firstName}} {{lastName}}"
     }
   },
+  "email": {
+    "sendAppointment": {
+      "subject": "Confirmación de turno",
+      "body": "Hola {{firstName}},"
+    }
+  },
   "error": {
     "notFoundDefault": "No encontrado",
     "notFoundUser": "Paciente no encontrado"
