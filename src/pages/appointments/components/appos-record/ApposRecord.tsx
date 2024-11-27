@@ -13,7 +13,6 @@ import { useTranslation } from 'react-i18next';
 // Imports
 import type { IAppointmentView } from '@appointments/interfaces/appointment.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
-import { APP_CONFIG } from '@config/app.config';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { useApposFilters } from '@appointments/hooks/useApposFilters';
 import { useNotificationsStore } from '@core/stores/notifications.store';
@@ -50,7 +49,7 @@ export function ApposRecord({ userId }: { userId: string }) {
         if (response instanceof Error) {
           setError(true);
           setErrorMessage(i18n.t('error.internalServer'));
-          addNotification({ type: 'error', message: APP_CONFIG.error.server });
+          addNotification({ type: 'error', message: i18n.t('error.internalServer') });
         }
       })
       .finally(() => setIsLoading(false));
