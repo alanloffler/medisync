@@ -54,16 +54,15 @@ export default function ViewAppointment() {
           const capitalized = capitalizeFirst(legibleDate);
           capitalized && setDate(capitalized);
 
-          // FIXME: check if user has email and removed default email
           setEmail({
-            to: response.data.user.email || 'alanmatiasloffler@gmail.com',
-            subject: `${VA_CONFIG.email.subject} ${capitalize(response.data.professional.title.abbreviation)} ${capitalize(response.data.professional.firstName)} ${capitalize(response.data.professional.lastName)}`,
-            body: VA_CONFIG.email.body,
+            to: response.data.user.email || VA_CONFIG.email.default,
+            subject: i18n.t('email.sendAppointment.subject'),
+            body: i18n.t('email.sendAppointment.body', { firstName: capitalize(response.data.user.firstName) }),
           });
         })
         .finally(() => setDataIsLoading(false));
     }
-  }, [appointment.day, capitalize, capitalizeFirst, i18n.language, id, legibleDate]);
+  }, [appointment.day, capitalize, capitalizeFirst, i18n.language, i18n, id, legibleDate]);
 
   function downloadPDF(): void {
     const input: HTMLDivElement | null = pdfRef.current;
