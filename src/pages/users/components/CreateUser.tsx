@@ -188,9 +188,7 @@ export default function CreateUser() {
             <DialogTitle className='text-lg'>{t('error.createUser')}</DialogTitle>
             <DialogDescription className='sr-only'></DialogDescription>
           </DialogHeader>
-          <section className='flex flex-col'>
-            <span className='text-sm'>{errorMessage}</span>
-          </section>
+          <section className='flex flex-col text-sm'>{errorMessage}</section>
           <footer className='flex justify-end space-x-4'>
             <Button variant='destructive' size='sm' onClick={() => setOpenDialog(false)}>
               {t('button.close')}
