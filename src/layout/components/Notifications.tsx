@@ -42,7 +42,7 @@ export function Notifications() {
         >
           <ChevronRight ref={chevronScope} size={16} strokeWidth={3} />
         </DropdownMenuTrigger>
-        <DropdownMenuContent className='ml-4 max-h-[250px]'>
+        <DropdownMenuContent className='ml-4 max-h-[250px] max-w-[400px]'>
           <ScrollArea className='h-[250px] p-1.5'>
             <ul className='w-full text-xs'>
               {notifications.map((notification) => (
