@@ -8,26 +8,26 @@ export const USER_CONFIG = {
   search: {
     debounceTime: 500,
   },
-  // WIP: this is consumed by table???
-  buttons: {
-    cancel: 'Cancelar',
+
+  // buttons: {
+    // cancel: 'Cancelar',
     // createUser: 'Agregar paciente',
-    remove: 'Eliminar paciente',
-    removing: 'Eliminando',
-  },
+    // remove: 'Eliminar paciente',
+    // removing: 'Eliminando',
+  // },
   dbUsersPlural: 'pacientes en la base de datos',
   dbUsersSingular: 'paciente en la base de datos',
   dialog: {
-    button: {
-      close: 'Cerrar',
-    },
+    // button: {
+    //   close: 'Cerrar',
+    // },
     remove: {
       content: {
         dni: 'DNI',
         title: 'Vas a eliminar de la base de datos al paciente:',
       },
-      subtitle: '¿Estas seguro de querer eliminar el paciente? Esta acción es irreversible.',
-      title: 'Eliminar paciente',
+      // subtitle: '¿Estas seguro de querer eliminar el paciente? Esta acción es irreversible.',
+      // title: 'Eliminar paciente',
     },
   },
 
