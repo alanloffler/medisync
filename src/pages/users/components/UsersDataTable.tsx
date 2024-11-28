@@ -342,7 +342,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
               ))}
             </TableBody>
           </Table>
-          <Pagination help={help} pagination={pagination} setPagination={setPagination} table={table} />
+          <Pagination help={help} pagination={pagination} setPagination={setPagination} table={table} className='pt-6 !text-xsm text-slate-400' />
         </>
       ) : (
         <InfoCard text={infoCardContent.text} type={infoCardContent.type} className='mt-3' />
