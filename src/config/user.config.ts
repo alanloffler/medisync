@@ -110,72 +110,13 @@ export const USER_CREATE_CONFIG = {
 };
 
 export const USER_VIEW_CONFIG = {
-  apposRecord: {
-    dialog: {
-      cancelButton: 'Cancelar',
-      content: 'Vas a eliminar el turno del paciente',
-      deleting: 'Eliminando turno',
-      description: 'Esta acción es irreversible. Vas a eliminar un turno.',
-      removeButton: 'Eliminar',
-      title: 'Eliminación de turno',
-    },
-    // filters: {
-      // button: {
-      //   clear: 'Borrar filtros',
-      // },
-      // select: {
-        // professional: {
-          // errorText: 'Error',
-          // loadingText: 'Cargando',
-          // placeholder: 'Profesionales',
-          // tooltip: 'Seleccionar profesional',
-        // },
-        // year: {
-          // errorText: 'Error',
-          // loadingText: 'Cargando',
-          // placeholder: 'Año',
-          // tooltip: 'Seleccionar año',
-        // },
-      // },
-      // title: 'Filtrar turnos',
-    // },
-    table: {
-      emptyList: 'No existen turnos para el paciente',
-      errorText: 'Error cargando turnos',
-      headers: ['Fecha', 'Profesional', 'Acciones'],
-      loadingText: 'Cargando turnos',
-      tooltip: {
-        user: {
-          delete: 'Eliminar',
-          details: 'Ver detalles',
-          message: 'Enviar mensaje',
-        },
-      },
-    },
-    title: 'Historial de turnos',
-  },
   breadcrumb: [
-    { id: 1, name: 'Inicio', path: '/' },
-    { id: 2, name: 'Pacientes', path: '/users' },
-    { id: 3, name: 'Detalles', path: '/users' },
+    { id: 1, name: 'breadcrumb.home', path: '/' },
+    { id: 2, name: 'breadcrumb.users', path: '/users' },
+    { id: 3, name: 'breadcrumb.userDetails', path: '' },
   ],
-  buttons: {
-    back: 'Volver',
-    goToUsers: 'Ir a pacientes',
-  },
-  email: {
-    subject: 'MediSync - Turnos médicos',
-    body: ['Hola', ','],
-  },
-  phrase: {
-    userSince: 'Paciente desde el',
-  },
-  title: 'Detalles del paciente',
-  tooltip: {
-    deleteUser: 'Eliminar paciente',
-    sendEmail: 'Enviar e-mail',
-    sendWhatsApp: 'Enviar WhatsApp',
-    updateUser: 'Editar paciente',
+  table: {
+    header: ['table.header.date', 'table.header.professional', 'table.header.actions'],
   },
 };
 
