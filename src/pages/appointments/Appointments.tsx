@@ -91,7 +91,7 @@ export default function Appointments() {
                 <section className='flex items-center justify-end space-x-1 px-1'>
                   <Database size={16} strokeWidth={2} className='text-blue-400' />
                   <span className='text-xsm text-slate-400'>
-                    {t('table.totalItems.appointments', { totalItems: appointments?.pagination?.totalItems })}
+                    {t('table.totalItems.appointments', { count: appointments?.pagination?.totalItems })}
                   </span>
                 </section>
                 <section className='flex flex-col'>
