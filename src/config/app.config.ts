@@ -1,7 +1,9 @@
 export const APP_CONFIG = {
+  // TODO: when translated all, remove this
   error: {
     server: 'Error interno del servidor'
   },
+  // In use
   i18n: {
     locale: 'es',
   },
@@ -15,7 +17,7 @@ export const APP_CONFIG = {
     findProfesionals: 'Cargando profesionales',
     findUsers: 'Cargando pacientes',
     findOneProfessional: 'Cargando información del profesional',
-    findOneUser: 'Cargando información del paciente',
+    // findOneUser: 'Cargando información del paciente',
     settings: {
       duration: 0.4,
       size: 18,
