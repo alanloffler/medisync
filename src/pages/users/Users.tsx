@@ -12,6 +12,7 @@ import { UsersDataTable } from '@users/components/UsersDataTable';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { spring, useAnimate } from 'motion/react';
+import { useTranslation } from 'react-i18next';
 // Imports
 import { EUserSearch, type IUserSearch } from '@users/interfaces/user-search.interface';
 import { HEADER_CONFIG } from '@config/layout/header.config';
@@ -31,6 +32,7 @@ export default function Users() {
   const navigate = useNavigate();
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
   const { help } = useHelpStore();
+  const { t } = useTranslation();
 
   useEffect(() => {
     setItemSelected(HEADER_CONFIG.headerMenu[3].id);
@@ -53,7 +55,7 @@ export default function Users() {
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
       {/* Section: Page Header */}
       <header className='flex items-center justify-between'>
-        <PageHeader title={USER_CONFIG.title} breadcrumb={USER_CONFIG.breadcrumb} />
+        <PageHeader title={t('pageTitle.users')} breadcrumb={USER_CONFIG.breadcrumb} />
       </header>
       {/* Section: Page content */}
       <section className='grid gap-6 md:grid-cols-4 md:gap-8 lg:grid-cols-4 xl:grid-cols-4'>
@@ -72,12 +74,12 @@ export default function Users() {
                   onMouseOut={() => createAnimation(createScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })}
                 >
                   <PlusCircle ref={createScope} size={16} strokeWidth={2} />
-                  {USER_CONFIG.buttons.createUser}
+                  {t('button.addUser')}
                 </Button>
               </Link>
               {/* Search by DNI */}
               <div className='flex flex-col space-y-4'>
-                <h1 className='text-lg font-semibold'>{USER_CONFIG.search.label}</h1>
+                <h1 className='text-lg font-semibold'>{t('search.user')}</h1>
                 <div className='relative w-full items-center md:w-1/3 lg:w-full'>
                   <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
                   <Input
@@ -85,7 +87,7 @@ export default function Users() {
                     onChange={handleSearchByDNI}
                     value={search.type === EUserSearch.DNI ? search.value : ''}
                     type='number'
-                    placeholder={USER_CONFIG.search.placeholder.dni}
+                    placeholder={t('words.identityCard')}
                     className='bg-background pl-10 shadow-sm'
                   />
                   {search.type === EUserSearch.DNI && search.value && (
@@ -107,7 +109,7 @@ export default function Users() {
                     onChange={handleSearchByName}
                     value={search.type === EUserSearch.NAME ? search.value : ''}
                     type='text'
-                    placeholder={USER_CONFIG.search.placeholder.name}
+                    placeholder={t('words.name')}
                     className='bg-background pl-10 shadow-sm'
                   />
                   {search.type === EUserSearch.NAME && search.value && (
@@ -126,13 +128,13 @@ export default function Users() {
         </Card>
         {/* Section: Right side content */}
         <Card className='col-span-1 h-fit overflow-y-auto md:col-span-4 lg:col-span-3 xl:col-span-3'>
-          <CardTitle className='bg-card-header flex items-center justify-between gap-2 rounded-b-none text-slate-700'>
+          <CardTitle className='flex items-center justify-between gap-2 rounded-b-none bg-card-header text-slate-700'>
             <header className='flex items-center gap-3.5 px-2'>
               <List size={16} strokeWidth={2} />
-              {USER_CONFIG.table.title}
+              {t('cardTitle.usersList')}
             </header>
             <section className='flex items-center gap-2'>
-              <TooltipWrapper tooltip={USER_CONFIG.tooltip.reload} help={help}>
+              <TooltipWrapper tooltip={t('tooltip.reload')} help={help}>
                 <Button
                   size='miniIcon'
                   variant='tableHeader'
@@ -146,7 +148,7 @@ export default function Users() {
                   <ListRestart size={16} strokeWidth={2} />
                 </Button>
               </TooltipWrapper>
-              <TooltipWrapper tooltip={USER_CONFIG.tooltip.addUser} help={help}>
+              <TooltipWrapper tooltip={t('tooltip.addUser')} help={help}>
                 <Button
                   ref={createMiniScope}
                   size='miniIcon'
