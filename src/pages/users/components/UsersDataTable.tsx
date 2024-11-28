@@ -129,7 +129,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
       header: () => <div className='text-center'>{t(USER_CONFIG.table.header[4])}</div>,
       cell: ({ row }) => (
         <div className='mx-auto flex w-fit flex-row items-center justify-center space-x-1'>
-          <TooltipWrapper tooltip={USER_CONFIG.table.tooltip.button.view} help={help}>
+          <TooltipWrapper tooltip={t('tooltip.details')} help={help}>
             <Button
               variant='ghost'
               size='miniIcon'
@@ -139,7 +139,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
               <FileText size={16} strokeWidth={1.5} />
             </Button>
           </TooltipWrapper>
-          <TooltipWrapper tooltip={USER_CONFIG.table.tooltip.button.edit} help={help}>
+          <TooltipWrapper tooltip={t('tooltip.edit')} help={help}>
             <Button
               variant='ghost'
               size='miniIcon'
@@ -149,7 +149,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
               <PencilLine size={16} strokeWidth={1.5} />
             </Button>
           </TooltipWrapper>
-          <TooltipWrapper tooltip={USER_CONFIG.table.tooltip.button.delete} help={help}>
+          <TooltipWrapper tooltip={t('tooltip.delete')} help={help}>
             <Button
               variant='ghost'
               size='miniIcon'
@@ -159,7 +159,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
               <Trash2 size={16} strokeWidth={1.5} />
             </Button>
           </TooltipWrapper>
-          <TooltipWrapper tooltip={USER_CONFIG.table.tooltip.button.sendWhatsApp} help={help}>
+          <TooltipWrapper tooltip={t('tooltip.sendMessage')} help={help}>
             <Button
               disabled={!row.original.phone}
               variant='ghost'
