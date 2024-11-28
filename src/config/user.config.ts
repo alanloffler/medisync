@@ -67,42 +67,6 @@ export const USER_CONFIG = {
   },
 };
 
-export const USER_CREATE_CONFIG = {
-  breadcrumb: [
-    { id: 1, name: 'Inicio', path: '/' },
-    { id: 2, name: 'Pacientes', path: '/users' },
-    { id: 3, name: 'Crear', path: '/create' },
-  ],
-  buttons: {
-    back: 'Volver',
-    cancel: 'Cancelar',
-    create: 'Crear paciente',
-    creating: 'Creando',
-  },
-  dialog: {
-    title: 'Error al crear el paciente',
-    button: {
-      close: 'Cerrar',
-    },
-  },
-  formDescription: 'Ingresá los datos para dar de alta a un nuevo paciente',
-  formTitle: 'Creación de paciente',
-  labels: {
-    dni: 'DNI',
-    email: 'Correo electrónico',
-    firstName: 'Nombre',
-    lastName: 'Apellido',
-    phone: 'Teléfono',
-  },
-  placeholders: {
-    dni: 'Ingresá el DNI',
-    email: 'Ingresá el correo electrónico',
-    firstName: 'Ingresá el nombre',
-    lastName: 'Ingresá el apellido',
-    phone: 'Ingresá el teléfono',
-  },
-};
-
 export const USER_UPDATE_CONFIG = {
   breadcrumb: [
     { id: 1, name: 'Inicio', path: '/' },
