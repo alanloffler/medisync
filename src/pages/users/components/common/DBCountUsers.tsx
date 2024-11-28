@@ -3,12 +3,15 @@ import { Database, TrendingDown, TrendingUp } from 'lucide-react';
 // Components
 import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
+import i18n from '@core/i18n/i18n';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 // Imports
-import { USER_CONFIG } from '@config/users/users.config';
 import { UserApiService } from '@users/services/user-api.service';
 // React component
 export function DBCountUsers() {
+  const { t } = useTranslation();
+
   const {
     data: dbCount,
     isLoading,
@@ -33,17 +36,22 @@ export function DBCountUsers() {
       <main className='flex flex-row justify-end gap-2 py-3 text-xsm font-normal text-slate-400'>
         <section className='flex items-center space-x-1'>
           <Database size={16} strokeWidth={2} className='text-blue-400' />
-          <span>{`${total} ${total === 1 ? USER_CONFIG.table.databaseCount.totalSingular : USER_CONFIG.table.databaseCount.totalPlural}`}</span>
+          <span>{t('table.totalItems.users', { count: total })}</span>
         </section>
-        {diffPrevMonth && <section className='flex items-center space-x-1'>
-          {diffPrevMonth && diffPrevMonth >= 0 ? (
-            <TrendingUp size={16} strokeWidth={2} className='text-emerald-400' />
-          ) : (
-            <TrendingDown size={16} strokeWidth={2} className='text-rose-400' />
-          )}
-          {/* TODO: from database or localStorage to use comma or dot for decimals */}
-          <span>{`${diffPrevMonth >= 0 ? '+' : ''}${diffPrevMonth % 1 === 0 ? diffPrevMonth : diffPrevMonth.toFixed(1)}% ${USER_CONFIG.table.databaseCount.difference}`}</span>
-        </section>}
+        {diffPrevMonth && (
+          <section className='flex items-center space-x-1'>
+            {diffPrevMonth && diffPrevMonth >= 0 ? (
+              <TrendingUp size={16} strokeWidth={2} className='text-emerald-400' />
+            ) : (
+              <TrendingDown size={16} strokeWidth={2} className='text-rose-400' />
+            )}
+            <div>
+              <span>{diffPrevMonth >= 0 ? '+' : ''}</span>
+              <span>{`${i18n.format(diffPrevMonth, 'number', i18n.resolvedLanguage)}%`}</span>
+            </div>
+            <span>{t('table.difference.lastMonth')}</span>
+          </section>
+        )}
       </main>
     )
   );
