@@ -1,11 +1,18 @@
+// TODO: when each section is in his own file, this file should be moved to the config folder
 export const USER_CONFIG = {
+  // In use
   breadcrumb: [
-    { id: 1, name: 'Inicio', path: '/' },
-    { id: 2, name: 'Pacientes', path: '/users' },
+    { id: 1, name: 'breadcrumb.home', path: '/' },
+    { id: 2, name: 'breadcrumb.users', path: '/users' },
   ],
+  // In use
+  search: {
+    debounceTime: 500,
+  },
+  // WIP: this is consumed by table???
   buttons: {
     cancel: 'Cancelar',
-    createUser: 'Agregar paciente',
+    // createUser: 'Agregar paciente',
     remove: 'Eliminar paciente',
     removing: 'Eliminando',
   },
@@ -24,14 +31,7 @@ export const USER_CONFIG = {
       title: 'Eliminar paciente',
     },
   },
-  search: {
-    debounceTime: 500,
-    label: 'Búsqueda',
-    placeholder: {
-      name: 'Apellido y/o nombre',
-      dni: 'DNI',
-    },
-  },
+
   table: {
     databaseCount: {
       difference: 'que el mes pasado',
@@ -49,7 +49,6 @@ export const USER_CONFIG = {
       of: 'de',
     },
     rowsPerPage: 'Pacientes por página',
-    title: 'Listado de Pacientes',
     tooltip: {
       button: {
         delete: 'Eliminar',
@@ -65,11 +64,6 @@ export const USER_CONFIG = {
         prevPage: 'Página anterior',
       },
     },
-  },
-  title: 'Pacientes',
-  tooltip: {
-    addUser: 'Agregar paciente',
-    reload: 'Recargar',
   },
 };
 
