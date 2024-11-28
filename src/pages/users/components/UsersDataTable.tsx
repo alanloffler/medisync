@@ -1,10 +1,9 @@
 // Icons: https://lucide.dev/icons/
-import { ArrowDownUp, ArrowLeftIcon, ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon, FileText, PencilLine, Trash2 } from 'lucide-react';
+import { ArrowDownUp, FileText, PencilLine, Trash2 } from 'lucide-react';
 // External components:
 // https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@core/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@core/components/ui/table';
 // Tanstack Data Table: https://tanstack.com/table/latest
 import {
@@ -23,17 +22,17 @@ import {
 import { DBCountUsers } from '@users/components/common/DBCountUsers';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
+import { Pagination } from '@core/components/common/Pagination';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
+import { Trans, useTranslation } from 'react-i18next';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 // Imports
 import type { IDataTableUsers, ITableManager } from '@core/interfaces/table.interface';
 import type { IInfoCard } from '@core/components/common/interfaces/infocard.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
-import { APP_CONFIG } from '@config/app.config';
 import { EUserSearch, type IUserSearch } from '@users/interfaces/user-search.interface';
 import { USER_CONFIG } from '@config/users/users.config';
 import { UserApiService } from '@users/services/user-api.service';
@@ -72,7 +71,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
     {
       accessorKey: 'index',
       size: 50,
-      header: () => <div className='text-center'>#</div>,
+      header: () => <div className='text-center'>{t(USER_CONFIG.table.header[0])}</div>,
       cell: ({ row }) => (
         <div className='mx-auto w-fit rounded-md bg-slate-100 px-1.5 py-1 text-center text-xs text-slate-400'>{truncate(row.original._id, -3)}</div>
       ),
@@ -85,7 +84,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
             className='flex items-center gap-2 hover:text-accent-foreground'
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
-            {USER_CONFIG.table.headers[0]}
+            {t(USER_CONFIG.table.header[1])}
             <ArrowDownUp size={12} strokeWidth={2} />
           </button>
         </div>
@@ -101,7 +100,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
             className='flex items-center gap-2 hover:text-accent-foreground'
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
-            {USER_CONFIG.table.headers[1]}
+            {t(USER_CONFIG.table.header[2])}
             <ArrowDownUp size={12} strokeWidth={2} />
           </button>
         </div>
@@ -117,7 +116,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
             className='flex items-center gap-2 hover:text-accent-foreground'
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
-            {USER_CONFIG.table.headers[2]}
+            {t(USER_CONFIG.table.header[3])}
             <ArrowDownUp size={12} strokeWidth={2} />
           </button>
         </div>
@@ -127,7 +126,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
     {
       accessorKey: 'actions',
       size: 100,
-      header: () => <div className='text-center'>{USER_CONFIG.table.headers[3]}</div>,
+      header: () => <div className='text-center'>{t(USER_CONFIG.table.header[4])}</div>,
       cell: ({ row }) => (
         <div className='mx-auto flex w-fit flex-row items-center justify-center space-x-1'>
           <TooltipWrapper tooltip={USER_CONFIG.table.tooltip.button.view} help={help}>
@@ -249,8 +248,8 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
               setInfoCardContent({ type: 'error', text: response.message });
             }
             if (response instanceof Error) {
-              addNotification({ type: 'error', message: APP_CONFIG.error.server });
-              setInfoCardContent({ type: 'error', text: APP_CONFIG.error.server });
+              addNotification({ type: 'error', message: t('error.internalServer') });
+              setInfoCardContent({ type: 'error', text: t('error.internalServer') });
             }
           })
           .finally(() => setIsLoading(false));
@@ -270,8 +269,8 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
               setInfoCardContent({ type: 'error', text: response.message });
             }
             if (response instanceof Error) {
-              addNotification({ type: 'error', message: APP_CONFIG.error.server });
-              setInfoCardContent({ type: 'error', text: APP_CONFIG.error.server });
+              addNotification({ type: 'error', message: t('error.internalServer') });
+              setInfoCardContent({ type: 'error', text: t('error.internalServer') });
             }
           })
           .finally(() => setIsLoading(false));
@@ -305,8 +304,8 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
         }
         if (response instanceof Error) {
           setErrorRemoving(true);
-          setErrorRemovingContent({ type: 'error', text: APP_CONFIG.error.server });
-          addNotification({ type: 'error', message: APP_CONFIG.error.server });
+          setErrorRemovingContent({ type: 'error', text: t('error.internalServer') });
+          addNotification({ type: 'error', message: t('error.internalServer') });
         }
       })
       .finally(() => setIsRemoving(false));
@@ -315,7 +314,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
   return (
     <>
       {isLoading ? (
-        <LoadingDB text={APP_CONFIG.loadingDB.findUsers} className='mt-3' />
+        <LoadingDB text={t('loading.users')} className='mt-6' />
       ) : table.getRowModel().rows?.length > 0 ? (
         <>
           <DBCountUsers />
@@ -343,72 +342,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
               ))}
             </TableBody>
           </Table>
-          <section className='flex items-center justify-between space-x-6 pt-6 lg:space-x-8'>
-            <div className='flex items-center space-x-2'>
-              <p className='text-xs font-normal text-slate-400'>{USER_CONFIG.table.rowsPerPage}</p>
-              <Select value={`${table.getState().pagination.pageSize}`} onValueChange={(e) => setPagination({ pageIndex: 0, pageSize: parseInt(e) })}>
-                <TooltipWrapper tooltip={USER_CONFIG.table.tooltip.pagination.itemsPerPage} help={help}>
-                  <SelectTrigger className='h-8 w-[65px] bg-input text-xs font-medium hover:bg-input-hover focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring/40 focus-visible:ring-offset-0'>
-                    <SelectValue placeholder={table.getState().pagination.pageSize} />
-                  </SelectTrigger>
-                </TooltipWrapper>
-                <SelectContent side='top' className='min-w-[4rem]' onCloseAutoFocus={(e) => e.preventDefault()}>
-                  {USER_CONFIG.table.itemsPerPage.map((pageSize) => (
-                    <SelectItem key={pageSize} value={`${pageSize}`} className='text-xs'>
-                      {pageSize}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className='flex w-[100px] items-center justify-center text-xs font-normal text-slate-400'>
-              {USER_CONFIG.table.pagination.page} {pagination.pageIndex + 1} {USER_CONFIG.table.pagination.of} {table.getPageCount()}
-            </div>
-            {table.getPageCount() > 1 && (
-              <section className='flex items-center space-x-2'>
-                <TooltipWrapper tooltip={USER_CONFIG.table.tooltip.pagination.firstPage} help={help}>
-                  <Button
-                    variant='ghost'
-                    className='h-8 w-8 bg-input p-0 hover:bg-input-hover lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800'
-                    onClick={() => table.setPageIndex(0)}
-                    disabled={!table.getCanPreviousPage()}
-                  >
-                    <ArrowLeftIcon size={16} strokeWidth={2} />
-                  </Button>
-                </TooltipWrapper>
-                <TooltipWrapper tooltip={USER_CONFIG.table.tooltip.pagination.prevPage} help={help}>
-                  <Button
-                    variant='ghost'
-                    className='h-8 w-8 bg-input p-0 hover:bg-input-hover dark:bg-neutral-950 dark:hover:bg-neutral-800'
-                    onClick={() => table.previousPage()}
-                    disabled={!table.getCanPreviousPage()}
-                  >
-                    <ChevronLeftIcon size={16} strokeWidth={2} />
-                  </Button>
-                </TooltipWrapper>
-                <TooltipWrapper tooltip={USER_CONFIG.table.tooltip.pagination.nextPage} help={help}>
-                  <Button
-                    variant='ghost'
-                    className='h-8 w-8 bg-input p-0 hover:bg-input-hover dark:bg-neutral-950 dark:hover:bg-neutral-800'
-                    onClick={() => table.nextPage()}
-                    disabled={!table.getCanNextPage()}
-                  >
-                    <ChevronRightIcon size={16} strokeWidth={2} />
-                  </Button>
-                </TooltipWrapper>
-                <TooltipWrapper tooltip={USER_CONFIG.table.tooltip.pagination.lastPage} help={help}>
-                  <Button
-                    variant='ghost'
-                    className='h-8 w-8 bg-input p-0 hover:bg-input-hover lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800'
-                    onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                    disabled={!table.getCanNextPage()}
-                  >
-                    <ArrowRightIcon size={16} strokeWidth={2} />
-                  </Button>
-                </TooltipWrapper>
-              </section>
-            )}
-          </section>
+          <Pagination help={help} pagination={pagination} setPagination={setPagination} table={table} />
         </>
       ) : (
         <InfoCard text={infoCardContent.text} type={infoCardContent.type} className='mt-3' />
@@ -420,7 +354,6 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
             <DialogTitle className='text-xl'>{t('dialog.deleteUser.title')}</DialogTitle>
             {errorRemoving ? <DialogDescription></DialogDescription> : <DialogDescription>{t('dialog.deleteUser.description')}</DialogDescription>}
             <section className='flex flex-col pt-2'>
-              {/* TODO: fix the structure and use Trans component for content */}
               {errorRemoving ? (
                 <>
                   <InfoCard text={errorRemovingContent.text} type={errorRemovingContent.type} />
@@ -432,9 +365,20 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
                 </>
               ) : (
                 <>
-                  <span className=''>{USER_CONFIG.dialog.remove.content.title}</span>
-                  <span className='mt-1 text-lg font-semibold'>{`${capitalize(userSelected.lastName)}, ${capitalize(userSelected.firstName)}`}</span>
-                  <span className='font-medium'>{`${USER_CONFIG.dialog.remove.content.dni}: ${delimiter(userSelected.dni, '.', 3)}`}</span>
+                  <div className='text-sm'>
+                    <Trans
+                      i18nKey='dialog.deleteUser.content'
+                      values={{
+                        firstName: userSelected.firstName,
+                        lastName: userSelected.lastName,
+                        identityCard: delimiter(userSelected.dni, '.', 3),
+                      }}
+                      components={{
+                        span: <span className='font-semibold' />,
+                        i: <i />,
+                      }}
+                    />
+                  </div>
                   <footer className='mt-5 flex justify-end space-x-4'>
                     <Button variant='ghost' size='sm' onClick={() => setOpenDialog(false)}>
                       {t('button.cancel')}
