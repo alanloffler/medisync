@@ -20,7 +20,7 @@ import type { IEmail } from '@core/interfaces/email.interface';
 import type { IUser } from '@users/interfaces/user.interface';
 // import { APP_CONFIG } from '@config/app.config';
 import { HEADER_CONFIG } from '@config/layout/header.config';
-import { USER_VIEW_CONFIG as UV_CONFIG } from '@config/user.config';
+import { USER_VIEW_CONFIG as UV_CONFIG } from '@config/users/user-view.config';
 import { UserApiService } from '@users/services/user-api.service';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useDelimiter } from '@core/hooks/useDelimiter';

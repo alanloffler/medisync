@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import i18n from '@core/i18n/i18n';
 import type { IAppointmentView } from '@appointments/interfaces/appointment.interface';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
-import { USER_VIEW_CONFIG as UV_CONFIG } from '@config/user.config';
+import { USER_VIEW_CONFIG as UV_CONFIG } from '@config/users/user-view.config';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useHelpStore } from '@settings/stores/help.store';
 // React component
