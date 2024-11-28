@@ -16,6 +16,7 @@
     "clearFilters": "Limpiar filtros",
     "close": "Cerrar",
     "deleteAppointment": "Eliminar turno",
+    "deleteUser": "Eliminar paciente",
     "generateAppointment": "Generar turno",
     "goToUsers": "Ir a pacientes",
     "reserve": "Reservar",
@@ -51,6 +52,10 @@
       "title": "Eliminar turno",
       "description": "Al confirmar, vas a eliminar un turno",
       "contentText": "Cancelación de turno para <span>{{firstName}} {{lastName}}</span>"
+    },
+    "deleteUser": {
+      "title": "Eliminar paciente",
+      "description": "Al confirmar, vas a eliminar un paciente"
     }
   },
   "email": {
@@ -90,6 +95,7 @@
     "appointments": "Cargando turnos",
     "creating": "Creando",
     "default": "Cargando",
+    "deleting": "Eliminando",
     "generatingPDF": "Generando PDF",
     "professionals": "Cargando profesionales",
     "schedule": "Cargando agenda",

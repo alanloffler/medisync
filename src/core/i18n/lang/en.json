@@ -16,6 +16,7 @@
     "clearFilters": "Clear filters",
     "close": "Close",
     "deleteAppointment": "Delete appointment",
+    "deleteUser": "Delete patient",
     "generateAppointment": "Generate appointment",
     "goToUsers": "Go to patients",
     "reserve": "Reserve",
@@ -48,6 +49,10 @@
       "title": "Delete appointment",
       "description": "By confirming, you will delete the appointment",
       "contentText": "Appointment cancellation for <span>{{firstName}} {{lastName}}</span>"
+    },
+    "deleteUser": {
+      "title": "Delete patient",
+      "description": "By confirming, you will delete the patient"
     }
   },
   "deleting": {
@@ -90,6 +95,7 @@
     "appointments": "Loading appointments",
     "creating": "Creating",
     "default": "Loading",
+    "deleting": "Deleting",
     "generatingPDF": "Generating PDF",
     "professionals": "Loading professionals",
     "schedule": "Loading schedule",
