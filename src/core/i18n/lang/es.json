@@ -8,6 +8,7 @@
     "userDetails": "Detalles"
   },
   "button": {
+    "addUser": "Agregar paciente",
     "back": "Volver",
     "cancel": "Cancelar",
     "clearFilters": "Limpiar filtros",
@@ -21,7 +22,8 @@
     "viewAppointment": "Turno",
     "appointmentsRecord": "Historial de turnos",
     "appointmentsList": "Lista de todos los turnos",
-    "appointmentsReserve": "Turnos diarios"
+    "appointmentsReserve": "Turnos diarios",
+    "usersList": "Lista de pacientes"
   },
   "cardContent": {
     "userSince": "Paciente desde el {{date}}"
@@ -100,7 +102,8 @@
     "default": "Buscar",
     "filter": {
       "appointments":"Filtrar turnos"
-    }
+    },
+    "user": "Buscar paciente"
   },
   "section": {
     "appointments": {
@@ -136,9 +139,11 @@
     }
   },
   "tooltip": {
+    "addUser": "Agregar paciente",
     "delete": "Eliminar",
     "deleteUser": "Eliminar paciente",
     "details": "Ver detalles",
+    "reload": "Recargar",
     "selectProfessional": "Seleccionar profesional",
     "selectYear": "Seleccionar año",
     "sendEmail": "Enviar email",
@@ -160,6 +165,7 @@
     "hoursAbbreviation": "hs.",
     "hoursSeparator": "a",
     "identityCard": "DNI",
+    "name": "Nombre",
     "slotsSeparator": "y"
   }
 }

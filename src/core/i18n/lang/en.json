@@ -8,6 +8,7 @@
     "userDetails": "Details"
   },
   "button": {
+    "addUser": "Add patient",
     "back": "Go back",
     "cancel": "Cancel",
     "clearFilters": "Clear filters",
@@ -21,7 +22,8 @@
     "appointmentsRecord": "Appointments history",
     "appointmentsList": "All appointments list",
     "appointmentsReserve": "Dayly appointments",
-    "viewAppointment": "Appointment"
+    "viewAppointment": "Appointment",
+    "usersList": "Patient list"
   },
   "cardContent": {
     "userSince": "Patient since {{date}}"
@@ -100,7 +102,8 @@
     "default": "Search",
     "filter": {
       "appointments":"Filter appointments"
-    }
+    },
+    "user": "Search patient"
   },
   "section": {
     "appointments": {
@@ -136,9 +139,11 @@
     }
   },
   "tooltip": {
+    "addUser": "Add patient",
     "delete": "Delete",
     "deleteUser": "Delete patient",
     "details": "See details",
+    "reload": "Reload",
     "selectProfessional": "Select professional",
     "selectYear": "Select year",
     "sendEmail": "Send email",
@@ -160,6 +165,7 @@
     "hoursAbbreviation": "h.",
     "hoursSeparator": "to",
     "identityCard": "IC",
+    "name": "Name",
     "slotsSeparator": "and"
   }
 }
