@@ -16,7 +16,7 @@ import { useTranslation } from 'react-i18next';
 // Imports
 import { EUserSearch, type IUserSearch } from '@users/interfaces/user-search.interface';
 import { HEADER_CONFIG } from '@config/layout/header.config';
-import { USER_CONFIG } from '@config/user.config';
+import { USER_CONFIG } from '@config/users/users.config';
 import { useDebounce } from '@core/hooks/useDebounce';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 import { useHelpStore } from '@settings/stores/help.store';

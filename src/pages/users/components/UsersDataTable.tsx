@@ -34,7 +34,7 @@ import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
 import { APP_CONFIG } from '@config/app.config';
 import { EUserSearch, type IUserSearch } from '@users/interfaces/user-search.interface';
-import { USER_CONFIG } from '@config/user.config';
+import { USER_CONFIG } from '@config/users/users.config';
 import { UserApiService } from '@users/services/user-api.service';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useDelimiter } from '@core/hooks/useDelimiter';

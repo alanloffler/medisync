@@ -16,7 +16,7 @@ import type { IAppointmentView } from '@appointments/interfaces/appointment.inte
 import type { IResponse } from '@core/interfaces/response.interface';
 import { DASHBOARD_CONFIG } from '@config/dashboard.config';
 import { DashboardApiService } from '@dashboard/services/dashboard-api.service';
-import { USER_CREATE_CONFIG } from '@config/user.config';
+import { USER_CREATE_CONFIG } from '@config/users/user-create.config';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useDelimiter } from '@core/hooks/useDelimiter';
 // React component

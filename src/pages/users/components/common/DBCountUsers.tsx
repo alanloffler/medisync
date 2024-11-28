@@ -5,7 +5,7 @@ import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
 import { useQuery } from '@tanstack/react-query';
 // Imports
-import { USER_CONFIG } from '@config/user.config';
+import { USER_CONFIG } from '@config/users/users.config';
 import { UserApiService } from '@users/services/user-api.service';
 // React component
 export function DBCountUsers() {
