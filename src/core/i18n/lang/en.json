@@ -4,6 +4,8 @@
     "home": "Home",
     "appointments": "Appointments",
     "appointmentDetails": "Details",
+    "create": "Create",
+    "update": "Update",
     "users": "Patients",
     "userDetails": "Details"
   },
@@ -12,17 +14,21 @@
     "back": "Go back",
     "cancel": "Cancel",
     "clearFilters": "Clear filters",
+    "close": "Close",
     "deleteAppointment": "Delete appointment",
     "generateAppointment": "Generate appointment",
     "goToUsers": "Go to patients",
     "reserve": "Reserve",
-    "reserveAppointment": "Reserve appointment"
+    "reserveAppointment": "Reserve appointment",
+    "updateUser": "Update patient"
   },
   "cardTitle": {
     "appointmentsRecord": "Appointments history",
     "appointmentsList": "All appointments list",
     "appointmentsReserve": "Dayly appointments",
     "viewAppointment": "Appointment",
+    "createUser": "Create patient",
+    "updateUser": "Update patient",
     "usersList": "Patient list"
   },
   "cardContent": {
@@ -58,10 +64,12 @@
     }
   },
   "error": {
+    "createUser": "Error creating user",
     "default": "Error",
     "internalServer": "Internal server error",
     "notFoundDefault": "Not found",
-    "notFoundUser": "Patient not found"
+    "notFoundUser": "Patient not found",
+    "updateUser": "Error updating user"
   },
   "headerMenu": {
     "dashboard": "Dashboard",
@@ -70,19 +78,30 @@
     "users": "Patients",
     "viewAppointment": "Appointment details"
   },
+  "label": {
+    "email": "Email",
+    "firstName": "Name",
+    "identityCard": "IC",
+    "lastName": "Last name",
+    "phone": "Phone"
+  },
   "loading": {
-    "default": "Loading",
-    "appointments": "Loading appointments",
     "appointmentDetails": "Loading appointment details",
+    "appointments": "Loading appointments",
+    "creating": "Creating",
+    "default": "Loading",
     "generatingPDF": "Generating PDF",
     "professionals": "Loading professionals",
     "schedule": "Loading schedule",
-    "users": "Loading patients",
-    "userDetails": "Loading patient information"
+    "updating": "Updating",
+    "userDetails": "Loading patient information",
+    "users": "Loading patients"
   },
   "pageTitle": {
     "appointments": "Appointments",
+    "createUser": "Patient creation",
     "professionals": "Professionals",
+    "updateUser": "Patient update",
     "users": "Patients",
     "viewAppointment": "Appointment details",
     "viewUser": "Patient details"
@@ -93,9 +112,14 @@
     "of": "of"
   },
   "placeholder": {
-    "userCombobox": "Search by IC",
+    "email": "Enter the email",
+    "firstName": "Enter the name",
+    "identityCard": "Enter the IC",
+    "lastName": "Enter the last name",
+    "phone": "Enter the phone",
     "professionalCombobox": "Professionals",
     "professionalSelect": "Professionals",
+    "userCombobox": "Search by IC",
     "yearSelect": "Year"
   },
   "search": {

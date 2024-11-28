@@ -4,6 +4,8 @@
     "home": "Inicio",
     "appointments": "Turnos",
     "appointmentDetails": "Detalles",
+    "create": "Crear",
+    "update": "Actualizar",
     "users": "Pacientes",
     "userDetails": "Detalles"
   },
@@ -12,17 +14,21 @@
     "back": "Volver",
     "cancel": "Cancelar",
     "clearFilters": "Limpiar filtros",
+    "close": "Cerrar",
     "deleteAppointment": "Eliminar turno",
     "generateAppointment": "Generar turno",
     "goToUsers": "Ir a pacientes",
     "reserve": "Reservar",
-    "reserveAppointment": "Reservar turno"
+    "reserveAppointment": "Reservar turno",
+    "updateUser": "Actualizar paciente"
   },
   "cardTitle": {
     "viewAppointment": "Turno",
     "appointmentsRecord": "Historial de turnos",
     "appointmentsList": "Lista de todos los turnos",
     "appointmentsReserve": "Turnos diarios",
+    "createUser": "Crear paciente",
+    "updateUser": "Actualizar paciente",
     "usersList": "Lista de pacientes"
   },
   "cardContent": {
@@ -58,10 +64,12 @@
     }
   },
   "error": {
+    "createUser": "Error al crear el usuario",
     "default": "Error",
     "internalServer": "Error interno del servidor",
     "notFoundDefault": "No encontrado",
-    "notFoundUser": "Paciente no encontrado"
+    "notFoundUser": "Paciente no encontrado",
+    "updateUser": "Error actualizando el usuario"
   },
   "headerMenu": {
     "dashboard": "Tablero",
@@ -70,19 +78,30 @@
     "users": "Pacientes",
     "viewAppointment": "Detalles del turno"
   },
+  "label": {
+    "email": "Correo electrónico",
+    "firstName": "Nombre",
+    "identityCard": "DNI",
+    "lastName": "Apellido",
+    "phone": "Teléfono"
+  },
   "loading": {
-    "default": "Cargando",
-    "appointments": "Cargando turnos",
     "appointmentDetails": "Cargando detalles del turno",
+    "appointments": "Cargando turnos",
+    "creating": "Creando",
+    "default": "Cargando",
     "generatingPDF": "Generando PDF",
     "professionals": "Cargando profesionales",
     "schedule": "Cargando agenda",
-    "users": "Cargando pacientes",
-    "userDetails": "Cargando información del paciente"
+    "updating": "Actualizando",
+    "userDetails": "Cargando información del paciente",
+    "users": "Cargando pacientes"
   },
   "pageTitle": {
     "appointments": "Turnos",
+    "createUser": "Creación de paciente",
     "professionals": "Profesionales",
+    "updateUser": "Actualización de paciente",
     "users": "Pacientes",
     "viewAppointment": "Detalles del turno",
     "viewUser": "Detalles del paciente"
@@ -93,15 +112,20 @@
     "of": "de"
   },
   "placeholder": {
-    "userCombobox": "Buscar por DNI",
+    "email": "Ingresá el correo electrónico",
+    "firstName": "Ingresá el nombre",
+    "identityCard": "Ingresá el DNI",
+    "lastName": "Ingresá el apellido",
+    "phone": "Ingresá el teléfono",
     "professionalCombobox": "Profesionales",
     "professionalSelect": "Profesionales",
+    "userCombobox": "Buscar por DNI",
     "yearSelect": "Año"
   },
   "search": {
     "default": "Buscar",
     "filter": {
-      "appointments":"Filtrar turnos"
+      "appointments": "Filtrar turnos"
     },
     "user": "Buscar paciente"
   },
