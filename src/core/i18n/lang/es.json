@@ -55,7 +55,8 @@
     },
     "deleteUser": {
       "title": "Eliminar paciente",
-      "description": "Al confirmar, vas a eliminar un paciente"
+      "description": "Al confirmar, vas a eliminar un paciente",
+      "content": "Vas a eliminar de la base de datos al paciente <span>{{firstName}} {{lastName}}</span> con DNI <i>{{identityCard}}</i>"
     }
   },
   "email": {
@@ -154,10 +155,19 @@
       "actions": "Acciones",
       "date": "Fecha",
       "id": "#",
-      "professional": "Profesional"
+      "identityCard": "DNI",
+      "phone": "Teléfono",
+      "professional": "Profesional",
+      "user": "Nombre completo"
+    },
+    "difference": {
+      "lastMonth": "que el mes pasado"
     },
     "totalItems": {
-      "appointments": "{{totalItems}} turnos en total"
+      "appointments_one": "{{count}} turno en total",
+      "appointments_other": "{{count}} turnos en total",
+      "users_one": "{{count}} paciente",
+      "users_other": "{{count}} pacientes"
     },
     "availableItems": {
       "appointments_one": "{{count}} turno disponible",
@@ -173,6 +183,14 @@
     "delete": "Eliminar",
     "deleteUser": "Eliminar paciente",
     "details": "Ver detalles",
+    "edit": "Editar",
+    "pagination": {
+      "firstPage": "Primera página",
+      "itemsPerPage": "Items por página",
+      "lastPage": "Ultima página",
+      "nextPage": "Siguiente página",
+      "previousPage": "Anterior página"
+    },
     "reload": "Recargar",
     "selectProfessional": "Seleccionar profesional",
     "selectYear": "Seleccionar año",

@@ -52,7 +52,8 @@
     },
     "deleteUser": {
       "title": "Delete patient",
-      "description": "By confirming, you will delete the patient"
+      "description": "By confirming, you will delete the patient",
+      "content": "You are going to delete from the database the patient <span>{{firstName}} {{lastName}}</span> with IC <i>{{identityCard}}</i>"
     }
   },
   "deleting": {
@@ -131,7 +132,7 @@
   "search": {
     "default": "Search",
     "filter": {
-      "appointments":"Filter appointments"
+      "appointments": "Filter appointments"
     },
     "user": "Search patient"
   },
@@ -154,13 +155,22 @@
       "actions": "Actions",
       "date": "Date",
       "id": "#",
-      "professional": "Professional"
+      "identityCard": "IC",
+      "phone": "Phone",
+      "professional": "Professional",
+      "user": "Full name"
+    },
+    "difference": {
+      "lastMonth": "than last month"
     },
     "totalItems": {
-      "appointments": "{{totalItems}} appointments in total"
+      "appointments_one": "{{count}} appointment in total",
+      "appointments_other": "{{count}} appointments in total",
+      "users_one": "{{count}} patient",
+      "users_other": "{{count}} patients"
     },
     "availableItems": {
-      "appointments_one": "{{totalItems}} available appointment",
+      "appointments_one": "{{count}} available appointment",
       "appointments_other": "{{count}} available appointments"
     },
     "reservedItems": {
@@ -173,6 +183,14 @@
     "delete": "Delete",
     "deleteUser": "Delete patient",
     "details": "See details",
+    "edit": "Edit",
+    "pagination": {
+      "firstPage": "First page",
+      "itemsPerPage": "Items per page",
+      "lastPage": "Last page",
+      "nextPage": "Next page",
+      "previousPage": "Previous page"
+    },
     "reload": "Reload",
     "selectProfessional": "Select professional",
     "selectYear": "Select year",
