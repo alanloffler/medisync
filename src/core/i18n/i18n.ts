@@ -9,11 +9,21 @@ i18n
   .use(Backend)
   .use(initReactI18next)
   .init({
-    // 
     lng: localStorage.getItem('i18nextLng') || APP_CONFIG.i18n.locale,
     fallbackLng: 'en',
     interpolation: {
       escapeValue: false,
+      format: (value, format, lng) => {
+        switch (format) {
+          case 'number':
+            return new Intl.NumberFormat(lng, {
+              style: 'decimal',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 1,
+            }).format(value);
+        }
+        return value;
+      },
     },
     resources: {
       en: { translation: en },
