@@ -14,6 +14,7 @@ import { PageHeader } from '@core/components/common/PageHeader';
 import { MouseEvent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 // Imports
@@ -21,7 +22,7 @@ import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
 import { APP_CONFIG } from '@config/app.config';
 import { USER_SCHEMA } from '@config/schemas/user.schema';
-import { USER_UPDATE_CONFIG as UU_CONFIG } from '@config/user.config';
+import { USER_UPDATE_CONFIG as UU_CONFIG } from '@config/users/user-update.config';
 import { UserApiService } from '@users/services/user-api.service';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useNotificationsStore } from '@core/stores/notifications.store';
@@ -37,6 +38,7 @@ export default function UpdateUser() {
   const capitalize = useCapitalize();
   const navigate = useNavigate();
   const { id } = useParams();
+  const { t } = useTranslation();
 
   const updateForm = useForm<z.infer<typeof userSchema>>({
     resolver: zodResolver(userSchema),
@@ -110,24 +112,24 @@ export default function UpdateUser() {
     <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
       {/* Section: Page Header */}
       <header className='flex items-center justify-between'>
-        <PageHeader title={''} breadcrumb={UU_CONFIG.breadcrumb} />
-        <BackButton label={UU_CONFIG.button.back} />
+        <PageHeader title={t('pageTitle.updateUser')} breadcrumb={UU_CONFIG.breadcrumb} />
+        <BackButton label={t('button.back')} />
       </header>
       {/* Section: Form */}
-      <section className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-2 lg:gap-6'>
+      <section className='mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-2 lg:gap-6'>
         <Card className='w-full md:grid-cols-2'>
           <CardHeader>
             <CardTitle className='flex items-center justify-between'>
               <div className='flex items-center gap-2'>
                 <FilePen size={16} strokeWidth={2} />
-                <span>{UU_CONFIG.formTitle}</span>
+                <span>{t('cardTitle.updateUser')}</span>
               </div>
             </CardTitle>
-            {!isLoading && <CardDescription>{UU_CONFIG.formDescription}</CardDescription>}
+            <CardDescription className='sr-only'></CardDescription>
           </CardHeader>
           <CardContent>
             {isLoading ? (
-              <LoadingDB text={APP_CONFIG.loadingDB.findOneUser} className='mt-3' />
+              <LoadingDB text={t('loading.userDetails')} className='mt-3' />
             ) : (
               <Form {...updateForm}>
                 <form onSubmit={updateForm.handleSubmit(handleUpdateUser)} className='space-y-4'>
@@ -138,9 +140,9 @@ export default function UpdateUser() {
                       name='dni'
                       render={({ field }) => (
                         <FormItem className=''>
-                          <FormLabel>{UU_CONFIG.label.dni}</FormLabel>
+                          <FormLabel>{t('label.identityCard')}</FormLabel>
                           <FormControl className='h-9'>
-                            <Input type='number' placeholder={UU_CONFIG.placeholder.dni} {...field} maxLength={USER_SCHEMA.dni.max.value} />
+                            <Input type='number' placeholder={t('placeholder.identityCard')} {...field} maxLength={USER_SCHEMA.dni.max.value} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -154,9 +156,9 @@ export default function UpdateUser() {
                       name='lastName'
                       render={({ field }) => (
                         <FormItem className=''>
-                          <FormLabel>{UU_CONFIG.label.lastName}</FormLabel>
+                          <FormLabel>{t('label.lastName')}</FormLabel>
                           <FormControl className='h-9'>
-                            <Input placeholder={UU_CONFIG.placeholder.lastName} {...field} />
+                            <Input placeholder={t('placeholder.lastName')} {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -167,9 +169,9 @@ export default function UpdateUser() {
                       name='firstName'
                       render={({ field }) => (
                         <FormItem className=''>
-                          <FormLabel>{UU_CONFIG.label.firstName}</FormLabel>
+                          <FormLabel>{t('label.firstName')}</FormLabel>
                           <FormControl className='h-9'>
-                            <Input placeholder={UU_CONFIG.placeholder.firstName} {...field} />
+                            <Input placeholder={t('placeholder.firstName')} {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -183,9 +185,9 @@ export default function UpdateUser() {
                       name='email'
                       render={({ field }) => (
                         <FormItem className=''>
-                          <FormLabel>{UU_CONFIG.label.email}</FormLabel>
+                          <FormLabel>{t('label.email')}</FormLabel>
                           <FormControl className='h-9'>
-                            <Input placeholder={UU_CONFIG.placeholder.email} {...field} />
+                            <Input placeholder={t('placeholder.email')} {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -196,9 +198,9 @@ export default function UpdateUser() {
                       name='phone'
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{UU_CONFIG.label.phone}</FormLabel>
+                          <FormLabel>{t('label.phone')}</FormLabel>
                           <FormControl className='h-9'>
-                            <Input type='number' placeholder={UU_CONFIG.placeholder.phone} {...field} />
+                            <Input type='number' placeholder={t('placeholder.phone')} {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -207,11 +209,11 @@ export default function UpdateUser() {
                   </section>
                   {/* Buttons */}
                   <footer className='grid grid-cols-1 space-y-2 pt-2 md:flex md:justify-end md:gap-6 md:space-y-0'>
-                    <Button type='submit' className='order-1 md:order-2 lg:order-2'>
-                      {isUpdating ? <LoadingDB text={UU_CONFIG.button.updating} variant='button' /> : UU_CONFIG.button.update}
+                    <Button type='submit' size='sm' className='order-1 md:order-2 lg:order-2'>
+                      {isUpdating ? <LoadingDB text={t('loading.updating')} variant='button' /> : t('button.updateUser')}
                     </Button>
-                    <Button variant={'ghost'} onClick={handleCancel} className='order-2 md:order-1 lg:order-1'>
-                      {UU_CONFIG.button.cancel}
+                    <Button variant='ghost' size='sm' onClick={handleCancel} className='order-2 md:order-1 lg:order-1'>
+                      {t('button.cancel')}
                     </Button>
                   </footer>
                 </form>
@@ -224,17 +226,15 @@ export default function UpdateUser() {
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className='text-xl'>{UU_CONFIG.dialog.title}</DialogTitle>
+            <DialogTitle className='text-lg'>{t('error.updateUser')}</DialogTitle>
             <DialogDescription className='sr-only'></DialogDescription>
-            <section className='flex flex-col pt-2'>
-              <span className=''>{errorMessage}</span>
-              <div className='mt-5 flex justify-end space-x-4'>
-                <Button variant='default' size='sm' onClick={() => setOpenDialog(false)}>
-                  {UU_CONFIG.dialog.button.close}
-                </Button>
-              </div>
-            </section>
           </DialogHeader>
+          <section className='flex flex-col text-sm'>{errorMessage}</section>
+          <footer className='flex justify-end space-x-4'>
+            <Button variant='destructive' size='sm' onClick={() => setOpenDialog(false)}>
+              {t('button.close')}
+            </Button>
+          </footer>
         </DialogContent>
       </Dialog>
     </main>
