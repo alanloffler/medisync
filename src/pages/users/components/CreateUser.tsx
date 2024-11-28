@@ -78,16 +78,16 @@ export default function CreateUser() {
     <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
       {/* Section: Page Header */}
       <header className='flex items-center justify-between'>
-        <PageHeader title={''} breadcrumb={UC_CONFIG.breadcrumb} />
+        <PageHeader title={t('pageTitle.createUser')} breadcrumb={UC_CONFIG.breadcrumb} />
         <BackButton label={t('button.back')} />
       </header>
       {/* Section: Form */}
-      <section className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-2 lg:gap-6'>
+      <section className='mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-2 lg:gap-6'>
         <Card className='w-full md:grid-cols-2'>
           <CardTitle className='flex rounded-b-none bg-card-header text-slate-700'>
             <header className='flex items-center gap-3.5 p-2'>
               <FilePlus2 size={16} strokeWidth={2} />
-              {t('cardTitle.usersList')}
+              {t('cardTitle.createUser')}
             </header>
           </CardTitle>
           <CardContent>
