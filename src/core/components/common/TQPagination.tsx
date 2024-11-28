@@ -33,7 +33,7 @@ export function TQPagination({ className, isPlaceholderData, itemsPerPage, limit
   return (
     <section className={cn('flex items-center justify-between text-sm text-foreground', className)}>
       <section className='flex w-fit flex-row items-center space-x-4'>
-        <div className='w-fit'>{t('pagination.rowsPerPage')}</div>
+        <p className='w-fit'>{t('pagination.rowsPerPage')}</p>
         <Select defaultValue={limit.toString()} onValueChange={(e) => setLimit(parseInt(e))}>
           <SelectTrigger className='h-8 w-16 bg-input text-xs text-slate-700 hover:bg-input-hover [&_svg]:opacity-100'>
             <SelectValue placeholder={`${limit}`} />
