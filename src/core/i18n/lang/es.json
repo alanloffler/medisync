@@ -3,7 +3,9 @@
   "breadcrumb": {
     "home": "Inicio",
     "appointments": "Turnos",
-    "appointmentDetails": "Detalles"
+    "appointmentDetails": "Detalles",
+    "users": "Pacientes",
+    "userDetails": "Detalles"
   },
   "button": {
     "back": "Volver",
@@ -11,13 +13,21 @@
     "clearFilters": "Limpiar filtros",
     "deleteAppointment": "Eliminar turno",
     "generateAppointment": "Generar turno",
+    "goToUsers": "Ir a pacientes",
     "reserve": "Reservar",
     "reserveAppointment": "Reservar turno"
   },
   "cardTitle": {
     "viewAppointment": "Turno",
+    "appointmentsRecord": "Historial de turnos",
     "appointmentsList": "Lista de todos los turnos",
     "appointmentsReserve": "Turnos diarios"
+  },
+  "cardContent": {
+    "userSince": "Paciente desde el {{date}}"
+  },
+  "deleting": {
+    "appointment": "Eliminando turno"
   },
   "dialog": {
     "reserveAppointment": {
@@ -32,17 +42,22 @@
     "deleteAppointment": {
       "title": "Eliminar turno",
       "description": "Al confirmar, vas a eliminar un turno",
-      "contentText": "Cancelación de turno para {{firstName}} {{lastName}}"
+      "contentText": "Cancelación de turno para <span>{{firstName}} {{lastName}}</span>"
     }
   },
   "email": {
     "sendAppointment": {
       "subject": "Confirmación de turno",
       "body": "Hola {{firstName}},"
+    },
+    "sendToUser": {
+      "subject": "MediSync - Turnos médicos",
+      "body": "Hola {{firstName}},"
     }
   },
   "error": {
     "default": "Error",
+    "internalServer": "Error interno del servidor",
     "notFoundDefault": "No encontrado",
     "notFoundUser": "Paciente no encontrado"
   },
@@ -60,13 +75,15 @@
     "generatingPDF": "Generando PDF",
     "professionals": "Cargando profesionales",
     "schedule": "Cargando agenda",
-    "users": "Cargando pacientes"
+    "users": "Cargando pacientes",
+    "userDetails": "Cargando información del paciente"
   },
   "pageTitle": {
     "appointments": "Turnos",
     "professionals": "Profesionales",
     "users": "Pacientes",
-    "viewAppointment": "Detalles del turno"
+    "viewAppointment": "Detalles del turno",
+    "viewUser": "Detalles del paciente"
   },
   "pagination": {
     "rowsPerPage": "Items por página",
@@ -100,6 +117,12 @@
     }
   },
   "table": {
+    "header": {
+      "actions": "Acciones",
+      "date": "Fecha",
+      "id": "#",
+      "professional": "Profesional"
+    },
     "totalItems": {
       "appointments": "{{totalItems}} turnos en total"
     },
@@ -113,14 +136,21 @@
     }
   },
   "tooltip": {
+    "delete": "Eliminar",
+    "deleteUser": "Eliminar paciente",
+    "details": "Ver detalles",
     "selectProfessional": "Seleccionar profesional",
-    "selectYear": "Seleccionar año"
+    "selectYear": "Seleccionar año",
+    "sendEmail": "Enviar email",
+    "sendMessage": "Enviar WhatsApp",
+    "updateUser": "Editar paciente"
   },
   "user": {
     "title": "Mi cuenta",
     "menuItems": { "profile": "Perfil", "settings": "Configuraciones", "logout": "Salir" }
   },
   "warning": {
+    "emptyAppointments": "No existen turnos para el paciente",
     "hourRangeNotAvailable": "No disponible de {{begin}} a {{end}}",
     "selectWorkingDay": "Seleccione un día laborable"
   },

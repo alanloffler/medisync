@@ -3,7 +3,9 @@
   "breadcrumb": {
     "home": "Home",
     "appointments": "Appointments",
-    "appointmentDetails": "Details"
+    "appointmentDetails": "Details",
+    "users": "Patients",
+    "userDetails": "Details"
   },
   "button": {
     "back": "Go back",
@@ -11,13 +13,18 @@
     "clearFilters": "Clear filters",
     "deleteAppointment": "Delete appointment",
     "generateAppointment": "Generate appointment",
+    "goToUsers": "Go to patients",
     "reserve": "Reserve",
     "reserveAppointment": "Reserve appointment"
   },
   "cardTitle": {
+    "appointmentsRecord": "Appointments history",
     "appointmentsList": "All appointments list",
     "appointmentsReserve": "Dayly appointments",
     "viewAppointment": "Appointment"
+  },
+  "cardContent": {
+    "userSince": "Patient since {{date}}"
   },
   "dialog": {
     "reserveAppointment": {
@@ -35,14 +42,22 @@
       "contentText": "Appointment cancellation for <span>{{firstName}} {{lastName}}</span>"
     }
   },
+  "deleting": {
+    "appointment": "Deleting appointment"
+  },
   "email": {
     "sendAppointment": {
       "subject": "Appointment confirmation",
-      "body": "Hi {{firstName}},"
+      "body": "Hello {{firstName}},"
+    },
+    "sendToUser": {
+      "subject": "MediSync - Medical appointments",
+      "body": "Hello {{firstName}},"
     }
   },
   "error": {
     "default": "Error",
+    "internalServer": "Internal server error",
     "notFoundDefault": "Not found",
     "notFoundUser": "Patient not found"
   },
@@ -60,13 +75,15 @@
     "generatingPDF": "Generating PDF",
     "professionals": "Loading professionals",
     "schedule": "Loading schedule",
-    "users": "Loading patients"
+    "users": "Loading patients",
+    "userDetails": "Loading patient information"
   },
   "pageTitle": {
     "appointments": "Appointments",
     "professionals": "Professionals",
     "users": "Patients",
-    "viewAppointment": "Appointment details"
+    "viewAppointment": "Appointment details",
+    "viewUser": "Patient details"
   },
   "pagination": {
     "rowsPerPage": "Items per page",
@@ -100,6 +117,12 @@
     }
   },
   "table": {
+    "header": {
+      "actions": "Actions",
+      "date": "Date",
+      "id": "#",
+      "professional": "Professional"
+    },
     "totalItems": {
       "appointments": "{{totalItems}} appointments in total"
     },
@@ -113,14 +136,21 @@
     }
   },
   "tooltip": {
+    "delete": "Delete",
+    "deleteUser": "Delete patient",
+    "details": "See details",
     "selectProfessional": "Select professional",
-    "selectYear": "Select year"
+    "selectYear": "Select year",
+    "sendEmail": "Send email",
+    "sendMessage": "Send WhatsApp",
+    "updateUser": "Update patient"
   },
   "user": {
     "title": "My account",
     "menuItems": { "profile": "Profile", "settings": "Settings", "logout": "Logout" }
   },
   "warning": {
+    "emptyAppointments": "There are no appointments for the patient",
     "hourRangeNotAvailable": "Not available from {{begin}} to {{end}}",
     "selectWorkingDay": "Select a working day"
   },
