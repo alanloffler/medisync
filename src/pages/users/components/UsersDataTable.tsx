@@ -27,6 +27,7 @@ import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 // Imports
 import type { IDataTableUsers, ITableManager } from '@core/interfaces/table.interface';
 import type { IInfoCard } from '@core/components/common/interfaces/infocard.interface';
@@ -65,6 +66,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
   const navigate = useNavigate();
   const prevDeps = useRef<{ search: IUserSearch; tableManager: ITableManager }>({ search, tableManager });
   const truncate = useTruncateText();
+  const { t } = useTranslation();
 
   const tableColumns: ColumnDef<IUser>[] = [
     {
@@ -415,15 +417,16 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className='text-xl'>{USER_CONFIG.dialog.remove.title}</DialogTitle>
-            {errorRemoving ? <DialogDescription></DialogDescription> : <DialogDescription>{USER_CONFIG.dialog.remove.subtitle}</DialogDescription>}
+            <DialogTitle className='text-xl'>{t('dialog.deleteUser.title')}</DialogTitle>
+            {errorRemoving ? <DialogDescription></DialogDescription> : <DialogDescription>{t('dialog.deleteUser.description')}</DialogDescription>}
             <section className='flex flex-col pt-2'>
+              {/* TODO: fix the structure and use Trans component for content */}
               {errorRemoving ? (
                 <>
                   <InfoCard text={errorRemovingContent.text} type={errorRemovingContent.type} />
                   <footer className='mt-5 flex justify-end space-x-4'>
                     <Button variant='default' size='sm' onClick={() => setOpenDialog(false)}>
-                      {USER_CONFIG.dialog.button.close}
+                      {t('button.close')}
                     </Button>
                   </footer>
                 </>
@@ -433,11 +436,11 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
                   <span className='mt-1 text-lg font-semibold'>{`${capitalize(userSelected.lastName)}, ${capitalize(userSelected.firstName)}`}</span>
                   <span className='font-medium'>{`${USER_CONFIG.dialog.remove.content.dni}: ${delimiter(userSelected.dni, '.', 3)}`}</span>
                   <footer className='mt-5 flex justify-end space-x-4'>
-                    <Button variant={'secondary'} size={'sm'} onClick={() => setOpenDialog(false)}>
-                      {USER_CONFIG.buttons.cancel}
+                    <Button variant='ghost' size='sm' onClick={() => setOpenDialog(false)}>
+                      {t('button.cancel')}
                     </Button>
-                    <Button variant={'remove'} size={'sm'} onClick={() => handleRemoveUserDatabase(userSelected._id)}>
-                      {isRemoving ? <LoadingDB text={USER_CONFIG.buttons.removing} variant='button' /> : USER_CONFIG.buttons.remove}
+                    <Button variant='remove' size='sm' onClick={() => handleRemoveUserDatabase(userSelected._id)}>
+                      {isRemoving ? <LoadingDB text={t('loading.deleting')} variant='button' /> : t('button.deleteUser')}
                     </Button>
                   </footer>
                 </>
