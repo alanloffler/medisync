@@ -1,35 +1,24 @@
 export const DASHBOARD_CONFIG = {
-  categoriesShortcuts: {
-    loadingText: 'Cargando especialidades',
-    title: 'Categorías',
-  },
-  latestAppos: {
-    loadingText: 'Cargando turnos',
-    title: 'Últimos turnos creados',
-  },
-  latestUsers: {
-    loadingText: 'Cargando usuarios',
-    title: 'Usuarios recientes',
-  },
   statisticGroup: {
     charts: [
       {
         days: [
-          { text: '7d', value: 7, default: true },
-          { text: '1m', value: 30 },
-          { text: '1a', value: 365 },
+          { text: 'chart.daylyAppointments.date.day', value: 7, default: true },
+          { text: 'chart.daylyAppointments.date.month', value: 30 },
+          { text: 'chart.daylyAppointments.date.year', value: 365 },
         ],
         height: 80,
         label: {
-          x: 'F',
-          y: 'T',
+          x: 'chart.daylyAppointments.label.x',
+          y: 'chart.daylyAppointments.label.y',
         },
         margin: { top: 30, right: 20, bottom: 10, left: 20 },
-        options: { axisX: false, axisY: false },
+        options: { axisX: true, axisY: true },
         path: '/appointments',
-        title: 'Turnos diarios',
+        title: 'chart.daylyAppointments.title',
       },
     ],
+    // WIP: translate this
     items: [
       {
         content: 'el último mes',
@@ -47,6 +36,5 @@ export const DASHBOARD_CONFIG = {
         title: 'Pacientes',
       },
     ],
-    title: 'Estadísticas',
   },
 };
