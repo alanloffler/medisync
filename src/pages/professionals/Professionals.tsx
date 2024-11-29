@@ -20,8 +20,9 @@ import { ProfessionalsDataTable } from '@professionals/components/ProfessionalsD
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
 import { ChangeEvent, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { spring, useAnimate } from 'motion/react';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 // Imports
 import type { IArea } from '@core/interfaces/area.interface';
 import type { ISpecialization } from '@core/interfaces/specialization.interface';
@@ -38,10 +39,11 @@ import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export default function Professionals() {
   const [areas, setAreas] = useState<IArea[]>([]);
+  const [dropdownPlaceholder, setDropdownPlaceholder] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [reload, setReload] = useState<number>(0);
   const [search, setSearch] = useState<IProfessionalSearch>({ value: '', type: EProfessionalSearch.INPUT });
-  const [specSelected, setSpecSelected] = useState<string>('Especialización');
+  const [specSelected, setSpecSelected] = useState<string | undefined>(undefined);
   const [createMiniScope, createMiniAnimation] = useAnimate();
   const [createScope, createAnimation] = useAnimate();
   const [reloadScope, reloadAnimation] = useAnimate();
@@ -52,6 +54,7 @@ export default function Professionals() {
   const navigate = useNavigate();
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
   const { help } = useHelpStore();
+  const { t } = useTranslation();
 
   function handleSearchByProfessional(event: ChangeEvent<HTMLInputElement>): void {
     setSearch({ value: event.target.value, type: EProfessionalSearch.INPUT });
@@ -60,12 +63,13 @@ export default function Professionals() {
   function handleSearchBySpecialization(specialization: ISpecialization): void {
     setSearch({ value: specialization._id, type: EProfessionalSearch.DROPDOWN });
     setSpecSelected(specialization.name);
+    setDropdownPlaceholder(capitalize(specialization.name));
   }
 
   function handleClearSearch(): void {
     setSearch({ value: '', type: EProfessionalSearch.INPUT });
-    // FIXME: this must be something globally
-    setSpecSelected('Especialización');
+    setSpecSelected(undefined);
+    setDropdownPlaceholder(capitalize(t('specialization')));
   }
 
   function handleReload(): void {
@@ -75,21 +79,22 @@ export default function Professionals() {
 
   useEffect(() => {
     setItemSelected(HEADER_CONFIG.headerMenu[2].id);
-  }, [setItemSelected]);
+    setDropdownPlaceholder(capitalize(t('specialization')));
+  }, [setItemSelected, t, capitalize]);
 
   useEffect(() => {
     AreaService.findAll().then((response) => {
       if (response.statusCode === 200) setAreas(response.data);
       if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
-      if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
+      if (response instanceof Error) addNotification({ type: 'error', message: t('error.internalServer') });
     });
-  }, [addNotification]);
+  }, [addNotification, t]);
 
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
       {/* Section: Page Header */}
       <header className='flex items-center justify-between'>
-        <PageHeader title={PROF_CONFIG.title} breadcrumb={PROF_CONFIG.breadcrumb} />
+        <PageHeader title={t('pageTitle.professionals')} breadcrumb={PROF_CONFIG.breadcrumb} />
       </header>
       {/* Section: Page content */}
       <section className='grid gap-6 md:grid-cols-4 md:gap-8 lg:grid-cols-4 xl:grid-cols-4'>
@@ -105,7 +110,7 @@ export default function Professionals() {
                 onMouseOut={() => createAnimation(createScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })}
               >
                 <PlusCircle ref={createScope} size={16} strokeWidth={2} />
-                <span>{PROF_CONFIG.button.addProfessional}</span>
+                <span>{t('button.addProfessional')}</span>
               </Button>
               <div className='flex flex-col space-y-2'>
                 <div className='relative w-full'>
@@ -114,7 +119,7 @@ export default function Professionals() {
                     onChange={handleSearchByProfessional}
                     value={search.type === EProfessionalSearch.INPUT ? search.value : ''}
                     type='text'
-                    placeholder={PROF_CONFIG.search.placeholder}
+                    placeholder={t('search.professional')}
                     className='bg-background pl-9 shadow-sm'
                   />
                   {search.type === EProfessionalSearch.INPUT && search.value && (
@@ -134,8 +139,8 @@ export default function Professionals() {
         <section className='col-span-1 overflow-y-auto md:col-span-4 lg:col-span-3 xl:col-span-3'>
           <section className='flex flex-row items-center justify-start space-x-3 py-3'>
             <div className='flex items-center space-x-2 text-sm font-medium text-slate-500'>
-              <Filter size={14} strokeWidth={2} />
-              <span>{PROF_CONFIG.search.filterBy}</span>
+              <Filter size={16} strokeWidth={2} />
+              <span>{t('search.filter.by')}</span>
             </div>
             <DropdownMenu>
               <div className='flex flex-row items-center space-x-2'>
@@ -143,10 +148,10 @@ export default function Professionals() {
                   disabled={!areas.length}
                   className='flex w-fit items-center space-x-2 rounded-md border bg-white px-2 py-1 text-sm'
                 >
-                  <span>{capitalize(specSelected)}</span>
+                  <span>{dropdownPlaceholder}</span>
                   <ChevronDown size={16} strokeWidth={2} />
                 </DropdownMenuTrigger>
-                {specSelected !== 'Especialización' && (
+                {specSelected !== undefined && (
                   <Button
                     ref={specializationsScope}
                     variant='default'
@@ -195,7 +200,7 @@ export default function Professionals() {
           </section>
           {/* Section: Professionals Table */}
           <Card>
-            <CardTitle className='bg-card-header flex items-center justify-between gap-2 rounded-b-none text-slate-700'>
+            <CardTitle className='flex items-center justify-between gap-2 rounded-b-none bg-card-header text-slate-700'>
               <header className='flex items-center gap-3.5 px-2'>
                 <List size={16} strokeWidth={2} />
                 {PROF_CONFIG.table.title}
