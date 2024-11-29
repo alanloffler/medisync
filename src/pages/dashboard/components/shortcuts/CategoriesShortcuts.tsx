@@ -11,10 +11,10 @@ import { LoadingDB } from '@core/components/common/LoadingDB';
 import { motion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 // Imports
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { ISpecialization } from '@core/interfaces/specialization.interface';
-import { DASHBOARD_CONFIG } from '@config/dashboard.config';
 import { SpecializationService } from '@core/services/specialization.service';
 import { cn } from '@lib/utils';
 // React component
@@ -24,6 +24,7 @@ export function CategoriesShortcuts({ className }: { className?: string }) {
   const [reachedLeftEdge, setReachedLeftEdge] = useState<boolean>(true);
   const [reachedRightEdge, setReachedRightEdge] = useState<boolean>(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
   const {
     data: specializations,
@@ -138,14 +139,12 @@ export function CategoriesShortcuts({ className }: { className?: string }) {
 
   return (
     <main className='space-y-2'>
-      <DashboardTitle title={DASHBOARD_CONFIG.categoriesShortcuts.title} />
+      <DashboardTitle title={t('cardTitle.dashboard.categoriesShortcuts')} />
       <Card className={cn('relative flex items-center bg-slate-300 p-4', className)}>
         {/* Section: Specializations shortcuts */}
         <section className='mx-auto flex flex-row justify-start space-x-4 overflow-x-hidden' ref={scrollRef}>
-          {isLoading && (
-            <LoadingDB text={DASHBOARD_CONFIG.categoriesShortcuts.loadingText} variant='default' spinnerColor='fill-white' className='text-white' />
-          )}
-          {error && <InfoCard text={error.message} type='error' className='text-white' />}
+          {isLoading && <LoadingDB text={t('loading.categories')} variant='default' spinnerColor='fill-slate-700' className='text-slate-700' />}
+          {error && <InfoCard text={error.message} type='error' />}
           {!isLoading &&
             !error &&
             specializations?.data.map((specialization: ISpecialization) => (
