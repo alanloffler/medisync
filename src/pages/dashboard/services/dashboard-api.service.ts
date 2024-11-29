@@ -1,7 +1,6 @@
 import type { IResponse } from '@core/interfaces/response.interface';
 import { APP_CONFIG } from '@config/app.config';
-
-// TODO: get response status message from config file
+import { t } from 'i18next';
 
 export class DashboardApiService {
   private static readonly API_URL: string = import.meta.env.VITE_API_URL;
@@ -78,7 +77,7 @@ export class DashboardApiService {
       return response;
     } catch (error) {
       if (error instanceof TypeError) {
-        throw new Error(APP_CONFIG.error.server);
+        throw new Error(t('error.internalServer'));
       }
       throw error;
     }
