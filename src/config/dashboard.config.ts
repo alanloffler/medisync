@@ -4,8 +4,8 @@ export const DASHBOARD_CONFIG = {
       {
         days: [
           { text: 'chart.daylyAppointments.date.day', value: 7, default: true },
-          { text: 'chart.daylyAppointments.date.month', value: 30 },
-          { text: 'chart.daylyAppointments.date.year', value: 365 },
+          { text: 'chart.daylyAppointments.date.month', value: 30 }, // 30 per month
+          { text: 'chart.daylyAppointments.date.year', value: 365 }, // 365 per year
         ],
         height: 80,
         label: {
@@ -18,22 +18,21 @@ export const DASHBOARD_CONFIG = {
         title: 'chart.daylyAppointments.title',
       },
     ],
-    // WIP: translate this
     items: [
       {
-        content: 'el último mes',
+        content: 'dashboard.lastMonth',
         path: '/appointments',
-        title: 'Turnos',
+        title: 'headerMenu.appointments',
       },
       {
-        content: 'nuevos este mes',
+        content: 'dashboard.newThisMonth',
         path: '/professionals',
-        title: 'Profesionales',
+        title: 'headerMenu.professionals',
       },
       {
-        content: 'nuevos este mes',
+        content: 'dashboard.newThisMonth',
         path: '/users',
-        title: 'Pacientes',
+        title: 'headerMenu.users',
       },
     ],
   },
