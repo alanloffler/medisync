@@ -9,7 +9,7 @@ import { StatisticChart } from '@dashboard/components/statistics/StatisticChart'
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
-import { DASHBOARD_CONFIG } from '@config/dashboard.config';
+import { DASHBOARD_CONFIG } from '@config/dashboard/dashboard.config';
 import { DashboardApiService } from '@dashboard/services/dashboard-api.service';
 import { useDelimiter } from '@core/hooks/useDelimiter';
 // React component

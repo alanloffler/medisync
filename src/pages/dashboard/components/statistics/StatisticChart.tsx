@@ -12,7 +12,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { IStatisticChart, IChartDataProcessed, IChartMargin, IChartData, IChartDays } from '@dashboard/interfaces/statistic.interface';
-import { DASHBOARD_CONFIG } from '@config/dashboard.config';
+import { DASHBOARD_CONFIG } from '@config/dashboard/dashboard.config';
 import { cn } from '@lib/utils';
 // Constants
 const days: IChartDays[] = DASHBOARD_CONFIG.statisticGroup.charts[0].days;
