@@ -9,6 +9,7 @@ import { motion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 // Imports
 import type { IStatisticChart, IChartDataProcessed, IChartMargin, IChartData, IChartDays } from '@dashboard/interfaces/statistic.interface';
 import { DASHBOARD_CONFIG } from '@config/dashboard.config';
@@ -28,6 +29,7 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
   const [daysAgo, setDaysAgo] = useState<number>(handleDaysAgo());
   const navigate = useNavigate();
   const lineChartRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
   function handleDaysAgo(): number {
     if (days.length > 0) {
@@ -121,7 +123,7 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
           .style('font-size', '11px')
           .style('font-weight', '600')
           .style('fill', axisColor)
-          .text(labels.x);
+          .text(t(labels.x));
 
         svg
           .append('text')
@@ -131,7 +133,7 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
           .style('font-size', '11px')
           .style('font-weight', '600')
           .style('fill', axisColor)
-          .text(labels.y);
+          .text(t(labels.y));
       }
     }
 
@@ -141,7 +143,7 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
 
     return () => removeEventListener('resize', drawChart);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+  }, [data, t]);
 
   const animation = {
     item: {
@@ -180,7 +182,7 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
           {title && (
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
               <CardTitle className={cn('flex px-2 py-1 text-primary-foreground', darkColor, titleColor)}>
-                <span className='text-xsm font-medium'>{title}</span>
+                <span className='text-xsm font-medium'>{t(title)}</span>
               </CardTitle>
               <section className={cn('flex flex-row space-x-1 text-[11px] font-normal', darkTextColor)}>
                 {days.length > 0 &&
@@ -190,7 +192,9 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
                       key={crypto.randomUUID()}
                       onClick={() => setDaysAgo(day.value)}
                     >
-                      {day.text}
+                      {t(day.text, {
+                        count: day.text.split('.')[3] === 'month' ? day.value / 30 : day.text.split('.')[3] === 'year' ? day.value / 365 : day.value,
+                      })}
                     </button>
                   ))}
               </section>
