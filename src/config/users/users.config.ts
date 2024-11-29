@@ -3,9 +3,6 @@ export const USER_CONFIG = {
     { id: 1, name: 'breadcrumb.home', path: '/' },
     { id: 2, name: 'breadcrumb.users', path: '/users' },
   ],
-  search: {
-    debounceTime: 500,
-  },
   table: {
     defaultPageSize: 10,
     defaultSortingId: 'lastName',

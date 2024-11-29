@@ -48,7 +48,7 @@ export default function Professionals() {
   const [specializationsScope, specializationsAnimation] = useAnimate();
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
-  const debouncedSearch = useDebounce<IProfessionalSearch>(search, PROF_CONFIG.search.debounceTime);
+  const debouncedSearch = useDebounce<IProfessionalSearch>(search, APP_CONFIG.debounceTime);
   const navigate = useNavigate();
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
   const { help } = useHelpStore();

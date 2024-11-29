@@ -14,6 +14,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { spring, useAnimate } from 'motion/react';
 import { useTranslation } from 'react-i18next';
 // Imports
+import { APP_CONFIG } from '@config/app.config';
 import { EUserSearch, type IUserSearch } from '@users/interfaces/user-search.interface';
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { USER_CONFIG } from '@config/users/users.config';
@@ -28,7 +29,7 @@ export default function Users() {
   const [createMiniScope, createMiniAnimation] = useAnimate();
   const [createScope, createAnimation] = useAnimate();
   const [reloadScope, reloadAnimation] = useAnimate();
-  const debouncedSearch = useDebounce<IUserSearch>(search, USER_CONFIG.search.debounceTime);
+  const debouncedSearch = useDebounce<IUserSearch>(search, APP_CONFIG.debounceTime);
   const navigate = useNavigate();
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
   const { help } = useHelpStore();
