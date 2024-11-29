@@ -10,7 +10,6 @@ import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
-import i18n from '@core/i18n/i18n';
 import { format } from '@formkit/tempo';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -18,7 +17,6 @@ import { useTranslation } from 'react-i18next';
 // Imports
 import type { IEmail } from '@core/interfaces/email.interface';
 import type { IUser } from '@users/interfaces/user.interface';
-// import { APP_CONFIG } from '@config/app.config';
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { USER_VIEW_CONFIG as UV_CONFIG } from '@config/users/user-view.config';
 import { UserApiService } from '@users/services/user-api.service';
@@ -39,8 +37,8 @@ export default function ViewUser() {
   const navigate = useNavigate();
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
   const { help } = useHelpStore();
+  const { i18n, t } = useTranslation();
   const { id } = useParams();
-  const { t } = useTranslation();
 
   useEffect(() => {
     if (id) {
@@ -113,7 +111,7 @@ export default function ViewUser() {
                   <span className='text-sm'>{user.email}</span>
                 </section>
                 <section className='pt-2 text-sm'>
-                  {t('cardContent.userSince', { date: format(user.createdAt, 'long', localStorage.getItem('i18nextLng') ?? i18n.language) })}
+                  {t('cardContent.userSince', { date: format(user.createdAt, 'long', localStorage.getItem('i18nextLng') ?? i18n.resolvedLanguage) })}
                 </section>
               </CardContent>
               <section className='flex justify-end space-x-2 border-t p-2'>
