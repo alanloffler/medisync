@@ -7,6 +7,7 @@ import { Statistic } from '@dashboard/components/statistics/Statistic';
 import { StatisticChart } from '@dashboard/components/statistics/StatisticChart';
 // External imports
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 // Imports
 import { DASHBOARD_CONFIG } from '@config/dashboard.config';
 import { DashboardApiService } from '@dashboard/services/dashboard-api.service';
@@ -14,6 +15,7 @@ import { useDelimiter } from '@core/hooks/useDelimiter';
 // React component
 export function StatisticGroup() {
   const delimiter = useDelimiter();
+  const { t } = useTranslation();
 
   const {
     data: apposData,
@@ -53,7 +55,7 @@ export function StatisticGroup() {
 
   return (
     <section className='flex flex-col space-y-2'>
-      <DashboardTitle title={DASHBOARD_CONFIG.statisticGroup.title} />
+      <DashboardTitle title={t('cardTitle.dashboard.statistics')} />
       <section className='grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4 lg:gap-8'>
         <Statistic
           content={DASHBOARD_CONFIG.statisticGroup.items[0].content}
