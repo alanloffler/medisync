@@ -55,6 +55,11 @@
       }
     }
   },
+  "dashboard": {
+    "lastMonth": "{{count}} el mes pasado",
+    "newThisMonth_one": "{{count}} nuevo este mes",
+    "newThisMonth_other": "{{count}} nuevos este mes"
+  },
   "deleting": {
     "appointment": "Eliminando turno"
   },

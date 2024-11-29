@@ -55,6 +55,11 @@
       }
     }
   },
+  "dashboard": {
+    "lastMonth": "{{count}} last month",
+    "newThisMonth_one": "{{count}} new this month",
+    "newThisMonth_other": "{{count}} new this month"
+  },
   "deleting": {
     "appointment": "Deleting appointment"
   },
