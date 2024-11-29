@@ -11,12 +11,11 @@ import { format } from '@formkit/tempo';
 import { motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 // Imports
 import type { IAppointmentView } from '@appointments/interfaces/appointment.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
-import { DASHBOARD_CONFIG } from '@config/dashboard.config';
 import { DashboardApiService } from '@dashboard/services/dashboard-api.service';
-import { USER_CREATE_CONFIG } from '@config/users/user-create.config';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useDelimiter } from '@core/hooks/useDelimiter';
 // React component
@@ -24,6 +23,7 @@ export function LatestAppos() {
   const capitalize = useCapitalize();
   const delimiter = useDelimiter();
   const navigate = useNavigate();
+  const { i18n, t } = useTranslation();
 
   const {
     data: latestAppos,
@@ -54,10 +54,10 @@ export function LatestAppos() {
 
   return (
     <main className='space-y-2'>
-      <DashboardTitle title={DASHBOARD_CONFIG.latestAppos.title} />
+      <DashboardTitle title={t('cardTitle.dashboard.latestAppointments')} />
       <Card>
         <CardContent className='grid gap-2 pt-6'>
-          {isLoading && <LoadingDB text={DASHBOARD_CONFIG.latestAppos.loadingText} variant='default' />}
+          {isLoading && <LoadingDB text={t('loading.appointments')} variant='default' />}
           {error && <InfoCard text={error.message} type='error' />}
           {!isLoading &&
             !error &&
@@ -76,11 +76,11 @@ export function LatestAppos() {
                     className='flex h-11 w-11 flex-col items-center rounded-sm bg-slate-600 pt-1.5 text-slate-200'
                   >
                     <CalendarPlus size={16} strokeWidth={2} />
-                    <p className='text-[11px] font-light'>{format(appo.createdAt, 'DD/MM')}</p>
+                    <p className='text-[11px] font-light'>{format(appo.createdAt, 'short', i18n.resolvedLanguage).slice(0, 5)}</p>
                   </motion.div>
                   <motion.div variants={animation.user} className='flex flex-col text-left'>
                     <p className='font-bold text-dark-default'>{`${capitalize(appo.user.firstName)} ${capitalize(appo.user.lastName)}`}</p>
-                    <p className='text-xs font-light text-muted-foreground'>{`${USER_CREATE_CONFIG.labels.dni} ${delimiter(appo.user.dni, '.', 3)}`}</p>
+                    <p className='text-xs font-light text-muted-foreground'>{`${t('label.identityCard')} ${delimiter(appo.user.dni, '.', 3)}`}</p>
                   </motion.div>
                 </div>
                 <div className='mr-2 flex w-1/2 flex-row items-center justify-end space-x-3 text-xs'>
