@@ -13,7 +13,7 @@ export const DASHBOARD_CONFIG = {
           y: 'chart.daylyAppointments.label.y',
         },
         margin: { top: 30, right: 20, bottom: 10, left: 20 },
-        options: { axisX: true, axisY: true },
+        options: { axisX: false, axisY: false },
         path: '/appointments',
         title: 'chart.daylyAppointments.title',
       },
