@@ -24,16 +24,39 @@
     "updateUser": "Update patient"
   },
   "cardTitle": {
-    "appointmentsRecord": "Appointments history",
     "appointmentsList": "All appointments list",
+    "appointmentsRecord": "Appointments history",
     "appointmentsReserve": "Dayly appointments",
-    "viewAppointment": "Appointment",
     "createUser": "Create patient",
+    "dashboard": {
+      "categoriesShortcuts": "Specialties",
+      "latestAppointments": "Latest appointments",
+      "latestUsers": "Latest patients",
+      "statistics": "Statistics"
+    },
     "updateUser": "Update patient",
-    "usersList": "Patient list"
+    "usersList": "Patient list",
+    "viewAppointment": "Appointment"
   },
   "cardContent": {
     "userSince": "Patient since {{date}}"
+  },
+  "chart": {
+    "daylyAppointments": {
+      "title": "Dayly appointments",
+      "label": {
+        "x": "D",
+        "y": "A"
+      },
+      "date": {
+        "day": "{{count}}d",
+        "month": "{{count}}m",
+        "year": "{{count}}y"
+      }
+    }
+  },
+  "deleting": {
+    "appointment": "Deleting appointment"
   },
   "dialog": {
     "reserveAppointment": {
@@ -55,9 +78,6 @@
       "description": "By confirming, you will delete the patient",
       "content": "You are going to delete from the database the patient <span>{{firstName}} {{lastName}}</span> with IC <i>{{identityCard}}</i>"
     }
-  },
-  "deleting": {
-    "appointment": "Deleting appointment"
   },
   "email": {
     "sendAppointment": {
@@ -94,6 +114,7 @@
   "loading": {
     "appointmentDetails": "Loading appointment details",
     "appointments": "Loading appointments",
+    "categories": "Loading specialties",
     "creating": "Creating",
     "default": "Loading",
     "deleting": "Deleting",

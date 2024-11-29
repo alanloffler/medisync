@@ -24,16 +24,36 @@
     "updateUser": "Actualizar paciente"
   },
   "cardTitle": {
-    "viewAppointment": "Turno",
-    "appointmentsRecord": "Historial de turnos",
     "appointmentsList": "Lista de todos los turnos",
+    "appointmentsRecord": "Historial de turnos",
     "appointmentsReserve": "Turnos diarios",
     "createUser": "Crear paciente",
+    "dashboard": {
+      "categoriesShortcuts": "Especialidades",
+      "latestAppointments": "Últimos turnos",
+      "latestUsers": "Usuarios recientes",
+      "statistics": "Estadísticas"
+    },
     "updateUser": "Actualizar paciente",
-    "usersList": "Lista de pacientes"
+    "usersList": "Lista de pacientes",
+    "viewAppointment": "Turno"
   },
   "cardContent": {
     "userSince": "Paciente desde el {{date}}"
+  },
+  "chart": {
+    "daylyAppointments": {
+      "title": "Turnos diarios",
+      "label": {
+        "x": "F",
+        "y": "T"
+      },
+      "date": {
+        "day": "{{count}}d",
+        "month": "{{count}}m",
+        "year": "{{count}}a"
+      }
+    }
   },
   "deleting": {
     "appointment": "Eliminando turno"
@@ -94,6 +114,7 @@
   "loading": {
     "appointmentDetails": "Cargando detalles del turno",
     "appointments": "Cargando turnos",
+    "categories": "Cargando especialidades",
     "creating": "Creando",
     "default": "Cargando",
     "deleting": "Eliminando",
