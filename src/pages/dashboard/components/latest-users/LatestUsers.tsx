@@ -11,16 +11,17 @@ import { format } from '@formkit/tempo';
 import { motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 // Imports
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
-import { DASHBOARD_CONFIG } from '@config/dashboard.config';
 import { DashboardApiService } from '@dashboard/services/dashboard-api.service';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 // React component
 export function LatestUsers() {
   const capitalize = useCapitalize();
   const navigate = useNavigate();
+  const { i18n, t } = useTranslation();
 
   const {
     data: latestUsers,
@@ -55,11 +56,11 @@ export function LatestUsers() {
 
   return (
     <main className='space-y-2'>
-      <DashboardTitle title={DASHBOARD_CONFIG.latestUsers.title} />
+      <DashboardTitle title={t('cardTitle.dashboard.latestUsers')} />
       <Card>
         <CardContent className='flex flex-col space-y-1 pt-6'>
           {error && <InfoCard text={error.message} type='error' />}
-          {isLoading && <LoadingDB text={DASHBOARD_CONFIG.latestUsers.loadingText} variant='default' />}
+          {isLoading && <LoadingDB text={t('loading.users')} variant='default' />}
           {!error &&
             !isLoading &&
             latestUsers?.data.map((user: IUser) => (
@@ -83,7 +84,7 @@ export function LatestUsers() {
                   className='flex flex-row items-center space-x-2 rounded-sm bg-orange-200 p-1 pr-2 text-orange-700'
                 >
                   <CalendarPlus size={16} strokeWidth={1.5} />
-                  <p className='text-xs'>{`${format(user.createdAt, 'DD')} ${capitalize(format(user.createdAt, 'MMM'))}`}</p>
+                  <p className='text-xs'>{`${capitalize(format(user.createdAt, 'medium', i18n.resolvedLanguage).split(' ')[0])} ${capitalize(format(user.createdAt, 'medium', i18n.resolvedLanguage).split(' ')[1]).replace(',', '')}`}</p>
                 </motion.div>
               </motion.button>
             ))}
