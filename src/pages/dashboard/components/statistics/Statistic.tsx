@@ -4,9 +4,10 @@ import { Card, CardContent } from '@core/components/ui/card';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
-import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 // Imports
 import type { IStatistic } from '@dashboard/interfaces/statistic.interface';
 // React component
@@ -14,6 +15,7 @@ export function Statistic({ children, content, error, isLoading, path, title, va
   const targetNumber = value1?.toString();
   const [displayedDigits, setDisplayedDigits] = useState<number[]>(new Array(targetNumber?.length).fill(0));
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (targetNumber === undefined) return;
@@ -83,7 +85,7 @@ export function Statistic({ children, content, error, isLoading, path, title, va
         ) : (
           <>
             <section className='flex flex-row items-center justify-between p-4 pb-2'>
-              <span className='text-xsm font-semibold uppercase leading-none text-slate-700'>{title}</span>
+              <span className='text-xsm font-semibold uppercase leading-none text-slate-700'>{t(title)}</span>
               <div>{children}</div>
             </section>
             <CardContent className='space-y-2 p-4 pt-0'>
@@ -92,7 +94,7 @@ export function Statistic({ children, content, error, isLoading, path, title, va
                   <span key={index}>{digit}</span>
                 ))}
               </div>
-              <p className='text-left text-xs text-dark-default'>{`${value2} ${content}`}</p>
+              <p className='text-left text-xs text-dark-default'>{t(content, { count: Number(value2) })}</p>
             </CardContent>
           </>
         )}
