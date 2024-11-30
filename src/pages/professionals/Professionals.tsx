@@ -69,7 +69,7 @@ export default function Professionals() {
   function handleClearSearch(): void {
     setSearch({ value: '', type: EProfessionalSearch.INPUT });
     setSpecSelected(undefined);
-    setDropdownPlaceholder(capitalize(t('specialization')));
+    setDropdownPlaceholder(capitalize(t('words.specialization')));
   }
 
   function handleReload(): void {
@@ -79,8 +79,7 @@ export default function Professionals() {
 
   useEffect(() => {
     setItemSelected(HEADER_CONFIG.headerMenu[2].id);
-    setDropdownPlaceholder(capitalize(t('specialization')));
-  }, [setItemSelected, t, capitalize]);
+  }, [setItemSelected, capitalize]);
 
   useEffect(() => {
     AreaService.findAll().then((response) => {
@@ -88,7 +87,8 @@ export default function Professionals() {
       if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
       if (response instanceof Error) addNotification({ type: 'error', message: t('error.internalServer') });
     });
-  }, [addNotification, t]);
+    if (specSelected === undefined) setDropdownPlaceholder(capitalize(t('words.specialization')));
+  }, [addNotification, capitalize, t, specSelected]);
 
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
@@ -203,10 +203,10 @@ export default function Professionals() {
             <CardTitle className='flex items-center justify-between gap-2 rounded-b-none bg-card-header text-slate-700'>
               <header className='flex items-center gap-3.5 px-2'>
                 <List size={16} strokeWidth={2} />
-                {PROF_CONFIG.table.title}
+                {t('cardTitle.professionalsList')}
               </header>
               <section className='flex items-center gap-2'>
-                <TooltipWrapper tooltip={PROF_CONFIG.tooltip.reload} help={help}>
+                <TooltipWrapper tooltip={t('tooltip.reload')} help={help}>
                   <Button
                     ref={reloadScope}
                     size='miniIcon'
@@ -222,7 +222,7 @@ export default function Professionals() {
                     <ListRestart size={16} strokeWidth={2} />
                   </Button>
                 </TooltipWrapper>
-                <TooltipWrapper tooltip={PROF_CONFIG.tooltip.addProfessional} help={help}>
+                <TooltipWrapper tooltip={t('tooltip.addProfessional')} help={help}>
                   <Button
                     ref={createMiniScope}
                     size='miniIcon'
