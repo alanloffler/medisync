@@ -408,17 +408,17 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className='text-xl'>{PROF_CONFIG.dialog.remove.title}</DialogTitle>
-            <DialogDescription>{PROF_CONFIG.dialog.remove.subtitle}</DialogDescription>
+            <DialogTitle className='text-xl'>{t('dialog.deleteProfessional.title')}</DialogTitle>
+            <DialogDescription>{t('dialog.deleteProfessional.description')}</DialogDescription>
             <section className='flex flex-col pt-2'>
               <span className=''>{PROF_CONFIG.dialog.remove.content.title}</span>
               <span className='mt-1 text-lg font-semibold'>{`${capitalize(professionalSelected.title?.abbreviation)} ${capitalize(professionalSelected.firstName)} ${capitalize(professionalSelected.lastName)}`}</span>
               <footer className='mt-5 flex justify-end space-x-4'>
-                <Button variant={'secondary'} size={'sm'} onClick={() => setOpenDialog(false)}>
-                  {PROF_CONFIG.button.cancel}
+                <Button variant='ghost' size='sm' onClick={() => setOpenDialog(false)}>
+                  {t('button.cancel')}
                 </Button>
-                <Button variant={'remove'} size={'sm'} onClick={() => removeProfessional(professionalSelected._id)}>
-                  {isRemovingProfessional ? <LoadingDB variant='button' text={PROF_CONFIG.button.isRemoving} /> : PROF_CONFIG.button.remove}
+                <Button variant='remove' size='sm' onClick={() => removeProfessional(professionalSelected._id)}>
+                  {isRemovingProfessional ? <LoadingDB variant='button' text={t('loading.deleting')} /> : t('button.deleteProfessional')}
                 </Button>
               </footer>
             </section>
