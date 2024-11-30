@@ -84,7 +84,8 @@
     },
     "deleteProfessional": {
       "title": "Eliminar profesional",
-      "description": "Al confirmar, vas a eliminar un profesional"
+      "description": "Al confirmar, vas a eliminar un profesional",
+      "content": "Vas a eliminar de la base de datos al profesional <span>{{titleAbbreviation}} {{firstName}} {{lastName}}</span>, con DNI <i>{{identityCard}}</i>"
     },
     "deleteUser": {
       "title": "Eliminar paciente",

@@ -84,7 +84,8 @@
     },
     "deleteProfessional": {
       "title": "Delete professional",
-      "description": "By confirming, you will delete the professional"
+      "description": "By confirming, you will delete the professional",
+      "content": "You are going to delete from the database the professional <span>{{titleAbbreviation}} {{firstName}} {{lastName}}</span>, with IC <i>{{identityCard}}</i>"
     },
     "deleteUser": {
       "title": "Delete patient",
