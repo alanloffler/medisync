@@ -1,10 +1,12 @@
 export const PROF_CONFIG = {
+  // In use
   breadcrumb: [
-    { id: 1, name: 'Inicio', path: '/' },
-    { id: 2, name: 'Profesionales', path: '/professionals' },
+    { id: 1, name: 'breadcrumb.home', path: '/' },
+    { id: 2, name: 'breadcrumb.professionals', path: '/professionals' },
   ],
+
+
   button: {
-    addProfessional: 'Agregar profesional',
     cancel: 'Cancelar',
     isRemoving: 'Eliminando profesional',
     remove: 'Eliminar profesional',
@@ -22,11 +24,7 @@ export const PROF_CONFIG = {
       title: 'Eliminar profesional',
     },
   },
-  search: {
-    debounceTime: 500,
-    filterBy: 'Filtrar por',
-    placeholder: 'Buscar profesional',
-  },
+
   table: {
     databaseCount: {
       availablePlural: 'activos',
@@ -47,7 +45,7 @@ export const PROF_CONFIG = {
       of: 'de',
     },
     rowsPerPage: 'Filas por página',
-    title: 'Listado de Profesionales',
+    // title: 'Listado de Profesionales',
     tooltip: {
       button: {
         delete: 'Eliminar',
@@ -70,11 +68,11 @@ export const PROF_CONFIG = {
       },
     },
   },
-  title: 'Profesionales',
-  tooltip: {
-    addProfessional: 'Agregar profesional',
-    reload: 'Recargar',
-  },
+  // title: 'Profesionales',
+  // tooltip: {
+    // addProfessional: 'Agregar profesional',
+    // reload: 'Recargar',
+  // },
 };
 
 export const PROF_CREATE_CONFIG = {
