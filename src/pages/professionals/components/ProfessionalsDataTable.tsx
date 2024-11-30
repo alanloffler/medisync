@@ -28,6 +28,7 @@ import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 // Imports
 import type { IDataTableProfessionals, ITableManager } from '@core/interfaces/table.interface';
 import type { IInfoCard } from '@core/components/common/interfaces/infocard.interface';
@@ -65,6 +66,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
   const prevDeps = useRef<{ search: IProfessionalSearch; tableManager: ITableManager }>({ search, tableManager });
   const truncate = useTruncateText();
   const { help } = useHelpStore();
+  const { t } = useTranslation();
   // #region Table columns
   const tableColumns: ColumnDef<IProfessional>[] = [
     {
@@ -309,8 +311,8 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
               setInfoCard({ text: response.message, type: 'warning' });
             }
             if (response instanceof Error) {
-              addNotification({ type: 'error', message: APP_CONFIG.error.server });
-              setInfoCard({ text: APP_CONFIG.error.server, type: 'error' });
+              addNotification({ type: 'error', message: t('error.internalServer') });
+              setInfoCard({ type: 'error', text: t('error.internalServer') });
             }
           })
           .finally(() => setIsLoading(false));
@@ -330,8 +332,8 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
               setInfoCard({ text: response.message, type: 'warning' });
             }
             if (response instanceof Error) {
-              addNotification({ type: 'error', message: APP_CONFIG.error.server });
-              setInfoCard({ text: APP_CONFIG.error.server, type: 'error' });
+              addNotification({ type: 'error', message: t('error.internalServer') });
+              setInfoCard({ type: 'error', text: t('error.internalServer') });
             }
           })
           .finally(() => setIsLoading(false));
@@ -360,7 +362,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
             setReload(new Date().getTime());
           }
           if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
-          if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
+          if (response instanceof Error) addNotification({ type: 'error', message: t('error.internalServer') });
         })
         .finally(() => setIsRemovingProfessional(false));
     }
