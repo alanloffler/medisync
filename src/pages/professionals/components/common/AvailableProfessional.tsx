@@ -3,10 +3,10 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 // External imports
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 // Imports
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
-import { PROF_VIEW_CONFIG } from '@config/professionals.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { cn } from '@lib/utils';
 import { useNotificationsStore } from '@core/stores/notifications.store';
@@ -23,6 +23,7 @@ export function AvailableProfessional({ className, data, items }: IAvailableProf
   const [showError, setShowError] = useState<boolean>(false);
   const [value, setValue] = useState<string>(String(available));
   const addNotification = useNotificationsStore((state) => state.addNotification);
+  const { t } = useTranslation();
 
   const { mutateAsync: updateAvailability, isError } = useMutation<IResponse, Error, string>({
     mutationFn: async (value: string) => await ProfessionalApiService.updateAvailability(_id as string, value),
@@ -70,7 +71,7 @@ export function AvailableProfessional({ className, data, items }: IAvailableProf
           </SelectGroup>
         </SelectContent>
       </Select>
-      {isError && showError && <span className='text-xs text-rose-400'>{PROF_VIEW_CONFIG.words.error || 'Error'}</span>}
+      {isError && showError && <span className='text-xs text-rose-400'>{t('error.default')}</span>}
     </main>
   );
 }
