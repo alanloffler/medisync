@@ -5,14 +5,7 @@ export const PROF_CONFIG = {
     { id: 2, name: 'breadcrumb.professionals', path: '/professionals' },
   ],
   // WIP: here
-  dialog: {
-    remove: {
-      content: {
-        dni: 'DNI',
-        title: 'Vas a eliminar de la base de datos al profesional:',
-      },
-    },
-  },
+
   table: {
     databaseCount: {
       availablePlural: 'activos',
