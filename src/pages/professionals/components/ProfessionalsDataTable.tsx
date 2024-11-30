@@ -26,9 +26,9 @@ import { LoadingDB } from '@core/components/common/LoadingDB';
 import { Pagination } from '@core/components/common/Pagination';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
+import { Trans, useTranslation } from 'react-i18next';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 // Imports
 import type { IDataTableProfessionals, ITableManager } from '@core/interfaces/table.interface';
 import type { IInfoCard } from '@core/components/common/interfaces/infocard.interface';
@@ -39,6 +39,7 @@ import { EProfessionalSearch, type IProfessionalSearch } from '@professionals/in
 import { PROF_CONFIG, PROF_VIEW_CONFIG } from '@config/professionals.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { useCapitalize } from '@core/hooks/useCapitalize';
+import { useDelimiter } from '@core/hooks/useDelimiter';
 import { useHelpStore } from '@settings/stores/help.store';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 import { useTruncateText } from '@core/hooks/useTruncateText';
@@ -61,6 +62,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
   const [totalItems, setTotalItems] = useState<number>(0);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
+  const delimiter = useDelimiter();
   const firstUpdate = useRef(true);
   const navigate = useNavigate();
   const prevDeps = useRef<{ search: IProfessionalSearch; tableManager: ITableManager }>({ search, tableManager });
@@ -347,6 +349,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
   function handleRemoveDialog(professional: IProfessional): void {
     setProfessionalSelected(professional);
     setOpenDialog(true);
+    console.log(professional);
   }
   // TODO: display error on UI ???
   function removeProfessional(id: string): void {
@@ -410,19 +413,32 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
           <DialogHeader>
             <DialogTitle className='text-xl'>{t('dialog.deleteProfessional.title')}</DialogTitle>
             <DialogDescription>{t('dialog.deleteProfessional.description')}</DialogDescription>
-            <section className='flex flex-col pt-2'>
-              <span className=''>{PROF_CONFIG.dialog.remove.content.title}</span>
-              <span className='mt-1 text-lg font-semibold'>{`${capitalize(professionalSelected.title?.abbreviation)} ${capitalize(professionalSelected.firstName)} ${capitalize(professionalSelected.lastName)}`}</span>
-              <footer className='mt-5 flex justify-end space-x-4'>
-                <Button variant='ghost' size='sm' onClick={() => setOpenDialog(false)}>
-                  {t('button.cancel')}
-                </Button>
-                <Button variant='remove' size='sm' onClick={() => removeProfessional(professionalSelected._id)}>
-                  {isRemovingProfessional ? <LoadingDB variant='button' text={t('loading.deleting')} /> : t('button.deleteProfessional')}
-                </Button>
-              </footer>
-            </section>
           </DialogHeader>
+          <section className='flex flex-col'>
+            <div>
+              <Trans
+                i18nKey='dialog.deleteProfessional.content'
+                values={{
+                  titleAbbreviation: capitalize(professionalSelected.title?.abbreviation),
+                  firstName: capitalize(professionalSelected.firstName),
+                  lastName: capitalize(professionalSelected.lastName),
+                  identityCard: delimiter(professionalSelected.dni, '.', 3),
+                }}
+                components={{
+                  span: <span className='font-semibold' />,
+                  i: <i />,
+                }}
+              />
+            </div>
+          </section>
+          <footer className='flex justify-end space-x-4'>
+            <Button variant='ghost' size='sm' onClick={() => setOpenDialog(false)}>
+              {t('button.cancel')}
+            </Button>
+            <Button variant='remove' size='sm' onClick={() => removeProfessional(professionalSelected._id)}>
+              {isRemovingProfessional ? <LoadingDB variant='button' text={t('loading.deleting')} /> : t('button.deleteProfessional')}
+            </Button>
+          </footer>
         </DialogContent>
       </Dialog>
     </>
