@@ -5,17 +5,20 @@
     "appointments": "Turnos",
     "appointmentDetails": "Detalles",
     "create": "Crear",
+    "professionals": "Profesionales",
     "update": "Actualizar",
     "users": "Pacientes",
     "userDetails": "Detalles"
   },
   "button": {
+    "addProfessional": "Agregar profesional",
     "addUser": "Agregar paciente",
     "back": "Volver",
     "cancel": "Cancelar",
     "clearFilters": "Limpiar filtros",
     "close": "Cerrar",
     "deleteAppointment": "Eliminar turno",
+    "deleteProfessional": "Eliminar profesional",
     "deleteUser": "Eliminar paciente",
     "generateAppointment": "Generar turno",
     "goToUsers": "Ir a pacientes",
@@ -34,6 +37,7 @@
       "latestUsers": "Usuarios recientes",
       "statistics": "Estadísticas"
     },
+    "professionalsList": "Lista de profesionales",
     "updateUser": "Actualizar paciente",
     "usersList": "Lista de pacientes",
     "viewAppointment": "Turno"
@@ -77,6 +81,10 @@
       "title": "Eliminar turno",
       "description": "Al confirmar, vas a eliminar un turno",
       "contentText": "Cancelación de turno para <span>{{firstName}} {{lastName}}</span>"
+    },
+    "deleteProfessional": {
+      "title": "Eliminar profesional",
+      "description": "Al confirmar, vas a eliminar un profesional"
     },
     "deleteUser": {
       "title": "Eliminar paciente",
@@ -158,8 +166,10 @@
   "search": {
     "default": "Buscar",
     "filter": {
+      "by": "Filtrar por",
       "appointments": "Filtrar turnos"
     },
+    "professional": "Buscar profesional",
     "user": "Buscar paciente"
   },
   "section": {
@@ -205,6 +215,7 @@
     }
   },
   "tooltip": {
+    "addProfessional": "Agregar profesional",
     "addUser": "Agregar paciente",
     "delete": "Eliminar",
     "deleteUser": "Eliminar paciente",
@@ -240,6 +251,7 @@
     "hoursSeparator": "a",
     "identityCard": "DNI",
     "name": "Nombre",
-    "slotsSeparator": "y"
+    "slotsSeparator": "y",
+    "specialization": "Especialización"
   }
 }

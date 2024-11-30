@@ -5,17 +5,20 @@
     "appointments": "Appointments",
     "appointmentDetails": "Details",
     "create": "Create",
+    "professionals": "Professionals",
     "update": "Update",
     "users": "Patients",
     "userDetails": "Details"
   },
   "button": {
+    "addProfessional": "Add professional",
     "addUser": "Add patient",
     "back": "Go back",
     "cancel": "Cancel",
     "clearFilters": "Clear filters",
     "close": "Close",
     "deleteAppointment": "Delete appointment",
+    "deleteProfessional": "Delete professional",
     "deleteUser": "Delete patient",
     "generateAppointment": "Generate appointment",
     "goToUsers": "Go to patients",
@@ -34,6 +37,7 @@
       "latestUsers": "Latest patients",
       "statistics": "Statistics"
     },
+    "professionalsList": "Professionals list",
     "updateUser": "Update patient",
     "usersList": "Patient list",
     "viewAppointment": "Appointment"
@@ -77,6 +81,10 @@
       "title": "Delete appointment",
       "description": "By confirming, you will delete the appointment",
       "contentText": "Appointment cancellation for <span>{{firstName}} {{lastName}}</span>"
+    },
+    "deleteProfessional": {
+      "title": "Delete professional",
+      "description": "By confirming, you will delete the professional"
     },
     "deleteUser": {
       "title": "Delete patient",
@@ -158,8 +166,10 @@
   "search": {
     "default": "Search",
     "filter": {
+      "by": "Filter by",
       "appointments": "Filter appointments"
     },
+    "professional": "Search professional",
     "user": "Search patient"
   },
   "section": {
@@ -205,6 +215,7 @@
     }
   },
   "tooltip": {
+    "addProfessional": "Add professional",
     "addUser": "Add patient",
     "delete": "Delete",
     "deleteUser": "Delete patient",
@@ -240,6 +251,7 @@
     "hoursSeparator": "to",
     "identityCard": "IC",
     "name": "Name",
-    "slotsSeparator": "and"
+    "slotsSeparator": "and",
+    "specialization": "Specialization"
   }
 }
