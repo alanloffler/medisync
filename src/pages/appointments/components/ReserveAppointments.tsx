@@ -90,14 +90,14 @@ export default function ReserveAppointments() {
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
   const { t } = useTranslation();
 
-  const selectedLocale = i18n.language;
+  const selectedLocale = i18n.resolvedLanguage || i18n.language;
 
   useEffect(() => {
     if (selectedDate) {
       const legibleTodayDate: string = format(selectedDate, 'full', selectedLocale);
       setSelectedLegibleDate(legibleTodayDate);
-      if (i18n.language === 'es') setCalendarLocale(es);
-      if (i18n.language === 'en') setCalendarLocale(enUS);
+      if (selectedLocale === 'es') setCalendarLocale(es);
+      if (selectedLocale === 'en') setCalendarLocale(enUS);
     }
   }, [selectedLocale, selectedDate]);
   // #region professionalSelected actions
