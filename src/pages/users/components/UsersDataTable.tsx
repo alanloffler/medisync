@@ -369,8 +369,8 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
                     <Trans
                       i18nKey='dialog.deleteUser.content'
                       values={{
-                        firstName: userSelected.firstName,
-                        lastName: userSelected.lastName,
+                        firstName: capitalize(userSelected.firstName),
+                        lastName: capitalize(userSelected.lastName),
                         identityCard: delimiter(userSelected.dni, '.', 3),
                       }}
                       components={{
