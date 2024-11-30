@@ -4,27 +4,15 @@ export const PROF_CONFIG = {
     { id: 1, name: 'breadcrumb.home', path: '/' },
     { id: 2, name: 'breadcrumb.professionals', path: '/professionals' },
   ],
-
-
-  button: {
-    cancel: 'Cancelar',
-    isRemoving: 'Eliminando profesional',
-    remove: 'Eliminar profesional',
-  },
-  filter: {
-    title: 'Filtrar',
-  },
+  // WIP: here
   dialog: {
     remove: {
       content: {
         dni: 'DNI',
         title: 'Vas a eliminar de la base de datos al profesional:',
       },
-      subtitle: '¿Estas seguro de querer eliminar el profesional? Esta acción es irreversible.',
-      title: 'Eliminar profesional',
     },
   },
-
   table: {
     databaseCount: {
       availablePlural: 'activos',
@@ -45,20 +33,12 @@ export const PROF_CONFIG = {
       of: 'de',
     },
     rowsPerPage: 'Filas por página',
-    // title: 'Listado de Profesionales',
     tooltip: {
       button: {
         delete: 'Eliminar',
         edit: 'Editar',
         sendWhatsApp: 'Enviar WhatsApp',
         view: 'Ver detalles',
-      },
-      pagination: {
-        firstPage: 'Primera página',
-        itemsPerPage: 'Filas por página',
-        lastPage: 'Última página',
-        nextPage: 'Página siguiente',
-        prevPage: 'Página anterior',
       },
       sortBy: {
         area: 'Ordenar por área',
@@ -68,11 +48,6 @@ export const PROF_CONFIG = {
       },
     },
   },
-  // title: 'Profesionales',
-  // tooltip: {
-    // addProfessional: 'Agregar profesional',
-    // reload: 'Recargar',
-  // },
 };
 
 export const PROF_CREATE_CONFIG = {
