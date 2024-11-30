@@ -1,10 +1,9 @@
 // Icons: https://lucide.dev/icons/
-import { ArrowDownUp, ArrowLeftIcon, ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon, FileText, PencilLine, Trash2 } from 'lucide-react';
+import { ArrowDownUp, FileText, PencilLine, Trash2 } from 'lucide-react';
 // External components:
 // https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@core/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@core/components/ui/table';
 // Tanstack Data Table: https://tanstack.com/table/latest
 import {
@@ -20,9 +19,11 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 // Components
+import { AvailableProfessional } from '@professionals/components/common/AvailableProfessional';
 import { DBCountProfessionals } from '@professionals/components/common/DBCountProfessionals';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
+import { Pagination } from '@core/components/common/Pagination';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
 import { useEffect, useRef, useState } from 'react';
@@ -40,7 +41,6 @@ import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useHelpStore } from '@settings/stores/help.store';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 import { useTruncateText } from '@core/hooks/useTruncateText';
-import { AvailableProfessional } from './common/AvailableProfessional';
 // import { useMediaQuery } from '@uidotdev/usehooks';
 // Default values for pagination and sorting
 const defaultSorting: SortingState = [{ id: PROF_CONFIG.table.defaultSortingId, desc: PROF_CONFIG.table.defaultSortingType }];
@@ -397,72 +397,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
               ))}
             </TableBody>
           </Table>
-          <div className='flex items-center justify-between space-x-6 pt-6 lg:space-x-8'>
-            <div className='flex items-center space-x-2'>
-              <p className='text-xs font-normal text-slate-400'>{PROF_CONFIG.table.rowsPerPage}</p>
-              <Select value={`${table.getState().pagination.pageSize}`} onValueChange={(e) => setPagination({ pageIndex: 0, pageSize: parseInt(e) })}>
-                <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.pagination.itemsPerPage} help={help}>
-                  <SelectTrigger className='h-8 w-[65px] bg-input text-xs font-medium hover:bg-slate-200/70 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring/40 focus-visible:ring-offset-0'>
-                    <SelectValue placeholder={table.getState().pagination.pageSize} />
-                  </SelectTrigger>
-                </TooltipWrapper>
-                <SelectContent side='top' className='min-w-[4rem]' onCloseAutoFocus={(e) => e.preventDefault()}>
-                  {PROF_CONFIG.table.itemsPerPage.map((pageSize) => (
-                    <SelectItem key={pageSize} value={`${pageSize}`} className='text-xs'>
-                      {pageSize}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className='flex w-[100px] items-center justify-center text-xs font-normal text-slate-400'>
-              {PROF_CONFIG.table.pagination.page} {pagination.pageIndex + 1} {PROF_CONFIG.table.pagination.of} {table.getPageCount()}
-            </div>
-            {table.getPageCount() > 1 && (
-              <div className='flex items-center space-x-2'>
-                <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.pagination.firstPage} help={help}>
-                  <Button
-                    variant='ghost'
-                    className='h-8 w-8 bg-input p-0 hover:bg-input-hover lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800'
-                    onClick={() => table.setPageIndex(0)}
-                    disabled={!table.getCanPreviousPage()}
-                  >
-                    <ArrowLeftIcon size={16} strokeWidth={2} />
-                  </Button>
-                </TooltipWrapper>
-                <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.pagination.prevPage} help={help}>
-                  <Button
-                    variant='ghost'
-                    className='h-8 w-8 bg-input p-0 hover:bg-input-hover dark:bg-neutral-950 dark:hover:bg-neutral-800'
-                    onClick={() => table.previousPage()}
-                    disabled={!table.getCanPreviousPage()}
-                  >
-                    <ChevronLeftIcon size={16} strokeWidth={2} />
-                  </Button>
-                </TooltipWrapper>
-                <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.pagination.nextPage} help={help}>
-                  <Button
-                    variant='ghost'
-                    className='h-8 w-8 bg-input p-0 hover:bg-input-hover dark:bg-neutral-950 dark:hover:bg-neutral-800'
-                    onClick={() => table.nextPage()}
-                    disabled={!table.getCanNextPage()}
-                  >
-                    <ChevronRightIcon size={16} strokeWidth={2} />
-                  </Button>
-                </TooltipWrapper>
-                <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.pagination.lastPage} help={help}>
-                  <Button
-                    variant='ghost'
-                    className='h-8 w-8 bg-input p-0 hover:bg-input-hover lg:flex dark:bg-neutral-950 dark:hover:bg-neutral-800'
-                    onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                    disabled={!table.getCanNextPage()}
-                  >
-                    <ArrowRightIcon size={16} strokeWidth={2} />
-                  </Button>
-                </TooltipWrapper>
-              </div>
-            )}
-          </div>
+          <Pagination help={help} pagination={pagination} setPagination={setPagination} table={table} className='pt-6 !text-xsm text-slate-400' />
         </>
       ) : (
         <InfoCard text={infoCard.text} type={infoCard.type} className='mt-3' />
