@@ -34,7 +34,7 @@ import type { ISpecialization } from '@core/interfaces/specialization.interface'
 import type { ITitle } from '@core/interfaces/title.interface';
 import type { IWorkingDay } from '@professionals/interfaces/working-days.interface';
 import { AreaService } from '@core/services/area.service';
-import { PROFESSIONAL_CREATE_CONFIG as PC_CONFIG } from '@config/professionals.config';
+import { PROFESSIONAL_CREATE_CONFIG as PC_CONFIG } from '@config/professionals/professional-create.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { ScheduleService } from '@settings/services/schedule-settings.service';
 import { TitleService } from '@core/services/title.service';
@@ -231,7 +231,7 @@ export default function CreateProfessional() {
             <DropdownMenuContent className='w-fit' align='center'>
               {PC_CONFIG.dropdownMenu.map((item) => (
                 <DropdownMenuItem key={item.id}>
-                  <Link to={item.path}>{item.name}</Link>
+                  <Link to={item.path}>{t(item.name)}</Link>
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
@@ -267,7 +267,7 @@ export default function CreateProfessional() {
                             <FormControl>
                               <SelectTrigger className={`h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
                                 {areasIsLoading ? (
-                                  <LoadingDB variant='default' text={PC_CONFIG.select.loadingText} className='ml-0' />
+                                  <LoadingDB variant='default' text={t('loading.default')} className='ml-0' />
                                 ) : (
                                   <SelectValue placeholder={t('placeholder.area')} />
                                 )}
@@ -301,7 +301,7 @@ export default function CreateProfessional() {
                             <FormControl>
                               <SelectTrigger className={`h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
                                 {areasIsLoading ? (
-                                  <LoadingDB variant='default' text={PC_CONFIG.select.loadingText} className='ml-0' />
+                                  <LoadingDB variant='default' text={t('loading.default')} className='ml-0' />
                                 ) : (
                                   <SelectValue placeholder={t('placeholder.specialty')} />
                                 )}
@@ -339,7 +339,7 @@ export default function CreateProfessional() {
                             <FormControl>
                               <SelectTrigger className={`h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
                                 {titlesIsLoading ? (
-                                  <LoadingDB variant='default' text={PC_CONFIG.select.loadingText} className='ml-0' />
+                                  <LoadingDB variant='default' text={t('loading.default')} className='ml-0' />
                                 ) : (
                                   <SelectValue placeholder={t('placeholder.title')} />
                                 )}
@@ -480,7 +480,7 @@ export default function CreateProfessional() {
                           <FormControl>
                             <WorkingDays
                               key={workingDaysKey}
-                              label={PC_CONFIG.labels.configuration.workingDays}
+                              label={t('label.workingDays')}
                               data={workingDays}
                               handleWorkingDaysValues={handleWorkingDaysValues}
                             />
@@ -496,8 +496,8 @@ export default function CreateProfessional() {
                       control={createForm.control}
                       name='configuration.slotDuration'
                       render={({ field }) => (
-                        <FormItem className='space-y-1'>
-                          <FormLabel>{PC_CONFIG.labels.configuration.slotDuration}</FormLabel>
+                        <FormItem className='space-y-2'>
+                          <FormLabel>{t('label.slotDuration')}</FormLabel>
                           <Select
                             disabled={areas.length < 1}
                             onValueChange={(event) => {
@@ -507,7 +507,7 @@ export default function CreateProfessional() {
                           >
                             <FormControl>
                               <SelectTrigger className={`h-9 w-1/2 ${!field.value ? 'text-muted-foreground' : ''}`}>
-                                <SelectValue placeholder={PC_CONFIG.placeholders.configuration.slotDuration} />
+                                <SelectValue placeholder={t('placeholder.slotDuration')} />
                               </SelectTrigger>
                             </FormControl>
                             <FormMessage />
@@ -530,10 +530,10 @@ export default function CreateProfessional() {
                       control={createForm.control}
                       name='configuration.scheduleTimeInit'
                       render={({ field }) => (
-                        <FormItem className='space-y-1'>
-                          <FormLabel>{PC_CONFIG.labels.configuration.scheduleTimeInit}</FormLabel>
+                        <FormItem className='space-y-2'>
+                          <FormLabel>{t('label.scheduleTimeInit')}</FormLabel>
                           <FormControl className='h-9'>
-                            <InputMask mask='99:99' maskPlaceholder='--:--' alwaysShowMask={false} placeholder={'00:00'} {...field}>
+                            <InputMask mask='99:99' maskPlaceholder='--:--' alwaysShowMask={false} placeholder={t('placeholder.hour')} {...field}>
                               <Input />
                             </InputMask>
                           </FormControl>
@@ -545,10 +545,10 @@ export default function CreateProfessional() {
                       control={createForm.control}
                       name='configuration.scheduleTimeEnd'
                       render={({ field }) => (
-                        <FormItem className='space-y-1'>
-                          <FormLabel>{PC_CONFIG.labels.configuration.scheduleTimeEnd}</FormLabel>
+                        <FormItem className='space-y-2'>
+                          <FormLabel>{t('label.scheduleTimeEnd')}</FormLabel>
                           <FormControl className='h-9'>
-                            <InputMask mask='99:99' maskPlaceholder='--:--' alwaysShowMask={false} placeholder={'00:00'} {...field}>
+                            <InputMask mask='99:99' maskPlaceholder='--:--' alwaysShowMask={false} placeholder={t('placeholder.hour')} {...field}>
                               <Input />
                             </InputMask>
                           </FormControl>
@@ -563,10 +563,10 @@ export default function CreateProfessional() {
                       control={createForm.control}
                       name='configuration.unavailableTimeSlot.timeSlotUnavailableInit'
                       render={({ field }) => (
-                        <FormItem className='space-y-1'>
-                          <FormLabel>{PC_CONFIG.labels.configuration.timeSlotUnavailableInit}</FormLabel>
+                        <FormItem className='space-y-2'>
+                          <FormLabel>{t('label.timeSlotUnavailableInit')}</FormLabel>
                           <FormControl className='h-9'>
-                            <InputMask mask='99:99' maskPlaceholder='--:--' alwaysShowMask={false} placeholder={'00:00'} {...field}>
+                            <InputMask mask='99:99' maskPlaceholder='--:--' alwaysShowMask={false} placeholder={t('placeholder.hour')} {...field}>
                               <Input />
                             </InputMask>
                           </FormControl>
@@ -578,10 +578,10 @@ export default function CreateProfessional() {
                       control={createForm.control}
                       name='configuration.unavailableTimeSlot.timeSlotUnavailableEnd'
                       render={({ field }) => (
-                        <FormItem className='space-y-1'>
-                          <FormLabel>{PC_CONFIG.labels.configuration.timeSlotUnavailableEnd}</FormLabel>
+                        <FormItem className='space-y-2'>
+                          <FormLabel>{t('label.timeSlotUnavailableEnd')}</FormLabel>
                           <FormControl className='h-9'>
-                            <InputMask mask='99:99' maskPlaceholder='--:--' alwaysShowMask={false} placeholder={'00:00'} {...field}>
+                            <InputMask mask='99:99' maskPlaceholder='--:--' alwaysShowMask={false} placeholder={t('placeholder.hour')} {...field}>
                               <Input />
                             </InputMask>
                           </FormControl>
