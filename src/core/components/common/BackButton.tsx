@@ -20,9 +20,9 @@ export function BackButton({ label }: { label: string }) {
 
   return (
     <Button
-      className='flex flex-row items-center space-x-2 text-xs font-medium uppercase'
+      className='flex flex-row items-center space-x-2 bg-transparent text-xs font-medium uppercase hover:bg-white'
       size='sm'
-      variant='outline'
+      variant='ghost'
       onClick={() => navigate(-1)}
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
