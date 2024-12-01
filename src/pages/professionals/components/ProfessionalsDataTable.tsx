@@ -74,7 +74,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
     {
       accessorKey: 'index',
       size: 50,
-      header: () => <div className='text-center'>#</div>,
+      header: () => <div className='text-center'>{t(PROF_CONFIG.table.header[0])}</div>,
       cell: ({ row }) => (
         <div className='mx-auto w-fit rounded-md bg-slate-100 px-1.5 py-1 text-center text-xs text-slate-400'>{truncate(row.original._id, -3)}</div>
       ),
@@ -84,14 +84,14 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
       header: ({ column }) => (
         <div className='text-left'>
           {totalItems === 1 ? (
-            PROF_CONFIG.table.headers[0]
+            t(PROF_CONFIG.table.header[1])
           ) : (
-            <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.sortBy.name} help={help}>
+            <TooltipWrapper tooltip={t('tooltip.sort.name')} help={help}>
               <button
                 className='flex items-center gap-2 hover:text-accent-foreground'
                 onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
               >
-                {PROF_CONFIG.table.headers[0]}
+                {t(PROF_CONFIG.table.header[1])}
                 <ArrowDownUp size={12} strokeWidth={2} />
               </button>
             </TooltipWrapper>
@@ -108,14 +108,14 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
       header: ({ column }) => (
         <div className='text-left'>
           {totalItems === 1 ? (
-            PROF_CONFIG.table.headers[1]
+            t(PROF_CONFIG.table.header[2])
           ) : (
-            <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.sortBy.area} help={help}>
+            <TooltipWrapper tooltip={t('tooltip.sort.area')} help={help}>
               <button
                 className='flex items-center gap-2 hover:text-accent-foreground'
                 onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
               >
-                {PROF_CONFIG.table.headers[1]}
+                {t(PROF_CONFIG.table.header[2])}
                 <ArrowDownUp size={12} strokeWidth={2} />
               </button>
             </TooltipWrapper>
@@ -130,14 +130,14 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
       header: ({ column }) => (
         <div className='flex justify-center'>
           {totalItems === 1 ? (
-            PROF_CONFIG.table.headers[2]
+            t(PROF_CONFIG.table.header[3])
           ) : (
-            <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.sortBy.specialization} help={help}>
+            <TooltipWrapper tooltip={t('tooltip.sort.specialty')} help={help}>
               <button
                 className='flex items-center gap-2 hover:text-accent-foreground'
                 onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
               >
-                {PROF_CONFIG.table.headers[2]}
+                {t(PROF_CONFIG.table.header[3])}
                 <ArrowDownUp size={12} strokeWidth={2} />
               </button>
             </TooltipWrapper>
@@ -152,14 +152,14 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
       header: ({ column }) => (
         <div className='flex justify-center'>
           {totalItems === 1 ? (
-            PROF_CONFIG.table.headers[3]
+            t(PROF_CONFIG.table.header[4])
           ) : (
-            <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.sortBy.availability} help={help}>
+            <TooltipWrapper tooltip={t('tooltip.sort.availability')} help={help}>
               <button
                 className='flex items-center gap-2 hover:text-accent-foreground'
                 onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
               >
-                {PROF_CONFIG.table.headers[3]}
+                {t(PROF_CONFIG.table.header[4])}
                 <ArrowDownUp size={12} strokeWidth={2} />
               </button>
             </TooltipWrapper>
@@ -179,10 +179,10 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
     {
       accessorKey: 'actions',
       size: 100,
-      header: () => <div className='text-center'>{PROF_CONFIG.table.headers[4]}</div>,
+      header: () => <div className='text-center'>{t(PROF_CONFIG.table.header[5])}</div>,
       cell: ({ row }) => (
         <div className='mx-auto flex w-fit flex-row items-center justify-center space-x-1'>
-          <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.button.view} help={help}>
+          <TooltipWrapper tooltip={t('tooltip.details')} help={help}>
             <Button
               variant='ghost'
               size='miniIcon'
@@ -192,7 +192,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
               <FileText size={16} strokeWidth={1.5} />
             </Button>
           </TooltipWrapper>
-          <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.button.edit} help={help}>
+          <TooltipWrapper tooltip={t('tooltip.edit')} help={help}>
             <Button
               variant={'ghost'}
               size={'miniIcon'}
@@ -202,7 +202,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
               <PencilLine size={16} strokeWidth={1.5} />
             </Button>
           </TooltipWrapper>
-          <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.button.delete} help={help}>
+          <TooltipWrapper tooltip={t('tooltip.delete')} help={help}>
             <Button
               variant='ghost'
               size='miniIcon'
@@ -212,7 +212,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
               <Trash2 size={16} strokeWidth={1.5} />
             </Button>
           </TooltipWrapper>
-          <TooltipWrapper tooltip={PROF_CONFIG.table.tooltip.button.sendWhatsApp} help={help}>
+          <TooltipWrapper tooltip={t('tooltip.sendMessage')} help={help}>
             <Button
               disabled={!row.original.phone}
               variant='ghost'
