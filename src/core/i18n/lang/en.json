@@ -11,7 +11,9 @@
     "userDetails": "Details"
   },
   "button": {
+    "addArea": "Add area",
     "addProfessional": "Add professional",
+    "addSpecialty": "Add specialty",
     "addUser": "Add patient",
     "back": "Go back",
     "cancel": "Cancel",
@@ -134,8 +136,14 @@
     "identityCard": "IC",
     "lastName": "Last name",
     "phone": "Phone",
+    "scheduleTimeEnd": "End of appointments",
+    "scheduleTimeInit": "Begin of appointments",
+    "slotDuration": "Appointment duration",
     "specialization": "Specialization",
-    "title": "Title"
+    "timeSlotUnavailableEnd": "End of break",
+    "timeSlotUnavailableInit": "Begin of break",
+    "title": "Title",
+    "workingDays": "Working days"
   },
   "loading": {
     "appointmentDetails": "Loading appointment details",
@@ -171,11 +179,13 @@
     "description": "Enter the description",
     "email": "Enter the email",
     "firstName": "Enter the name",
+    "hour": "00:00",
     "identityCard": "Enter the IC",
     "lastName": "Enter the last name",
     "phone": "Enter the phone",
     "professionalCombobox": "Professionals",
     "professionalSelect": "Professionals",
+    "slotDuration": "Min",
     "specialty": "Enter the specialty",
     "title": "Enter the title",
     "userCombobox": "Search by IC",

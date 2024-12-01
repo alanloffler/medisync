@@ -11,7 +11,9 @@
     "userDetails": "Detalles"
   },
   "button": {
+    "addArea": "Agregar área",
     "addProfessional": "Agregar profesional",
+    "addSpecialty": "Agregar especialidad",
     "addUser": "Agregar paciente",
     "back": "Volver",
     "cancel": "Cancelar",
@@ -134,8 +136,14 @@
     "identityCard": "DNI",
     "lastName": "Apellido",
     "phone": "Teléfono",
+    "scheduleTimeEnd": "Fin de turnos",
+    "scheduleTimeInit": "Inicio de turnos",
+    "slotDuration": "Duración del turno",
     "specialization": "Especialización",
-    "title": "Título"
+    "timeSlotUnavailableEnd": "Fin de descanso",
+    "timeSlotUnavailableInit": "Inicio de descanso",
+    "title": "Título",
+    "workingDays": "Días laborales"
   },
   "loading": {
     "appointmentDetails": "Cargando detalles del turno",
@@ -171,11 +179,13 @@
     "description": "Ingresá la descripción",
     "email": "Ingresá el correo electrónico",
     "firstName": "Ingresá el nombre",
+    "hour": "00:00",
     "identityCard": "Ingresá el DNI",
     "lastName": "Ingresá el apellido",
     "phone": "Ingresá el teléfono",
     "professionalCombobox": "Profesionales",
     "professionalSelect": "Profesionales",
+    "slotDuration": "Min",
     "specialty": "Ingresá la especialidad",
     "title": "Ingresá el título",
     "userCombobox": "Buscar por DNI",
