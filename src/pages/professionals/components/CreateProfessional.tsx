@@ -24,6 +24,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { spring, useAnimate } from 'motion/react';
 import { useEffect, useState, MouseEvent } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 // Imports
@@ -32,9 +33,8 @@ import type { IResponse } from '@core/interfaces/response.interface';
 import type { ISpecialization } from '@core/interfaces/specialization.interface';
 import type { ITitle } from '@core/interfaces/title.interface';
 import type { IWorkingDay } from '@professionals/interfaces/working-days.interface';
-import { APP_CONFIG } from '@config/app.config';
 import { AreaService } from '@core/services/area.service';
-import { PROF_CREATE_CONFIG as PC_CONFIG } from '@config/professionals.config';
+import { PROFESSIONAL_CREATE_CONFIG as PC_CONFIG } from '@config/professionals.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { ScheduleService } from '@settings/services/schedule-settings.service';
 import { TitleService } from '@core/services/title.service';
@@ -60,6 +60,7 @@ export default function CreateProfessional() {
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     setAreasIsLoading(true);
@@ -77,9 +78,9 @@ export default function CreateProfessional() {
           addNotification({ type: 'error', message: response.message });
         }
         if (response instanceof Error) {
-          createForm.setError('area', { message: APP_CONFIG.error.server });
-          createForm.setError('specialization', { message: APP_CONFIG.error.server });
-          addNotification({ type: 'error', message: APP_CONFIG.error.server });
+          createForm.setError('area', { message: t('error.internalServer') });
+          createForm.setError('specialization', { message: t('error.internalServer') });
+          addNotification({ type: 'error', message: t('error.internalServer') });
         }
       })
       .finally(() => setAreasIsLoading(false));
@@ -92,8 +93,8 @@ export default function CreateProfessional() {
           addNotification({ type: 'error', message: response.message });
         }
         if (response instanceof Error) {
-          createForm.setError('title', { message: APP_CONFIG.error.server });
-          addNotification({ type: 'error', message: APP_CONFIG.error.server });
+          createForm.setError('title', { message: t('error.internalServer') });
+          addNotification({ type: 'error', message: t('error.internalServer') });
         }
       })
       .finally(() => setTitlesIsLoading(false));
@@ -169,8 +170,8 @@ export default function CreateProfessional() {
         }
         if (response instanceof Error) {
           setOpenDialog(true);
-          setErrorMessage(APP_CONFIG.error.server);
-          addNotification({ type: 'error', message: APP_CONFIG.error.server });
+          setErrorMessage(t('error.internalServer'));
+          addNotification({ type: 'error', message: t('error.internalServer') });
         }
       })
       .finally(() => setIsCreating(false));
