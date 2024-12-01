@@ -190,11 +190,14 @@
   "table": {
     "header": {
       "actions": "Actions",
+      "area": "Area",
       "date": "Date",
       "id": "#",
       "identityCard": "IC",
+      "name": "Name",
       "phone": "Phone",
       "professional": "Professional",
+      "specialty": "Specialty",
       "user": "Full name"
     },
     "difference": {
@@ -234,6 +237,12 @@
     "selectYear": "Select year",
     "sendEmail": "Send email",
     "sendMessage": "Send WhatsApp",
+    "sort": {
+      "area": "Sort by area",
+      "availability": "Sort by availability",
+      "name": "Sort by name",
+      "specialty": "Sort by specialty"
+    },
     "updateUser": "Update patient"
   },
   "user": {
@@ -251,7 +260,6 @@
     "hoursAbbreviation": "h.",
     "hoursSeparator": "to",
     "identityCard": "IC",
-    "name": "Name",
     "slotsSeparator": "and",
     "specialization": "Specialization"
   }

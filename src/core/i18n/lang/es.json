@@ -190,11 +190,14 @@
   "table": {
     "header": {
       "actions": "Acciones",
+      "area": "Area",
       "date": "Fecha",
       "id": "#",
       "identityCard": "DNI",
+      "name": "Nombre",
       "phone": "Teléfono",
       "professional": "Profesional",
+      "specialty": "Especialidad",
       "user": "Nombre completo"
     },
     "difference": {
@@ -234,6 +237,12 @@
     "selectYear": "Seleccionar año",
     "sendEmail": "Enviar email",
     "sendMessage": "Enviar WhatsApp",
+    "sort": {
+      "area": "Ordenar por área",
+      "availability": "Ordenar por disponibilidad",
+      "name": "Ordenar por nombre",
+      "specialty": "Ordenar por especialidad"
+    },
     "updateUser": "Editar paciente"
   },
   "user": {
@@ -251,7 +260,6 @@
     "hoursAbbreviation": "hs.",
     "hoursSeparator": "a",
     "identityCard": "DNI",
-    "name": "Nombre",
     "slotsSeparator": "y",
     "specialization": "Especialización"
   }
