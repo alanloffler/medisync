@@ -110,7 +110,7 @@ export default function Users() {
                     onChange={handleSearchByName}
                     value={search.type === EUserSearch.NAME ? search.value : ''}
                     type='text'
-                    placeholder={t('words.name')}
+                    placeholder={t('table.header.name')}
                     className='bg-background pl-10 shadow-sm'
                   />
                   {search.type === EUserSearch.NAME && search.value && (
