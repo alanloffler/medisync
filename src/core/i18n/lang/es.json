@@ -30,6 +30,7 @@
     "appointmentsList": "Lista de todos los turnos",
     "appointmentsRecord": "Historial de turnos",
     "appointmentsReserve": "Turnos diarios",
+    "createProfessional": "Crear profesional",
     "createUser": "Crear paciente",
     "dashboard": {
       "categoriesShortcuts": "Especialidades",
@@ -37,7 +38,9 @@
       "latestUsers": "Usuarios recientes",
       "statistics": "Estadísticas"
     },
+    "professionalData": "Datos del profesional",
     "professionalsList": "Lista de profesionales",
+    "scheduleConfiguration": "Configuración de agenda",
     "updateUser": "Actualizar paciente",
     "usersList": "Lista de pacientes",
     "viewAppointment": "Turno"
@@ -91,6 +94,11 @@
       "title": "Eliminar paciente",
       "description": "Al confirmar, vas a eliminar un paciente",
       "content": "Vas a eliminar de la base de datos al paciente <span>{{firstName}} {{lastName}}</span> con DNI <i>{{identityCard}}</i>"
+    },
+    "error": {
+      "createProfessional": {
+        "title": "Error creando profesional"
+      }
     }
   },
   "email": {
@@ -119,11 +127,15 @@
     "viewAppointment": "Detalles del turno"
   },
   "label": {
+    "available": "Disponible",
+    "description": "Descripción",
     "email": "Correo electrónico",
     "firstName": "Nombre",
     "identityCard": "DNI",
     "lastName": "Apellido",
-    "phone": "Teléfono"
+    "phone": "Teléfono",
+    "specialization": "Especialización",
+    "title": "Título"
   },
   "loading": {
     "appointmentDetails": "Cargando detalles del turno",
@@ -142,6 +154,7 @@
   "pageTitle": {
     "appointments": "Turnos",
     "createUser": "Creación de paciente",
+    "createProfessional": "Creación de profesional",
     "professionals": "Profesionales",
     "updateUser": "Actualización de paciente",
     "users": "Pacientes",
@@ -154,6 +167,8 @@
     "of": "de"
   },
   "placeholder": {
+    "area": "Ingresá el área",
+    "description": "Ingresá la descripción",
     "email": "Ingresá el correo electrónico",
     "firstName": "Ingresá el nombre",
     "identityCard": "Ingresá el DNI",
@@ -161,6 +176,8 @@
     "phone": "Ingresá el teléfono",
     "professionalCombobox": "Profesionales",
     "professionalSelect": "Profesionales",
+    "specialty": "Ingresá la especialidad",
+    "title": "Ingresá el título",
     "userCombobox": "Buscar por DNI",
     "yearSelect": "Año"
   },
@@ -267,8 +284,6 @@
     "appointmentPrefix": "T",
     "hoursAbbreviation": "hs.",
     "hoursSeparator": "a",
-    "identityCard": "DNI",
-    "slotsSeparator": "y",
-    "specialization": "Especialización"
+    "slotsSeparator": "y"
   }
 }
