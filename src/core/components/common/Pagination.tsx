@@ -1,7 +1,7 @@
 // Icons: https://lucide.dev/icons/
 import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
-import { Button } from '../ui/button';
+import { Button } from '@core/components/ui/button';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@core/components/ui/select';
 // Components
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
@@ -9,11 +9,11 @@ import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { IPagination } from '@core/components/common/interfaces/pagination.interface';
-import { USER_CONFIG } from '@config/users/users.config';
 import { cn } from '@lib/utils';
 // React component
-export function Pagination({ className, help, pagination, setPagination, table }: IPagination) {
+export function Pagination({ className, help, itemsPerPage, pagination, setPagination, table }: IPagination<any>) {
   const { t } = useTranslation();
+  const ITEMS: number[] = itemsPerPage ?? [5, 10, 20, 50];
 
   return (
     <section className={cn('flex items-center justify-between text-sm text-foreground', className)}>
@@ -27,7 +27,7 @@ export function Pagination({ className, help, pagination, setPagination, table }
           </TooltipWrapper>
           <SelectContent className='w-[65px] min-w-px' onCloseAutoFocus={(e) => e.preventDefault()}>
             <SelectGroup className='[&_svg]:h-4 [&_svg]:w-4'>
-              {USER_CONFIG.table.itemsPerPage.map((pageSize) => (
+              {ITEMS.map((pageSize) => (
                 <SelectItem key={pageSize} value={`${pageSize}`} className='justify-between text-xs'>
                   {pageSize}
                 </SelectItem>
