@@ -177,6 +177,7 @@ export const PROF_VIEW_CONFIG = {
     scheduleTitle: 'Días y horario de atención',
     contactTitle: 'Contacto',
   },
+  // WIP: this traanslated and maybe in root file because is used in another components
   select: [
     { id: 0, label: 'Activo', value: true },
     { id: 1, label: 'Inactivo', value: false },
