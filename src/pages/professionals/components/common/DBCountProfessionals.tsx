@@ -4,11 +4,13 @@ import { ArrowDownLeft, ArrowUpRight, Database } from 'lucide-react';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 // Imports
-import { PROF_CONFIG } from '@config/professionals.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 // React component
 export function DBCountProfessionals() {
+  const { t } = useTranslation();
+
   const {
     data: dbCount,
     isLoading,
@@ -30,20 +32,20 @@ export function DBCountProfessionals() {
       {total && (
         <section className='flex items-center space-x-1'>
           <Database size={16} strokeWidth={2} className='text-blue-400' />
-          <span>{`${total} ${total === 1 ? PROF_CONFIG.table.databaseCount.totalSingular : PROF_CONFIG.table.databaseCount.totalPlural}`}</span>
+          <span>{t('table.totalItems.professionals', { count: total })}</span>
         </section>
       )}
       <section className='flex flex-row space-x-2'>
         {available && (
           <div className='flex items-center'>
             <ArrowUpRight size={16} strokeWidth={2} className='text-emerald-400' />
-            <span>{`${available} ${available === 1 ? PROF_CONFIG.table.databaseCount.availableSingular : PROF_CONFIG.table.databaseCount.availablePlural}`}</span>
+            <span>{t('table.availableItems.default', { count: available })}</span>
           </div>
         )}
         {notAvailable && (
           <div className='flex items-center'>
             <ArrowDownLeft size={16} strokeWidth={2} className='text-rose-400' />
-            <span>{`${notAvailable} ${notAvailable === 1 ? PROF_CONFIG.table.databaseCount.notAvailableSingular : PROF_CONFIG.table.databaseCount.notAvailablePlural}`}</span>
+            <span>{t('table.notAvailableItems.default', { count: notAvailable })}</span>
           </div>
         )}
       </section>
