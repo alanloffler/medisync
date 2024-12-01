@@ -1,28 +1,3 @@
-export const PROF_CONFIG = {
-  // In use
-  breadcrumb: [
-    { id: 1, name: 'breadcrumb.home', path: '/' },
-    { id: 2, name: 'breadcrumb.professionals', path: '/professionals' },
-  ],
-  // WIP: here
-  table: {
-    databaseCount: {
-      availablePlural: 'activos',
-      availableSingular: 'activo',
-      notAvailablePlural: 'inactivos',
-      notAvailableSingular: 'inactivo',
-      totalPlural: 'profesionales en total',
-      totalSingular: 'profesional en total',
-    },
-    defaultPageSize: 10,
-    defaultSortingId: 'lastName',
-    defaultSortingType: false, // desc: true | false
-    // In use
-    header: ['table.header.id', 'table.header.name', 'table.header.area', 'table.header.specialty', '', 'table.header.actions'],
-    itemsPerPage: [5, 10, 20],
-  },
-};
-
 export const PROF_CREATE_CONFIG = {
   breadcrumb: [
     { id: 1, name: 'Inicio', path: '/' },
