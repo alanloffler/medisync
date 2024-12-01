@@ -34,9 +34,9 @@ import type { IDataTableProfessionals, ITableManager } from '@core/interfaces/ta
 import type { IInfoCard } from '@core/components/common/interfaces/infocard.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
-import { APP_CONFIG } from '@config/app.config';
 import { EProfessionalSearch, type IProfessionalSearch } from '@professionals/interfaces/professional-search.interface';
-import { PROF_CONFIG, PROF_VIEW_CONFIG } from '@config/professionals.config';
+import { PROFESSIONALS_CONFIG as PROF_CONFIG } from '@config/professionals/professionals.config';
+import { PROF_VIEW_CONFIG } from '@config/professionals.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useDelimiter } from '@core/hooks/useDelimiter';
@@ -374,7 +374,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
   return (
     <>
       {isLoading ? (
-        <LoadingDB text={APP_CONFIG.loadingDB.findProfesionals} className='mt-3' />
+        <LoadingDB text={t('loading.professionals')} className='mt-3' />
       ) : table.getRowModel().rows?.length > 0 ? (
         <>
           <DBCountProfessionals />
@@ -402,7 +402,14 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
               ))}
             </TableBody>
           </Table>
-          <Pagination help={help} pagination={pagination} setPagination={setPagination} table={table} className='pt-6 !text-xsm text-slate-400' />
+          <Pagination
+            className='pt-6 !text-xsm text-slate-400'
+            help={help}
+            itemsPerPage={PROF_CONFIG.table.itemsPerPage}
+            pagination={pagination}
+            setPagination={setPagination}
+            table={table}
+          />
         </>
       ) : (
         <InfoCard text={infoCard.text} type={infoCard.type} className='mt-3' />
