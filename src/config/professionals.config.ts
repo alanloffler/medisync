@@ -5,7 +5,6 @@ export const PROF_CONFIG = {
     { id: 2, name: 'breadcrumb.professionals', path: '/professionals' },
   ],
   // WIP: here
-
   table: {
     databaseCount: {
       availablePlural: 'activos',
@@ -18,28 +17,9 @@ export const PROF_CONFIG = {
     defaultPageSize: 10,
     defaultSortingId: 'lastName',
     defaultSortingType: false, // desc: true | false
-    headers: ['Nombre', 'Área', 'Espec.', 'Disp.', 'Acciones'],
+    // In use
+    header: ['table.header.id', 'table.header.name', 'table.header.area', 'table.header.specialty', '', 'table.header.actions'],
     itemsPerPage: [5, 10, 20],
-    noResults: 'No hay resultados',
-    pagination: {
-      page: 'Página',
-      of: 'de',
-    },
-    rowsPerPage: 'Filas por página',
-    tooltip: {
-      button: {
-        delete: 'Eliminar',
-        edit: 'Editar',
-        sendWhatsApp: 'Enviar WhatsApp',
-        view: 'Ver detalles',
-      },
-      sortBy: {
-        area: 'Ordenar por área',
-        availability: 'Ordenar por disponibilidad',
-        name: 'Ordenar por apellido',
-        specialization: 'Ordenar por especialidad',
-      },
-    },
   },
 };
 
