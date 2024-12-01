@@ -1,36 +1,30 @@
-export const PROF_CREATE_CONFIG = {
+export const PROFESSIONAL_CREATE_CONFIG = {
+  // In use
   breadcrumb: [
-    { id: 1, name: 'Inicio', path: '/' },
-    { id: 2, name: 'Profesionales', path: '/professionals' },
-    { id: 3, name: 'Crear', path: '/professionals/create' },
+    { id: 1, name: 'breadcrumb.home', path: '/' },
+    { id: 2, name: 'breadcrumb.professionals', path: '/professionals' },
+    { id: 3, name: 'breadcrumb.create', path: '/professionals/create' },
   ],
-  buttons: {
-    back: 'Volver',
-    cancel: 'Cancelar',
-    create: 'Crear profesional',
-    creating: 'Creando',
-  },
-  dialog: {
-    button: {
-      close: 'Cerrar',
-    },
-    create: {
-      errorTitle: 'Error al crear profesional',
-    },
-  },
+
+  // buttons: {
+    // back: 'Volver',
+    // cancel: 'Cancelar',
+    // create: 'Crear profesional',
+    // creating: 'Creando',
+  // },
+  // dialog: {
+    // button: {
+      // close: 'Cerrar',
+    // },
+    // create: {
+      // errorTitle: 'Error al crear profesional',
+    // },
+  // },
   dropdownMenu: [
     { id: 1, name: 'Agregar área', path: '/' },
     { id: 2, name: 'Agregar especialidad', path: '/' },
   ],
-  formTitle: {
-    description: 'Ingresá los datos para dar de alta a un nuevo profesional',
-    header: 'Formulario de creación',
-    professional: 'Datos del profesional',
-    schedule: 'Configuración de la agenda',
-  },
   labels: {
-    area: 'Área',
-    available: 'Disponible',
     configuration: {
       scheduleTimeEnd: 'Fin de turnos',
       scheduleTimeInit: 'Inicio de turnos',
@@ -39,17 +33,8 @@ export const PROF_CREATE_CONFIG = {
       timeSlotUnavailableInit: 'Inicio de descanso',
       workingDays: 'Días laborales',
     },
-    description: 'Descripción',
-    dni: 'DNI',
-    email: 'Correo electrónico',
-    firstName: 'Nombre',
-    lastName: 'Apellido',
-    phone: 'Teléfono',
-    specialization: 'Especialidad',
-    title: 'Título',
   },
   placeholders: {
-    area: 'Ingresá el área',
     configuration: {
       scheduleTimeEnd: 'Ingresá la hora de finalización',
       scheduleTimeInit: 'Ingresá la hora de inicio',
@@ -57,14 +42,6 @@ export const PROF_CREATE_CONFIG = {
       timeSlotUnavailableEnd: 'Ingresá la hora de finalización',
       timeSlotUnavailableInit: 'Ingresá la hora de inicio',
     },
-    description: 'Ingresá la descripción',
-    dni: 'Ingresá el DNI',
-    email: 'Ingresá el correo electrónico',
-    firstName: 'Ingresá el nombre',
-    lastName: 'Ingresá el apellido',
-    phone: 'Ingresá el teléfono',
-    specialization: 'Ingresá la especialidad',
-    title: 'Ingresá el título',
   },
   select: {
     loadingText: 'Cargando',
