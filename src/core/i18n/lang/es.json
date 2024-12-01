@@ -206,12 +206,20 @@
     "totalItems": {
       "appointments_one": "{{count}} turno en total",
       "appointments_other": "{{count}} turnos en total",
+      "professionals_one": "{{count}} profesional",
+      "professionals_other": "{{count}} profesionales",
       "users_one": "{{count}} paciente",
       "users_other": "{{count}} pacientes"
     },
     "availableItems": {
+      "default_one": "{{count}} activo",
+      "default_other": "{{count}} activos",
       "appointments_one": "{{count}} turno disponible",
       "appointments_other": "{{count}} turnos disponibles"
+    },
+    "notAvailableItems": {
+      "default_one": "{{count}} inactivo",
+      "default_other": "{{count}} inactivos"
     },
     "reservedItems": {
       "appointments_one": "{{count}} turno reservado",

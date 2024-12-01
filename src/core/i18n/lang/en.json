@@ -206,12 +206,20 @@
     "totalItems": {
       "appointments_one": "{{count}} appointment in total",
       "appointments_other": "{{count}} appointments in total",
+      "professionals_one": "{{count}} professional",
+      "professionals_other": "{{count}} professionals",
       "users_one": "{{count}} patient",
       "users_other": "{{count}} patients"
     },
     "availableItems": {
+      "default_one": "{{count}} active",
+      "default_other": "{{count}} active",
       "appointments_one": "{{count}} available appointment",
       "appointments_other": "{{count}} available appointments"
+    },
+    "notAvailableItems": {
+      "default_one": "{{count}} inactive",
+      "default_other": "{{count}} inactive"
     },
     "reservedItems": {
       "appointments_one": "{{count}} reserved appointment",
