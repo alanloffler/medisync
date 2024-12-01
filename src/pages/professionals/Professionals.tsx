@@ -87,7 +87,7 @@ export default function Professionals() {
       if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
       if (response instanceof Error) addNotification({ type: 'error', message: t('error.internalServer') });
     });
-    if (specSelected === undefined) setDropdownPlaceholder(capitalize(t('words.specialization')));
+    if (specSelected === undefined) setDropdownPlaceholder(capitalize(t('label.specialization')));
   }, [addNotification, capitalize, t, specSelected]);
 
   return (
