@@ -30,7 +30,7 @@ import { APP_CONFIG } from '@config/app.config';
 import { AreaService } from '@core/services/area.service';
 import { EProfessionalSearch, type IProfessionalSearch } from '@professionals/interfaces/professional-search.interface';
 import { HEADER_CONFIG } from '@config/layout/header.config';
-import { PROF_CONFIG } from '@config/professionals.config';
+import { PROFESSIONALS_CONFIG as PROF_CONFIG } from '@config/professionals/professionals.config';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useDebounce } from '@core/hooks/useDebounce';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
