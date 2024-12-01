@@ -64,13 +64,13 @@ export function AvailableProfessional({ className, data, help, items }: IAvailab
             <SelectItem value={items ? items[0].value.toString() : 'true'} className='px-2 py-1 text-xs focus:bg-input [&_svg]:hidden'>
               <div className='flex items-center space-x-2'>
                 <div className='h-2.5 w-2.5 rounded-full bg-emerald-400'></div>
-                <span>{items ? items[0].label : 'Active'}</span>
+                <span>{items ? t(items[0].label) : 'Active'}</span>
               </div>
             </SelectItem>
             <SelectItem value={items ? items[1].value.toString() : 'false'} className='px-2 py-1 text-xs focus:bg-input [&_svg]:hidden'>
               <div className='flex items-center space-x-2'>
                 <div className='h-2.5 w-2.5 rounded-full bg-rose-400'></div>
-                <span>{items ? items[1].label : 'Inactive'}</span>
+                <span>{items ? t(items[1].label) : 'Inactive'}</span>
               </div>
             </SelectItem>
           </SelectGroup>
