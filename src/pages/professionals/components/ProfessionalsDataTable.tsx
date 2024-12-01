@@ -36,7 +36,7 @@ import type { IProfessional } from '@professionals/interfaces/professional.inter
 import type { IResponse } from '@core/interfaces/response.interface';
 import { EProfessionalSearch, type IProfessionalSearch } from '@professionals/interfaces/professional-search.interface';
 import { PROFESSIONALS_CONFIG as PROF_CONFIG } from '@config/professionals/professionals.config';
-import { PROF_VIEW_CONFIG } from '@config/professionals.config';
+import { PROFESSIONAL_VIEW_CONFIG as PV_CONFIG } from '@config/professionals/professional-view.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useDelimiter } from '@core/hooks/useDelimiter';
@@ -169,7 +169,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
       cell: ({ row }) => (
         <section className='flex flex-row items-center justify-center'>
           <AvailableProfessional
-            items={PROF_VIEW_CONFIG.select}
+            items={PV_CONFIG.select}
             data={{ _id: row.original._id, available: row.original.available }}
             className='h-6'
           />
