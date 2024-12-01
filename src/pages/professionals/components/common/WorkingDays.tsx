@@ -4,6 +4,7 @@ import { Label } from '@core/components/ui/label';
 // External imports
 import { range } from '@formkit/tempo';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 // Imports
 import type { IWorkingDay, IWorkingDaysProps } from '@professionals/interfaces/working-days.interface';
 import { generateWeekOfWorkingDays } from '@professionals/utils/week-working-days.util';
@@ -13,15 +14,16 @@ export function WorkingDays({ label, data, handleWorkingDaysValues }: IWorkingDa
   const [days, setDays] = useState<string[]>([]);
   const [daysData, setDaysData] = useState<IWorkingDay[]>([]);
   const capitalize = useCapitalize();
+  const { i18n } = useTranslation();
 
   useEffect(() => {
     function handleResize(): void {
       const windowWidth: number = window.innerWidth;
-      
+
       if (windowWidth < 1140 && windowWidth >= 768) {
-        setDays(range('ddd', 'es').map((day) => day));
+        setDays(range('ddd', i18n.resolvedLanguage).map((day) => day));
       } else {
-        setDays(range('dddd', 'es').map((day) => day));
+        setDays(range('dddd', i18n.resolvedLanguage).map((day) => day));
       }
     }
 
@@ -32,7 +34,7 @@ export function WorkingDays({ label, data, handleWorkingDaysValues }: IWorkingDa
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [i18n.resolvedLanguage]);
 
   useEffect(() => {
     const defaultWorkingDaysValues: IWorkingDay[] = generateWeekOfWorkingDays();
