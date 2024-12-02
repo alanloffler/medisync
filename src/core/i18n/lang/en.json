@@ -6,9 +6,10 @@
     "create": "Create",
     "home": "Home",
     "professionalDetails": "Details",
+    "professionalUpdate": "Update",
     "professionals": "Professionals",
-    "update": "Update",
     "userDetails": "Details",
+    "userUpdate": "Update",
     "users": "Patients"
   },
   "button": {
@@ -28,6 +29,7 @@
     "goToUsers": "Go to patients",
     "reserve": "Reserve",
     "reserveAppointment": "Reserve appointment",
+    "updateProfessional": "Update professional",
     "updateUser": "Update patient"
   },
   "cardTitle": {
@@ -45,6 +47,7 @@
     "professionalData": "Professional data",
     "professionalsList": "Professionals list",
     "scheduleConfiguration": "Schedule configuration",
+    "updateProfessional": "Update professional",
     "updateUser": "Update patient",
     "usersList": "Patient list",
     "viewAppointment": "Appointment"
@@ -102,7 +105,8 @@
     "error": {
       "createProfessional": {
         "title": "Error creating professional"
-      }
+      },
+      "updateProfessional": "Error updating professional"
     }
   },
   "email": {
@@ -145,6 +149,7 @@
     "lastName": "Last name",
     "notActive": "Inactive",
     "phone": "Phone",
+    "professional": "Professional",
     "scheduleTimeEnd": "End of appointments",
     "scheduleTimeInit": "Begin of appointments",
     "scheduleTitle": "Office hours",
@@ -175,6 +180,7 @@
     "createUser": "Patient creation",
     "createProfessional": "Professional creation",
     "professionals": "Professionals",
+    "updateProfessional": "Professional update",
     "updateUser": "Patient update",
     "users": "Patients",
     "viewAppointment": "Appointment details",
@@ -197,6 +203,7 @@
     "phone": "Enter the phone",
     "professionalCombobox": "Professionals",
     "professionalSelect": "Professionals",
+    "select": "Select",
     "slotDuration": "Min",
     "specialty": "Enter the specialty",
     "title": "Enter the title",

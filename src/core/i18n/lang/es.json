@@ -6,9 +6,10 @@
     "create": "Crear",
     "home": "Inicio",
     "professionalDetails": "Detalles",
+    "professionalUpdate": "Actualizar",
     "professionals": "Profesionales",
-    "update": "Actualizar",
     "userDetails": "Detalles",
+    "userUpdate": "Actualizar",
     "users": "Pacientes"
   },
   "button": {
@@ -28,6 +29,7 @@
     "goToUsers": "Ir a pacientes",
     "reserve": "Reservar",
     "reserveAppointment": "Reservar turno",
+    "updateProfessional": "Actualizar profesional",
     "updateUser": "Actualizar paciente"
   },
   "cardTitle": {
@@ -45,6 +47,7 @@
     "professionalData": "Datos del profesional",
     "professionalsList": "Lista de profesionales",
     "scheduleConfiguration": "Configuración de agenda",
+    "updateProfessional": "Actualizar profesional",
     "updateUser": "Actualizar paciente",
     "usersList": "Lista de pacientes",
     "viewAppointment": "Turno"
@@ -102,7 +105,8 @@
     "error": {
       "createProfessional": {
         "title": "Error creando profesional"
-      }
+      },
+      "updateProfessional": "Error actualizando profesional"
     }
   },
   "email": {
@@ -145,6 +149,7 @@
     "lastName": "Apellido",
     "notActive": "Inactivo",
     "phone": "Teléfono",
+    "professional": "Profesional",
     "scheduleTimeEnd": "Fin de turnos",
     "scheduleTimeInit": "Inicio de turnos",
     "scheduleTitle": "Horarios de atención",
@@ -175,6 +180,7 @@
     "createUser": "Creación de paciente",
     "createProfessional": "Creación de profesional",
     "professionals": "Profesionales",
+    "updateProfessional": "Actualización de profesional",
     "updateUser": "Actualización de paciente",
     "users": "Pacientes",
     "viewAppointment": "Detalles del turno",
@@ -197,6 +203,7 @@
     "phone": "Ingresá el teléfono",
     "professionalCombobox": "Profesionales",
     "professionalSelect": "Profesionales",
+    "select": "Seleccionar",
     "slotDuration": "Min",
     "specialty": "Ingresá la especialidad",
     "title": "Ingresá el título",
