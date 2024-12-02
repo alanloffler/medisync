@@ -3,7 +3,7 @@ import { FilePlus, Menu } from 'lucide-react';
 // External components:
 // https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@core/components/ui/card';
+import { Card, CardContent, CardTitle } from '@core/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@core/components/ui/dropdown-menu';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@core/components/ui/form';
@@ -25,6 +25,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { spring, useAnimate } from 'motion/react';
 import { useEffect, useState, MouseEvent, useRef } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 // Imports
@@ -69,6 +70,7 @@ export default function UpdateProfessional() {
   const navigate = useNavigate();
   const valuesRef = useRef<IProfessionalForm>({} as IProfessionalForm);
   const { id } = useParams();
+  const { t } = useTranslation();
 
   const updateForm = useForm<z.infer<typeof professionalSchema>>({
     resolver: zodResolver(professionalSchema),
@@ -224,54 +226,53 @@ export default function UpdateProfessional() {
     <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
       {/* Section: Page Header */}
       <header className='flex items-center justify-between'>
-        <PageHeader title={PU_CONFIG.title} breadcrumb={PU_CONFIG.breadcrumb} />
-        <BackButton label={PU_CONFIG.button.back} />
+        <PageHeader title={t('pageTitle.updateProfessional')} breadcrumb={PU_CONFIG.breadcrumb} />
+        <BackButton label={t('button.back')} />
       </header>
       {/* Section: Form */}
       {!errorLoadingProfessional ? (
         <Card className='mx-auto mt-4 flex w-full flex-col md:w-full lg:w-4/5'>
-          <CardHeader className='flex flex-col'>
-            <CardTitle className='flex flex-row items-center justify-between'>
-              <div className='flex items-center gap-2'>
-                <FilePlus size={16} strokeWidth={2} />
-                <span>{PU_CONFIG.formTitle.header}</span>
-              </div>
-              {/* Dropdown menu */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    ref={dropdownScope}
-                    size={'miniIcon'}
-                    variant={'tableHeader'}
-                    onMouseOver={() =>
-                      dropdownAnimation(dropdownScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                    }
-                    onMouseOut={() =>
-                      dropdownAnimation(dropdownScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                    }
-                  >
-                    <Menu size={16} strokeWidth={2} />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className='w-fit' align='center'>
-                  {PU_CONFIG.dropdownMenu.map((item) => (
-                    <DropdownMenuItem key={item.id}>
-                      <Link to={item.path}>{item.name}</Link>
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </CardTitle>
-            <CardDescription className='flex w-full flex-row'>{PU_CONFIG.formTitle.description}</CardDescription>
-          </CardHeader>
-          <CardContent className='pt-1'>
+          <CardTitle className='flex flex-row items-center justify-between rounded-b-none bg-card-header text-slate-700'>
+            <header className='flex items-center gap-3.5 p-2'>
+              <FilePlus size={16} strokeWidth={2} />
+              <span>{t('cardTitle.updateProfessional')}</span>
+            </header>
+            {/* Dropdown menu */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  ref={dropdownScope}
+                  size={'miniIcon'}
+                  variant={'tableHeader'}
+                  onMouseOver={() =>
+                    dropdownAnimation(dropdownScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                  }
+                  onMouseOut={() =>
+                    dropdownAnimation(dropdownScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                  }
+                >
+                  <Menu size={16} strokeWidth={2} />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className='w-fit' align='center'>
+                {PU_CONFIG.dropdownMenu.map((item) => (
+                  <DropdownMenuItem key={item.id}>
+                    <Link to={item.path}>{t(item.name)}</Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </CardTitle>
+          <CardContent className='pt-6'>
             <Form {...updateForm}>
               <form onSubmit={updateForm.handleSubmit(handleUpdateProfessional)}>
                 {/* Section: Form fields */}
                 <section className='grid grid-cols-1 space-y-6 md:grid-cols-2 md:space-y-0'>
                   {/* Section: Professional data (left side) */}
                   <section className='flex flex-col gap-4 md:pr-6'>
-                    <h1 className='mb-3 rounded-sm bg-slate-200/50 px-2 py-1 font-semibold text-slate-700'>{PU_CONFIG.formTitle.professional}</h1>
+                    <h1 className='mb-3 rounded-sm bg-slate-200/50 px-2 py-1 text-base font-semibold text-slate-700'>
+                      {t('cardTitle.professionalData')}
+                    </h1>
                     {/* Form fields: area and specialization */}
                     <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                       <FormField
@@ -279,7 +280,7 @@ export default function UpdateProfessional() {
                         name='area'
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{PU_CONFIG.labels.area}</FormLabel>
+                            <FormLabel>{t('table.header.area')}</FormLabel>
                             <Select
                               defaultValue={field.value}
                               disabled={areas.length < 1}
@@ -292,9 +293,9 @@ export default function UpdateProfessional() {
                               <FormControl>
                                 <SelectTrigger className={`h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
                                   {areasIsLoading ? (
-                                    <LoadingDB variant='default' text={PU_CONFIG.select.loadingText} className='ml-0' />
+                                    <LoadingDB variant='default' text={t('loading.default')} className='ml-0' />
                                   ) : (
-                                    <SelectValue placeholder={PU_CONFIG.placeholders.area} />
+                                    <SelectValue placeholder={t('placeholder.area')} />
                                   )}
                                 </SelectTrigger>
                               </FormControl>
@@ -316,7 +317,7 @@ export default function UpdateProfessional() {
                         name='specialization'
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{PU_CONFIG.labels.specialization}</FormLabel>
+                            <FormLabel>{t('table.header.specialty')}</FormLabel>
                             <Select
                               defaultValue={field.value}
                               disabled={disabledSpec || specializations.length < 1}
@@ -327,9 +328,9 @@ export default function UpdateProfessional() {
                               <FormControl>
                                 <SelectTrigger className={`h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
                                   {areasIsLoading ? (
-                                    <LoadingDB variant='default' text={PU_CONFIG.select.loadingText} className='ml-0' />
+                                    <LoadingDB variant='default' text={t('loading.default')} className='ml-0' />
                                   ) : (
-                                    <SelectValue placeholder={PU_CONFIG.placeholders.specialization} />
+                                    <SelectValue placeholder={t('placeholder.specialty')} />
                                   )}
                                 </SelectTrigger>
                               </FormControl>
@@ -353,7 +354,7 @@ export default function UpdateProfessional() {
                         name='title'
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{PU_CONFIG.labels.title}</FormLabel>
+                            <FormLabel>{t('label.title')}</FormLabel>
                             <Select
                               defaultValue={field.value}
                               disabled={titles.length < 1}
@@ -365,9 +366,9 @@ export default function UpdateProfessional() {
                               <FormControl>
                                 <SelectTrigger className={`h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
                                   {titlesIsLoading ? (
-                                    <LoadingDB variant='default' text={PU_CONFIG.select.loadingText} className='ml-0' />
+                                    <LoadingDB variant='default' text={t('loading.default')} className='ml-0' />
                                   ) : (
-                                    <SelectValue placeholder={PU_CONFIG.placeholders.title} />
+                                    <SelectValue placeholder={t('placeholder.title')} />
                                   )}
                                 </SelectTrigger>
                               </FormControl>
@@ -392,7 +393,7 @@ export default function UpdateProfessional() {
                             <FormControl className='h-9'>
                               <div className='flex h-full items-center space-x-4 pb-2 pt-4 md:place-content-center md:pb-0 md:pt-8 lg:place-content-center lg:pb-0 lg:pt-8'>
                                 <Switch id='available' checked={field.value} onCheckedChange={field.onChange} />
-                                <Label htmlFor='available'>{PU_CONFIG.labels.available}</Label>
+                                <Label htmlFor='available'>{t('label.available')}</Label>
                               </div>
                             </FormControl>
                             <FormMessage />
@@ -407,9 +408,9 @@ export default function UpdateProfessional() {
                         name='lastName'
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{PU_CONFIG.labels.lastName}</FormLabel>
+                            <FormLabel>{t('label.lastName')}</FormLabel>
                             <FormControl className='h-9'>
-                              <Input placeholder={PU_CONFIG.placeholders.lastName} {...field} />
+                              <Input placeholder={t('placeholder.lastName')} {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -420,9 +421,9 @@ export default function UpdateProfessional() {
                         name='firstName'
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{PU_CONFIG.labels.firstName}</FormLabel>
+                            <FormLabel>{t('label.firstName')}</FormLabel>
                             <FormControl className='h-9'>
-                              <Input placeholder={PU_CONFIG.placeholders.firstName} {...field} />
+                              <Input placeholder={t('placeholder.firstName')} {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -436,9 +437,9 @@ export default function UpdateProfessional() {
                         name='dni'
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{PU_CONFIG.labels.dni}</FormLabel>
+                            <FormLabel>{t('label.identityCard')}</FormLabel>
                             <FormControl className='h-9'>
-                              <Input type='number' placeholder={PU_CONFIG.placeholders.dni} {...field} />
+                              <Input type='number' placeholder={t('placeholder.identityCard')} {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -452,9 +453,9 @@ export default function UpdateProfessional() {
                         name='email'
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{PU_CONFIG.labels.email}</FormLabel>
+                            <FormLabel>{t('label.email')}</FormLabel>
                             <FormControl className='h-9'>
-                              <Input placeholder={PU_CONFIG.placeholders.email} {...field} />
+                              <Input placeholder={t('placeholder.email')} {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -465,9 +466,9 @@ export default function UpdateProfessional() {
                         name='phone'
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{PU_CONFIG.labels.phone}</FormLabel>
+                            <FormLabel>{t('label.phone')}</FormLabel>
                             <FormControl className='h-9'>
-                              <Input type='number' placeholder={PU_CONFIG.placeholders.phone} {...field} />
+                              <Input type='number' placeholder={t('placeholder.phone')} {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -481,9 +482,9 @@ export default function UpdateProfessional() {
                         name='description'
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{PU_CONFIG.labels.description}</FormLabel>
+                            <FormLabel>{t('label.description')}</FormLabel>
                             <FormControl className='h-9'>
-                              <Textarea placeholder={PU_CONFIG.placeholders.description} {...field} />
+                              <Textarea placeholder={t('placeholder.description')} {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -493,7 +494,7 @@ export default function UpdateProfessional() {
                   </section>
                   {/* Section: Schedule (right side) */}
                   <section className='flex flex-col gap-4 border-t pt-6 md:border-l md:border-t-0 md:pl-6 md:pt-0'>
-                    <h1 className='mb-3 rounded-sm bg-slate-200/50 px-2 py-1 font-semibold text-slate-700'>{PU_CONFIG.formTitle.schedule}</h1>
+                    <h1 className='mb-3 rounded-sm bg-slate-200/50 px-2 py-1 font-semibold text-slate-700'>{t('cardTitle.scheduleConfiguration')}</h1>
                     {/* Form fields: Schedule working days */}
                     <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                       <FormField
@@ -504,7 +505,7 @@ export default function UpdateProfessional() {
                             <FormControl>
                               <WorkingDays
                                 key={workingDaysKey}
-                                label={PU_CONFIG.labels.configuration.workingDays}
+                                label={t('label.workingDays')}
                                 data={field.value}
                                 handleWorkingDaysValues={handleWorkingDaysValues}
                               />
@@ -520,8 +521,8 @@ export default function UpdateProfessional() {
                         control={updateForm.control}
                         name='configuration.slotDuration'
                         render={({ field }) => (
-                          <FormItem className='space-y-1'>
-                            <FormLabel>{PU_CONFIG.labels.configuration.slotDuration}</FormLabel>
+                          <FormItem className='space-y-2'>
+                            <FormLabel>{t('label.slotDuration')}</FormLabel>
                             <Select
                               disabled={areas.length < 1}
                               onValueChange={(event) => {
@@ -531,7 +532,7 @@ export default function UpdateProfessional() {
                             >
                               <FormControl>
                                 <SelectTrigger className={`h-9 w-1/2 ${!field.value ? 'text-muted-foreground' : ''}`}>
-                                  <SelectValue placeholder={PU_CONFIG.placeholders.configuration.slotDuration} />
+                                  <SelectValue placeholder={t('placeholder.slotDuration')} />
                                 </SelectTrigger>
                               </FormControl>
                               <FormMessage />
@@ -554,10 +555,10 @@ export default function UpdateProfessional() {
                         control={updateForm.control}
                         name='configuration.scheduleTimeInit'
                         render={({ field }) => (
-                          <FormItem className='space-y-1'>
-                            <FormLabel>{PU_CONFIG.labels.configuration.scheduleTimeInit}</FormLabel>
+                          <FormItem className='space-y-2'>
+                            <FormLabel>{t('label.scheduleTimeInit')}</FormLabel>
                             <FormControl className='h-9'>
-                              <InputMask mask='99:99' maskPlaceholder='--:--' alwaysShowMask={false} placeholder={'00:00'} {...field}>
+                              <InputMask mask='99:99' maskPlaceholder='--:--' alwaysShowMask={false} placeholder={t('placeholder.hour')} {...field}>
                                 <Input />
                               </InputMask>
                             </FormControl>
@@ -569,10 +570,10 @@ export default function UpdateProfessional() {
                         control={updateForm.control}
                         name='configuration.scheduleTimeEnd'
                         render={({ field }) => (
-                          <FormItem className='space-y-1'>
-                            <FormLabel>{PU_CONFIG.labels.configuration.scheduleTimeEnd}</FormLabel>
+                          <FormItem className='space-y-2'>
+                            <FormLabel>{t('label.scheduleTimeEnd')}</FormLabel>
                             <FormControl className='h-9'>
-                              <InputMask mask='99:99' maskPlaceholder='--:--' alwaysShowMask={false} placeholder={'00:00'} {...field}>
+                              <InputMask mask='99:99' maskPlaceholder='--:--' alwaysShowMask={false} placeholder={t('placeholder.hour')} {...field}>
                                 <Input />
                               </InputMask>
                             </FormControl>
@@ -587,10 +588,10 @@ export default function UpdateProfessional() {
                         control={updateForm.control}
                         name='configuration.unavailableTimeSlot.timeSlotUnavailableInit'
                         render={({ field }) => (
-                          <FormItem className='space-y-1'>
-                            <FormLabel>{PU_CONFIG.labels.configuration.timeSlotUnavailableInit}</FormLabel>
+                          <FormItem className='space-y-2'>
+                            <FormLabel>{t('label.timeSlotUnavailableInit')}</FormLabel>
                             <FormControl className='h-9'>
-                              <InputMask mask='99:99' maskPlaceholder='--:--' alwaysShowMask={false} placeholder={'00:00'} {...field}>
+                              <InputMask mask='99:99' maskPlaceholder='--:--' alwaysShowMask={false} placeholder={t('placeholder.hour')} {...field}>
                                 <Input />
                               </InputMask>
                             </FormControl>
@@ -602,10 +603,10 @@ export default function UpdateProfessional() {
                         control={updateForm.control}
                         name='configuration.unavailableTimeSlot.timeSlotUnavailableEnd'
                         render={({ field }) => (
-                          <FormItem className='space-y-1'>
-                            <FormLabel>{PU_CONFIG.labels.configuration.timeSlotUnavailableEnd}</FormLabel>
+                          <FormItem className='space-y-2'>
+                            <FormLabel>{t('label.timeSlotUnavailableEnd')}</FormLabel>
                             <FormControl className='h-9'>
-                              <InputMask mask='99:99' maskPlaceholder='--:--' alwaysShowMask={false} placeholder={'00:00'} {...field}>
+                              <InputMask mask='99:99' maskPlaceholder='--:--' alwaysShowMask={false} placeholder={t('placeholder.hour')} {...field}>
                                 <Input />
                               </InputMask>
                             </FormControl>
@@ -618,11 +619,11 @@ export default function UpdateProfessional() {
                 </section>
                 {/* Section footer: Buttons */}
                 <footer className='grid grid-cols-1 space-y-2 pt-6 md:flex md:justify-end md:gap-6 md:space-y-0'>
-                  <Button type='submit' className='order-1 md:order-2 lg:order-2'>
-                    {isUpdating ? <LoadingDB text={PU_CONFIG.button.updating} variant='button' /> : PU_CONFIG.button.update}
+                  <Button type='submit' variant='default' size='sm' className='order-1 md:order-2 lg:order-2'>
+                    {isUpdating ? <LoadingDB text={t('loading.updating')} variant='button' /> : t('button.updateProfessional')}
                   </Button>
-                  <Button variant={'ghost'} onClick={handleCancel} className='order-2 md:order-1 lg:order-1'>
-                    {PU_CONFIG.button.cancel}
+                  <Button variant='ghost' size='sm' onClick={handleCancel} className='order-2 md:order-1 lg:order-1'>
+                    {t('button.cancel')}
                   </Button>
                 </footer>
               </form>
@@ -638,17 +639,15 @@ export default function UpdateProfessional() {
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className='text-xl'>{PU_CONFIG.dialog.update.errorTitle}</DialogTitle>
+            <DialogTitle className='text-xl'>{t('dialog.error.updateProfessional')}</DialogTitle>
             <DialogDescription className='sr-only'></DialogDescription>
-            <div className='flex flex-col pt-2'>
-              <span className=''>{errorMessage}</span>
-              <div className='mt-5 flex justify-end space-x-4'>
-                <Button variant='remove' size='sm' onClick={() => setOpenDialog(false)}>
-                  {PU_CONFIG.dialog.button.close}
-                </Button>
-              </div>
-            </div>
+            <div className='flex flex-col'>{errorMessage}</div>
           </DialogHeader>
+          <footer className='flex justify-end space-x-4'>
+            <Button variant='remove' size='sm' onClick={() => setOpenDialog(false)}>
+              {t('button.close')}
+            </Button>
+          </footer>
         </DialogContent>
       </Dialog>
     </main>
