@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { CalendarClock, CalendarDays, Mail, PencilLine, Share2, Smartphone, Tag, Trash2 } from 'lucide-react';
+import { CalendarClock, CalendarDays, Mail, PencilLine, Send, Share2, Smartphone, Tag, Trash2 } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Badge } from '@core/components/ui/badge';
 import { Button } from '@core/components/ui/button';
@@ -14,25 +14,25 @@ import { PageHeader } from '@core/components/common/PageHeader';
 import { RemoveDialog } from '@core/components/common/RemoveDialog';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
-import { useNavigate, useParams } from 'react-router-dom';
+import { Trans, useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 // Imports
 import type { IEmail } from '@core/interfaces/email.interface';
 import type { IInfoCard } from '@core/components/common/interfaces/infocard.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
-import { APP_CONFIG } from '@config/app.config';
 import { CalendarService } from '@appointments/services/calendar.service';
-import { PROF_VIEW_CONFIG as PV_CONFIG } from '@config/professionals.config';
+import { PROFESSIONAL_VIEW_CONFIG as PV_CONFIG } from '@config/professionals/professional-view.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useCapitalizeFirstLetter } from '@core/hooks/useCapitalizeFirstLetter';
 import { useDelimiter } from '@core/hooks/useDelimiter';
-import { useNotificationsStore } from '@core/stores/notifications.store';
 import { useHelpStore } from '@settings/stores/help.store';
+import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export default function ViewProfessional() {
-  const [emailObject, setEmailObject] = useState<IEmail>({} as IEmail);
+  const [email, setEmail] = useState<IEmail>({} as IEmail);
   const [infoCard, setInfoCard] = useState<IInfoCard>({} as IInfoCard);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [legibleWorkingDays, setLegibleWorkingDays] = useState<string>('');
@@ -44,24 +44,31 @@ export default function ViewProfessional() {
   const delimiter = useDelimiter();
   const navigate = useNavigate();
   const { help } = useHelpStore();
+  const { i18n, t } = useTranslation();
   const { id } = useParams();
 
   useEffect(() => {
     if (id) {
+      const selectedLocale = i18n.resolvedLanguage || i18n.language;
+
       setIsLoading(true);
 
       ProfessionalApiService.findOne(id)
         .then((response: IResponse) => {
           if (response.statusCode === 200) {
             setProfessional(response.data);
-            setEmailObject({
+            setEmail({
               to: response.data.email,
-              subject: PV_CONFIG.email.subject,
-              body: `${PV_CONFIG.email.body[0]} ${capitalize(response.data?.firstName)}${PV_CONFIG.email.body[1]}`,
+              subject: t('email.sendToProfessional.subject'),
+              body: t('email.sendToProfessional.body', {
+                titleAbbreviation: capitalize(response.data.title.abbreviation),
+                firstName: capitalize(response.data.firstName),
+                lastName: capitalize(response.data.lastName),
+              }),
             });
             setShowCard(true);
 
-            const legibleWorkingDays: string = CalendarService.getLegibleWorkingDays(response.data.configuration.workingDays, true);
+            const legibleWorkingDays: string = CalendarService.getLegibleWorkingDays(response.data.configuration.workingDays, true, selectedLocale);
             setLegibleWorkingDays(legibleWorkingDays);
           }
           if (response.statusCode > 399) {
@@ -69,21 +76,21 @@ export default function ViewProfessional() {
             addNotification({ type: 'warning', message: response.message });
           }
           if (response instanceof Error) {
-            setInfoCard({ type: 'error', text: APP_CONFIG.error.server });
-            addNotification({ type: 'error', message: APP_CONFIG.error.server });
+            setInfoCard({ type: 'error', text: t('error.internalServer') });
+            addNotification({ type: 'error', message: t('error.internalServer') });
           }
         })
         .finally(() => setIsLoading(false));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [id, i18n.resolvedLanguage]);
 
   return (
-    <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
+    <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
       {/* Section: Page Header */}
       <header className='flex items-center justify-between'>
-        <PageHeader title={PV_CONFIG.title} breadcrumb={PV_CONFIG.breadcrumb} />
-        <BackButton label={PV_CONFIG.button.back} />
+        <PageHeader title={t('pageTitle.viewProfessional')} breadcrumb={PV_CONFIG.breadcrumb} />
+        <BackButton label={t('button.back')} />
       </header>
       {/* Section: Page content */}
       <section className='mx-auto mt-4 flex w-full flex-row px-2 md:w-[500px]'>
@@ -96,7 +103,7 @@ export default function ViewProfessional() {
             <InfoCard type={infoCard.type} text={infoCard.text} className='py-6' />
           )}
           {isLoading ? (
-            <LoadingDB text={APP_CONFIG.loadingDB.findOneUser} className='-mt-12 py-6' />
+            <LoadingDB text={t('loading.professional')} className='-mt-12 py-6' />
           ) : (
             showCard && (
               <>
@@ -108,7 +115,7 @@ export default function ViewProfessional() {
                     </section>
                   )}
                   <section className='space-y-3'>
-                    <h2 className='pt-2 text-xsm font-semibold uppercase leading-none text-slate-700'>{PV_CONFIG.phrases.scheduleTitle}</h2>
+                    <h2 className='pt-2 text-xsm font-semibold uppercase leading-none text-slate-700'>{t('label.scheduleTitle')}</h2>
                     {professional.configuration?.workingDays && (
                       <div className='flex items-center space-x-3'>
                         <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
@@ -127,18 +134,18 @@ export default function ViewProfessional() {
                             professional.configuration?.scheduleTimeEnd &&
                             !professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableInit &&
                             !professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableEnd &&
-                            `${professional.configuration.scheduleTimeInit} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.scheduleTimeEnd}`}
+                            `${professional.configuration.scheduleTimeInit} ${t('words.hoursSeparator')} ${professional.configuration.scheduleTimeEnd}`}
                           {professional.configuration?.scheduleTimeInit &&
                             professional.configuration?.scheduleTimeEnd &&
                             professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableInit &&
                             professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableEnd &&
-                            `${professional.configuration.scheduleTimeInit} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.unavailableTimeSlot?.timeSlotUnavailableInit} ${PV_CONFIG.words.slotsSeparator} ${professional.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd} ${PV_CONFIG.words.hoursSeparator} ${professional.configuration.scheduleTimeEnd}`}
+                            `${professional.configuration.scheduleTimeInit} ${t('words.hoursSeparator')} ${professional.configuration.unavailableTimeSlot?.timeSlotUnavailableInit} ${t('words.slotsSeparator')} ${professional.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd} ${t('words.hoursSeparator')} ${professional.configuration.scheduleTimeEnd}`}
                         </span>
                       </div>
                     )}
                   </section>
                   <section className='space-y-3'>
-                    <h2 className='pt-2 text-xsm font-semibold uppercase leading-none text-slate-700'>{PV_CONFIG.phrases.contactTitle}</h2>
+                    <h2 className='pt-2 text-xsm font-semibold uppercase leading-none text-slate-700'>{t('label.contact')}</h2>
                     {professional.phone && (
                       <div className='flex items-center space-x-3'>
                         <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
@@ -170,9 +177,21 @@ export default function ViewProfessional() {
                   </section>
                 </CardContent>
                 <CardFooter className='justify-between border-t p-2'>
-                  <AvailableProfessional items={PV_CONFIG.select} data={{ _id: professional._id, available: professional.available }} />
+                  <AvailableProfessional items={PV_CONFIG.select} data={{ _id: professional._id, available: professional.available }} help={help} />
                   <section className='space-x-2'>
-                    <TooltipWrapper tooltip={PV_CONFIG.tooltip.share} help={help}>
+                    <TooltipWrapper tooltip={t('tooltip.sendEmail')} help={help}>
+                      <Button
+                        variant='ghost'
+                        size='miniIcon'
+                        onClick={() =>
+                          window.open(`https://mail.google.com/mail/?view=cm&to=${email.to}&su=${email.subject}&body=${email.body}`, '_blank')
+                        }
+                        className='transition-transform hover:scale-110 hover:bg-white hover:text-fuchsia-400 hover:animate-in'
+                      >
+                        <Send size={18} strokeWidth={1.5} />
+                      </Button>
+                    </TooltipWrapper>
+                    <TooltipWrapper tooltip={t('tooltip.share')} help={help}>
                       <Button
                         variant='ghost'
                         size='miniIcon'
@@ -181,7 +200,7 @@ export default function ViewProfessional() {
                         <Share2 size={18} strokeWidth={1.5} />
                       </Button>
                     </TooltipWrapper>
-                    <TooltipWrapper tooltip={PV_CONFIG.tooltip.edit} help={help}>
+                    <TooltipWrapper tooltip={t('tooltip.edit')} help={help}>
                       <Button
                         variant='ghost'
                         size='miniIcon'
@@ -192,21 +211,30 @@ export default function ViewProfessional() {
                       </Button>
                     </TooltipWrapper>
                     <RemoveDialog
-                      // action={() => console.log({ 'action'})}
+                      action={() => Promise.resolve({} as IResponse)}
                       dialogContent={
-                        <section>
-                          Vas a eliminar al profesional{' '}
-                          <span className='font-semibold'>{`${capitalize(professional.title.abbreviation)} ${capitalize(professional.firstName)} ${capitalize(professional.lastName)}`}</span>
-                        </section>
+                        <Trans
+                          i18nKey={'dialog.deleteProfessional.content'}
+                          values={{
+                            titleAbbreviation: capitalize(professional.title.abbreviation),
+                            firstName: capitalize(professional.firstName),
+                            lastName: capitalize(professional.lastName),
+                            identityCard: delimiter(professional.dni, '.', 3),
+                          }}
+                          components={{
+                            span: <span className='font-semibold' />,
+                            i: <i />,
+                          }}
+                        />
                       }
                       dialogTexts={{
-                        title: PV_CONFIG.dialog.title,
-                        description: PV_CONFIG.dialog.description,
-                        cancelButton: PV_CONFIG.button.cancel,
-                        removeButton: PV_CONFIG.button.deleteProfessional,
+                        title: t('dialog.deleteProfessional.title'),
+                        description: t('dialog.deleteProfessional.description'),
+                        cancelButton: t('button.cancel'),
+                        removeButton: t('button.deleteProfessional'),
                       }}
                       help={help}
-                      tooltip={PV_CONFIG.tooltip.delete}
+                      tooltip={t('tooltip.delete')}
                       triggerButton={<Trash2 size={18} strokeWidth={1.5} />}
                     />
                   </section>
@@ -217,9 +245,9 @@ export default function ViewProfessional() {
         </Card>
       </section>
       {/* Section: Page footer */}
-      <footer className='mx-auto pt-3'>
+      <footer className='mx-auto'>
         <Button variant='default' size='default' onClick={() => navigate('/professionals')}>
-          {PV_CONFIG.button.goToProfessionals}
+          {t('button.goToProfessionals')}
         </Button>
       </footer>
     </main>
