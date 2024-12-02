@@ -1,6 +1,7 @@
 import type { IProfessional, IProfessionalForm } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { SortingState } from '@tanstack/react-table';
+import i18next from 'i18next';
 import { APP_CONFIG } from '@config/app.config';
 import { EMethods } from '@core/enums/methods.enum';
 import { ProfessionalUtils } from '@professionals/services/professional.utils';
@@ -22,30 +23,6 @@ export class ProfessionalApiService {
       return await query.json();
     } catch (error) {
       return error;
-    }
-  }
-
-  public static async findAllActive(): Promise<IResponse<IProfessional[]>> {
-    const url: string = `${this.API_URL}/professionals/active`;
-
-    try {
-      const query: Response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json;charset=UTF-8',
-        },
-      });
-
-      const response: IResponse<IProfessional[]> = await query.json();
-      if (!query.ok) throw new Error(response.message);
-
-      return response;
-    } catch (error) {
-      if (error instanceof TypeError) {
-        throw new Error(APP_CONFIG.error.server);
-      }
-
-      throw error;
     }
   }
 
@@ -151,7 +128,12 @@ export class ProfessionalApiService {
     return await this.fetch(url, EMethods.GET);
   }
 
-  private static async fetch(url: string, method: EMethods, body?: any) {
+  public static async findAllActive(): Promise<IResponse<IProfessional[]>> {
+    const url: string = `${this.API_URL}/professionals/active`;
+    return await this.fetch(url, EMethods.GET);
+  }
+
+  private static async fetch(url: string, method: EMethods, body?: any): Promise<IResponse<any>> {
     try {
       const query: Response = await fetch(url, {
         method: method,
@@ -161,13 +143,13 @@ export class ProfessionalApiService {
         body: JSON.stringify(body),
       });
 
-      const response: IResponse = await query.json();
+      const response: IResponse<any> = await query.json();
       if (!query.ok) throw new Error(response.message);
 
       return response;
     } catch (error) {
       if (error instanceof TypeError) {
-        throw new Error(APP_CONFIG.error.server);
+        throw new Error(i18next.t('error.internalServer'));
       }
       throw error;
     }
