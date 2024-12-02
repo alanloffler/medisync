@@ -9,7 +9,7 @@ import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
 import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useQuery } from '@tanstack/react-query';
 // Imports
 import type { IInfoCard } from '@core/components/common/interfaces/infocard.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
@@ -31,39 +31,28 @@ interface IProfessionalsCombobox {
 }
 // React component
 export function ProfessionalsCombobox({ onSelectProfessional, options, className }: IProfessionalsCombobox) {
-  const [error, setError] = useState<boolean>(false);
   const [infoCard, setInfoCard] = useState<IInfoCard>({} as IInfoCard);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [openCombobox, setOpenCombobox] = useState<boolean>(false);
-  const [professionals, setProfessionals] = useState<IProfessional[]>([] as IProfessional[]);
   const [value, setValue] = useState<string>('');
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const { loadingText, notFoundText, placeholder, searchText } = options;
-  const { t } = useTranslation();
+
+  const {
+    data: professionals,
+    error,
+    isError,
+    isLoading,
+  } = useQuery<IResponse<IProfessional[]>>({
+    queryKey: ['professionals', 'professionals-active'],
+    queryFn: async () => await ProfessionalApiService.findAllActive(),
+    retry: 1,
+  });
 
   useEffect(() => {
-    setIsLoading(true);
-    // prettier-ignore
-    ProfessionalApiService
-    .findAllActive()
-    .then((response: IResponse) => {
-      if (response.statusCode === 200) {
-        setProfessionals(response.data);
-      }
-      if (response.statusCode > 399) {
-        addNotification({ type: 'warning', message: response.message });
-        setInfoCard({ type: 'warning', text: response.message });
-        setError(true);
-      }
-      if (response instanceof Error) {
-        addNotification({ type: 'error', message: t('error.internalServer') });
-        setInfoCard({ type: 'error', text: t('error.internalServer') });
-        setError(true);
-      }
-      setIsLoading(false);
-    });
-  }, [addNotification, t]);
+    setInfoCard({ type: 'error', text: error?.message });
+    if (error?.message !== undefined) addNotification({ type: 'error', message: error?.message });
+  }, [error?.message, addNotification]);
 
   return (
     <Popover open={openCombobox} onOpenChange={setOpenCombobox}>
@@ -79,38 +68,41 @@ export function ProfessionalsCombobox({ onSelectProfessional, options, className
       </PopoverTrigger>
       <PopoverContent className='mt-2 w-full p-0 shadow-sm' align='start'>
         <Command>
-          {!error && <CommandInput placeholder={searchText} className='h-8 text-xsm' />}
+          {!isError && <CommandInput placeholder={searchText} className='h-8 text-xsm' />}
           <CommandList>
-            {!error && <CommandEmpty>{notFoundText}</CommandEmpty>}
+            {!isError && <CommandEmpty>{notFoundText}</CommandEmpty>}
             <CommandGroup>
-              {error ? (
+              {isError ? (
                 <div className='relative left-0 max-w-[300px]'>
                   <InfoCard type={infoCard.type} text={infoCard.text} />
                 </div>
               ) : (
                 <>
-                  {professionals.map((professional) => (
-                    <CommandItem
-                      className='text-xsm'
-                      key={professional._id}
-                      value={`${professional.title.abbreviation} ${professional.firstName} ${professional.lastName}`}
-                      onSelect={(currentValue) => {
-                        setValue(currentValue === value ? '' : currentValue);
-                        setOpenCombobox(false);
-                        onSelectProfessional(professional);
-                      }}
-                    >
-                      <Check
-                        className={cn(
-                          'mr-2 h-4 w-4',
-                          value === `${professional.title.abbreviation} ${professional.firstName} ${professional.lastName}`
-                            ? 'opacity-100'
-                            : 'opacity-0',
-                        )}
-                      />
-                      {`${capitalize(professional.title.abbreviation)} ${capitalize(professional.firstName)} ${capitalize(professional.lastName)}`}
-                    </CommandItem>
-                  ))}
+                  {professionals?.data &&
+                    professionals?.data.map((professional) => (
+                      <CommandItem
+                        className='text-xsm'
+                        key={professional._id}
+                        value={`${professional.title.abbreviation} ${professional.firstName} ${professional.lastName}`}
+                        onSelect={(currentValue) => {
+                          setValue(currentValue === value ? '' : currentValue);
+                          setOpenCombobox(false);
+                          onSelectProfessional(professional);
+                        }}
+                      >
+                        <Check
+                          className={cn(
+                            'mr-2',
+                            value === `${professional.title.abbreviation} ${professional.firstName} ${professional.lastName}`
+                              ? 'opacity-100'
+                              : 'opacity-0',
+                          )}
+                          size={16}
+                          strokeWidth={2}
+                        />
+                        {`${capitalize(professional.title.abbreviation)} ${capitalize(professional.firstName)} ${capitalize(professional.lastName)}`}
+                      </CommandItem>
+                    ))}
                 </>
               )}
             </CommandGroup>
