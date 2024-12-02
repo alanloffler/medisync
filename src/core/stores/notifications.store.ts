@@ -4,7 +4,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 
 export interface INotification {
   date?: string;
-  message: string;
+  message?: string;
   type: 'error' | 'success' | 'warning';
 }
 
