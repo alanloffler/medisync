@@ -1,4 +1,4 @@
-import type { IProfessionalForm } from '@professionals/interfaces/professional.interface';
+import type { IProfessional, IProfessionalForm } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { SortingState } from '@tanstack/react-table';
 import { APP_CONFIG } from '@config/app.config';
@@ -25,7 +25,7 @@ export class ProfessionalApiService {
     }
   }
 
-  public static async findAllActive() {
+  public static async findAllActive(): Promise<IResponse<IProfessional[]>> {
     const url: string = `${this.API_URL}/professionals/active`;
 
     try {
@@ -36,9 +36,16 @@ export class ProfessionalApiService {
         },
       });
 
-      return await query.json();
+      const response: IResponse<IProfessional[]> = await query.json();
+      if (!query.ok) throw new Error(response.message);
+
+      return response;
     } catch (error) {
-      return error;
+      if (error instanceof TypeError) {
+        throw new Error(APP_CONFIG.error.server);
+      }
+
+      throw error;
     }
   }
 
