@@ -1,14 +1,15 @@
 {
   "appName": "MediSync",
   "breadcrumb": {
-    "home": "Inicio",
-    "appointments": "Turnos",
     "appointmentDetails": "Detalles",
+    "appointments": "Turnos",
     "create": "Crear",
+    "home": "Inicio",
+    "professionalDetails": "Detalles",
     "professionals": "Profesionales",
     "update": "Actualizar",
-    "users": "Pacientes",
-    "userDetails": "Detalles"
+    "userDetails": "Detalles",
+    "users": "Pacientes"
   },
   "button": {
     "addArea": "Agregar área",
@@ -23,6 +24,7 @@
     "deleteProfessional": "Eliminar profesional",
     "deleteUser": "Eliminar paciente",
     "generateAppointment": "Generar turno",
+    "goToProfessionals": "Ir a profesionales",
     "goToUsers": "Ir a pacientes",
     "reserve": "Reservar",
     "reserveAppointment": "Reservar turno",
@@ -108,6 +110,10 @@
       "subject": "Confirmación de turno",
       "body": "Hola {{firstName}},"
     },
+    "sendToProfessional": {
+      "subject": "MediSync - Turnos médicos",
+      "body": "Hola {{titleAbbreviation}} {{firstName}} {{lastName}},"
+    },
     "sendToUser": {
       "subject": "MediSync - Turnos médicos",
       "body": "Hola {{firstName}},"
@@ -129,15 +135,19 @@
     "viewAppointment": "Detalles del turno"
   },
   "label": {
+    "active": "Activo",
     "available": "Disponible",
+    "contact": "Contacto",
     "description": "Descripción",
     "email": "Correo electrónico",
     "firstName": "Nombre",
     "identityCard": "DNI",
     "lastName": "Apellido",
+    "notActive": "Inactivo",
     "phone": "Teléfono",
     "scheduleTimeEnd": "Fin de turnos",
     "scheduleTimeInit": "Inicio de turnos",
+    "scheduleTitle": "Horarios de atención",
     "slotDuration": "Duración del turno",
     "specialization": "Especialización",
     "timeSlotUnavailableEnd": "Fin de descanso",
@@ -153,6 +163,7 @@
     "default": "Cargando",
     "deleting": "Eliminando",
     "generatingPDF": "Generando PDF",
+    "professional": "Cargando profesional",
     "professionals": "Cargando profesionales",
     "schedule": "Cargando agenda",
     "updating": "Actualizando",
@@ -167,6 +178,7 @@
     "updateUser": "Actualización de paciente",
     "users": "Pacientes",
     "viewAppointment": "Detalles del turno",
+    "viewProfessional": "Detalles del profesional",
     "viewUser": "Detalles del paciente"
   },
   "pagination": {
@@ -256,6 +268,7 @@
   "tooltip": {
     "addProfessional": "Agregar profesional",
     "addUser": "Agregar paciente",
+    "availability": "Disponibilidad",
     "delete": "Eliminar",
     "deleteUser": "Eliminar paciente",
     "details": "Ver detalles",
@@ -272,6 +285,7 @@
     "selectYear": "Seleccionar año",
     "sendEmail": "Enviar email",
     "sendMessage": "Enviar WhatsApp",
+    "share": "Compartir",
     "sort": {
       "area": "Ordenar por área",
       "availability": "Ordenar por disponibilidad",
