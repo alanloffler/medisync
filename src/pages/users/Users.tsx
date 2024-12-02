@@ -88,7 +88,7 @@ export default function Users() {
                     onChange={handleSearchByDNI}
                     value={search.type === EUserSearch.DNI ? search.value : ''}
                     type='number'
-                    placeholder={t('words.identityCard')}
+                    placeholder={t('label.identityCard')}
                     className='bg-background pl-10 shadow-sm'
                   />
                   {search.type === EUserSearch.DNI && search.value && (
