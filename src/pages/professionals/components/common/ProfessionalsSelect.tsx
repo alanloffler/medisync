@@ -2,7 +2,7 @@
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@core/components/ui/select';
 // Imports
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
-import { PROFESSIONALS_SELECT_CONFIG as PS_CONFIG } from '@config/professionals.config';
+import { PROFESSIONALS_SELECT_CONFIG as PS_CONFIG } from '@config/professionals/professional-select.config';
 import { cn } from '@lib/utils';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 // React component
@@ -20,7 +20,7 @@ export function ProfessionalsSelect({
   const capitalize = useCapitalize();
 
   return (
-    <main className='flex flex-row space-x-2 items-center'>
+    <main className='flex flex-row items-center space-x-2'>
       <span className='text-[13px] font-medium text-slate-500'>{PS_CONFIG.label}</span>
       <Select defaultValue={defaultValue} onValueChange={onValueChange}>
         <SelectTrigger className={cn('h-8 w-full space-x-2 border bg-white text-[13px] shadow-sm', className)}>
