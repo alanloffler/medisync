@@ -354,16 +354,18 @@ export default function ReserveAppointments() {
           {/* Section: Select professional (Step 1) */}
           <section className='flex w-full flex-col space-y-4'>
             <Steps text={t('section.appointments.reserve.steps.title1')} step='1' />
-            <ProfessionalsCombobox
-              onSelectProfessional={(professional) => setProfessionalSelected(professional)}
-              options={{
-                loadingText: t('loading.professionals'),
-                notFoundText: t('error.notFoundDefault'),
-                placeholder: t('placeholder.professionalCombobox'),
-                searchText: t('search.default'),
-              }}
-              className='w-fit'
-            />
+            <div className='p-2'>
+              <ProfessionalsCombobox
+                onSelectProfessional={(professional) => setProfessionalSelected(professional)}
+                options={{
+                  loadingText: t('loading.professionals'),
+                  notFoundText: t('error.notFoundDefault'),
+                  placeholder: t('placeholder.professionalCombobox'),
+                  searchText: t('search.default'),
+                }}
+                className='w-fit'
+              />
+            </div>
             {professionalSelected && (
               <section className='flex w-full flex-col space-y-1 text-sm font-normal text-slate-500'>
                 <div className='flex flex-row items-center space-x-2'>
