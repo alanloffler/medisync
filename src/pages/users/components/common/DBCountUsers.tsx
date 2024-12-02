@@ -38,9 +38,9 @@ export function DBCountUsers() {
           <Database size={16} strokeWidth={2} className='text-blue-400' />
           <span>{t('table.totalItems.users', { count: total })}</span>
         </section>
-        {diffPrevMonth && (
+        {diffPrevMonth !== undefined && (
           <section className='flex items-center space-x-1'>
-            {diffPrevMonth && diffPrevMonth >= 0 ? (
+            {diffPrevMonth >= 0 ? (
               <TrendingUp size={16} strokeWidth={2} className='text-emerald-400' />
             ) : (
               <TrendingDown size={16} strokeWidth={2} className='text-rose-400' />
