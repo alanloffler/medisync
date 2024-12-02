@@ -1,5 +1,8 @@
 // External components: https://ui.shadcn.com/docs/components
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@core/components/ui/select';
+// Components
+import { InfoCard } from '@core/components/common/InfoCard';
+import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
@@ -23,17 +26,28 @@ export function ProfessionalsSelect({
   const capitalize = useCapitalize();
   const { t } = useTranslation();
 
-  const { data: professionals } = useQuery<IResponse<IProfessional[]>, Error>({
+  const {
+    data: professionals,
+    isError,
+    isPending,
+  } = useQuery<IResponse<IProfessional[]>, Error>({
     queryKey: ['professionals', ['input-select']],
     queryFn: async () => await ProfessionalApiService.findAllActive(),
+    retry: 1,
   });
 
   return (
     <main className='flex flex-row items-center space-x-2'>
       <span className='text-xsm font-medium text-slate-500'>{t(PS_CONFIG.label)}</span>
-      <Select defaultValue={defaultValue} onValueChange={onValueChange}>
+      <Select defaultValue={defaultValue} onValueChange={onValueChange} disabled={isError}>
         <SelectTrigger className={cn('h-8 w-full space-x-2 border bg-white text-xsm shadow-sm', className)}>
-          <SelectValue placeholder={t(PS_CONFIG.placeholder)} />
+          {isError ? (
+            <InfoCard type='error' text={t('error.default')} className='mx-auto' />
+          ) : isPending ? (
+            <LoadingDB size='xs' text={t('loading.default')} />
+          ) : (
+            <SelectValue placeholder={t(PS_CONFIG.placeholder)} />
+          )}
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
