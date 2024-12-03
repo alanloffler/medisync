@@ -22,9 +22,14 @@ export function SelectSpecialtiesForm({ formControl, callback }: IFormSelect) {
   const capitalize = useCapitalize();
   const { t } = useTranslation();
 
-  const { data: areas, isLoading } = useQuery<IResponse<IArea[]>>({
+  const {
+    data: areas,
+    isLoading,
+    isError,
+  } = useQuery<IResponse<IArea[]>>({
     queryKey: ['areas', ['input-form-select']],
     queryFn: async () => await AreaService.findAll(),
+    retry: 1,
   });
 
   return (
@@ -44,9 +49,11 @@ export function SelectSpecialtiesForm({ formControl, callback }: IFormSelect) {
             value={field.value}
           >
             <FormControl>
-              <SelectTrigger className={`h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
+              <SelectTrigger className={`h-9 ${!field.value ? 'text-muted-foreground' : ''}`} disabled={isError}>
                 {isLoading ? (
                   <LoadingDB variant='default' text={t('loading.default')} className='ml-0' />
+                ) : isError ? (
+                  <span className='text-red-400'>{t('error.default')}</span>
                 ) : (
                   <SelectValue placeholder={t('placeholder.area')} />
                 )}
