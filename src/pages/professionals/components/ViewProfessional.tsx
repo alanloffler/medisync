@@ -17,6 +17,7 @@ import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 import { Trans, useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+// import { OpenAI } from 'openai';
 // Imports
 import type { IEmail } from '@core/interfaces/email.interface';
 import type { IInfoCard } from '@core/components/common/interfaces/infocard.interface';
@@ -84,9 +85,65 @@ export default function ViewProfessional() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, i18n.resolvedLanguage]);
+  
+  // const translation = new TranslationServiceClient({
+  //   apiKey: import.meta.env.VITE_GOOGLE_API_KEY
+  // });
+
+  // async function translateGoogle(text: string) {
+  //   const apiKey = import.meta.env.VITE_GOOGLE_API_KEY;
+  //   const url = `https://translation.googleapis.com/language/translate/v2`;
+  //   console.log(apiKey)
+    
+  //   const payload = {
+  //     q: text,
+  //     target: 'fr',
+  //     key: "AIzaSyBMNAIe8f86axnr8LHCjpra252DWqp_LBM"
+  //   };
+  //   try {
+  //     const response = await fetch(url, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Access-Control-Allow-Origin': '*',
+  //         'Access-Control-Allow-Credentials':'true',
+  //         'Access-Control-Allow-Methods':'POST, GET',
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(payload),
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error(`Error: ${response.statusText}`);
+  //     }
+
+  //     const data = await response.json();
+  //     const translatedText = data.data.translations[0].translatedText;
+  //     return translatedText;
+  //   } catch (error) {
+  //     console.error('Translation Error:', error);
+  //     return 'Translation failed.';
+  //   }
+  // }
+  
+  // const openai = new OpenAI({
+  //   apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+  //   dangerouslyAllowBrowser: true
+  // });
+  
+  // async function translateOpenAi(content: string) {
+  //   console.log('translate openai called');
+  //   const translation = await openai.completions.create({
+  //     model: 'gpt-3.5-turbo-0125',
+  //     prompt: `Translate the following text into English: ${content}`,
+  //   });
+  //   console.log(translation);
+  //   return translation;
+  // }
 
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
+      {/* <button onClick={() => translateOpenAi(professional.description)}>Translate</button> */}
+      {/* <button onClick={() => translateGoogle(professional.description)}>Translate</button> */}
       {/* Section: Page Header */}
       <header className='flex items-center justify-between'>
         <PageHeader title={t('pageTitle.viewProfessional')} breadcrumb={PV_CONFIG.breadcrumb} />
