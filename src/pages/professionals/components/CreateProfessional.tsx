@@ -18,6 +18,7 @@ import InputMask from '@mona-health/react-input-mask';
 import { BackButton } from '@core/components/common/BackButton';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
+import { SelectSpecialtiesForm } from '@core/components/common/SelectSpecialtiesForm';
 import { WorkingDays } from '@professionals/components/common/WorkingDays';
 // External imports
 import { Link, useNavigate } from 'react-router-dom';
@@ -249,43 +250,8 @@ export default function CreateProfessional() {
                   </h1>
                   {/* Form fields: area and specialization */}
                   <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
-                    <FormField
-                      control={createForm.control}
-                      name='area'
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{t('table.header.area')}</FormLabel>
-                          <Select
-                            defaultValue={field.value}
-                            disabled={areas.length < 1}
-                            onValueChange={(event) => {
-                              field.onChange(event);
-                              handleChangeArea(event);
-                            }}
-                            value={field.value}
-                          >
-                            <FormControl>
-                              <SelectTrigger className={`h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
-                                {areasIsLoading ? (
-                                  <LoadingDB variant='default' text={t('loading.default')} className='ml-0' />
-                                ) : (
-                                  <SelectValue placeholder={t('placeholder.area')} />
-                                )}
-                              </SelectTrigger>
-                            </FormControl>
-                            <FormMessage />
-                            <SelectContent>
-                              {areas.length > 0 &&
-                                areas.map((el) => (
-                                  <SelectItem key={el._id} value={el._id} className='text-sm'>
-                                    {capitalize(el.name)}
-                                  </SelectItem>
-                                ))}
-                            </SelectContent>
-                          </Select>
-                        </FormItem>
-                      )}
-                    />
+                    <SelectSpecialtiesForm formControl={createForm.control} callback={handleChangeArea} />
+
                     <FormField
                       control={createForm.control}
                       name='specialization'
