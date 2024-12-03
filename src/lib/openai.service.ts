@@ -11,7 +11,7 @@ export async function translateOpenAi(content: string, lng: string) {
     temperature: 0.5,
     messages: [{ role: 'user', content: `Act as a translator. Translate this text to ${lng}: ${content}` }],
   });
-  console.log(completion);
+  // console.log(completion);
   return completion;
 }
 
