@@ -4,7 +4,6 @@ const OPENAI_API_KEY: string = import.meta.env.VITE_OPENAI_API_KEY;
 
 const openai = new OpenAI({
   apiKey: OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true,
 });
 
 export async function translateOpenAi(content: string, lng: string) {
