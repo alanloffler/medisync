@@ -251,7 +251,7 @@ export default function CreateProfessional() {
                   {/* Form fields: area and specialization */}
                   <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <SelectSpecialtiesForm formControl={createForm.control} callback={handleChangeArea} />
-
+                    {/* WIP */}
                     <FormField
                       control={createForm.control}
                       name='specialization'
