@@ -16,8 +16,6 @@ export async function translateOpenAi(content: string, lng: string) {
 }
 
 export class OpenAIService {
-  // private static readonly OPENAI_API_KEY: string = import.meta.env.VITE_OPENAI_API_KEY;
-
   public static async translate(content: string, language: string) {
     console.log('OPENAI Translation');
     console.log('--------------------');
