@@ -80,7 +80,7 @@ export default function Appointments() {
           </Button>
         </section>
         <Card className='col-span-1 h-fit space-y-4 overflow-y-auto p-0 md:col-span-4 lg:col-span-3 xl:col-span-3'>
-          <header className='flex items-center justify-center space-x-3.5 rounded-t-lg p-2 bg-slate-200 text-slate-700'>
+          <header className='flex items-center space-x-3.5 rounded-t-lg bg-slate-200 px-3.5 py-2 text-slate-700'>
             <List size={16} strokeWidth={2} />
             <h1 className='text-center text-lg font-semibold'>{t('cardTitle.appointmentsList')}</h1>
           </header>
