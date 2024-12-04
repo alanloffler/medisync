@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { Database, PlusCircle } from 'lucide-react';
+import { Database, List, PlusCircle } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
 import { Card, CardContent } from '@core/components/ui/card';
@@ -80,9 +80,10 @@ export default function Appointments() {
           </Button>
         </section>
         <Card className='col-span-1 h-fit space-y-4 overflow-y-auto p-0 md:col-span-4 lg:col-span-3 xl:col-span-3'>
-          <div className='relative flex items-center justify-center rounded-t-lg bg-slate-200 p-3 text-slate-700'>
-            <h1 className='text-center text-xl font-bold'>{t('cardTitle.appointmentsList')}</h1>
-          </div>
+          <header className='flex items-center justify-center space-x-3.5 rounded-t-lg p-2 bg-slate-200 text-slate-700'>
+            <List size={16} strokeWidth={2} />
+            <h1 className='text-center text-lg font-semibold'>{t('cardTitle.appointmentsList')}</h1>
+          </header>
           <CardContent className='space-y-2 pt-0'>
             {isLoading && <LoadingDB variant='default' text={t('loading.appointments')} />}
             {isError && <InfoCard text={error.message} type='error' />}
