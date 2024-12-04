@@ -76,7 +76,7 @@ export function LatestAppos() {
                     className='flex h-11 w-11 flex-col items-center rounded-sm bg-slate-600 pt-1.5 text-slate-200'
                   >
                     <CalendarPlus size={16} strokeWidth={2} />
-                    <p className='text-[11px] font-light'>{format(appo.createdAt, 'short', i18n.resolvedLanguage).slice(0, 5)}</p>
+                    <p className='text-[11px] font-light'>{format(appo.createdAt, 'short', i18n.resolvedLanguage).slice(0, -3)}</p>
                   </motion.div>
                   <motion.div variants={animation.user} className='flex flex-col text-left'>
                     <p className='font-bold text-dark-default'>{`${capitalize(appo.user.firstName)} ${capitalize(appo.user.lastName)}`}</p>
