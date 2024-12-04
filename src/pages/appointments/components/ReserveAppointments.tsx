@@ -36,7 +36,6 @@ import type { IDialog } from '@core/interfaces/dialog.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IUser } from '@users/interfaces/user.interface';
 import type { IWorkingDay } from '@professionals/interfaces/working-days.interface';
-import { APP_CONFIG } from '@config/app.config';
 import { AppoSchedule } from '@appointments/services/schedule.service';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { CalendarService } from '@appointments/services/calendar.service';
@@ -197,7 +196,7 @@ export default function ReserveAppointments() {
                 setAvailableSlotsToReserve(availableSlotsToReserve);
               }
 
-              if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
+              if (response instanceof Error) addNotification({ type: 'error', message: t('error.internalServer') });
             })
             .finally(() => setLoadingAppointments(false));
         }
@@ -223,7 +222,7 @@ export default function ReserveAppointments() {
         handleResetDialog();
       }
       if (newAppo.statusCode > 399) addNotification({ type: 'error', message: newAppo.message });
-      if (newAppo instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
+      if (newAppo instanceof Error) addNotification({ type: 'error', message: t('error.internalServer') });
     }
   }
 
@@ -236,7 +235,7 @@ export default function ReserveAppointments() {
           setOpenDialog(false);
         }
         if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
-        if (response instanceof Error) addNotification({ type: 'error', message: APP_CONFIG.error.server });
+        if (response instanceof Error) addNotification({ type: 'error', message: t('error.internalServer') });
       });
     }
   }
