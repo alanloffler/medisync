@@ -239,6 +239,10 @@ export default function ReserveAppointments() {
       });
     }
   }
+
+  useEffect(() => {
+    if (openDialog === false) handleResetDialog();
+  }, [openDialog]);
   // #endregion
   // #region Dialog
   function handleDialog(action: DialogAction, slot: ITimeSlot): void {
