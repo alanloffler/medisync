@@ -2,7 +2,7 @@
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@core/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@core/components/ui/select';
 // Components
-import { LoadingDB } from '@core/components/common/LoadingDB';
+import { LoadingText } from '@core/components/common/LoadingText';
 // External imports
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -81,7 +81,7 @@ export function SelectSpecialtiesForm({ formControl, callback }: IFormSelect) {
             <FormControl>
               <SelectTrigger className={`h-9 ${!field.value ? 'text-muted-foreground' : ''}`} disabled={isError}>
                 {isLoading ? (
-                  <LoadingDB variant='default' text={t('loading.default')} className='ml-0' />
+                  <LoadingText text={t('loading.default')} suffix='...' />
                 ) : isError ? (
                   <span className='text-red-400'>{t('error.default')}</span>
                 ) : (
