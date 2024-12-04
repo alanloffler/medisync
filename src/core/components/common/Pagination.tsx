@@ -39,50 +39,48 @@ export function Pagination({ className, help, itemsPerPage, pagination, setPagin
       <section>
         {t('pagination.page')} {pagination.pageIndex + 1} {t('pagination.of')} {table.getPageCount()}
       </section>
-      {table.getPageCount() > 1 && (
-        <section className='flex items-center space-x-4'>
-          <TooltipWrapper tooltip={t('tooltip.pagination.firstPage')} help={help}>
-            <Button
-              variant='ghost'
-              className='h-8 w-8 bg-input p-0 text-slate-700 hover:bg-input-hover'
-              onClick={() => table.setPageIndex(0)}
-              disabled={!table.getCanPreviousPage()}
-            >
-              <ArrowLeft size={16} strokeWidth={2} />
-            </Button>
-          </TooltipWrapper>
-          <TooltipWrapper tooltip={t('tooltip.pagination.previousPage')} help={help}>
-            <Button
-              variant='ghost'
-              className='h-8 w-8 bg-input p-0 text-slate-700 hover:bg-input-hover'
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              <ChevronLeft size={16} strokeWidth={2} />
-            </Button>
-          </TooltipWrapper>
-          <TooltipWrapper tooltip={t('tooltip.pagination.nextPage')} help={help}>
-            <Button
-              variant='ghost'
-              className='h-8 w-8 bg-input p-0 text-slate-700 hover:bg-input-hover'
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              <ChevronRight size={16} strokeWidth={2} />
-            </Button>
-          </TooltipWrapper>
-          <TooltipWrapper tooltip={t('tooltip.pagination.lastPage')} help={help}>
-            <Button
-              variant='ghost'
-              className='h-8 w-8 bg-input p-0 text-slate-700 hover:bg-input-hover'
-              onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-              disabled={!table.getCanNextPage()}
-            >
-              <ArrowRight size={16} strokeWidth={2} />
-            </Button>
-          </TooltipWrapper>
-        </section>
-      )}
+      <section className={`flex items-center space-x-4 ${table.getPageCount() <= 1 && 'opacity-0'}`}>
+        <TooltipWrapper tooltip={t('tooltip.pagination.firstPage')} help={help}>
+          <Button
+            variant='ghost'
+            className='h-8 w-8 bg-input p-0 text-slate-700 hover:bg-input-hover'
+            onClick={() => table.setPageIndex(0)}
+            disabled={!table.getCanPreviousPage()}
+          >
+            <ArrowLeft size={16} strokeWidth={2} />
+          </Button>
+        </TooltipWrapper>
+        <TooltipWrapper tooltip={t('tooltip.pagination.previousPage')} help={help}>
+          <Button
+            variant='ghost'
+            className='h-8 w-8 bg-input p-0 text-slate-700 hover:bg-input-hover'
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            <ChevronLeft size={16} strokeWidth={2} />
+          </Button>
+        </TooltipWrapper>
+        <TooltipWrapper tooltip={t('tooltip.pagination.nextPage')} help={help}>
+          <Button
+            variant='ghost'
+            className='h-8 w-8 bg-input p-0 text-slate-700 hover:bg-input-hover'
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            <ChevronRight size={16} strokeWidth={2} />
+          </Button>
+        </TooltipWrapper>
+        <TooltipWrapper tooltip={t('tooltip.pagination.lastPage')} help={help}>
+          <Button
+            variant='ghost'
+            className='h-8 w-8 bg-input p-0 text-slate-700 hover:bg-input-hover'
+            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+            disabled={!table.getCanNextPage()}
+          >
+            <ArrowRight size={16} strokeWidth={2} />
+          </Button>
+        </TooltipWrapper>
+      </section>
     </section>
   );
 }
