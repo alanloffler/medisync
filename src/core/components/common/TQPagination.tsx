@@ -51,7 +51,7 @@ export function TQPagination({ className, isPlaceholderData, itemsPerPage, limit
         </Select>
       </section>
       <section>{`${t('pagination.page')} ${page + 1} ${t('pagination.of')} ${totalPages}`}</section>
-      <section className={`flex space-x-4 ${pagination?.totalItems && pagination?.totalItems < limit && 'opacity-0'}`}>
+      <section className={`flex space-x-4 ${pagination?.totalItems && pagination?.totalItems <= limit && 'opacity-0'}`}>
         <Button className='h-8 w-8 bg-input p-0 text-slate-700 hover:bg-input-hover' variant='ghost' disabled={page === 0} onClick={() => setPage(0)}>
           <ArrowLeft size={16} strokeWidth={2} />
         </Button>
