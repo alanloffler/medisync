@@ -5,7 +5,6 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 // Components
 import { ActionsButton } from '@layout/components/ActionsButton';
 import { HeaderMenu } from '@layout/components/HeaderMenu';
-import { User } from '@layout/components/User';
 // External imports
 import { Link } from 'react-router-dom';
 import { useAnimate } from 'motion/react';
@@ -41,7 +40,6 @@ export function Header() {
         >
           <Settings size={20} strokeWidth={2} />
         </Link>
-        <User />
         <Select value={selectedLanguage?.code} onValueChange={(e) => onChangeLang(e)}>
           <SelectTrigger className='h-8 w-[55px] bg-input p-2 text-xs hover:bg-input-hover'>
             <SelectValue>
