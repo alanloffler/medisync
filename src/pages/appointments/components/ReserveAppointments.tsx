@@ -433,7 +433,7 @@ export default function ReserveAppointments() {
                   <LoadingDB text={t('loading.schedule')} variant='card' size='default' />
                 ) : (
                   <Card className='w-full'>
-                    <CardTitle className='bg-card-header! rounded-b-none border-b'>
+                    <CardTitle className='bg-card-header! rounded-b-none border-b text-sm md:text-lg'>
                       <section className='flex flex-row justify-between p-2'>
                         <div className='flex flex-row items-center gap-3.5'>
                           <CalendarDays size={16} strokeWidth={2} />
