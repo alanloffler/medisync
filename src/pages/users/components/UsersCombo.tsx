@@ -21,6 +21,7 @@ export function UsersCombo({
   searchResult: (user: IUser) => void;
   placeholder: string;
 }) {
+  const [error, setError] = useState<string>('');
   const [openCombobox, setOpenCombobox] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
   const [showNoResults, setShowNoResults] = useState<boolean>(false);
@@ -58,8 +59,13 @@ export function UsersCombo({
           if (response.statusCode > 399) {
             setShowNoResults(true);
             setUsers([]);
+            setError(response.message);
           }
-          // TODO: handle server error
+          if (response instanceof Error) {
+            setShowNoResults(true);
+            setUsers([]);
+            setError(t('error.internalServer'));
+          }
         });
       }
       if (searchBy === 'dni') {
@@ -71,15 +77,20 @@ export function UsersCombo({
           if (response.statusCode > 399) {
             setShowNoResults(true);
             setUsers([]);
+            setError(response.message);
           }
-          // TODO: handle server error
+          if (response instanceof Error) {
+            setShowNoResults(true);
+            setUsers([]);
+            setError(t('error.internalServer'));
+          }
         });
       }
     } else {
       setUsers([]);
       setOpenCombobox(false);
     }
-  }, [debouncedSearch, searchBy]);
+  }, [debouncedSearch, searchBy, t]);
 
   return (
     <main className='flex flex-col'>
@@ -115,7 +126,7 @@ export function UsersCombo({
               ))}
             {showNoResults && (
               <li className='list-none'>
-                <span className='italic text-rose-500'>{t('error.notFoundUser')}</span>
+                <span className='italic text-rose-500'>{error}</span>
               </li>
             )}
           </ScrollArea>
