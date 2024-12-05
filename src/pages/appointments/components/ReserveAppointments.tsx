@@ -450,12 +450,12 @@ export default function ReserveAppointments() {
                       </section>
                     )}
                     {showTimeSlots && (
-                      <section className='flex justify-start space-x-3 px-3 pb-2 text-xsm font-normal'>
-                        <div className='flex flex-row items-center space-x-1.5 rounded-md bg-emerald-100 px-2 py-1'>
+                      <section className='flex flex-col justify-start gap-3 px-3 pb-2 text-xsm font-normal md:flex-row'>
+                        <div className='flex w-fit flex-row items-center space-x-1.5 rounded-md bg-emerald-100 px-2 py-1'>
                           <div className='h-2.5 w-2.5 rounded-full border border-emerald-400 bg-emerald-300'></div>
                           <span className='text-emerald-700'>{t('table.availableItems.appointments', { count: availableSlotsToReserve })}</span>
                         </div>
-                        <div className='flex flex-row items-center space-x-1.5 rounded-md bg-sky-100 px-2 py-1'>
+                        <div className='flex w-fit flex-row items-center space-x-1.5 rounded-md bg-sky-100 px-2 py-1'>
                           <div className='h-2.5 w-2.5 rounded-full border border-sky-400 bg-sky-300'></div>
                           <span className='text-sky-700'>{t('table.reservedItems.appointments', { count: appointments.length })}</span>
                         </div>
