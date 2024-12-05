@@ -15,7 +15,7 @@ import {
 // External Components: https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
 import { Calendar } from '@core/components/ui/calendar';
-import { Card, CardContent, CardHeader, CardTitle } from '@core/components/ui/card';
+import { Card, CardContent, CardTitle } from '@core/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
 // Components
 import { CalendarFooter } from '@appointments/components/CalendarFooter';
@@ -433,36 +433,34 @@ export default function ReserveAppointments() {
                   <LoadingDB text={t('loading.schedule')} variant='card' size='default' />
                 ) : (
                   <Card className='w-full'>
-                    <CardHeader>
-                      <CardTitle className='px-3 text-base'>
-                        <section className='flex flex-row justify-between'>
-                          <div className='flex flex-row items-center gap-2'>
-                            <CalendarDays className='h-4 w-4' />
-                            <span>{t('cardTitle.appointmentsReserve')}</span>
-                          </div>
-                          {professionalSelected?._id && (
-                            <h1>{`${capitalize(professionalSelected?.title.abbreviation)} ${capitalize(professionalSelected?.firstName)} ${capitalize(professionalSelected?.lastName)}`}</h1>
-                          )}
-                        </section>
-                      </CardTitle>
-                      {!errorMessage && (
-                        <section className='py-2 text-center text-base font-semibold text-primary'>
-                          {capitalizeFirstLetter(selectedLegibleDate)}
-                        </section>
-                      )}
-                      {showTimeSlots && (
-                        <section className='flex justify-start space-x-3 px-3 pb-2 text-xsm font-normal'>
-                          <div className='flex flex-row items-center space-x-1.5 rounded-md bg-emerald-100 px-2 py-1'>
-                            <div className='h-2.5 w-2.5 rounded-full border border-emerald-400 bg-emerald-300'></div>
-                            <span className='text-emerald-700'>{t('table.availableItems.appointments', { count: availableSlotsToReserve })}</span>
-                          </div>
-                          <div className='flex flex-row items-center space-x-1.5 rounded-md bg-sky-100 px-2 py-1'>
-                            <div className='h-2.5 w-2.5 rounded-full border border-sky-400 bg-sky-300'></div>
-                            <span className='text-sky-700'>{t('table.reservedItems.appointments', { count: appointments.length })}</span>
-                          </div>
-                        </section>
-                      )}
-                    </CardHeader>
+                    <CardTitle className='bg-card-header! rounded-b-none border-b'>
+                      <section className='flex flex-row justify-between p-2'>
+                        <div className='flex flex-row items-center gap-3.5'>
+                          <CalendarDays size={16} strokeWidth={2} />
+                          <span>{t('cardTitle.appointmentsReserve')}</span>
+                        </div>
+                        {professionalSelected?._id && (
+                          <h1>{`${capitalize(professionalSelected?.title.abbreviation)} ${capitalize(professionalSelected?.firstName)} ${capitalize(professionalSelected?.lastName)}`}</h1>
+                        )}
+                      </section>
+                    </CardTitle>
+                    {!errorMessage && (
+                      <section className='py-2 text-center text-base font-semibold text-primary'>
+                        {capitalizeFirstLetter(selectedLegibleDate)}
+                      </section>
+                    )}
+                    {showTimeSlots && (
+                      <section className='flex justify-start space-x-3 px-3 pb-2 text-xsm font-normal'>
+                        <div className='flex flex-row items-center space-x-1.5 rounded-md bg-emerald-100 px-2 py-1'>
+                          <div className='h-2.5 w-2.5 rounded-full border border-emerald-400 bg-emerald-300'></div>
+                          <span className='text-emerald-700'>{t('table.availableItems.appointments', { count: availableSlotsToReserve })}</span>
+                        </div>
+                        <div className='flex flex-row items-center space-x-1.5 rounded-md bg-sky-100 px-2 py-1'>
+                          <div className='h-2.5 w-2.5 rounded-full border border-sky-400 bg-sky-300'></div>
+                          <span className='text-sky-700'>{t('table.reservedItems.appointments', { count: appointments.length })}</span>
+                        </div>
+                      </section>
+                    )}
                     {errorMessage && (
                       <section className='flex items-center justify-center space-x-2 px-4 py-0 text-rose-500'>
                         <FileWarning className='h-5 w-5' strokeWidth={2} />
@@ -574,7 +572,7 @@ export default function ReserveAppointments() {
           <DialogHeader>
             <DialogTitle className='text-xl'>{dialogContent.title}</DialogTitle>
             <DialogDescription>{dialogContent.description}</DialogDescription>
-            <section className='pt-4 z-50'>
+            <section className='z-50 pt-4'>
               {dialogContent.action === DialogAction.RESERVE && !userSelected._id && dialogContent.content}
               {dialogContent.action === DialogAction.RESERVE && userSelected._id && generateReservationSummary(userSelected)}
               {dialogContent.action === DialogAction.CANCEL && dialogContent.content}
