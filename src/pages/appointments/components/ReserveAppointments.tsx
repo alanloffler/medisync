@@ -574,7 +574,7 @@ export default function ReserveAppointments() {
           <DialogHeader>
             <DialogTitle className='text-xl'>{dialogContent.title}</DialogTitle>
             <DialogDescription>{dialogContent.description}</DialogDescription>
-            <section className='pt-4'>
+            <section className='pt-4 z-50'>
               {dialogContent.action === DialogAction.RESERVE && !userSelected._id && dialogContent.content}
               {dialogContent.action === DialogAction.RESERVE && userSelected._id && generateReservationSummary(userSelected)}
               {dialogContent.action === DialogAction.CANCEL && dialogContent.content}
