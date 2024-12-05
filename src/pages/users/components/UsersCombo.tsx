@@ -11,7 +11,6 @@ import type { IUser } from '@users/interfaces/user.interface';
 import { UserApiService } from '@users/services/user-api.service';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useDebounce } from '@core/hooks/useDebounce';
-import { useDelimiter } from '@core/hooks/useDelimiter';
 // React component
 export function UsersCombo({
   searchBy,
@@ -29,8 +28,7 @@ export function UsersCombo({
   const DEBOUNCE_TIME: number = 500;
   const capitalize = useCapitalize();
   const debouncedSearch = useDebounce<string>(search, DEBOUNCE_TIME);
-  const delimiter = useDelimiter();
-  const { t } = useTranslation();
+  const { i18n, t } = useTranslation();
 
   function handleSearch(event: ChangeEvent<HTMLInputElement>): void {
     setSearch(event.target.value);
@@ -111,7 +109,7 @@ export function UsersCombo({
                     className='w-full space-x-2 rounded-sm px-1.5 py-0.5 text-left hover:bg-slate-100 hover:transition-all'
                   >
                     <span>{`${capitalize(user.firstName)} ${capitalize(user.lastName)}`}</span>
-                    <span className='italic text-slate-500'>{`${t('words.identityCard')} ${delimiter(user.dni, '.', 3)}`}</span>
+                    <span className='italic text-slate-500'>{`${t('label.identityCard')} ${i18n.format(user.dni, 'number', i18n.resolvedLanguage)}`}</span>
                   </button>
                 </li>
               ))}
