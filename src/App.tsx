@@ -22,6 +22,7 @@ const CreateUser = lazy(() => import('./pages/users/components/CreateUser'));
 const UpdateUser = lazy(() => import('./pages/users/components/UpdateUser'));
 const ViewUser = lazy(() => import('./pages/users/components/ViewUser'));
 
+const SendEmail = lazy(() => import('./pages/email/SendEmail'));
 const WhatsApp = lazy(() => import('./pages/whatsapp/WhatsApp'));
 // React component
 export default function App() {
@@ -43,6 +44,7 @@ export default function App() {
         { path: '/users/:id', element: (<Suspense fallback={<Loading />}><ViewUser /></Suspense>) },
         { path: '/users/create', element: (<Suspense fallback={<Loading />}><CreateUser /></Suspense>) },
         { path: '/users/update/:id', element: (<Suspense fallback={<Loading />}><UpdateUser /></Suspense>) },
+        { path: '/email/:id',  element: (<Suspense fallback={<Loading />}><SendEmail /></Suspense>) },
         { path: '/whatsapp/:type/:id',  element: (<Suspense fallback={<Loading />}><WhatsApp /></Suspense>) },
         { path: '*', element: <>Not found 404</> },
       ],
