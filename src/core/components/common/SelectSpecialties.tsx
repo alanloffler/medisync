@@ -103,7 +103,7 @@ export function SelectSpecialties({ callback, clear, dropdownPlaceholder, setDro
             </Button>
           )}
         </div>
-        <DropdownMenuContent className='w-fit' align='center'>
+        <DropdownMenuContent className='w-fit' align='center' onCloseAutoFocus={(e) => e.preventDefault()}>
           {areas &&
             areas?.data.length > 0 &&
             areas?.data.map((area) => (
