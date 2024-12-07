@@ -15,16 +15,19 @@ import {
 } from '@core/components/ui/dropdown-menu';
 import { Input } from '@core/components/ui/input';
 // Components
+import { LoadingText } from '@core/components/common/LoadingText';
 import { PageHeader } from '@core/components/common/PageHeader';
 import { ProfessionalsDataTable } from '@professionals/components/ProfessionalsDataTable';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
-import { ChangeEvent, useEffect, useState } from 'react';
 import { spring, useAnimate } from 'motion/react';
+import { type ChangeEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { IArea } from '@core/interfaces/area.interface';
+import type { IResponse } from '@core/interfaces/response.interface';
 import type { ISpecialization } from '@core/interfaces/specialization.interface';
 import { APP_CONFIG } from '@config/app.config';
 import { AreaService } from '@core/services/area.service';
@@ -38,7 +41,6 @@ import { useHelpStore } from '@settings/stores/help.store';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export default function Professionals() {
-  const [areas, setAreas] = useState<IArea[]>([]);
   const [dropdownPlaceholder, setDropdownPlaceholder] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [reload, setReload] = useState<number>(0);
@@ -81,14 +83,24 @@ export default function Professionals() {
     setItemSelected(HEADER_CONFIG.headerMenu[2].id);
   }, [setItemSelected, capitalize]);
 
+  const { data: areas, error, isError, isLoading, isSuccess } = useQuery<IResponse<IArea[]>>({
+    queryKey: ['areas', 'findAll'],
+    queryFn: async () => await AreaService.findAll(),
+    retry: 1,
+  });
+
   useEffect(() => {
-    AreaService.findAll().then((response) => {
-      if (response.statusCode === 200) setAreas(response.data);
-      if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
-      if (response instanceof Error) addNotification({ type: 'error', message: t('error.internalServer') });
-    });
-    if (specSelected === undefined) setDropdownPlaceholder(capitalize(t('label.specialization')));
-  }, [addNotification, capitalize, t, specSelected]);
+    if (isSuccess) {
+      if(specSelected === undefined) setDropdownPlaceholder(capitalize(t('label.specialization')));
+    }
+  }, [isSuccess, capitalize, t, specSelected]);
+
+  useEffect(() => {
+    if (isError) {
+      setDropdownPlaceholder(t('error.default'));
+      addNotification({ type: 'error', message: error?.message });
+    }
+  }, [ addNotification, error?.message, isError, t]);
 
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
@@ -145,10 +157,12 @@ export default function Professionals() {
             <DropdownMenu>
               <div className='flex flex-row items-center space-x-2'>
                 <DropdownMenuTrigger
-                  disabled={!areas.length}
-                  className='flex w-fit items-center space-x-2 rounded-md border bg-white px-2 py-1 text-sm'
+                  disabled={!areas?.data.length}
+                  className='flex w-fit items-center space-x-2 rounded-md bg-white px-2 py-1 text-sm shadow-sm'
                 >
-                  <span>{dropdownPlaceholder}</span>
+                  {isLoading && <LoadingText suffix='...' text={t('loading.default')}  />}
+                  {isError && <span className='text-rose-400'>{dropdownPlaceholder}</span>}
+                  {isSuccess && !specSelected && <span>{dropdownPlaceholder}</span>}
                   <ChevronDown size={16} strokeWidth={2} />
                 </DropdownMenuTrigger>
                 {specSelected !== undefined && (
@@ -178,8 +192,9 @@ export default function Professionals() {
                 )}
               </div>
               <DropdownMenuContent className='w-fit' align='center'>
-                {areas.length > 0 &&
-                  areas.map((area) => (
+                {areas &&
+                  areas?.data.length > 0 &&
+                  areas?.data.map((area) => (
                     <DropdownMenuSub key={area._id}>
                       <DropdownMenuSubTrigger>
                         <span>{capitalize(area.name)}</span>
