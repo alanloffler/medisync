@@ -3,17 +3,21 @@ import { ChevronRight } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@core/components/ui/dropdown-menu';
 import { ScrollArea } from '@core/components/ui/scroll-area';
+// Components
+import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
 import { spring, useAnimate } from 'motion/react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 // Imports
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
-export function Notifications() {
+export function Notifications({ help }: { help: boolean }) {
   const [showAll, setShowAll] = useState<boolean>(false);
   const [showNotification, setShowNotification] = useState<boolean>(false);
   const [chevronScope, chevronAnimate] = useAnimate();
   const notifications = useNotificationsStore((state) => state.notifications);
+  const { t } = useTranslation();
 
   useEffect(() => {
     setShowNotification(true);
@@ -33,15 +37,17 @@ export function Notifications() {
   return (
     <main className='flex items-center space-x-2 overflow-hidden'>
       <DropdownMenu>
-        <DropdownMenuTrigger
-          className='rounded-sm border-2 border-slate-700 focus:outline-none'
-          disabled={notifications.length === 0}
-          onClick={() => setShowAll(!showAll)}
-          onMouseOver={handleMouseOver}
-          onMouseOut={handleMouseOut}
-        >
-          <ChevronRight ref={chevronScope} size={16} strokeWidth={2} />
-        </DropdownMenuTrigger>
+        <TooltipWrapper tooltip={t('tooltip.console')} help={help}>
+          <DropdownMenuTrigger
+            className='rounded-sm border-2 border-slate-700 focus:outline-none'
+            disabled={notifications.length === 0}
+            onClick={() => setShowAll(!showAll)}
+            onMouseOver={handleMouseOver}
+            onMouseOut={handleMouseOut}
+          >
+            <ChevronRight ref={chevronScope} size={16} strokeWidth={2} />
+          </DropdownMenuTrigger>
+        </TooltipWrapper>
         <DropdownMenuContent className='ml-4 max-h-[250px] max-w-[400px]'>
           <ScrollArea className='h-[250px] p-1.5'>
             <ul className='w-full text-xs'>
