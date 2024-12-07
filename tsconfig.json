@@ -27,6 +27,7 @@
       "@config/*": ["./src/config/*"],
       "@core/*": ["./src/core/*"],
       "@dashboard/*": ["./src/pages/dashboard/*"],
+      "@email/*": ["./src/pages/email/*"],
       "@layout/*": ["./src/layout/*"],
       "@lib/*": ["./src/lib/*"],
       "@professionals/*": ["./src/pages/professionals/*"],
