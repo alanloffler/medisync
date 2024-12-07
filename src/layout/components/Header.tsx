@@ -1,13 +1,9 @@
-// Icons: https://lucide.dev/icons/
-import { Settings } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@core/components/ui/select';
 // Components
 import { ActionsButton } from '@layout/components/ActionsButton';
 import { HeaderMenu } from '@layout/components/HeaderMenu';
 // External imports
-import { Link } from 'react-router-dom';
-import { useAnimate } from 'motion/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 // Imports
@@ -18,7 +14,6 @@ import { LANGUAGES } from '@config/i18n.config';
 export function Header() {
   const { i18n } = useTranslation();
   const [selectedLanguage, setSelectedLanguage] = useState(LANGUAGES.find((lang) => lang.code === i18n.language));
-  const [settingScope, settingAnimation] = useAnimate();
   const links: ILinks[] = HEADER_CONFIG.actionsButton;
 
   function onChangeLang(language: string): void {
@@ -32,14 +27,6 @@ export function Header() {
       <HeaderMenu />
       <div className='flex w-full items-center justify-end gap-4 md:ml-auto md:gap-2 lg:gap-4'>
         <ActionsButton links={links} />
-        <Link
-          ref={settingScope}
-          to='/settings'
-          onMouseOver={() => settingAnimation(settingScope.current, { rotate: '90deg' }, { duration: 0.25, ease: 'easeIn' })}
-          onMouseOut={() => settingAnimation(settingScope.current, { rotate: '-90deg' }, { duration: 0.25, ease: 'easeIn' })}
-        >
-          <Settings size={20} strokeWidth={2} />
-        </Link>
         <Select value={selectedLanguage?.code} onValueChange={(e) => onChangeLang(e)}>
           <SelectTrigger className='h-8 w-[55px] bg-input p-2 text-xs hover:bg-input-hover'>
             <SelectValue>
