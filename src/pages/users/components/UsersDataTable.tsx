@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { ArrowDownUp, FileText, PencilLine, Trash2 } from 'lucide-react';
+import { ArrowDownUp, FileText, PencilLine, Send, Trash2 } from 'lucide-react';
 // External components:
 // https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
@@ -157,6 +157,16 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
               className='transition-transform duration-100 ease-in-out animate-in hover:scale-110 hover:bg-transparent hover:text-rose-400'
             >
               <Trash2 size={16} strokeWidth={1.5} />
+            </Button>
+          </TooltipWrapper>
+          <TooltipWrapper tooltip={t('tooltip.sendEmail')} help={help}>
+            <Button
+              variant='ghost'
+              size='miniIcon'
+              onClick={() => navigate(`/email/${row.original._id}`)}
+              className='transition-transform duration-100 ease-in-out animate-in hover:scale-110 hover:bg-transparent hover:text-sky-500'
+            >
+              <Send size={16} strokeWidth={1.5} />
             </Button>
           </TooltipWrapper>
           <TooltipWrapper tooltip={t('tooltip.sendMessage')} help={help}>
