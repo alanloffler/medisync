@@ -22,6 +22,8 @@ export const EMAIL_SCHEMA = {
     },
   },
   to: {
-    message: 'Debes ingresar un email de destinatario'
+    email: 'Cada elemento debe ser un email',
+    nonEmpty: 'Debes ingresar un email de destinatario',
+    string: 'Cada elemento debe ser una cadena de texto',
   },
 };
