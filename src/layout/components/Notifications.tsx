@@ -40,7 +40,7 @@ export function Notifications() {
           onMouseOver={handleMouseOver}
           onMouseOut={handleMouseOut}
         >
-          <ChevronRight ref={chevronScope} size={16} strokeWidth={3} />
+          <ChevronRight ref={chevronScope} size={16} strokeWidth={2} />
         </DropdownMenuTrigger>
         <DropdownMenuContent className='ml-4 max-h-[250px] max-w-[400px]'>
           <ScrollArea className='h-[250px] p-1.5'>
