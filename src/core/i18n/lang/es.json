@@ -4,6 +4,7 @@
     "appointmentDetails": "Detalles",
     "appointments": "Turnos",
     "create": "Crear",
+    "email": "Email",
     "home": "Inicio",
     "professionalDetails": "Detalles",
     "professionalUpdate": "Actualizar",
@@ -29,6 +30,7 @@
     "goToUsers": "Ir a pacientes",
     "reserve": "Reservar",
     "reserveAppointment": "Reservar turno",
+    "sendEmail": "Enviar email",
     "updateProfessional": "Actualizar profesional",
     "updateUser": "Actualizar paciente"
   },
@@ -44,6 +46,7 @@
       "latestUsers": "Usuarios recientes",
       "statistics": "Estadísticas"
     },
+    "email": "Enviar email a {{username}}",
     "professionalData": "Datos del profesional",
     "professionalsList": "Lista de profesionales",
     "scheduleConfiguration": "Configuración de agenda",
@@ -110,6 +113,8 @@
     }
   },
   "email": {
+    "body": "Cuerpo",
+    "description": "Este email va a ser enviado desde tu cuenta de administrador {{account}}",
     "sendAppointment": {
       "subject": "Confirmación de turno",
       "body": "Hola {{firstName}},"
@@ -121,7 +126,9 @@
     "sendToUser": {
       "subject": "MediSync - Turnos médicos",
       "body": "Hola {{firstName}},"
-    }
+    },
+    "subject": "Asunto",
+    "to": "Para"
   },
   "error": {
     "createUser": "Error al crear el usuario",
@@ -179,6 +186,7 @@
     "appointments": "Turnos",
     "createUser": "Creación de paciente",
     "createProfessional": "Creación de profesional",
+    "email": "Enviar email",
     "professionals": "Profesionales",
     "updateProfessional": "Actualización de profesional",
     "updateUser": "Actualización de paciente",

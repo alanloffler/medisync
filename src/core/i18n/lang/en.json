@@ -4,6 +4,7 @@
     "appointmentDetails": "Details",
     "appointments": "Appointments",
     "create": "Create",
+    "email": "Email",
     "home": "Home",
     "professionalDetails": "Details",
     "professionalUpdate": "Update",
@@ -29,6 +30,7 @@
     "goToUsers": "Go to patients",
     "reserve": "Reserve",
     "reserveAppointment": "Reserve appointment",
+    "sendEmail": "Send email",
     "updateProfessional": "Update professional",
     "updateUser": "Update patient"
   },
@@ -44,6 +46,7 @@
       "latestUsers": "Latest patients",
       "statistics": "Statistics"
     },
+    "email": "Send email to {{username}}",
     "professionalData": "Professional data",
     "professionalsList": "Professionals list",
     "scheduleConfiguration": "Schedule configuration",
@@ -110,6 +113,8 @@
     }
   },
   "email": {
+    "body": "Body",
+    "description": "This email will be sent from your administrator account {{account}}",
     "sendAppointment": {
       "subject": "Appointment confirmation",
       "body": "Hello {{firstName}},"
@@ -121,7 +126,9 @@
     "sendToUser": {
       "subject": "MediSync - Medical appointments",
       "body": "Hello {{firstName}},"
-    }
+    },
+    "subject": "Subject",
+    "to": "To"
   },
   "error": {
     "createUser": "Error creating user",
@@ -179,6 +186,7 @@
     "appointments": "Appointments",
     "createUser": "Patient creation",
     "createProfessional": "Professional creation",
+    "email": "Send email",
     "professionals": "Professionals",
     "updateProfessional": "Professional update",
     "updateUser": "Patient update",
