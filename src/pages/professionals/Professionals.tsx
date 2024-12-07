@@ -26,6 +26,7 @@ import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 import { useHelpStore } from '@settings/stores/help.store';
 // React component
 export default function Professionals() {
+  const [debounceTime, setDebounceTime] = useState<number>(APP_CONFIG.debounceTime);
   const [dropdownPlaceholder, setDropdownPlaceholder] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [reload, setReload] = useState<number>(0);
@@ -35,26 +36,28 @@ export default function Professionals() {
   const [createScope, createAnimation] = useAnimate();
   const [reloadScope, reloadAnimation] = useAnimate();
   const capitalize = useCapitalize();
-  const debouncedSearch = useDebounce<IProfessionalSearch>(search, APP_CONFIG.debounceTime);
+  const debouncedSearch = useDebounce<IProfessionalSearch>(search, debounceTime);
   const navigate = useNavigate();
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
   const { help } = useHelpStore();
   const { t } = useTranslation();
 
   function handleSearchByProfessional(event: ChangeEvent<HTMLInputElement>): void {
+    setDebounceTime(APP_CONFIG.debounceTime);
+    setSpecSelected(undefined);
     setSearch({ value: event.target.value, type: EProfessionalSearch.INPUT });
   }
 
   function handleSearchBySpecialization(specialization: ISpecialization): void {
-    setSearch({ value: specialization._id, type: EProfessionalSearch.DROPDOWN });
+    setDebounceTime(0);
     setSpecSelected(specialization.name);
     setDropdownPlaceholder(capitalize(specialization.name));
+    setSearch({ value: specialization._id, type: EProfessionalSearch.DROPDOWN });
   }
 
   function handleClearSearch(): void {
-    setSearch({ value: '', type: EProfessionalSearch.INPUT });
     setSpecSelected(undefined);
-    setDropdownPlaceholder(capitalize(t('label.specialization')));
+    setSearch({ value: '', type: EProfessionalSearch.INPUT });
   }
 
   function handleReload(): void {
