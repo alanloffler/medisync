@@ -6,11 +6,11 @@ import { User } from '@layout/components/User';
 // External imports
 import { Link } from 'react-router-dom';
 import { spring, useAnimate } from 'motion/react';
-// Imports
-import { FOOTER_CONFIG } from '@config/layout/footer.config';
+import { useTranslation } from 'react-i18next';
 // React component
 export function Footer() {
   const [settingScope, settingAnimation] = useAnimate();
+  const { t } = useTranslation();
 
   return (
     <footer className='fixed bottom-0 z-50 flex h-12 w-full items-center justify-between gap-4 border-t bg-white p-4 px-4 md:p-6 md:px-4'>
@@ -28,7 +28,7 @@ export function Footer() {
           <Notifications />
         </section>
         <section className='flex items-center gap-2'>
-          <div className='hidden justify-end text-sm font-medium text-primary md:flex lg:flex'>{FOOTER_CONFIG.title}</div>
+          <div className='hidden justify-end text-sm font-medium text-primary md:flex lg:flex'>{`© ${new Date().getFullYear()} ${t('appName')}`}</div>
         </section>
       </section>
     </footer>
