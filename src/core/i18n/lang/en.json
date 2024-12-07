@@ -275,7 +275,9 @@
   "tooltip": {
     "addProfessional": "Add professional",
     "addUser": "Add patient",
+    "account": "My account",
     "availability": "Availability",
+    "console": "Console",
     "delete": "Delete",
     "deleteUser": "Delete patient",
     "details": "See details",
@@ -292,6 +294,7 @@
     "selectYear": "Select year",
     "sendEmail": "Send email",
     "sendMessage": "Send WhatsApp",
+    "settings": "Settings",
     "share": "Share",
     "sort": {
       "area": "Sort by area",
