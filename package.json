@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@formkit/tempo": "^0.1.2",
-    "@google-cloud/translate": "^8.5.0",
     "@hookform/resolvers": "^3.9.0",
     "@mona-health/react-input-mask": "^3.0.3",
     "@radix-ui/react-avatar": "^1.1.0",
