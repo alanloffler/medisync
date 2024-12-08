@@ -9,7 +9,7 @@ import { emailSchema } from '@email/schemas/email.schema';
 export class EmailApiService {
   private static readonly API_URL: string = import.meta.env.VITE_API_URL;
 
-  public static async sendEmail(data: z.infer<typeof emailSchema>) {
+  public static async sendEmail(data: z.infer<typeof emailSchema>): Promise<IResponse<any>> {
     const url: string = `${this.API_URL}/email/send`;
     return await this.fetch(url, EMethods.POST, data);
   }
