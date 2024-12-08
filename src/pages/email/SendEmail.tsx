@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { Mail, MailCheck, Send } from 'lucide-react';
+import { Mail, Send } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
 import { Card, CardContent, CardTitle } from '@core/components/ui/card';
@@ -7,7 +7,9 @@ import { Form, FormField, FormControl, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@core/components/ui/input';
 import { Textarea } from '@core/components/ui/textarea';
 // Components
+import { LoadingText } from '@core/components/common/LoadingText';
 import { PageHeader } from '@core/components/common/PageHeader';
+import { SendEmailSuccess } from '@email/components/SendEmailSuccess';
 // External imports
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -24,14 +26,17 @@ import { EmailApiService } from '@email/services/email.service';
 import { UserApiService } from '@users/services/user-api.service';
 import { emailSchema } from '@email/schemas/email.schema';
 import { useCapitalize } from '@core/hooks/useCapitalize';
-import { LoadingText } from '@core/components/common/LoadingText';
 // React component
 export default function SendEmail() {
   const capitalize = useCapitalize();
   const { id } = useParams();
   const { t } = useTranslation();
 
-  const { data: user, isPending, isSuccess } = useQuery<IResponse<IUser>>({
+  const {
+    data: user,
+    isPending,
+    isSuccess,
+  } = useQuery<IResponse<IUser>>({
     queryKey: ['user', id],
     queryFn: async () => id && (await UserApiService.findOne(id)),
     retry: 1,
@@ -62,7 +67,7 @@ export default function SendEmail() {
     retry: 0,
     onSuccess: () => {
       resetForm();
-      // TODO: addNotification then navigate -1 history
+      // TODO: addNotification
     },
   });
 
@@ -90,81 +95,72 @@ export default function SendEmail() {
           </CardTitle>
           <CardContent className='pt-6'>
             {!isSuccessMutation ? (
-              <>
+              <Form {...emailForm}>
                 <h5 className='text-xsm text-muted-foreground'>{t('email.description', { account: EMAIL_CONFIG.account })}</h5>
-                <Form {...emailForm}>
-                  <form onSubmit={emailForm.handleSubmit(handleSendEmail)} className='space-y-4 pt-6'>
-                    <FormField
-                      control={emailForm.control}
-                      name='to'
-                      render={({ field }) => (
-                        <FormItem>
-                          <section className='flex flex-row items-center space-x-3'>
-                            <FormLabel>{t('email.to')}</FormLabel>
-                            <FormControl className='h-9'>
-                              <Input type='text' disabled className='disabled:!opacity-100' defaultValue={field.value} />
-                            </FormControl>
-                          </section>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={emailForm.control}
-                      name='subject'
-                      render={({ field }) => (
-                        <FormItem>
-                          <section className='flex flex-row items-center space-x-3'>
-                            <FormLabel>{t('email.subject')}</FormLabel>
-                            <FormControl className='h-9'>
-                              <Input type='text' {...field} />
-                            </FormControl>
-                          </section>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={emailForm.control}
-                      name='body'
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel htmlFor='body'>{t('email.body')}</FormLabel>
+                <form onSubmit={emailForm.handleSubmit(handleSendEmail)} className='space-y-4 pt-6'>
+                  <FormField
+                    control={emailForm.control}
+                    name='to'
+                    render={({ field }) => (
+                      <FormItem>
+                        <section className='flex flex-row items-center space-x-3'>
+                          <FormLabel>{t('email.to')}</FormLabel>
                           <FormControl className='h-9'>
-                            <Textarea id='body' rows={4} {...field} className='h-auto' />
+                            <Input type='text' disabled className='disabled:!opacity-100' defaultValue={field.value} />
                           </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </form>
-                  <footer className='flex flex-col items-center justify-end gap-6 pt-6 md:flex-row'>
-                    <Button className='order-2 w-full md:order-1 md:w-fit' size='sm' variant='ghost' onClick={resetForm}>
-                      {t('button.cancel')}
-                    </Button>
-                    <Button
-                      type='submit'
-                      disabled={isPending}
-                      size='sm'
-                      variant='default'
-                      className='order-1 w-full gap-2 md:order-2 md:w-fit'
-                      onClick={emailForm.handleSubmit(handleSendEmail)}
-                    >
-                      <Send size={16} strokeWidth={2} />
-                      {isPendingMutation ? (
-                        <LoadingText text={t('loading.sending')} suffix='...' className='text-background' />
-                      ) : (
-                        t('button.sendEmail')
-                      )}
-                    </Button>
-                  </footer>
-                </Form>
-              </>
+                        </section>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={emailForm.control}
+                    name='subject'
+                    render={({ field }) => (
+                      <FormItem>
+                        <section className='flex flex-row items-center space-x-3'>
+                          <FormLabel>{t('email.subject')}</FormLabel>
+                          <FormControl className='h-9'>
+                            <Input type='text' {...field} />
+                          </FormControl>
+                        </section>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={emailForm.control}
+                    name='body'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel htmlFor='body'>{t('email.body')}</FormLabel>
+                        <FormControl className='h-9'>
+                          <Textarea id='body' rows={4} {...field} className='h-auto' />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </form>
+                <footer className='flex flex-col items-center justify-end gap-6 pt-6 md:flex-row'>
+                  <Button className='order-2 w-full md:order-1 md:w-fit' size='sm' variant='ghost' onClick={resetForm}>
+                    {t('button.cancel')}
+                  </Button>
+                  <Button
+                    type='submit'
+                    disabled={isPending}
+                    size='sm'
+                    variant='default'
+                    className='order-1 w-full gap-2 md:order-2 md:w-fit'
+                    onClick={emailForm.handleSubmit(handleSendEmail)}
+                  >
+                    <Send size={16} strokeWidth={2} />
+                    {isPendingMutation ? <LoadingText text={t('loading.sending')} suffix='...' className='text-background' /> : t('button.sendEmail')}
+                  </Button>
+                </footer>
+              </Form>
             ) : (
-              <section className='flex flex-row items-center gap-2 text-sm'>
-                <MailCheck size={20} strokeWidth={2} className='stroke-emerald-400' />
-                <span>Email enviado. Serás redirigido en 2 segundos</span>
-              </section>
+              <SendEmailSuccess />
             )}
           </CardContent>
         </Card>
