@@ -28,11 +28,11 @@ export function SendEmailSuccess() {
   }, [navigate]);
 
   return (
-    <section className='flex flex-row items-center gap-2 text-sm'>
+    <section className='flex flex-row items-center gap-3 text-sm'>
       <MailCheck size={20} strokeWidth={2} className='stroke-emerald-400' />
       <div>
         <Trans
-          i18nKey='email.sentConfirmation'
+          i18nKey='email.sentSuccess'
           values={{ seconds: countdown }}
           components={{ NumberFlow: <NumberFlow value={countdown} trend={0} className='font-semibold' /> }}
         />
