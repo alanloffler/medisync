@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { CalendarClock, CalendarDays, Mail, PencilLine, Send, Share2, Smartphone, Tag, Trash2 } from 'lucide-react';
+import { ArrowRight, CalendarClock, CalendarDays, Mail, PencilLine, Send, Share2, Smartphone, Tag, Trash2 } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Badge } from '@core/components/ui/badge';
 import { Button } from '@core/components/ui/button';
@@ -246,8 +246,9 @@ export default function ViewProfessional() {
       </section>
       {/* Section: Page footer */}
       <footer className='mx-auto'>
-        <Button variant='default' size='default' onClick={() => navigate('/professionals')}>
+        <Button variant='default' size='default' className='flex items-center gap-3' onClick={() => navigate('/professionals')}>
           {t('button.goToProfessionals')}
+          <ArrowRight size={16} strokeWidth={2} />
         </Button>
       </footer>
     </main>
