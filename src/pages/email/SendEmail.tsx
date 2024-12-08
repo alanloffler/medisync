@@ -15,7 +15,7 @@ import { SendEmailSuccess } from '@email/components/SendEmailSuccess';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -32,6 +32,7 @@ import { useNotificationsStore } from '@core/stores/notifications.store';
 export default function SendEmail() {
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
+  const navigate = useNavigate();
   const { id } = useParams();
   const { t } = useTranslation();
 
@@ -81,8 +82,8 @@ export default function SendEmail() {
   }
 
   function resetForm(): void {
-    // TODO: cancel mutation too if is pending (no internet connection)
     emailForm.reset(defaultValues);
+    navigate(-1);
   }
 
   return (
