@@ -31,7 +31,7 @@ export default function SendEmail() {
   const { id } = useParams();
   const { t } = useTranslation();
 
-  const { data: user, isSuccess } = useQuery<IResponse<IUser>>({
+  const { data: user, isPending, isSuccess } = useQuery<IResponse<IUser>>({
     queryKey: ['user', id],
     queryFn: async () => id && (await UserApiService.findOne(id)),
     retry: 1,
@@ -144,6 +144,7 @@ export default function SendEmail() {
                     </Button>
                     <Button
                       type='submit'
+                      disabled={isPending}
                       size='sm'
                       variant='default'
                       className='order-1 w-full gap-2 md:order-2 md:w-fit'
