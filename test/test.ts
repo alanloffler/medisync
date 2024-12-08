@@ -130,3 +130,6 @@ export class AppoSchedule {
   // const unavailableRanges = [
   //   { begin: '12:00', end: '16:00' },
   // ];
+
+  // Email link open gmail in new tab
+  // window.open(`https://mail.google.com/mail/?view=cm&to=${email.to}&su=${email.subject}&body=${email.body}`, '_blank')
