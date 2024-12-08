@@ -9,6 +9,7 @@ import { Textarea } from '@core/components/ui/textarea';
 // Components
 import { LoadingText } from '@core/components/common/LoadingText';
 import { PageHeader } from '@core/components/common/PageHeader';
+import { SendEmailError } from '@email/components/SendEmailError';
 import { SendEmailSuccess } from '@email/components/SendEmailSuccess';
 // External imports
 import { useEffect } from 'react';
@@ -26,8 +27,10 @@ import { EmailApiService } from '@email/services/email.service';
 import { UserApiService } from '@users/services/user-api.service';
 import { emailSchema } from '@email/schemas/email.schema';
 import { useCapitalize } from '@core/hooks/useCapitalize';
+import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export default function SendEmail() {
+  const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const { id } = useParams();
   const { t } = useTranslation();
@@ -58,21 +61,23 @@ export default function SendEmail() {
   }, [emailForm, isSuccess, user?.data.email]);
 
   const {
+    isError: isErrorMutation,
     isPending: isPendingMutation,
     isSuccess: isSuccessMutation,
-    mutateAsync,
-  } = useMutation({
+    mutate,
+  } = useMutation<IResponse, Error, z.infer<typeof emailSchema>>({
     mutationKey: ['sendEmail', id],
     mutationFn: async (data: z.infer<typeof emailSchema>) => await EmailApiService.sendEmail(data),
     retry: 0,
-    onSuccess: () => {
+    onSuccess: (success) => {
       resetForm();
-      // TODO: addNotification
+      addNotification({ type: 'success', message: success.message });
     },
+    onError: (error) => addNotification({ type: 'error', message: error.message }),
   });
 
   function handleSendEmail(data: z.infer<typeof emailSchema>): void {
-    mutateAsync(data);
+    mutate(data);
   }
 
   function resetForm(): void {
@@ -94,7 +99,9 @@ export default function SendEmail() {
             </header>
           </CardTitle>
           <CardContent className='pt-6'>
-            {!isSuccessMutation ? (
+            {isSuccessMutation && <SendEmailSuccess />}
+            {isErrorMutation && <SendEmailError />}
+            {!isSuccessMutation && !isErrorMutation && (
               <Form {...emailForm}>
                 <h5 className='text-xsm text-muted-foreground'>{t('email.description', { account: EMAIL_CONFIG.account })}</h5>
                 <form onSubmit={emailForm.handleSubmit(handleSendEmail)} className='space-y-4 pt-6'>
@@ -148,7 +155,7 @@ export default function SendEmail() {
                   </Button>
                   <Button
                     type='submit'
-                    disabled={isPending}
+                    disabled={isPending || isPendingMutation}
                     size='sm'
                     variant='default'
                     className='order-1 w-full gap-2 md:order-2 md:w-fit'
@@ -159,8 +166,6 @@ export default function SendEmail() {
                   </Button>
                 </footer>
               </Form>
-            ) : (
-              <SendEmailSuccess />
             )}
           </CardContent>
         </Card>
