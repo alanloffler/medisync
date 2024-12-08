@@ -1,5 +1,6 @@
 export const APP_CONFIG = {
   debounceTime: 500,
+  redirectTime: 5000,
   // TODO: when translated all, remove this
   error: {
     server: 'Error interno del servidor'
