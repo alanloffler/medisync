@@ -11,6 +11,7 @@ import { PageHeader } from '@core/components/common/PageHeader';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
 import { format } from '@formkit/tempo';
+import { spring, useAnimate } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -26,6 +27,7 @@ import { useHelpStore } from '@settings/stores/help.store';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export default function ViewUser() {
+  const [gotoScope, gotoAnimation] = useAnimate();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showCard, setShowCard] = useState<boolean>(false);
   const [user, setUser] = useState<IUser>({} as IUser);
@@ -60,6 +62,14 @@ export default function ViewUser() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  function gotoMouseOverAnimation(): void {
+    gotoAnimation(gotoScope.current, { x: 3 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 });
+  }
+
+  function gotoMouseOutAnimation(): void {
+    gotoAnimation(gotoScope.current, { x: 0 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 });
+  }
 
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
@@ -157,9 +167,16 @@ export default function ViewUser() {
         )}
       </section>
       <footer className='mx-auto'>
-        <Button variant='default' size='default' className='flex items-center gap-3' onClick={() => navigate('/users')}>
+        <Button
+          variant='default'
+          size='default'
+          className='flex items-center gap-3'
+          onClick={() => navigate('/users')}
+          onMouseOver={gotoMouseOverAnimation}
+          onMouseOut={gotoMouseOutAnimation}
+        >
           {t('button.goToUsers')}
-          <ArrowRight size={16} strokeWidth={2} />
+          <ArrowRight ref={gotoScope} size={16} strokeWidth={2} />
         </Button>
       </footer>
     </main>
