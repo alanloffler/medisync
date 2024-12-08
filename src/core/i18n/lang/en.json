@@ -31,6 +31,7 @@
     "reserve": "Reserve",
     "reserveAppointment": "Reserve appointment",
     "sendEmail": "Send email",
+    "tryAgain": "Try again",
     "updateProfessional": "Update professional",
     "updateUser": "Update patient"
   },
@@ -127,6 +128,8 @@
       "subject": "MediSync - Medical appointments",
       "body": "Hello {{firstName}},"
     },
+    "sentError": "Email not sent. A shipping error has occurred.",
+    "sentSuccess": "Email sent. You will be redirected in {{seconds}}",
     "subject": "Subject",
     "to": "To"
   },

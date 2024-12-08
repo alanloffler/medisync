@@ -31,6 +31,7 @@
     "reserve": "Reservar",
     "reserveAppointment": "Reservar turno",
     "sendEmail": "Enviar email",
+    "tryAgain": "Intentar de nuevo",
     "updateProfessional": "Actualizar profesional",
     "updateUser": "Actualizar paciente"
   },
@@ -127,6 +128,8 @@
       "subject": "MediSync - Turnos médicos",
       "body": "Hola {{firstName}},"
     },
+    "sentError": "Email no enviado. Ha sucedido un error de envío.",
+    "sentSuccess": "Email enviado. Serás redirigido en <NumberFlow value={{seconds}} />",
     "subject": "Asunto",
     "to": "Para"
   },
