@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { CreditCard, Mail, MessageCircle, PencilLine, Send, Smartphone, Trash2 } from 'lucide-react';
+import { ArrowRight, CreditCard, Mail, MessageCircle, PencilLine, Send, Smartphone, Trash2 } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
 import { Card, CardContent } from '@core/components/ui/card';
@@ -15,7 +15,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 // Imports
-import type { IEmail } from '@core/interfaces/email.interface';
 import type { IUser } from '@users/interfaces/user.interface';
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { USER_VIEW_CONFIG as UV_CONFIG } from '@config/users/user-view.config';
@@ -27,7 +26,6 @@ import { useHelpStore } from '@settings/stores/help.store';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export default function ViewUser() {
-  const [email, setEmail] = useState<IEmail>({} as IEmail);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showCard, setShowCard] = useState<boolean>(false);
   const [user, setUser] = useState<IUser>({} as IUser);
@@ -62,14 +60,6 @@ export default function ViewUser() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
-
-  useEffect(() => {
-    setEmail({
-      to: user.email,
-      subject: t('email.sendToUser.subject'),
-      body: t('email.sendToUser.body', { firstName: capitalize(user.firstName) }),
-    });
-  }, [capitalize, t, user]);
 
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
@@ -117,9 +107,7 @@ export default function ViewUser() {
               <section className='flex justify-end space-x-2 border-t p-2'>
                 <TooltipWrapper tooltip={t('tooltip.sendEmail')} help={help}>
                   <Button
-                    onClick={() =>
-                      window.open(`https://mail.google.com/mail/?view=cm&to=${email.to}&su=${email.subject}&body=${email.body}`, '_blank')
-                    }
+                    onClick={() => navigate(`/email/${user._id}`)}
                     variant='secondary'
                     size='miniIcon'
                     className='bg-transparent transition-transform hover:scale-125 hover:bg-transparent hover:text-sky-500 hover:animate-in'
@@ -169,8 +157,9 @@ export default function ViewUser() {
         )}
       </section>
       <footer className='mx-auto'>
-        <Button variant='default' size='default' onClick={() => navigate('/users')}>
+        <Button variant='default' size='default' className='flex items-center gap-3' onClick={() => navigate('/users')}>
           {t('button.goToUsers')}
+          <ArrowRight size={16} strokeWidth={2} />
         </Button>
       </footer>
     </main>
