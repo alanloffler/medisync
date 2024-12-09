@@ -1,11 +1,10 @@
 // Icons: https://lucide.dev/icons/
 import { Calendar, Clock, FileText, MessageCircle, Trash2 } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
-import { Button } from '@core/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@core/components/ui/table';
 // Components
 import { RemoveDialog } from '@core/components/common/RemoveDialog';
-import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
+import { TableButton } from '@core/components/common/TableButton';
 // External imports
 import { Trans, useTranslation } from 'react-i18next';
 import { format } from '@formkit/tempo';
@@ -58,27 +57,23 @@ export function ApposTable({
       accessorKey: 'actions',
       size: 100,
       cell: ({ row }) => (
-        <div className='space-x-2 text-center'>
-          <TooltipWrapper tooltip={t('tooltip.details')} help={help}>
-            <Button
-              onClick={() => navigate(`/appointments/${row.original._id}`)}
-              variant='secondary'
-              size='miniIcon'
-              className='bg-transparent transition-transform hover:scale-110 hover:bg-transparent hover:text-sky-500 hover:animate-in'
-            >
-              <FileText size={16} strokeWidth={1.5} />
-            </Button>
-          </TooltipWrapper>
-          <TooltipWrapper tooltip={t('tooltip.sendMessage')} help={help}>
-            <Button
-              // onClick={}
-              variant='secondary'
-              size='miniIcon'
-              className='bg-transparent transition-transform hover:scale-110 hover:bg-transparent hover:text-emerald-500 hover:animate-in'
-            >
-              <MessageCircle size={16} strokeWidth={1.5} />
-            </Button>
-          </TooltipWrapper>
+        <div className='flex items-center space-x-2 text-center'>
+          <TableButton
+            callback={() => navigate(`/appointments/${row.original._id}`)}
+            help={help}
+            tooltip={t('tooltip.details')}
+            className='hover:text-sky-500'
+          >
+            <FileText size={16} strokeWidth={1.5} />
+          </TableButton>
+          <TableButton
+            callback={() => navigate(`/whatsapp/user/${row.original._id}`)}
+            help={help}
+            tooltip={t('tooltip.sendMessage')}
+            className='hover:text-emerald-500'
+          >
+            <MessageCircle size={16} strokeWidth={1.5} />
+          </TableButton>
           <RemoveDialog
             action={() => AppointmentApiService.remove(row.original._id)}
             callback={handleRefresh}
