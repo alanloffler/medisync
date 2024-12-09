@@ -9,6 +9,11 @@ export class Motion {
     linear: { duration: 0.7, ease: 'linear' as Easing, type: spring },
   };
 
+  public scale(value: number) {
+    this._keyframes = { scale: value };
+    return this;
+  }
+
   public x(value: number) {
     this._keyframes = { x: value };
     return this;
