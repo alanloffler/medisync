@@ -11,7 +11,7 @@ import { PageHeader } from '@core/components/common/PageHeader';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
 import { format } from '@formkit/tempo';
-import { spring, useAnimate } from 'motion/react';
+import { useAnimate } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -20,6 +20,7 @@ import type { IUser } from '@users/interfaces/user.interface';
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { USER_VIEW_CONFIG as UV_CONFIG } from '@config/users/user-view.config';
 import { UserApiService } from '@users/services/user-api.service';
+import { motion } from '@core/services/motion.service';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useDelimiter } from '@core/hooks/useDelimiter';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
@@ -27,10 +28,10 @@ import { useHelpStore } from '@settings/stores/help.store';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export default function ViewUser() {
-  const [gotoScope, gotoAnimation] = useAnimate();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showCard, setShowCard] = useState<boolean>(false);
   const [user, setUser] = useState<IUser>({} as IUser);
+  const [gotoScope, gotoAnimation] = useAnimate();
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const delimiter = useDelimiter();
@@ -63,12 +64,14 @@ export default function ViewUser() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  function gotoMouseOverAnimation(): void {
-    gotoAnimation(gotoScope.current, { x: 3 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 });
+  function gotoAnimationOver(): void {
+    const { keyframes, options } = motion.x(3).type('bounce').animate();
+    gotoAnimation(gotoScope.current, keyframes, options);
   }
 
-  function gotoMouseOutAnimation(): void {
-    gotoAnimation(gotoScope.current, { x: 0 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 });
+  function gotoAnimationOut(): void {
+    const { keyframes, options } = motion.x(0).type('bounce').animate();
+    gotoAnimation(gotoScope.current, keyframes, options);
   }
 
   return (
@@ -172,8 +175,8 @@ export default function ViewUser() {
           size='default'
           className='flex items-center gap-3'
           onClick={() => navigate('/users')}
-          onMouseOver={gotoMouseOverAnimation}
-          onMouseOut={gotoMouseOutAnimation}
+          onMouseOver={gotoAnimationOver}
+          onMouseOut={gotoAnimationOut}
         >
           {t('button.goToUsers')}
           <ArrowRight ref={gotoScope} size={16} strokeWidth={2} />
