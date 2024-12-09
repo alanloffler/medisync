@@ -11,7 +11,7 @@ interface IProps {
   callback: () => void;
   children: ReactNode;
   className?: string;
-  help: boolean;
+  help?: boolean;
   tooltip?: string;
 }
 // React component
