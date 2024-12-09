@@ -35,9 +35,15 @@ export function ApposTable({
       accessorKey: 'day',
       size: 80,
       cell: ({ row }) => (
-        <section className='mx-auto flex w-fit items-center justify-center space-x-2 rounded-sm bg-slate-200 p-1 pr-2 text-slate-600'>
-          <Calendar size={16} strokeWidth={2} />
-          <span className='text-xsm font-normal'>{format(row.original.day, 'DD/MM/YY')}</span>
+        <section className='flex justify-center text-xsm font-normal'>
+          <div className='flex items-center space-x-1 rounded-l-sm bg-indigo-200 p-1 pr-2 text-indigo-600'>
+            <Calendar size={14} strokeWidth={2} />
+            <span>{format(row.original.day, 'short', i18n.resolvedLanguage)}</span>
+          </div>
+          <div className='flex items-center space-x-1 rounded-r-sm bg-indigo-100 p-1 pr-2 text-indigo-600'>
+            <Clock size={14} strokeWidth={2} />
+            <span>{row.original.hour}</span>
+          </div>
         </section>
       ),
       header: () => <div className='text-center'>{t(UV_CONFIG.table.header[0])}</div>,
@@ -57,7 +63,7 @@ export function ApposTable({
       accessorKey: 'actions',
       size: 100,
       cell: ({ row }) => (
-        <div className='flex items-center space-x-2 text-center'>
+        <div className='flex items-center justify-center space-x-2'>
           <TableButton
             callback={() => navigate(`/appointments/${row.original._id}`)}
             help={help}
@@ -70,7 +76,7 @@ export function ApposTable({
             callback={() => navigate(`/whatsapp/user/${row.original._id}`)}
             help={help}
             tooltip={t('tooltip.sendMessage')}
-            className='hover:text-emerald-500'
+            className='hover:text-green-500'
           >
             <MessageCircle size={16} strokeWidth={1.5} />
           </TableButton>
