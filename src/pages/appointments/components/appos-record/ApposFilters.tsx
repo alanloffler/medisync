@@ -7,13 +7,14 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
-import { animate, spring } from 'motion/react';
-import { useEffect, useRef, useState } from 'react';
+import { useAnimate } from 'motion/react';
+import { useEffect, useState } from 'react';
 // Imports
 import type { IApposFilters } from '@appointments/interfaces/appos-filters.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
+import { motion } from '@core/services/motion.service';
 import { useApposFilters } from '@appointments/hooks/useApposFilters';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useHelpStore } from '@settings/stores/help.store';
@@ -27,10 +28,9 @@ export function ApposFilters({ userId, disabled }: { userId: string; disabled: b
   const [professionals, setProfessionals] = useState<IProfessional[]>([]);
   const [yearError, setYearError] = useState<boolean>(false);
   const [years, setYears] = useState<string[]>([]);
+  const [clearButtonScope, clearButtonAnimation] = useAnimate();
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
-  const clearButtonRef = useRef(null);
-  const clearLabelRef = useRef(null);
   const { help } = useHelpStore();
   const { i18n, t } = useTranslation();
   const { professional, year, setFilters, clearFilters } = useApposFilters();
@@ -74,18 +74,14 @@ export function ApposFilters({ userId, disabled }: { userId: string; disabled: b
     console.log('check professional years on db');
   }, [professional]);
 
-  function clearButtonOverAnimation(): void {
-    if (clearButtonRef.current && clearLabelRef.current) {
-      animate(clearButtonRef.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 });
-      animate(clearLabelRef.current, { opacity: 1 }, { duration: 0.2, ease: 'easeIn' });
-    }
+  function clearButtonAnimationOver(): void {
+    const { keyframes, options } = motion.scale(1.1).type('bounce').animate();
+    clearButtonAnimation(clearButtonScope.current, keyframes, options);
   }
 
-  function clearButtonOutAnimation(): void {
-    if (clearButtonRef.current && clearLabelRef.current) {
-      animate(clearButtonRef.current, { scale: 1 }, { duration: 0.1 });
-      animate(clearLabelRef.current, { opacity: 0 }, { duration: 0.1 });
-    }
+  function clearButtonAnimationOut(): void {
+    const { keyframes, options } = motion.scale(1).type('bounce').animate();
+    clearButtonAnimation(clearButtonScope.current, keyframes, options);
   }
 
   return (
@@ -150,19 +146,18 @@ export function ApposFilters({ userId, disabled }: { userId: string; disabled: b
       </section>
       {(professional || year) && (
         <section className='flex items-center space-x-2'>
-          <span ref={clearLabelRef} className='text-xs text-slate-500 opacity-0'>
-            {t('button.clearFilters')}
-          </span>
-          <Button
-            ref={clearButtonRef}
-            variant='clear'
-            size='icon5'
-            onClick={() => clearFilters({ professional, year })}
-            onMouseOver={clearButtonOverAnimation}
-            onMouseOut={clearButtonOutAnimation}
-          >
-            <X size={14} strokeWidth={2} />
-          </Button>
+          <TooltipWrapper tooltip={t('tooltip.clearFilters')} help={help}>
+            <Button
+              ref={clearButtonScope}
+              variant='clear'
+              size='icon5'
+              onClick={() => clearFilters({ professional, year })}
+              onMouseOver={clearButtonAnimationOver}
+              onMouseOut={clearButtonAnimationOut}
+            >
+              <X size={14} strokeWidth={2} />
+            </Button>
+          </TooltipWrapper>
         </section>
       )}
     </main>
