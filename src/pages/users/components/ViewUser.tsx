@@ -99,7 +99,7 @@ export default function ViewUser() {
                   <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
                     <CreditCard size={17} strokeWidth={2} />
                   </div>
-                  <span className='text-sm'>{delimiter(user.dni, '.', 3)}</span>
+                  <span className='text-sm'>{i18n.format(user.dni, 'number', i18n.resolvedLanguage)}</span>
                 </section>
                 <section className='flex items-center space-x-3'>
                   <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
