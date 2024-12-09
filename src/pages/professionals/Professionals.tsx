@@ -10,8 +10,8 @@ import { ProfessionalsDataTable } from '@professionals/components/ProfessionalsD
 import { SelectSpecialties } from '@core/components/common/SelectSpecialties';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
-import { spring, useAnimate } from 'motion/react';
 import { type ChangeEvent, useEffect, useState } from 'react';
+import { useAnimate } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 // Imports
@@ -20,6 +20,7 @@ import { APP_CONFIG } from '@config/app.config';
 import { EProfessionalSearch, type IProfessionalSearch } from '@professionals/interfaces/professional-search.interface';
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { PROFESSIONALS_CONFIG as PROF_CONFIG } from '@config/professionals/professionals.config';
+import { motion } from '@core/services/motion.service';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useDebounce } from '@core/hooks/useDebounce';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
@@ -32,8 +33,8 @@ export default function Professionals() {
   const [reload, setReload] = useState<number>(0);
   const [search, setSearch] = useState<IProfessionalSearch>({ value: '', type: EProfessionalSearch.INPUT });
   const [specSelected, setSpecSelected] = useState<string | undefined>(undefined);
-  const [createMiniScope, createMiniAnimation] = useAnimate();
-  const [createScope, createAnimation] = useAnimate();
+  const [addProfScope, addProfAnimation] = useAnimate();
+  const [addProfIconScope, addProfIconAnimation] = useAnimate();
   const [reloadScope, reloadAnimation] = useAnimate();
   const capitalize = useCapitalize();
   const debouncedSearch = useDebounce<IProfessionalSearch>(search, debounceTime);
@@ -69,6 +70,36 @@ export default function Professionals() {
     setItemSelected(HEADER_CONFIG.headerMenu[2].id);
   }, [setItemSelected, capitalize]);
 
+  function addProfessionalAnimationOver(): void {
+    const { keyframes, options } = motion.scale(1.2).type('bounce').animate();
+    addProfAnimation(addProfScope.current, keyframes, options);
+  }
+
+  function addProfessionalAnimationOut(): void {
+    const { keyframes, options } = motion.scale(1).type('bounce').animate();
+    addProfAnimation(addProfScope.current, keyframes, options);
+  }
+
+  function reloadAnimationOver(): void {
+    const { keyframes, options } = motion.scale(1.1).type('bounce').animate();
+    reloadAnimation(reloadScope.current, keyframes, options);
+  }
+
+  function reloadAnimationOut(): void {
+    const { keyframes, options } = motion.scale(1).type('bounce').animate();
+    reloadAnimation(reloadScope.current, keyframes, options);
+  }
+
+  function addProfessionalIconAnimationOver(): void {
+    const { keyframes, options } = motion.scale(1.1).type('bounce').animate();
+    addProfIconAnimation(addProfIconScope.current, keyframes, options);
+  }
+
+  function addProfessionalIconAnimationOut(): void {
+    const { keyframes, options } = motion.scale(1).type('bounce').animate();
+    addProfIconAnimation(addProfIconScope.current, keyframes, options);
+  }
+
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
       {/* Section: Page Header */}
@@ -85,10 +116,10 @@ export default function Professionals() {
                 size='sm'
                 className='w-fit space-x-2'
                 onClick={() => navigate('/professionals/create')}
-                onMouseOver={() => createAnimation(createScope.current, { scale: 1.2 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })}
-                onMouseOut={() => createAnimation(createScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })}
+                onMouseOver={addProfessionalAnimationOver}
+                onMouseOut={addProfessionalAnimationOut}
               >
-                <PlusCircle ref={createScope} size={16} strokeWidth={2} />
+                <PlusCircle ref={addProfScope} size={16} strokeWidth={2} />
                 <span>{t('button.addProfessional')}</span>
               </Button>
               <div className='flex flex-col space-y-2'>
@@ -137,28 +168,20 @@ export default function Professionals() {
                     size='miniIcon'
                     variant='tableHeader'
                     onClick={handleReload}
-                    onMouseOver={() =>
-                      reloadAnimation(reloadScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                    }
-                    onMouseOut={() =>
-                      reloadAnimation(reloadScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                    }
+                    onMouseOver={reloadAnimationOver}
+                    onMouseOut={reloadAnimationOut}
                   >
                     <ListRestart size={16} strokeWidth={2} />
                   </Button>
                 </TooltipWrapper>
                 <TooltipWrapper tooltip={t('tooltip.addProfessional')} help={help}>
                   <Button
-                    ref={createMiniScope}
+                    ref={addProfIconScope}
                     size='miniIcon'
                     variant='tableHeaderPrimary'
                     onClick={() => navigate('/professionals/create')}
-                    onMouseOver={() =>
-                      createMiniAnimation(createMiniScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                    }
-                    onMouseOut={() =>
-                      createMiniAnimation(createMiniScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                    }
+                    onMouseOver={addProfessionalIconAnimationOver}
+                    onMouseOut={addProfessionalIconAnimationOut}
                   >
                     <CirclePlus size={16} strokeWidth={2} />
                   </Button>
