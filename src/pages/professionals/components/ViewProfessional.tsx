@@ -15,6 +15,7 @@ import { RemoveDialog } from '@core/components/common/RemoveDialog';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
 import { Trans, useTranslation } from 'react-i18next';
+import { useAnimate } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 // Imports
@@ -25,6 +26,7 @@ import type { IResponse } from '@core/interfaces/response.interface';
 import { CalendarService } from '@appointments/services/calendar.service';
 import { PROFESSIONAL_VIEW_CONFIG as PV_CONFIG } from '@config/professionals/professional-view.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
+import { motion } from '@core/services/motion.service';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useCapitalizeFirstLetter } from '@core/hooks/useCapitalizeFirstLetter';
 import { useDelimiter } from '@core/hooks/useDelimiter';
@@ -38,6 +40,7 @@ export default function ViewProfessional() {
   const [legibleWorkingDays, setLegibleWorkingDays] = useState<string>('');
   const [professional, setProfessional] = useState<IProfessional>({} as IProfessional);
   const [showCard, setShowCard] = useState<boolean>(false);
+  const [gotoScope, gotoAnimation] = useAnimate();
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const capitalizeFirstLetter = useCapitalizeFirstLetter();
@@ -84,6 +87,16 @@ export default function ViewProfessional() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, i18n.resolvedLanguage]);
+
+  function gotoAnimateOver(): void {
+    const { keyframes, options } = motion.x(3).type('bounce').animate();
+    gotoAnimation(gotoScope.current, keyframes, options);
+  }
+
+  function gotoAnimateOut(): void {
+    const { keyframes, options } = motion.x(0).type('bounce').animate();
+    gotoAnimation(gotoScope.current, keyframes, options);
+  }
 
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
@@ -246,9 +259,16 @@ export default function ViewProfessional() {
       </section>
       {/* Section: Page footer */}
       <footer className='mx-auto'>
-        <Button variant='default' size='default' className='flex items-center gap-3' onClick={() => navigate('/professionals')}>
+        <Button
+          variant='default'
+          size='default'
+          className='flex items-center gap-3'
+          onClick={() => navigate('/professionals')}
+          onMouseOver={gotoAnimateOver}
+          onMouseOut={gotoAnimateOut}
+        >
           {t('button.goToProfessionals')}
-          <ArrowRight size={16} strokeWidth={2} />
+          <ArrowRight ref={gotoScope} size={16} strokeWidth={2} />
         </Button>
       </footer>
     </main>
