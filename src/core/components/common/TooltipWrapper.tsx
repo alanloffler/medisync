@@ -6,11 +6,11 @@ import { ReactNode } from 'react';
 interface ITooltipWrapper {
   children: ReactNode;
   help?: boolean;
-  tooltip: string;
+  tooltip?: string;
 }
 // React component
 export function TooltipWrapper({ children, tooltip, help }: ITooltipWrapper) {
-  return help ? (
+  return help && tooltip ? (
     <TooltipProvider delayDuration={0.3}>
       <Tooltip>
         <TooltipTrigger asChild>{children}</TooltipTrigger>
