@@ -8,7 +8,7 @@ import { ApposRecord } from '@appointments/components/appos-record/ApposRecord';
 import { BackButton } from '@core/components/common/BackButton';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
-import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
+import { TableButton } from '@core/components/common/TableButton';
 // External imports
 import { format } from '@formkit/tempo';
 import { useAnimate } from 'motion/react';
@@ -117,48 +117,41 @@ export default function ViewUser() {
                   {t('cardContent.userSince', { date: format(user.createdAt, 'long', localStorage.getItem('i18nextLng') ?? i18n.resolvedLanguage) })}
                 </section>
               </CardContent>
-              <section className='flex justify-end space-x-2 border-t p-2'>
-                <TooltipWrapper tooltip={t('tooltip.sendEmail')} help={help}>
-                  <Button
-                    onClick={() => navigate(`/email/${user._id}`)}
-                    variant='secondary'
-                    size='miniIcon'
-                    className='bg-transparent transition-transform hover:scale-125 hover:bg-transparent hover:text-sky-500 hover:animate-in'
-                  >
-                    <Send size={18} strokeWidth={1.5} />
-                  </Button>
-                </TooltipWrapper>
-                <TooltipWrapper tooltip={t('tooltip.sendMessage')} help={help}>
-                  <Button
-                    onClick={() => navigate(`/whatsapp/${user._id}`)}
-                    variant='secondary'
-                    size='miniIcon'
-                    className='bg-transparent transition-transform hover:scale-125 hover:bg-transparent hover:text-emerald-500 hover:animate-in'
-                  >
-                    <MessageCircle size={18} strokeWidth={1.5} />
-                  </Button>
-                </TooltipWrapper>
-                <TooltipWrapper tooltip={t('tooltip.updateUser')} help={help}>
-                  <Button
-                    onClick={() => navigate(`/users/update/${user._id}`)}
-                    variant='secondary'
-                    size='miniIcon'
-                    className='bg-transparent transition-transform hover:scale-125 hover:bg-transparent hover:text-amber-500 hover:animate-in'
-                  >
-                    <PencilLine size={18} strokeWidth={1.5} />
-                  </Button>
-                </TooltipWrapper>
+              <section className='flex items-center justify-end space-x-2 border-t p-2'>
+                <TableButton
+                  callback={() => navigate(`/email/${user._id}`)}
+                  className='hover:text-sky-500'
+                  help={help}
+                  tooltip={t('tooltip.sendEmail')}
+                >
+                  <Send size={18} strokeWidth={1.5} />
+                </TableButton>
+                <TableButton
+                  callback={() => navigate(`/whatsapp/${user._id}`)}
+                  className='hover:text-green-500'
+                  help={help}
+                  tooltip={t('tooltip.sendMessage')}
+                >
+                  <MessageCircle size={18} strokeWidth={1.5} />
+                </TableButton>
+                <TableButton
+                  callback={() => navigate(`/users/update/${user._id}`)}
+                  className='hover:text-fuchsia-500'
+                  help={help}
+                  tooltip={t('tooltip.updateUser')}
+                >
+                  <PencilLine size={18} strokeWidth={1.5} />
+                </TableButton>
+
                 {/* TODO: create dialog for user delete */}
-                <TooltipWrapper tooltip={t('tooltip.deleteUser')} help={help}>
-                  <Button
-                    onClick={() => navigate(``)}
-                    variant='secondary'
-                    size='miniIcon'
-                    className='bg-transparent transition-transform hover:scale-125 hover:bg-transparent hover:text-rose-500 hover:animate-in'
-                  >
-                    <Trash2 size={18} strokeWidth={1.5} />
-                  </Button>
-                </TooltipWrapper>
+                <TableButton
+                  callback={() => console.log('Open dialog')}
+                  className='hover:text-rose-500'
+                  help={help}
+                  tooltip={t('tooltip.deleteUser')}
+                >
+                  <Trash2 size={18} strokeWidth={1.5} />
+                </TableButton>
               </section>
             </Card>
           )
