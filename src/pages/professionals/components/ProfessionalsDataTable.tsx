@@ -169,9 +169,10 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
       cell: ({ row }) => (
         <section className='flex flex-row items-center justify-center'>
           <AvailableProfessional
-            items={PV_CONFIG.select}
-            data={{ _id: row.original._id, available: row.original.available }}
             className='h-6'
+            data={{ _id: row.original._id, available: row.original.available }}
+            help={help}
+            items={PV_CONFIG.select}
           />
         </section>
       ),
