@@ -79,7 +79,7 @@ export default function SendEmail() {
 
 // TODO: motion animation with custom class
   useEffect(() => {
-    if (!isPendingMutation) {
+    if (isPendingMutation) {
       animate(sendScope.current, 
         // { x: -3, y: 3 },
         { x: [-3, 0], y: [3, 0] },
