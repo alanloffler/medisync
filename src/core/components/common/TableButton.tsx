@@ -36,10 +36,7 @@ export function TableButton({ callback, children, className, disabled, help, too
   return (
     <TooltipWrapper help={help} tooltip={tooltip}>
       <button
-        className={cn(
-          'flex h-6 w-6 items-center justify-center bg-transparent disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:text-foreground',
-          className,
-        )}
+        className={cn('flex h-6 w-6 items-center justify-center bg-transparent disabled:pointer-events-none disabled:text-rose-500', className)}
         disabled={disabled}
         onClick={callback}
         onMouseOver={animateOver}
