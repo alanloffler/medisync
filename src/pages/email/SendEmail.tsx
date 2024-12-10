@@ -12,6 +12,7 @@ import { PageHeader } from '@core/components/common/PageHeader';
 import { SendEmailError } from '@email/components/SendEmailError';
 import { SendEmailSuccess } from '@email/components/SendEmailSuccess';
 // External imports
+import { animate } from 'motion/react';
 import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -26,10 +27,9 @@ import { EMAIL_CONFIG } from '@config/email.config';
 import { EmailApiService } from '@email/services/email.service';
 import { UserApiService } from '@users/services/user-api.service';
 import { emailSchema } from '@email/schemas/email.schema';
+import { motion } from '@core/services/motion.service';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useNotificationsStore } from '@core/stores/notifications.store';
-import { spring, animate } from 'motion/react';
-// import { motion } from '@core/services/motion.service';
 // React component
 export default function SendEmail() {
   const addNotification = useNotificationsStore((state) => state.addNotification);
@@ -77,17 +77,6 @@ export default function SendEmail() {
     onError: (error) => addNotification({ type: 'error', message: error.message }),
   });
 
-// TODO: motion animation with custom class
-  useEffect(() => {
-    if (isPendingMutation) {
-      animate(sendScope.current, 
-        // { x: -3, y: 3 },
-        { x: [-3, 0], y: [3, 0] },
-        { duration: 1, repeatDelay:.5, type: spring, repeat: Infinity, bounce: .5 }
-      );
-    }
-  }, [isPendingMutation]);
-
   function handleSendEmail(data: z.infer<typeof emailSchema>): void {
     mutate(data);
   }
@@ -96,6 +85,13 @@ export default function SendEmail() {
     emailForm.reset(defaultValues);
     navigate(-1);
   }
+
+  useEffect(() => {
+    if (isPendingMutation) {
+      const { keyframes, options } = motion.xy([-3, 0], [3, 0]).type('fly').animate();
+      animate(sendScope.current, keyframes, options);
+    }
+  }, [isPendingMutation]);
 
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
