@@ -107,12 +107,14 @@ export default function ViewUser() {
                   </div>
                   <span className='text-sm'>{delimiter(user.phone, '-', 6)}</span>
                 </section>
-                <section className='flex items-center space-x-3'>
-                  <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
-                    <Mail size={17} strokeWidth={2} />
-                  </div>
-                  <span className='text-sm'>{user.email}</span>
-                </section>
+                {user.email && (
+                  <section className='flex items-center space-x-3'>
+                    <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
+                      <Mail size={17} strokeWidth={2} />
+                    </div>
+                    <span className='text-sm'>{user.email}</span>
+                  </section>
+                )}
                 <section className='pt-2 text-sm'>
                   {t('cardContent.userSince', { date: format(user.createdAt, 'long', localStorage.getItem('i18nextLng') ?? i18n.resolvedLanguage) })}
                 </section>
@@ -121,6 +123,7 @@ export default function ViewUser() {
                 <TableButton
                   callback={() => navigate(`/email/${user._id}`)}
                   className='hover:text-sky-500'
+                  disabled={!user.email}
                   help={help}
                   tooltip={t('tooltip.sendEmail')}
                 >
@@ -142,7 +145,6 @@ export default function ViewUser() {
                 >
                   <PencilLine size={18} strokeWidth={1.5} />
                 </TableButton>
-
                 {/* TODO: create dialog for user delete */}
                 <TableButton
                   callback={() => console.log('Open dialog')}
