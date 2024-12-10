@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { ArrowDownUp, FileText, MailX, PencilLine, Send, Trash2 } from 'lucide-react';
+import { ArrowDownUp, FileText, Mail, MailX, PencilLine, Trash2 } from 'lucide-react';
 // External components:
 // https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
@@ -160,7 +160,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
             help={help}
             tooltip={t('tooltip.sendEmail')}
           >
-            {!row.original.email ? <MailX size={16} strokeWidth={1.5} /> : <Send size={16} strokeWidth={1.5} />}
+            {!row.original.email ? <MailX size={16} strokeWidth={1.5} /> : <Mail size={16} strokeWidth={1.5} />}
           </TableButton>
           <TableButton
             callback={() => navigate(`/whatsapp/user/${row.original._id}`)}
