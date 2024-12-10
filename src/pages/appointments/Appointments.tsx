@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { Database, List, PlusCircle } from 'lucide-react';
+import { ChartLine, Database, List, PlusCircle } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
 import { Card, CardContent } from '@core/components/ui/card';
@@ -22,6 +22,7 @@ import { AppointmentApiService } from '@appointments/services/appointment.servic
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { queryClient } from '@lib/react-query';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
+import NumberFlow, { NumberFlowGroup } from '@number-flow/react';
 // React component
 export default function Appointments() {
   const _limit: number =
@@ -60,24 +61,62 @@ export default function Appointments() {
     }
   }, [appointments, isPlaceholderData, limit, page]);
 
+  const [flowValue, setFlowValue] = useState<{ value: number; label: string }>({ value: 0, label: '' });
+
+  useEffect(() => {
+    const flowContent = [
+      { value: 58, label: 'en total' },
+      { value: -12, label: 'esta semana' },
+      { value: 4, label: 'hoy' },
+    ];
+    let index = 0;
+
+    const interval = setInterval(() => {
+      setFlowValue(flowContent[index]);
+      index = (index + 1) % flowContent.length;
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
       <header className='flex items-center justify-between'>
         <PageHeader title={t('pageTitle.appointments')} breadcrumb={APPO_CONFIG.breadcrumb} />
       </header>
       <section className='grid gap-6 md:grid-cols-4 md:gap-8 lg:grid-cols-4 xl:grid-cols-4'>
-        <section className='col-span-1 md:col-span-4 lg:col-span-1 xl:col-span-1'>
-          <Button
-            variant='default'
-            size='sm'
-            className='w-fit space-x-2'
-            onClick={() => navigate('/reserve')}
-            onMouseOver={() => createAnimation(createScope.current, { scale: 1.2 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })}
-            onMouseOut={() => createAnimation(createScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })}
-          >
-            <PlusCircle ref={createScope} size={16} strokeWidth={2} />
-            <span>{t('button.generateAppointment')}</span>
-          </Button>
+        <section className='col-span-1 space-y-6 md:col-span-4 lg:col-span-1 xl:col-span-1'>
+          <div className='flex'>
+            <Button
+              variant='default'
+              size='sm'
+              className='w-fit space-x-2'
+              onClick={() => navigate('/reserve')}
+              onMouseOver={() => createAnimation(createScope.current, { scale: 1.2 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })}
+              onMouseOut={() => createAnimation(createScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })}
+            >
+              <PlusCircle ref={createScope} size={16} strokeWidth={2} />
+              <span>{t('button.generateAppointment')}</span>
+            </Button>
+          </div>
+          <Card className='space-y-4 p-4 pb-8 bg-amber-200 text-amber-600'>
+            <div className='flex items-center justify-between'>
+              <h2 className='text-xsm font-semibold uppercase'>{t('pageTitle.appointments')}</h2>
+              <ChartLine size={20} strokeWidth={2} className='stroke-amber-600' />
+            </div>
+            <NumberFlowGroup>
+              <div className='flex flex-col items-center justify-center space-y-2 font-semibold'>
+                <div className='flex items-center space-x-2'>
+                  <NumberFlow format={{ style: 'decimal' }} value={flowValue.value} suffix='' className={`text-3xl ${flowValue.value < 0 ? '!text-red-600' : 'text-amber-600'}`} />
+                  <span className='text-base font-light'>{flowValue.label}</span>
+                </div>
+                {/* <div className='flex items-center space-x-2'>
+                  <NumberFlow value={flowValue.value} suffix='' className='text-2xl font-semibold' />
+                  <span className='font-light'>{flowValue.label}</span>
+                </div> */}
+              </div>
+            </NumberFlowGroup>
+          </Card>
         </section>
         <Card className='col-span-1 h-fit space-y-4 overflow-y-auto p-0 md:col-span-4 lg:col-span-3 xl:col-span-3'>
           <header className='flex items-center space-x-3.5 rounded-t-lg bg-slate-200 px-3.5 py-2 text-slate-700'>
