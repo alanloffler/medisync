@@ -6,6 +6,7 @@ export class Motion {
 
   private _optionsMap = {
     bounce: { duration: 0.7, ease: 'linear' as Easing, type: spring, bounce: 0.7 },
+    fly: { duration: 1, ease: 'linear' as Easing, type: spring, bounce: 0.5, repeat: Infinity, repeatDelay: 0.5 },
     linear: { duration: 0.7, ease: 'linear' as Easing, type: spring },
   };
 
@@ -29,8 +30,8 @@ export class Motion {
     return this;
   }
 
-  public xy(value: number[]) {
-    this._keyframes = { x: value[0], y: value[1] };
+  public xy(x: number[] | number, y: number[] | number) {
+    this._keyframes = { x: x, y: y };
     return this;
   }
 
