@@ -7,7 +7,11 @@ export const userSchema = z.object({
     .min(USER_SCHEMA.dni.min.value, { message: USER_SCHEMA.dni.min.message })
     .max(USER_SCHEMA.dni.max.value, { message: USER_SCHEMA.dni.max.message }),
 
-  email: z.string().email({ message: USER_SCHEMA.email.message }),
+  email: z
+    .string()
+    .email({ message: USER_SCHEMA.email.message })
+    .optional()
+    .or(z.literal('').transform((e) => (e === '' ? undefined : e))),
 
   firstName: z
     .string()
