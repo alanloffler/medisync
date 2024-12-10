@@ -34,7 +34,7 @@ export function SendEmailSuccess() {
         <Trans
           i18nKey='email.sentSuccess'
           values={{ seconds: countdown }}
-          components={{ NumberFlow: <NumberFlow value={countdown} trend={0} className='font-semibold' /> }}
+          components={{ NumberFlow: <NumberFlow value={countdown} className='font-semibold' /> }}
         />
       </div>
     </section>
