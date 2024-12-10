@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { Mail, Send } from 'lucide-react';
+import { Mail, Send, X } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
 import { Card, CardContent, CardTitle } from '@core/components/ui/card';
@@ -12,7 +12,7 @@ import { PageHeader } from '@core/components/common/PageHeader';
 import { SendEmailError } from '@email/components/SendEmailError';
 import { SendEmailSuccess } from '@email/components/SendEmailSuccess';
 // External imports
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -28,11 +28,14 @@ import { UserApiService } from '@users/services/user-api.service';
 import { emailSchema } from '@email/schemas/email.schema';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useNotificationsStore } from '@core/stores/notifications.store';
+import { spring, animate } from 'motion/react';
+// import { motion } from '@core/services/motion.service';
 // React component
 export default function SendEmail() {
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
   const navigate = useNavigate();
+  const sendScope = useRef(null);
   const { id } = useParams();
   const { t } = useTranslation();
 
@@ -70,12 +73,20 @@ export default function SendEmail() {
     mutationKey: ['sendEmail', id],
     mutationFn: async (data: z.infer<typeof emailSchema>) => await EmailApiService.sendEmail(data),
     retry: 0,
-    onSuccess: (success) => {
-      resetForm();
-      addNotification({ type: 'success', message: success.message });
-    },
+    onSuccess: (success) => addNotification({ type: 'success', message: success.message }),
     onError: (error) => addNotification({ type: 'error', message: error.message }),
   });
+
+// TODO: motion animation with custom class
+  useEffect(() => {
+    if (!isPendingMutation) {
+      animate(sendScope.current, 
+        // { x: -3, y: 3 },
+        { x: [-3, 0], y: [3, 0] },
+        { duration: 1, repeatDelay:.5, type: spring, repeat: Infinity, bounce: .5 }
+      );
+    }
+  }, [isPendingMutation]);
 
   function handleSendEmail(data: z.infer<typeof emailSchema>): void {
     mutate(data);
@@ -114,7 +125,23 @@ export default function SendEmail() {
                         <section className='flex flex-row items-center space-x-3'>
                           <FormLabel>{t('email.to')}</FormLabel>
                           <FormControl className='h-9'>
-                            <Input type='text' disabled className='disabled:!opacity-100' defaultValue={field.value} />
+                            <>
+                              {/* <Input type='text' disabled className='disabled:!opacity-100' defaultValue={field.value} /> */}
+                              <section className='flex h-10 w-full items-center rounded-md bg-slate-100/70 px-3 py-2 text-sm'>
+                                <span className='flex items-center space-x-2 rounded-full bg-fuchsia-200 py-1 pl-2 pr-1 text-xsm font-light text-fuchsia-700'>
+                                  <span>{field.value}</span>
+                                  <button
+                                    className='flex h-4 w-4 items-center justify-center rounded-full bg-fuchsia-300 hover:bg-fuchsia-500 hover:text-fuchsia-100'
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      resetForm();
+                                    }}
+                                  >
+                                    <X size={10} strokeWidth={2} />
+                                  </button>
+                                </span>
+                              </section>
+                            </>
                           </FormControl>
                         </section>
                         <FormMessage />
@@ -161,8 +188,9 @@ export default function SendEmail() {
                     variant='default'
                     className='order-1 w-full gap-2 md:order-2 md:w-fit'
                     onClick={emailForm.handleSubmit(handleSendEmail)}
+                    // onMouseOver={onover}
                   >
-                    <Send size={16} strokeWidth={2} />
+                    <Send ref={sendScope} size={16} strokeWidth={2} />
                     {isPendingMutation ? <LoadingText text={t('loading.sending')} suffix='...' className='text-background' /> : t('button.sendEmail')}
                   </Button>
                 </footer>
