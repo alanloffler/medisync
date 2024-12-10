@@ -1,6 +1,6 @@
 export interface IUserForm {
   dni: number;
-  email: string;
+  email?: string;
   firstName: string;
   lastName: string;
   phone: number;
