@@ -128,7 +128,7 @@
       "body": "Hello {{firstName}},"
     },
     "sentError": "Email not sent. A shipping error has occurred.",
-    "sentSuccess": "Email sent. You will be redirected in {{seconds}}",
+    "sentSuccess": "Email sent. You will be redirected in <NumberFlow />",
     "subject": "Subject",
     "to": "To"
   },

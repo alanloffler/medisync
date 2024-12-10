@@ -128,7 +128,7 @@
       "body": "Hola {{firstName}},"
     },
     "sentError": "Email no enviado. Ha sucedido un error de envío.",
-    "sentSuccess": "Email enviado. Serás redirigido en <NumberFlow value={{seconds}} />",
+    "sentSuccess": "Email enviado. Serás redirigido en <NumberFlow />",
     "subject": "Asunto",
     "to": "Para"
   },
