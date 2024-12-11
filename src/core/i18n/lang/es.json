@@ -249,13 +249,14 @@
       "actions": "Acciones",
       "area": "Area",
       "date": "Fecha",
+      "fullName": "Nombre completo",
       "id": "#",
       "identityCard": "DNI",
       "name": "Nombre",
       "phone": "Teléfono",
       "professional": "Profesional",
       "specialty": "Especialidad",
-      "user": "Nombre completo"
+      "user": "Paciente"
     },
     "difference": {
       "lastMonth": "que el mes pasado"
