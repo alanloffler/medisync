@@ -6,28 +6,21 @@ import { Card, CardContent } from '@core/components/ui/card';
 // Components
 import { AppoFlowCard } from '@appointments/components/AppoFlowCard';
 import { ApposDataTable } from '@appointments/components/AppoDataTable';
-import { InfoCard } from '@core/components/common/InfoCard';
-import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
 // External imports
 import { spring, useAnimate } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
 import { APPO_CONFIG } from '@config/appointments/appointments.config';
-import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { EAppointmentSearch, type IAppointmentSearch } from '@appointments/interfaces/appointment-search.interface';
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 import { useHelpStore } from '@settings/stores/help.store';
+import { DBCountAppos } from './components/common/DBCountAppos';
 // React component
 export default function Appointments() {
-  const _limit: number =
-    APPO_CONFIG.table.defaultItemsPerPage && APPO_CONFIG.table.defaultItemsPerPage > 0 ? APPO_CONFIG.table.defaultItemsPerPage : 10;
-  const [limit, setLimit] = useState<number>(_limit);
-  const [page, setPage] = useState<number>(0);
   const [createScope, createAnimation] = useAnimate();
   const navigate = useNavigate();
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
@@ -41,18 +34,6 @@ export default function Appointments() {
   useEffect(() => {
     setItemSelected(HEADER_CONFIG.headerMenu[1].id);
   }, [setItemSelected]);
-
-  const {
-    data: totalAppointments,
-    error,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ['appointments', 'countTotalAppointments', page, limit],
-    queryFn: () => AppointmentApiService.countTotalAppointments(),
-    refetchOnWindowFocus: 'always',
-    retry: 1,
-  });
 
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
@@ -82,17 +63,8 @@ export default function Appointments() {
             <h1 className='text-center text-lg font-semibold'>{t('cardTitle.appointmentsList')}</h1>
           </header>
           <CardContent className='space-y-2 pt-0'>
-            {isLoading && <LoadingDB variant='default' text={t('loading.appointments')} />}
-            {isError && <InfoCard text={error.message} type='error' />}
-            {!isError && !isLoading && totalAppointments && (
-              <>
-                <section className='flex items-center justify-end space-x-1 px-1'>
-                  <Database size={16} strokeWidth={2} className='text-blue-400' />
-                  <span className='text-xsm text-slate-400'>{t('table.totalItems.appointments', { count: totalAppointments?.data })}</span>
-                </section>
-                <ApposDataTable search={search} reload={reload} setReload={setReload} setErrorMessage={setErrorMessage} help={help} />
-              </>
-            )}
+            <DBCountAppos className='!text-xsm' />
+            <ApposDataTable search={search} reload={reload} setReload={setReload} setErrorMessage={setErrorMessage} help={help} />
           </CardContent>
         </Card>
       </section>
