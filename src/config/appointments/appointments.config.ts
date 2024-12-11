@@ -3,8 +3,18 @@ export const APPO_CONFIG = {
     { id: 1, name: 'breadcrumb.home', path: '/' },
     { id: 2, name: 'breadcrumb.appointments', path: '' },
   ],
-  pagination: {
+  table: {
     defaultItemsPerPage: 20,
-    itemsPerPage: [10, 20, 50],
+    defaultSortingId: 'lastName',
+    defaultSortingType: false, // desc: true | false
+    header: [
+      'table.header.id',
+      'table.header.date',
+      'table.header.user',
+      'table.header.identityCard',
+      'table.header.professional',
+      'table.header.actions',
+    ],
+    itemsPerPage: [10, 20, 50, 100],
   },
 };
