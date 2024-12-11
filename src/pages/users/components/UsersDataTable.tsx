@@ -65,7 +65,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
   const navigate = useNavigate();
   const prevDeps = useRef<{ search: IUserSearch; tableManager: ITableManager }>({ search, tableManager });
   const truncate = useTruncateText();
-  const { t } = useTranslation();
+  const { i18n, t } = useTranslation();
 
   const tableColumns: ColumnDef<IUser>[] = [
     {
@@ -105,7 +105,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
           </button>
         </div>
       ),
-      cell: ({ row }) => <div className='text-left'>{delimiter(row.original.dni, '.', 3)}</div>,
+      cell: ({ row }) => <div className='text-left'>{i18n.format(row.original.dni, 'number', i18n.resolvedLanguage)}</div>,
     },
     {
       accessorKey: 'phone',
