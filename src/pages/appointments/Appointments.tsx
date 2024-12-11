@@ -13,18 +13,16 @@ import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
 // External imports
 import { clsx } from 'clsx';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { spring, useAnimate } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
-// import type { IAppointment } from './interfaces/appointment.interface';
 import { APPO_CONFIG } from '@config/appointments/appointments.config';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { EAppointmentSearch, type IAppointmentSearch } from '@appointments/interfaces/appointment-search.interface';
 import { HEADER_CONFIG } from '@config/layout/header.config';
-import { queryClient } from '@lib/react-query';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 import { useHelpStore } from '@settings/stores/help.store';
 // React component
@@ -48,27 +46,16 @@ export default function Appointments() {
   }, [setItemSelected]);
 
   const {
-    data: appointments,
+    data: totalAppointments,
     error,
-    isError,
     isLoading,
-    isPlaceholderData,
+    isError,
   } = useQuery({
-    queryKey: ['appointments', 'listAll', page, limit],
-    queryFn: () => AppointmentApiService.findAll(page, limit),
-    placeholderData: keepPreviousData,
+    queryKey: ['appointments', 'countTotalAppointments', page, limit],
+    queryFn: () => AppointmentApiService.countTotalAppointments(),
     refetchOnWindowFocus: 'always',
     retry: 1,
   });
-
-  useEffect(() => {
-    if (!isPlaceholderData && appointments?.pagination?.hasMore) {
-      queryClient.prefetchQuery({
-        queryKey: ['appointments', 'listAll', page + 1, limit],
-        queryFn: () => AppointmentApiService.findAll(page + 1, limit),
-      });
-    }
-  }, [appointments, isPlaceholderData, limit, page]);
 
   const [flowValue, setFlowValue] = useState<{ value: number; label: string }>({ value: 0, label: '' });
 
@@ -140,13 +127,11 @@ export default function Appointments() {
           <CardContent className='space-y-2 pt-0'>
             {isLoading && <LoadingDB variant='default' text={t('loading.appointments')} />}
             {isError && <InfoCard text={error.message} type='error' />}
-            {!isError && !isLoading && appointments && (
+            {!isError && !isLoading && totalAppointments && (
               <>
                 <section className='flex items-center justify-end space-x-1 px-1'>
                   <Database size={16} strokeWidth={2} className='text-blue-400' />
-                  <span className='text-xsm text-slate-400'>
-                    {t('table.totalItems.appointments', { count: appointments?.pagination?.totalItems })}
-                  </span>
+                  <span className='text-xsm text-slate-400'>{t('table.totalItems.appointments', { count: totalAppointments?.data })}</span>
                 </section>
                 <ApposDataTable search={search} reload={reload} setReload={setReload} setErrorMessage={setErrorMessage} help={help} />
               </>
