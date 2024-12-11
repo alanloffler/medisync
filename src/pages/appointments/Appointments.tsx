@@ -7,12 +7,10 @@ import { Card, CardContent } from '@core/components/ui/card';
 // https://number-flow.barvian.me/
 import NumberFlow, { NumberFlowGroup } from '@number-flow/react';
 // Components
-import { AppoItemMini } from '@appointments/components/AppoItemMini';
 import { ApposDataTable } from '@appointments/components/AppoDataTable';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
-import { TQPagination } from '@core/components/common/TQPagination';
 // External imports
 import { clsx } from 'clsx';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
@@ -21,10 +19,10 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 // Imports
-import type { IAppointment } from './interfaces/appointment.interface';
+// import type { IAppointment } from './interfaces/appointment.interface';
 import { APPO_CONFIG } from '@config/appointments/appointments.config';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
-import { EUserSearch, type IUserSearch } from '@users/interfaces/user-search.interface';
+import { EAppointmentSearch, type IAppointmentSearch } from '@appointments/interfaces/appointment-search.interface';
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { queryClient } from '@lib/react-query';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
@@ -32,7 +30,7 @@ import { useHelpStore } from '@settings/stores/help.store';
 // React component
 export default function Appointments() {
   const _limit: number =
-    APPO_CONFIG.pagination.defaultItemsPerPage && APPO_CONFIG.pagination.defaultItemsPerPage > 0 ? APPO_CONFIG.pagination.defaultItemsPerPage : 10;
+    APPO_CONFIG.table.defaultItemsPerPage && APPO_CONFIG.table.defaultItemsPerPage > 0 ? APPO_CONFIG.table.defaultItemsPerPage : 10;
   const [limit, setLimit] = useState<number>(_limit);
   const [page, setPage] = useState<number>(0);
   const [createScope, createAnimation] = useAnimate();
@@ -41,7 +39,7 @@ export default function Appointments() {
   const { t } = useTranslation();
   // WIP: const for appos data table
   const [reload, setReload] = useState<number>(0);
-  const [search, setSearch] = useState<IUserSearch>({ value: '', type: EUserSearch.NAME });
+  const [search, setSearch] = useState<IAppointmentSearch>({ value: '', type: EAppointmentSearch.NAME });
   const [errorMessage, setErrorMessage] = useState<string>('');
   const { help } = useHelpStore();
 
@@ -150,22 +148,7 @@ export default function Appointments() {
                     {t('table.totalItems.appointments', { count: appointments?.pagination?.totalItems })}
                   </span>
                 </section>
-                <section className='flex flex-col'>
-                  {appointments?.data.map((appointment: IAppointment) => <AppoItemMini key={appointment._id} data={appointment} />)}
-                </section>
-
                 <ApposDataTable search={search} reload={reload} setReload={setReload} setErrorMessage={setErrorMessage} help={help} />
-
-                <TQPagination
-                  className='pt-2 !text-xsm text-slate-400'
-                  isPlaceholderData={isPlaceholderData}
-                  itemsPerPage={APPO_CONFIG.pagination.itemsPerPage}
-                  limit={limit}
-                  page={page}
-                  pagination={appointments?.pagination}
-                  setLimit={setLimit}
-                  setPage={setPage}
-                />
               </>
             )}
           </CardContent>
