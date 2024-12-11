@@ -8,6 +8,7 @@ import { Card, CardContent } from '@core/components/ui/card';
 import NumberFlow, { NumberFlowGroup } from '@number-flow/react';
 // Components
 import { AppoItemMini } from '@appointments/components/AppoItemMini';
+import { ApposDataTable } from '@appointments/components/AppoDataTable';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
@@ -23,9 +24,11 @@ import { useTranslation } from 'react-i18next';
 import type { IAppointment } from './interfaces/appointment.interface';
 import { APPO_CONFIG } from '@config/appointments/appointments.config';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
+import { EUserSearch, type IUserSearch } from '@users/interfaces/user-search.interface';
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { queryClient } from '@lib/react-query';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
+import { useHelpStore } from '@settings/stores/help.store';
 // React component
 export default function Appointments() {
   const _limit: number =
@@ -36,6 +39,11 @@ export default function Appointments() {
   const navigate = useNavigate();
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
   const { t } = useTranslation();
+  // WIP: const for appos data table
+  const [reload, setReload] = useState<number>(0);
+  const [search, setSearch] = useState<IUserSearch>({ value: '', type: EUserSearch.NAME });
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const { help } = useHelpStore();
 
   useEffect(() => {
     setItemSelected(HEADER_CONFIG.headerMenu[1].id);
@@ -145,6 +153,9 @@ export default function Appointments() {
                 <section className='flex flex-col'>
                   {appointments?.data.map((appointment: IAppointment) => <AppoItemMini key={appointment._id} data={appointment} />)}
                 </section>
+
+                <ApposDataTable search={search} reload={reload} setReload={setReload} setErrorMessage={setErrorMessage} help={help} />
+
                 <TQPagination
                   className='pt-2 !text-xsm text-slate-400'
                   isPlaceholderData={isPlaceholderData}
