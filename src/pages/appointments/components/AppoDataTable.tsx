@@ -34,13 +34,11 @@ import type { IAppointment } from '@appointments/interfaces/appointment.interfac
 import type { IDataTableAppointments, ITableManager } from '@core/interfaces/table.interface';
 import type { IInfoCard } from '@core/components/common/interfaces/infocard.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
-import type { IUser } from '@users/interfaces/user.interface';
 import { APPO_CONFIG } from '@config/appointments/appointments.config';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { EAppointmentSearch, type IAppointmentSearch } from '@appointments/interfaces/appointment-search.interface';
 import { UserApiService } from '@users/services/user-api.service';
 import { useCapitalize } from '@core/hooks/useCapitalize';
-import { useDelimiter } from '@core/hooks/useDelimiter';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 import { useTruncateText } from '@core/hooks/useTruncateText';
 // Default values for pagination and sorting
@@ -48,6 +46,7 @@ const defaultSorting: SortingState = [{ id: APPO_CONFIG.table.defaultSortingId, 
 const defaultPagination: PaginationState = { pageIndex: 0, pageSize: APPO_CONFIG.table.defaultItemsPerPage };
 // React component
 export function ApposDataTable({ search, reload, setReload, setErrorMessage, help }: IDataTableAppointments) {
+  const [appointmentSelected, setAppointmentSelected] = useState<IAppointment>({} as IAppointment);
   const [columns, setColumns] = useState<ColumnDef<IAppointment>[]>([]);
   const [data, setData] = useState<IAppointment[]>([]);
   const [errorRemoving, setErrorRemoving] = useState<boolean>(false);
@@ -60,10 +59,8 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
   const [sorting, setSorting] = useState<SortingState>(defaultSorting);
   const [tableManager, setTableManager] = useState<ITableManager>({ sorting, pagination });
   const [totalItems, setTotalItems] = useState<number>(0);
-  const [userSelected, setUserSelected] = useState<IUser>({} as IUser);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
-  const delimiter = useDelimiter();
   const firstUpdate = useRef(true);
   const navigate = useNavigate();
   const prevDeps = useRef<{ search: any; tableManager: ITableManager }>({ search, tableManager });
@@ -163,8 +160,7 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
             <PencilLine size={16} strokeWidth={1.5} />
           </TableButton>
           <TableButton
-            // callback={() => handleRemoveUserDialog(row.original)}
-            callback={() => console.log(row.original)}
+            callback={() => handleRemoveAppointmentDialog(row.original)}
             className='hover:text-rose-500'
             help={help}
             tooltip={t('tooltip.delete')}
@@ -278,10 +274,10 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search, tableManager]);
 
-  // function handleRemoveUserDialog(user: IUser): void {
-  //   setOpenDialog(true);
-  //   setUserSelected(user);
-  // }
+  function handleRemoveAppointmentDialog(appointment: IAppointment): void {
+    setOpenDialog(true);
+    setAppointmentSelected(appointment);
+  }
 
   function handleRemoveUserDatabase(id: string): void {
     setIsRemoving(true);
@@ -292,7 +288,7 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
         if (response.statusCode === 200) {
           addNotification({ type: 'success', message: response.message });
           setOpenDialog(false);
-          setUserSelected({} as IUser);
+          setAppointmentSelected({} as IAppointment);
           setReload(new Date().getTime());
         }
         if (response.statusCode > 399) {
@@ -340,7 +336,6 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
               ))}
             </TableBody>
           </Table>
-          {JSON.stringify(pagination)}
           <Pagination
             className='pt-6 !text-xsm text-slate-400'
             help={help}
@@ -375,9 +370,9 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
                     <Trans
                       i18nKey='dialog.deleteUser.content'
                       values={{
-                        firstName: capitalize(userSelected.firstName),
-                        lastName: capitalize(userSelected.lastName),
-                        identityCard: i18n.format(userSelected.dni, 'number', i18n.resolvedLanguage),
+                        firstName: capitalize(appointmentSelected.user?.firstName),
+                        lastName: capitalize(appointmentSelected.user?.lastName),
+                        identityCard: i18n.format(appointmentSelected?.user.dni, 'number', i18n.resolvedLanguage),
                       }}
                       components={{
                         span: <span className='font-semibold' />,
@@ -389,7 +384,7 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
                     <Button variant='ghost' size='sm' onClick={() => setOpenDialog(false)}>
                       {t('button.cancel')}
                     </Button>
-                    <Button variant='remove' size='sm' onClick={() => handleRemoveUserDatabase(userSelected._id)}>
+                    <Button variant='remove' size='sm' onClick={() => handleRemoveUserDatabase(appointmentSelected._id)}>
                       {isRemoving ? <LoadingDB text={t('loading.deleting')} variant='button' /> : t('button.deleteUser')}
                     </Button>
                   </footer>
