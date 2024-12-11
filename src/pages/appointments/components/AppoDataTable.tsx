@@ -19,7 +19,6 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 // Components
-import { DBCountUsers } from '@users/components/common/DBCountUsers';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { TableButton } from '@core/components/common/TableButton';
@@ -311,7 +310,6 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
         <LoadingDB text={t('loading.users')} className='mt-6' />
       ) : table.getRowModel().rows?.length > 0 ? (
         <>
-          <DBCountUsers />
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -372,7 +370,7 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
                       values={{
                         firstName: capitalize(appointmentSelected.user?.firstName),
                         lastName: capitalize(appointmentSelected.user?.lastName),
-                        identityCard: i18n.format(appointmentSelected?.user.dni, 'number', i18n.resolvedLanguage),
+                        identityCard: i18n.format(appointmentSelected.user?.dni, 'number', i18n.resolvedLanguage),
                       }}
                       components={{
                         span: <span className='font-semibold' />,
