@@ -27,7 +27,7 @@ export function DBCountAppos({ className }: { className?: string }) {
   if (isError) return <main className='py-2'></main>;
 
   return (
-    <main className={cn('flex flex-row justify-end gap-2 text-xsm font-normal text-slate-400', className)}>
+    <main className={cn('flex flex-row gap-2 text-xsm font-normal text-slate-400', className)}>
       {count?.data && (
         <section className='flex items-center space-x-1'>
           <Database size={16} strokeWidth={2} className='text-blue-400' />
