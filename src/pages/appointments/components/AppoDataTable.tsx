@@ -339,7 +339,8 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
                 </TableRow>
               ))}
             </TableBody>
-          </Table>{JSON.stringify(pagination)}
+          </Table>
+          {JSON.stringify(pagination)}
           <Pagination
             className='pt-6 !text-xsm text-slate-400'
             help={help}
@@ -376,7 +377,7 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
                       values={{
                         firstName: capitalize(userSelected.firstName),
                         lastName: capitalize(userSelected.lastName),
-                        identityCard: delimiter(userSelected.dni, '.', 3),
+                        identityCard: i18n.format(userSelected.dni, 'number', i18n.resolvedLanguage),
                       }}
                       components={{
                         span: <span className='font-semibold' />,
