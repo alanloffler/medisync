@@ -43,12 +43,17 @@ export class AppointmentApiService {
   // WIP: TQ method implemented on appointments page
   public static async findAll(page: number, limit: number) {
     const url: string = `${this.API_URL}/appointments?p=${page}&l=${limit}`;
-    return this.fetch(url, EMethods.GET);
+    return await this.fetch(url, EMethods.GET);
   }
 
   public static async findSearch(search: string, sorting: SortingState, skip: number, limit: number) {
     const url: string = `${this.API_URL}/appointments/search?search=${search}&skip=${skip}&limit=${limit}&sk=${sorting[0].id}&sv=${sorting[0].desc ? 'desc' : 'asc'}`;
-    return this.fetch(url, EMethods.GET);
+    return await this.fetch(url, EMethods.GET);
+  }
+
+  public static async countTotalAppointments() {
+    const url: string = `${this.API_URL}/appointments/count`;
+    return await this.fetch(url, EMethods.GET);
   }
 
   // FIXME: check if is unused method
