@@ -27,6 +27,7 @@ import { Pagination } from '@core/components/common/Pagination';
 // External imports
 import { Trans, useTranslation } from 'react-i18next';
 import { useEffect, useRef, useState } from 'react';
+import { useMediaQuery } from '@uidotdev/usehooks';
 import { useNavigate } from 'react-router-dom';
 // Imports
 import type { IAppointment } from '@appointments/interfaces/appointment.interface';
@@ -69,7 +70,7 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
   const tableColumns: ColumnDef<IAppointment>[] = [
     {
       accessorKey: 'index',
-      size: 50,
+      size: 30,
       header: () => <div className='text-center'>{t(APPO_CONFIG.table.header[0])}</div>,
       cell: ({ row }) => (
         <div className='mx-auto w-fit rounded-md bg-slate-100 px-1.5 py-1 text-center text-xs text-slate-400'>{truncate(row.original._id, -3)}</div>
@@ -77,16 +78,17 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
     },
     {
       accessorKey: 'date',
-      size: 50,
-      header: () => <div className='text-center'>{t(APPO_CONFIG.table.header[1])}</div>,
+      size: 70,
+      header: () => <div className='text-center bg-red-500'>{t(APPO_CONFIG.table.header[1])}</div>,
       cell: ({ row }) => (
-        <div className='mx-auto'>
+        <div className='text-center'>
           <DateTime day={row.original.day} hour={row.original.hour} className='!text-xs' />
         </div>
       ),
     },
     {
       accessorKey: 'user',
+      size: 200,
       header: ({ column }) => (
         <div className='text-left'>
           <button
@@ -101,7 +103,7 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
       cell: ({ row }) => <div className='text-left'>{`${capitalize(row.original.user.firstName)} ${capitalize(row.original.user.lastName)}`}</div>,
     },
     {
-      accessorKey: 'dni',
+      accessorKey: 'identityCard',
       size: 80,
       header: ({ column }) => (
         <div className='text-left'>
@@ -118,7 +120,7 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
     },
     {
       accessorKey: 'professional',
-      size: 80,
+      size: 120,
       header: ({ column }) => (
         <div className='text-center'>
           <button
@@ -171,6 +173,28 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
     },
   ];
 
+  // WIP: hide columns
+  const isSmallDevice = useMediaQuery('only screen and (max-width : 639px)');
+  const isMediumDevice = useMediaQuery('only screen and (max-width : 767px)');
+  const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>({
+    identityCard: !isSmallDevice,
+    index: !isSmallDevice,
+    professional: !isMediumDevice,
+  });
+
+  useEffect(() => {
+    function handleResize() {
+      setColumnVisibility({
+        index: !isSmallDevice,
+        identityCard: !isSmallDevice,
+        professional: !isMediumDevice,
+      });
+    }
+    window.addEventListener('resize', handleResize);
+
+    () => window.removeEventListener('resize', handleResize);
+  }, [isMediumDevice, isSmallDevice]);
+
   const table: ITable<IAppointment> = useReactTable({
     columns: columns,
     data: data,
@@ -184,9 +208,11 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
     onSortingChange: setSorting,
     rowCount: totalItems,
     state: {
+      columnVisibility,
       sorting,
       pagination,
     },
+    onColumnVisibilityChange: setColumnVisibility,
   });
 
   useEffect(() => {
@@ -207,7 +233,6 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
 
   useEffect(() => {
     const fetchData = (search: IAppointmentSearch, sorting: SortingState, itemsPerPage: number) => {
-      console.log('search on fetch', search);
       setIsLoading(true);
 
       let skipItems: number;
@@ -233,7 +258,6 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
               setColumns(tableColumns);
               setTotalItems(response.data.count);
               setErrorMessage('');
-              console.log(response);
             }
             if (response.statusCode > 399) {
               setErrorMessage(response.message);
