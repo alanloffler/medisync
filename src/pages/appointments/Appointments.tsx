@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { List, PlusCircle, Search, X } from 'lucide-react';
+import { CalendarIcon, List, PlusCircle, Search, X } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
 import { Card, CardContent } from '@core/components/ui/card';
@@ -22,6 +22,10 @@ import { HEADER_CONFIG } from '@config/layout/header.config';
 import { useDebounce } from '@core/hooks/useDebounce';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 import { useHelpStore } from '@settings/stores/help.store';
+import { Popover, PopoverContent, PopoverTrigger } from '@core/components/ui/popover';
+import { Calendar } from '@core/components/ui/calendar';
+import { cn } from '@lib/utils';
+import { format } from '@formkit/tempo';
 // React component
 export default function Appointments() {
   const [createScope, createAnimation] = useAnimate();
@@ -35,6 +39,7 @@ export default function Appointments() {
   const debouncedSearch = useDebounce<IAppointmentSearch>(search, APP_CONFIG.debounceTime);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const { help } = useHelpStore();
+  const [date, setDate] = useState<Date>();
 
   useEffect(() => {
     setItemSelected(HEADER_CONFIG.headerMenu[1].id);
@@ -73,23 +78,39 @@ export default function Appointments() {
           </header>
           <CardContent className='space-y-2 pt-0'>
             <section className='flex items-center justify-between'>
-              <div className='relative w-full items-center md:w-[200px]'>
-                <Search size={16} strokeWidth={2} className='absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground' />
-                <Input
-                  className='h-7 bg-input pl-8 text-xsm'
-                  onChange={handleSearch}
-                  placeholder={t('search.user')}
-                  type='text'
-                  value={search.type === EAppointmentSearch.NAME ? search.value : ''}
-                />
-                {search.type === EAppointmentSearch.NAME && search.value && (
-                  <button
-                    onClick={() => setSearch({ value: '', type: EAppointmentSearch.NAME })}
-                    className='absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-black'
-                  >
-                    <X size={16} strokeWidth={2} />
-                  </button>
-                )}
+              <div className='flex items-center space-x-4'>
+                <div className='relative w-full items-center md:w-[200px]'>
+                  <Search size={16} strokeWidth={2} className='absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground' />
+                  <Input
+                    className='h-7 bg-input pl-8 text-xsm'
+                    onChange={handleSearch}
+                    placeholder={t('search.user')}
+                    type='text'
+                    value={search.type === EAppointmentSearch.NAME ? search.value : ''}
+                  />
+                  {search.type === EAppointmentSearch.NAME && search.value && (
+                    <button
+                      onClick={() => setSearch({ value: '', type: EAppointmentSearch.NAME })}
+                      className='absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-black'
+                    >
+                      <X size={16} strokeWidth={2} />
+                    </button>
+                  )}
+                </div>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={'outline'}
+                      className={cn('h-7 w-fit justify-start bg-input text-left font-normal', !date && 'text-muted-foreground')}
+                    >
+                      <CalendarIcon className='mr-2 h-4 w-4' />
+                      {date ? format(date, 'short') : <span>Pick a date</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className='w-auto p-0'>
+                    <Calendar mode='single' selected={date} onSelect={setDate} initialFocus />
+                  </PopoverContent>
+                </Popover>
               </div>
               <DBCountAppos className='justify-end !text-xsm' />
             </section>
