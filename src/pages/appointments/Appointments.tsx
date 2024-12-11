@@ -1,18 +1,15 @@
 // Icons: https://lucide.dev/icons/
-import { ChartLine, Database, List, PlusCircle } from 'lucide-react';
-// External components:
-// https://ui.shadcn.com/docs/components
+import { Database, List, PlusCircle } from 'lucide-react';
+// External components: https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
 import { Card, CardContent } from '@core/components/ui/card';
-// https://number-flow.barvian.me/
-import NumberFlow, { NumberFlowGroup } from '@number-flow/react';
 // Components
+import { AppoFlowCard } from '@appointments/components/AppoFlowCard';
 import { ApposDataTable } from '@appointments/components/AppoDataTable';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
 // External imports
-import { clsx } from 'clsx';
 import { spring, useAnimate } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -57,24 +54,6 @@ export default function Appointments() {
     retry: 1,
   });
 
-  const [flowValue, setFlowValue] = useState<{ value: number; label: string }>({ value: 0, label: '' });
-
-  useEffect(() => {
-    const flowContent = [
-      { value: 58, label: 'en total' },
-      { value: -12, label: 'esta semana' },
-      { value: 4, label: 'hoy' },
-    ];
-    let index = 0;
-
-    const interval = setInterval(() => {
-      setFlowValue(flowContent[index]);
-      index = (index + 1) % flowContent.length;
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
       <header className='flex items-center justify-between'>
@@ -95,29 +74,7 @@ export default function Appointments() {
               <span>{t('button.generateAppointment')}</span>
             </Button>
           </div>
-          <Card className='space-y-4 bg-amber-200 p-4 pb-8 text-amber-600'>
-            <div className='flex items-center justify-between'>
-              <h2 className='text-xsm font-semibold uppercase'>{t('pageTitle.appointments')}</h2>
-              <ChartLine size={20} strokeWidth={2} className='stroke-amber-600' />
-            </div>
-            <NumberFlowGroup>
-              <div className='flex flex-col items-center justify-center space-y-2 font-semibold'>
-                <div className={'flex items-center space-x-2'}>
-                  <NumberFlow
-                    className={clsx('text-3xl', flowValue.value < 0 ? 'fill-rose-500 text-rose-500' : 'fill-emerald-500 text-emerald-500')}
-                    format={{ style: 'decimal' }}
-                    value={flowValue.value}
-                    // prefix={flowValue.value > 0 ? '+' : ''}
-                  />
-                  <span className='text-base font-light'>{flowValue.label}</span>
-                </div>
-                {/* <div className='flex items-center space-x-2'>
-                  <NumberFlow value={flowValue.value} suffix='' className='text-2xl font-semibold' />
-                  <span className='font-light'>{flowValue.label}</span>
-                </div> */}
-              </div>
-            </NumberFlowGroup>
-          </Card>
+          <AppoFlowCard />
         </section>
         <Card className='col-span-1 h-fit space-y-4 overflow-y-auto p-0 md:col-span-4 lg:col-span-3 xl:col-span-3'>
           <header className='flex items-center space-x-3.5 rounded-t-lg bg-slate-200 px-3.5 py-2 text-slate-700'>
