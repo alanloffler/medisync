@@ -16,8 +16,10 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 // Imports
 import { APPO_CONFIG } from '@config/appointments/appointments.config';
+import { APP_CONFIG } from '@config/app.config';
 import { EAppointmentSearch, type IAppointmentSearch } from '@appointments/interfaces/appointment-search.interface';
 import { HEADER_CONFIG } from '@config/layout/header.config';
+import { useDebounce } from '@core/hooks/useDebounce';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 import { useHelpStore } from '@settings/stores/help.store';
 // React component
@@ -27,8 +29,10 @@ export default function Appointments() {
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
   const { t } = useTranslation();
   // WIP: const for appos data table
+
   const [reload, setReload] = useState<number>(0);
   const [search, setSearch] = useState<IAppointmentSearch>({ value: '', type: EAppointmentSearch.NAME });
+  const debouncedSearch = useDebounce<IAppointmentSearch>(search, APP_CONFIG.debounceTime);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const { help } = useHelpStore();
 
@@ -37,7 +41,7 @@ export default function Appointments() {
   }, [setItemSelected]);
 
   function handleSearch(e: ChangeEvent<HTMLInputElement>): void {
-    console.log('search', e);
+    setSearch({ value: e.target.value, type: search.type });
   }
 
   return (
@@ -72,19 +76,16 @@ export default function Appointments() {
               <div className='relative w-full items-center md:w-[200px]'>
                 <Search size={16} strokeWidth={2} className='absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground' />
                 <Input
-                  onClick={() =>
-                    search.value !== '' && search.type === EAppointmentSearch.NAME && setSearch({ value: '', type: EAppointmentSearch.DNI })
-                  }
-                  onChange={(e) => handleSearch(e)}
-                  value={search.type === EAppointmentSearch.DNI ? search.value : ''}
-                  type='number'
-                  placeholder={t('search.user')}
                   className='h-7 bg-input pl-8 text-xsm'
+                  onChange={handleSearch}
+                  placeholder={t('search.user')}
+                  type='text'
+                  value={search.type === EAppointmentSearch.NAME ? search.value : ''}
                 />
-                {search.type === EAppointmentSearch.DNI && search.value && (
+                {search.type === EAppointmentSearch.NAME && search.value && (
                   <button
-                    onClick={() => setSearch({ value: '', type: EAppointmentSearch.DNI })}
-                    className='absolute right-3 top-3 text-muted-foreground hover:text-black'
+                    onClick={() => setSearch({ value: '', type: EAppointmentSearch.NAME })}
+                    className='absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-black'
                   >
                     <X size={16} strokeWidth={2} />
                   </button>
@@ -92,7 +93,7 @@ export default function Appointments() {
               </div>
               <DBCountAppos className='justify-end !text-xsm' />
             </section>
-            <ApposDataTable search={search} reload={reload} setReload={setReload} setErrorMessage={setErrorMessage} help={help} />
+            <ApposDataTable search={debouncedSearch} reload={reload} setReload={setReload} setErrorMessage={setErrorMessage} help={help} />
           </CardContent>
         </Card>
       </section>
