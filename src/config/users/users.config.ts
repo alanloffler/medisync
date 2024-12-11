@@ -7,7 +7,7 @@ export const USER_CONFIG = {
     defaultPageSize: 10,
     defaultSortingId: 'lastName',
     defaultSortingType: false, // desc: true | false
-    header: ['table.header.id', 'table.header.user', 'table.header.identityCard', 'table.header.phone', 'table.header.actions'],
+    header: ['table.header.id', 'table.header.fullName', 'table.header.identityCard', 'table.header.phone', 'table.header.actions'],
     itemsPerPage: [5, 10, 20],
   },
 };
