@@ -78,8 +78,7 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
     },
     {
       accessorKey: 'date',
-      size: 70,
-      header: () => <div className='text-center bg-red-500'>{t(APPO_CONFIG.table.header[1])}</div>,
+      header: () => <div className='text-center'>{t(APPO_CONFIG.table.header[1])}</div>,
       cell: ({ row }) => (
         <div className='text-center'>
           <DateTime day={row.original.day} hour={row.original.hour} className='!text-xs' />
@@ -88,9 +87,8 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
     },
     {
       accessorKey: 'user',
-      size: 200,
       header: ({ column }) => (
-        <div className='text-left'>
+        <div className='text-center'>
           <button
             className='flex items-center gap-2 hover:text-accent-foreground'
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
@@ -104,7 +102,6 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
     },
     {
       accessorKey: 'identityCard',
-      size: 80,
       header: ({ column }) => (
         <div className='text-left'>
           <button
@@ -120,7 +117,6 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
     },
     {
       accessorKey: 'professional',
-      size: 120,
       header: ({ column }) => (
         <div className='text-center'>
           <button
@@ -339,7 +335,7 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id} style={{ width: `${header.getSize()}px` }}>
+                    <TableHead key={header.id} style={{ width: `${header.getSize()}px` }} className='px-1'>
                       {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
                   ))}
@@ -350,7 +346,7 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
               {table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell className='px-0 py-1' key={cell.id} style={{ width: `${cell.column.getSize()}px` }}>
+                    <TableCell className='p-1' key={cell.id} style={{ width: `${cell.column.getSize()}px` }}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
