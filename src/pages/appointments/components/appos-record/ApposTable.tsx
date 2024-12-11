@@ -3,6 +3,7 @@ import { Calendar, Clock, FileText, MessageCircle, Trash2 } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@core/components/ui/table';
 // Components
+import { DateTime } from '@core/components/common/DateTime';
 import { RemoveDialog } from '@core/components/common/RemoveDialog';
 import { TableButton } from '@core/components/common/TableButton';
 // External imports
@@ -34,18 +35,7 @@ export function ApposTable({
     {
       accessorKey: 'day',
       size: 80,
-      cell: ({ row }) => (
-        <section className='flex justify-center text-xsm font-normal'>
-          <div className='flex items-center space-x-1 rounded-l-sm bg-indigo-200 p-1 pr-2 text-indigo-600'>
-            <Calendar size={14} strokeWidth={2} />
-            <span>{format(row.original.day, 'short', i18n.resolvedLanguage)}</span>
-          </div>
-          <div className='flex items-center space-x-1 rounded-r-sm bg-indigo-100 p-1 pr-2 text-indigo-600'>
-            <Clock size={14} strokeWidth={2} />
-            <span>{row.original.hour}</span>
-          </div>
-        </section>
-      ),
+      cell: ({ row }) => <DateTime day={row.original.day} hour={row.original.hour} />,
       header: () => <div className='text-center'>{t(UV_CONFIG.table.header[0])}</div>,
     },
     {
