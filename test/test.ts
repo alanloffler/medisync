@@ -133,3 +133,27 @@ export class AppoSchedule {
 
   // Email link open gmail in new tab
   // window.open(`https://mail.google.com/mail/?view=cm&to=${email.to}&su=${email.subject}&body=${email.body}`, '_blank')
+
+  // useQuery for pagination cached
+    // const {
+  //   data: appointments,
+  //   error,
+  //   isError,
+  //   isLoading,
+  //   isPlaceholderData,
+  // } = useQuery({
+  //   queryKey: ['appointments', 'listAll', page, limit],
+  //   queryFn: () => AppointmentApiService.findAll(page, limit),
+  //   placeholderData: keepPreviousData,
+  //   refetchOnWindowFocus: 'always',
+  //   retry: 1,
+  // });
+
+  // useEffect(() => {
+  //   if (!isPlaceholderData && appointments?.pagination?.hasMore) {
+  //     queryClient.prefetchQuery({
+  //       queryKey: ['appointments', 'listAll', page + 1, limit],
+  //       queryFn: () => AppointmentApiService.findAll(page + 1, limit),
+  //     });
+  //   }
+  // }, [appointments, isPlaceholderData, limit, page]);
