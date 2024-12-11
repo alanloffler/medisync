@@ -81,7 +81,7 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
       header: () => <div className='text-center'>{t(APPO_CONFIG.table.header[1])}</div>,
       cell: ({ row }) => (
         <div className='mx-auto'>
-          <DateTime day={row.original.day} hour={row.original.hour} />
+          <DateTime day={row.original.day} hour={row.original.hour} className='!text-xs' />
         </div>
       ),
     },
@@ -131,7 +131,7 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
         </div>
       ),
       cell: ({ row }) => (
-        <div className='text-left text-sm'>
+        <div className='text-left'>
           {capitalize(`${row.original.professional.title.abbreviation} ${row.original.professional.firstName} ${row.original.professional.lastName}`)}
         </div>
       ),
@@ -322,7 +322,7 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
                 </TableRow>
               ))}
             </TableHeader>
-            <TableBody>
+            <TableBody className='text-xsm'>
               {table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell) => (
