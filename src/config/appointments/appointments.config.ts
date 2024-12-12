@@ -5,8 +5,8 @@ export const APPO_CONFIG = {
   ],
   table: {
     defaultItemsPerPage: 20,
-    defaultSortingId: 'lastName',
-    defaultSortingType: false, // desc: true | false
+    defaultSortingId: 'day',
+    defaultSortingType: true, // desc: true | false
     header: [
       'table.header.id',
       'table.header.date',
