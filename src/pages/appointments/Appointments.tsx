@@ -44,12 +44,15 @@ export default function Appointments() {
     setItemSelected(HEADER_CONFIG.headerMenu[1].id);
   }, [setItemSelected]);
 
-  function handleSearch(e: ChangeEvent<HTMLInputElement>): void {
-    setSearch({ value: e.target.value, type: search.type });
+  function handleSearchByName(e: ChangeEvent<HTMLInputElement>): void {
+    setSearch({ value: e.target.value, type: EAppointmentSearch.NAME });
   }
 
-  function handleSetDate(date: Date | undefined): void {
-    date ? setDate(date) : setDate(undefined);
+  function handleSearchByDate(date: Date | undefined): void {
+    if (date) {
+      setDate(date);
+      setSearch({ value: format(date, 'YYYY-MM-DD'), type: EAppointmentSearch.DAY });
+    } else setDate(undefined);
     setOpenPopover(false);
   }
 
@@ -88,7 +91,7 @@ export default function Appointments() {
                     <Search size={16} strokeWidth={2} className='absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground' />
                     <Input
                       className='h-7 bg-input pl-8 text-xsm'
-                      onChange={handleSearch}
+                      onChange={(e) => handleSearchByName(e)}
                       placeholder={t('search.user')}
                       type='text'
                       value={search.type === EAppointmentSearch.NAME ? search.value : ''}
@@ -119,11 +122,11 @@ export default function Appointments() {
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className='w-auto p-0'>
-                        <Calendar mode='single' selected={date} onSelect={handleSetDate} initialFocus />
+                        <Calendar mode='single' selected={date} onSelect={handleSearchByDate} initialFocus />
                       </PopoverContent>
                     </Popover>
                     {date && (
-                      <Button variant={'clear'} size='icon5' onClick={() => handleSetDate(undefined)}>
+                      <Button variant={'clear'} size='icon5' onClick={() => handleSearchByDate(undefined)}>
                         <X size={14} strokeWidth={2} />
                       </Button>
                     )}
