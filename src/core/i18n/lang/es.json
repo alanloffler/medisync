@@ -212,6 +212,7 @@
     "identityCard": "Ingresá el DNI",
     "lastName": "Ingresá el apellido",
     "phone": "Ingresá el teléfono",
+    "pickDate": "Elegir fecha",
     "professionalCombobox": "Profesionales",
     "professionalSelect": "Profesionales",
     "select": "Seleccionar",

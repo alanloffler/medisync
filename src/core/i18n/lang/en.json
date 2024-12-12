@@ -212,6 +212,7 @@
     "identityCard": "Enter the IC",
     "lastName": "Enter the last name",
     "phone": "Enter the phone",
+    "pickDate": "Pick a date",
     "professionalCombobox": "Professionals",
     "professionalSelect": "Professionals",
     "select": "Select",
