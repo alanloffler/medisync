@@ -356,7 +356,7 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
             </TableBody>
           </Table>
           <Pagination
-            className='pt-2 !text-xsm text-slate-400'
+            className='pt-4 !text-xsm text-slate-400'
             help={help}
             itemsPerPage={APPO_CONFIG.table.itemsPerPage}
             pagination={pagination}
