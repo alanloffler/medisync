@@ -37,7 +37,7 @@ import type { IResponse } from '@core/interfaces/response.interface';
 import { APPO_CONFIG } from '@config/appointments/appointments.config';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { EAppointmentSearch, type IAppointmentSearch } from '@appointments/interfaces/appointment-search.interface';
-import { UserApiService } from '@users/services/user-api.service';
+// import { UserApiService } from '@users/services/user-api.service';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 import { useTruncateText } from '@core/hooks/useTruncateText';
@@ -242,7 +242,7 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
       }
 
       if (search.type === EAppointmentSearch.NAME) {
-        AppointmentApiService.findSearch(search.value, sorting, skipItems, itemsPerPage)
+        AppointmentApiService.findSearch(search.type, search.value, sorting, skipItems, itemsPerPage)
           .then((response: IResponse) => {
             if (response.statusCode === 200) {
               if (response.data.length === 0) {
@@ -268,8 +268,8 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
           .catch((error) => setErrorMessage(error.message))
           .finally(() => setIsLoading(false));
       }
-      if (search.type === EAppointmentSearch.DNI) {
-        UserApiService.findAllByDNI(search.value, sorting, skipItems, itemsPerPage)
+      if (search.type === EAppointmentSearch.DAY) {
+        AppointmentApiService.findSearch(search.type, search.value, sorting, skipItems, itemsPerPage)
           .then((response: IResponse) => {
             if (response.statusCode === 200) {
               setData(response.data.data);
@@ -287,6 +287,7 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
               setInfoCardContent({ type: 'error', text: t('error.internalServer') });
             }
           })
+          .catch((error) => setErrorMessage(error.message))
           .finally(() => setIsLoading(false));
       }
     };
@@ -300,29 +301,30 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
   }
 
   function handleRemoveUserDatabase(id: string): void {
+    console.log(id);
     setIsRemoving(true);
     setErrorRemoving(false);
 
-    UserApiService.remove(id)
-      .then((response: IResponse) => {
-        if (response.statusCode === 200) {
-          addNotification({ type: 'success', message: response.message });
-          setOpenDialog(false);
-          setAppointmentSelected({} as IAppointment);
-          setReload(new Date().getTime());
-        }
-        if (response.statusCode > 399) {
-          setErrorRemoving(true);
-          setErrorRemovingContent({ type: 'error', text: response.message });
-          addNotification({ type: 'error', message: response.message });
-        }
-        if (response instanceof Error) {
-          setErrorRemoving(true);
-          setErrorRemovingContent({ type: 'error', text: t('error.internalServer') });
-          addNotification({ type: 'error', message: t('error.internalServer') });
-        }
-      })
-      .finally(() => setIsRemoving(false));
+    // UserApiService.remove(id)
+    //   .then((response: IResponse) => {
+    //     if (response.statusCode === 200) {
+    //       addNotification({ type: 'success', message: response.message });
+    //       setOpenDialog(false);
+    //       setAppointmentSelected({} as IAppointment);
+    //       setReload(new Date().getTime());
+    //     }
+    //     if (response.statusCode > 399) {
+    //       setErrorRemoving(true);
+    //       setErrorRemovingContent({ type: 'error', text: response.message });
+    //       addNotification({ type: 'error', message: response.message });
+    //     }
+    //     if (response instanceof Error) {
+    //       setErrorRemoving(true);
+    //       setErrorRemovingContent({ type: 'error', text: t('error.internalServer') });
+    //       addNotification({ type: 'error', message: t('error.internalServer') });
+    //     }
+    //   })
+    //   .finally(() => setIsRemoving(false));
   }
 
   return (
