@@ -4,6 +4,6 @@ export enum EAppointmentSearch {
 }
 
 export interface IAppointmentSearch {
-  value: string;
   type: EAppointmentSearch;
+  value: Date | string | undefined;
 }
