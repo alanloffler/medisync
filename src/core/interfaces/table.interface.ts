@@ -11,7 +11,7 @@ export interface IDataTable {
 }
 
 export interface IDataTableAppointments extends IDataTable {
-  search: IAppointmentSearch;
+  search: IAppointmentSearch[];
 }
 
 export interface IDataTableProfessionals extends IDataTable {
