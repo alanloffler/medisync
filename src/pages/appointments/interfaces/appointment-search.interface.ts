@@ -1,6 +1,6 @@
 export enum EAppointmentSearch {
   NAME = 'name',
-  DNI = 'dni',
+  DAY = 'day',
 }
 
 export interface IAppointmentSearch {
