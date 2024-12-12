@@ -31,13 +31,12 @@ import { useMediaQuery } from '@uidotdev/usehooks';
 import { useNavigate } from 'react-router-dom';
 // Imports
 import type { IAppointment } from '@appointments/interfaces/appointment.interface';
+import type { IAppointmentSearch } from '@appointments/interfaces/appointment-search.interface';
 import type { IDataTableAppointments, ITableManager } from '@core/interfaces/table.interface';
 import type { IInfoCard } from '@core/components/common/interfaces/infocard.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import { APPO_CONFIG } from '@config/appointments/appointments.config';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
-import { EAppointmentSearch, type IAppointmentSearch } from '@appointments/interfaces/appointment-search.interface';
-// import { UserApiService } from '@users/services/user-api.service';
 import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 import { useTruncateText } from '@core/hooks/useTruncateText';
@@ -228,68 +227,45 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
   }, [reload]);
 
   useEffect(() => {
-    const fetchData = (search: IAppointmentSearch, sorting: SortingState, itemsPerPage: number) => {
+    const fetchData = (search: IAppointmentSearch[], sorting: SortingState, itemsPerPage: number) => {
       setIsLoading(true);
 
       let skipItems: number;
 
-      if (prevDeps.current.search.value !== search.value) {
+      if (prevDeps.current.search !== search) {
         setPagination(defaultPagination);
         prevDeps.current.search = search;
         skipItems = 0;
       } else {
         skipItems = tableManager.pagination.pageIndex * tableManager.pagination.pageSize;
       }
-
-      if (search.type === EAppointmentSearch.NAME) {
-        AppointmentApiService.findSearch(search.type, search.value, sorting, skipItems, itemsPerPage)
-          .then((response: IResponse) => {
-            if (response.statusCode === 200) {
-              if (response.data.length === 0) {
-                addNotification({ type: 'error', message: response.message });
-                setInfoCardContent({ type: 'warning', text: response.message });
-              }
-
-              setData(response.data.data);
-              setColumns(tableColumns);
-              setTotalItems(response.data.count);
-              setErrorMessage('');
-            }
-            if (response.statusCode > 399) {
-              setErrorMessage(response.message);
-              addNotification({ type: 'warning', message: response.message });
-              setInfoCardContent({ type: 'error', text: response.message });
-            }
-            if (response instanceof Error) {
-              addNotification({ type: 'error', message: t('error.internalServer') });
-              setInfoCardContent({ type: 'error', text: t('error.internalServer') });
-            }
-          })
-          .catch((error) => setErrorMessage(error.message))
-          .finally(() => setIsLoading(false));
-      }
-      if (search.type === EAppointmentSearch.DAY) {
-        AppointmentApiService.findSearch(search.type, search.value, sorting, skipItems, itemsPerPage)
-          .then((response: IResponse) => {
-            if (response.statusCode === 200) {
-              setData(response.data.data);
-              setColumns(tableColumns);
-              setTotalItems(response.data.count);
-              setErrorMessage('');
-            }
-            if (response.statusCode > 399) {
-              setErrorMessage(response.message);
+      // TODO: implement useQuery and manage errors and loading states
+      // This method unifies the simultaneous types of search
+      AppointmentApiService.findSearch(search, sorting, skipItems, itemsPerPage)
+        .then((response: IResponse) => {
+          if (response.statusCode === 200) {
+            if (response.data.length === 0) {
               addNotification({ type: 'error', message: response.message });
-              setInfoCardContent({ type: 'error', text: response.message });
+              setInfoCardContent({ type: 'warning', text: response.message });
             }
-            if (response instanceof Error) {
-              addNotification({ type: 'error', message: t('error.internalServer') });
-              setInfoCardContent({ type: 'error', text: t('error.internalServer') });
-            }
-          })
-          .catch((error) => setErrorMessage(error.message))
-          .finally(() => setIsLoading(false));
-      }
+
+            setData(response.data.data);
+            setColumns(tableColumns);
+            setTotalItems(response.data.count);
+            setErrorMessage('');
+          }
+          if (response.statusCode > 399) {
+            setErrorMessage(response.message);
+            addNotification({ type: 'warning', message: response.message });
+            setInfoCardContent({ type: 'error', text: response.message });
+          }
+          if (response instanceof Error) {
+            addNotification({ type: 'error', message: t('error.internalServer') });
+            setInfoCardContent({ type: 'error', text: t('error.internalServer') });
+          }
+        })
+        .catch((error) => setErrorMessage(error.message))
+        .finally(() => setIsLoading(false));
     };
     fetchData(search, tableManager.sorting, tableManager.pagination.pageSize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
