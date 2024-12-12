@@ -3,6 +3,7 @@ import type { IResponse } from '@core/interfaces/response.interface';
 import type { SortingState } from '@tanstack/react-table';
 import { APP_CONFIG } from '@config/app.config';
 import { EMethods } from '@core/enums/methods.enum';
+import { EAppointmentSearch } from '@appointments/interfaces/appointment-search.interface';
 
 export class AppointmentApiService {
   private static readonly API_URL: string = import.meta.env.VITE_API_URL;
@@ -46,8 +47,8 @@ export class AppointmentApiService {
     return await this.fetch(url, EMethods.GET);
   }
 
-  public static async findSearch(search: string, sorting: SortingState, skip: number, limit: number) {
-    const url: string = `${this.API_URL}/appointments/search?search=${search}&skip=${skip}&limit=${limit}&sk=${sorting[0].id}&sv=${sorting[0].desc ? 'desc' : 'asc'}`;
+  public static async findSearch(searchType: EAppointmentSearch, search: string, sorting: SortingState, skip: number, limit: number) {
+    const url: string = `${this.API_URL}/appointments/search?searchType=${searchType}&search=${search}&skip=${skip}&limit=${limit}&sk=${sorting[0].id}&sv=${sorting[0].desc ? 'desc' : 'asc'}`;
     return await this.fetch(url, EMethods.GET);
   }
 
