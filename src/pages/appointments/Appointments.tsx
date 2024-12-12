@@ -12,9 +12,9 @@ import { ApposDataTable } from '@appointments/components/AppoDataTable';
 import { DBCountAppos } from '@appointments/components/common/DBCountAppos';
 import { PageHeader } from '@core/components/common/PageHeader';
 // External imports
-import { ChangeEvent, useEffect, useState } from 'react';
 import { format } from '@formkit/tempo';
 import { spring, useAnimate } from 'motion/react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 // Imports
@@ -26,15 +26,21 @@ import { cn } from '@lib/utils';
 import { useDebounce } from '@core/hooks/useDebounce';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 import { useHelpStore } from '@settings/stores/help.store';
+// Constants
+const defaultAppoSearch: IAppointmentSearch[] = [
+  { type: EAppointmentSearch.NAME, value: '' },
+  { type: EAppointmentSearch.DAY, value: undefined },
+];
 // React component
 export default function Appointments() {
   const [createScope, createAnimation] = useAnimate();
   const [date, setDate] = useState<Date>();
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [name, setName] = useState<string>('');
   const [openPopover, setOpenPopover] = useState<boolean>(false);
   const [reload, setReload] = useState<number>(0);
-  const [search, setSearch] = useState<IAppointmentSearch>({ value: '', type: EAppointmentSearch.NAME });
-  const debouncedSearch = useDebounce<IAppointmentSearch>(search, APP_CONFIG.debounceTime);
+  const [search, setSearch] = useState<IAppointmentSearch[]>(defaultAppoSearch);
+  const debouncedSearch = useDebounce<IAppointmentSearch[]>(search, APP_CONFIG.debounceTime);
   const navigate = useNavigate();
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
   const { help } = useHelpStore();
@@ -44,17 +50,14 @@ export default function Appointments() {
     setItemSelected(HEADER_CONFIG.headerMenu[1].id);
   }, [setItemSelected]);
 
-  function handleSearchByName(e: ChangeEvent<HTMLInputElement>): void {
-    setSearch({ value: e.target.value, type: EAppointmentSearch.NAME });
-  }
-
-  function handleSearchByDate(date: Date | undefined): void {
-    if (date) {
-      setDate(date);
-      setSearch({ value: format(date, 'YYYY-MM-DD'), type: EAppointmentSearch.DAY });
-    } else setDate(undefined);
+  useEffect(() => {
+    const search: IAppointmentSearch[] = [
+      { type: EAppointmentSearch.NAME, value: name },
+      { type: EAppointmentSearch.DAY, value: date ? format(date, 'YYYY-MM-DD') : undefined },
+    ];
+    setSearch(search);
     setOpenPopover(false);
-  }
+  }, [date, name]);
 
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
@@ -91,14 +94,14 @@ export default function Appointments() {
                     <Search size={16} strokeWidth={2} className='absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground' />
                     <Input
                       className='h-7 bg-input pl-8 text-xsm'
-                      onChange={(e) => handleSearchByName(e)}
+                      onChange={(e) => setName(e.currentTarget.value)}
                       placeholder={t('search.user')}
                       type='text'
-                      value={search.type === EAppointmentSearch.NAME ? search.value : ''}
+                      value={name}
                     />
-                    {search.type === EAppointmentSearch.NAME && search.value && (
+                    {name !== '' && (
                       <button
-                        onClick={() => setSearch({ value: '', type: EAppointmentSearch.NAME })}
+                        onClick={() => setName('')}
                         className='absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-black'
                       >
                         <X size={16} strokeWidth={2} />
@@ -122,11 +125,11 @@ export default function Appointments() {
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className='w-auto p-0'>
-                        <Calendar mode='single' selected={date} onSelect={handleSearchByDate} initialFocus />
+                        <Calendar mode='single' selected={date} onSelect={setDate} initialFocus />
                       </PopoverContent>
                     </Popover>
                     {date && (
-                      <Button variant={'clear'} size='icon5' onClick={() => handleSearchByDate(undefined)}>
+                      <Button variant={'clear'} size='icon5' onClick={() => setDate(undefined)}>
                         <X size={14} strokeWidth={2} />
                       </Button>
                     )}
