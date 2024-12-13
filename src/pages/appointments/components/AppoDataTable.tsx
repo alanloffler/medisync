@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { ArrowDownUp, FileText, PencilLine, Trash2 } from 'lucide-react';
+import { ArrowDownUp, FileText, Trash2 } from 'lucide-react';
 // External components:
 // https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
@@ -157,14 +157,6 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
             tooltip={t('tooltip.details')}
           >
             <FileText size={16} strokeWidth={1.5} />
-          </TableButton>
-          <TableButton
-            callback={() => navigate(`/users/update/${row.original._id}`)}
-            className='hover:text-fuchsia-500'
-            help={help}
-            tooltip={t('tooltip.edit')}
-          >
-            <PencilLine size={16} strokeWidth={1.5} />
           </TableButton>
           <TableButton
             callback={() => handleRemoveAppointmentDialog(row.original)}
