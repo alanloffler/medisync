@@ -56,19 +56,19 @@ export class AppointmentApiService {
       sortingValue: sorting[0].desc ? 'desc' : 'asc',
     };
 
-    return await this.fetch(url, EMethods.POST, body);
+    return await UtilsService.fetch(url, EMethods.POST, body);
   }
   // CHECKED: used on AppoFlowCard.tsx
   public static async getStatistics() {
     const path: string = `${this.API_URL}/appointments/statistics`;
     const url = UtilsService.createUrl(path);
 
-    return await this.fetch(url, EMethods.GET);
+    return await UtilsService.fetch(url, EMethods.GET);
   }
 
   public static async countTotalAppointments() {
     const url: string = `${this.API_URL}/appointments/count`;
-    return await this.fetch(url, EMethods.GET);
+    return await UtilsService.fetch(url, EMethods.GET);
   }
 
   // FIXME: check if is unused method
@@ -224,25 +224,25 @@ export class AppointmentApiService {
   }
 
   // Generic fetch method
-  private static async fetch(url: string | URL, method: EMethods, body?: any) {
-    try {
-      const query: Response = await fetch(url, {
-        method: method,
-        headers: {
-          'content-type': 'application/json;charset=UTF-8',
-        },
-        body: JSON.stringify(body),
-      });
+  // private static async fetch(url: string | URL, method: EMethods, body?: any) {
+  //   try {
+  //     const query: Response = await fetch(url, {
+  //       method: method,
+  //       headers: {
+  //         'content-type': 'application/json;charset=UTF-8',
+  //       },
+  //       body: JSON.stringify(body),
+  //     });
 
-      const response: IResponse = await query.json();
-      if (!query.ok) throw new Error(response.message);
+  //     const response: IResponse = await query.json();
+  //     if (!query.ok) throw new Error(response.message);
 
-      return response;
-    } catch (error) {
-      if (error instanceof TypeError) {
-        throw new Error(APP_CONFIG.error.server);
-      }
-      throw error;
-    }
-  }
+  //     return response;
+  //   } catch (error) {
+  //     if (error instanceof TypeError) {
+  //       throw new Error(APP_CONFIG.error.server);
+  //     }
+  //     throw error;
+  //   }
+  // }
 }
