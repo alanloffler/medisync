@@ -9,8 +9,18 @@
 // };
 // console.log(area, selectedLanguage);
 
-const date = '12/12/24';
+// const date = '12/12/24';
 
-const shorten = date.slice(0, -3);
+// const shorten = date.slice(0, -3);
 
-console.log(shorten);
+// console.log(shorten);
+
+class Utils {
+  static url = {
+    create: (path) => {
+      return path;
+    },
+  };
+}
+
+console.log(Utils.url.create('http://localhost:3000'));
