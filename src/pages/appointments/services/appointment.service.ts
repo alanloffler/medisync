@@ -46,7 +46,7 @@ export class AppointmentApiService {
     const url: string = `${this.API_URL}/appointments?p=${page}&l=${limit}`;
     return await this.fetch(url, EMethods.GET);
   }
-
+  // CHECKED: used on appointments.tsx
   public static async findSearch(search: IAppointmentSearch[], sorting: SortingState, skip: number, limit: number) {
     const url: string = `${this.API_URL}/appointments/search`;
 
@@ -59,6 +59,11 @@ export class AppointmentApiService {
     };
 
     return await this.fetch(url, EMethods.POST, body);
+  }
+
+  public static async getStatistics() {
+    const url: string = `${this.API_URL}/appointments/statistics`;
+    return await this.fetch(url, EMethods.GET);
   }
 
   public static async countTotalAppointments() {
