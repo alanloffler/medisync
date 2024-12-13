@@ -18,9 +18,8 @@ import type { IEmail } from '@core/interfaces/email.interface';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { BackButton } from '@core/components/common/BackButton';
 import { HEADER_CONFIG } from '@config/layout/header.config';
+import { UtilsString } from '@core/services/utils/string.service';
 import { VIEW_APPOINTMENT_CONFIG as VA_CONFIG } from '@config/appointments/view-appointment.config';
-import { useCapitalize } from '@core/hooks/useCapitalize';
-import { useCapitalizeFirstLetter } from '@core/hooks/useCapitalizeFirstLetter';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 import { useLegibleDate } from '@core/hooks/useDateToString';
 // React component
@@ -30,8 +29,6 @@ export default function ViewAppointment() {
   const [date, setDate] = useState<string>('');
   const [email, setEmail] = useState<IEmail>({} as IEmail);
   const [pdfIsGenerating, setPdfIsGenerating] = useState<boolean>(false);
-  const capitalize = useCapitalize();
-  const capitalizeFirst = useCapitalizeFirstLetter();
   const legibleDate = useLegibleDate();
   const pdfRef = useRef<HTMLDivElement>(null);
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
@@ -51,18 +48,18 @@ export default function ViewAppointment() {
           setAppointment(response.data);
 
           const legibleDate: string = format(appointment.day, 'full', i18n.language);
-          const capitalized = capitalizeFirst(legibleDate);
+          const capitalized = UtilsString.upperCase(legibleDate, 'first');
           capitalized && setDate(capitalized);
 
           setEmail({
             to: response.data.user.email || VA_CONFIG.email.default,
             subject: i18n.t('email.sendAppointment.subject'),
-            body: i18n.t('email.sendAppointment.body', { firstName: capitalize(response.data.user.firstName) }),
+            body: i18n.t('email.sendAppointment.body', { firstName: UtilsString.upperCase(response.data.user.firstName, 'each') }),
           });
         })
         .finally(() => setDataIsLoading(false));
     }
-  }, [appointment.day, capitalize, capitalizeFirst, i18n.language, i18n, id, legibleDate]);
+  }, [appointment.day, i18n.language, i18n, id, legibleDate]);
 
   function downloadPDF(): void {
     const input: HTMLDivElement | null = pdfRef.current;
@@ -109,13 +106,18 @@ export default function ViewAppointment() {
                     <CalendarDays className='h-4 w-4' />
                     <span>{t('cardTitle.viewAppointment')}</span>
                   </div>
-                  <div className='flex flex-row items-center'>{`${capitalize(appointment.professional?.title.abbreviation)} ${capitalize(appointment.professional?.firstName)} ${capitalize(appointment.professional?.lastName)}`}</div>
+                  <div className='flex flex-row items-center'>
+                    {UtilsString.upperCase(
+                      `${appointment.professional?.title.abbreviation} ${appointment.professional?.firstName} ${appointment.professional?.lastName}`,
+                      'each',
+                    )}
+                  </div>
                 </header>
               </CardTitle>
             </CardHeader>
             <CardContent className='mt-4 space-y-4'>
               <h1 className='flex items-center justify-center gap-2 text-center text-2xl font-semibold'>
-                <span>{`${capitalize(appointment.user?.firstName)} ${capitalize(appointment.user?.lastName)}`}</span>
+                <span>{UtilsString.upperCase(`${appointment.user?.firstName} ${appointment.user?.lastName}`, 'each')}</span>
                 <Link to={`/users/${appointment.user?._id}`}>
                   <LinkIcon className='h-3.5 w-3.5' strokeWidth={2} />
                 </Link>
