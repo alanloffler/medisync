@@ -37,7 +37,7 @@ import type { IInfoCard } from '@core/components/common/interfaces/infocard.inte
 import type { IResponse } from '@core/interfaces/response.interface';
 import { APPO_CONFIG } from '@config/appointments/appointments.config';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
-import { useCapitalize } from '@core/hooks/useCapitalize';
+import { UtilsString } from '@core/services/utils/string.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 import { useTruncateText } from '@core/hooks/useTruncateText';
 // Default values for pagination and sorting
@@ -59,7 +59,6 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
   const [tableManager, setTableManager] = useState<ITableManager>({ sorting, pagination });
   const [totalItems, setTotalItems] = useState<number>(0);
   const addNotification = useNotificationsStore((state) => state.addNotification);
-  const capitalize = useCapitalize();
   const firstUpdate = useRef(true);
   const navigate = useNavigate();
   const prevDeps = useRef<{ search: any; tableManager: ITableManager }>({ search, tableManager });
@@ -97,7 +96,7 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
           </button>
         </div>
       ),
-      cell: ({ row }) => <div className='text-left'>{`${capitalize(row.original.user.firstName)} ${capitalize(row.original.user.lastName)}`}</div>,
+      cell: ({ row }) => <div className='text-left'>{UtilsString.capitalize(`${row.original.user.firstName} ${row.original.user.lastName}`)}</div>,
     },
     {
       accessorKey: 'identityCard',
@@ -129,7 +128,7 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
       ),
       cell: ({ row }) => (
         <div className='text-left'>
-          {capitalize(`${row.original.professional.title.abbreviation} ${row.original.professional.firstName} ${row.original.professional.lastName}`)}
+          {UtilsString.capitalize(`${row.original.professional.title.abbreviation} ${row.original.professional.firstName} ${row.original.professional.lastName}`)}
         </div>
       ),
     },
@@ -367,8 +366,8 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
                     <Trans
                       i18nKey='dialog.deleteUser.content'
                       values={{
-                        firstName: capitalize(appointmentSelected.user?.firstName),
-                        lastName: capitalize(appointmentSelected.user?.lastName),
+                        firstName: UtilsString.capitalize(appointmentSelected.user?.firstName),
+                        lastName: UtilsString.capitalize(appointmentSelected.user?.lastName),
                         identityCard: i18n.format(appointmentSelected.user?.dni, 'number', i18n.resolvedLanguage),
                       }}
                       components={{
