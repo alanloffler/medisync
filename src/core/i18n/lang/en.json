@@ -245,6 +245,17 @@
       }
     }
   },
+  "statistics": {
+    "appointments": {
+      "lastMonth": "last month",
+      "lastWeek": "last week",
+      "title": "Appointments",
+      "today": "today",
+      "total": "in total",
+      "week": "this week",
+      "yesterday": "yesterday"
+    }
+  },
   "table": {
     "header": {
       "actions": "Actions",

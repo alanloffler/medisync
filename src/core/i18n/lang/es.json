@@ -245,6 +245,17 @@
       }
     }
   },
+  "statistics": {
+    "appointments": {
+      "lastMonth": "el último mes",
+      "lastWeek": "la semana pasada",
+      "title": "Turnos",
+      "today": "hoy",
+      "total": "en total",
+      "week": "esta semana",
+      "yesterday": "ayer"
+    }
+  },
   "table": {
     "header": {
       "actions": "Acciones",
