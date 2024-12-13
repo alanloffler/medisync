@@ -4,12 +4,14 @@ import type { IResponse } from '@core/interfaces/response.interface';
 import type { SortingState } from '@tanstack/react-table';
 import { APP_CONFIG } from '@config/app.config';
 import { EMethods } from '@core/enums/methods.enum';
+import { UtilsService } from '@core/services/utils.service';
 
 export class AppointmentApiService {
   private static readonly API_URL: string = import.meta.env.VITE_API_URL;
-
+  // CHECKED: used on ReserveAppointments.tsx
   public static async findAllByProfessional(id: string, day: string) {
-    const url: string = `${this.API_URL}/appointments/byProfessional?id=${id}&day=${day}`;
+    const path: string = `${this.API_URL}/appointments/byProfessional`;
+    const url: URL = UtilsService.createUrl(path, { id, day });
 
     try {
       const query: Response = await fetch(url, {
@@ -41,14 +43,10 @@ export class AppointmentApiService {
       return error;
     }
   }
-  // WIP: TQ method implemented on appointments page
-  public static async findAll(page: number, limit: number) {
-    const url: string = `${this.API_URL}/appointments?p=${page}&l=${limit}`;
-    return await this.fetch(url, EMethods.GET);
-  }
   // CHECKED: used on appointments.tsx
   public static async findSearch(search: IAppointmentSearch[], sorting: SortingState, skip: number, limit: number) {
-    const url: string = `${this.API_URL}/appointments/search`;
+    const path: string = `${this.API_URL}/appointments/search`;
+    const url = UtilsService.createUrl(path);
 
     const body = {
       search,
@@ -60,9 +58,11 @@ export class AppointmentApiService {
 
     return await this.fetch(url, EMethods.POST, body);
   }
-
+  // CHECKED: used on AppoFlowCard.tsx
   public static async getStatistics() {
-    const url: string = `${this.API_URL}/appointments/statistics`;
+    const path: string = `${this.API_URL}/appointments/statistics`;
+    const url = UtilsService.createUrl(path);
+
     return await this.fetch(url, EMethods.GET);
   }
 
@@ -224,7 +224,7 @@ export class AppointmentApiService {
   }
 
   // Generic fetch method
-  private static async fetch(url: string, method: EMethods, body?: any) {
+  private static async fetch(url: string | URL, method: EMethods, body?: any) {
     try {
       const query: Response = await fetch(url, {
         method: method,
