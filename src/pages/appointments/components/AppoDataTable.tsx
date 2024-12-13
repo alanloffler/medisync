@@ -97,7 +97,14 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
         </div>
       ),
       cell: ({ row }) => (
-        <div className='text-left'>{UtilsString.upperCase(`${row.original.user.firstName} ${row.original.user.lastName}`, 'each')}</div>
+        <Button
+          variant='link-table'
+          size='xs'
+          className='!text-xsm'
+          onClick={() => navigate(`/users/${row.original.user._id}`)}
+        >
+          {UtilsString.upperCase(`${row.original.user.firstName} ${row.original.user.lastName}`, 'each')}
+        </Button>
       ),
     },
     {
@@ -144,7 +151,7 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
       cell: ({ row }) => (
         <div className='mx-auto flex w-fit flex-row items-center justify-center space-x-2'>
           <TableButton
-            callback={() => navigate(`/users/${row.original._id}`)}
+            callback={() => navigate(`/appointments/${row.original._id}`)}
             className='hover:text-sky-500'
             help={help}
             tooltip={t('tooltip.details')}
