@@ -4,14 +4,14 @@ import type { IResponse } from '@core/interfaces/response.interface';
 import type { SortingState } from '@tanstack/react-table';
 import { APP_CONFIG } from '@config/app.config';
 import { EMethods } from '@core/enums/methods.enum';
-import { UtilsService } from '@core/services/utils.service';
+import { UtilsUrl } from '@core/services/utils/url.service';
 
 export class AppointmentApiService {
   private static readonly API_URL: string = import.meta.env.VITE_API_URL;
   // CHECKED: used on ReserveAppointments.tsx
   public static async findAllByProfessional(id: string, day: string) {
     const path: string = `${this.API_URL}/appointments/byProfessional`;
-    const url: URL = UtilsService.createUrl(path, { id, day });
+    const url: URL = UtilsUrl.create(path, { id, day });
 
     try {
       const query: Response = await fetch(url, {
@@ -46,7 +46,7 @@ export class AppointmentApiService {
   // CHECKED: used on appointments.tsx
   public static async findSearch(search: IAppointmentSearch[], sorting: SortingState, skip: number, limit: number) {
     const path: string = `${this.API_URL}/appointments/search`;
-    const url = UtilsService.createUrl(path);
+    const url = UtilsUrl.create(path);
 
     const body = {
       search,
@@ -56,19 +56,19 @@ export class AppointmentApiService {
       sortingValue: sorting[0].desc ? 'desc' : 'asc',
     };
 
-    return await UtilsService.fetch(url, EMethods.POST, body);
+    return await UtilsUrl.fetch(url, EMethods.POST, body);
   }
   // CHECKED: used on AppoFlowCard.tsx
   public static async getStatistics() {
     const path: string = `${this.API_URL}/appointments/statistics`;
-    const url = UtilsService.createUrl(path);
+    const url = UtilsUrl.create(path);
 
-    return await UtilsService.fetch(url, EMethods.GET);
+    return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
   public static async countTotalAppointments() {
     const url: string = `${this.API_URL}/appointments/count`;
-    return await UtilsService.fetch(url, EMethods.GET);
+    return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
   // FIXME: check if is unused method
