@@ -96,7 +96,9 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
           </button>
         </div>
       ),
-      cell: ({ row }) => <div className='text-left'>{UtilsString.capitalize(`${row.original.user.firstName} ${row.original.user.lastName}`)}</div>,
+      cell: ({ row }) => (
+        <div className='text-left'>{UtilsString.upperCase(`${row.original.user.firstName} ${row.original.user.lastName}`, 'each')}</div>
+      ),
     },
     {
       accessorKey: 'identityCard',
@@ -128,7 +130,10 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
       ),
       cell: ({ row }) => (
         <div className='text-left'>
-          {UtilsString.capitalize(`${row.original.professional.title.abbreviation} ${row.original.professional.firstName} ${row.original.professional.lastName}`)}
+          {UtilsString.upperCase(
+            `${row.original.professional.title.abbreviation} ${row.original.professional.firstName} ${row.original.professional.lastName}`,
+            'each',
+          )}
         </div>
       ),
     },
@@ -366,8 +371,8 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
                     <Trans
                       i18nKey='dialog.deleteUser.content'
                       values={{
-                        firstName: UtilsString.capitalize(appointmentSelected.user?.firstName),
-                        lastName: UtilsString.capitalize(appointmentSelected.user?.lastName),
+                        firstName: UtilsString.upperCase(appointmentSelected.user?.firstName, 'each'),
+                        lastName: UtilsString.upperCase(appointmentSelected.user?.lastName, 'each'),
                         identityCard: i18n.format(appointmentSelected.user?.dni, 'number', i18n.resolvedLanguage),
                       }}
                       components={{
