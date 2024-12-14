@@ -5,7 +5,7 @@ enum ECapitalize {
 }
 
 export class UtilsString {
-  public static upperCase(content: string, type?: keyof typeof ECapitalize, standardize?: boolean): string {
+  public static upperCase(content?: string, type?: keyof typeof ECapitalize, standardize?: boolean): string {
     let result: string = '';
     if (!content) return result;
     if (!type) type = 'first';
