@@ -1,20 +1,24 @@
 // External components: https://ui.shadcn.com/docs/components
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger } from '@core/components/ui/select';
+// Components
+import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
 import { useEffect, useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
+import type { IAppointment } from '@appointments/interfaces/appointment.interface';
+import type { IResponse } from '@core/interfaces/response.interface';
 import { AppoSchedule } from '@appointments/services/schedule.service';
+import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { EStatus } from '@appointments/enums/status.enum';
 import { cn } from '@lib/utils';
 import { useHelpStore } from '@settings/stores/help.store';
-import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
+import { useNotificationsStore } from '@core/stores/notifications.store';
 // Interfaces
 interface IStatusSelect {
-  day: string;
-  hour: string;
+  appointment: IAppointment;
   mode: 'update' | 'view';
-  status: string;
 }
 
 interface IStatusOption {
@@ -22,60 +26,77 @@ interface IStatusOption {
   style: { dark: string; light: string };
   value: string;
 }
+// Constants
+const statusOptions: IStatusOption[] = [
+  {
+    value: EStatus.ATTENDED,
+    label: `status.${EStatus.ATTENDED}`,
+    style: {
+      dark: 'bg-emerald-200',
+      light: 'bg-emerald-400',
+    },
+  },
+  {
+    value: EStatus.NOT_ATTENDED,
+    label: `status.${EStatus.NOT_ATTENDED}`,
+    style: {
+      dark: 'bg-rose-200',
+      light: 'bg-rose-400',
+    },
+  },
+  {
+    value: EStatus.NOT_STATUS,
+    label: `status.${EStatus.NOT_STATUS}`,
+    style: {
+      dark: 'bg-slate-200',
+      light: 'bg-slate-400',
+    },
+  },
+  {
+    value: EStatus.WAITING,
+    label: t(`status.${EStatus.WAITING}`),
+    style: {
+      dark: 'bg-amber-200',
+      light: 'bg-amber-400',
+    },
+  },
+];
 // React component
-export function StatusSelect({ day, hour, mode, status }: IStatusSelect) {
-  const [itemSelected, setItemSelected] = useState<string>(status);
+export function StatusSelect({ appointment, mode }: IStatusSelect) {
+  const [itemSelected, setItemSelected] = useState<string>(appointment.status);
+  const addNotification = useNotificationsStore((state) => state.addNotification);
+  const { day, hour, _id, status } = appointment;
   const { help } = useHelpStore();
   const { t } = useTranslation();
-  const statusOptions: IStatusOption[] = [
-    {
-      value: EStatus.ATTENDED,
-      label: t(`status.${EStatus.ATTENDED}`),
-      style: {
-        dark: 'bg-emerald-200',
-        light: 'bg-emerald-400',
-      },
-    },
-    {
-      value: EStatus.NOT_ATTENDED,
-      label: t(`status.${EStatus.NOT_ATTENDED}`),
-      style: {
-        dark: 'bg-rose-200',
-        light: 'bg-rose-400',
-      },
-    },
-    {
-      value: EStatus.NOT_STATUS,
-      label: t(`status.${EStatus.NOT_STATUS}`),
-      style: {
-        dark: 'bg-slate-200',
-        light: 'bg-slate-400',
-      },
-    },
-    {
-      value: EStatus.WAITING,
-      label: t(`status.${EStatus.WAITING}`),
-      style: {
-        dark: 'bg-amber-200',
-        light: 'bg-amber-400',
-      },
-    },
-  ];
 
   useEffect(() => {
     const futureDate = AppoSchedule.isDatetimeInFuture(new Date(day), hour);
     futureDate ? setItemSelected(EStatus.WAITING) : setItemSelected(status);
   }, [day, hour, status]);
 
-  function handleStatusChange(status: string) {
-    setItemSelected(status);
+  const { mutate } = useMutation<IResponse, Error, { status: string }>({
+    mutationKey: ['appointment', 'update', _id, status],
+    mutationFn: async () => {
+      return await AppointmentApiService.update(_id, itemSelected);
+    },
+    onSuccess: (success, vars) => {
+      setItemSelected(vars.status);
+      addNotification({ type: 'success', message: success.message });
+    },
+    onError: (error) => {
+      addNotification({ type: 'error', message: error?.message });
+    },
+  });
+
+  function handleStatusChange(status: string): void {
     if (mode === 'update') {
-      console.log('can update');
+      setItemSelected(status);
+      mutate({ status });
     }
   }
 
   return (
-    <Select value={itemSelected} onValueChange={(e) => handleStatusChange(e)} disabled={itemSelected === EStatus.WAITING || mode === 'view'}>
+    <Select value={itemSelected} onValueChange={handleStatusChange} disabled={itemSelected === EStatus.WAITING || mode === 'view'}>
       <TooltipWrapper tooltip={t(`status.${itemSelected}`)} help={help}>
         <SelectTrigger className='h-5 w-5 justify-center bg-transparent p-0 [&_svg]:hidden'>
           <div
@@ -90,7 +111,7 @@ export function StatusSelect({ day, hour, mode, status }: IStatusSelect) {
           </div>
         </SelectTrigger>
       </TooltipWrapper>
-      <SelectContent align='center'>
+      <SelectContent align='center' onCloseAutoFocus={(e) => e.preventDefault()}>
         <SelectGroup>
           {statusOptions
             .filter((item) => item.value !== EStatus.WAITING)
