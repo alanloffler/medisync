@@ -58,6 +58,12 @@ export class AppointmentApiService {
 
     return await UtilsUrl.fetch(url, EMethods.POST, body);
   }
+  // CHECKED: used on StatusSelect.tsx
+  public static async update(id: string, status: string): Promise<IResponse> {
+    const url: string = `${this.API_URL}/appointments/${id}`;
+
+    return await UtilsUrl.fetch(url, EMethods.PATCH, { status });
+  }
   // CHECKED: used on AppoFlowCard.tsx
   public static async getStatistics() {
     const path: string = `${this.API_URL}/appointments/statistics`;
