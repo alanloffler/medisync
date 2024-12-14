@@ -141,9 +141,19 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
       ),
     },
     {
+      accessorKey: 'status',
+      size: 60,
+      header: () => <div className='text-center'>{t(APPO_CONFIG.table.header[5])}</div>,
+      cell: () => (
+        <div className='flex justify-center'>
+          <StatusSelect />
+        </div>
+      ),
+    },
+    {
       accessorKey: 'actions',
       size: 100,
-      header: () => <div className='text-center'>{t(APPO_CONFIG.table.header[5])}</div>,
+      header: () => <div className='text-center'>{t(APPO_CONFIG.table.header[6])}</div>,
       cell: ({ row }) => (
         <div className='mx-auto flex w-fit flex-row items-center justify-center space-x-2'>
           <TableButton
@@ -162,7 +172,6 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
           >
             <Trash2 size={16} strokeWidth={1.5} />
           </TableButton>
-          <StatusSelect />
         </div>
       ),
     },
