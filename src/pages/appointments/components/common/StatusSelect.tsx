@@ -12,12 +12,14 @@ const statusStyle: IStatusStyles = {
     dark: 'bg-emerald-200',
     light: 'bg-emerald-400',
   },
-
   inactive: {
     dark: 'bg-rose-200',
     light: 'bg-rose-400',
   },
-
+  waiting: {
+    dark: 'bg-amber-200',
+    light: 'bg-amber-400',
+  },
   not_status: {
     dark: 'bg-slate-200',
     light: 'bg-slate-400',
@@ -27,6 +29,13 @@ const statusStyle: IStatusStyles = {
 export function StatusSelect() {
   const [status, setStatus] = useState<string>('not_status');
   const [styles, setStyles] = useState<{ dark: string; light: string }>(statusStyle.not_status);
+
+  const statusOptions: { value: string; label: string }[] = [
+    { value: 'active', label: 'Asistió' },
+    { value: 'inactive', label: 'Faltó' },
+    { value: 'waiting', label: 'Esperando' },
+    { value: 'not_status', label: 'No definido' },
+  ];
 
   useEffect(() => {
     const findStyle = Object.entries(statusStyle).find(([key, value]) => {
@@ -43,17 +52,18 @@ export function StatusSelect() {
           <span className={cn('h-2.5 w-2.5 rounded-full bg-rose-400', styles.light)}></span>
         </div>
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent align='center' className=''>
         <SelectGroup>
-          <SelectItem value='active' className='!text-xs'>
-            Asistió
-          </SelectItem>
-          <SelectItem value='inactive' className='!text-xs'>
-            Faltó
-          </SelectItem>
-          <SelectItem value='not_status' className='!text-xs'>
-            Sin estado
-          </SelectItem>
+          {statusOptions.map((option) => (
+            <SelectItem value={option.value} className='[&_svg]:h-3 [&_svg]:w-3'>
+              <div className='flex flex-row items-center space-x-2'>
+                <div className={cn('flex h-4 w-4 items-center justify-center rounded-full bg-rose-200', statusStyle[option.value].dark)}>
+                  <div className={cn('h-2.5 w-2.5 rounded-full bg-rose-400', statusStyle[option.value].light)}></div>
+                </div>
+                <div className='text-xs'>{option.label}</div>
+              </div>
+            </SelectItem>
+          ))}
         </SelectGroup>
       </SelectContent>
     </Select>
