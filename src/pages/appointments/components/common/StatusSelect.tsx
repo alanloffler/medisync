@@ -4,9 +4,11 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger } from '@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 // Imports
-import { cn } from '@lib/utils';
 import { AppoSchedule } from '@appointments/services/schedule.service';
 import { EStatus } from '@appointments/enums/status.enum';
+import { cn } from '@lib/utils';
+import { useHelpStore } from '@settings/stores/help.store';
+import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // Interfaces
 interface IStatusSelect {
   day: string;
@@ -22,8 +24,9 @@ interface IStatusOption {
 }
 // React component
 export function StatusSelect({ day, hour, mode, status }: IStatusSelect) {
-  const { t } = useTranslation();
   const [itemSelected, setItemSelected] = useState<string>(status);
+  const { help } = useHelpStore();
+  const { t } = useTranslation();
   const statusOptions: IStatusOption[] = [
     {
       value: EStatus.ATTENDED,
@@ -73,16 +76,20 @@ export function StatusSelect({ day, hour, mode, status }: IStatusSelect) {
 
   return (
     <Select value={itemSelected} onValueChange={(e) => handleStatusChange(e)} disabled={itemSelected === EStatus.WAITING || mode === 'view'}>
-      <SelectTrigger className='h-5 w-5 justify-center bg-transparent p-0 [&_svg]:hidden'>
-        <div
-          className={cn(
-            'flex h-4 w-4 items-center justify-center rounded-full bg-rose-200',
-            statusOptions.find((item) => item.value === itemSelected)?.style.dark,
-          )}
-        >
-          <span className={cn('h-2.5 w-2.5 rounded-full bg-rose-400', statusOptions.find((item) => item.value === itemSelected)?.style.light)}></span>
-        </div>
-      </SelectTrigger>
+      <TooltipWrapper tooltip={t(`status.${itemSelected}`)} help={help}>
+        <SelectTrigger className='h-5 w-5 justify-center bg-transparent p-0 [&_svg]:hidden'>
+          <div
+            className={cn(
+              'flex h-4 w-4 items-center justify-center rounded-full bg-rose-200',
+              statusOptions.find((item) => item.value === itemSelected)?.style.dark,
+            )}
+          >
+            <span
+              className={cn('h-2.5 w-2.5 rounded-full bg-rose-400', statusOptions.find((item) => item.value === itemSelected)?.style.light)}
+            ></span>
+          </div>
+        </SelectTrigger>
+      </TooltipWrapper>
       <SelectContent align='center'>
         <SelectGroup>
           {statusOptions
