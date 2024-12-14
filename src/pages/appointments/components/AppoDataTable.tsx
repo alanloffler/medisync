@@ -187,16 +187,13 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
   });
 
   useEffect(() => {
-    function handleResize() {
+    if (isMediumDevice || isSmallDevice) {
       setColumnVisibility({
         index: !isSmallDevice,
         identityCard: !isSmallDevice,
         professional: !isMediumDevice,
       });
     }
-    window.addEventListener('resize', handleResize);
-
-    () => window.removeEventListener('resize', handleResize);
   }, [isMediumDevice, isSmallDevice]);
 
   const table: ITable<IAppointment> = useReactTable({
