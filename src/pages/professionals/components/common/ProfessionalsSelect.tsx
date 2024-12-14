@@ -11,8 +11,8 @@ import type { IProfessional } from '@professionals/interfaces/professional.inter
 import type { IResponse } from '@core/interfaces/response.interface';
 import { PROFESSIONALS_SELECT_CONFIG as PS_CONFIG } from '@config/professionals/professional-select.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
+import { UtilsString } from '@core/services/utils/string.service';
 import { cn } from '@lib/utils';
-import { useCapitalize } from '@core/hooks/useCapitalize';
 // React component
 export function ProfessionalsSelect({
   className,
@@ -23,7 +23,6 @@ export function ProfessionalsSelect({
   defaultValue?: string;
   onValueChange?: (e: string) => void;
 }) {
-  const capitalize = useCapitalize();
   const { t } = useTranslation();
 
   const {
@@ -54,7 +53,7 @@ export function ProfessionalsSelect({
             {professionals?.data &&
               professionals?.data.map((professional) => (
                 <SelectItem key={crypto.randomUUID()} value={professional._id} className='text-xsm'>
-                  {capitalize(professional.title.abbreviation)} {capitalize(professional.firstName)} {capitalize(professional.lastName)}
+                  {UtilsString.upperCase(`${professional.title.abbreviation} ${professional.firstName} ${professional.lastName}`, 'each')}
                 </SelectItem>
               ))}
           </SelectGroup>
