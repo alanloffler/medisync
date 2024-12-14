@@ -146,7 +146,7 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
       header: () => <div className='text-center'>{t(APPO_CONFIG.table.header[5])}</div>,
       cell: ({ row }) => (
         <div className='flex justify-center'>
-          <StatusSelect day={row.original.day} hour={row.original.hour} status={row.original.status} mode='update' />
+          <StatusSelect appointment={row.original} mode='update' />
         </div>
       ),
     },
