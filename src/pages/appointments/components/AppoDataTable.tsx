@@ -144,9 +144,9 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
       accessorKey: 'status',
       size: 60,
       header: () => <div className='text-center'>{t(APPO_CONFIG.table.header[5])}</div>,
-      cell: () => (
+      cell: ({ row }) => (
         <div className='flex justify-center'>
-          <StatusSelect />
+          <StatusSelect day={row.original.day} hour={row.original.hour} status={'active'} />
         </div>
       ),
     },
