@@ -7,6 +7,7 @@ export interface IAppointmentForm {
   hour: string;
   professional: string;
   slot: number;
+  status?: string;
   user: string;
 }
 
@@ -21,6 +22,7 @@ export interface IAppointmentView {
   hour: string;
   professional: IProfessional;
   slot: number;
+  status: string;
   updatedAt: Date;
   user: IUser;
 }
