@@ -256,6 +256,12 @@
       "yesterday": "ayer"
     }
   },
+  "status": {
+    "attended": "Asistió",
+    "not_attended": "No asistió",
+    "not_status": "Sin estado",
+    "waiting": "Aguardando"
+  },
   "table": {
     "header": {
       "actions": "Acciones",
