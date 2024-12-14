@@ -83,16 +83,18 @@ export function StatusSelect({ day, hour, mode, status }: IStatusSelect) {
       </SelectTrigger>
       <SelectContent align='center'>
         <SelectGroup>
-          {statusOptions.map((option) => (
-            <SelectItem key={crypto.randomUUID()} value={option.value} className='[&_svg]:h-3 [&_svg]:w-3'>
-              <div className='flex flex-row items-center space-x-2'>
-                <div className={cn('flex h-4 w-4 items-center justify-center rounded-full', option.style.dark)}>
-                  <div className={cn('h-2.5 w-2.5 rounded-full', option.style.light)}></div>
+          {statusOptions
+            .filter((item) => item.value !== EStatus.WAITING)
+            .map((option) => (
+              <SelectItem key={crypto.randomUUID()} value={option.value} className='[&_svg]:h-3 [&_svg]:w-3'>
+                <div className='flex flex-row items-center space-x-2'>
+                  <div className={cn('flex h-4 w-4 items-center justify-center rounded-full', option.style.dark)}>
+                    <div className={cn('h-2.5 w-2.5 rounded-full', option.style.light)}></div>
+                  </div>
+                  <div className='text-xs'>{option.label}</div>
                 </div>
-                <div className='text-xs'>{option.label}</div>
-              </div>
-            </SelectItem>
-          ))}
+              </SelectItem>
+            ))}
         </SelectGroup>
       </SelectContent>
     </Select>
