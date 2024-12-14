@@ -13,6 +13,7 @@ export const APPO_CONFIG = {
       'table.header.user',
       'table.header.identityCard',
       'table.header.professional',
+      'table.header.status',
       'table.header.actions',
     ],
     itemsPerPage: [5, 10, 20, 50, 100],
