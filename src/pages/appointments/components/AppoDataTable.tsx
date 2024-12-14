@@ -19,11 +19,12 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 // Components
+import { DateTime } from '@core/components/common/DateTime';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
-import { TableButton } from '@core/components/common/TableButton';
-import { DateTime } from '@core/components/common/DateTime';
 import { Pagination } from '@core/components/common/Pagination';
+import { StatusSelect } from '@appointments/components/common/StatusSelect';
+import { TableButton } from '@core/components/common/TableButton';
 // External imports
 import { Trans, useTranslation } from 'react-i18next';
 import { useEffect, useRef, useState } from 'react';
@@ -97,12 +98,7 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
         </div>
       ),
       cell: ({ row }) => (
-        <Button
-          variant='link-table'
-          size='xs'
-          className='!text-xsm'
-          onClick={() => navigate(`/users/${row.original.user._id}`)}
-        >
+        <Button variant='link-table' size='xs' className='!text-xsm' onClick={() => navigate(`/users/${row.original.user._id}`)}>
           {UtilsString.upperCase(`${row.original.user.firstName} ${row.original.user.lastName}`, 'each')}
         </Button>
       ),
@@ -166,6 +162,7 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
           >
             <Trash2 size={16} strokeWidth={1.5} />
           </TableButton>
+          <StatusSelect />
         </div>
       ),
     },
