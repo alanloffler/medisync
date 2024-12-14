@@ -63,7 +63,7 @@ export function StatusSelect({ day, hour, status }: IStatusSelect) {
   }, [itemSelected]);
 
   return (
-    <Select value={itemSelected} onValueChange={setItemSelected}>
+    <Select value={itemSelected} onValueChange={setItemSelected} disabled={itemSelected === 'waiting'}>
       <SelectTrigger className='h-5 w-5 justify-center bg-transparent p-0 [&_svg]:hidden'>
         <div className={cn('flex h-4 w-4 items-center justify-center rounded-full bg-rose-200', styles.dark)}>
           <span className={cn('h-2.5 w-2.5 rounded-full bg-rose-400', styles.light)}></span>
