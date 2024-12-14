@@ -2,6 +2,7 @@
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger } from '@core/components/ui/select';
 // External imports
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 // Imports
 import { cn } from '@lib/utils';
 import { AppoSchedule } from '@appointments/services/schedule.service';
@@ -21,11 +22,12 @@ interface IStatusOption {
 }
 // React component
 export function StatusSelect({ day, hour, mode, status }: IStatusSelect) {
+  const { t } = useTranslation();
   const [itemSelected, setItemSelected] = useState<string>(status);
   const statusOptions: IStatusOption[] = [
     {
       value: EStatus.ATTENDED,
-      label: 'Asistió',
+      label: t(`status.${EStatus.ATTENDED}`),
       style: {
         dark: 'bg-emerald-200',
         light: 'bg-emerald-400',
@@ -33,7 +35,7 @@ export function StatusSelect({ day, hour, mode, status }: IStatusSelect) {
     },
     {
       value: EStatus.NOT_ATTENDED,
-      label: 'No asistió',
+      label: t(`status.${EStatus.NOT_ATTENDED}`),
       style: {
         dark: 'bg-rose-200',
         light: 'bg-rose-400',
@@ -41,7 +43,7 @@ export function StatusSelect({ day, hour, mode, status }: IStatusSelect) {
     },
     {
       value: EStatus.NOT_STATUS,
-      label: 'Sin estado',
+      label: t(`status.${EStatus.NOT_STATUS}`),
       style: {
         dark: 'bg-slate-200',
         light: 'bg-slate-400',
@@ -49,7 +51,7 @@ export function StatusSelect({ day, hour, mode, status }: IStatusSelect) {
     },
     {
       value: EStatus.WAITING,
-      label: 'Aguardando',
+      label: t(`status.${EStatus.WAITING}`),
       style: {
         dark: 'bg-amber-200',
         light: 'bg-amber-400',
