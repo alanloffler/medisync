@@ -42,8 +42,8 @@ import { CalendarService } from '@appointments/services/calendar.service';
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { RESERVE_APPOINTMENT_CONFIG as RA_CONFIG } from '@config/appointments/reserve-appointments.config';
 import { Trans, useTranslation } from 'react-i18next';
+import { UtilsString } from '@core/services/utils/string.service';
 import { cn } from '@lib/utils';
-import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useCapitalizeFirstLetter } from '@core/hooks/useCapitalizeFirstLetter';
 import { useDelimiter } from '@core/hooks/useDelimiter';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
@@ -82,7 +82,6 @@ export default function ReserveAppointments() {
   const [todayIsWorkingDay, setTodayIsWorkingDay] = useState<boolean>(false);
   const [userSelected, setUserSelected] = useState<IUser>({} as IUser);
   const addNotification = useNotificationsStore((state) => state.addNotification);
-  const capitalize = useCapitalize();
   const capitalizeFirstLetter = useCapitalizeFirstLetter();
   const delimiter = useDelimiter();
   const navigate = useNavigate();
@@ -269,7 +268,10 @@ export default function ReserveAppointments() {
           <div className='space-y-2'>
             <Trans
               i18nKey='dialog.deleteAppointment.contentText'
-              values={{ firstName: capitalize(slot.appointment?.user.firstName), lastName: capitalize(slot.appointment?.user.lastName) }}
+              values={{
+                firstName: UtilsString.upperCase(slot.appointment?.user.firstName),
+                lastName: UtilsString.upperCase(slot.appointment?.user.lastName),
+              }}
               components={{
                 span: <span className='font-semibold' />,
               }}
@@ -300,7 +302,7 @@ export default function ReserveAppointments() {
           <div className='flex flex-row items-center gap-1'>
             <Trans
               i18nKey='dialog.reserveAppointment.content.reservedTo'
-              values={{ firstName: capitalize(userSelected.firstName), lastName: capitalize(userSelected.lastName) }}
+              values={{ firstName: UtilsString.upperCase(userSelected.firstName), lastName: UtilsString.upperCase(userSelected.lastName) }}
               components={{
                 span: <span className='font-semibold' />,
               }}
@@ -333,7 +335,11 @@ export default function ReserveAppointments() {
         </div>
         <div className='flex items-center space-x-2'>
           <BriefcaseMedical className='h-5 w-5' strokeWidth={2} />
-          <span className='font-semibold'>{`${capitalize(professionalSelected?.title.abbreviation)} ${capitalize(professionalSelected?.firstName)} ${capitalize(professionalSelected?.lastName)}`}</span>
+          <span className='font-semibold'>
+            {UtilsString.upperCase(
+              `${professionalSelected?.title.abbreviation} ${professionalSelected?.firstName} ${professionalSelected?.lastName}`,
+            )}
+          </span>
         </div>
       </div>
     );
@@ -440,7 +446,11 @@ export default function ReserveAppointments() {
                           <span>{t('cardTitle.appointmentsReserve')}</span>
                         </div>
                         {professionalSelected?._id && (
-                          <h1>{`${capitalize(professionalSelected?.title.abbreviation)} ${capitalize(professionalSelected?.firstName)} ${capitalize(professionalSelected?.lastName)}`}</h1>
+                          <h1>
+                            {UtilsString.upperCase(
+                              `${professionalSelected?.title.abbreviation} ${professionalSelected?.firstName} ${professionalSelected?.lastName}`,
+                            )}
+                          </h1>
                         )}
                       </section>
                     </CardTitle>
@@ -495,7 +505,7 @@ export default function ReserveAppointments() {
                                     onClick={() => navigate(`/appointments/${slot.appointment?._id}`)}
                                   >
                                     <span className='text-sm font-medium'>
-                                      {`${capitalize(slot.appointment.user.firstName)} ${capitalize(slot.appointment.user.lastName)}`}
+                                      {UtilsString.upperCase(`${slot.appointment.user.firstName} ${slot.appointment.user.lastName}`)}
                                     </span>
                                     <div className='hidden items-center space-x-2 text-muted-foreground lg:flex'>
                                       <IdCard size={18} strokeWidth={1.5} />
