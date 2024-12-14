@@ -4,7 +4,14 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger } from '@
 import { useEffect, useState } from 'react';
 // Imports
 import { cn } from '@lib/utils';
-// Types
+import { AppoSchedule } from '@appointments/services/schedule.service';
+// Inteerface and type
+interface IStatusSelect {
+  day: string;
+  hour: string;
+  status: string;
+}
+
 type IStatusStyles = Record<string, { dark: string; light: string }>;
 // Constants
 const statusStyle: IStatusStyles = {
@@ -26,8 +33,8 @@ const statusStyle: IStatusStyles = {
   },
 };
 // React component
-export function StatusSelect() {
-  const [status, setStatus] = useState<string>('not_status');
+export function StatusSelect({ day, hour, status }: IStatusSelect) {
+  const [itemSelected, setItemSelected] = useState<string>(status);
   const [styles, setStyles] = useState<{ dark: string; light: string }>(statusStyle.not_status);
 
   const statusOptions: { value: string; label: string }[] = [
@@ -38,24 +45,34 @@ export function StatusSelect() {
   ];
 
   useEffect(() => {
+    const futureDate = AppoSchedule.isDatetimeInFuture(new Date(day), hour);
+
+    if (futureDate) {
+      setItemSelected('waiting');
+    } else {
+      setItemSelected(status);
+    }
+  }, [day, hour, status]);
+
+  useEffect(() => {
     const findStyle = Object.entries(statusStyle).find(([key, value]) => {
-      if (key === status) return value;
+      if (key === itemSelected) return value;
     })![1];
 
     setStyles(findStyle);
-  }, [status]);
+  }, [itemSelected]);
 
   return (
-    <Select defaultValue='not_status' onValueChange={setStatus}>
+    <Select value={itemSelected} onValueChange={setItemSelected}>
       <SelectTrigger className='h-5 w-5 justify-center bg-transparent p-0 [&_svg]:hidden'>
         <div className={cn('flex h-4 w-4 items-center justify-center rounded-full bg-rose-200', styles.dark)}>
           <span className={cn('h-2.5 w-2.5 rounded-full bg-rose-400', styles.light)}></span>
         </div>
       </SelectTrigger>
-      <SelectContent align='center' className=''>
+      <SelectContent align='center'>
         <SelectGroup>
           {statusOptions.map((option) => (
-            <SelectItem value={option.value} className='[&_svg]:h-3 [&_svg]:w-3'>
+            <SelectItem key={crypto.randomUUID()} value={option.value} className='[&_svg]:h-3 [&_svg]:w-3'>
               <div className='flex flex-row items-center space-x-2'>
                 <div className={cn('flex h-4 w-4 items-center justify-center rounded-full bg-rose-200', statusStyle[option.value].dark)}>
                   <div className={cn('h-2.5 w-2.5 rounded-full bg-rose-400', statusStyle[option.value].light)}></div>
