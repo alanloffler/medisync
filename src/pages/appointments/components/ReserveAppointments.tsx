@@ -338,6 +338,7 @@ export default function ReserveAppointments() {
           <span className='font-semibold'>
             {UtilsString.upperCase(
               `${professionalSelected?.title.abbreviation} ${professionalSelected?.firstName} ${professionalSelected?.lastName}`,
+              'each',
             )}
           </span>
         </div>
@@ -449,6 +450,7 @@ export default function ReserveAppointments() {
                           <h1>
                             {UtilsString.upperCase(
                               `${professionalSelected?.title.abbreviation} ${professionalSelected?.firstName} ${professionalSelected?.lastName}`,
+                              'each',
                             )}
                           </h1>
                         )}
@@ -505,7 +507,7 @@ export default function ReserveAppointments() {
                                     onClick={() => navigate(`/appointments/${slot.appointment?._id}`)}
                                   >
                                     <span className='text-sm font-medium'>
-                                      {UtilsString.upperCase(`${slot.appointment.user.firstName} ${slot.appointment.user.lastName}`)}
+                                      {UtilsString.upperCase(`${slot.appointment.user.firstName} ${slot.appointment.user.lastName}`, 'each')}
                                     </span>
                                     <div className='hidden items-center space-x-2 text-muted-foreground lg:flex'>
                                       <IdCard size={18} strokeWidth={1.5} />
