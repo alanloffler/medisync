@@ -54,7 +54,7 @@ const statusOptions: IStatusOption[] = [
   },
   {
     value: EStatus.WAITING,
-    label: t(`status.${EStatus.WAITING}`),
+    label: `status.${EStatus.WAITING}`,
     style: {
       dark: 'bg-amber-200',
       light: 'bg-amber-400',
@@ -121,7 +121,7 @@ export function StatusSelect({ appointment, mode }: IStatusSelect) {
                   <div className={cn('flex h-4 w-4 items-center justify-center rounded-full', option.style.dark)}>
                     <div className={cn('h-2.5 w-2.5 rounded-full', option.style.light)}></div>
                   </div>
-                  <div className='text-xs'>{option.label}</div>
+                  <div className='text-xs'>{t(option.label)}</div>
                 </div>
               </SelectItem>
             ))}
