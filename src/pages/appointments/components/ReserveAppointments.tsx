@@ -22,6 +22,7 @@ import { CalendarFooter } from '@appointments/components/CalendarFooter';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { ProfessionalsCombobox } from '@professionals/components/common/ProfessionalsCombobox';
+import { StatusSelect } from '@appointments/components/common/StatusSelect';
 import { Steps } from '@core/components/common/Steps';
 import { UsersCombo } from '@users/components/UsersCombo';
 // External imports
@@ -43,10 +44,8 @@ import { RESERVE_APPOINTMENT_CONFIG as RA_CONFIG } from '@config/appointments/re
 import { Trans, useTranslation } from 'react-i18next';
 import { UtilsString } from '@core/services/utils/string.service';
 import { cn } from '@lib/utils';
-import { useCapitalizeFirstLetter } from '@core/hooks/useCapitalizeFirstLetter';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
-import { StatusSelect } from './common/StatusSelect';
 // Enum
 enum DialogAction {
   CANCEL = 'cancel',
@@ -81,7 +80,6 @@ export default function ReserveAppointments() {
   const [todayIsWorkingDay, setTodayIsWorkingDay] = useState<boolean>(false);
   const [userSelected, setUserSelected] = useState<IUser>({} as IUser);
   const addNotification = useNotificationsStore((state) => state.addNotification);
-  const capitalizeFirstLetter = useCapitalizeFirstLetter();
   const navigate = useNavigate();
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
   const { i18n, t } = useTranslation();
@@ -275,7 +273,7 @@ export default function ReserveAppointments() {
               }}
             />
             <p className='italic'>
-              {`${capitalizeFirstLetter(format(slot.appointment?.day as string, 'full', selectedLocale))} - ${slot.appointment?.hour} ${t('words.hoursAbbreviation')}`}
+              {`${UtilsString.upperCase(format(slot.appointment?.day as string, 'full', selectedLocale))} - ${slot.appointment?.hour} ${t('words.hoursAbbreviation')}`}
             </p>
           </div>
         ),
@@ -456,7 +454,7 @@ export default function ReserveAppointments() {
                     </CardTitle>
                     {!errorMessage && (
                       <section className='py-2 text-center text-base font-semibold text-primary'>
-                        {capitalizeFirstLetter(selectedLegibleDate)}
+                        {UtilsString.upperCase(selectedLegibleDate)}
                       </section>
                     )}
                     {showTimeSlots && (
