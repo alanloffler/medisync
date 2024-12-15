@@ -24,7 +24,7 @@ import type { IArea } from '@core/interfaces/area.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { ISpecialization } from '@core/interfaces/specialization.interface';
 import { AreaService } from '@core/services/area.service';
-import { useCapitalize } from '@core/hooks/useCapitalize';
+import { UtilsString } from '@core/services/utils/string.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // Interface
 interface ISelectSpecialties {
@@ -38,7 +38,6 @@ interface ISelectSpecialties {
 export function SelectSpecialties({ callback, clear, dropdownPlaceholder, setDropdownPlaceholder, specSelected }: ISelectSpecialties) {
   const [specializationsScope, specializationsAnimation] = useAnimate();
   const addNotification = useNotificationsStore((state) => state.addNotification);
-  const capitalize = useCapitalize();
   const { t } = useTranslation();
 
   const {
@@ -55,10 +54,10 @@ export function SelectSpecialties({ callback, clear, dropdownPlaceholder, setDro
 
   useEffect(() => {
     if (isSuccess) {
-      if (specSelected === undefined) setDropdownPlaceholder(capitalize(t('label.specialization')));
-      if (specSelected !== undefined) setDropdownPlaceholder(capitalize(specSelected));
+      if (specSelected === undefined) setDropdownPlaceholder(UtilsString.upperCase(t('label.specialization')));
+      if (specSelected !== undefined) setDropdownPlaceholder(UtilsString.upperCase(specSelected));
     }
-  }, [isSuccess, capitalize, t, specSelected, setDropdownPlaceholder]);
+  }, [isSuccess, t, specSelected, setDropdownPlaceholder]);
 
   useEffect(() => {
     if (isError) {
@@ -82,7 +81,7 @@ export function SelectSpecialties({ callback, clear, dropdownPlaceholder, setDro
             {isLoading && <LoadingText suffix='...' text={t('loading.default')} />}
             {isError && <span className='text-rose-400'>{dropdownPlaceholder}</span>}
             {isSuccess && !specSelected && <span>{dropdownPlaceholder}</span>}
-            {isSuccess && specSelected && <span>{capitalize(specSelected)}</span>}
+            {isSuccess && specSelected && <span>{UtilsString.upperCase(specSelected)}</span>}
             <ChevronDown size={16} strokeWidth={2} />
           </DropdownMenuTrigger>
           {specSelected !== undefined && (
@@ -109,13 +108,13 @@ export function SelectSpecialties({ callback, clear, dropdownPlaceholder, setDro
             areas?.data.map((area) => (
               <DropdownMenuSub key={area._id}>
                 <DropdownMenuSubTrigger>
-                  <span>{capitalize(area.name)}</span>
+                  <span>{UtilsString.upperCase(area.name)}</span>
                 </DropdownMenuSubTrigger>
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent>
                     {area.specializations.map((spec) => (
                       <DropdownMenuItem key={spec._id} onClick={() => callback(spec)}>
-                        <span>{capitalize(spec.name)}</span>
+                        <span>{UtilsString.upperCase(spec.name)}</span>
                       </DropdownMenuItem>
                     ))}
                   </DropdownMenuSubContent>

@@ -4,10 +4,9 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { ICalendarFooter } from '@appointments/interfaces/calendar.interface';
-import { useCapitalize } from '@core/hooks/useCapitalize';
+import { UtilsString } from '@core/services/utils/string.service';
 // React component
 export function CalendarFooter({ calendarMonths, calendarYears, selectedMonth, selectedYear, selectMonth, selectYear }: ICalendarFooter) {
-  const capitalize = useCapitalize();
   const { t } = useTranslation();
 
   return (
@@ -34,7 +33,7 @@ export function CalendarFooter({ calendarMonths, calendarYears, selectedMonth, s
           <SelectGroup>
             {calendarMonths.map((month, index) => (
               <SelectItem key={month} value={index.toString()}>
-                {capitalize(month)}
+                {UtilsString.upperCase(month)}
               </SelectItem>
             ))}
           </SelectGroup>
