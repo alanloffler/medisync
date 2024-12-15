@@ -144,11 +144,7 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
       accessorKey: 'status',
       size: 60,
       header: () => <div className='text-center'>{t(APPO_CONFIG.table.header[5])}</div>,
-      cell: ({ row }) => (
-        <div className='flex justify-center'>
-          <StatusSelect appointment={row.original} mode='update' />
-        </div>
-      ),
+      cell: ({ row }) => <StatusSelect appointment={row.original} mode='update' className='mx-auto h-5 w-5' />,
     },
     {
       accessorKey: 'actions',
