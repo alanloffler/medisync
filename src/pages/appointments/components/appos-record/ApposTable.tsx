@@ -12,11 +12,10 @@ import { format } from '@formkit/tempo';
 import { type Cell, type ColumnDef, flexRender, getCoreRowModel, type Row, useReactTable } from '@tanstack/react-table';
 import { useNavigate } from 'react-router-dom';
 // Imports
-import i18n from '@core/i18n/i18n';
 import type { IAppointmentView } from '@appointments/interfaces/appointment.interface';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { USER_VIEW_CONFIG as UV_CONFIG } from '@config/users/user-view.config';
-import { useCapitalize } from '@core/hooks/useCapitalize';
+import { UtilsString } from '@core/services/utils/string.service';
 import { useHelpStore } from '@settings/stores/help.store';
 // React component
 export function ApposTable({
@@ -26,10 +25,9 @@ export function ApposTable({
   appointments: IAppointmentView[];
   setRefresh: React.Dispatch<React.SetStateAction<string>>;
 }) {
-  const capitalize = useCapitalize();
   const navigate = useNavigate();
   const { help } = useHelpStore();
-  const { t } = useTranslation();
+  const { i18n, t } = useTranslation();
 
   const columns: ColumnDef<IAppointmentView>[] = [
     {
@@ -42,8 +40,9 @@ export function ApposTable({
       accessorKey: 'lastName',
       cell: ({ row }) => (
         <div>
-          {capitalize(
+          {UtilsString.upperCase(
             `${row.original.professional?.title.abbreviation} ${row.original.professional?.firstName} ${row.original.professional?.lastName}`,
+            'each',
           )}
         </div>
       ),
@@ -79,7 +78,10 @@ export function ApposTable({
                 <section className='flex flex-row gap-1'>
                   <Trans
                     i18nKey={'dialog.deleteAppointment.contentText'}
-                    values={{ firstName: capitalize(row.original.user.firstName), lastName: capitalize(row.original.user.lastName) }}
+                    values={{
+                      firstName: UtilsString.upperCase(row.original.user.firstName, 'each'),
+                      lastName: UtilsString.upperCase(row.original.user.lastName, 'each'),
+                    }}
                     components={{
                       span: <span className='font-semibold' />,
                     }}
@@ -94,7 +96,12 @@ export function ApposTable({
                     <Clock size={16} strokeWidth={2} />
                     <span>{row.original.hour}</span>
                   </div>
-                  <span className='font-medium'>{`${capitalize(row.original.professional.title.abbreviation)} ${capitalize(row.original.professional.firstName)} ${capitalize(row.original.professional.lastName)}`}</span>
+                  <span className='font-medium'>
+                    {UtilsString.upperCase(
+                      `${row.original.professional.title.abbreviation} ${row.original.professional.firstName} ${row.original.professional.lastName}`,
+                      'each',
+                    )}
+                  </span>
                 </section>
               </section>
             }
