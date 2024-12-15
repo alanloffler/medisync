@@ -15,8 +15,8 @@ import type { IInfoCard } from '@core/components/common/interfaces/infocard.inte
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
+import { UtilsString } from '@core/services/utils/string.service';
 import { cn } from '@lib/utils';
-import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // Interface
 interface IProfessionalsCombobox {
@@ -35,7 +35,6 @@ export function ProfessionalsCombobox({ onSelectProfessional, options, className
   const [openCombobox, setOpenCombobox] = useState<boolean>(false);
   const [value, setValue] = useState<string>('');
   const addNotification = useNotificationsStore((state) => state.addNotification);
-  const capitalize = useCapitalize();
   const { loadingText, notFoundText, placeholder, searchText } = options;
 
   const {
@@ -62,7 +61,7 @@ export function ProfessionalsCombobox({ onSelectProfessional, options, className
           aria-expanded={openCombobox}
           className={cn('h-10 w-full justify-between bg-white !text-sm font-normal text-foreground shadow-sm hover:bg-white', className)}
         >
-          {isLoading ? <LoadingDB text={loadingText} /> : value ? capitalize(value) : placeholder}
+          {isLoading ? <LoadingDB text={loadingText} /> : value ? UtilsString.upperCase(value) : placeholder}
           <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
         </Button>
       </PopoverTrigger>
@@ -100,7 +99,7 @@ export function ProfessionalsCombobox({ onSelectProfessional, options, className
                           size={16}
                           strokeWidth={2}
                         />
-                        {`${capitalize(professional.title.abbreviation)} ${capitalize(professional.firstName)} ${capitalize(professional.lastName)}`}
+                        {UtilsString.upperCase(`${professional.title.abbreviation} ${professional.firstName} ${professional.lastName}`, 'each')}
                       </CommandItem>
                     ))}
                 </>
