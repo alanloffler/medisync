@@ -28,12 +28,11 @@ import { EmailApiService } from '@email/services/email.service';
 import { UserApiService } from '@users/services/user-api.service';
 import { emailSchema } from '@email/schemas/email.schema';
 import { motion } from '@core/services/motion.service';
-import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useNotificationsStore } from '@core/stores/notifications.store';
+import { UtilsString } from '@core/services/utils/string.service';
 // React component
 export default function SendEmail() {
   const addNotification = useNotificationsStore((state) => state.addNotification);
-  const capitalize = useCapitalize();
   const navigate = useNavigate();
   const sendScope = useRef(null);
   const { id } = useParams();
@@ -61,7 +60,7 @@ export default function SendEmail() {
   });
 
   useEffect(() => {
-    if (isSuccess) emailForm.setValue('to', [user?.data.email] || []);
+    if (isSuccess) user.data.email && emailForm.setValue('to', [user?.data.email]);
   }, [emailForm, isSuccess, user?.data.email]);
 
   const {
@@ -103,7 +102,7 @@ export default function SendEmail() {
           <CardTitle className='flex items-center justify-between gap-2 rounded-b-none bg-card-header text-slate-700'>
             <header className='flex items-center gap-3.5 p-2'>
               <Mail size={20} strokeWidth={2} />
-              {t('cardTitle.email', { username: capitalize(`${user?.data.firstName} ${user?.data.lastName}`) })}
+              {t('cardTitle.email', { username: UtilsString.upperCase(`${user?.data.firstName} ${user?.data.lastName}`, 'each') })}
             </header>
           </CardTitle>
           <CardContent className='pt-6'>
