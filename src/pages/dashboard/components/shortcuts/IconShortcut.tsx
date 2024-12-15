@@ -1,7 +1,7 @@
 // External imports
 import { motion } from 'motion/react';
 // Imports
-import { useCapitalize } from '@core/hooks/useCapitalize';
+import { UtilsString } from '@core/services/utils/string.service';
 import { cn } from '@lib/utils';
 // Interface
 interface IIconShortcut {
@@ -15,8 +15,6 @@ interface IIconShortcut {
 }
 // React component
 export function IconShortcut({ setAreaSelected, className, icon, iconSize, itemHeight, itemWidth, label }: IIconShortcut) {
-  const capitalize = useCapitalize();
-
   const animation = {
     item: {
       initial: { scale: 1 },
@@ -68,7 +66,7 @@ export function IconShortcut({ setAreaSelected, className, icon, iconSize, itemH
         variants={animation.item}
       />
       <motion.span variants={animation.label} className='text-xs font-bold text-primary'>
-        {capitalize(label)}
+        {UtilsString.upperCase(label)}
       </motion.span>
     </motion.button>
   );
