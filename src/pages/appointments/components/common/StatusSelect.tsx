@@ -18,7 +18,9 @@ import { useNotificationsStore } from '@core/stores/notifications.store';
 // Interfaces
 interface IStatusSelect {
   appointment: IAppointment;
+  className?: string;
   mode: 'update' | 'view';
+  showLabel?: boolean;
 }
 
 interface IStatusOption {
@@ -62,7 +64,7 @@ const statusOptions: IStatusOption[] = [
   },
 ];
 // React component
-export function StatusSelect({ appointment, mode }: IStatusSelect) {
+export function StatusSelect({ appointment, className, mode, showLabel = false }: IStatusSelect) {
   const [itemSelected, setItemSelected] = useState<string>(appointment.status);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const { day, hour, _id, status } = appointment;
@@ -98,7 +100,7 @@ export function StatusSelect({ appointment, mode }: IStatusSelect) {
   return (
     <Select value={itemSelected} onValueChange={handleStatusChange} disabled={itemSelected === EStatus.WAITING || mode === 'view'}>
       <TooltipWrapper tooltip={t(`status.${itemSelected}`)} help={help}>
-        <SelectTrigger className='h-5 w-5 justify-center bg-transparent p-0 [&_svg]:hidden'>
+        <SelectTrigger className={cn('flex flex-row items-center space-x-1 justify-center bg-transparent p-0 [&_svg]:hidden disabled:pointer-events-none', className)}>
           <div
             className={cn(
               'flex h-4 w-4 items-center justify-center rounded-full bg-rose-200',
@@ -109,6 +111,7 @@ export function StatusSelect({ appointment, mode }: IStatusSelect) {
               className={cn('h-2.5 w-2.5 rounded-full bg-rose-400', statusOptions.find((item) => item.value === itemSelected)?.style.light)}
             ></span>
           </div>
+          {showLabel && <section>{t(`status.${itemSelected}`)}</section>}
         </SelectTrigger>
       </TooltipWrapper>
       <SelectContent align='center' onCloseAutoFocus={(e) => e.preventDefault()}>
