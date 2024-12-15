@@ -377,7 +377,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
                       values={{
                         firstName: UtilsString.upperCase(userSelected.firstName),
                         lastName: UtilsString.upperCase(userSelected.lastName),
-                        identityCard: delimiter(userSelected.dni, '.', 3),
+                        identityCard: i18n.format(userSelected.dni, 'number', i18n.resolvedLanguage),
                       }}
                       components={{
                         span: <span className='font-semibold' />,
