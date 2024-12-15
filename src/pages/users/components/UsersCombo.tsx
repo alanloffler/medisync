@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 // Imports
 import type { IUser } from '@users/interfaces/user.interface';
 import { UserApiService } from '@users/services/user-api.service';
-import { useCapitalize } from '@core/hooks/useCapitalize';
+import { UtilsString } from '@core/services/utils/string.service';
 import { useDebounce } from '@core/hooks/useDebounce';
 // React component
 export function UsersCombo({
@@ -27,7 +27,6 @@ export function UsersCombo({
   const [showNoResults, setShowNoResults] = useState<boolean>(false);
   const [users, setUsers] = useState<IUser[]>([] as IUser[]);
   const DEBOUNCE_TIME: number = 500;
-  const capitalize = useCapitalize();
   const debouncedSearch = useDebounce<string>(search, DEBOUNCE_TIME);
   const { i18n, t } = useTranslation();
 
@@ -119,7 +118,7 @@ export function UsersCombo({
                     onClick={() => handleSelectedUser(user)}
                     className='w-full space-x-2 rounded-sm px-1.5 py-0.5 text-left hover:bg-slate-100 hover:transition-all'
                   >
-                    <span>{`${capitalize(user.firstName)} ${capitalize(user.lastName)}`}</span>
+                    <span>{UtilsString.upperCase(`${user.firstName} ${user.lastName}`)}</span>
                     <span className='italic text-slate-500'>{`${t('label.identityCard')} ${i18n.format(user.dni, 'number', i18n.resolvedLanguage)}`}</span>
                   </button>
                 </li>
