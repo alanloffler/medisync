@@ -20,8 +20,8 @@ import type { IUser } from '@users/interfaces/user.interface';
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { USER_VIEW_CONFIG as UV_CONFIG } from '@config/users/user-view.config';
 import { UserApiService } from '@users/services/user-api.service';
+import { UtilsString } from '@core/services/utils/string.service';
 import { motion } from '@core/services/motion.service';
-import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useDelimiter } from '@core/hooks/useDelimiter';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 import { useHelpStore } from '@settings/stores/help.store';
@@ -33,7 +33,6 @@ export default function ViewUser() {
   const [user, setUser] = useState<IUser>({} as IUser);
   const [gotoScope, gotoAnimation] = useAnimate();
   const addNotification = useNotificationsStore((state) => state.addNotification);
-  const capitalize = useCapitalize();
   const delimiter = useDelimiter();
   const navigate = useNavigate();
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
@@ -90,9 +89,7 @@ export default function ViewUser() {
           showCard && (
             <Card className='col-span-1 mx-auto h-fit w-full md:col-span-2 lg:col-span-2 xl:col-span-2'>
               <header className='relative flex items-center justify-center rounded-t-lg bg-slate-200 p-3 text-slate-700'>
-                <h1 className='text-center text-xl font-bold'>
-                  {capitalize(user.firstName)} {capitalize(user.lastName)}
-                </h1>
+                <h1 className='text-center text-xl font-bold'>{UtilsString.upperCase(`${user.firstName} ${user.lastName}`)}</h1>
               </header>
               <CardContent className='mt-3 space-y-3 overflow-auto'>
                 <section className='flex items-center space-x-3'>
