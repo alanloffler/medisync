@@ -24,7 +24,7 @@ import { APP_CONFIG } from '@config/app.config';
 import { USER_SCHEMA } from '@config/schemas/user.schema';
 import { USER_UPDATE_CONFIG as UU_CONFIG } from '@config/users/user-update.config';
 import { UserApiService } from '@users/services/user-api.service';
-import { useCapitalize } from '@core/hooks/useCapitalize';
+import { UtilsString } from '@core/services/utils/string.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 import { userSchema } from '@users/schemas/user.schema';
 // React component
@@ -35,7 +35,6 @@ export default function UpdateUser() {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [user, setUser] = useState<IUser>({} as IUser);
   const addNotification = useNotificationsStore((state) => state.addNotification);
-  const capitalize = useCapitalize();
   const navigate = useNavigate();
   const { id } = useParams();
   const { t } = useTranslation();
@@ -54,8 +53,8 @@ export default function UpdateUser() {
             setUser(response.data);
             updateForm.setValue('dni', response.data.dni);
             updateForm.setValue('email', response.data.email);
-            updateForm.setValue('firstName', capitalize(response.data.firstName));
-            updateForm.setValue('lastName', capitalize(response.data.lastName));
+            updateForm.setValue('firstName', UtilsString.upperCase(response.data.firstName, 'each'));
+            updateForm.setValue('lastName', UtilsString.upperCase(response.data.lastName, 'each'));
             updateForm.setValue('phone', response.data.phone);
           }
           if (response.statusCode > 399) {
@@ -102,8 +101,8 @@ export default function UpdateUser() {
     updateForm.reset();
     updateForm.setValue('dni', user.dni);
     updateForm.setValue('email', user.email);
-    updateForm.setValue('firstName', capitalize(user.firstName) || '');
-    updateForm.setValue('lastName', capitalize(user.lastName) || '');
+    updateForm.setValue('firstName', UtilsString.upperCase(user.firstName, 'each'));
+    updateForm.setValue('lastName', UtilsString.upperCase(user.lastName, 'each'));
     updateForm.setValue('phone', user.phone);
     navigate('/users');
   }
