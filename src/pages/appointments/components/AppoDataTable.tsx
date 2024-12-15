@@ -60,9 +60,10 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
   const [tableManager, setTableManager] = useState<ITableManager>({ sorting, pagination });
   const [totalItems, setTotalItems] = useState<number>(0);
   const addNotification = useNotificationsStore((state) => state.addNotification);
-  const firstUpdate = useRef(true);
+  const isFirstFetch = useRef<boolean>(true);
+  const isFirstTableManager = useRef<boolean>(true);
   const navigate = useNavigate();
-  const prevDeps = useRef<{ search: any; tableManager: ITableManager }>({ search, tableManager });
+  const prevDeps = useRef<{ search: IAppointmentSearch[]; tableManager: ITableManager }>({ search, tableManager });
   const truncate = useTruncateText();
   const { i18n, t } = useTranslation();
 
@@ -213,14 +214,15 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
   });
 
   useEffect(() => {
-    if (firstUpdate.current) {
-      firstUpdate.current = false;
+    if (isFirstTableManager.current) {
+      isFirstTableManager.current = false;
       return;
+    } else {
+      setTableManager({
+        sorting: sorting,
+        pagination: pagination,
+      });
     }
-    setTableManager({
-      sorting: sorting,
-      pagination: pagination,
-    });
   }, [sorting, pagination]);
 
   useEffect(() => {
@@ -230,44 +232,49 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
 
   useEffect(() => {
     const fetchData = (search: IAppointmentSearch[], sorting: SortingState, itemsPerPage: number) => {
-      setIsLoading(true);
-
-      let skipItems: number;
-
-      if (prevDeps.current.search !== search) {
-        setPagination(defaultPagination);
-        prevDeps.current.search = search;
-        skipItems = 0;
+      if (isFirstFetch.current) {
+        isFirstFetch.current = false;
+        return;
       } else {
-        skipItems = tableManager.pagination.pageIndex * tableManager.pagination.pageSize;
-      }
-      // TODO: implement useQuery and manage errors and loading states
-      // This method unifies the simultaneous types of search
-      AppointmentApiService.findSearch(search, sorting, skipItems, itemsPerPage)
-        .then((response: IResponse) => {
-          if (response.statusCode === 200) {
-            if (response.data.length === 0) {
-              addNotification({ type: 'error', message: response.message });
-              setInfoCardContent({ type: 'warning', text: response.message });
-            }
+        setIsLoading(true);
 
-            setData(response.data.data);
-            setColumns(tableColumns);
-            setTotalItems(response.data.count);
-            setErrorMessage('');
-          }
-          if (response.statusCode > 399) {
-            setErrorMessage(response.message);
-            addNotification({ type: 'warning', message: response.message });
-            setInfoCardContent({ type: 'error', text: response.message });
-          }
-          if (response instanceof Error) {
-            addNotification({ type: 'error', message: t('error.internalServer') });
-            setInfoCardContent({ type: 'error', text: t('error.internalServer') });
-          }
-        })
-        .catch((error) => setErrorMessage(error.message))
-        .finally(() => setIsLoading(false));
+        let skipItems: number;
+
+        if (prevDeps.current.search !== search) {
+          setPagination(defaultPagination);
+          prevDeps.current.search = search;
+          skipItems = 0;
+        } else {
+          skipItems = tableManager.pagination.pageIndex * tableManager.pagination.pageSize;
+        }
+        // TODO: implement useQuery and manage errors and loading states
+        // This method unifies the simultaneous types of search
+        AppointmentApiService.findSearch(search, sorting, skipItems, itemsPerPage)
+          .then((response: IResponse) => {
+            if (response.statusCode === 200) {
+              if (response.data.length === 0) {
+                addNotification({ type: 'error', message: response.message });
+                setInfoCardContent({ type: 'warning', text: response.message });
+              }
+
+              setData(response.data.data);
+              setColumns(tableColumns);
+              setTotalItems(response.data.count);
+              setErrorMessage('');
+            }
+            if (response.statusCode > 399) {
+              setErrorMessage(response.message);
+              addNotification({ type: 'warning', message: response.message });
+              setInfoCardContent({ type: 'error', text: response.message });
+            }
+            if (response instanceof Error) {
+              addNotification({ type: 'error', message: t('error.internalServer') });
+              setInfoCardContent({ type: 'error', text: t('error.internalServer') });
+            }
+          })
+          .catch((error) => setErrorMessage(error.message))
+          .finally(() => setIsLoading(false));
+      }
     };
     fetchData(search, tableManager.sorting, tableManager.pagination.pageSize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -345,7 +352,7 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
           />
         </>
       ) : (
-        <InfoCard text={infoCardContent.text} type={infoCardContent.type} className='mt-3' />
+        !isFirstFetch && <InfoCard text={infoCardContent.text} type={infoCardContent.type} className='mt-3' />
       )}
       {/* Section: Dialog */}
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
