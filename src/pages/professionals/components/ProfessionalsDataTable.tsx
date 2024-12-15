@@ -39,12 +39,10 @@ import { EProfessionalSearch, type IProfessionalSearch } from '@professionals/in
 import { PROFESSIONALS_CONFIG as PROF_CONFIG } from '@config/professionals/professionals.config';
 import { PROFESSIONAL_VIEW_CONFIG as PV_CONFIG } from '@config/professionals/professional-view.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
-import { useCapitalize } from '@core/hooks/useCapitalize';
-import { useDelimiter } from '@core/hooks/useDelimiter';
+import { UtilsString } from '@core/services/utils/string.service';
 import { useHelpStore } from '@settings/stores/help.store';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 import { useTruncateText } from '@core/hooks/useTruncateText';
-// import { useMediaQuery } from '@uidotdev/usehooks';
 // Default values for pagination and sorting
 const defaultSorting: SortingState = [{ id: PROF_CONFIG.table.defaultSortingId, desc: PROF_CONFIG.table.defaultSortingType }];
 const defaultPagination: PaginationState = { pageIndex: 0, pageSize: PROF_CONFIG.table.defaultPageSize };
@@ -62,14 +60,12 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
   const [tableManager, setTableManager] = useState<ITableManager>({ sorting, pagination });
   const [totalItems, setTotalItems] = useState<number>(0);
   const addNotification = useNotificationsStore((state) => state.addNotification);
-  const capitalize = useCapitalize();
-  const delimiter = useDelimiter();
   const firstUpdate = useRef(true);
   const navigate = useNavigate();
   const prevDeps = useRef<{ search: IProfessionalSearch; tableManager: ITableManager }>({ search, tableManager });
   const truncate = useTruncateText();
   const { help } = useHelpStore();
-  const { t } = useTranslation();
+  const { i18n, t } = useTranslation();
   // #region Table columns
   const tableColumns: ColumnDef<IProfessional>[] = [
     {
@@ -100,7 +96,9 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
         </div>
       ),
       cell: ({ row }) => (
-        <div className='text-left'>{`${capitalize(row.original.title.abbreviation)} ${capitalize(row.original.firstName)} ${capitalize(row.original.lastName)}`}</div>
+        <div className='text-left'>
+          {UtilsString.upperCase(`${row.original.title.abbreviation} ${row.original.firstName} ${row.original.lastName}`, 'each')}
+        </div>
       ),
     },
     {
@@ -123,7 +121,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
           )}
         </div>
       ),
-      cell: ({ row }) => <div className='text-left'>{capitalize(row.original.area.name)}</div>,
+      cell: ({ row }) => <div className='text-left'>{UtilsString.upperCase(row.original.area.name)}</div>,
     },
     {
       accessorKey: 'specialization',
@@ -145,7 +143,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
           )}
         </div>
       ),
-      cell: ({ row }) => <div className='text-left text-sm'>{capitalize(row.original.specialization.name)}</div>,
+      cell: ({ row }) => <div className='text-left text-sm'>{UtilsString.upperCase(row.original.specialization.name)}</div>,
     },
     {
       accessorKey: 'available',
@@ -414,10 +412,10 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
               <Trans
                 i18nKey='dialog.deleteProfessional.content'
                 values={{
-                  titleAbbreviation: capitalize(professionalSelected.title?.abbreviation),
-                  firstName: capitalize(professionalSelected.firstName),
-                  lastName: capitalize(professionalSelected.lastName),
-                  identityCard: delimiter(professionalSelected.dni, '.', 3),
+                  titleAbbreviation: UtilsString.upperCase(professionalSelected.title?.abbreviation),
+                  firstName: UtilsString.upperCase(professionalSelected.firstName),
+                  lastName: UtilsString.upperCase(professionalSelected.lastName),
+                  identityCard: i18n.format(professionalSelected.dni, 'number', i18n.resolvedLanguage),
                 }}
                 components={{
                   span: <span className='font-semibold' />,
