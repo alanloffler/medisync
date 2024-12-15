@@ -20,8 +20,8 @@ import { APP_CONFIG } from '@config/app.config';
 import { EProfessionalSearch, type IProfessionalSearch } from '@professionals/interfaces/professional-search.interface';
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { PROFESSIONALS_CONFIG as PROF_CONFIG } from '@config/professionals/professionals.config';
+import { UtilsString } from '@core/services/utils/string.service';
 import { motion } from '@core/services/motion.service';
-import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useDebounce } from '@core/hooks/useDebounce';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 import { useHelpStore } from '@settings/stores/help.store';
@@ -36,7 +36,6 @@ export default function Professionals() {
   const [addProfScope, addProfAnimation] = useAnimate();
   const [addProfIconScope, addProfIconAnimation] = useAnimate();
   const [reloadScope, reloadAnimation] = useAnimate();
-  const capitalize = useCapitalize();
   const debouncedSearch = useDebounce<IProfessionalSearch>(search, debounceTime);
   const navigate = useNavigate();
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
@@ -52,7 +51,7 @@ export default function Professionals() {
   function handleSearchBySpecialization(specialization: ISpecialization): void {
     setDebounceTime(0);
     setSpecSelected(specialization.name);
-    setDropdownPlaceholder(capitalize(specialization.name));
+    setDropdownPlaceholder(UtilsString.upperCase(specialization.name, 'each'));
     setSearch({ value: specialization._id, type: EProfessionalSearch.DROPDOWN });
   }
 
@@ -68,7 +67,7 @@ export default function Professionals() {
 
   useEffect(() => {
     setItemSelected(HEADER_CONFIG.headerMenu[2].id);
-  }, [setItemSelected, capitalize]);
+  }, [setItemSelected]);
 
   function addProfessionalAnimationOver(): void {
     const { keyframes, options } = motion.scale(1.2).type('bounce').animate();
@@ -189,8 +188,6 @@ export default function Professionals() {
               </section>
             </CardTitle>
             <CardContent>
-              {/* TODO: must send to component the state of search, when is from a filter or not, then manage the sorting state on datatable
-              If is by filter then set skip to default (ex: 10), if not the datatable must manage the skip */}
               <ProfessionalsDataTable key={reload} reload={reload} search={debouncedSearch} setErrorMessage={setErrorMessage} setReload={setReload} />
             </CardContent>
           </Card>
