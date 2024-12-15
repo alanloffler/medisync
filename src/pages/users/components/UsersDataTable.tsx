@@ -23,6 +23,7 @@ import { DBCountUsers } from '@users/components/common/DBCountUsers';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { Pagination } from '@core/components/common/Pagination';
+import { TableButton } from '@core/components/common/TableButton';
 // External imports
 import { Trans, useTranslation } from 'react-i18next';
 import { useEffect, useRef, useState } from 'react';
@@ -35,11 +36,10 @@ import type { IUser } from '@users/interfaces/user.interface';
 import { EUserSearch, type IUserSearch } from '@users/interfaces/user-search.interface';
 import { USER_CONFIG } from '@config/users/users.config';
 import { UserApiService } from '@users/services/user-api.service';
-import { useCapitalize } from '@core/hooks/useCapitalize';
+import { UtilsString } from '@core/services/utils/string.service';
 import { useDelimiter } from '@core/hooks/useDelimiter';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 import { useTruncateText } from '@core/hooks/useTruncateText';
-import { TableButton } from '@core/components/common/TableButton';
 // Default values for pagination and sorting
 const defaultSorting: SortingState = [{ id: USER_CONFIG.table.defaultSortingId, desc: USER_CONFIG.table.defaultSortingType }];
 const defaultPagination: PaginationState = { pageIndex: 0, pageSize: USER_CONFIG.table.defaultPageSize };
@@ -59,7 +59,6 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
   const [totalItems, setTotalItems] = useState<number>(0);
   const [userSelected, setUserSelected] = useState<IUser>({} as IUser);
   const addNotification = useNotificationsStore((state) => state.addNotification);
-  const capitalize = useCapitalize();
   const delimiter = useDelimiter();
   const firstUpdate = useRef(true);
   const navigate = useNavigate();
@@ -89,7 +88,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
           </button>
         </div>
       ),
-      cell: ({ row }) => <div className='text-left'>{`${capitalize(row.original.firstName)} ${capitalize(row.original.lastName)}`}</div>,
+      cell: ({ row }) => <div className='text-left'>{UtilsString.upperCase(`${row.original.firstName} ${row.original.lastName}`)}</div>,
     },
     {
       accessorKey: 'dni',
@@ -376,8 +375,8 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
                     <Trans
                       i18nKey='dialog.deleteUser.content'
                       values={{
-                        firstName: capitalize(userSelected.firstName),
-                        lastName: capitalize(userSelected.lastName),
+                        firstName: UtilsString.upperCase(userSelected.firstName),
+                        lastName: UtilsString.upperCase(userSelected.lastName),
                         identityCard: delimiter(userSelected.dni, '.', 3),
                       }}
                       components={{
