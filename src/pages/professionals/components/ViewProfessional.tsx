@@ -231,7 +231,7 @@ export default function ViewProfessional() {
                             titleAbbreviation: capitalize(professional.title.abbreviation),
                             firstName: capitalize(professional.firstName),
                             lastName: capitalize(professional.lastName),
-                            identityCard: delimiter(professional.dni, '.', 3),
+                            identityCard: i18n.format(professional.dni, 'number', i18n.resolvedLanguage),
                           }}
                           components={{
                             span: <span className='font-semibold' />,
