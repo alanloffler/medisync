@@ -89,7 +89,7 @@ export default function ViewUser() {
           showCard && (
             <Card className='col-span-1 mx-auto h-fit w-full md:col-span-2 lg:col-span-2 xl:col-span-2'>
               <header className='relative flex items-center justify-center rounded-t-lg bg-slate-200 p-3 text-slate-700'>
-                <h1 className='text-center text-xl font-bold'>{UtilsString.upperCase(`${user.firstName} ${user.lastName}`)}</h1>
+                <h1 className='text-center text-xl font-bold'>{UtilsString.upperCase(`${user.firstName} ${user.lastName}`, 'each')}</h1>
               </header>
               <CardContent className='mt-3 space-y-3 overflow-auto'>
                 <section className='flex items-center space-x-3'>
