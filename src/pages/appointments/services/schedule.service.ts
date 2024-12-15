@@ -101,13 +101,14 @@ export class AppoSchedule {
 
     return totalAvailableSlots;
   }
-
+  // FIXME: this has a bug on formatting date
   public static isDatetimeInFuture(date: Date | undefined, time: string): boolean {
     if (!date) return false;
 
     const today: Date = new Date();
     const selectedDay: Date = new Date(date);
     selectedDay.setHours(parseInt(time.split(':')[0]), parseInt(time.split(':')[1]), 0, 0);
+    console.log(date, time, selectedDay);
 
     return isAfter(selectedDay, today);
   }
