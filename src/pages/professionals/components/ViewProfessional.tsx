@@ -26,9 +26,9 @@ import type { IResponse } from '@core/interfaces/response.interface';
 import { CalendarService } from '@appointments/services/calendar.service';
 import { PROFESSIONAL_VIEW_CONFIG as PV_CONFIG } from '@config/professionals/professional-view.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
+import { UtilsString } from '@core/services/utils/string.service';
 import { motion } from '@core/services/motion.service';
 import { useCapitalize } from '@core/hooks/useCapitalize';
-import { useCapitalizeFirstLetter } from '@core/hooks/useCapitalizeFirstLetter';
 import { useDelimiter } from '@core/hooks/useDelimiter';
 import { useHelpStore } from '@settings/stores/help.store';
 import { useNotificationsStore } from '@core/stores/notifications.store';
@@ -43,7 +43,6 @@ export default function ViewProfessional() {
   const [gotoScope, gotoAnimation] = useAnimate();
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalize = useCapitalize();
-  const capitalizeFirstLetter = useCapitalizeFirstLetter();
   const delimiter = useDelimiter();
   const navigate = useNavigate();
   const { help } = useHelpStore();
@@ -124,7 +123,7 @@ export default function ViewProfessional() {
                   {professional.description && (
                     <section className='flex space-x-4 text-ellipsis rounded-md bg-slate-100 px-4 py-3 italic text-slate-600'>
                       <IconMedic name={professional.specialization.icon} size={20} />
-                      <span>{`${capitalizeFirstLetter(professional.description)}`}</span>
+                      <span>{UtilsString.upperCase(professional.description)}</span>
                     </section>
                   )}
                   <section className='space-y-3'>
