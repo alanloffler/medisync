@@ -30,7 +30,6 @@ import { format } from '@formkit/tempo';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // Imports
-import i18n from '@core/i18n/i18n';
 import type { IAppointment, ITimeSlot } from '@appointments/interfaces/appointment.interface';
 import type { IDialog } from '@core/interfaces/dialog.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
@@ -45,9 +44,9 @@ import { Trans, useTranslation } from 'react-i18next';
 import { UtilsString } from '@core/services/utils/string.service';
 import { cn } from '@lib/utils';
 import { useCapitalizeFirstLetter } from '@core/hooks/useCapitalizeFirstLetter';
-import { useDelimiter } from '@core/hooks/useDelimiter';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
+import { StatusSelect } from './common/StatusSelect';
 // Enum
 enum DialogAction {
   CANCEL = 'cancel',
@@ -83,10 +82,9 @@ export default function ReserveAppointments() {
   const [userSelected, setUserSelected] = useState<IUser>({} as IUser);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const capitalizeFirstLetter = useCapitalizeFirstLetter();
-  const delimiter = useDelimiter();
   const navigate = useNavigate();
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
-  const { t } = useTranslation();
+  const { i18n, t } = useTranslation();
 
   const selectedLocale = i18n.resolvedLanguage || i18n.language;
 
@@ -511,10 +509,12 @@ export default function ReserveAppointments() {
                                     </span>
                                     <div className='hidden items-center space-x-2 text-muted-foreground lg:flex'>
                                       <IdCard size={18} strokeWidth={1.5} />
-                                      <span>{delimiter(slot.appointment.user.dni, '.', 3)}</span>
+                                      <span>{i18n.format(slot.appointment.user.dni, 'number', i18n.resolvedLanguage)}</span>
                                     </div>
                                   </button>
-                                  <div className='w-fit'>State here</div>
+                                  <div className=''>
+                                    <StatusSelect appointment={slot.appointment} mode='update' showLabel className='text-xs text-muted-foreground' />
+                                  </div>
                                 </section>
                               ) : (
                                 <div className='relative flex h-px flex-1 flex-row items-center justify-end bg-slate-200'></div>
