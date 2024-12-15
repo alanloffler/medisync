@@ -13,8 +13,8 @@ import type { IArea } from '@core/interfaces/area.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 // import { APP_CONFIG } from '@config/app.config';
 import { AreaService } from '@core/services/area.service';
+import { UtilsString } from '@core/services/utils/string.service';
 // import { OpenAIService } from '@lib/openai.service';
-import { useCapitalize } from '@core/hooks/useCapitalize';
 // Interface
 interface IFormSelect {
   callback: (value: string) => void;
@@ -23,7 +23,6 @@ interface IFormSelect {
 // React component
 export function SelectSpecialtiesForm({ formControl, callback }: IFormSelect) {
   const [translation, setTranslation] = useState<IArea[]>([] as IArea[]);
-  const capitalize = useCapitalize();
   const { i18n, t } = useTranslation();
 
   const {
@@ -95,7 +94,7 @@ export function SelectSpecialtiesForm({ formControl, callback }: IFormSelect) {
                 translation.length > 0 &&
                 translation.map((el: IArea) => (
                   <SelectItem key={el._id} value={el._id} className='text-sm'>
-                    {capitalize(el.name)}
+                    {UtilsString.upperCase(el.name)}
                   </SelectItem>
                 ))}
             </SelectContent>
