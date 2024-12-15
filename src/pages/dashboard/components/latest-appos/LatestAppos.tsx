@@ -16,12 +16,9 @@ import { useTranslation } from 'react-i18next';
 import type { IAppointmentView } from '@appointments/interfaces/appointment.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import { DashboardApiService } from '@dashboard/services/dashboard-api.service';
-import { useCapitalize } from '@core/hooks/useCapitalize';
-import { useDelimiter } from '@core/hooks/useDelimiter';
+import { UtilsString } from '@core/services/utils/string.service';
 // React component
 export function LatestAppos() {
-  const capitalize = useCapitalize();
-  const delimiter = useDelimiter();
   const navigate = useNavigate();
   const { i18n, t } = useTranslation();
 
@@ -79,14 +76,19 @@ export function LatestAppos() {
                     <p className='text-[11px] font-light'>{format(appo.createdAt, 'short', i18n.resolvedLanguage).slice(0, -3)}</p>
                   </motion.div>
                   <motion.div variants={animation.user} className='flex flex-col text-left'>
-                    <p className='font-bold text-dark-default'>{`${capitalize(appo.user.firstName)} ${capitalize(appo.user.lastName)}`}</p>
-                    <p className='text-xs font-light text-muted-foreground'>{`${t('label.identityCard')} ${delimiter(appo.user.dni, '.', 3)}`}</p>
+                    <p className='font-bold text-dark-default'>{UtilsString.upperCase(`${appo.user.firstName} ${appo.user.lastName}`, 'each')}</p>
+                    <p className='text-xs font-light text-muted-foreground'>{`${t('label.identityCard')} ${i18n.format(appo.user.dni, 'number', i18n.resolvedLanguage)}`}</p>
                   </motion.div>
                 </div>
                 <div className='mr-2 flex w-1/2 flex-row items-center justify-end space-x-3 text-xs'>
                   <motion.div variants={animation.professional} className='hidden flex-col text-right md:flex lg:flex xl:flex'>
-                    <p className='font-bold text-dark-default'>{`${capitalize(appo.professional.title.abbreviation)} ${capitalize(appo.professional.firstName)} ${capitalize(appo.professional.lastName)}`}</p>
-                    <p className='text-xs font-light text-muted-foreground'>{capitalize(appo.professional.specialization.name)}</p>
+                    <p className='font-bold text-dark-default'>
+                      {UtilsString.upperCase(
+                        `${appo.professional.title.abbreviation} ${appo.professional.firstName} ${appo.professional.lastName}`,
+                        'each',
+                      )}
+                    </p>
+                    <p className='text-xs font-light text-muted-foreground'>{UtilsString.upperCase(appo.professional.specialization.name)}</p>
                   </motion.div>
                   <motion.div
                     variants={animation.item}
