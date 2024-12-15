@@ -9,17 +9,17 @@ import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
 import { useAnimate } from 'motion/react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 // Imports
 import type { IApposFilters } from '@appointments/interfaces/appos-filters.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
+import { UtilsString } from '@core/services/utils/string.service';
 import { motion } from '@core/services/motion.service';
 import { useApposFilters } from '@appointments/hooks/useApposFilters';
-import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useHelpStore } from '@settings/stores/help.store';
 import { useNotificationsStore } from '@core/stores/notifications.store';
-import { useTranslation } from 'react-i18next';
 // React component
 export function ApposFilters({ userId, disabled }: { userId: string; disabled: boolean }) {
   const [loadingProfessionals, setLoadingProfessionals] = useState<boolean>(false);
@@ -30,7 +30,6 @@ export function ApposFilters({ userId, disabled }: { userId: string; disabled: b
   const [years, setYears] = useState<string[]>([]);
   const [clearButtonScope, clearButtonAnimation] = useAnimate();
   const addNotification = useNotificationsStore((state) => state.addNotification);
-  const capitalize = useCapitalize();
   const { help } = useHelpStore();
   const { i18n, t } = useTranslation();
   const { professional, year, setFilters, clearFilters } = useApposFilters();
@@ -111,7 +110,7 @@ export function ApposFilters({ userId, disabled }: { userId: string; disabled: b
             <SelectGroup>
               {professionals.map((professional) => (
                 <SelectItem key={crypto.randomUUID()} value={professional._id}>
-                  {capitalize(professional.title.abbreviation)} {capitalize(professional.firstName)} {capitalize(professional.lastName)}
+                  {UtilsString.upperCase(`${professional.title.abbreviation} ${professional.firstName} ${professional.lastName}`, 'each')}
                 </SelectItem>
               ))}
             </SelectGroup>
