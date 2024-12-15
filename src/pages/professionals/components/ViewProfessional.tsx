@@ -28,7 +28,6 @@ import { PROFESSIONAL_VIEW_CONFIG as PV_CONFIG } from '@config/professionals/pro
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
 import { motion } from '@core/services/motion.service';
-import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useDelimiter } from '@core/hooks/useDelimiter';
 import { useHelpStore } from '@settings/stores/help.store';
 import { useNotificationsStore } from '@core/stores/notifications.store';
@@ -42,7 +41,6 @@ export default function ViewProfessional() {
   const [showCard, setShowCard] = useState<boolean>(false);
   const [gotoScope, gotoAnimation] = useAnimate();
   const addNotification = useNotificationsStore((state) => state.addNotification);
-  const capitalize = useCapitalize();
   const delimiter = useDelimiter();
   const navigate = useNavigate();
   const { help } = useHelpStore();
@@ -63,9 +61,9 @@ export default function ViewProfessional() {
               to: response.data.email,
               subject: t('email.sendToProfessional.subject'),
               body: t('email.sendToProfessional.body', {
-                titleAbbreviation: capitalize(response.data.title.abbreviation),
-                firstName: capitalize(response.data.firstName),
-                lastName: capitalize(response.data.lastName),
+                titleAbbreviation: UtilsString.upperCase(response.data.title.abbreviation),
+                firstName: UtilsString.upperCase(response.data.firstName, 'each'),
+                lastName: UtilsString.upperCase(response.data.lastName, 'each'),
               }),
             });
             setShowCard(true);
@@ -109,7 +107,9 @@ export default function ViewProfessional() {
         <Card className='w-full'>
           {showCard ? (
             <div className='relative flex items-center justify-center rounded-t-lg bg-slate-200 p-3 text-slate-700'>
-              <h1 className='text-center text-xl font-bold'>{`${capitalize(professional.title.abbreviation)} ${capitalize(professional.firstName)} ${capitalize(professional.lastName)}`}</h1>
+              <h1 className='text-center text-xl font-bold'>
+                {UtilsString.upperCase(`${professional.title.abbreviation} ${professional.firstName} ${professional.lastName}`, 'each')}
+              </h1>
             </div>
           ) : (
             <InfoCard type={infoCard.type} text={infoCard.text} className='py-6' />
@@ -178,11 +178,11 @@ export default function ViewProfessional() {
                       <div className='flex justify-end space-x-4 pt-3'>
                         <Badge variant='default'>
                           <Tag size={13} strokeWidth={2} className='stroke-slate-600' />
-                          <span>{capitalize(professional.area.name)}</span>
+                          <span>{UtilsString.upperCase(professional.area.name)}</span>
                         </Badge>
                         <Badge variant='default'>
                           <Tag size={13} strokeWidth={2} className='stroke-slate-600' />
-                          <span>{capitalize(professional.specialization.name)}</span>
+                          <span>{UtilsString.upperCase(professional.specialization.name)}</span>
                         </Badge>
                       </div>
                     )}
@@ -228,9 +228,9 @@ export default function ViewProfessional() {
                         <Trans
                           i18nKey={'dialog.deleteProfessional.content'}
                           values={{
-                            titleAbbreviation: capitalize(professional.title.abbreviation),
-                            firstName: capitalize(professional.firstName),
-                            lastName: capitalize(professional.lastName),
+                            titleAbbreviation: UtilsString.upperCase(professional.title.abbreviation),
+                            firstName: UtilsString.upperCase(professional.firstName, 'each'),
+                            lastName: UtilsString.upperCase(professional.lastName, 'each'),
                             identityCard: i18n.format(professional.dni, 'number', i18n.resolvedLanguage),
                           }}
                           components={{
