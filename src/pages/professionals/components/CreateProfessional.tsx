@@ -39,9 +39,9 @@ import { PROFESSIONAL_CREATE_CONFIG as PC_CONFIG } from '@config/professionals/p
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { ScheduleService } from '@settings/services/schedule-settings.service';
 import { TitleService } from '@core/services/title.service';
+import { UtilsString } from '@core/services/utils/string.service';
 import { generateWeekOfWorkingDays } from '@professionals/utils/week-working-days.util';
 import { professionalSchema } from '@professionals/schemas/professional.schema';
-import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export default function CreateProfessional() {
@@ -59,7 +59,6 @@ export default function CreateProfessional() {
   const [workingDaysKey, setWorkingDaysKey] = useState<string>('');
   const [dropdownScope, dropdownAnimation] = useAnimate();
   const addNotification = useNotificationsStore((state) => state.addNotification);
-  const capitalize = useCapitalize();
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -277,7 +276,7 @@ export default function CreateProfessional() {
                             <SelectContent>
                               {specializations.map((el) => (
                                 <SelectItem key={el._id} value={el._id} className='text-sm'>
-                                  {capitalize(el.name)}
+                                  {UtilsString.upperCase(el.name)}
                                 </SelectItem>
                               ))}
                             </SelectContent>
@@ -316,7 +315,7 @@ export default function CreateProfessional() {
                               {titles.length > 0 &&
                                 titles.map((el) => (
                                   <SelectItem key={el._id} value={el._id} className='text-sm'>
-                                    {capitalize(el.name)}
+                                    {UtilsString.upperCase(el.name)}
                                   </SelectItem>
                                 ))}
                             </SelectContent>
