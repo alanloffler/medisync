@@ -11,10 +11,8 @@ import { useTranslation } from 'react-i18next';
 // Imports
 import { DASHBOARD_CONFIG } from '@config/dashboard/dashboard.config';
 import { DashboardApiService } from '@dashboard/services/dashboard-api.service';
-import { useDelimiter } from '@core/hooks/useDelimiter';
 // React component
 export function StatisticGroup() {
-  const delimiter = useDelimiter();
   const { t } = useTranslation();
 
   const {
@@ -76,7 +74,7 @@ export function StatisticGroup() {
           isLoading={usersDataIsLoading}
           path={DASHBOARD_CONFIG.statisticGroup.items[2].path}
           title={DASHBOARD_CONFIG.statisticGroup.items[2].title}
-          value1={delimiter(usersData?.data?.value1, '.', 3)}
+          value1={usersData?.data?.value1}
           value2={usersData?.data?.value2}
         >
           <div className='rounded-full bg-sky-100 p-2'>
