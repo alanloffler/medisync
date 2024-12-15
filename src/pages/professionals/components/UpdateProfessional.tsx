@@ -42,8 +42,8 @@ import { PROF_UPDATE_CONFIG as PU_CONFIG } from '@config/professionals.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { ScheduleService } from '@settings/services/schedule-settings.service';
 import { TitleService } from '@core/services/title.service';
+import { UtilsString } from '@core/services/utils/string.service';
 import { professionalSchema } from '@professionals/schemas/professional.schema';
-import { useCapitalize } from '@core/hooks/useCapitalize';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export default function UpdateProfessional() {
@@ -66,7 +66,6 @@ export default function UpdateProfessional() {
   const [workingDaysValuesRef, setWorkingDaysValuesRef] = useState<IWorkingDay[]>([] as IWorkingDay[]);
   const [dropdownScope, dropdownAnimation] = useAnimate();
   const addNotification = useNotificationsStore((state) => state.addNotification);
-  const capitalize = useCapitalize();
   const navigate = useNavigate();
   const valuesRef = useRef<IProfessionalForm>({} as IProfessionalForm);
   const { id } = useParams();
@@ -166,8 +165,8 @@ export default function UpdateProfessional() {
       updateForm.setValue('description', professional.description);
       updateForm.setValue('dni', professional.dni);
       updateForm.setValue('email', professional.email);
-      updateForm.setValue('firstName', capitalize(professional.firstName));
-      updateForm.setValue('lastName', capitalize(professional.lastName));
+      updateForm.setValue('firstName', UtilsString.upperCase(professional.firstName, 'each'));
+      updateForm.setValue('lastName', UtilsString.upperCase(professional.lastName, 'each'));
       updateForm.setValue('phone', professional.phone);
       updateForm.setValue('specialization', professional.specialization._id);
       updateForm.setValue('title', professional.title._id);
@@ -304,7 +303,7 @@ export default function UpdateProfessional() {
                                 {areas.length > 0 &&
                                   areas.map((el) => (
                                     <SelectItem key={el._id} value={el._id} className='text-sm'>
-                                      {capitalize(el.name)}
+                                      {UtilsString.upperCase(el.name)}
                                     </SelectItem>
                                   ))}
                               </SelectContent>
@@ -338,7 +337,7 @@ export default function UpdateProfessional() {
                               <SelectContent>
                                 {specializations.map((el) => (
                                   <SelectItem key={el._id} value={el._id} className='text-sm'>
-                                    {capitalize(el.name)}
+                                    {UtilsString.upperCase(el.name)}
                                   </SelectItem>
                                 ))}
                               </SelectContent>
@@ -377,7 +376,7 @@ export default function UpdateProfessional() {
                                 {titles.length > 0 &&
                                   titles.map((el) => (
                                     <SelectItem key={el._id} value={el._id} className='text-sm'>
-                                      {capitalize(el.name)}
+                                      {UtilsString.upperCase(el.name)}
                                     </SelectItem>
                                   ))}
                               </SelectContent>
