@@ -21,14 +21,13 @@ import type { IUser } from '@users/interfaces/user.interface';
 import { APP_CONFIG } from '@config/app.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { UserApiService } from '@users/services/user-api.service';
+import { UtilsString } from '@core/services/utils/string.service';
 import { WHATSAPP_CONFIG } from '@config/whatsapp.config';
-import { useCapitalize } from '@core/hooks/useCapitalize';
 // React component
 export default function WhatsApp() {
   const [addressee, setAddressee] = useState<IProfessional | IUser>({} as IProfessional | IUser);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loadingMessage, setLoadingMessage] = useState<string>('');
-  const capitalize = useCapitalize();
   const navigate = useNavigate();
   const { id, type } = useParams();
 
@@ -112,7 +111,7 @@ export default function WhatsApp() {
               <>
                 <section className='mt-1 text-base'>
                   {WHATSAPP_CONFIG.subtitle}
-                  <span className='font-bold'>{` ${capitalize(addressee.firstName)} ${capitalize(addressee.lastName)}`}</span>.
+                  <span className='font-bold'>{UtilsString.upperCase(` ${addressee.firstName} ${addressee.lastName}`)}</span>.
                 </section>
                 {/* Section: Form */}
                 <Form {...whatsappForm}>
