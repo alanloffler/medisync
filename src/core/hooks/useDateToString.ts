@@ -1,5 +1,5 @@
+import { UtilsString } from '@core/services/utils/string.service';
 import { useCallback } from 'react';
-import { useCapitalize } from '@core/hooks/useCapitalize';
 
 export function useDateToString(): (date: Date) => string {
   return useCallback((date: Date) => {
@@ -18,28 +18,23 @@ export function useDateToString(): (date: Date) => string {
 }
 
 export function useLegibleDate(): (date: Date, type: 'long' | 'short') => string {
-  const capitalize = useCapitalize();
+  return useCallback((date: Date, type: 'long' | 'short') => {
+    if (date === undefined) return 'Invalid date';
+    if (type === undefined) return 'Invalid type';
 
-  return useCallback(
-    (date: Date, type: 'long' | 'short') => {
-      if (date === undefined) return 'Invalid date';
-      if (type === undefined) return 'Invalid type';
+    const _day: number = date.getDate();
+    const _month: number = date.getMonth();
+    const _year: number = date.getFullYear();
+    const newDate: Date = new Date(_year, _month, _day);
 
-      const _day = date.getDate();
-      const _month = date.getMonth();
-      const _year = date.getFullYear();
-      const newDate = new Date(_year, _month, _day);
+    const weekDay: string = UtilsString.upperCase(newDate.toLocaleString('es', { weekday: 'long' }));
+    const day: string = newDate.toLocaleString('es', { day: 'numeric' });
+    const month: string = UtilsString.upperCase(date.toLocaleString('es', { month: 'long' }));
+    const year: string = date.toLocaleString('es', { year: 'numeric' });
 
-      const weekDay = capitalize(newDate.toLocaleString('es', { weekday: 'long' }));
-      const day = newDate.toLocaleString('es', { day: 'numeric' });
-      const month = capitalize(date.toLocaleString('es', { month: 'long' })) || '';
-      const year = date.toLocaleString('es', { year: 'numeric' });
+    if (type === 'long') return `${weekDay}, ${day} de ${month} de ${year}`;
+    if (type === 'short') return `${day} de ${month} de ${year}`;
 
-      if (type === 'long') return `${weekDay}, ${day} de ${month} de ${year}`;
-      if (type === 'short') return `${day} de ${month} de ${year}`;
-
-      return '';
-    },
-    [capitalize],
-  );
+    return '';
+  }, []);
 }
