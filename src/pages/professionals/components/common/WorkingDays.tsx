@@ -7,15 +7,15 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { IWorkingDay, IWorkingDaysProps } from '@professionals/interfaces/working-days.interface';
+import { UtilsString } from '@core/services/utils/string.service';
 import { generateWeekOfWorkingDays } from '@professionals/utils/week-working-days.util';
-import { useCapitalize } from '@core/hooks/useCapitalize';
 // React component
 export function WorkingDays({ label, data, handleWorkingDaysValues }: IWorkingDaysProps) {
   const [days, setDays] = useState<string[]>([]);
   const [daysData, setDaysData] = useState<IWorkingDay[]>([]);
-  const capitalize = useCapitalize();
   const { i18n } = useTranslation();
 
+  // TODO: refactor with useQuery hook
   useEffect(() => {
     function handleResize(): void {
       const windowWidth: number = window.innerWidth;
@@ -64,7 +64,7 @@ export function WorkingDays({ label, data, handleWorkingDaysValues }: IWorkingDa
                 defaultChecked={daysData.find((value) => value.day === index)?.value || false}
                 onCheckedChange={(checked) => handleCheckedChange(index, checked as boolean)}
               />
-              <span className='text-xs font-medium'>{capitalize(days[index])}</span>
+              <span className='text-xs font-medium'>{UtilsString.upperCase(days[index])}</span>
             </div>
           ))}
       </div>
