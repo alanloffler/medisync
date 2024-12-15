@@ -88,7 +88,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
           </button>
         </div>
       ),
-      cell: ({ row }) => <div className='text-left'>{UtilsString.upperCase(`${row.original.firstName} ${row.original.lastName}`)}</div>,
+      cell: ({ row }) => <div className='text-left'>{UtilsString.upperCase(`${row.original.firstName} ${row.original.lastName}`, 'each')}</div>,
     },
     {
       accessorKey: 'dni',
