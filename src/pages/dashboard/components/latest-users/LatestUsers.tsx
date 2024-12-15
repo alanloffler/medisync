@@ -16,10 +16,9 @@ import { useTranslation } from 'react-i18next';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
 import { DashboardApiService } from '@dashboard/services/dashboard-api.service';
-import { useCapitalize } from '@core/hooks/useCapitalize';
+import { UtilsString } from '@core/services/utils/string.service';
 // React component
 export function LatestUsers() {
-  const capitalize = useCapitalize();
   const navigate = useNavigate();
   const { i18n, t } = useTranslation();
 
@@ -76,7 +75,7 @@ export function LatestUsers() {
                   <motion.span variants={animation.arrow}>
                     <CircleChevronRight size={16} strokeWidth={1.5} />
                   </motion.span>
-                  <span>{`${capitalize(user.firstName)} ${capitalize(user.lastName)}`}</span>
+                  <span>{UtilsString.upperCase(`${user.firstName} ${user.lastName}`, 'each')}</span>
                 </motion.div>
                 <motion.div className='h-[1px] grow bg-slate-200' variants={animation.line}></motion.div>
                 <motion.div
@@ -84,7 +83,12 @@ export function LatestUsers() {
                   className='flex flex-row items-center space-x-2 rounded-sm bg-orange-200 p-1 pr-2 text-orange-700'
                 >
                   <CalendarPlus size={16} strokeWidth={1.5} />
-                  <p className='text-xs'>{`${capitalize(format(user.createdAt, 'medium', i18n.resolvedLanguage).split(' ')[0])} ${capitalize(format(user.createdAt, 'medium', i18n.resolvedLanguage).split(' ')[1]).replace(',', '')}`}</p>
+                  <p className='text-xs'>
+                    {UtilsString.upperCase(
+                      `${format(user.createdAt, 'medium', i18n.resolvedLanguage).split(' ')[0]} ${format(user.createdAt, 'medium', i18n.resolvedLanguage).split(' ')[1].replace(',', '')}`,
+                      'each',
+                    )}
+                  </p>
                 </motion.div>
               </motion.button>
             ))}
