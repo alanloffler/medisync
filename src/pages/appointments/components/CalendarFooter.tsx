@@ -18,7 +18,7 @@ export function CalendarFooter({ calendarMonths, calendarYears, selectedMonth, s
         <SelectContent>
           <SelectGroup>
             {calendarYears.map((year) => (
-              <SelectItem key={year} value={year}>
+              <SelectItem className='py-1 text-xs [&_svg]:h-3 [&_svg]:w-3' key={year} value={year}>
                 {year}
               </SelectItem>
             ))}
@@ -32,7 +32,7 @@ export function CalendarFooter({ calendarMonths, calendarYears, selectedMonth, s
         <SelectContent>
           <SelectGroup>
             {calendarMonths.map((month, index) => (
-              <SelectItem key={month} value={index.toString()}>
+              <SelectItem className='py-1 text-xs [&_svg]:h-3 [&_svg]:w-3' key={month} value={index.toString()}>
                 {UtilsString.upperCase(month)}
               </SelectItem>
             ))}
