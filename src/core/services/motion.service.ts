@@ -8,6 +8,7 @@ export class Motion {
     bounce: { duration: 0.7, ease: 'linear' as Easing, type: spring, bounce: 0.7 },
     fly: { duration: 1, ease: 'linear' as Easing, type: spring, bounce: 0.5, repeat: Infinity, repeatDelay: 0.5 },
     linear: { duration: 0.7, ease: 'linear' as Easing, type: spring },
+    'linear-1': { duration: 0.35, ease: 'linear' as Easing, type: spring },
   };
 
   public rotate(value: string) {
