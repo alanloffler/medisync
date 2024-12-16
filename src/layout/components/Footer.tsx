@@ -21,7 +21,7 @@ export function Footer() {
     <footer className='fixed bottom-0 z-50 flex h-12 w-full items-center justify-between gap-4 border-t bg-white p-4 px-4 md:p-6 md:px-4'>
       <section className='flex w-full items-center justify-between'>
         <section className='flex items-center space-x-3'>
-          <User help={help} />
+          <User />
           <TooltipWrapper tooltip={t('tooltip.settings')} help={help}>
             <Link
               ref={settingScope}
