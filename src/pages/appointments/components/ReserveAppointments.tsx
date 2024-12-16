@@ -23,7 +23,7 @@ import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { ProfessionalsCombobox } from '@professionals/components/common/ProfessionalsCombobox';
 import { StatusSelect } from '@appointments/components/common/StatusSelect';
-import { Steps } from '@core/components/common/Steps';
+// import { Steps } from '@core/components/common/Steps';
 import { UsersCombo } from '@users/components/UsersCombo';
 // External imports
 import { es, enUS, Locale } from 'date-fns/locale';
@@ -354,13 +354,16 @@ export default function ReserveAppointments() {
   // #endregion
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6'>
-      <section className='flex flex-col gap-4 overflow-x-auto md:flex-row lg:flex-row'>
+      <section className='flex flex-col gap-6 overflow-x-auto md:flex-row lg:flex-row'>
         {/* Section: Left side */}
-        <section className='flex h-fit flex-col gap-4 md:mx-auto md:w-1/3 md:gap-6 lg:mx-auto lg:w-1/3 lg:gap-6'>
-          {/* Section: Select professional (Step 1) */}
+        <section className='flex h-fit flex-col gap-4 rounded-lg bg-background p-4 md:mx-auto md:w-1/3 md:gap-6 lg:mx-auto lg:w-1/3 lg:gap-6'>
+          {/* Section: Select professional */}
           <section className='flex w-full flex-col space-y-4'>
-            <Steps text={t('section.appointments.reserve.steps.title1')} step='1' />
-            <div className='p-2'>
+            <h5 className='flex items-center gap-2 text-xsm font-semibold uppercase'>
+              <span className='flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-center leading-none text-background'>1</span>
+              {t('section.appointments.reserve.steps.title1')}
+            </h5>
+            <div className=''>
               <ProfessionalsCombobox
                 onSelectProfessional={(professional) => setProfessionalSelected(professional)}
                 options={{
@@ -369,7 +372,7 @@ export default function ReserveAppointments() {
                   placeholder: t('placeholder.professionalCombobox'),
                   searchText: t('search.default'),
                 }}
-                className='w-fit'
+                className='w-fit bg-input hover:bg-input-hover'
               />
             </div>
             {professionalSelected && (
@@ -385,33 +388,39 @@ export default function ReserveAppointments() {
               </section>
             )}
           </section>
-          {/* Section: Calendar (Step 2) */}
-          {professionalSelected && (
-            <section className={cn('flex flex-col space-y-4', showCalendar ? 'pointer-events-auto' : 'pointer-events-none')}>
-              <Steps text={t('section.appointments.reserve.steps.title2')} step='2' />
-              <Calendar
-                className='h-fit w-fit flex-row rounded-lg bg-card text-card-foreground shadow-sm'
-                defaultMonth={new Date(selectedYear, selectedMonth)}
-                disabled={[
-                  new Date(2024, 8, 17),
-                  new Date(2024, 8, 18),
-                  { dayOfWeek: disabledDays },
-                  // { before: new Date() }, // This is to disable past days
-                  { from: new Date(2024, 5, 5) },
-                ]}
-                fromYear={Number(calendarYears[0])}
-                key={calendarKey}
-                locale={calendarLocale}
-                mode='single'
-                onDayClick={(event) => setSelectedDate(event)}
-                onMonthChange={(month) => {
-                  setSelectedMonth(month.getMonth());
-                  setSelectedYear(month.getFullYear());
-                }}
-                selected={date}
-                showOutsideDays={false}
-                toYear={Number(calendarYears[calendarYears.length - 1])}
-                footer={
+          {/* Section: Calendar */}
+          <section className={cn('flex flex-col space-y-4', showCalendar ? 'pointer-events-auto' : 'pointer-events-none')}>
+            <h5 className='flex items-center gap-2 text-xsm font-semibold uppercase'>
+              <span className='flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-center leading-none text-background'>2</span>
+              {t('section.appointments.reserve.steps.title2')}
+            </h5>
+            <Calendar
+              className='mx-auto h-fit w-fit text-card-foreground'
+              defaultMonth={new Date(selectedYear, selectedMonth)}
+              disabled={[
+                new Date(2024, 8, 17),
+                new Date(2024, 8, 18),
+                { dayOfWeek: disabledDays },
+                // { before: new Date() }, // This is to disable past days
+                { from: new Date(2024, 5, 5) },
+              ]}
+              fromYear={Number(calendarYears[0])}
+              key={calendarKey}
+              locale={calendarLocale}
+              mode='single'
+              onDayClick={(event) => professionalSelected && setSelectedDate(event)}
+              onMonthChange={(month) => {
+                setSelectedMonth(month.getMonth());
+                setSelectedYear(month.getFullYear());
+              }}
+              selected={date}
+              showOutsideDays={false}
+              toYear={Number(calendarYears[calendarYears.length - 1])}
+              footer={
+                <section className='mt-3 flex flex-row items-center justify-center space-x-3'>
+                  <Button variant='default' className='h-7 w-fit px-2 text-xs' onClick={() => setSelectedDate(new Date())}>
+                    {t('button.today')}
+                  </Button>
                   <CalendarFooter
                     calendarMonths={calendarMonths}
                     calendarYears={calendarYears}
@@ -420,160 +429,161 @@ export default function ReserveAppointments() {
                     selectMonth={selectMonth}
                     selectYear={selectYear}
                   />
-                }
-              />
-            </section>
-          )}
+                </section>
+              }
+            />
+          </section>
         </section>
         {/* Section: Right side */}
         <section className='flex flex-col gap-4 md:w-2/3 lg:w-2/3'>
-          {professionalSelected && selectedDate && (
-            <>
-              {/* Section: Schedule (Step 3) */}
-              <Steps text={t('section.appointments.reserve.steps.title3')} step='3' />
-              {todayIsWorkingDay ? (
-                loadingAppointments ? (
-                  <LoadingDB text={t('loading.schedule')} variant='card' size='default' />
-                ) : (
-                  <Card className='w-full'>
-                    <CardTitle className='bg-card-header! rounded-b-none border-b text-sm md:text-lg'>
-                      <section className='flex flex-row justify-between p-2'>
-                        <div className='flex flex-row items-center gap-3.5'>
-                          <CalendarDays size={16} strokeWidth={2} />
-                          <span>{t('cardTitle.appointmentsReserve')}</span>
-                        </div>
-                        {professionalSelected?._id && (
-                          <h1>
-                            {UtilsString.upperCase(
-                              `${professionalSelected?.title.abbreviation} ${professionalSelected?.firstName} ${professionalSelected?.lastName}`,
-                              'each',
-                            )}
-                          </h1>
-                        )}
-                      </section>
-                    </CardTitle>
-                    {!errorMessage && (
+          <>
+            {/* Section: Schedule */}
+            {true ? (
+              // {todayIsWorkingDay ? (
+              loadingAppointments ? (
+                <LoadingDB text={t('loading.schedule')} variant='card' size='default' />
+              ) : (
+                <Card className='w-full'>
+                  <CardTitle className='bg-card-header! rounded-b-none border-b text-sm md:text-lg'>
+                    <section className='flex flex-row justify-between p-2'>
+                      <div className='flex flex-row items-center gap-3.5'>
+                        <CalendarDays size={16} strokeWidth={2} />
+                        <span>{t('cardTitle.appointmentsReserve')}</span>
+                      </div>
+                      {professionalSelected?._id && (
+                        <h1>
+                          {UtilsString.upperCase(
+                            `${professionalSelected?.title.abbreviation} ${professionalSelected?.firstName} ${professionalSelected?.lastName}`,
+                            'each',
+                          )}
+                        </h1>
+                      )}
+                    </section>
+                  </CardTitle>
+                  {!errorMessage && (
+                    <>
                       <section className='py-2 text-center text-base font-semibold text-primary'>
                         {UtilsString.upperCase(selectedLegibleDate)}
                       </section>
-                    )}
-                    {showTimeSlots && (
-                      <section className='flex flex-col justify-start gap-3 px-3 pb-2 text-xsm font-normal md:flex-row'>
-                        <div className='flex w-fit flex-row items-center space-x-1.5 rounded-md bg-emerald-100 px-2 py-1'>
-                          <div className='h-2.5 w-2.5 rounded-full border border-emerald-400 bg-emerald-300'></div>
-                          <span className='text-emerald-700'>{t('table.availableItems.appointments', { count: availableSlotsToReserve })}</span>
-                        </div>
-                        <div className='flex w-fit flex-row items-center space-x-1.5 rounded-md bg-sky-100 px-2 py-1'>
-                          <div className='h-2.5 w-2.5 rounded-full border border-sky-400 bg-sky-300'></div>
-                          <span className='text-sky-700'>{t('table.reservedItems.appointments', { count: appointments.length })}</span>
-                        </div>
-                      </section>
-                    )}
-                    {errorMessage && (
-                      <section className='flex items-center justify-center space-x-2 px-4 py-0 text-rose-500'>
-                        <FileWarning className='h-5 w-5' strokeWidth={2} />
-                        <span className='text-center font-medium'>{errorMessage}</span>
-                      </section>
-                    )}
-                    <CardContent>
-                      {showTimeSlots &&
-                        timeSlots.map((slot) =>
-                          slot.available ? (
-                            <section
-                              key={crypto.randomUUID()}
-                              className={`flex h-10 flex-row items-center space-x-4 text-xsm ${
-                                slot.available ? 'text-foreground' : 'bg-slate-100 text-slate-400'
-                              }`}
-                            >
-                              {/* Slot info */}
-                              <div className='flex w-[100px] flex-row items-center justify-between space-x-2'>
-                                <div className='h-fit w-fit rounded-sm bg-slate-200 px-1.5 py-1 text-xs leading-3 text-slate-600'>
-                                  {`${t('words.appointmentPrefix')}${slot.id < 10 ? `0${slot.id}` : slot.id}`}
-                                </div>
-                                <div className='flex h-fit w-fit flex-row items-center space-x-1 rounded-sm bg-purple-100 p-1 pr-1.5 text-purple-600'>
-                                  <Clock size={13} strokeWidth={2} />
-                                  <span className='text-xs leading-3'>{slot.begin}</span>
-                                </div>
+                      {!professionalSelected && <InfoCard text={'Debés elegir un professional antes de generar un turno'} type='warning' />}
+                    </>
+                  )}
+                  {showTimeSlots && (
+                    <section className='flex flex-col justify-start gap-3 px-3 pb-2 text-xsm font-normal md:flex-row'>
+                      <div className='flex w-fit flex-row items-center space-x-1.5 rounded-md bg-emerald-100 px-2 py-1'>
+                        <div className='h-2.5 w-2.5 rounded-full border border-emerald-400 bg-emerald-300'></div>
+                        <span className='text-emerald-700'>{t('table.availableItems.appointments', { count: availableSlotsToReserve })}</span>
+                      </div>
+                      <div className='flex w-fit flex-row items-center space-x-1.5 rounded-md bg-sky-100 px-2 py-1'>
+                        <div className='h-2.5 w-2.5 rounded-full border border-sky-400 bg-sky-300'></div>
+                        <span className='text-sky-700'>{t('table.reservedItems.appointments', { count: appointments.length })}</span>
+                      </div>
+                    </section>
+                  )}
+                  {errorMessage && (
+                    <section className='flex items-center justify-center space-x-2 px-4 py-0 text-rose-500'>
+                      <FileWarning className='h-5 w-5' strokeWidth={2} />
+                      <span className='text-center font-medium'>{errorMessage}</span>
+                    </section>
+                  )}
+                  <CardContent>
+                    {showTimeSlots &&
+                      timeSlots.map((slot) =>
+                        slot.available ? (
+                          <section
+                            key={crypto.randomUUID()}
+                            className={`flex h-10 flex-row items-center space-x-4 text-xsm ${
+                              slot.available ? 'text-foreground' : 'bg-slate-100 text-slate-400'
+                            }`}
+                          >
+                            {/* Slot info */}
+                            <div className='flex w-[100px] flex-row items-center justify-between space-x-2'>
+                              <div className='h-fit w-fit rounded-sm bg-slate-200 px-1.5 py-1 text-xs leading-3 text-slate-600'>
+                                {`${t('words.appointmentPrefix')}${slot.id < 10 ? `0${slot.id}` : slot.id}`}
                               </div>
-                              {/* Appointment Section */}
-                              {slot.appointment?.user ? (
-                                <section className='flex flex-1 flex-row items-center justify-between rounded-md px-2 py-1 hover:bg-slate-100'>
-                                  <button
-                                    className='flex h-fit flex-1 flex-row items-center space-x-4 text-xsm leading-none text-slate-600'
-                                    onClick={() => navigate(`/appointments/${slot.appointment?._id}`)}
+                              <div className='flex h-fit w-fit flex-row items-center space-x-1 rounded-sm bg-purple-100 p-1 pr-1.5 text-purple-600'>
+                                <Clock size={13} strokeWidth={2} />
+                                <span className='text-xs leading-3'>{slot.begin}</span>
+                              </div>
+                            </div>
+                            {/* Appointment Section */}
+                            {slot.appointment?.user ? (
+                              <section className='flex flex-1 flex-row items-center justify-between rounded-md px-2 py-1 hover:bg-slate-100'>
+                                <button
+                                  className='flex h-fit flex-1 flex-row items-center space-x-4 text-xsm leading-none text-slate-600'
+                                  onClick={() => navigate(`/appointments/${slot.appointment?._id}`)}
+                                >
+                                  <span className='text-sm font-medium'>
+                                    {UtilsString.upperCase(`${slot.appointment.user.firstName} ${slot.appointment.user.lastName}`, 'each')}
+                                  </span>
+                                  <div className='hidden items-center space-x-2 text-muted-foreground lg:flex'>
+                                    <IdCard size={18} strokeWidth={1.5} />
+                                    <span>{i18n.format(slot.appointment.user.dni, 'number', i18n.resolvedLanguage)}</span>
+                                  </div>
+                                </button>
+                                <div className=''>
+                                  <StatusSelect appointment={slot.appointment} mode='update' showLabel className='text-xs text-muted-foreground' />
+                                </div>
+                              </section>
+                            ) : (
+                              <div className='relative flex h-px flex-1 flex-row items-center justify-end bg-slate-200'></div>
+                            )}
+                            {/* Buttons */}
+                            <div className='flex w-[100px] flex-row justify-center'>
+                              {!slot.appointment?.user && AppoSchedule.isDatetimeInFuture(date, slot.begin) && (
+                                <div className='flex w-full justify-center'>
+                                  <Button
+                                    className='w-full space-x-1.5 bg-emerald-400 px-1.5 py-1.5 text-emerald-50 hover:bg-emerald-500 hover:text-emerald-50 md:pr-2.5'
+                                    size='xs'
+                                    variant='ghost'
+                                    onClick={() => handleDialog(DialogAction.RESERVE, slot)}
                                   >
-                                    <span className='text-sm font-medium'>
-                                      {UtilsString.upperCase(`${slot.appointment.user.firstName} ${slot.appointment.user.lastName}`, 'each')}
-                                    </span>
-                                    <div className='hidden items-center space-x-2 text-muted-foreground lg:flex'>
-                                      <IdCard size={18} strokeWidth={1.5} />
-                                      <span>{i18n.format(slot.appointment.user.dni, 'number', i18n.resolvedLanguage)}</span>
-                                    </div>
-                                  </button>
-                                  <div className=''>
-                                    <StatusSelect appointment={slot.appointment} mode='update' showLabel className='text-xs text-muted-foreground' />
-                                  </div>
-                                </section>
-                              ) : (
-                                <div className='relative flex h-px flex-1 flex-row items-center justify-end bg-slate-200'></div>
+                                    <CalendarCheck size={16} strokeWidth={2} />
+                                    <span className='hidden text-xs font-normal md:block'>{t('button.reserve')}</span>
+                                  </Button>
+                                </div>
                               )}
-                              {/* Buttons */}
-                              <div className='flex w-[100px] flex-row justify-center'>
-                                {!slot.appointment?.user && AppoSchedule.isDatetimeInFuture(date, slot.begin) && (
-                                  <div className='flex w-full justify-center'>
-                                    <Button
-                                      className='w-full space-x-1.5 bg-emerald-400 px-1.5 py-1.5 text-emerald-50 hover:bg-emerald-500 hover:text-emerald-50 md:pr-2.5'
-                                      size='xs'
-                                      variant='ghost'
-                                      onClick={() => handleDialog(DialogAction.RESERVE, slot)}
-                                    >
-                                      <CalendarCheck size={16} strokeWidth={2} />
-                                      <span className='hidden text-xs font-normal md:block'>{t('button.reserve')}</span>
-                                    </Button>
-                                  </div>
-                                )}
-                                {slot.appointment?.user && AppoSchedule.isDatetimeInFuture(date, slot.begin) && (
-                                  <div className='flex w-full justify-center'>
-                                    <Button
-                                      className='w-full space-x-1.5 bg-rose-400 px-1.5 py-1.5 text-rose-100 hover:bg-rose-500 hover:text-rose-100'
-                                      size='xs'
-                                      variant='ghost'
-                                      onClick={() => handleDialog(DialogAction.CANCEL, slot)}
-                                    >
-                                      <X size={16} strokeWidth={2} />
-                                      <span className='hidden text-xs font-normal md:block'>{t('button.cancel')}</span>
-                                    </Button>
-                                  </div>
-                                )}
-                                {(slot.appointment?.user || !slot.appointment?.user) && !AppoSchedule.isDatetimeInFuture(date, slot.begin) && (
-                                  <div className='flex flex-1 items-center justify-center rounded-md bg-slate-100 px-1.5 py-1.5 text-slate-400'>
-                                    <CircleSlash2 size={16} strokeWidth={2} />
-                                  </div>
-                                )}
-                              </div>
-                            </section>
-                          ) : (
-                            <section
-                              key={crypto.randomUUID()}
-                              className='mx-auto flex w-fit items-center space-x-2 rounded-md bg-slate-100 px-2 py-1 text-center text-xsm text-slate-500'
-                            >
-                              <ClockAlert size={16} strokeWidth={2} className='text-rose-400' />
-                              <div>{slot.available ? slot.begin : t('warning.hourRangeNotAvailable', { begin: slot.begin, end: slot.end })}</div>
-                            </section>
-                          ),
-                        )}
-                    </CardContent>
-                  </Card>
-                )
-              ) : (
-                <Card>
-                  <CardContent className='pt-6'>
-                    <InfoCard type='warning' text={t('warning.selectWorkingDay')} />
+                              {slot.appointment?.user && AppoSchedule.isDatetimeInFuture(date, slot.begin) && (
+                                <div className='flex w-full justify-center'>
+                                  <Button
+                                    className='w-full space-x-1.5 bg-rose-400 px-1.5 py-1.5 text-rose-100 hover:bg-rose-500 hover:text-rose-100'
+                                    size='xs'
+                                    variant='ghost'
+                                    onClick={() => handleDialog(DialogAction.CANCEL, slot)}
+                                  >
+                                    <X size={16} strokeWidth={2} />
+                                    <span className='hidden text-xs font-normal md:block'>{t('button.cancel')}</span>
+                                  </Button>
+                                </div>
+                              )}
+                              {(slot.appointment?.user || !slot.appointment?.user) && !AppoSchedule.isDatetimeInFuture(date, slot.begin) && (
+                                <div className='flex flex-1 items-center justify-center rounded-md bg-slate-100 px-1.5 py-1.5 text-slate-400'>
+                                  <CircleSlash2 size={16} strokeWidth={2} />
+                                </div>
+                              )}
+                            </div>
+                          </section>
+                        ) : (
+                          <section
+                            key={crypto.randomUUID()}
+                            className='mx-auto flex w-fit items-center space-x-2 rounded-md bg-slate-100 px-2 py-1 text-center text-xsm text-slate-500'
+                          >
+                            <ClockAlert size={16} strokeWidth={2} className='text-rose-400' />
+                            <div>{slot.available ? slot.begin : t('warning.hourRangeNotAvailable', { begin: slot.begin, end: slot.end })}</div>
+                          </section>
+                        ),
+                      )}
                   </CardContent>
                 </Card>
-              )}
-            </>
-          )}
+              )
+            ) : (
+              <Card>
+                <CardContent className='pt-6'>
+                  <InfoCard type='warning' text={t('warning.selectWorkingDay')} />
+                </CardContent>
+              </Card>
+            )}
+          </>
         </section>
       </section>
       {/* Section: Dialog */}
