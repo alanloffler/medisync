@@ -6,15 +6,16 @@ import { ScrollArea } from '@core/components/ui/scroll-area';
 // Components
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
-import { spring, useAnimate } from 'motion/react';
+import { useAnimate } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 // Imports
+import { motion } from '@core/services/motion.service';
 import { useHelpStore } from '@settings/stores/help.store';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export function Notifications() {
-  const [chevronScope, chevronAnimate] = useAnimate();
+  const [scope, animate] = useAnimate();
   const [showAll, setShowAll] = useState<boolean>(false);
   const [showNotification, setShowNotification] = useState<boolean>(false);
   const notifications = useNotificationsStore((state) => state.notifications);
@@ -29,11 +30,13 @@ export function Notifications() {
   }, [notifications]);
 
   function handleMouseOver(): void {
-    chevronAnimate(chevronScope.current, { rotate: '-90deg' }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 });
+    const { keyframes, options } = motion.rotate('-90deg').type('linear-1').animate();
+    animate(scope.current, keyframes, options);
   }
 
   function handleMouseOut(): void {
-    chevronAnimate(chevronScope.current, { rotate: '0deg' }, { duration: 0.35, ease: 'easeOut', type: spring });
+    const { keyframes, options } = motion.rotate('0deg').type('linear-1').animate();
+    animate(scope.current, keyframes, options);
   }
 
   return (
@@ -47,7 +50,7 @@ export function Notifications() {
             onMouseOver={handleMouseOver}
             onMouseOut={handleMouseOut}
           >
-            <ChevronRight ref={chevronScope} size={16} strokeWidth={2} />
+            <ChevronRight ref={scope} size={16} strokeWidth={2} />
           </DropdownMenuTrigger>
         </TooltipWrapper>
         <DropdownMenuContent className='ml-4 max-h-[250px] max-w-[400px]'>
