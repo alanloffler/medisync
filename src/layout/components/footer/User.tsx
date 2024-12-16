@@ -12,8 +12,8 @@ import {
 // Components
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
-import { Link } from 'react-router-dom';
 import { useAnimate } from 'motion/react';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 // Imports
 import { HEADER_CONFIG } from '@config/layout/header.config';
@@ -22,6 +22,7 @@ import { useHelpStore } from '@settings/stores/help.store';
 // React component
 export function User() {
   const [scope, animation] = useAnimate();
+  const navigate = useNavigate();
   const { help } = useHelpStore();
   const { t } = useTranslation();
 
@@ -46,10 +47,8 @@ export function User() {
         <DropdownMenuLabel className='text-xsm'>{t('user.title')}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {HEADER_CONFIG.user.menuItems.map((item) => (
-          <DropdownMenuItem key={item.id}>
-            <Link key={item.id} to={item.path} className='text-xsm'>
-              {t(item.key)}
-            </Link>
+          <DropdownMenuItem key={item.id} onClick={() => navigate(item.path)} className='text-xsm'>
+            {t(item.key)}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
