@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons
-import { ChartLine, TrendingDown, TrendingUp } from 'lucide-react';
+import { ChartLine, MoveRight, TrendingDown, TrendingUp } from 'lucide-react';
 // External components:
 // https://ui.shadcn.com/docs/components
 import { Card } from '@core/components/ui/card';
@@ -84,13 +84,17 @@ export function AppoFlowCard() {
                   format={{ style: 'decimal', maximumFractionDigits: 1 }}
                   locales={i18n.resolvedLanguage}
                   prefix={flowValue.diff && flowValue.diff > 0 ? '+' : ''}
-                  suffix={flowValue.diff ? '%' : undefined}
+                  suffix={flowValue.diff || flowValue.diff === 0 ? '%' : ''}
                 />
                 <div className='flex items-center'>
-                  <span>
-                    {flowValue.diff && flowValue.diff > 0 && <TrendingUp size={12} strokeWidth={2} className='mr-1 stroke-emerald-500' />}
-                    {flowValue.diff && flowValue.diff < 0 && <TrendingDown size={12} strokeWidth={2} className='mr-1 stroke-rose-500' />}
-                  </span>
+                  {flowValue.diff ? (
+                    <>
+                      <span>{flowValue.diff > 0 && <TrendingUp size={12} strokeWidth={2} className='mr-1 stroke-emerald-500' />}</span>
+                      <span>{flowValue.diff < 0 && <TrendingDown size={12} strokeWidth={2} className='mr-1 stroke-rose-500' />}</span>
+                    </>
+                  ) : (
+                    <span>{flowValue.diff === 0 && <MoveRight size={12} strokeWidth={2} className='mr-1 stroke-amber-600' />}</span>
+                  )}
                   {flowValue.last && <span className='text-xs font-light'>{t(`statistics.appointments.${flowValue.last.label}`)}</span>}
                 </div>
               </div>
