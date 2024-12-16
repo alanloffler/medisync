@@ -145,7 +145,12 @@
     "appointments": "Appointments",
     "professionals": "Professionals",
     "users": "Patients",
-    "viewAppointment": "Appointment details"
+    "viewAppointment": "Appointment details",
+    "links": {
+      "appointment": "Appointment",
+      "professional": "Professional",
+      "user": "Patient"
+    }
   },
   "label": {
     "active": "Active",

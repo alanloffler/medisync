@@ -145,7 +145,12 @@
     "appointments": "Turnos",
     "professionals": "Profesionales",
     "users": "Pacientes",
-    "viewAppointment": "Detalles del turno"
+    "viewAppointment": "Detalles del turno",
+    "links": {
+      "appointment": "Turno",
+      "professional": "Profesional",
+      "user": "Paciente"
+    }
   },
   "label": {
     "active": "Activo",
