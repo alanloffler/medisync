@@ -314,6 +314,7 @@
     "deleteUser": "Delete patient",
     "details": "See details",
     "edit": "Edit",
+    "help": "Help activated",
     "pagination": {
       "firstPage": "First page",
       "itemsPerPage": "Items per page",

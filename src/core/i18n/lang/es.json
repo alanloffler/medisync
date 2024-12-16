@@ -314,6 +314,7 @@
     "deleteUser": "Eliminar paciente",
     "details": "Ver detalles",
     "edit": "Editar",
+    "help": "Ayuda activada",
     "pagination": {
       "firstPage": "Primera página",
       "itemsPerPage": "Items por página",
