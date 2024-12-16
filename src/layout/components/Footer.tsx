@@ -1,6 +1,7 @@
 // Icons: https://lucide.dev/icons/
 import { Settings } from 'lucide-react';
 // Components
+import { Help } from '@layout/components/Help';
 import { Notifications } from '@layout/components/Notifications';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 import { User } from '@layout/components/User';
@@ -31,7 +32,8 @@ export function Footer() {
               <Settings size={20} strokeWidth={2} />
             </Link>
           </TooltipWrapper>
-          <Notifications help={help} />
+          <Help />
+          <Notifications />
         </section>
         <section className='flex items-center gap-2'>
           <div className='hidden justify-end text-sm font-medium text-primary md:flex lg:flex'>{`© ${new Date().getFullYear()} ${t('appName')}`}</div>
