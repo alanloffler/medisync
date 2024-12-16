@@ -76,7 +76,7 @@ export function SelectSpecialties({ callback, clear, dropdownPlaceholder, setDro
         <div className='flex flex-row items-center space-x-2'>
           <DropdownMenuTrigger
             disabled={!areas?.data.length}
-            className='flex w-fit items-center space-x-2 rounded-md bg-white px-2 py-1 text-sm shadow-sm'
+            className='flex min-h-7 w-fit items-center space-x-2 rounded-md bg-white px-2.5 py-1 text-sm shadow-sm'
           >
             {isLoading && <LoadingText suffix='...' text={t('loading.default')} />}
             {isError && <span className='text-rose-400'>{dropdownPlaceholder}</span>}
@@ -102,18 +102,18 @@ export function SelectSpecialties({ callback, clear, dropdownPlaceholder, setDro
             </Button>
           )}
         </div>
-        <DropdownMenuContent className='w-fit' align='center' onCloseAutoFocus={(e) => e.preventDefault()}>
+        <DropdownMenuContent className='w-fit [&_svg]:h-3 [&_svg]:w-3' align='center' onCloseAutoFocus={(e) => e.preventDefault()}>
           {areas &&
             areas?.data.length > 0 &&
             areas?.data.map((area) => (
               <DropdownMenuSub key={area._id}>
-                <DropdownMenuSubTrigger>
+                <DropdownMenuSubTrigger className='p-1 text-xsm'>
                   <span>{UtilsString.upperCase(area.name)}</span>
                 </DropdownMenuSubTrigger>
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent>
                     {area.specializations.map((spec) => (
-                      <DropdownMenuItem key={spec._id} onClick={() => callback(spec)}>
+                      <DropdownMenuItem className='p-1 text-xsm' key={spec._id} onClick={() => callback(spec)}>
                         <span>{UtilsString.upperCase(spec.name)}</span>
                       </DropdownMenuItem>
                     ))}
