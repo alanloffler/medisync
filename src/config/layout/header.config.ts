@@ -7,9 +7,9 @@ export const HEADER_CONFIG = {
     { id: 4, key: 'headerMenu.users', path: '/users' },
   ],
   actionsButton: [
-    { id: 1, key: 'headerMenu.appointments', menuId: 2, path: '/reserve', default: true },
-    { id: 2, key: 'headerMenu.users', menuId: 4, path: '/users/create' },
-    { id: 3, key: 'headerMenu.professionals', menuId: 3, path: '/professionals/create' },
+    { id: 1, key: 'headerMenu.links.appointment', menuId: 2, path: '/reserve', default: true },
+    { id: 2, key: 'headerMenu.links.user', menuId: 4, path: '/users/create' },
+    { id: 3, key: 'headerMenu.links.professional', menuId: 3, path: '/professionals/create' },
   ],
   user: {
     title: 'Mi cuenta',
