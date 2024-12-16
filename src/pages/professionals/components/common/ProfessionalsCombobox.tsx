@@ -61,7 +61,7 @@ export function ProfessionalsCombobox({ onSelectProfessional, options, className
           aria-expanded={openCombobox}
           className={cn('h-10 w-full justify-between bg-white !text-sm font-normal text-foreground shadow-sm hover:bg-white', className)}
         >
-          {isLoading ? <LoadingDB text={loadingText} /> : value ? UtilsString.upperCase(value) : placeholder}
+          {isLoading ? <LoadingDB text={loadingText} /> : value ? UtilsString.upperCase(value, 'each') : placeholder}
           <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
         </Button>
       </PopoverTrigger>
