@@ -13,23 +13,34 @@ import {
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
 import { Link } from 'react-router-dom';
-import { spring, useAnimate } from 'motion/react';
+import { useAnimate } from 'motion/react';
 import { useTranslation } from 'react-i18next';
 // Imports
 import { HEADER_CONFIG } from '@config/layout/header.config';
+import { motion } from '@core/services/motion.service';
 // React component
 export function User({ help }: { help: boolean }) {
-  const [userScope, userAnimation] = useAnimate();
+  const [scope, animation] = useAnimate();
   const { t } = useTranslation();
+
+  function handleAnimationOver(): void {
+    const { keyframes, options } = motion.scale(1.1).type('bounce').animate();
+    animation(scope.current, keyframes, options);
+  }
+
+  function handleAnimationOut(): void {
+    const { keyframes, options } = motion.scale(1.1).type('bounce').animate();
+    animation(scope.current, keyframes, options);
+  }
 
   return (
     <DropdownMenu>
       <TooltipWrapper tooltip={t('tooltip.account')} help={help}>
         <DropdownMenuTrigger
-          onMouseOver={() => userAnimation(userScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })}
-          onMouseOut={() => userAnimation(userScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })}
+          onMouseOver={handleAnimationOver}
+          onMouseOut={handleAnimationOut}
         >
-          <CircleUser ref={userScope} size={20} strokeWidth={2} />
+          <CircleUser ref={scope} size={20} strokeWidth={2} />
         </DropdownMenuTrigger>
       </TooltipWrapper>
       <DropdownMenuContent align='end'>
