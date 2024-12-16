@@ -10,7 +10,7 @@ export function CalendarFooter({ calendarMonths, calendarYears, selectedMonth, s
   const { t } = useTranslation();
 
   return (
-    <main className='flex w-full space-x-3 pt-3 text-xs'>
+    <main className='flex space-x-3 text-xs'>
       <Select value={selectedYear.toString()} onValueChange={selectYear}>
         <SelectTrigger className='h-7 w-1/2 border text-xs'>
           <SelectValue placeholder={t('placeholder.year')} />
