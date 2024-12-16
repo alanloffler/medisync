@@ -1,15 +1,15 @@
 // Icons: https://lucide.dev/icons/
-import { ChevronDown, Plus } from 'lucide-react';
+import { ChevronDown, PlusCircle } from 'lucide-react';
 // External components
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@core/components/ui/dropdown-menu';
-import { Separator } from '@core/components/ui/separator';
 // External imports
-import { spring, useAnimate } from 'motion/react';
+import { useAnimate } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { ILinks } from '@layout/interfaces/links.interface';
+import { motion } from '@core/services/motion.service';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 // React component
 export function ActionsButton({ links }: { links: ILinks[] }) {
@@ -30,21 +30,31 @@ export function ActionsButton({ links }: { links: ILinks[] }) {
     chevronAnimation(chevronScope.current, { rotate: open === true ? '180deg' : '0deg' }, { duration: 0.25, ease: 'easeIn' });
   }, [chevronAnimation, chevronScope, open]);
 
+  function handleAnimationOver(): void {
+    const { keyframes, options } = motion.scale(1.1).type('bounce').animate();
+    plusAnimation(plusScope.current, keyframes, options);
+  }
+
+  function handleAnimationOut(): void {
+    const { keyframes, options } = motion.scale(1).type('bounce').animate();
+    plusAnimation(plusScope.current, keyframes, options);
+  }
+
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
-      <section className='flex h-8 flex-row items-center rounded-md text-sm font-medium text-white'>
+      <section className='flex h-8 flex-row items-center rounded-md text-sm font-medium text-muted-foreground'>
         <button
           onClick={() => navigate(links[0].path)}
-          onMouseOver={() => plusAnimation(plusScope.current, { scale: 1.5 }, { duration: 1, ease: 'linear', type: spring, bounce: 0.7 })}
-          onMouseOut={() => plusAnimation(plusScope.current, { scale: 1 }, { duration: 1, ease: 'linear', type: spring, bounce: 0.7 })}
-          className='flex h-8 w-fit items-center space-x-2 rounded-l-md bg-primary/75 px-3 py-1'
+          onMouseOver={handleAnimationOver}
+          onMouseOut={handleAnimationOut}
+          className='flex h-8 w-fit items-center space-x-2 rounded-l-md bg-slate-100 px-3 py-1'
         >
-          <Plus ref={plusScope} size={16} strokeWidth={2} />
+          <PlusCircle ref={plusScope} size={16} strokeWidth={2} />
           <span>{links.find((link) => link.default)?.key ? t(links.find((link) => link.default)!.key) : t(links[0].key)}</span>
         </button>
         <DropdownMenuTrigger
           onClick={() => setOpen(true)}
-          className='flex h-8 w-8 items-center rounded-l-none rounded-r-md bg-primary px-2 hover:bg-primary/90'
+          className='flex h-8 w-8 items-center rounded-l-none rounded-r-md border-l border-white bg-slate-200 px-2 transition-colors animate-in hover:bg-primary hover:text-white data-[state=open]:bg-primary data-[state=open]:text-white'
           asChild
         >
           <button className='h-8 w-8'>
@@ -52,19 +62,18 @@ export function ActionsButton({ links }: { links: ILinks[] }) {
           </button>
         </DropdownMenuTrigger>
       </section>
-      <DropdownMenuContent align='end' onCloseAutoFocus={(e) => e.preventDefault()} className='w-fit p-0 text-sm font-medium text-white'>
+      <DropdownMenuContent align='end' onCloseAutoFocus={(e) => e.preventDefault()} className='w-fit p-1 text-xsm'>
         {links
           .filter((item, index, array) => (array.some((i) => i.default) ? !item.default : index !== 0))
-          .map((link, index) => (
+          .map((link) => (
             <section key={crypto.randomUUID()}>
               <button
-                className='flex w-full items-center space-x-2 rounded-none bg-primary/75 px-2 py-1 hover:bg-primary'
+                className='flex w-full items-center space-x-2 rounded-sm px-2 py-1.5 hover:bg-primary hover:text-white'
                 onClick={() => handleClick(link)}
               >
-                <Plus strokeWidth={2} className='h-4 w-4' />
+                <PlusCircle size={12} strokeWidth={2} />
                 <span>{t(link.key)}</span>
               </button>
-              {index < links.length - 1 && <Separator className='bg-primary/50' />}
             </section>
           ))}
       </DropdownMenuContent>
