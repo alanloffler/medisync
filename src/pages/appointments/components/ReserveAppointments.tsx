@@ -364,7 +364,7 @@ export default function ReserveAppointments() {
               <ProfessionalsCombobox
                 onSelectProfessional={(professional) => setProfessionalSelected(professional)}
                 options={{
-                  loadingText: t('loading.professionals'),
+                  loadingText: t('loading.default'),
                   notFoundText: t('error.notFoundDefault'),
                   placeholder: t('placeholder.professionalCombobox'),
                   searchText: t('search.default'),
