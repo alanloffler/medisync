@@ -15,6 +15,11 @@ export class Motion {
     this._keyframes = { rotate: value };
     return this;
   }
+  
+  public color(value: string) {
+    this._keyframes = { color: value };
+    return this;
+  }
 
   public scale(value: number) {
     this._keyframes = { scale: value };
