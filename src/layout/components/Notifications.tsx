@@ -10,13 +10,15 @@ import { spring, useAnimate } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 // Imports
+import { useHelpStore } from '@settings/stores/help.store';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
-export function Notifications({ help }: { help: boolean }) {
+export function Notifications() {
+  const [chevronScope, chevronAnimate] = useAnimate();
   const [showAll, setShowAll] = useState<boolean>(false);
   const [showNotification, setShowNotification] = useState<boolean>(false);
-  const [chevronScope, chevronAnimate] = useAnimate();
   const notifications = useNotificationsStore((state) => state.notifications);
+  const { help } = useHelpStore();
   const { t } = useTranslation();
 
   useEffect(() => {
