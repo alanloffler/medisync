@@ -65,7 +65,7 @@ export function ProfessionalsCombobox({ onSelectProfessional, options, className
           <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className='mt-2 w-full p-0 shadow-sm' align='start'>
+      <PopoverContent className='mt-2 w-full p-0 shadow-sm border' align='start'>
         <Command>
           {!isError && <CommandInput placeholder={searchText} className='h-8 text-xsm' />}
           <CommandList>
