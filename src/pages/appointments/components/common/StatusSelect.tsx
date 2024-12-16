@@ -72,7 +72,7 @@ export function StatusSelect({ appointment, className, mode, showLabel = false }
   const { t } = useTranslation();
 
   useEffect(() => {
-    const futureDate = isAfter(parse(day, 'YYYY-MM-DD'), new Date());
+    const futureDate = isAfter(parse(`${day}T${hour}`, 'YYYY-MM-DDTHH:mm'), new Date());
     futureDate ? setItemSelected(EStatus.WAITING) : setItemSelected(status);
   }, [day, hour, status]);
 
