@@ -4,7 +4,7 @@ import { Filter, X } from 'lucide-react';
 import { Button } from '@core/components/ui/button';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@core/components/ui/select';
 // Components
-import { LoadingDB } from '@core/components/common/LoadingDB';
+import { LoadingText } from '@core/components/common/LoadingText';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
 import { useAnimate } from 'motion/react';
@@ -84,7 +84,7 @@ export function ApposFilters({ userId, disabled }: { userId: string; disabled: b
   }
 
   return (
-    <main className='flex w-full items-center justify-between rounded-md border border-slate-200 bg-slate-100 px-2 py-1'>
+    <main className='flex w-full items-center justify-between rounded-md bg-slate-100 p-2'>
       <section className='flex items-center justify-start space-x-4'>
         <section className='flex items-center space-x-2'>
           <Filter size={14} strokeWidth={1.5} />
@@ -96,9 +96,9 @@ export function ApposFilters({ userId, disabled }: { userId: string; disabled: b
           onValueChange={(e) => setFilters({ professional: e as IApposFilters['professional'] })}
         >
           <TooltipWrapper tooltip={t('tooltip.selectProfessional')} help={help}>
-            <SelectTrigger className={'h-7 w-fit space-x-3 border border-slate-300 bg-white text-xsm shadow-none'}>
+            <SelectTrigger className={'h-7 w-fit space-x-3 border-slate-300 bg-white text-xsm shadow-sm'}>
               {loadingProfessionals ? (
-                <LoadingDB variant='default' text={t('loading.default')} className='h-7 px-0 text-xsm font-normal' />
+                <LoadingText text={t('loading.default')} suffix='...' />
               ) : professionalError ? (
                 <span className='text-red-500'>{t('error.default')}</span>
               ) : (
@@ -109,7 +109,7 @@ export function ApposFilters({ userId, disabled }: { userId: string; disabled: b
           <SelectContent onCloseAutoFocus={(e) => e.preventDefault()}>
             <SelectGroup>
               {professionals.map((professional) => (
-                <SelectItem key={crypto.randomUUID()} value={professional._id}>
+                <SelectItem className='py-1.5 text-xsm [&_svg]:h-3 [&_svg]:w-3' key={crypto.randomUUID()} value={professional._id}>
                   {UtilsString.upperCase(`${professional.title.abbreviation} ${professional.firstName} ${professional.lastName}`, 'each')}
                 </SelectItem>
               ))}
@@ -122,9 +122,9 @@ export function ApposFilters({ userId, disabled }: { userId: string; disabled: b
           onValueChange={(e) => setFilters({ year: e as IApposFilters['year'] })}
         >
           <TooltipWrapper tooltip={t('tooltip.selectYear')} help={help}>
-            <SelectTrigger className={'h-7 w-fit space-x-3 border border-slate-300 bg-white text-xsm shadow-none'}>
+            <SelectTrigger className={'h-7 w-fit space-x-3 bg-white text-xsm shadow-sm'}>
               {loadingYears ? (
-                <LoadingDB variant='default' text={t('loading.default')} className='h-7 px-0 text-xsm font-normal' />
+                <LoadingText text={t('loading.default')} suffix='...' />
               ) : yearError ? (
                 <span className='text-red-500'>{t('error.default')}</span>
               ) : (
@@ -135,7 +135,7 @@ export function ApposFilters({ userId, disabled }: { userId: string; disabled: b
           <SelectContent onCloseAutoFocus={(e) => e.preventDefault()}>
             <SelectGroup>
               {years.map((year) => (
-                <SelectItem key={crypto.randomUUID()} value={year}>
+                <SelectItem className='py-1.5 text-xsm [&_svg]:h-3 [&_svg]:w-3' key={crypto.randomUUID()} value={year}>
                   {year}
                 </SelectItem>
               ))}
