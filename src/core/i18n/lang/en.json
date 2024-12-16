@@ -248,12 +248,12 @@
   "statistics": {
     "appointments": {
       "lastMonth": "last month",
-      "lastWeek": "last week",
+      "lastWeek": "than last week",
       "title": "Appointments",
       "today": "today",
       "total": "in total",
       "week": "this week",
-      "yesterday": "yesterday"
+      "yesterday": "than yesterday"
     }
   },
   "status": {

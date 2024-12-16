@@ -248,12 +248,12 @@
   "statistics": {
     "appointments": {
       "lastMonth": "el último mes",
-      "lastWeek": "la semana pasada",
+      "lastWeek": "que la semana pasada",
       "title": "Turnos",
       "today": "hoy",
       "total": "en total",
       "week": "esta semana",
-      "yesterday": "ayer"
+      "yesterday": "que ayer"
     }
   },
   "status": {
