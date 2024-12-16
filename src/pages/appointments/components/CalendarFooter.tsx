@@ -6,13 +6,13 @@ import { useTranslation } from 'react-i18next';
 import type { ICalendarFooter } from '@appointments/interfaces/calendar.interface';
 import { UtilsString } from '@core/services/utils/string.service';
 // React component
-export function CalendarFooter({ calendarMonths, calendarYears, selectedMonth, selectedYear, selectMonth, selectYear }: ICalendarFooter) {
+export function CalendarFooter({ calendarMonths, calendarYears, disabled, selectedMonth, selectedYear, selectMonth, selectYear }: ICalendarFooter) {
   const { t } = useTranslation();
 
   return (
     <main className='flex space-x-3 text-xs'>
-      <Select value={selectedYear.toString()} onValueChange={selectYear}>
-        <SelectTrigger className='h-7 w-1/2 border text-xs'>
+      <Select value={selectedYear.toString()} onValueChange={selectYear} disabled={disabled}>
+        <SelectTrigger className='h-7 w-fit bg-input px-2 text-xs hover:bg-input-hover [&_svg]:ml-2'>
           <SelectValue placeholder={t('placeholder.year')} />
         </SelectTrigger>
         <SelectContent>
@@ -25,8 +25,8 @@ export function CalendarFooter({ calendarMonths, calendarYears, selectedMonth, s
           </SelectGroup>
         </SelectContent>
       </Select>
-      <Select value={selectedMonth.toString()} onValueChange={selectMonth}>
-        <SelectTrigger className='h-7 w-1/2 border text-xs'>
+      <Select value={selectedMonth.toString()} onValueChange={selectMonth} disabled={disabled}>
+        <SelectTrigger className='h-7 w-fit bg-input px-2 text-xs hover:bg-input-hover [&_svg]:ml-2'>
           <SelectValue placeholder={t('placeholder.month')} />
         </SelectTrigger>
         <SelectContent>
