@@ -15,12 +15,19 @@
 
 // console.log(shorten);
 
-class Utils {
-  static url = {
-    create: (path) => {
-      return path;
-    },
-  };
-}
+// class Utils {
+//   static url = {
+//     create: (path) => {
+//       return path;
+//     },
+//   };
+// }
 
-console.log(Utils.url.create('http://localhost:3000'));
+// console.log(Utils.url.create('http://localhost:3000'));
+
+const daysWithAppos = [
+  { day: '2024-12-01', value: 5 },
+  { day: '2024-12-12', value: 2 },
+];
+
+daysWithAppos.map(day => console.log(day.day.split('-')[2]));
