@@ -1,10 +1,10 @@
 // Icons: https://lucide.dev/icons/
 import { Settings } from 'lucide-react';
 // Components
-import { Help } from '@layout/components/Help';
-import { Notifications } from '@layout/components/Notifications';
+import { Help } from '@layout/components/footer/Help';
+import { Notifications } from '@layout/components/footer/Notifications';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
-import { User } from '@layout/components/User';
+import { User } from '@layout/components/footer/User';
 // External imports
 import { Link } from 'react-router-dom';
 import { spring, useAnimate } from 'motion/react';
