@@ -53,7 +53,7 @@ export function Notifications() {
             <ChevronRight ref={scope} size={16} strokeWidth={2} />
           </DropdownMenuTrigger>
         </TooltipWrapper>
-        <DropdownMenuContent className='ml-4 max-h-[250px] max-w-[400px]'>
+        <DropdownMenuContent className='ml-4 max-h-[250px] max-w-[400px]' onCloseAutoFocus={(e) => e.preventDefault()}>
           <ScrollArea className='h-[250px] p-1.5'>
             <ul className='w-full text-xs'>
               {notifications.map((notification) => (
