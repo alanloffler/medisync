@@ -3,7 +3,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger } from '@
 // Components
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
-import { isAfter } from '@formkit/tempo';
+import { isAfter, parse } from '@formkit/tempo';
 import { useEffect, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
@@ -72,7 +72,7 @@ export function StatusSelect({ appointment, className, mode, showLabel = false }
   const { t } = useTranslation();
 
   useEffect(() => {
-    const futureDate = isAfter(new Date(day), new Date());
+    const futureDate = isAfter(parse(day, 'YYYY-MM-DD'), new Date());
     futureDate ? setItemSelected(EStatus.WAITING) : setItemSelected(status);
   }, [day, hour, status]);
 
@@ -101,10 +101,7 @@ export function StatusSelect({ appointment, className, mode, showLabel = false }
     <Select value={itemSelected} onValueChange={handleStatusChange} disabled={itemSelected === EStatus.WAITING || mode === 'view'}>
       <TooltipWrapper tooltip={t(`status.${itemSelected}`)} help={help}>
         <SelectTrigger
-          className={cn(
-            'flex flex-row items-center justify-center space-x-1 bg-transparent p-0 disabled:pointer-events-none [&_svg]:hidden',
-            className,
-          )}
+          className={cn('flex flex-row items-center justify-center space-x-1 bg-transparent p-0 disabled:cursor-default [&_svg]:hidden', className)}
         >
           <div
             className={cn(
