@@ -31,21 +31,18 @@ export function User() {
   }
 
   function handleAnimationOut(): void {
-    const { keyframes, options } = motion.scale(1.1).type('bounce').animate();
+    const { keyframes, options } = motion.scale(1).type('bounce').animate();
     animation(scope.current, keyframes, options);
   }
 
   return (
     <DropdownMenu>
       <TooltipWrapper tooltip={t('tooltip.account')} help={help}>
-        <DropdownMenuTrigger
-          onMouseOver={handleAnimationOver}
-          onMouseOut={handleAnimationOut}
-        >
+        <DropdownMenuTrigger onMouseOver={handleAnimationOver} onMouseOut={handleAnimationOut}>
           <CircleUser ref={scope} size={20} strokeWidth={2} />
         </DropdownMenuTrigger>
       </TooltipWrapper>
-      <DropdownMenuContent align='end'>
+      <DropdownMenuContent align='start' onCloseAutoFocus={(e) => e.preventDefault()}>
         <DropdownMenuLabel className='text-xsm'>{t('user.title')}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {HEADER_CONFIG.user.menuItems.map((item) => (
