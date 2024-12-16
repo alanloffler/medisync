@@ -389,13 +389,13 @@ export default function ReserveAppointments() {
             )}
           </section>
           {/* Section: Calendar */}
-          <section className={cn('flex flex-col space-y-4', showCalendar ? 'pointer-events-auto' : 'pointer-events-none')}>
+          <section className={cn('flex flex-col space-y-3', showCalendar ? 'pointer-events-auto' : 'pointer-events-none')}>
             <h5 className='flex items-center gap-2 text-xsm font-semibold uppercase'>
               <span className='flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-center leading-none text-background'>2</span>
               {t('section.appointments.reserve.steps.title2')}
             </h5>
             <Calendar
-              className='mx-auto h-fit w-fit text-card-foreground'
+              className='mx-auto text-card-foreground'
               defaultMonth={new Date(selectedYear, selectedMonth)}
               disabled={[
                 new Date(2024, 8, 17),
@@ -416,22 +416,30 @@ export default function ReserveAppointments() {
               selected={date}
               showOutsideDays={false}
               toYear={Number(calendarYears[calendarYears.length - 1])}
-              footer={
-                <section className='mt-3 flex flex-row items-center justify-center space-x-3'>
-                  <Button variant='default' className='h-7 w-fit px-2 text-xs' onClick={() => setSelectedDate(new Date())}>
-                    {t('button.today')}
-                  </Button>
-                  <CalendarFooter
-                    calendarMonths={calendarMonths}
-                    calendarYears={calendarYears}
-                    selectedMonth={selectedMonth}
-                    selectedYear={selectedYear}
-                    selectMonth={selectMonth}
-                    selectYear={selectYear}
-                  />
-                </section>
-              }
             />
+            <section className='flex w-full flex-row items-center justify-center space-x-3'>
+              <Button
+                variant='default'
+                className='h-7 w-fit px-2 text-xs'
+                onClick={() => {
+                  setSelectedMonth(new Date().getMonth());
+                  setSelectedYear(new Date().getFullYear());
+                  setSelectedDate(new Date());
+                  setCalendarKey(crypto.randomUUID());
+                }}
+              >
+                {t('button.today')}
+              </Button>
+              <CalendarFooter
+                calendarMonths={calendarMonths}
+                calendarYears={calendarYears}
+                disabled={!professionalSelected}
+                selectedMonth={selectedMonth}
+                selectedYear={selectedYear}
+                selectMonth={selectMonth}
+                selectYear={selectYear}
+              />
+            </section>
           </section>
         </section>
         {/* Section: Right side */}
