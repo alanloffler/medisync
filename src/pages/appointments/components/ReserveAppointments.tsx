@@ -27,7 +27,7 @@ import { StatusSelect } from '@appointments/components/common/StatusSelect';
 import { UsersCombo } from '@users/components/UsersCombo';
 // External imports
 import { es, enUS, Locale } from 'date-fns/locale';
-import { format } from '@formkit/tempo';
+import { format, parse } from '@formkit/tempo';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // Imports
@@ -352,6 +352,12 @@ export default function ReserveAppointments() {
     setCalendarKey(crypto.randomUUID());
   }
   // #endregion
+
+  const daysWithAppos = [
+    { day: '2024-12-02', value: 5 },
+    { day: '2024-12-12', value: 25 },
+  ];
+
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6'>
       <section className='flex flex-col gap-6 overflow-x-auto md:flex-row lg:flex-row'>
@@ -416,6 +422,26 @@ export default function ReserveAppointments() {
               selected={date}
               showOutsideDays={false}
               toYear={Number(calendarYears[calendarYears.length - 1])}
+              formatters={{
+                formatDay: (day) => {
+                  console.log('day', day.getDate());
+                  const found = daysWithAppos.find((item) => {
+                    const transformed = parseInt(item.day.split('-')[2]);
+                    console.log(transformed);
+                    if (transformed === day.getDate()) return item;
+                  });
+                  console.log(found);
+                  return found ? (
+                    <div>
+                      <span>{day.getDate()}</span>
+                      <span className='border border-emerald-400 h-6 w-6 rounded-full absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2'></span>
+                      {/* <span className='bg-emerald-400 text-white rounded-full w-3.5 h-3.5 absolute bottom-0 right-1 text-[9px] leading-none items-center flex justify-center'>{found.value}</span> */}
+                    </div>
+                  ) : (
+                    day.getDate()
+                  );
+                },
+              }}
             />
             <section className='flex w-full flex-row items-center justify-center space-x-3'>
               <Button
