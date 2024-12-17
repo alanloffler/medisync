@@ -51,6 +51,8 @@ enum DialogAction {
   CANCEL = 'cancel',
   RESERVE = 'reserve',
 }
+// Constants
+const DISABLED_DAYS: number[] = RA_CONFIG.calendar.disabledDays;
 // React component
 export default function ReserveAppointments() {
   const [appointments, setAppointments] = useState<IAppointment[]>([] as IAppointment[]);
@@ -61,7 +63,7 @@ export default function ReserveAppointments() {
   const [calendarYears, setCalendarYears] = useState<string[]>([]);
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [dialogContent, setDialogContent] = useState<IDialog>({} as IDialog);
-  const [disabledDays, setDisabledDays] = useState<number[]>([0, 6]);
+  const [disabledDays, setDisabledDays] = useState<number[]>(DISABLED_DAYS);
   const [errorMessage, setErrorMessage] = useState<string>();
   const [legibleSchedule, setLegibleSchedule] = useState<string>('');
   const [legibleWorkingDays, setLegibleWorkingDays] = useState<string>('');
