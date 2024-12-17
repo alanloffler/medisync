@@ -60,7 +60,7 @@
     "userSince": "Paciente desde el {{date}}"
   },
   "chart": {
-    "daylyAppointments": {
+    "dailyAppointments": {
       "title": "Turnos diarios",
       "label": {
         "x": "F",

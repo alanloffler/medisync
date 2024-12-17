@@ -38,7 +38,7 @@
   "cardTitle": {
     "appointmentsList": "All appointments list",
     "appointmentsRecord": "Appointments history",
-    "appointmentsReserve": "Dayly appointments",
+    "appointmentsReserve": "Daily appointments",
     "createProfessional": "Create professional",
     "createUser": "Create patient",
     "dashboard": {
@@ -60,8 +60,8 @@
     "userSince": "Patient since {{date}}"
   },
   "chart": {
-    "daylyAppointments": {
-      "title": "Dayly appointments",
+    "dailyAppointments": {
+      "title": "Daily appointments",
       "label": {
         "x": "D",
         "y": "A"
