@@ -1,17 +1,18 @@
 // Icons: https://lucide.dev/icons
-import { BriefcaseMedical, CalendarCheck, CalendarDays, CircleSlash2, ClipboardCheck, Clock, ClockAlert, FileWarning, IdCard, X } from 'lucide-react';
+import { CalendarCheck, CalendarDays, CircleSlash2, Clock, ClockAlert, FileWarning, IdCard, X } from 'lucide-react';
 // External Components: https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
 import { Card, CardContent, CardTitle } from '@core/components/ui/card';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
 // Components
 import { DateSelection } from '@appointments/components/reserve/DateSelection';
+import { DialogReserve } from '@appointments/components/reserve/DialogReserve';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { ProfessionalSelection } from '@appointments/components/reserve/ProfessionalSelection';
 import { StatusSelect } from '@appointments/components/common/StatusSelect';
 import { UsersCombo } from '@users/components/UsersCombo';
 // External imports
+import { Trans, useTranslation } from 'react-i18next';
 import { format } from '@formkit/tempo';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -24,17 +25,12 @@ import type { IWorkingDay } from '@professionals/interfaces/working-days.interfa
 import { AppoSchedule } from '@appointments/services/schedule.service';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { CalendarService } from '@appointments/services/calendar.service';
+import { EDialogAction } from '@appointments/enums/dialog.enum';
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { RESERVE_APPOINTMENT_CONFIG as RA_CONFIG } from '@config/appointments/reserve-appointments.config';
-import { Trans, useTranslation } from 'react-i18next';
 import { UtilsString } from '@core/services/utils/string.service';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
-// Enum
-enum DialogAction {
-  CANCEL = 'cancel',
-  RESERVE = 'reserve',
-}
 // Constants: Common with ProfessionalSelection and DateSelection
 const DISABLED_DAYS: number[] = RA_CONFIG.calendar.disabledDays;
 // React component
@@ -44,7 +40,6 @@ export default function ReserveAppointments() {
   const [dialogContent, setDialogContent] = useState<IDialog>({} as IDialog);
   const [errorMessage, setErrorMessage] = useState<string>();
   const [loadingAppointments, setLoadingAppointments] = useState<boolean>(false);
-  const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [refreshAppos, setRefreshAppos] = useState<string>('');
   const [selectedSlot, setSelectedSlot] = useState<ITimeSlot>({} as ITimeSlot);
   const [showTimeSlots, setShowTimeSlots] = useState<boolean>(false);
@@ -61,6 +56,7 @@ export default function ReserveAppointments() {
   const [professionalSelected, setProfessionalSelected] = useState<IProfessional>();
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedLegibleDate, setSelectedLegibleDate] = useState<string>('');
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
 
   const { i18n, t } = useTranslation();
   const selectedLocale: string = i18n.resolvedLanguage || i18n.language;
@@ -73,22 +69,22 @@ export default function ReserveAppointments() {
 
   // SCHEDULE
   // Full legible today date (schedule header)
-  const legibleTodayDate: string = useMemo(() => {
+  const $legibleTodayDate: string = useMemo(() => {
     return format(selectedDate!, 'full', selectedLocale);
   }, [selectedDate, selectedLocale]);
 
   useEffect(() => {
-    setSelectedLegibleDate(legibleTodayDate);
-  }, [legibleTodayDate, selectedDate]);
+    setSelectedLegibleDate($legibleTodayDate);
+  }, [$legibleTodayDate, selectedDate]);
 
+  // CALENDAR
+  // Set disabled days by professional selected
   const $getDisabledDays = useMemo(() => {
     return (professionalSelected: IProfessional | undefined) => {
       return CalendarService.getDisabledDays(professionalSelected?.configuration.workingDays ?? []);
     };
   }, []);
 
-  // CALENDAR
-  // Set disabled days by professional selected
   useEffect(() => {
     const disabledDays = $getDisabledDays(professionalSelected);
     setDisabledDays(disabledDays);
@@ -182,7 +178,7 @@ export default function ReserveAppointments() {
         if (newAppo.statusCode === 200) {
           addNotification({ type: 'success', message: newAppo.message });
           setRefreshAppos(crypto.randomUUID());
-          handleResetDialog();
+          // handleResetDialog();
         }
         if (newAppo.statusCode > 399) addNotification({ type: 'error', message: newAppo.message });
         if (newAppo instanceof Error) addNotification({ type: 'error', message: t('error.internalServer') });
@@ -191,33 +187,17 @@ export default function ReserveAppointments() {
     [addNotification, date, professionalSelected, selectedDate, t, userSelected._id],
   );
 
-  async function handleCancelAppointment(slot: ITimeSlot): Promise<void> {
-    if (slot.appointment?._id) {
-      AppointmentApiService.remove(slot.appointment._id).then((response) => {
-        if (response.statusCode === 200) {
-          addNotification({ type: 'success', message: response.message });
-          setRefreshAppos(crypto.randomUUID());
-          setOpenDialog(false);
-        }
-        if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
-        if (response instanceof Error) addNotification({ type: 'error', message: t('error.internalServer') });
-      });
-    }
-  }
 
-  useEffect(() => {
-    if (openDialog === false) handleResetDialog();
-  }, [openDialog]);
-
-  // #region Dialog
+  // DIALOG
+  // Methods for reserve appointment dialog: content, reset and generate summary
   const handleDialog = useCallback(
-    (action: DialogAction, slot: ITimeSlot): void => {
+    (action: EDialogAction, slot: ITimeSlot): void => {
       setOpenDialog(true);
       setSelectedSlot(slot);
 
-      if (action === DialogAction.RESERVE) {
+      if (action === EDialogAction.RESERVE) {
         const reserveDialogContent: IDialog = {
-          action: DialogAction.RESERVE,
+          action: EDialogAction.RESERVE,
           content: <UsersCombo searchBy='dni' searchResult={(e) => setUserSelected(e)} placeholder={t('placeholder.userCombobox')} />,
           description: t('dialog.reserveAppointment.description'),
           title: t('dialog.reserveAppointment.title'),
@@ -226,11 +206,11 @@ export default function ReserveAppointments() {
         setDialogContent(reserveDialogContent);
       }
 
-      if (action === DialogAction.CANCEL) {
+      if (action === EDialogAction.CANCEL) {
         setUserSelected({} as IUser);
 
         const cancelDialogContent: IDialog = {
-          action: DialogAction.CANCEL,
+          action: EDialogAction.CANCEL,
           content: (
             <div className='space-y-2'>
               <Trans
@@ -257,63 +237,6 @@ export default function ReserveAppointments() {
     },
     [selectedLocale, t],
   );
-
-  function handleResetDialog(): void {
-    setOpenDialog(false);
-    setUserSelected({} as IUser);
-  }
-  // #endregion
-  function generateReservationSummary(userSelected: IUser): JSX.Element {
-    return (
-      <div className='space-y-2'>
-        <div className='flex items-center space-x-2'>
-          <ClipboardCheck className='h-5 w-5' strokeWidth={2} />
-          <div className='flex flex-row items-center gap-1'>
-            <Trans
-              i18nKey='dialog.reserveAppointment.content.reservedTo'
-              values={{ firstName: UtilsString.upperCase(userSelected.firstName), lastName: UtilsString.upperCase(userSelected.lastName) }}
-              components={{
-                span: <span className='font-semibold' />,
-              }}
-            />
-          </div>
-        </div>
-        <div className='flex items-center space-x-2'>
-          <CalendarCheck className='h-5 w-5' strokeWidth={2} />
-          <div className='flex flex-row items-center gap-1'>
-            <Trans
-              i18nKey='dialog.reserveAppointment.content.date'
-              values={{ date: selectedLegibleDate }}
-              components={{
-                span: <span />,
-              }}
-            />
-          </div>
-        </div>
-        <div className='flex items-center space-x-2'>
-          <Clock className='h-5 w-5' strokeWidth={2} />
-          <div className='flex flex-row items-center gap-1'>
-            <Trans
-              i18nKey='dialog.reserveAppointment.content.hour'
-              values={{ hour: selectedSlot.begin }}
-              components={{
-                span: <span />,
-              }}
-            />
-          </div>
-        </div>
-        <div className='flex items-center space-x-2'>
-          <BriefcaseMedical className='h-5 w-5' strokeWidth={2} />
-          <span className='font-semibold'>
-            {UtilsString.upperCase(
-              `${professionalSelected?.title.abbreviation} ${professionalSelected?.firstName} ${professionalSelected?.lastName}`,
-              'each',
-            )}
-          </span>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6'>
@@ -427,7 +350,7 @@ export default function ReserveAppointments() {
                                     className='w-full space-x-1.5 bg-emerald-400 px-1.5 py-1.5 text-emerald-50 hover:bg-emerald-500 hover:text-emerald-50 md:pr-2.5'
                                     size='xs'
                                     variant='ghost'
-                                    onClick={() => handleDialog(DialogAction.RESERVE, slot)}
+                                    onClick={() => handleDialog(EDialogAction.RESERVE, slot)}
                                   >
                                     <CalendarCheck size={16} strokeWidth={2} />
                                     <span className='hidden text-xs font-normal md:block'>{t('button.reserve')}</span>
@@ -440,7 +363,7 @@ export default function ReserveAppointments() {
                                     className='w-full space-x-1.5 bg-rose-400 px-1.5 py-1.5 text-rose-100 hover:bg-rose-500 hover:text-rose-100'
                                     size='xs'
                                     variant='ghost'
-                                    onClick={() => handleDialog(DialogAction.CANCEL, slot)}
+                                    onClick={() => handleDialog(EDialogAction.CANCEL, slot)}
                                   >
                                     <X size={16} strokeWidth={2} />
                                     <span className='hidden text-xs font-normal md:block'>{t('button.cancel')}</span>
@@ -478,34 +401,21 @@ export default function ReserveAppointments() {
         </section>
       </section>
       {/* Section: Dialog */}
-      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle className='text-xl'>{dialogContent.title}</DialogTitle>
-            <DialogDescription>{dialogContent.description}</DialogDescription>
-            <section className='z-50 pt-4'>
-              {dialogContent.action === DialogAction.RESERVE && !userSelected._id && dialogContent.content}
-              {dialogContent.action === DialogAction.RESERVE && userSelected._id && generateReservationSummary(userSelected)}
-              {dialogContent.action === DialogAction.CANCEL && dialogContent.content}
-            </section>
-            <footer className='flex justify-end gap-6 pt-4'>
-              <Button variant='secondary' size='sm' onClick={() => handleResetDialog()}>
-                {t('button.cancel')}
-              </Button>
-              {dialogContent.action === DialogAction.RESERVE && (
-                <Button variant='default' size='sm' disabled={!userSelected._id} onClick={() => handleReserveAppointment(selectedSlot)}>
-                  {t('button.reserveAppointment')}
-                </Button>
-              )}
-              {dialogContent.action === DialogAction.CANCEL && (
-                <Button variant='default' size='sm' onClick={() => handleCancelAppointment(selectedSlot)}>
-                  {t('button.deleteAppointment')}
-                </Button>
-              )}
-            </footer>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
+      <DialogReserve
+        content={{ 
+          messages: dialogContent,
+          slot: selectedSlot,
+        }}
+
+        reserve={handleReserveAppointment}
+        
+        user={userSelected}
+        setUser={setUserSelected}
+        professional={professionalSelected}
+        legibleDate={selectedLegibleDate}
+        openState={{ open: openDialog, setOpen: setOpenDialog}}
+        refreshAppos={setRefreshAppos}
+      />
     </main>
   );
 }
