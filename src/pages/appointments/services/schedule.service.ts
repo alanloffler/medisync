@@ -108,7 +108,6 @@ export class AppoSchedule {
     const today: Date = new Date();
     const selectedDay: Date = new Date(date);
     selectedDay.setHours(parseInt(time.split(':')[0]), parseInt(time.split(':')[1]), 0, 0);
-    console.log(date, time, selectedDay);
 
     return isAfter(selectedDay, today);
   }
