@@ -62,17 +62,17 @@ export function AppoFlowCard() {
   return (
     <Card className='flex flex-col bg-amber-100 text-amber-500'>
       {!isError && (isLoading || flowValue === undefined) ? (
-        <LoadingText text={t('loading.default')} suffix='...' className='py-4 my-auto !text-xsm text-amber-500' />
+        <LoadingText text={t('loading.default')} suffix='...' className='mx-auto my-auto py-4 !text-xsm text-amber-500' />
       ) : (
         <>
-          <section className='flex w-full items-center space-x-2 bg-amber-200 rounded-md rounded-b-none p-2'>
+          <section className='flex w-full items-center space-x-2 rounded-md rounded-b-none bg-amber-200 p-2'>
             <div>
               <ChartLine size={16} strokeWidth={2} className='stroke-amber-500' />
             </div>
             <span className='text-xsm font-semibold uppercase leading-none'>{t('statistics.appointments.title')}</span>
           </section>
           {flowValue?.count && (
-            <div className='flex flex-col items-center font-semibold p-4'>
+            <div className='flex flex-col items-center p-4 font-semibold'>
               <NumberFlowGroup>
                 {flowValue.count && (
                   <div className='flex items-center space-x-2'>
@@ -109,7 +109,7 @@ export function AppoFlowCard() {
           )}
         </>
       )}
-      {isError && <span className='!text-xsm'>{error.message}</span>}
+      {isError && <span className='!text-xsm mx-auto my-auto'>{error.message}</span>}
     </Card>
   );
 }
