@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { CalendarFooter } from '@appointments/components/CalendarFooter';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
-import { ProfessionalSelection } from '@appointments/components/schedule/ProfessionalSelection';
+import { ProfessionalSelection } from '@appointments/components/reserve/ProfessionalSelection';
 import { StatusSelect } from '@appointments/components/common/StatusSelect';
 import { UsersCombo } from '@users/components/UsersCombo';
 // External imports
@@ -325,6 +325,7 @@ export default function ReserveAppointments() {
       </div>
     );
   }
+  
   // #region Calendar footer
   function selectYear(value: string): void {
     setSelectedYear(parseInt(value));
