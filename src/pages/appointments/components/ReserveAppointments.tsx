@@ -1,17 +1,5 @@
 // Icons: https://lucide.dev/icons
-import {
-  BriefcaseMedical,
-  CalendarCheck,
-  CalendarClock,
-  CalendarDays,
-  CircleSlash2,
-  ClipboardCheck,
-  Clock,
-  ClockAlert,
-  FileWarning,
-  IdCard,
-  X,
-} from 'lucide-react';
+import { BriefcaseMedical, CalendarCheck, CalendarDays, CircleSlash2, ClipboardCheck, Clock, ClockAlert, FileWarning, IdCard, X } from 'lucide-react';
 // External Components: https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
 import { Calendar } from '@core/components/ui/calendar';
@@ -21,9 +9,8 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { CalendarFooter } from '@appointments/components/CalendarFooter';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
-import { ProfessionalsCombobox } from '@professionals/components/common/ProfessionalsCombobox';
+import { ProfessionalSelection } from '@appointments/components/schedule/ProfessionalSelection';
 import { StatusSelect } from '@appointments/components/common/StatusSelect';
-// import { Steps } from '@core/components/common/Steps';
 import { UsersCombo } from '@users/components/UsersCombo';
 // External imports
 import { es, enUS, Locale } from 'date-fns/locale';
@@ -65,8 +52,6 @@ export default function ReserveAppointments() {
   const [dialogContent, setDialogContent] = useState<IDialog>({} as IDialog);
   const [disabledDays, setDisabledDays] = useState<number[]>(DISABLED_DAYS);
   const [errorMessage, setErrorMessage] = useState<string>();
-  const [legibleSchedule, setLegibleSchedule] = useState<string>('');
-  const [legibleWorkingDays, setLegibleWorkingDays] = useState<string>('');
   const [loadingAppointments, setLoadingAppointments] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [professionalSelected, setProfessionalSelected] = useState<IProfessional>();
@@ -86,7 +71,10 @@ export default function ReserveAppointments() {
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
   const { i18n, t } = useTranslation();
 
-  const selectedLocale = i18n.resolvedLanguage || i18n.language;
+  const selectedLocale: string = i18n.resolvedLanguage || i18n.language;
+
+  // SCHEDULE
+  // Full legible today date (schedule header)
   const legibleTodayDate: string = useMemo(() => {
     return format(selectedDate!, 'full', selectedLocale);
   }, [selectedDate, selectedLocale]);
@@ -98,36 +86,17 @@ export default function ReserveAppointments() {
       if (selectedLocale === 'en') setCalendarLocale(enUS);
     }
   }, [selectedLocale, selectedDate, legibleTodayDate]);
-  // #region professionalSelected actions
-  useEffect(() => {
-    setItemSelected(HEADER_CONFIG.headerMenu[1].id);
-  }, [setItemSelected]);
 
   const _disabledDays = useMemo(() => {
     return CalendarService.getDisabledDays(professionalSelected?.configuration.workingDays ?? []);
   }, [professionalSelected?.configuration.workingDays]);
 
-  const _legibleWorkingDays = useMemo(() => {
-    return CalendarService.getLegibleWorkingDays(professionalSelected?.configuration.workingDays ?? [], true, selectedLocale);
-  }, [professionalSelected?.configuration.workingDays, selectedLocale]);
+  // #region professionalSelected actions
+  useEffect(() => {
+    setItemSelected(HEADER_CONFIG.headerMenu[1].id);
+  }, [setItemSelected]);
 
   useEffect(() => {
-    if (professionalSelected) {
-      // const calendarDisabledDays: number[] = CalendarService.getDisabledDays(professionalSelected.configuration.workingDays);
-      setDisabledDays(_disabledDays);
-
-      // const legibleWorkingDays: string = CalendarService.getLegibleWorkingDays(professionalSelected.configuration.workingDays, true, selectedLocale);
-      setLegibleWorkingDays(_legibleWorkingDays);
-
-      const legibleSchedule: string = CalendarService.getLegibleSchedule(
-        professionalSelected.configuration.scheduleTimeInit,
-        professionalSelected.configuration.scheduleTimeEnd,
-        professionalSelected.configuration.unavailableTimeSlot?.timeSlotUnavailableInit || undefined,
-        professionalSelected.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd || undefined,
-      );
-      setLegibleSchedule(legibleSchedule);
-    }
-
     setSelectedDate(undefined);
     setShowCalendar(true);
     setSelectedDate(new Date());
@@ -137,7 +106,7 @@ export default function ReserveAppointments() {
 
     const calendarMonths: string[] = CalendarService.generateMonths(selectedLocale);
     setCalendarMonths(calendarMonths);
-  }, [_disabledDays, _legibleWorkingDays, professionalSelected, selectedLocale]);
+  }, [_disabledDays, professionalSelected, selectedLocale]);
   // #endregion
   // #region Load data, schedule creation, time slots generation and appointments insertion.
   useEffect(() => {
@@ -163,10 +132,6 @@ export default function ReserveAppointments() {
         setTodayIsWorkingDay(todayIsWorkingDay);
 
         if (todayIsWorkingDay) {
-          // Deprecated: legible date is set on page load and on language change. Test it!
-          // const legibleTodayDate: string = format(selectedDate, 'full', selectedLocale);
-          // setSelectedLegibleDate(capitalizeFirstLetter(legibleTodayDate) || '');
-
           const scheduleDate: string = format(selectedDate, 'YYYY-MM-DD');
           setDate(selectedDate);
 
@@ -213,25 +178,6 @@ export default function ReserveAppointments() {
   }, [selectedDate, refreshAppos]);
   // #endregion
   // #region Appointment actions (reserve and cancel)
-  // async function handleReserveAppointment(timeSlot: ITimeSlot | undefined): Promise<void> {
-  //   if (timeSlot && professionalSelected && selectedDate !== undefined) {
-  //     const newAppo = await AppointmentApiService.create({
-  //       slot: timeSlot.id,
-  //       professional: professionalSelected?._id || '',
-  //       day: format(date ?? new Date(), 'YYYY-MM-DD'),
-  //       hour: timeSlot.begin,
-  //       user: userSelected._id,
-  //     });
-
-  //     if (newAppo.statusCode === 200) {
-  //       addNotification({ type: 'success', message: newAppo.message });
-  //       setRefreshAppos(crypto.randomUUID());
-  //       handleResetDialog();
-  //     }
-  //     if (newAppo.statusCode > 399) addNotification({ type: 'error', message: newAppo.message });
-  //     if (newAppo instanceof Error) addNotification({ type: 'error', message: t('error.internalServer') });
-  //   }
-  // }
   const handleReserveAppointment = useCallback(
     async (timeSlot: ITimeSlot | undefined): Promise<void> => {
       if (timeSlot && professionalSelected && selectedDate !== undefined) {
@@ -273,52 +219,8 @@ export default function ReserveAppointments() {
     if (openDialog === false) handleResetDialog();
   }, [openDialog]);
   // #endregion
+
   // #region Dialog
-  // function handleDialog(action: DialogAction, slot: ITimeSlot): void {
-  //   setOpenDialog(true);
-  //   setSelectedSlot(slot);
-
-  //   if (action === DialogAction.RESERVE) {
-  //     const reserveDialogContent: IDialog = {
-  //       action: DialogAction.RESERVE,
-  //       content: <UsersCombo searchBy='dni' searchResult={(e) => setUserSelected(e)} placeholder={t('placeholder.userCombobox')} />,
-  //       description: t('dialog.reserveAppointment.description'),
-  //       title: t('dialog.reserveAppointment.title'),
-  //     };
-
-  //     setDialogContent(reserveDialogContent);
-  //   }
-
-  //   if (action === DialogAction.CANCEL) {
-  //     setUserSelected({} as IUser);
-
-  //     const cancelDialogContent: IDialog = {
-  //       action: DialogAction.CANCEL,
-  //       content: (
-  //         <div className='space-y-2'>
-  //           <Trans
-  //             i18nKey='dialog.deleteAppointment.contentText'
-  //             values={{
-  //               firstName: UtilsString.upperCase(slot.appointment?.user.firstName),
-  //               lastName: UtilsString.upperCase(slot.appointment?.user.lastName),
-  //             }}
-  //             components={{
-  //               span: <span className='font-semibold' />,
-  //             }}
-  //           />
-  //           <p className='italic'>
-  //             {`${UtilsString.upperCase(format(slot.appointment?.day as string, 'full', selectedLocale))} - ${slot.appointment?.hour} ${t('words.hoursAbbreviation')}`}
-  //           </p>
-  //         </div>
-  //       ),
-  //       description: t('dialog.deleteAppointment.description'),
-  //       title: t('dialog.deleteAppointment.title'),
-  //     };
-
-  //     setDialogContent(cancelDialogContent);
-  //   }
-  // }
-
   const handleDialog = useCallback(
     (action: DialogAction, slot: ITimeSlot): void => {
       setOpenDialog(true);
@@ -446,36 +348,7 @@ export default function ReserveAppointments() {
         {/* Section: Left side */}
         <section className='flex h-fit flex-col gap-4 rounded-lg bg-background p-4 md:mx-auto md:w-1/3 md:gap-6 lg:mx-auto lg:w-1/3 lg:gap-6'>
           {/* Section: Select professional */}
-          <section className='flex w-full flex-col space-y-4'>
-            <h5 className='flex items-center gap-2 text-xsm font-semibold uppercase'>
-              <span className='flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-center leading-none text-background'>1</span>
-              {t('section.appointments.reserve.steps.title1')}
-            </h5>
-            <div className=''>
-              <ProfessionalsCombobox
-                onSelectProfessional={(professional) => setProfessionalSelected(professional)}
-                options={{
-                  loadingText: t('loading.default'),
-                  notFoundText: t('error.notFoundDefault'),
-                  placeholder: t('placeholder.professionalCombobox'),
-                  searchText: t('search.default'),
-                }}
-                className='w-fit bg-input hover:bg-input-hover'
-              />
-            </div>
-            {professionalSelected && (
-              <section className='flex w-full flex-col space-y-1 text-sm font-normal text-slate-500'>
-                <div className='flex flex-row items-center space-x-2'>
-                  <CalendarDays size={18} strokeWidth={2} />
-                  <span>{legibleWorkingDays}</span>
-                </div>
-                <div className='flex flex-row items-center space-x-2'>
-                  <CalendarClock size={18} strokeWidth={2} />
-                  <span>{legibleSchedule}</span>
-                </div>
-              </section>
-            )}
-          </section>
+          <ProfessionalSelection professional={professionalSelected} setSelected={setProfessionalSelected} setDisabledDays={setDisabledDays} />
           {/* Section: Calendar */}
           <section className={cn('flex flex-col space-y-3', showCalendar ? 'pointer-events-auto' : 'pointer-events-none')}>
             <h5 className='flex items-center gap-2 text-xsm font-semibold uppercase'>
@@ -515,10 +388,8 @@ export default function ReserveAppointments() {
                   return found ? (
                     <div>
                       <span className='font-semibold'>{numberDay}</span>
-                      {/* <span className='border border-emerald-400 h-6 w-6 rounded-full absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2'></span> */}
-                      {/* <span className='bg-emerald-400 text-white rounded-full w-3.5 h-3.5 absolute bottom-0 right-1 text-[9px] leading-none items-center flex justify-center'>{found.value}</span> */}
-                      {/* <span className='bg-emerald-400 text-white rounded-full w-1.5 h-1.5 absolute bottom-1.5 right-1.5 text-[9px] leading-none items-center flex justify-center'></span> */}
-                      <span className='absolute bottom-1.5 right-0 h-0.5 w-1/2 -translate-x-1/2 rounded-full bg-emerald-400'></span>
+                      <span className='bg-emerald-400 text-white rounded-full w-1.5 h-1.5 absolute bottom-1.5 right-1.5 text-[9px] leading-none items-center flex justify-center'></span>
+                      {/* <span className='absolute bottom-1.5 right-0 h-0.5 w-1/2 -translate-x-1/2 rounded-full bg-emerald-400'></span> */}
                     </div>
                   ) : (
                     <>{numberDay}</>
