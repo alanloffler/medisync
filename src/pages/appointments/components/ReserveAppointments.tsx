@@ -27,7 +27,7 @@ import { StatusSelect } from '@appointments/components/common/StatusSelect';
 import { UsersCombo } from '@users/components/UsersCombo';
 // External imports
 import { es, enUS, Locale } from 'date-fns/locale';
-import { format, parse } from '@formkit/tempo';
+import { format } from '@formkit/tempo';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // Imports
@@ -424,23 +424,24 @@ export default function ReserveAppointments() {
               toYear={Number(calendarYears[calendarYears.length - 1])}
               formatters={{
                 formatDay: (day) => {
-                  console.log('day', day.getDate());
-                  const found = daysWithAppos.find((item) => {
-                    const transformed = parseInt(item.day.split('-')[2]);
-                    console.log(transformed);
-                    if (transformed === day.getDate()) return item;
-                  });
-                  console.log(found);
-                  return found ? (
-                    <div>
-                      <span>{day.getDate()}</span>
-                      <span className='border border-emerald-400 h-6 w-6 rounded-full absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2'></span>
-                      {/* <span className='bg-emerald-400 text-white rounded-full w-3.5 h-3.5 absolute bottom-0 right-1 text-[9px] leading-none items-center flex justify-center'>{found.value}</span> */}
-                    </div>
-                  ) : (
-                    day.getDate()
-                  );
-                },
+                const numberDay: number = day.getDate();
+            
+                const found = daysWithAppos.find((item) => {
+                  const transformed = parseInt(item.day.split('-')[2]);
+                  if (transformed === numberDay) return item;
+                });
+                return found ? (
+                  <div>
+                    <span className='font-semibold'>{numberDay}</span>
+                    {/* <span className='border border-emerald-400 h-6 w-6 rounded-full absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2'></span> */}
+                    {/* <span className='bg-emerald-400 text-white rounded-full w-3.5 h-3.5 absolute bottom-0 right-1 text-[9px] leading-none items-center flex justify-center'>{found.value}</span> */}
+                    {/* <span className='bg-emerald-400 text-white rounded-full w-1.5 h-1.5 absolute bottom-1.5 right-1.5 text-[9px] leading-none items-center flex justify-center'></span> */}
+                    <span className='absolute bottom-1.5 right-0 h-0.5 w-1/2 -translate-x-1/2 rounded-full bg-emerald-400'></span>
+                  </div>
+                ) : (
+                  <>{numberDay}</>
+                );
+              }
               }}
             />
             <section className='flex w-full flex-row items-center justify-center space-x-3'>
@@ -472,7 +473,7 @@ export default function ReserveAppointments() {
         <section className='flex flex-col gap-4 md:w-2/3 lg:w-2/3'>
           <>
             {/* Section: Schedule */}
-            {true ? (
+            {todayIsWorkingDay ? (
               // {todayIsWorkingDay ? (
               loadingAppointments ? (
                 <LoadingDB text={t('loading.schedule')} variant='card' size='default' />
