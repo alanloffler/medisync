@@ -1,21 +1,25 @@
-import { cn } from '@lib/utils';
-import { CalendarFooter } from '@appointments/components/CalendarFooter';
-import { Calendar } from '@core/components/ui/calendar';
-import { useTranslation } from 'react-i18next';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+// External components: https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
+import { Calendar } from '@core/components/ui/calendar';
+// Components
+import { CalendarFooter } from '@appointments/components/CalendarFooter';
+// External imports
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { es, enUS, Locale } from 'date-fns/locale';
+import { useTranslation } from 'react-i18next';
+// Imports
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import { CalendarService } from '@appointments/services/calendar.service';
-import { es, enUS, Locale } from 'date-fns/locale';
 import { RESERVE_APPOINTMENT_CONFIG as RA_CONFIG } from '@config/appointments/reserve-appointments.config';
-
+import { cn } from '@lib/utils';
+// Interface
 interface IProps {
-  date: Date | undefined;
+  date?: Date;
   disabledDays: number[];
   professional?: IProfessional;
   setSelectedDate: Dispatch<SetStateAction<Date | undefined>>;
 }
-
+// React component
 export function DateSelection({ date, disabledDays, professional, setSelectedDate }: IProps) {
   const [calendarKey, setCalendarKey] = useState<string>('');
   const [calendarLocale, setCalendarLocale] = useState<Locale>();
@@ -26,14 +30,6 @@ export function DateSelection({ date, disabledDays, professional, setSelectedDat
   const { i18n, t } = useTranslation();
 
   const selectedLocale: string = i18n.resolvedLanguage || i18n.language;
-
-  // useEffect(() => {
-  //   if (selectedDate) {
-  //     setSelectedLegibleDate(legibleTodayDate);
-  //     if (selectedLocale === 'es') setCalendarLocale(es);
-  //     if (selectedLocale === 'en') setCalendarLocale(enUS);
-  //   }
-  // }, [selectedLocale, selectedDate, legibleTodayDate]);
 
   useEffect(() => {
     const calendarYears: string[] = CalendarService.generateYearsRange(RA_CONFIG.calendar.yearsRange);
@@ -50,15 +46,15 @@ export function DateSelection({ date, disabledDays, professional, setSelectedDat
     console.log('Professional changed');
   }, [professional]);
 
-  // function selectYear(value: string): void {
-  //   setSelectedYear(parseInt(value));
-  //   setCalendarKey(crypto.randomUUID());
-  // }
+  function selectYear(value: string): void {
+    setSelectedYear(parseInt(value));
+    setCalendarKey(crypto.randomUUID());
+  }
 
-  // function selectMonth(value: string): void {
-  //   setSelectedMonth(parseInt(value));
-  //   setCalendarKey(crypto.randomUUID());
-  // }
+  function selectMonth(value: string): void {
+    setSelectedMonth(parseInt(value));
+    setCalendarKey(crypto.randomUUID());
+  }
 
   const daysWithAppos = [
     { day: '2024-12-02', value: 5 },
@@ -96,7 +92,6 @@ export function DateSelection({ date, disabledDays, professional, setSelectedDat
         formatters={{
           formatDay: (day) => {
             const numberDay: number = day.getDate();
-
             const found = daysWithAppos.find((item) => {
               const transformed = parseInt(item.day.split('-')[2]);
               if (transformed === numberDay) return item;
@@ -126,15 +121,15 @@ export function DateSelection({ date, disabledDays, professional, setSelectedDat
         >
           {t('button.today')}
         </Button>
-        {/* <CalendarFooter
+        <CalendarFooter
           calendarMonths={calendarMonths}
           calendarYears={calendarYears}
-          disabled={!professionalSelected}
+          disabled={!professional}
           selectedMonth={selectedMonth}
           selectedYear={selectedYear}
           selectMonth={selectMonth}
           selectYear={selectYear}
-        /> */}
+        />
       </section>
     </section>
   );
