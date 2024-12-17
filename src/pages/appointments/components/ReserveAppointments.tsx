@@ -2,18 +2,16 @@
 import { BriefcaseMedical, CalendarCheck, CalendarDays, CircleSlash2, ClipboardCheck, Clock, ClockAlert, FileWarning, IdCard, X } from 'lucide-react';
 // External Components: https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
-import { Calendar } from '@core/components/ui/calendar';
 import { Card, CardContent, CardTitle } from '@core/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
 // Components
-import { CalendarFooter } from '@appointments/components/CalendarFooter';
+import { DateSelection } from '@appointments/components/reserve/DateSelection';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { ProfessionalSelection } from '@appointments/components/reserve/ProfessionalSelection';
 import { StatusSelect } from '@appointments/components/common/StatusSelect';
 import { UsersCombo } from '@users/components/UsersCombo';
 // External imports
-import { es, enUS, Locale } from 'date-fns/locale';
 import { format } from '@formkit/tempo';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -30,7 +28,6 @@ import { HEADER_CONFIG } from '@config/layout/header.config';
 import { RESERVE_APPOINTMENT_CONFIG as RA_CONFIG } from '@config/appointments/reserve-appointments.config';
 import { Trans, useTranslation } from 'react-i18next';
 import { UtilsString } from '@core/services/utils/string.service';
-import { cn } from '@lib/utils';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // Enum
@@ -38,30 +35,19 @@ enum DialogAction {
   CANCEL = 'cancel',
   RESERVE = 'reserve',
 }
-// Constants
+// Constants: Common with ProfessionalSelection and DateSelection
 const DISABLED_DAYS: number[] = RA_CONFIG.calendar.disabledDays;
 // React component
 export default function ReserveAppointments() {
   const [appointments, setAppointments] = useState<IAppointment[]>([] as IAppointment[]);
   const [availableSlotsToReserve, setAvailableSlotsToReserve] = useState<number>(0);
-  const [calendarKey, setCalendarKey] = useState<string>('');
-  const [calendarLocale, setCalendarLocale] = useState<Locale>();
-  const [calendarMonths, setCalendarMonths] = useState<string[]>([]);
-  const [calendarYears, setCalendarYears] = useState<string[]>([]);
-  const [date, setDate] = useState<Date | undefined>(new Date());
   const [dialogContent, setDialogContent] = useState<IDialog>({} as IDialog);
-  const [disabledDays, setDisabledDays] = useState<number[]>(DISABLED_DAYS);
   const [errorMessage, setErrorMessage] = useState<string>();
   const [loadingAppointments, setLoadingAppointments] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [professionalSelected, setProfessionalSelected] = useState<IProfessional>();
   const [refreshAppos, setRefreshAppos] = useState<string>('');
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
-  const [selectedLegibleDate, setSelectedLegibleDate] = useState<string>('');
-  const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth());
   const [selectedSlot, setSelectedSlot] = useState<ITimeSlot>({} as ITimeSlot);
-  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
-  const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [showTimeSlots, setShowTimeSlots] = useState<boolean>(false);
   const [timeSlots, setTimeSlots] = useState<ITimeSlot[]>([] as ITimeSlot[]);
   const [todayIsWorkingDay, setTodayIsWorkingDay] = useState<boolean>(false);
@@ -69,8 +55,15 @@ export default function ReserveAppointments() {
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const navigate = useNavigate();
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
-  const { i18n, t } = useTranslation();
 
+  // Common with ProfessionalSelection and DateSelection
+  const [disabledDays, setDisabledDays] = useState<number[]>(DISABLED_DAYS);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [selectedLegibleDate, setSelectedLegibleDate] = useState<string>('');
+
+
+  const { i18n, t } = useTranslation();
   const selectedLocale: string = i18n.resolvedLanguage || i18n.language;
 
   // SCHEDULE
@@ -80,12 +73,10 @@ export default function ReserveAppointments() {
   }, [selectedDate, selectedLocale]);
 
   useEffect(() => {
-    if (selectedDate) {
-      setSelectedLegibleDate(legibleTodayDate);
-      if (selectedLocale === 'es') setCalendarLocale(es);
-      if (selectedLocale === 'en') setCalendarLocale(enUS);
-    }
-  }, [selectedLocale, selectedDate, legibleTodayDate]);
+    setSelectedLegibleDate(legibleTodayDate);
+  }, [legibleTodayDate, selectedDate]);
+
+
 
   const _disabledDays = useMemo(() => {
     return CalendarService.getDisabledDays(professionalSelected?.configuration.workingDays ?? []);
@@ -98,16 +89,10 @@ export default function ReserveAppointments() {
 
   useEffect(() => {
     setSelectedDate(undefined);
-    setShowCalendar(true);
     setSelectedDate(new Date());
-
-    const calendarYears: string[] = CalendarService.generateYearsRange(RA_CONFIG.calendar.yearsRange);
-    setCalendarYears(calendarYears);
-
-    const calendarMonths: string[] = CalendarService.generateMonths(selectedLocale);
-    setCalendarMonths(calendarMonths);
   }, [_disabledDays, professionalSelected, selectedLocale]);
   // #endregion
+
   // #region Load data, schedule creation, time slots generation and appointments insertion.
   useEffect(() => {
     if (professionalSelected) {
@@ -118,12 +103,12 @@ export default function ReserveAppointments() {
       }
 
       if (selectedDate) {
-        if (selectedDate !== date) {
-          setTimeSlots([]);
-          setAppointments([]);
-          setErrorMessage('');
-          setAvailableSlotsToReserve(0);
-        }
+        // if (selectedDate !== date) {
+        //   setTimeSlots([]);
+        //   setAppointments([]);
+        //   setErrorMessage('');
+        //   setAvailableSlotsToReserve(0);
+        // }
 
         // Check if today is professional's working day
         const dayOfWeekSelected: number = selectedDate.getDay();
@@ -148,7 +133,6 @@ export default function ReserveAppointments() {
             ],
           );
 
-          setShowCalendar(true);
           setTimeSlots(schedule.timeSlots);
           setShowTimeSlots(true);
           setLoadingAppointments(true);
@@ -326,23 +310,6 @@ export default function ReserveAppointments() {
     );
   }
   
-  // #region Calendar footer
-  function selectYear(value: string): void {
-    setSelectedYear(parseInt(value));
-    setCalendarKey(crypto.randomUUID());
-  }
-
-  function selectMonth(value: string): void {
-    setSelectedMonth(parseInt(value));
-    setCalendarKey(crypto.randomUUID());
-  }
-  // #endregion
-
-  const daysWithAppos = [
-    { day: '2024-12-02', value: 5 },
-    { day: '2024-12-12', value: 25 },
-  ];
-
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6'>
       <section className='flex flex-col gap-6 overflow-x-auto md:flex-row lg:flex-row'>
@@ -351,77 +318,8 @@ export default function ReserveAppointments() {
           {/* Section: Select professional */}
           <ProfessionalSelection professional={professionalSelected} setSelected={setProfessionalSelected} setDisabledDays={setDisabledDays} />
           {/* Section: Calendar */}
-          <section className={cn('flex flex-col space-y-3', showCalendar ? 'pointer-events-auto' : 'pointer-events-none')}>
-            <h5 className='flex items-center gap-2 text-xsm font-semibold uppercase'>
-              <span className='flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-center leading-none text-background'>2</span>
-              {t('section.appointments.reserve.steps.title2')}
-            </h5>
-            <Calendar
-              className='mx-auto text-card-foreground'
-              defaultMonth={new Date(selectedYear, selectedMonth)}
-              disabled={[
-                new Date(2024, 11, 24),
-                new Date(2024, 11, 25),
-                { dayOfWeek: disabledDays },
-                // { before: new Date() }, // This is to disable past days
-                // { from: new Date(2024, 11, 24) },
-              ]}
-              fromYear={Number(calendarYears[0])}
-              key={calendarKey}
-              locale={calendarLocale}
-              mode='single'
-              onDayClick={(event) => professionalSelected && setSelectedDate(event)}
-              onMonthChange={(month) => {
-                setSelectedMonth(month.getMonth());
-                setSelectedYear(month.getFullYear());
-              }}
-              selected={date}
-              showOutsideDays={false}
-              toYear={Number(calendarYears[calendarYears.length - 1])}
-              formatters={{
-                formatDay: (day) => {
-                  const numberDay: number = day.getDate();
+          <DateSelection professional={professionalSelected} disabledDays={disabledDays} date={date} setSelectedDate={setSelectedDate} />
 
-                  const found = daysWithAppos.find((item) => {
-                    const transformed = parseInt(item.day.split('-')[2]);
-                    if (transformed === numberDay) return item;
-                  });
-                  return found ? (
-                    <div>
-                      <span className='font-semibold'>{numberDay}</span>
-                      <span className='bg-emerald-400 text-white rounded-full w-1.5 h-1.5 absolute bottom-1.5 right-1.5 text-[9px] leading-none items-center flex justify-center'></span>
-                      {/* <span className='absolute bottom-1.5 right-0 h-0.5 w-1/2 -translate-x-1/2 rounded-full bg-emerald-400'></span> */}
-                    </div>
-                  ) : (
-                    <>{numberDay}</>
-                  );
-                },
-              }}
-            />
-            <section className='flex w-full flex-row items-center justify-center space-x-3'>
-              <Button
-                variant='default'
-                className='h-7 w-fit px-2 text-xs'
-                onClick={() => {
-                  setSelectedMonth(new Date().getMonth());
-                  setSelectedYear(new Date().getFullYear());
-                  setSelectedDate(new Date());
-                  setCalendarKey(crypto.randomUUID());
-                }}
-              >
-                {t('button.today')}
-              </Button>
-              <CalendarFooter
-                calendarMonths={calendarMonths}
-                calendarYears={calendarYears}
-                disabled={!professionalSelected}
-                selectedMonth={selectedMonth}
-                selectedYear={selectedYear}
-                selectMonth={selectMonth}
-                selectYear={selectYear}
-              />
-            </section>
-          </section>
         </section>
         {/* Section: Right side */}
         <section className='flex flex-col gap-4 md:w-2/3 lg:w-2/3'>
