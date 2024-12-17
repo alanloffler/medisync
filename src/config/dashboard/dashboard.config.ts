@@ -3,19 +3,19 @@ export const DASHBOARD_CONFIG = {
     charts: [
       {
         days: [
-          { text: 'chart.daylyAppointments.date.day', value: 7, default: true },
-          { text: 'chart.daylyAppointments.date.month', value: 30 }, // 30 per month
-          { text: 'chart.daylyAppointments.date.year', value: 365 }, // 365 per year
+          { text: 'chart.dailyAppointments.date.day', value: 7, default: true },
+          { text: 'chart.dailyAppointments.date.month', value: 30 }, // 30 per month
+          { text: 'chart.dailyAppointments.date.year', value: 365 }, // 365 per year
         ],
         height: 80,
         label: {
-          x: 'chart.daylyAppointments.label.x',
-          y: 'chart.daylyAppointments.label.y',
+          x: 'chart.dailyAppointments.label.x',
+          y: 'chart.dailyAppointments.label.y',
         },
         margin: { top: 30, right: 20, bottom: 10, left: 20 },
         options: { axisX: false, axisY: false },
         path: '/appointments',
-        title: 'chart.daylyAppointments.title',
+        title: 'chart.dailyAppointments.title',
       },
     ],
     items: [
