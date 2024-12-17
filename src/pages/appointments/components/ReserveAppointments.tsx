@@ -45,7 +45,6 @@ export default function ReserveAppointments() {
   const [errorMessage, setErrorMessage] = useState<string>();
   const [loadingAppointments, setLoadingAppointments] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
-  const [professionalSelected, setProfessionalSelected] = useState<IProfessional>();
   const [refreshAppos, setRefreshAppos] = useState<string>('');
   const [selectedSlot, setSelectedSlot] = useState<ITimeSlot>({} as ITimeSlot);
   const [showTimeSlots, setShowTimeSlots] = useState<boolean>(false);
@@ -57,14 +56,20 @@ export default function ReserveAppointments() {
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
 
   // Common with ProfessionalSelection and DateSelection
-  const [disabledDays, setDisabledDays] = useState<number[]>(DISABLED_DAYS);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [date, setDate] = useState<Date | undefined>(new Date());
+  const [disabledDays, setDisabledDays] = useState<number[]>(DISABLED_DAYS);
+  const [professionalSelected, setProfessionalSelected] = useState<IProfessional>();
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedLegibleDate, setSelectedLegibleDate] = useState<string>('');
-
 
   const { i18n, t } = useTranslation();
   const selectedLocale: string = i18n.resolvedLanguage || i18n.language;
+
+  // PAGE
+  // Set header menu item selected
+  useEffect(() => {
+    setItemSelected(HEADER_CONFIG.headerMenu[1].id);
+  }, [setItemSelected]);
 
   // SCHEDULE
   // Full legible today date (schedule header)
@@ -76,22 +81,23 @@ export default function ReserveAppointments() {
     setSelectedLegibleDate(legibleTodayDate);
   }, [legibleTodayDate, selectedDate]);
 
+  const $getDisabledDays = useMemo(() => {
+    return (professionalSelected: IProfessional | undefined) => {
+      return CalendarService.getDisabledDays(professionalSelected?.configuration.workingDays ?? []);
+    };
+  }, []);
 
-
-  const _disabledDays = useMemo(() => {
-    return CalendarService.getDisabledDays(professionalSelected?.configuration.workingDays ?? []);
-  }, [professionalSelected?.configuration.workingDays]);
-
-  // #region professionalSelected actions
+  // CALENDAR
+  // Set disabled days by professional selected
   useEffect(() => {
-    setItemSelected(HEADER_CONFIG.headerMenu[1].id);
-  }, [setItemSelected]);
+    const disabledDays = $getDisabledDays(professionalSelected);
+    setDisabledDays(disabledDays);
+  }, [professionalSelected, $getDisabledDays]);
 
   useEffect(() => {
     setSelectedDate(undefined);
     setSelectedDate(new Date());
-  }, [_disabledDays, professionalSelected, selectedLocale]);
-  // #endregion
+  }, [professionalSelected, selectedLocale]);
 
   // #region Load data, schedule creation, time slots generation and appointments insertion.
   useEffect(() => {
@@ -161,7 +167,7 @@ export default function ReserveAppointments() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDate, refreshAppos]);
   // #endregion
-  // #region Appointment actions (reserve and cancel)
+
   const handleReserveAppointment = useCallback(
     async (timeSlot: ITimeSlot | undefined): Promise<void> => {
       if (timeSlot && professionalSelected && selectedDate !== undefined) {
@@ -202,7 +208,6 @@ export default function ReserveAppointments() {
   useEffect(() => {
     if (openDialog === false) handleResetDialog();
   }, [openDialog]);
-  // #endregion
 
   // #region Dialog
   const handleDialog = useCallback(
@@ -309,7 +314,7 @@ export default function ReserveAppointments() {
       </div>
     );
   }
-  
+
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6'>
       <section className='flex flex-col gap-6 overflow-x-auto md:flex-row lg:flex-row'>
@@ -319,7 +324,6 @@ export default function ReserveAppointments() {
           <ProfessionalSelection professional={professionalSelected} setSelected={setProfessionalSelected} setDisabledDays={setDisabledDays} />
           {/* Section: Calendar */}
           <DateSelection professional={professionalSelected} disabledDays={disabledDays} date={date} setSelectedDate={setSelectedDate} />
-
         </section>
         {/* Section: Right side */}
         <section className='flex flex-col gap-4 md:w-2/3 lg:w-2/3'>
