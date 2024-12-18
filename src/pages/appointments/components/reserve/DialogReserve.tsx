@@ -22,13 +22,12 @@ interface IProps {
   date?: Date;
   openState: { open: boolean; setOpen: Dispatch<SetStateAction<boolean>> };
   professional?: IProfessional;
-  refreshAppos: Dispatch<SetStateAction<string>>;
   setRefreshAppos: Dispatch<SetStateAction<string>>;
   setUser: Dispatch<SetStateAction<IUser>>;
   user: IUser;
 }
 // React component
-export function DialogReserve({ content, date, openState, professional, refreshAppos, setRefreshAppos, setUser, user }: IProps) {
+export function DialogReserve({ content, date, openState, professional, setRefreshAppos, setUser, user }: IProps) {
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const { messages: dialogContent, slot: selectedSlot } = content;
   const { i18n, t } = useTranslation();
@@ -100,7 +99,8 @@ export function DialogReserve({ content, date, openState, professional, refreshA
       AppointmentApiService.remove(slot.appointment._id).then((response) => {
         if (response.statusCode === 200) {
           addNotification({ type: 'success', message: response.message });
-          refreshAppos(crypto.randomUUID());
+          handleResetDialog();
+          setRefreshAppos(crypto.randomUUID());
           openState.setOpen(false);
         }
         if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
@@ -145,7 +145,7 @@ export function DialogReserve({ content, date, openState, professional, refreshA
             {dialogContent.action === EDialogAction.CANCEL && dialogContent.content}
           </section>
           <footer className='flex justify-end gap-6 pt-4'>
-            <Button variant='secondary' size='sm' onClick={() => handleResetDialog()}>
+            <Button variant='secondary' size='sm' onClick={() => openState.setOpen(false)}>
               {t('button.cancel')}
             </Button>
             {dialogContent.action === EDialogAction.RESERVE && (
