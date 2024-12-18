@@ -27,21 +27,20 @@ export default function ReserveAppointments() {
   const [selectedSlot, setSelectedSlot] = useState<ITimeSlot>({} as ITimeSlot);
   const [userSelected, setUserSelected] = useState<IUser>({} as IUser);
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
+  const { i18n, t } = useTranslation();
+  const selectedLocale: string = i18n.resolvedLanguage || i18n.language;
 
   // Common with ProfessionalSelection and DateSelection
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [disabledDays, setDisabledDays] = useState<number[]>(DISABLED_DAYS);
   const [professionalSelected, setProfessionalSelected] = useState<IProfessional>();
-
+  // Dialog
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   // In DailySchedule & DialogReserve
   const [dialogContent, setDialogContent] = useState<IDialog>({} as IDialog);
   const [selectedLegibleDate, setSelectedLegibleDate] = useState<string>('');
   // In DateSelection & DailySchedule
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-
-  const { i18n, t } = useTranslation();
-  const selectedLocale: string = i18n.resolvedLanguage || i18n.language;
 
   // PAGE
   // Set header menu item selected
