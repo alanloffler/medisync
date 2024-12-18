@@ -61,7 +61,7 @@ export const DailySchedule = memo(({ date, handleDialog, professional, refreshAp
     onSuccess: (response) => {
       if (response && schedule && selectedDate) {
         if (response.statusCode === 200) schedule.insertAppointments(response.data);
-        
+
         const availableSlotsToReserve: number = schedule.availableSlotsToReserve(selectedDate, schedule.timeSlots, response.data.length ?? 0);
         setAvailableSlotsToReserve(availableSlotsToReserve);
       }
@@ -80,8 +80,6 @@ export const DailySchedule = memo(({ date, handleDialog, professional, refreshAp
       const dayOfWeekSelected: number = selectedDate.getDay();
       const workingDays: IWorkingDay[] = professional.configuration.workingDays;
       const todayIsWorkingDay: boolean = CalendarService.checkTodayIsWorkingDay(workingDays, dayOfWeekSelected);
-      setTodayIsWorkingDay(todayIsWorkingDay);
-
       const scheduleDate: string = format(selectedDate, 'YYYY-MM-DD');
 
       const schedule: AppoSchedule = new AppoSchedule(
@@ -97,9 +95,10 @@ export const DailySchedule = memo(({ date, handleDialog, professional, refreshAp
         ],
       );
 
-      setTimeSlots(schedule.timeSlots);
       setSchedule(schedule);
+      setTimeSlots(schedule.timeSlots);
       fetchAppos();
+      setTodayIsWorkingDay(todayIsWorkingDay);
     }
   }, [addNotification, fetchAppos, professional, refreshAppos, selectedDate, setDate, t]);
 
