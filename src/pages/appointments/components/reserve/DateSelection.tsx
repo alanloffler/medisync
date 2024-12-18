@@ -46,7 +46,7 @@ export function DateSelection({ date, disabledDays, professional, setDate, setSe
   useEffect(() => {
     setDate(undefined);
     setCalendarKey(crypto.randomUUID());
-  }, [professional, setSelectedDate, setDate]);
+  }, [professional, setDate]);
 
   function selectYear(value: string): void {
     setSelectedYear(parseInt(value));
