@@ -20,7 +20,6 @@ import { useNotificationsStore } from '@core/stores/notifications.store';
 interface IProps {
   content: { messages: IDialog; slot: ITimeSlot };
   date?: Date;
-  legibleDate?: string;
   openState: { open: boolean; setOpen: Dispatch<SetStateAction<boolean>> };
   professional?: IProfessional;
   refreshAppos: Dispatch<SetStateAction<string>>;
@@ -29,10 +28,11 @@ interface IProps {
   user: IUser;
 }
 // React component
-export function DialogReserve({ content, date, legibleDate, openState, professional, refreshAppos, setRefreshAppos, setUser, user }: IProps) {
+export function DialogReserve({ content, date, openState, professional, refreshAppos, setRefreshAppos, setUser, user }: IProps) {
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const { messages: dialogContent, slot: selectedSlot } = content;
-  const { t } = useTranslation();
+  const { i18n, t } = useTranslation();
+  const locale: string = i18n.resolvedLanguage || i18n.language;
 
   const handleResetDialog = useCallback((): void => {
     setUser({} as IUser);
@@ -51,7 +51,10 @@ export function DialogReserve({ content, date, legibleDate, openState, professio
           <div className='flex flex-row items-center gap-1'>
             <Trans
               i18nKey='dialog.reserveAppointment.content.reservedTo'
-              values={{ firstName: UtilsString.upperCase(userSelected.firstName), lastName: UtilsString.upperCase(userSelected.lastName) }}
+              values={{
+                firstName: UtilsString.upperCase(userSelected.firstName, 'each'),
+                lastName: UtilsString.upperCase(userSelected.lastName, 'each'),
+              }}
               components={{
                 span: <span className='font-semibold' />,
               }}
@@ -63,7 +66,7 @@ export function DialogReserve({ content, date, legibleDate, openState, professio
           <div className='flex flex-row items-center gap-1'>
             <Trans
               i18nKey='dialog.reserveAppointment.content.date'
-              values={{ date: legibleDate }}
+              values={{ date: UtilsString.upperCase(format(date!, 'full', locale)) }}
               components={{
                 span: <span />,
               }}
