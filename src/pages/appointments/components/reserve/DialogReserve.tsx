@@ -5,7 +5,8 @@ import { Button } from '@core/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
 // External imports
 import { Trans, useTranslation } from 'react-i18next';
-import { useCallback, useEffect } from 'react';
+import { format } from '@formkit/tempo';
+import { type Dispatch, type SetStateAction, useCallback, useEffect } from 'react';
 // Imports
 import type { IDialog } from '@core/interfaces/dialog.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
@@ -18,17 +19,17 @@ import { useNotificationsStore } from '@core/stores/notifications.store';
 // Interface
 interface IProps {
   content: { messages: IDialog; slot: ITimeSlot };
-  reserve: (timeSlot: ITimeSlot | undefined) => Promise<void>;
-
-  user: IUser;
-  setUser: React.Dispatch<React.SetStateAction<IUser>>;
-  professional?: IProfessional;
+  date?: Date;
   legibleDate?: string;
-  openState: { open: boolean; setOpen: React.Dispatch<React.SetStateAction<boolean>> };
-  refreshAppos: React.Dispatch<React.SetStateAction<string>>;
+  openState: { open: boolean; setOpen: Dispatch<SetStateAction<boolean>> };
+  professional?: IProfessional;
+  refreshAppos: Dispatch<SetStateAction<string>>;
+  setRefreshAppos: Dispatch<SetStateAction<string>>;
+  setUser: Dispatch<SetStateAction<IUser>>;
+  user: IUser;
 }
 // React component
-export function DialogReserve({ content, reserve, user, setUser, professional, legibleDate, openState, refreshAppos }: IProps) {
+export function DialogReserve({ content, date, legibleDate, openState, professional, refreshAppos, setRefreshAppos, setUser, user }: IProps) {
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const { messages: dialogContent, slot: selectedSlot } = content;
   const { t } = useTranslation();
@@ -41,6 +42,7 @@ export function DialogReserve({ content, reserve, user, setUser, professional, l
     if (openState.open === false) handleResetDialog();
   }, [handleResetDialog, openState.open]);
 
+  // TODO: useCallback
   function generateSummary(userSelected: IUser): JSX.Element {
     return (
       <div className='space-y-2'>
@@ -104,6 +106,30 @@ export function DialogReserve({ content, reserve, user, setUser, professional, l
     }
   }
 
+  const reserveAppointment = useCallback(
+    async (timeSlot: ITimeSlot | undefined): Promise<void> => {
+      if (timeSlot && professional) {
+        const newAppo = await AppointmentApiService.create({
+          slot: timeSlot.id,
+          professional: professional?._id || '',
+          day: format(date ?? new Date(), 'YYYY-MM-DD'),
+          hour: timeSlot.begin,
+          user: user._id,
+        });
+
+        if (newAppo.statusCode === 200) {
+          addNotification({ type: 'success', message: newAppo.message });
+          setRefreshAppos(crypto.randomUUID());
+          handleResetDialog();
+          openState.setOpen(false);
+        }
+        if (newAppo.statusCode > 399) addNotification({ type: 'error', message: newAppo.message });
+        if (newAppo instanceof Error) addNotification({ type: 'error', message: t('error.internalServer') });
+      }
+    },
+    [addNotification, date, handleResetDialog, openState, professional, setRefreshAppos, t, user._id],
+  );
+
   return (
     <Dialog open={openState.open} onOpenChange={openState.setOpen}>
       <DialogContent>
@@ -120,8 +146,7 @@ export function DialogReserve({ content, reserve, user, setUser, professional, l
               {t('button.cancel')}
             </Button>
             {dialogContent.action === EDialogAction.RESERVE && (
-              // TODO: method inside here and close dialog!!!
-              <Button variant='default' size='sm' disabled={!user._id} onClick={() => reserve(selectedSlot)}>
+              <Button variant='default' size='sm' disabled={!user._id} onClick={() => reserveAppointment(selectedSlot)}>
                 {t('button.reserveAppointment')}
               </Button>
             )}
