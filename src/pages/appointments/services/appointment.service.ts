@@ -13,18 +13,7 @@ export class AppointmentApiService {
     const path: string = `${this.API_URL}/appointments/byProfessional`;
     const url: URL = UtilsUrl.create(path, { id, day });
 
-    try {
-      const query: Response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json;charset=UTF-8',
-        },
-      });
-
-      return await query.json();
-    } catch (error) {
-      return error;
-    }
+    return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
   public static async findAllByUser(id: string) {
