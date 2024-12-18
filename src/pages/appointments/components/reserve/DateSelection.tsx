@@ -4,11 +4,14 @@ import { Calendar } from '@core/components/ui/calendar';
 // Components
 import { CalendarFooter } from '@appointments/components/CalendarFooter';
 // External imports
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 import { es, enUS, Locale } from 'date-fns/locale';
+import { useMutation } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
+import type { IResponse } from '@core/interfaces/response.interface';
+import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { CalendarService } from '@appointments/services/calendar.service';
 import { RESERVE_APPOINTMENT_CONFIG as RA_CONFIG } from '@config/appointments/reserve-appointments.config';
 import { cn } from '@lib/utils';
@@ -43,25 +46,35 @@ export function DateSelection({ date, disabledDays, professional, setDate, setSe
     if (selectedLocale === 'en') setCalendarLocale(enUS);
   }, [selectedLocale]);
 
+  const { data: daysWithAppos, mutate } = useMutation<IResponse<{ day: string }[]> | undefined>({
+    mutationKey: ['appointments', 'byProfessional', professional?._id, selectedYear, selectedMonth, professional],
+    mutationFn: async () => {
+      if (professional) {
+        return await AppointmentApiService.daysWithAppos(professional._id, selectedYear, selectedMonth + 1);
+      }
+      return { data: [], message: '', statusCode: 200 };
+    },
+    gcTime: 0,
+  });
+
   useEffect(() => {
     setDate(undefined);
     setCalendarKey(crypto.randomUUID());
   }, [professional, setDate]);
 
-  function selectYear(value: string): void {
+  const selectYear = useCallback((value: string): void => {
     setSelectedYear(parseInt(value));
     setCalendarKey(crypto.randomUUID());
-  }
+  }, []);
 
-  function selectMonth(value: string): void {
+  const selectMonth = useCallback((value: string): void => {
     setSelectedMonth(parseInt(value));
     setCalendarKey(crypto.randomUUID());
-  }
-  // TODO: refactor with useQuery and data from database
-  const daysWithAppos = [
-    { day: '2024-12-02', value: 5 },
-    { day: '2024-12-12', value: 25 },
-  ];
+  }, []);
+
+  useEffect(() => {
+    mutate();
+  }, [mutate, professional, selectedMonth, selectedYear]);
 
   return (
     <section className={cn('flex flex-col space-y-3')}>
@@ -94,7 +107,7 @@ export function DateSelection({ date, disabledDays, professional, setDate, setSe
         formatters={{
           formatDay: (day) => {
             const numberDay: number = day.getDate();
-            const found = daysWithAppos.find((item) => {
+            const found = daysWithAppos?.data?.find((item) => {
               const transformed = parseInt(item.day.split('-')[2]);
               if (transformed === numberDay) return item;
             });
