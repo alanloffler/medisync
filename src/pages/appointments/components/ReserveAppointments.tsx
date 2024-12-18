@@ -156,7 +156,6 @@ export default function ReserveAppointments() {
           slot: selectedSlot,
         }}
         date={date}
-        legibleDate={selectedLegibleDate}
         openState={{ open: openDialog, setOpen: setOpenDialog }}
         professional={professionalSelected}
         refreshAppos={setRefreshAppos}
