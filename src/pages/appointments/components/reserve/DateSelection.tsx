@@ -17,10 +17,11 @@ interface IProps {
   date?: Date;
   disabledDays: number[];
   professional?: IProfessional;
+  setDate: Dispatch<SetStateAction<Date | undefined>>;
   setSelectedDate: Dispatch<SetStateAction<Date | undefined>>;
 }
 // React component
-export function DateSelection({ date, disabledDays, professional, setSelectedDate }: IProps) {
+export function DateSelection({ date, disabledDays, professional, setDate, setSelectedDate }: IProps) {
   const [calendarKey, setCalendarKey] = useState<string>('');
   const [calendarLocale, setCalendarLocale] = useState<Locale>();
   const [calendarMonths, setCalendarMonths] = useState<string[]>([]);
@@ -43,8 +44,9 @@ export function DateSelection({ date, disabledDays, professional, setSelectedDat
   }, [selectedLocale]);
 
   useEffect(() => {
-    console.log('Professional changed');
-  }, [professional]);
+    setDate(undefined);
+    setCalendarKey(crypto.randomUUID());
+  }, [professional, setSelectedDate, setDate]);
 
   function selectYear(value: string): void {
     setSelectedYear(parseInt(value));
@@ -55,7 +57,7 @@ export function DateSelection({ date, disabledDays, professional, setSelectedDat
     setSelectedMonth(parseInt(value));
     setCalendarKey(crypto.randomUUID());
   }
-
+  // TODO: refactor with useQuery and data from database
   const daysWithAppos = [
     { day: '2024-12-02', value: 5 },
     { day: '2024-12-12', value: 25 },
