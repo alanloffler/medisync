@@ -60,6 +60,13 @@ export class AppointmentApiService {
 
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
+  // CHECKED: used on DateSelection.tsx
+  public static async daysWithAppos(professionalId: string, year: string, month: string) {
+    const path: string = `${this.API_URL}/appointments/daysWithAppos`;
+    const url = UtilsUrl.create(path, { professionalId, year, month });
+
+    return await UtilsUrl.fetch(url, EMethods.GET);
+  }
 
   public static async countTotalAppointments() {
     const url: string = `${this.API_URL}/appointments/count`;
