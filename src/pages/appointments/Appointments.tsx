@@ -12,6 +12,7 @@ import { ApposDataTable } from '@appointments/components/AppoDataTable';
 import { DBCountAppos } from '@appointments/components/common/DBCountAppos';
 import { PageHeader } from '@core/components/common/PageHeader';
 // External imports
+import { enUS, es, Locale } from 'date-fns/locale';
 import { format } from '@formkit/tempo';
 import { spring, useAnimate } from 'motion/react';
 import { useEffect, useState } from 'react';
@@ -36,6 +37,7 @@ export default function Appointments() {
   const [createScope, createAnimation] = useAnimate();
   const [date, setDate] = useState<Date>();
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [locale, setLocale] = useState<Locale>();
   const [name, setName] = useState<string>('');
   const [openPopover, setOpenPopover] = useState<boolean>(false);
   const [reload, setReload] = useState<number>(0);
@@ -44,7 +46,7 @@ export default function Appointments() {
   const navigate = useNavigate();
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
   const { help } = useHelpStore();
-  const { t } = useTranslation();
+  const { i18n, t } = useTranslation();
 
   useEffect(() => {
     setItemSelected(HEADER_CONFIG.headerMenu[1].id);
@@ -58,6 +60,11 @@ export default function Appointments() {
     setSearch(search);
     setOpenPopover(false);
   }, [date, name]);
+
+  useEffect(() => {
+    if (i18n.resolvedLanguage === 'en') setLocale(enUS);
+    if (i18n.resolvedLanguage === 'es') setLocale(es);
+  }, [i18n.resolvedLanguage]);
 
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
@@ -125,7 +132,7 @@ export default function Appointments() {
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className='w-auto p-0'>
-                        <Calendar mode='single' selected={date} onSelect={setDate} initialFocus />
+                        <Calendar initialFocus locale={locale} mode='single' onSelect={setDate} selected={date} showOutsideDays={false} />
                       </PopoverContent>
                     </Popover>
                     {date && (
