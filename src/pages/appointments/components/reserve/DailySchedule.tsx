@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons
-import { CalendarCheck, CalendarDays, CircleSlash2, Clock, ClockAlert, FileWarning, IdCard, X } from 'lucide-react';
+import { CalendarCheck, CalendarDays, CircleSlash2, Clock, ClockAlert, IdCard, X } from 'lucide-react';
 // External Components: https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
 import { Card, CardContent, CardTitle } from '@core/components/ui/card';
@@ -10,11 +10,13 @@ import { StatusSelect } from '@appointments/components/common/StatusSelect';
 // External imports
 import { format } from '@formkit/tempo';
 import { memo, useCallback, useEffect, useState, type Dispatch, type SetStateAction } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { IAppointment, ITimeSlot } from '@appointments/interfaces/appointment.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
+import type { IResponse } from '@core/interfaces/response.interface';
 import type { IWorkingDay } from '@professionals/interfaces/working-days.interface';
 import { AppoSchedule } from '@appointments/services/schedule.service';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
@@ -34,75 +36,72 @@ interface IProps {
 }
 // React component
 export const DailySchedule = memo(({ date, handleDialog, professional, refreshAppos, selectedDate, selectedLegibleDate, setDate }: IProps) => {
-  const [appointments, setAppointments] = useState<IAppointment[]>([] as IAppointment[]);
   const [availableSlotsToReserve, setAvailableSlotsToReserve] = useState<number>(0);
-  const [errorMessage, setErrorMessage] = useState<string>();
-  const [loadingAppointments, setLoadingAppointments] = useState<boolean>(false);
-  const [showTimeSlots, setShowTimeSlots] = useState<boolean>(false);
+  const [schedule, setSchedule] = useState<AppoSchedule | null>(null);
   const [timeSlots, setTimeSlots] = useState<ITimeSlot[]>([] as ITimeSlot[]);
   const [todayIsWorkingDay, setTodayIsWorkingDay] = useState<boolean>(false);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const navigate = useNavigate();
   const { i18n, t } = useTranslation();
 
-  useEffect(() => {
-    if (professional && selectedDate) {
-      if (selectedDate !== date) {
-        setTimeSlots([]);
-        setAppointments([]);
-        setErrorMessage('');
-        setAvailableSlotsToReserve(0);
-        setDate(undefined);
+  const {
+    data: appointments,
+    error: errorAppos,
+    isPending: isLoadingAppos,
+    isError: isErrorAppos,
+    mutate: fetchAppos,
+  } = useMutation<IResponse<IAppointment[]> | undefined>({
+    mutationKey: ['appointments', professional && professional._id, selectedDate && format(selectedDate, 'YYYY-MM-DD')],
+    mutationFn: async () => {
+      if (professional && selectedDate) {
+        return await AppointmentApiService.findAllByProfessional(professional._id, format(selectedDate, 'YYYY-MM-DD'));
       }
-      // Check if today is professional's working day
+      return undefined;
+    },
+    onSuccess: (response) => {
+      if (response && schedule && selectedDate) {
+        if (response.statusCode === 200) schedule.insertAppointments(response.data);
+        
+        const availableSlotsToReserve: number = schedule.availableSlotsToReserve(selectedDate, schedule.timeSlots, response.data.length ?? 0);
+        setAvailableSlotsToReserve(availableSlotsToReserve);
+      }
+    },
+    onError: (error) => {
+      addNotification({ type: 'error', message: error.message });
+    },
+  });
+
+  useEffect(() => {
+    // OK, reset calendar selected day
+    // If change professional then is undefined
+    setDate(selectedDate);
+
+    if (professional && selectedDate) {
       const dayOfWeekSelected: number = selectedDate.getDay();
       const workingDays: IWorkingDay[] = professional.configuration.workingDays;
       const todayIsWorkingDay: boolean = CalendarService.checkTodayIsWorkingDay(workingDays, dayOfWeekSelected);
       setTodayIsWorkingDay(todayIsWorkingDay);
 
-      if (todayIsWorkingDay) {
-        const scheduleDate: string = format(selectedDate, 'YYYY-MM-DD');
-        setDate(selectedDate);
+      const scheduleDate: string = format(selectedDate, 'YYYY-MM-DD');
 
-        const schedule: AppoSchedule = new AppoSchedule(
-          `Schedule ${scheduleDate}`,
-          new Date(`${scheduleDate}T${professional.configuration.scheduleTimeInit}`),
-          new Date(`${scheduleDate}T${professional.configuration.scheduleTimeEnd}`),
-          Number(professional.configuration.slotDuration),
-          [
-            {
-              begin: new Date(`${scheduleDate}T${professional.configuration.unavailableTimeSlot?.timeSlotUnavailableInit}`),
-              end: new Date(`${scheduleDate}T${professional.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd}`),
-            },
-          ],
-        );
+      const schedule: AppoSchedule = new AppoSchedule(
+        `Schedule ${scheduleDate}`,
+        new Date(`${scheduleDate}T${professional.configuration.scheduleTimeInit}`),
+        new Date(`${scheduleDate}T${professional.configuration.scheduleTimeEnd}`),
+        Number(professional.configuration.slotDuration),
+        [
+          {
+            begin: new Date(`${scheduleDate}T${professional.configuration.unavailableTimeSlot?.timeSlotUnavailableInit}`),
+            end: new Date(`${scheduleDate}T${professional.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd}`),
+          },
+        ],
+      );
 
-        setTimeSlots(schedule.timeSlots);
-        setShowTimeSlots(true);
-        setLoadingAppointments(true);
-
-        AppointmentApiService.findAllByProfessional(professional._id, scheduleDate)
-          .then((response) => {
-            if (response.statusCode === 200) {
-              setAppointments(response.data);
-              schedule.insertAppointments(response.data);
-
-              const availableSlotsToReserve: number = schedule.availableSlotsToReserve(selectedDate, schedule.timeSlots, response.data.length);
-              setAvailableSlotsToReserve(availableSlotsToReserve);
-            }
-
-            if (response.statusCode > 399) {
-              const availableSlotsToReserve: number = schedule.availableSlotsToReserve(selectedDate, schedule.timeSlots, 0);
-              setAvailableSlotsToReserve(availableSlotsToReserve);
-            }
-
-            if (response instanceof Error) addNotification({ type: 'error', message: t('error.internalServer') });
-          })
-          .finally(() => setLoadingAppointments(false));
-      }
+      setTimeSlots(schedule.timeSlots);
+      setSchedule(schedule);
+      fetchAppos();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDate, refreshAppos, t]);
+  }, [addNotification, fetchAppos, professional, refreshAppos, selectedDate, setDate, t]);
 
   // Cached methods between re-renders
   const handleReserve = useCallback(
@@ -119,9 +118,17 @@ export const DailySchedule = memo(({ date, handleDialog, professional, refreshAp
     [handleDialog],
   );
 
+  if (isErrorAppos) {
+    return (
+      <Card className='w-full p-6'>
+        <InfoCard type='error' text={errorAppos.message} className='w-full text-base'></InfoCard>
+      </Card>
+    );
+  }
+
   return professional && selectedDate && todayIsWorkingDay ? (
-    loadingAppointments ? (
-      <LoadingDB text={t('loading.schedule')} variant='card' size='big' className='w-full gap-6 text-lg' />
+    isLoadingAppos ? (
+      <LoadingDB text={t('loading.schedule')} variant='card' size='big' className='w-full gap-6 text-base' />
     ) : (
       <Card className='w-full'>
         <CardTitle className='bg-card-header! rounded-b-none border-b text-sm md:text-lg'>
@@ -135,13 +142,11 @@ export const DailySchedule = memo(({ date, handleDialog, professional, refreshAp
             )}
           </section>
         </CardTitle>
-        {!errorMessage && (
-          <>
-            <section className='py-2 text-center text-base font-semibold text-primary'>{UtilsString.upperCase(selectedLegibleDate)}</section>
-            {!professional && <InfoCard text={'Debés elegir un professional antes de generar un turno'} type='warning' />}
-          </>
-        )}
-        {showTimeSlots && (
+        <>
+          <section className='py-2 text-center text-base font-semibold text-primary'>{UtilsString.upperCase(selectedLegibleDate)}</section>
+          {!professional && <InfoCard text={'Debés elegir un professional antes de generar un turno'} type='warning' />}
+        </>
+        {timeSlots && (
           <section className='flex flex-col justify-start gap-3 px-3 pb-2 text-xsm font-normal md:flex-row'>
             <div className='flex w-fit flex-row items-center space-x-1.5 rounded-md bg-emerald-100 px-2 py-1'>
               <div className='h-2.5 w-2.5 rounded-full border border-emerald-400 bg-emerald-300'></div>
@@ -149,18 +154,12 @@ export const DailySchedule = memo(({ date, handleDialog, professional, refreshAp
             </div>
             <div className='flex w-fit flex-row items-center space-x-1.5 rounded-md bg-sky-100 px-2 py-1'>
               <div className='h-2.5 w-2.5 rounded-full border border-sky-400 bg-sky-300'></div>
-              <span className='text-sky-700'>{t('table.reservedItems.appointments', { count: appointments.length })}</span>
+              <span className='text-sky-700'>{t('table.reservedItems.appointments', { count: appointments?.data.length })}</span>
             </div>
           </section>
         )}
-        {errorMessage && (
-          <section className='flex items-center justify-center space-x-2 px-4 py-0 text-rose-500'>
-            <FileWarning className='h-5 w-5' strokeWidth={2} />
-            <span className='text-center font-medium'>{errorMessage}</span>
-          </section>
-        )}
         <CardContent>
-          {showTimeSlots &&
+          {timeSlots &&
             timeSlots.map((slot) =>
               slot.available ? (
                 <section
