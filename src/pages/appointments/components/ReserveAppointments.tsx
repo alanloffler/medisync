@@ -158,7 +158,6 @@ export default function ReserveAppointments() {
         date={date}
         openState={{ open: openDialog, setOpen: setOpenDialog }}
         professional={professionalSelected}
-        refreshAppos={setRefreshAppos}
         setRefreshAppos={setRefreshAppos}
         setUser={setUserSelected}
         user={userSelected}
