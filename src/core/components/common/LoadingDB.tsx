@@ -13,6 +13,7 @@ const loadingDBVariants = cva('flex items-center justify-center gap-2 text-sm fo
       primary: 'mx-auto bg-primary/25 rounded-lg text-slate-900',
     },
     size: {
+      big: 'px-6 py-6 [&_svg]:w-6 [&_svg]:h-6',
       box: 'w-fit px-4 py-4',
       default: 'w-fit px-3 py-2',
       md: 'w-fit px-4 py-2',
@@ -30,7 +31,7 @@ interface ILoadingDB {
   className?: string;
   empty?: boolean;
   iconSize?: number;
-  size?: 'box' | 'default' | 'xs' | 'md';
+  size?: 'big' | 'box' | 'default' | 'xs' | 'md';
   spinnerColor?: string;
   text?: string;
   variant?: 'button' | 'card' | 'default' | 'primary';
