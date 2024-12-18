@@ -9,7 +9,7 @@ import { LoadingDB } from '@core/components/common/LoadingDB';
 import { StatusSelect } from '@appointments/components/common/StatusSelect';
 // External imports
 import { format } from '@formkit/tempo';
-import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
+import { memo, useCallback, useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 // Imports
@@ -33,15 +33,7 @@ interface IProps {
   setDate: Dispatch<SetStateAction<Date | undefined>>;
 }
 // React component
-export function DailySchedule({
-  date,
-  handleDialog,
-  professional,
-  refreshAppos,
-  selectedDate,
-  selectedLegibleDate,
-  setDate,
-}: IProps) {
+export const DailySchedule = memo(({ date, handleDialog, professional, refreshAppos, selectedDate, selectedLegibleDate, setDate }: IProps) => {
   const [appointments, setAppointments] = useState<IAppointment[]>([] as IAppointment[]);
   const [availableSlotsToReserve, setAvailableSlotsToReserve] = useState<number>(0);
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -109,12 +101,27 @@ export function DailySchedule({
           .finally(() => setLoadingAppointments(false));
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDate, refreshAppos, t]);
+
+  // Cached methods between re-renders
+  const handleReserve = useCallback(
+    (slot: ITimeSlot): void => {
+      handleDialog(EDialogAction.RESERVE, slot);
+    },
+    [handleDialog],
+  );
+
+  const handleCancel = useCallback(
+    (slot: ITimeSlot): void => {
+      handleDialog(EDialogAction.CANCEL, slot);
+    },
+    [handleDialog],
+  );
 
   return professional && selectedDate && todayIsWorkingDay ? (
     loadingAppointments ? (
-      <LoadingDB text={t('loading.schedule')} variant='card' size='big' className='w-full text-lg gap-6' />
+      <LoadingDB text={t('loading.schedule')} variant='card' size='big' className='w-full gap-6 text-lg' />
     ) : (
       <Card className='w-full'>
         <CardTitle className='bg-card-header! rounded-b-none border-b text-sm md:text-lg'>
@@ -202,7 +209,7 @@ export function DailySchedule({
                           className='w-full space-x-1.5 bg-emerald-400 px-1.5 py-1.5 text-emerald-50 hover:bg-emerald-500 hover:text-emerald-50 md:pr-2.5'
                           size='xs'
                           variant='ghost'
-                          onClick={() => handleDialog(EDialogAction.RESERVE, slot)}
+                          onClick={() => handleReserve(slot)}
                         >
                           <CalendarCheck size={16} strokeWidth={2} />
                           <span className='hidden text-xs font-normal md:block'>{t('button.reserve')}</span>
@@ -215,7 +222,7 @@ export function DailySchedule({
                           className='w-full space-x-1.5 bg-rose-400 px-1.5 py-1.5 text-rose-100 hover:bg-rose-500 hover:text-rose-100'
                           size='xs'
                           variant='ghost'
-                          onClick={() => handleDialog(EDialogAction.CANCEL, slot)}
+                          onClick={() => handleCancel(slot)}
                         >
                           <X size={16} strokeWidth={2} />
                           <span className='hidden text-xs font-normal md:block'>{t('button.cancel')}</span>
@@ -249,4 +256,4 @@ export function DailySchedule({
       </CardContent>
     </Card>
   );
-}
+});
