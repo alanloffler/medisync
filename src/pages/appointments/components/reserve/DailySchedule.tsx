@@ -9,7 +9,7 @@ import { LoadingDB } from '@core/components/common/LoadingDB';
 import { StatusSelect } from '@appointments/components/common/StatusSelect';
 // External imports
 import { format } from '@formkit/tempo';
-import { memo, useCallback, useEffect, useState, type Dispatch, type SetStateAction } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState, type Dispatch, type SetStateAction } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -103,19 +103,35 @@ export const DailySchedule = memo(({ date, handleDialog, professional, refreshAp
   }, [addNotification, fetchAppos, professional, refreshAppos, selectedDate, setDate, t]);
 
   // Cached methods between re-renders
-  const handleReserve = useCallback(
-    (slot: ITimeSlot): void => {
-      handleDialog(EDialogAction.RESERVE, slot);
+  const memoizedHandleDialog = useCallback(
+    (action: EDialogAction, slot: ITimeSlot) => {
+      handleDialog(action, slot);
     },
     [handleDialog],
   );
 
+  const handleReserve = useCallback(
+    (slot: ITimeSlot): void => {
+      memoizedHandleDialog(EDialogAction.RESERVE, slot);
+    },
+    [memoizedHandleDialog],
+  );
+
   const handleCancel = useCallback(
     (slot: ITimeSlot): void => {
-      handleDialog(EDialogAction.CANCEL, slot);
+      memoizedHandleDialog(EDialogAction.CANCEL, slot);
     },
-    [handleDialog],
+    [memoizedHandleDialog],
   );
+
+  const derivedState = useMemo(() => {
+    return {
+      availableSlotsToReserve,
+      schedule,
+      timeSlots,
+      todayIsWorkingDay,
+    };
+  }, [availableSlotsToReserve, schedule, timeSlots, todayIsWorkingDay]);
 
   if (isErrorAppos) {
     return (
@@ -125,7 +141,7 @@ export const DailySchedule = memo(({ date, handleDialog, professional, refreshAp
     );
   }
 
-  return professional && selectedDate && todayIsWorkingDay ? (
+  return professional && selectedDate && derivedState.todayIsWorkingDay ? (
     isLoadingAppos ? (
       <LoadingDB text={t('loading.schedule')} variant='card' size='big' className='w-full gap-6 text-base' />
     ) : (
@@ -145,11 +161,11 @@ export const DailySchedule = memo(({ date, handleDialog, professional, refreshAp
           <section className='py-2 text-center text-base font-semibold text-primary'>{UtilsString.upperCase(selectedLegibleDate)}</section>
           {!professional && <InfoCard text={'Debés elegir un professional antes de generar un turno'} type='warning' />}
         </>
-        {timeSlots && (
+        {derivedState.timeSlots && (
           <section className='flex flex-col justify-start gap-3 px-3 pb-2 text-xsm font-normal md:flex-row'>
             <div className='flex w-fit flex-row items-center space-x-1.5 rounded-md bg-emerald-100 px-2 py-1'>
               <div className='h-2.5 w-2.5 rounded-full border border-emerald-400 bg-emerald-300'></div>
-              <span className='text-emerald-700'>{t('table.availableItems.appointments', { count: availableSlotsToReserve })}</span>
+              <span className='text-emerald-700'>{t('table.availableItems.appointments', { count: derivedState.availableSlotsToReserve })}</span>
             </div>
             <div className='flex w-fit flex-row items-center space-x-1.5 rounded-md bg-sky-100 px-2 py-1'>
               <div className='h-2.5 w-2.5 rounded-full border border-sky-400 bg-sky-300'></div>
@@ -158,8 +174,8 @@ export const DailySchedule = memo(({ date, handleDialog, professional, refreshAp
           </section>
         )}
         <CardContent>
-          {timeSlots &&
-            timeSlots.map((slot) =>
+          {derivedState.timeSlots &&
+            derivedState.timeSlots.map((slot) =>
               slot.available ? (
                 <section
                   key={crypto.randomUUID()}
