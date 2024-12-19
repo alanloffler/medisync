@@ -40,7 +40,6 @@ import { PROFESSIONALS_CONFIG as PROF_CONFIG } from '@config/professionals/profe
 import { PROFESSIONAL_VIEW_CONFIG as PV_CONFIG } from '@config/professionals/professional-view.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
-import { useHelpStore } from '@settings/stores/help.store';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 import { useTruncateText } from '@core/hooks/useTruncateText';
 // Default values for pagination and sorting
@@ -64,7 +63,6 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
   const navigate = useNavigate();
   const prevDeps = useRef<{ search: IProfessionalSearch; tableManager: ITableManager }>({ search, tableManager });
   const truncate = useTruncateText();
-  const { help } = useHelpStore();
   const { i18n, t } = useTranslation();
   // #region Table columns
   const tableColumns: ColumnDef<IProfessional>[] = [
@@ -83,7 +81,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
           {totalItems === 1 ? (
             t(PROF_CONFIG.table.header[1])
           ) : (
-            <TooltipWrapper tooltip={t('tooltip.sort.name')} help={help}>
+            <TooltipWrapper tooltip={t('tooltip.sort.name')}>
               <button
                 className='flex items-center gap-2 hover:text-accent-foreground'
                 onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
@@ -109,7 +107,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
           {totalItems === 1 ? (
             t(PROF_CONFIG.table.header[2])
           ) : (
-            <TooltipWrapper tooltip={t('tooltip.sort.area')} help={help}>
+            <TooltipWrapper tooltip={t('tooltip.sort.area')}>
               <button
                 className='flex items-center gap-2 hover:text-accent-foreground'
                 onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
@@ -131,7 +129,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
           {totalItems === 1 ? (
             t(PROF_CONFIG.table.header[3])
           ) : (
-            <TooltipWrapper tooltip={t('tooltip.sort.specialty')} help={help}>
+            <TooltipWrapper tooltip={t('tooltip.sort.specialty')}>
               <button
                 className='flex items-center gap-2 hover:text-accent-foreground'
                 onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
@@ -153,7 +151,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
           {totalItems === 1 ? (
             t(PROF_CONFIG.table.header[4])
           ) : (
-            <TooltipWrapper tooltip={t('tooltip.sort.availability')} help={help}>
+            <TooltipWrapper tooltip={t('tooltip.sort.availability')}>
               <button
                 className='flex items-center gap-2 hover:text-accent-foreground'
                 onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
@@ -167,12 +165,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
       ),
       cell: ({ row }) => (
         <section className='flex flex-row items-center justify-center'>
-          <AvailableProfessional
-            className='h-6'
-            data={{ _id: row.original._id, available: row.original.available }}
-            help={help}
-            items={PV_CONFIG.select}
-          />
+          <AvailableProfessional className='h-6' data={{ _id: row.original._id, available: row.original.available }} items={PV_CONFIG.select} />
         </section>
       ),
     },
@@ -182,29 +175,22 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
       header: () => <div className='text-center'>{t(PROF_CONFIG.table.header[5])}</div>,
       cell: ({ row }) => (
         <div className='mx-auto flex w-fit flex-row items-center justify-center space-x-2'>
-          <TableButton
-            callback={() => navigate(`/professionals/${row.original._id}`)}
-            className='hover:text-sky-500'
-            help={help}
-            tooltip={t('tooltip.details')}
-          >
+          <TableButton callback={() => navigate(`/professionals/${row.original._id}`)} className='hover:text-sky-500' tooltip={t('tooltip.details')}>
             <FileText size={16} strokeWidth={1.5} />
           </TableButton>
           <TableButton
             callback={() => navigate(`/professionals/update/${row.original._id}`)}
             className='hover:text-fuchsia-500'
-            help={help}
             tooltip={t('tooltip.delete')}
           >
             <PencilLine size={16} strokeWidth={1.5} />
           </TableButton>
-          <TableButton callback={() => handleRemoveDialog(row.original)} className='hover:text-rose-500' help={help} tooltip={t('tooltip.edit')}>
+          <TableButton callback={() => handleRemoveDialog(row.original)} className='hover:text-rose-500' tooltip={t('tooltip.edit')}>
             <Trash2 size={16} strokeWidth={1.5} />
           </TableButton>
           <TableButton
             callback={() => navigate(`/whatsapp/professional/${row.original._id}`)}
             className='hover:fill-green-500'
-            help={help}
             tooltip={t('tooltip.sendMessage')}
           >
             <svg width={16} height={16} viewBox='0 0 32 32'>
@@ -390,7 +376,6 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
           </Table>
           <Pagination
             className='pt-6 !text-xsm text-slate-400'
-            help={help}
             itemsPerPage={PROF_CONFIG.table.itemsPerPage}
             pagination={pagination}
             setPagination={setPagination}
