@@ -1,6 +1,6 @@
 import Backend from 'i18next-http-backend';
-import en from './lang/en.json';
-import es from './lang/es.json';
+import en from './lang/en-us.json';
+import es from './lang/es-ar.json';
 import i18n from 'i18next';
 import { APP_CONFIG } from '@config/app.config';
 import { initReactI18next } from 'react-i18next';
