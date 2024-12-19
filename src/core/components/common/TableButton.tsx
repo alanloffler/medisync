@@ -6,7 +6,6 @@ import { useAnimate } from 'motion/react';
 // Imports
 import { cn } from '@lib/utils';
 import { motion } from '@core/services/motion.service';
-import { useHelpStore } from '@settings/stores/help.store';
 // Interface
 interface IProps {
   callback: () => void;
@@ -18,7 +17,6 @@ interface IProps {
 // React component
 export function TableButton({ callback, children, className, disabled, tooltip }: IProps) {
   const [scope, animation] = useAnimate();
-  const { help } = useHelpStore();
 
   function animateOver(): void {
     if (disabled === false || disabled === undefined) {
@@ -35,7 +33,7 @@ export function TableButton({ callback, children, className, disabled, tooltip }
   }
 
   return (
-    <TooltipWrapper help={help} tooltip={tooltip}>
+    <TooltipWrapper tooltip={tooltip}>
       <button
         className={cn('flex h-6 w-6 items-center justify-center bg-transparent disabled:pointer-events-none disabled:text-rose-500', className)}
         disabled={disabled}
