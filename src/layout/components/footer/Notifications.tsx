@@ -11,7 +11,6 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 // Imports
 import { motion } from '@core/services/motion.service';
-import { useHelpStore } from '@settings/stores/help.store';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export function Notifications() {
@@ -19,7 +18,6 @@ export function Notifications() {
   const [showAll, setShowAll] = useState<boolean>(false);
   const [showNotification, setShowNotification] = useState<boolean>(false);
   const notifications = useNotificationsStore((state) => state.notifications);
-  const { help } = useHelpStore();
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -42,7 +40,7 @@ export function Notifications() {
   return (
     <main className='flex items-center space-x-2 overflow-hidden'>
       <DropdownMenu>
-        <TooltipWrapper tooltip={t('tooltip.console')} help={help}>
+        <TooltipWrapper tooltip={t('tooltip.console')}>
           <DropdownMenuTrigger
             className='rounded-sm border-2 border-slate-700 focus:outline-none'
             disabled={notifications.length === 0}
