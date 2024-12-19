@@ -6,18 +6,19 @@ import { useAnimate } from 'motion/react';
 // Imports
 import { cn } from '@lib/utils';
 import { motion } from '@core/services/motion.service';
+import { useHelpStore } from '@settings/stores/help.store';
 // Interface
 interface IProps {
   callback: () => void;
   children: ReactNode;
   className?: string;
   disabled?: boolean;
-  help?: boolean;
   tooltip?: string;
 }
 // React component
-export function TableButton({ callback, children, className, disabled, help, tooltip }: IProps) {
+export function TableButton({ callback, children, className, disabled, tooltip }: IProps) {
   const [scope, animation] = useAnimate();
+  const { help } = useHelpStore();
 
   function animateOver(): void {
     if (disabled === false || disabled === undefined) {
