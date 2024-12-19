@@ -24,7 +24,6 @@ import { UtilsString } from '@core/services/utils/string.service';
 import { motion } from '@core/services/motion.service';
 import { useDebounce } from '@core/hooks/useDebounce';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
-import { useHelpStore } from '@settings/stores/help.store';
 // React component
 export default function Professionals() {
   const [debounceTime, setDebounceTime] = useState<number>(APP_CONFIG.debounceTime);
@@ -39,7 +38,6 @@ export default function Professionals() {
   const debouncedSearch = useDebounce<IProfessionalSearch>(search, debounceTime);
   const navigate = useNavigate();
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
-  const { help } = useHelpStore();
   const { t } = useTranslation();
 
   function handleSearchByProfessional(event: ChangeEvent<HTMLInputElement>): void {
@@ -161,7 +159,7 @@ export default function Professionals() {
                 {t('cardTitle.professionalsList')}
               </header>
               <section className='flex items-center gap-2'>
-                <TooltipWrapper tooltip={t('tooltip.reload')} help={help}>
+                <TooltipWrapper tooltip={t('tooltip.reload')}>
                   <Button
                     ref={reloadScope}
                     size='miniIcon'
@@ -173,7 +171,7 @@ export default function Professionals() {
                     <ListRestart size={16} strokeWidth={2} />
                   </Button>
                 </TooltipWrapper>
-                <TooltipWrapper tooltip={t('tooltip.addProfessional')} help={help}>
+                <TooltipWrapper tooltip={t('tooltip.addProfessional')}>
                   <Button
                     ref={addProfIconScope}
                     size='miniIcon'
