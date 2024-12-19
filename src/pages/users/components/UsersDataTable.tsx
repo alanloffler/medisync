@@ -44,7 +44,7 @@ import { useTruncateText } from '@core/hooks/useTruncateText';
 const defaultSorting: SortingState = [{ id: USER_CONFIG.table.defaultSortingId, desc: USER_CONFIG.table.defaultSortingType }];
 const defaultPagination: PaginationState = { pageIndex: 0, pageSize: USER_CONFIG.table.defaultPageSize };
 // React component
-export function UsersDataTable({ search, reload, setReload, setErrorMessage, help }: IDataTableUsers) {
+export function UsersDataTable({ search, reload, setReload, setErrorMessage }: IDataTableUsers) {
   const [columns, setColumns] = useState<ColumnDef<IUser>[]>([]);
   const [data, setData] = useState<IUser[]>([]);
   const [errorRemoving, setErrorRemoving] = useState<boolean>(false);
@@ -131,7 +131,6 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
           <TableButton
             callback={() => navigate(`/users/${row.original._id}`)}
             className='hover:text-sky-500'
-            help={help}
             tooltip={t('tooltip.details')}
           >
             <FileText size={16} strokeWidth={1.5} />
@@ -139,7 +138,6 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
           <TableButton
             callback={() => navigate(`/users/update/${row.original._id}`)}
             className='hover:text-fuchsia-500'
-            help={help}
             tooltip={t('tooltip.edit')}
           >
             <PencilLine size={16} strokeWidth={1.5} />
@@ -147,7 +145,6 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
           <TableButton
             callback={() => handleRemoveUserDialog(row.original)}
             className='hover:text-rose-500'
-            help={help}
             tooltip={t('tooltip.delete')}
           >
             <Trash2 size={16} strokeWidth={1.5} />
@@ -156,7 +153,6 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
             callback={() => navigate(`/email/${row.original._id}`)}
             className='hover:text-sky-500'
             disabled={!row.original.email}
-            help={help}
             tooltip={t('tooltip.sendEmail')}
           >
             {!row.original.email ? <MailX size={16} strokeWidth={1.5} /> : <Mail size={16} strokeWidth={1.5} />}
@@ -164,7 +160,6 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
           <TableButton
             callback={() => navigate(`/whatsapp/user/${row.original._id}`)}
             className='hover:text-green-500'
-            help={help}
             tooltip={t('tooltip.sendMessage')}
           >
             <svg width={16} height={16} viewBox='0 0 32 32'>
@@ -343,7 +338,6 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage, hel
           </Table>
           <Pagination
             className='pt-6 !text-xsm text-slate-400'
-            help={help}
             itemsPerPage={USER_CONFIG.table.itemsPerPage}
             pagination={pagination}
             setPagination={setPagination}
