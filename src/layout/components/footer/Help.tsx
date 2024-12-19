@@ -29,7 +29,7 @@ export function Help() {
   }
 
   return (
-    <TooltipWrapper tooltip={t('tooltip.help')} help={help}>
+    <TooltipWrapper tooltip={t('tooltip.help')}>
       <button
         className='relative flex h-5 w-5 items-center justify-center'
         onClick={handleHelp}
