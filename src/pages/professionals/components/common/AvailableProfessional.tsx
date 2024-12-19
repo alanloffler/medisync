@@ -16,11 +16,10 @@ import { useNotificationsStore } from '@core/stores/notifications.store';
 interface IAvailableProfessional {
   className?: string;
   data: Partial<IProfessional>;
-  help: boolean;
   items: { id: number; label: string; value: boolean }[];
 }
 // React component
-export function AvailableProfessional({ className, data, help, items }: IAvailableProfessional) {
+export function AvailableProfessional({ className, data, items }: IAvailableProfessional) {
   const { _id, available } = data;
   const [prevValue, setPrevValue] = useState<string>(String(available));
   const [showError, setShowError] = useState<boolean>(false);
@@ -54,7 +53,7 @@ export function AvailableProfessional({ className, data, help, items }: IAvailab
   return (
     <main className='flex flex-row items-center space-x-1'>
       <Select value={value} onValueChange={handleValueChange}>
-        <TooltipWrapper tooltip={t('tooltip.availability')} help={help}>
+        <TooltipWrapper tooltip={t('tooltip.availability')}>
           <SelectTrigger className={cn('h-8 w-fit space-x-2 bg-transparent px-2 py-1 text-xs hover:bg-input', className)}>
             <SelectValue placeholder='Select a fruit' />
           </SelectTrigger>
