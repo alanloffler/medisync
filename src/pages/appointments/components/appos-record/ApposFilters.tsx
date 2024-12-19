@@ -18,7 +18,6 @@ import { AppointmentApiService } from '@appointments/services/appointment.servic
 import { UtilsString } from '@core/services/utils/string.service';
 import { motion } from '@core/services/motion.service';
 import { useApposFilters } from '@appointments/hooks/useApposFilters';
-import { useHelpStore } from '@settings/stores/help.store';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export function ApposFilters({ userId, disabled }: { userId: string; disabled: boolean }) {
@@ -30,7 +29,6 @@ export function ApposFilters({ userId, disabled }: { userId: string; disabled: b
   const [years, setYears] = useState<string[]>([]);
   const [clearButtonScope, clearButtonAnimation] = useAnimate();
   const addNotification = useNotificationsStore((state) => state.addNotification);
-  const { help } = useHelpStore();
   const { i18n, t } = useTranslation();
   const { professional, year, setFilters, clearFilters } = useApposFilters();
 
@@ -95,7 +93,7 @@ export function ApposFilters({ userId, disabled }: { userId: string; disabled: b
           value={professional ? professional : ''}
           onValueChange={(e) => setFilters({ professional: e as IApposFilters['professional'] })}
         >
-          <TooltipWrapper tooltip={t('tooltip.selectProfessional')} help={help}>
+          <TooltipWrapper tooltip={t('tooltip.selectProfessional')}>
             <SelectTrigger className={'h-7 w-fit space-x-3 border-slate-300 bg-white text-xsm shadow-sm'}>
               {loadingProfessionals ? (
                 <LoadingText text={t('loading.default')} suffix='...' />
@@ -121,7 +119,7 @@ export function ApposFilters({ userId, disabled }: { userId: string; disabled: b
           value={year ? year : ''}
           onValueChange={(e) => setFilters({ year: e as IApposFilters['year'] })}
         >
-          <TooltipWrapper tooltip={t('tooltip.selectYear')} help={help}>
+          <TooltipWrapper tooltip={t('tooltip.selectYear')}>
             <SelectTrigger className={'h-7 w-fit space-x-3 bg-white text-xsm shadow-sm'}>
               {loadingYears ? (
                 <LoadingText text={t('loading.default')} suffix='...' />
@@ -145,7 +143,7 @@ export function ApposFilters({ userId, disabled }: { userId: string; disabled: b
       </section>
       {(professional || year) && (
         <section className='flex items-center space-x-2'>
-          <TooltipWrapper tooltip={t('tooltip.clearFilters')} help={help}>
+          <TooltipWrapper tooltip={t('tooltip.clearFilters')}>
             <Button
               ref={clearButtonScope}
               variant='clear'
