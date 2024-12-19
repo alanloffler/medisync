@@ -26,7 +26,6 @@ import { HEADER_CONFIG } from '@config/layout/header.config';
 import { cn } from '@lib/utils';
 import { useDebounce } from '@core/hooks/useDebounce';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
-import { useHelpStore } from '@settings/stores/help.store';
 // Constants
 const defaultAppoSearch: IAppointmentSearch[] = [
   { type: EAppointmentSearch.NAME, value: '' },
@@ -45,7 +44,6 @@ export default function Appointments() {
   const debouncedSearch = useDebounce<IAppointmentSearch[]>(search, APP_CONFIG.debounceTime);
   const navigate = useNavigate();
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
-  const { help } = useHelpStore();
   const { i18n, t } = useTranslation();
 
   useEffect(() => {
@@ -146,7 +144,7 @@ export default function Appointments() {
               </section>
               <div className='flex h-4 text-xsm font-light text-rose-400'>{errorMessage}</div>
             </header>
-            <ApposDataTable search={debouncedSearch} reload={reload} setReload={setReload} setErrorMessage={setErrorMessage} help={help} />
+            <ApposDataTable search={debouncedSearch} reload={reload} setReload={setReload} setErrorMessage={setErrorMessage} />
           </CardContent>
         </Card>
       </section>
