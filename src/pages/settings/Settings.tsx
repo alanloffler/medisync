@@ -1,18 +1,11 @@
 // External components: https://ui.shadcn.com/docs/components
 import { Checkbox } from '@core/components/ui/checkbox';
-// External imports
-import { useEffect } from 'react';
 // Imports
 import { SETTINGS_CONFIG } from '@config/settings.config';
 import { useHelpStore } from '@settings/stores/help.store';
 // React component
 export default function Settings() {
   const { help, setHelp } = useHelpStore();
-
-  useEffect(() => {
-    console.log('Help on store: ', help);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   function handleHelpChecked(checked: boolean): void {
     setHelp(checked);
