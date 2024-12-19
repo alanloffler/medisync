@@ -3,6 +3,7 @@ import { Button } from '@core/components/ui/button';
 import { Calendar } from '@core/components/ui/calendar';
 // Components
 import { CalendarFooter } from '@appointments/components/CalendarFooter';
+import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 import { es, enUS, Locale } from 'date-fns/locale';
@@ -46,7 +47,11 @@ export function DateSelection({ date, disabledDays, professional, setDate, setSe
     if (selectedLocale === 'en') setCalendarLocale(enUS);
   }, [selectedLocale]);
 
-  const { data: daysWithAppos, mutate } = useMutation<IResponse<{ day: string }[]> | undefined>({
+  const {
+    data: daysWithAppos,
+    isPending,
+    mutate: fetchDaysWithAppos,
+  } = useMutation<IResponse<{ day: string }[]> | undefined>({
     mutationKey: ['appointments', 'byProfessional', professional?._id, selectedYear, selectedMonth, professional],
     mutationFn: async () => {
       if (professional) {
@@ -54,7 +59,6 @@ export function DateSelection({ date, disabledDays, professional, setDate, setSe
       }
       return { data: [], message: '', statusCode: 200 };
     },
-    gcTime: 0,
   });
 
   const selectYear = useCallback((value: string): void => {
@@ -70,8 +74,8 @@ export function DateSelection({ date, disabledDays, professional, setDate, setSe
   useEffect(() => {
     setDate(undefined);
     setCalendarKey(crypto.randomUUID());
-    mutate();
-  }, [professional, setDate, mutate, selectedMonth, selectedYear]);
+    fetchDaysWithAppos();
+  }, [fetchDaysWithAppos, professional, setDate, selectedMonth, selectedYear]);
 
   return (
     <section className={cn('flex flex-col space-y-3')}>
@@ -101,6 +105,7 @@ export function DateSelection({ date, disabledDays, professional, setDate, setSe
         selected={date}
         showOutsideDays={false}
         toYear={Number(calendarYears[calendarYears.length - 1])}
+        footer={isPending && <LoadingDB text={t('loading.appointments')} className='text-xs mx-0 [&_svg]:w-3' />}
         formatters={{
           formatDay: (day) => {
             const numberDay: number = day.getDate();
@@ -120,7 +125,7 @@ export function DateSelection({ date, disabledDays, professional, setDate, setSe
           },
         }}
       />
-      <section className='flex w-full flex-row items-center justify-center space-x-3'>
+      <section className='flex w-full flex-row items-center justify-center space-x-3 -mt-3'>
         <Button
           variant='default'
           className='h-7 w-fit px-2 text-xs'
