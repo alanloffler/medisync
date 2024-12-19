@@ -20,7 +20,6 @@ import { HEADER_CONFIG } from '@config/layout/header.config';
 import { USER_CONFIG } from '@config/users/users.config';
 import { useDebounce } from '@core/hooks/useDebounce';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
-import { useHelpStore } from '@settings/stores/help.store';
 // React component
 export default function Users() {
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -32,7 +31,6 @@ export default function Users() {
   const debouncedSearch = useDebounce<IUserSearch>(search, APP_CONFIG.debounceTime);
   const navigate = useNavigate();
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
-  const { help } = useHelpStore();
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -135,7 +133,7 @@ export default function Users() {
               {t('cardTitle.usersList')}
             </header>
             <section className='flex items-center gap-2'>
-              <TooltipWrapper tooltip={t('tooltip.reload')} help={help}>
+              <TooltipWrapper tooltip={t('tooltip.reload')}>
                 <Button
                   size='miniIcon'
                   variant='tableHeader'
@@ -149,7 +147,7 @@ export default function Users() {
                   <ListRestart size={16} strokeWidth={2} />
                 </Button>
               </TooltipWrapper>
-              <TooltipWrapper tooltip={t('tooltip.addUser')} help={help}>
+              <TooltipWrapper tooltip={t('tooltip.addUser')}>
                 <Button
                   ref={createMiniScope}
                   size='miniIcon'
@@ -170,7 +168,6 @@ export default function Users() {
           {/* Table */}
           <CardContent>
             <UsersDataTable
-              help={help}
               key={reload}
               reload={reload}
               search={debouncedSearch}
