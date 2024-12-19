@@ -13,7 +13,6 @@ import type { IResponse } from '@core/interfaces/response.interface';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { EStatus } from '@appointments/enums/status.enum';
 import { cn } from '@lib/utils';
-import { useHelpStore } from '@settings/stores/help.store';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // Interfaces
 interface IStatusSelect {
@@ -68,7 +67,6 @@ export function StatusSelect({ appointment, className, mode, showLabel = false }
   const [itemSelected, setItemSelected] = useState<string>(appointment.status);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const { day, hour, _id, status } = appointment;
-  const { help } = useHelpStore();
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -99,7 +97,7 @@ export function StatusSelect({ appointment, className, mode, showLabel = false }
 
   return (
     <Select value={itemSelected} onValueChange={handleStatusChange} disabled={itemSelected === EStatus.WAITING || mode === 'view'}>
-      <TooltipWrapper tooltip={t(`status.${itemSelected}`)} help={help}>
+      <TooltipWrapper tooltip={t(`status.${itemSelected}`)}>
         <SelectTrigger
           className={cn('flex flex-row items-center justify-center space-x-1 bg-transparent p-0 disabled:cursor-default [&_svg]:hidden', className)}
         >
