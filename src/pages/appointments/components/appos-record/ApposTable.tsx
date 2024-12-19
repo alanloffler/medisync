@@ -16,7 +16,6 @@ import type { IAppointmentView } from '@appointments/interfaces/appointment.inte
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { USER_VIEW_CONFIG as UV_CONFIG } from '@config/users/user-view.config';
 import { UtilsString } from '@core/services/utils/string.service';
-import { useHelpStore } from '@settings/stores/help.store';
 // React component
 export function ApposTable({
   appointments,
@@ -26,7 +25,6 @@ export function ApposTable({
   setRefresh: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const navigate = useNavigate();
-  const { help } = useHelpStore();
   const { i18n, t } = useTranslation();
 
   const columns: ColumnDef<IAppointmentView>[] = [
@@ -53,17 +51,11 @@ export function ApposTable({
       size: 100,
       cell: ({ row }) => (
         <div className='flex items-center justify-center space-x-2'>
-          <TableButton
-            callback={() => navigate(`/appointments/${row.original._id}`)}
-            help={help}
-            tooltip={t('tooltip.details')}
-            className='hover:text-sky-500'
-          >
+          <TableButton callback={() => navigate(`/appointments/${row.original._id}`)} tooltip={t('tooltip.details')} className='hover:text-sky-500'>
             <FileText size={16} strokeWidth={1.5} />
           </TableButton>
           <TableButton
             callback={() => navigate(`/whatsapp/user/${row.original._id}`)}
-            help={help}
             tooltip={t('tooltip.sendMessage')}
             className='hover:text-green-500'
           >
@@ -112,7 +104,6 @@ export function ApposTable({
               removeButton: t('button.deleteAppointment'),
               title: t('dialog.deleteAppointment.title'),
             }}
-            help={help}
             tooltip={t('tooltip.delete')}
           />
         </div>
