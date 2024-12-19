@@ -11,7 +11,6 @@ import { useMutation } from '@tanstack/react-query';
 // Imports
 import type { IResponse } from '@core/interfaces/response.interface';
 import { REMOVE_DIALOG_CONFIG } from '@config/common.config';
-import { useHelpStore } from '@settings/stores/help.store';
 // Interfaces
 interface IRemoveDialog {
   action: () => Promise<IResponse | Error>;
@@ -32,7 +31,6 @@ interface IDialogTexts {
 // React component
 export function RemoveDialog({ action, callback, dialogContent, dialogTexts, tooltip, triggerButton }: IRemoveDialog) {
   const [openDialog, setOpenDialog] = useState(false);
-  const { help } = useHelpStore();
 
   const { error, isError, isPending, mutate, reset } = useMutation({
     mutationFn: action,
@@ -56,7 +54,7 @@ export function RemoveDialog({ action, callback, dialogContent, dialogTexts, too
 
   return (
     <>
-      <TooltipWrapper tooltip={tooltip} help={help}>
+      <TooltipWrapper tooltip={tooltip}>
         <Button
           onClick={() => setOpenDialog(true)}
           variant='ghost'
