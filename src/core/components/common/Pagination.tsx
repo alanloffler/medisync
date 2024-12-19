@@ -10,10 +10,8 @@ import { useTranslation } from 'react-i18next';
 // Imports
 import type { IPagination } from '@core/components/common/interfaces/pagination.interface';
 import { cn } from '@lib/utils';
-import { useHelpStore } from '@settings/stores/help.store';
 // React component
 export function Pagination({ className, itemsPerPage, pagination, setPagination, table }: IPagination<any>) {
-  const { help } = useHelpStore();
   const { t } = useTranslation();
   const ITEMS: number[] = itemsPerPage ?? [5, 10, 20, 50];
 
@@ -22,7 +20,7 @@ export function Pagination({ className, itemsPerPage, pagination, setPagination,
       <section className='flex w-fit flex-row items-center space-x-4'>
         <p className='w-fit'>{t('pagination.rowsPerPage')}</p>
         <Select value={`${table.getState().pagination.pageSize}`} onValueChange={(e) => setPagination({ pageIndex: 0, pageSize: parseInt(e) })}>
-          <TooltipWrapper tooltip={t('tooltip.pagination.itemsPerPage')} help={help}>
+          <TooltipWrapper tooltip={t('tooltip.pagination.itemsPerPage')}>
             <SelectTrigger className='h-8 w-16 bg-input text-xs text-slate-700 hover:bg-input-hover [&_svg]:opacity-100'>
               <SelectValue placeholder={table.getState().pagination.pageSize} />
             </SelectTrigger>
@@ -42,7 +40,7 @@ export function Pagination({ className, itemsPerPage, pagination, setPagination,
         {t('pagination.page')} {pagination.pageIndex + 1} {t('pagination.of')} {table.getPageCount()}
       </section>
       <section className={`flex items-center space-x-4 ${table.getPageCount() <= 1 && 'opacity-0'}`}>
-        <TooltipWrapper tooltip={t('tooltip.pagination.firstPage')} help={help}>
+        <TooltipWrapper tooltip={t('tooltip.pagination.firstPage')}>
           <Button
             variant='ghost'
             className='h-8 w-8 bg-input p-0 text-slate-700 hover:bg-input-hover'
@@ -52,7 +50,7 @@ export function Pagination({ className, itemsPerPage, pagination, setPagination,
             <ArrowLeft size={16} strokeWidth={2} />
           </Button>
         </TooltipWrapper>
-        <TooltipWrapper tooltip={t('tooltip.pagination.previousPage')} help={help}>
+        <TooltipWrapper tooltip={t('tooltip.pagination.previousPage')}>
           <Button
             variant='ghost'
             className='h-8 w-8 bg-input p-0 text-slate-700 hover:bg-input-hover'
@@ -62,7 +60,7 @@ export function Pagination({ className, itemsPerPage, pagination, setPagination,
             <ChevronLeft size={16} strokeWidth={2} />
           </Button>
         </TooltipWrapper>
-        <TooltipWrapper tooltip={t('tooltip.pagination.nextPage')} help={help}>
+        <TooltipWrapper tooltip={t('tooltip.pagination.nextPage')}>
           <Button
             variant='ghost'
             className='h-8 w-8 bg-input p-0 text-slate-700 hover:bg-input-hover'
@@ -72,7 +70,7 @@ export function Pagination({ className, itemsPerPage, pagination, setPagination,
             <ChevronRight size={16} strokeWidth={2} />
           </Button>
         </TooltipWrapper>
-        <TooltipWrapper tooltip={t('tooltip.pagination.lastPage')} help={help}>
+        <TooltipWrapper tooltip={t('tooltip.pagination.lastPage')}>
           <Button
             variant='ghost'
             className='h-8 w-8 bg-input p-0 text-slate-700 hover:bg-input-hover'
