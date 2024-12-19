@@ -2,14 +2,17 @@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@core/components/ui/tooltip';
 // External imports
 import { ReactNode } from 'react';
+// Imports
+import { useHelpStore } from '@settings/stores/help.store';
 // Interface
 interface ITooltipWrapper {
   children: ReactNode;
-  help?: boolean;
   tooltip?: string;
 }
 // React component
-export function TooltipWrapper({ children, tooltip, help }: ITooltipWrapper) {
+export function TooltipWrapper({ children, tooltip }: ITooltipWrapper) {
+  const { help } = useHelpStore();
+
   return help && tooltip ? (
     <TooltipProvider delayDuration={0.3}>
       <Tooltip>
