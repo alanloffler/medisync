@@ -45,7 +45,7 @@ import { useTruncateText } from '@core/hooks/useTruncateText';
 const defaultSorting: SortingState = [{ id: APPO_CONFIG.table.defaultSortingId, desc: APPO_CONFIG.table.defaultSortingType }];
 const defaultPagination: PaginationState = { pageIndex: 0, pageSize: APPO_CONFIG.table.defaultItemsPerPage };
 // React component
-export function ApposDataTable({ search, reload, setReload, setErrorMessage, help }: IDataTableAppointments) {
+export function ApposDataTable({ search, reload, setReload, setErrorMessage }: IDataTableAppointments) {
   const [appointmentSelected, setAppointmentSelected] = useState<IAppointment>({} as IAppointment);
   const [columns, setColumns] = useState<ColumnDef<IAppointment>[]>([]);
   const [data, setData] = useState<IAppointment[]>([]);
@@ -153,20 +153,10 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
       header: () => <div className='text-center'>{t(APPO_CONFIG.table.header[6])}</div>,
       cell: ({ row }) => (
         <div className='mx-auto flex w-fit flex-row items-center justify-center space-x-2'>
-          <TableButton
-            callback={() => navigate(`/appointments/${row.original._id}`)}
-            className='hover:text-sky-500'
-            help={help}
-            tooltip={t('tooltip.details')}
-          >
+          <TableButton callback={() => navigate(`/appointments/${row.original._id}`)} className='hover:text-sky-500' tooltip={t('tooltip.details')}>
             <FileText size={16} strokeWidth={1.5} />
           </TableButton>
-          <TableButton
-            callback={() => handleRemoveAppointmentDialog(row.original)}
-            className='hover:text-rose-500'
-            help={help}
-            tooltip={t('tooltip.delete')}
-          >
+          <TableButton callback={() => handleRemoveAppointmentDialog(row.original)} className='hover:text-rose-500' tooltip={t('tooltip.delete')}>
             <Trash2 size={16} strokeWidth={1.5} />
           </TableButton>
         </div>
@@ -344,7 +334,6 @@ export function ApposDataTable({ search, reload, setReload, setErrorMessage, hel
           </Table>
           <Pagination
             className='pt-4 !text-xsm text-slate-400'
-            help={help}
             itemsPerPage={APPO_CONFIG.table.itemsPerPage}
             pagination={pagination}
             setPagination={setPagination}
