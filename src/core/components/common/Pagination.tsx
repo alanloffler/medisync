@@ -10,8 +10,10 @@ import { useTranslation } from 'react-i18next';
 // Imports
 import type { IPagination } from '@core/components/common/interfaces/pagination.interface';
 import { cn } from '@lib/utils';
+import { useHelpStore } from '@settings/stores/help.store';
 // React component
-export function Pagination({ className, help, itemsPerPage, pagination, setPagination, table }: IPagination<any>) {
+export function Pagination({ className, itemsPerPage, pagination, setPagination, table }: IPagination<any>) {
+  const { help } = useHelpStore();
   const { t } = useTranslation();
   const ITEMS: number[] = itemsPerPage ?? [5, 10, 20, 50];
 
