@@ -93,9 +93,9 @@ export default function Appointments() {
           </header>
           <CardContent className='pt-2'>
             <header className='space-y-2'>
-              <section className='flex flex-row items-center justify-between'>
+              <section className='flex flex-col space-y-3 md:flex-row md:items-center md:justify-between md:space-y-0'>
                 <div className='flex items-center space-x-4'>
-                  <div className='relative w-full items-center md:w-[200px]'>
+                  <div className='relative items-center md:w-[200px]'>
                     <Search size={16} strokeWidth={2} className='absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground' />
                     <Input
                       className='h-7 bg-input pl-8 text-xsm'
@@ -139,6 +139,9 @@ export default function Appointments() {
                       </Button>
                     )}
                   </div>
+                  <Button size='xs' className='h-7 text-xs' onClick={() => setDate(new Date())}>
+                    {t('button.today')}
+                  </Button>
                 </div>
                 <DBCountAppos className='!text-xsm' />
               </section>
