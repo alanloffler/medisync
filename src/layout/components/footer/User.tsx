@@ -18,12 +18,10 @@ import { useTranslation } from 'react-i18next';
 // Imports
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { motion } from '@core/services/motion.service';
-import { useHelpStore } from '@settings/stores/help.store';
 // React component
 export function User() {
   const [scope, animation] = useAnimate();
   const navigate = useNavigate();
-  const { help } = useHelpStore();
   const { t } = useTranslation();
 
   function handleAnimationOver(): void {
@@ -38,7 +36,7 @@ export function User() {
 
   return (
     <DropdownMenu>
-      <TooltipWrapper tooltip={t('tooltip.account')} help={help}>
+      <TooltipWrapper tooltip={t('tooltip.account')}>
         <DropdownMenuTrigger onMouseOver={handleAnimationOver} onMouseOut={handleAnimationOut}>
           <CircleUser ref={scope} size={20} strokeWidth={2} />
         </DropdownMenuTrigger>
