@@ -57,11 +57,6 @@ export function DateSelection({ date, disabledDays, professional, setDate, setSe
     gcTime: 0,
   });
 
-  useEffect(() => {
-    setDate(undefined);
-    setCalendarKey(crypto.randomUUID());
-  }, [professional, setDate]);
-
   const selectYear = useCallback((value: string): void => {
     setSelectedYear(parseInt(value));
     setCalendarKey(crypto.randomUUID());
@@ -73,8 +68,10 @@ export function DateSelection({ date, disabledDays, professional, setDate, setSe
   }, []);
 
   useEffect(() => {
+    setDate(undefined);
+    setCalendarKey(crypto.randomUUID());
     mutate();
-  }, [mutate, professional, selectedMonth, selectedYear]);
+  }, [professional, setDate, mutate, selectedMonth, selectedYear]);
 
   return (
     <section className={cn('flex flex-col space-y-3')}>
