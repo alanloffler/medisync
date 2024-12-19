@@ -102,6 +102,10 @@ export const DailySchedule = memo(({ date, handleDialog, professional, refreshAp
     }
   }, [addNotification, fetchAppos, professional, refreshAppos, selectedDate, setDate, t]);
 
+  useEffect(() => {
+    if (!date) setTodayIsWorkingDay(false);
+  }, [date]);
+
   // Cached methods between re-renders
   const memoizedHandleDialog = useCallback(
     (action: EDialogAction, slot: ITimeSlot) => {
