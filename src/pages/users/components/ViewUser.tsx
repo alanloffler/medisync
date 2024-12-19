@@ -24,7 +24,6 @@ import { UtilsString } from '@core/services/utils/string.service';
 import { motion } from '@core/services/motion.service';
 import { useDelimiter } from '@core/hooks/useDelimiter';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
-import { useHelpStore } from '@settings/stores/help.store';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export default function ViewUser() {
@@ -36,7 +35,6 @@ export default function ViewUser() {
   const delimiter = useDelimiter();
   const navigate = useNavigate();
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
-  const { help } = useHelpStore();
   const { i18n, t } = useTranslation();
   const { id } = useParams();
 
@@ -121,7 +119,6 @@ export default function ViewUser() {
                   callback={() => navigate(`/email/${user._id}`)}
                   className='hover:text-sky-500'
                   disabled={!user.email}
-                  help={help}
                   tooltip={t('tooltip.sendEmail')}
                 >
                   <Send size={18} strokeWidth={1.5} />
@@ -129,7 +126,6 @@ export default function ViewUser() {
                 <TableButton
                   callback={() => navigate(`/whatsapp/${user._id}`)}
                   className='hover:text-green-500'
-                  help={help}
                   tooltip={t('tooltip.sendMessage')}
                 >
                   <MessageCircle size={18} strokeWidth={1.5} />
@@ -137,7 +133,6 @@ export default function ViewUser() {
                 <TableButton
                   callback={() => navigate(`/users/update/${user._id}`)}
                   className='hover:text-fuchsia-500'
-                  help={help}
                   tooltip={t('tooltip.updateUser')}
                 >
                   <PencilLine size={18} strokeWidth={1.5} />
@@ -146,7 +141,6 @@ export default function ViewUser() {
                 <TableButton
                   callback={() => console.log('Open dialog')}
                   className='hover:text-rose-500'
-                  help={help}
                   tooltip={t('tooltip.deleteUser')}
                 >
                   <Trash2 size={18} strokeWidth={1.5} />
