@@ -29,7 +29,6 @@ import { ProfessionalApiService } from '@professionals/services/professional-api
 import { UtilsString } from '@core/services/utils/string.service';
 import { motion } from '@core/services/motion.service';
 import { useDelimiter } from '@core/hooks/useDelimiter';
-import { useHelpStore } from '@settings/stores/help.store';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export default function ViewProfessional() {
@@ -43,7 +42,6 @@ export default function ViewProfessional() {
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const delimiter = useDelimiter();
   const navigate = useNavigate();
-  const { help } = useHelpStore();
   const { i18n, t } = useTranslation();
   const { id } = useParams();
 
@@ -189,9 +187,9 @@ export default function ViewProfessional() {
                   </section>
                 </CardContent>
                 <CardFooter className='justify-between border-t p-2'>
-                  <AvailableProfessional items={PV_CONFIG.select} data={{ _id: professional._id, available: professional.available }} help={help} />
+                  <AvailableProfessional items={PV_CONFIG.select} data={{ _id: professional._id, available: professional.available }} />
                   <section className='space-x-2'>
-                    <TooltipWrapper tooltip={t('tooltip.sendEmail')} help={help}>
+                    <TooltipWrapper tooltip={t('tooltip.sendEmail')}>
                       <Button
                         variant='ghost'
                         size='miniIcon'
@@ -203,7 +201,7 @@ export default function ViewProfessional() {
                         <Send size={18} strokeWidth={1.5} />
                       </Button>
                     </TooltipWrapper>
-                    <TooltipWrapper tooltip={t('tooltip.share')} help={help}>
+                    <TooltipWrapper tooltip={t('tooltip.share')}>
                       <Button
                         variant='ghost'
                         size='miniIcon'
@@ -212,7 +210,7 @@ export default function ViewProfessional() {
                         <Share2 size={18} strokeWidth={1.5} />
                       </Button>
                     </TooltipWrapper>
-                    <TooltipWrapper tooltip={t('tooltip.edit')} help={help}>
+                    <TooltipWrapper tooltip={t('tooltip.edit')}>
                       <Button
                         variant='ghost'
                         size='miniIcon'
@@ -245,7 +243,6 @@ export default function ViewProfessional() {
                         cancelButton: t('button.cancel'),
                         removeButton: t('button.deleteProfessional'),
                       }}
-                      help={help}
                       tooltip={t('tooltip.delete')}
                       triggerButton={<Trash2 size={18} strokeWidth={1.5} />}
                     />
