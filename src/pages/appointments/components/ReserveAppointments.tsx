@@ -31,7 +31,6 @@ export default function ReserveAppointments() {
   const { i18n, t } = useTranslation();
   const selectedLocale: string = i18n.resolvedLanguage || i18n.language;
 
-
   // Common with ProfessionalSelection and DateSelection
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [disabledDays, setDisabledDays] = useState<number[]>(DISABLED_DAYS);
@@ -80,8 +79,6 @@ export default function ReserveAppointments() {
     (action: EDialogAction, slot: ITimeSlot, isOnly?: boolean): void => {
       setOpenDialog(true);
       setSelectedSlot(slot);
-
-      console.log('isOnly inside handleDialog', isOnly);
 
       if (action === EDialogAction.RESERVE) {
         const reserveDialogContent: IDialog = {
