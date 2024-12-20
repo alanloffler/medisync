@@ -1,5 +1,4 @@
 import type { IResponse } from '@core/interfaces/response.interface';
-import { APP_CONFIG } from '@config/app.config';
 import { EMethods } from '@core/enums/methods.enum';
 
 export class UtilsUrl {
@@ -25,7 +24,7 @@ export class UtilsUrl {
 
       return response;
     } catch (error) {
-      if (error instanceof TypeError) throw new Error(APP_CONFIG.error.server);
+      if (error instanceof TypeError) throw new Error('error.internalServer');
       throw error;
     }
   }
