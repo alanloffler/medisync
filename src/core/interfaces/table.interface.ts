@@ -4,9 +4,10 @@ import type { IUserSearch } from '@users/interfaces/user-search.interface';
 import type { PaginationState, SortingState } from '@tanstack/react-table';
 
 export interface IDataTable {
-  reload: number;
-  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
-  setReload: React.Dispatch<React.SetStateAction<number>>;
+  help?: boolean;
+  reload?: number;
+  setErrorMessage?: React.Dispatch<React.SetStateAction<string>>;
+  setReload?: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export interface IDataTableAppointments extends IDataTable {
