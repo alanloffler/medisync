@@ -27,7 +27,7 @@ import { useNotificationsStore } from '@core/stores/notifications.store';
 // Interface
 interface IProps {
   date?: Date;
-  handleDialog: (action: EDialogAction, slot: ITimeSlot) => void;
+  handleDialog: (action: EDialogAction, slot: ITimeSlot, isOnly?: boolean) => void;
   professional?: IProfessional;
   refreshAppos: string;
   selectedDate?: Date;
@@ -108,8 +108,8 @@ export const DailySchedule = memo(({ date, handleDialog, professional, refreshAp
 
   // Cached methods between re-renders
   const memoizedHandleDialog = useCallback(
-    (action: EDialogAction, slot: ITimeSlot) => {
-      handleDialog(action, slot);
+    (action: EDialogAction, slot: ITimeSlot, isOnly?: boolean) => {
+      handleDialog(action, slot, isOnly);
     },
     [handleDialog],
   );
@@ -122,8 +122,8 @@ export const DailySchedule = memo(({ date, handleDialog, professional, refreshAp
   );
 
   const handleCancel = useCallback(
-    (slot: ITimeSlot): void => {
-      memoizedHandleDialog(EDialogAction.CANCEL, slot);
+    (slot: ITimeSlot, isOnly: boolean): void => {
+      memoizedHandleDialog(EDialogAction.CANCEL, slot, isOnly);
     },
     [memoizedHandleDialog],
   );
@@ -240,7 +240,7 @@ export const DailySchedule = memo(({ date, handleDialog, professional, refreshAp
                           className='w-full space-x-1.5 bg-rose-400 px-1.5 py-1.5 text-rose-100 hover:bg-rose-500 hover:text-rose-100'
                           size='xs'
                           variant='ghost'
-                          onClick={() => handleCancel(slot)}
+                          onClick={() => handleCancel(slot, !!(appointments?.data && appointments.data.length <= 1))}
                         >
                           <X size={16} strokeWidth={2} />
                           <span className='hidden text-xs font-normal md:block'>{t('button.cancel')}</span>
