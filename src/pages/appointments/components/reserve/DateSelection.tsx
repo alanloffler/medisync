@@ -22,10 +22,11 @@ interface IProps {
   disabledDays: number[];
   professional?: IProfessional;
   setDate: Dispatch<SetStateAction<Date | undefined>>;
+  handleDaysWithAppos: { day: string; action: string; id: string } | undefined;
   setSelectedDate: Dispatch<SetStateAction<Date | undefined>>;
 }
 // React component
-export function DateSelection({ date, disabledDays, professional, setDate, setSelectedDate }: IProps) {
+export function DateSelection({ date, disabledDays, professional, handleDaysWithAppos, setDate, setSelectedDate }: IProps) {
   const [calendarKey, setCalendarKey] = useState<string>('');
   const [calendarLocale, setCalendarLocale] = useState<Locale>();
   const [calendarMonths, setCalendarMonths] = useState<string[]>([]);
@@ -34,6 +35,7 @@ export function DateSelection({ date, disabledDays, professional, setDate, setSe
   const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
   const { i18n, t } = useTranslation();
 
+  // Locale language
   const selectedLocale: string = i18n.resolvedLanguage || i18n.language;
 
   useEffect(() => {
@@ -47,20 +49,22 @@ export function DateSelection({ date, disabledDays, professional, setDate, setSe
     if (selectedLocale === 'en') setCalendarLocale(enUS);
   }, [selectedLocale]);
 
+  // Fetch days with appointments
   const {
     data: daysWithAppos,
     isPending,
     mutate: fetchDaysWithAppos,
   } = useMutation<IResponse<{ day: string }[]> | undefined>({
-    mutationKey: ['appointments', 'byProfessional', professional?._id, selectedYear, selectedMonth, professional],
+    mutationKey: ['appointments', 'daysWithAppos', professional?._id, selectedYear, selectedMonth],
     mutationFn: async () => {
       if (professional) {
         return await AppointmentApiService.daysWithAppos(professional._id, selectedYear, selectedMonth + 1);
       }
-      return { data: [], message: '', statusCode: 200 };
+      return { statusCode: 200, message: 'Default empty days with appos', data: [] };
     },
   });
 
+  // Calendar year and month actions when selected
   const selectYear = useCallback((value: string): void => {
     setSelectedYear(parseInt(value));
     setCalendarKey(crypto.randomUUID());
@@ -71,11 +75,29 @@ export function DateSelection({ date, disabledDays, professional, setDate, setSe
     setCalendarKey(crypto.randomUUID());
   }, []);
 
+  // Reset calendar when professional, year or month changes
   useEffect(() => {
     setDate(undefined);
     setCalendarKey(crypto.randomUUID());
     fetchDaysWithAppos();
-  }, [fetchDaysWithAppos, professional, setDate, selectedMonth, selectedYear]);
+  }, [professional, setDate, selectedMonth, selectedYear, fetchDaysWithAppos]);
+
+  // Handle days with appointments when action from schedule is create or delete
+  useEffect(() => {
+    if (handleDaysWithAppos) {
+      const { action, day } = handleDaysWithAppos;
+
+      if (action === 'create') {
+        const exists: boolean | undefined = daysWithAppos?.data?.some((item) => item.day === day);
+        if (!exists) daysWithAppos?.data?.push({ day: day });
+      }
+
+      if (action === 'delete') {
+        const index: number | undefined = daysWithAppos?.data?.findIndex((item) => item.day === day);
+        if (index && index !== -1) daysWithAppos?.data?.splice(index, 1);
+      }
+    }
+  }, [daysWithAppos?.data, handleDaysWithAppos]);
 
   return (
     <section className={cn('flex flex-col space-y-3')}>
@@ -105,7 +127,7 @@ export function DateSelection({ date, disabledDays, professional, setDate, setSe
         selected={date}
         showOutsideDays={false}
         toYear={Number(calendarYears[calendarYears.length - 1])}
-        footer={isPending && <LoadingDB text={t('loading.appointments')} className='text-xs mx-0 [&_svg]:w-3' />}
+        footer={isPending && <LoadingDB text={t('loading.appointments')} className='mx-0 text-xs [&_svg]:w-3' />}
         formatters={{
           formatDay: (day) => {
             const numberDay: number = day.getDate();
@@ -125,7 +147,7 @@ export function DateSelection({ date, disabledDays, professional, setDate, setSe
           },
         }}
       />
-      <section className='flex w-full flex-row items-center justify-center space-x-3 -mt-3'>
+      <section className='-mt-3 flex w-full flex-row items-center justify-center space-x-3'>
         <Button
           variant='default'
           className='h-7 w-fit px-2 text-xs'
