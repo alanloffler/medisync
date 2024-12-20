@@ -23,12 +23,14 @@ import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 const DISABLED_DAYS: number[] = RA_CONFIG.calendar.disabledDays;
 // React component
 export default function ReserveAppointments() {
+  const [handleDaysWithAppos, setHandleDaysWithAppos] = useState<{ day: string; action: string; id: string } | undefined>();
   const [refreshAppos, setRefreshAppos] = useState<string>('');
   const [selectedSlot, setSelectedSlot] = useState<ITimeSlot>({} as ITimeSlot);
   const [userSelected, setUserSelected] = useState<IUser>({} as IUser);
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
   const { i18n, t } = useTranslation();
   const selectedLocale: string = i18n.resolvedLanguage || i18n.language;
+
 
   // Common with ProfessionalSelection and DateSelection
   const [date, setDate] = useState<Date | undefined>(undefined);
@@ -75,9 +77,11 @@ export default function ReserveAppointments() {
 
   // DIALOG
   const handleDialog = useCallback(
-    (action: EDialogAction, slot: ITimeSlot): void => {
+    (action: EDialogAction, slot: ITimeSlot, isOnly?: boolean): void => {
       setOpenDialog(true);
       setSelectedSlot(slot);
+
+      console.log('isOnly inside handleDialog', isOnly);
 
       if (action === EDialogAction.RESERVE) {
         const reserveDialogContent: IDialog = {
@@ -113,6 +117,7 @@ export default function ReserveAppointments() {
             </div>
           ),
           description: t('dialog.deleteAppointment.description'),
+          isOnly: isOnly,
           title: t('dialog.deleteAppointment.title'),
         };
 
@@ -126,12 +131,13 @@ export default function ReserveAppointments() {
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6'>
       <section className='flex flex-col gap-6 overflow-x-auto md:flex-row lg:flex-row'>
         {/* Section: Left side */}
-        <section className='flex h-fit flex-col w-full min-w-fit gap-4 rounded-lg bg-background p-4 mx-auto md:w-fit md:gap-6 lg:w-1/3 lg:gap-6'>
+        <section className='mx-auto flex h-fit w-full min-w-fit flex-col gap-4 rounded-lg bg-background p-4 md:w-fit md:gap-6 lg:w-1/3 lg:gap-6'>
           <ProfessionalSelection professional={professionalSelected} setDisabledDays={setDisabledDays} setSelected={setProfessionalSelected} />
           <DateSelection
             date={date}
             disabledDays={disabledDays}
             professional={professionalSelected}
+            handleDaysWithAppos={handleDaysWithAppos}
             setDate={setDate}
             setSelectedDate={setSelectedDate}
           />
@@ -158,6 +164,7 @@ export default function ReserveAppointments() {
         date={date}
         openState={{ open: openDialog, setOpen: setOpenDialog }}
         professional={professionalSelected}
+        setHandleDaysWithAppos={setHandleDaysWithAppos}
         setRefreshAppos={setRefreshAppos}
         setUser={setUserSelected}
         user={userSelected}
