@@ -71,7 +71,9 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
   const truncate = useTruncateText();
   const { i18n, t } = useTranslation();
 
+  // Fetch appointments
   const {
+    data: response,
     error,
     isError,
     isPending: isLoading,
@@ -88,14 +90,10 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
         setColumns(tableColumns);
         setTotalItems(response.data.count);
       }
-      if (response.statusCode > 399) {
-        addNotification({ type: 'warning', message: response.message });
-      }
-      if (response instanceof Error) {
-        addNotification({ type: 'error', message: t('error.internalServer') });
-      }
     },
-    onError: () => addNotification({ type: 'error', message: t('error.internalServer') }),
+    onError: (error: Error) => {
+      addNotification({ type: 'error', message: error.message })
+    },
   });
 
   useEffect(() => {
@@ -112,10 +110,60 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
       } else {
         skipItems = tableManager.pagination.pageIndex * tableManager.pagination.pageSize;
       }
-      console.log('Triggering fetchData with params:', { search, tableManager });
+
       fetchData({ search, sorting: tableManager.sorting, skipItems, itemsPerPage: tableManager.pagination.pageSize });
     }
   }, [search, tableManager, fetchData]);
+
+  // Table column visibility
+  const isSmallDevice = useMediaQuery('only screen and (max-width : 639px)');
+  const isMediumDevice = useMediaQuery('only screen and (max-width : 767px)');
+  const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>({
+    identityCard: !isSmallDevice,
+    index: !isSmallDevice,
+    professional: !isMediumDevice,
+  });
+
+  // Table manager
+  const table: ITable<IAppointment> = useReactTable({
+    columns: columns,
+    data: data ?? [],
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    manualPagination: true,
+    manualSorting: true,
+    onPaginationChange: setPagination,
+    onSortingChange: setSorting,
+    rowCount: totalItems,
+    state: {
+      columnVisibility,
+      sorting,
+      pagination,
+    },
+    onColumnVisibilityChange: setColumnVisibility,
+  });
+
+  useEffect(() => {
+    setColumnVisibility({
+      professional: !isMediumDevice,
+      index: !isSmallDevice,
+      identityCard: !isSmallDevice,
+    });
+  }, [isMediumDevice, isSmallDevice]);
+
+  useEffect(() => {
+    if (isFirstTableManager.current) {
+      isFirstTableManager.current = false;
+      return;
+    } else {
+      setTableManager({
+        sorting: sorting,
+        pagination: pagination,
+      });
+    }
+  }, [sorting, pagination]);
 
   const tableColumns: ColumnDef<IAppointment>[] = useMemo(
     () => [
@@ -217,59 +265,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
     [i18n, navigate, t, truncate],
   );
 
-  const isSmallDevice = useMediaQuery('only screen and (max-width : 639px)');
-  const isMediumDevice = useMediaQuery('only screen and (max-width : 767px)');
-  const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>({
-    identityCard: !isSmallDevice,
-    index: !isSmallDevice,
-    professional: !isMediumDevice,
-  });
-
-  useEffect(() => {
-    setColumnVisibility({
-      professional: !isMediumDevice,
-      index: !isSmallDevice,
-      identityCard: !isSmallDevice,
-    });
-  }, [isMediumDevice, isSmallDevice]);
-
-  const table: ITable<IAppointment> = useReactTable({
-    columns: columns,
-    data: data ?? [],
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    manualPagination: true,
-    manualSorting: true,
-    onPaginationChange: setPagination,
-    onSortingChange: setSorting,
-    rowCount: totalItems,
-    state: {
-      columnVisibility,
-      sorting,
-      pagination,
-    },
-    onColumnVisibilityChange: setColumnVisibility,
-  });
-
-  useEffect(() => {
-    if (isFirstTableManager.current) {
-      isFirstTableManager.current = false;
-      return;
-    } else {
-      setTableManager({
-        sorting: sorting,
-        pagination: pagination,
-      });
-    }
-  }, [sorting, pagination]);
-
-  // useEffect(() => {
-  //   setSorting(defaultSorting);
-  //   setPagination(defaultPagination);
-  // }, [reload]);
-
+  // Actions
   function handleRemoveAppointmentDialog(appointment: IAppointment): void {
     setOpenDialog(true);
     setAppointmentSelected(appointment);
@@ -281,8 +277,9 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
     setErrorRemoving(false);
   }
 
+  // Render
   if (isError) {
-    return <InfoCard type='error' text={error.message} className='mt-6' />;
+    return <InfoCard type='error' text={t(error.message)} className='mt-6' />;
   }
 
   if (isLoading) {
@@ -290,10 +287,9 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
   }
 
   return (
-    <>
-      {/* {JSON.stringify(data?.data)} */}
+    <main className='mt-6'>
       {/* Section: Data table */}
-      {table.getRowModel().rows?.length > 0 && (
+      {table.getRowModel().rows?.length > 0 ? (
         <>
           <Table>
             <TableHeader>
@@ -327,7 +323,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
             table={table}
           />
         </>
-      )}
+      ) : (<InfoCard type='warning' text={response?.message} />)}
       {/* Section: Dialog */}
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent>
@@ -374,6 +370,6 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
           </DialogHeader>
         </DialogContent>
       </Dialog>
-    </>
+    </main>
   );
 }
