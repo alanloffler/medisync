@@ -35,11 +35,9 @@ const defaultAppoSearch: IAppointmentSearch[] = [
 export default function Appointments() {
   const [createScope, createAnimation] = useAnimate();
   const [date, setDate] = useState<Date>();
-  const [errorMessage, setErrorMessage] = useState<string>('');
   const [locale, setLocale] = useState<Locale>();
   const [name, setName] = useState<string>('');
   const [openPopover, setOpenPopover] = useState<boolean>(false);
-  const [reload, setReload] = useState<number>(0);
   const [search, setSearch] = useState<IAppointmentSearch[]>(defaultAppoSearch);
   const debouncedSearch = useDebounce<IAppointmentSearch[]>(search, APP_CONFIG.debounceTime);
   const navigate = useNavigate();
@@ -145,9 +143,8 @@ export default function Appointments() {
                 </div>
                 <DBCountAppos className='!text-xsm' />
               </section>
-              <div className='flex h-4 text-xsm font-light text-rose-400'>{errorMessage}</div>
             </header>
-            <ApposDataTable search={debouncedSearch} reload={reload} setReload={setReload} setErrorMessage={setErrorMessage} />
+            <ApposDataTable search={debouncedSearch} />
           </CardContent>
         </Card>
       </section>
