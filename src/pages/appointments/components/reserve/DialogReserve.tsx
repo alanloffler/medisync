@@ -22,12 +22,13 @@ interface IProps {
   date?: Date;
   openState: { open: boolean; setOpen: Dispatch<SetStateAction<boolean>> };
   professional?: IProfessional;
+  setHandleDaysWithAppos: Dispatch<SetStateAction<{ day: string; action: string; id: string } | undefined>>;
   setRefreshAppos: Dispatch<SetStateAction<string>>;
   setUser: Dispatch<SetStateAction<IUser>>;
   user: IUser;
 }
 // React component
-export function DialogReserve({ content, date, openState, professional, setRefreshAppos, setUser, user }: IProps) {
+export function DialogReserve({ content, date, openState, professional, setHandleDaysWithAppos, setRefreshAppos, setUser, user }: IProps) {
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const { messages: dialogContent, slot: selectedSlot } = content;
   const { i18n, t } = useTranslation();
@@ -94,13 +95,18 @@ export function DialogReserve({ content, date, openState, professional, setRefre
     );
   }
 
-  async function cancelAppointment(slot: ITimeSlot): Promise<void> {
-    if (slot.appointment?._id) {
+  async function cancelAppointment(slot: ITimeSlot, isOnly?: boolean): Promise<void> {
+    if (slot.appointment) {
+      const slotAppointmentDay: string = slot.appointment.day;
+
       AppointmentApiService.remove(slot.appointment._id).then((response) => {
         if (response.statusCode === 200) {
           addNotification({ type: 'success', message: response.message });
           handleResetDialog();
           setRefreshAppos(crypto.randomUUID());
+          if (isOnly === true) {
+            setHandleDaysWithAppos({ day: slotAppointmentDay, action: 'delete', id: crypto.randomUUID() });
+          }
           openState.setOpen(false);
         }
         if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
@@ -123,6 +129,7 @@ export function DialogReserve({ content, date, openState, professional, setRefre
         if (newAppo.statusCode === 200) {
           addNotification({ type: 'success', message: newAppo.message });
           setRefreshAppos(crypto.randomUUID());
+          setHandleDaysWithAppos({ day: format(date ?? new Date(), 'YYYY-MM-DD'), action: 'create', id: crypto.randomUUID() });
           handleResetDialog();
           openState.setOpen(false);
         }
@@ -130,7 +137,7 @@ export function DialogReserve({ content, date, openState, professional, setRefre
         if (newAppo instanceof Error) addNotification({ type: 'error', message: t('error.internalServer') });
       }
     },
-    [addNotification, date, handleResetDialog, openState, professional, setRefreshAppos, t, user._id],
+    [addNotification, date, handleResetDialog, openState, professional, setHandleDaysWithAppos, setRefreshAppos, t, user._id],
   );
 
   return (
@@ -154,7 +161,7 @@ export function DialogReserve({ content, date, openState, professional, setRefre
               </Button>
             )}
             {dialogContent.action === EDialogAction.CANCEL && (
-              <Button variant='default' size='sm' onClick={() => cancelAppointment(selectedSlot)}>
+              <Button variant='default' size='sm' onClick={() => cancelAppointment(selectedSlot, dialogContent.isOnly)}>
                 {t('button.deleteAppointment')}
               </Button>
             )}
