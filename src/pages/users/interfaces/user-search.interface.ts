@@ -1,9 +1,6 @@
-export enum EUserSearch {
-  NAME = 'name',
-  DNI = 'dni',
-}
+import { EUserSearch } from '@users/enums/user-search.enum';
 
 export interface IUserSearch {
-  value: string;
   type: EUserSearch;
+  value: string;
 }
