@@ -235,6 +235,9 @@
       "appointments": "Filter appointments"
     },
     "professional": "Search professional",
+    "searching": {
+      "users": "Searching patients"
+    },
     "user": "Search patient"
   },
   "section": {

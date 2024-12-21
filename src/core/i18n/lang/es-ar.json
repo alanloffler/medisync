@@ -235,6 +235,9 @@
       "appointments": "Filtrar turnos"
     },
     "professional": "Buscar profesional",
+    "searching": {
+      "users": "Buscando pacientes"
+    },
     "user": "Buscar paciente"
   },
   "section": {
