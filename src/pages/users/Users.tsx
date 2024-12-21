@@ -14,8 +14,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { spring, useAnimate } from 'motion/react';
 import { useTranslation } from 'react-i18next';
 // Imports
+import type { IUserSearch } from '@users/interfaces/user-search.interface';
 import { APP_CONFIG } from '@config/app.config';
-import { EUserSearch, type IUserSearch } from '@users/interfaces/user-search.interface';
+import { EUserSearch } from '@users/enums/user-search.enum';
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { USER_CONFIG } from '@config/users/users.config';
 import { useDebounce } from '@core/hooks/useDebounce';
@@ -42,7 +43,7 @@ export default function Users() {
   }
 
   function handleSearchByDNI(event: ChangeEvent<HTMLInputElement>): void {
-    setSearch({ value: event.target.value, type: EUserSearch.DNI });
+    setSearch({ value: event.target.value, type: EUserSearch.IDENTITY });
   }
 
   function handleReload(): void {
@@ -82,16 +83,16 @@ export default function Users() {
                 <div className='relative w-full items-center md:w-1/3 lg:w-full'>
                   <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
                   <Input
-                    onClick={() => search.value !== '' && search.type === EUserSearch.NAME && setSearch({ value: '', type: EUserSearch.DNI })}
+                    onClick={() => search.value !== '' && search.type === EUserSearch.NAME && setSearch({ value: '', type: EUserSearch.IDENTITY })}
                     onChange={handleSearchByDNI}
-                    value={search.type === EUserSearch.DNI ? search.value : ''}
+                    value={search.type === EUserSearch.IDENTITY ? search.value : ''}
                     type='number'
                     placeholder={t('label.identityCard')}
                     className='bg-background pl-10 shadow-sm'
                   />
-                  {search.type === EUserSearch.DNI && search.value && (
+                  {search.type === EUserSearch.IDENTITY && search.value && (
                     <button
-                      onClick={() => setSearch({ value: '', type: EUserSearch.DNI })}
+                      onClick={() => setSearch({ value: '', type: EUserSearch.IDENTITY })}
                       className='absolute right-3 top-3 text-muted-foreground hover:text-black'
                     >
                       <X size={16} strokeWidth={2} />
@@ -104,7 +105,7 @@ export default function Users() {
                 <div className='relative w-full items-center md:w-1/3 lg:w-full'>
                   <Search className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
                   <Input
-                    onClick={() => search.value !== '' && search.type === EUserSearch.DNI && setSearch({ value: '', type: EUserSearch.NAME })}
+                    onClick={() => search.value !== '' && search.type === EUserSearch.IDENTITY && setSearch({ value: '', type: EUserSearch.NAME })}
                     onChange={handleSearchByName}
                     value={search.type === EUserSearch.NAME ? search.value : ''}
                     type='text'
@@ -167,13 +168,7 @@ export default function Users() {
           </CardTitle>
           {/* Table */}
           <CardContent>
-            <UsersDataTable
-              key={reload}
-              reload={reload}
-              search={debouncedSearch}
-              setErrorMessage={setErrorMessage}
-              setReload={setReload}
-            />
+            <UsersDataTable key={reload} reload={reload} search={debouncedSearch} setErrorMessage={setErrorMessage} setReload={setReload} />
           </CardContent>
         </Card>
       </section>
