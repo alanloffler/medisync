@@ -80,9 +80,9 @@ export function UsersCombo({
   useEffect(() => {
     if (debouncedSearch !== '') {
       setOpenCombobox(true);
-
-      if (searchBy === EUserSearch.NAME) searchUsersBy({ searchBy: EUserSearch.NAME });
-      if (searchBy === EUserSearch.IDENTITY) searchUsersBy({ searchBy: EUserSearch.IDENTITY });
+      searchUsersBy({ searchBy });
+      // if (searchBy === EUserSearch.NAME) searchUsersBy({ searchBy: EUserSearch.NAME });
+      // if (searchBy === EUserSearch.IDENTITY) searchUsersBy({ searchBy: EUserSearch.IDENTITY });
     } else {
       setOpenCombobox(false);
     }
@@ -103,7 +103,7 @@ export function UsersCombo({
     <main className='flex flex-col'>
       <section className='flex flex-row items-center space-x-3'>
         <Input
-          type={searchBy === 'name' ? 'text' : 'number'}
+          type={searchBy === EUserSearch.NAME ? 'text' : 'number'}
           value={search}
           onChange={handleSearch}
           placeholder={placeholder}
