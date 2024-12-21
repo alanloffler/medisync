@@ -270,7 +270,7 @@ export const DailySchedule = memo(({ date, handleDialog, professional, refreshAp
   ) : (
     <Card>
       <CardContent className='pt-6'>
-        <InfoCard type='warning' text={t('warning.selectWorkingDay')} />
+        <InfoCard type='warning' text={t(!professional ? 'warning.selectProfessional' : 'warning.selectWorkingDay')} />
       </CardContent>
     </Card>
   );
