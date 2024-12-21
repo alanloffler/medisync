@@ -27,30 +27,41 @@ import { TableButton } from '@core/components/common/TableButton';
 // External imports
 import { Trans, useTranslation } from 'react-i18next';
 import { useEffect, useRef, useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 // Imports
 import type { IDataTableUsers, ITableManager } from '@core/interfaces/table.interface';
 import type { IInfoCard } from '@core/components/common/interfaces/infocard.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
-import { EUserSearch, type IUserSearch } from '@users/interfaces/user-search.interface';
+import type { IUserSearch } from '@users/interfaces/user-search.interface';
+import { EUserSearch } from '@users/enums/user-search.enum';
 import { USER_CONFIG } from '@config/users/users.config';
 import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
 import { useDelimiter } from '@core/hooks/useDelimiter';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 import { useTruncateText } from '@core/hooks/useTruncateText';
+// Interfaces
+interface IUsersData {
+  count: number;
+  data: IUser[];
+  total: number;
+}
+
+interface IVars {
+  search: IUserSearch;
+  skipItems: number;
+  tableManager: ITableManager;
+}
 // Default values for pagination and sorting
 const defaultSorting: SortingState = [{ id: USER_CONFIG.table.defaultSortingId, desc: USER_CONFIG.table.defaultSortingType }];
 const defaultPagination: PaginationState = { pageIndex: 0, pageSize: USER_CONFIG.table.defaultPageSize };
 // React component
-export function UsersDataTable({ search, reload, setReload, setErrorMessage }: IDataTableUsers) {
+export function UsersDataTable({ search, reload, setReload }: IDataTableUsers) {
   const [columns, setColumns] = useState<ColumnDef<IUser>[]>([]);
-  const [data, setData] = useState<IUser[]>([]);
   const [errorRemoving, setErrorRemoving] = useState<boolean>(false);
   const [errorRemovingContent, setErrorRemovingContent] = useState<IInfoCard>({ type: 'success', text: '' });
-  const [infoCardContent, setInfoCardContent] = useState<IInfoCard>({ type: 'success', text: '' });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isRemoving, setIsRemoving] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [pagination, setPagination] = useState<PaginationState>(defaultPagination);
@@ -65,6 +76,81 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage }: I
   const prevDeps = useRef<{ search: IUserSearch; tableManager: ITableManager }>({ search, tableManager });
   const truncate = useTruncateText();
   const { i18n, t } = useTranslation();
+
+  // Fetch users
+  const {
+    data,
+    error,
+    mutate: searchUsersBy,
+    isError,
+    isPending,
+    isSuccess,
+  } = useMutation<IResponse<IUsersData>, Error, IVars>({
+    mutationKey: ['searchUsersBy', search, tableManager],
+    mutationFn: async ({ search, skipItems, tableManager }) =>
+      await UserApiService.searchUsersBy(search.value, tableManager.sorting, skipItems, tableManager.pagination.pageSize, search.type),
+    onSuccess: (response) => {
+      setColumns(tableColumns);
+      setTotalItems(response.data.count);
+    },
+    onError: (error) => {
+      addNotification({ type: 'error', message: t(error.message) });
+    },
+    retry: 1,
+  });
+
+  useEffect(() => {
+    let skipItems: number;
+
+    if (prevDeps.current.search.value !== search.value) {
+      setPagination(defaultPagination);
+      prevDeps.current.search = search;
+      skipItems = 0;
+    } else {
+      skipItems = tableManager.pagination.pageIndex * tableManager.pagination.pageSize;
+    }
+
+    if (search.value !== '') {
+      searchUsersBy({ search, skipItems, tableManager });
+    } else {
+      searchUsersBy({ search: { value: '', type: EUserSearch.NAME }, skipItems, tableManager });
+    }
+  }, [search, searchUsersBy, tableManager]);
+
+  // Table manager
+  const table: ITable<IUser> = useReactTable({
+    columns: columns,
+    data: data?.data.data ?? [],
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    manualPagination: true,
+    manualSorting: true,
+    onPaginationChange: setPagination,
+    onSortingChange: setSorting,
+    rowCount: totalItems,
+    state: {
+      sorting,
+      pagination,
+    },
+  });
+
+  useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }
+    setTableManager({
+      sorting: sorting,
+      pagination: pagination,
+    });
+  }, [sorting, pagination]);
+
+  useEffect(() => {
+    setSorting(defaultSorting);
+    setPagination(defaultPagination);
+  }, [reload]);
 
   const tableColumns: ColumnDef<IUser>[] = [
     {
@@ -128,25 +214,13 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage }: I
       header: () => <div className='text-center'>{t(USER_CONFIG.table.header[4])}</div>,
       cell: ({ row }) => (
         <div className='mx-auto flex w-fit flex-row items-center justify-center space-x-2'>
-          <TableButton
-            callback={() => navigate(`/users/${row.original._id}`)}
-            className='hover:text-sky-500'
-            tooltip={t('tooltip.details')}
-          >
+          <TableButton callback={() => navigate(`/users/${row.original._id}`)} className='hover:text-sky-500' tooltip={t('tooltip.details')}>
             <FileText size={16} strokeWidth={1.5} />
           </TableButton>
-          <TableButton
-            callback={() => navigate(`/users/update/${row.original._id}`)}
-            className='hover:text-fuchsia-500'
-            tooltip={t('tooltip.edit')}
-          >
+          <TableButton callback={() => navigate(`/users/update/${row.original._id}`)} className='hover:text-fuchsia-500' tooltip={t('tooltip.edit')}>
             <PencilLine size={16} strokeWidth={1.5} />
           </TableButton>
-          <TableButton
-            callback={() => handleRemoveUserDialog(row.original)}
-            className='hover:text-rose-500'
-            tooltip={t('tooltip.delete')}
-          >
+          <TableButton callback={() => handleRemoveUserDialog(row.original)} className='hover:text-rose-500' tooltip={t('tooltip.delete')}>
             <Trash2 size={16} strokeWidth={1.5} />
           </TableButton>
           <TableButton
@@ -174,106 +248,7 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage }: I
     },
   ];
 
-  const table: ITable<IUser> = useReactTable({
-    columns: columns,
-    data: data,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    manualPagination: true,
-    manualSorting: true,
-    onPaginationChange: setPagination,
-    onSortingChange: setSorting,
-    rowCount: totalItems,
-    state: {
-      sorting,
-      pagination,
-    },
-  });
-
-  useEffect(() => {
-    if (firstUpdate.current) {
-      firstUpdate.current = false;
-      return;
-    }
-    setTableManager({
-      sorting: sorting,
-      pagination: pagination,
-    });
-  }, [sorting, pagination]);
-
-  useEffect(() => {
-    setSorting(defaultSorting);
-    setPagination(defaultPagination);
-  }, [reload]);
-
-  useEffect(() => {
-    const fetchData = (search: IUserSearch, sorting: SortingState, itemsPerPage: number) => {
-      setIsLoading(true);
-
-      let skipItems: number;
-
-      if (prevDeps.current.search.value !== search.value) {
-        setPagination(defaultPagination);
-        prevDeps.current.search = search;
-        skipItems = 0;
-      } else {
-        skipItems = tableManager.pagination.pageIndex * tableManager.pagination.pageSize;
-      }
-
-      if (search.type === EUserSearch.NAME) {
-        UserApiService.findAll(search.value, sorting, skipItems, itemsPerPage)
-          .then((response: IResponse) => {
-            if (response.statusCode === 200) {
-              if (response.data.length === 0) {
-                addNotification({ type: 'error', message: response.message });
-                setInfoCardContent({ type: 'warning', text: response.message });
-              }
-
-              setData(response.data.data);
-              setColumns(tableColumns);
-              setTotalItems(response.data.count);
-              setErrorMessage('');
-            }
-            if (response.statusCode > 399) {
-              setErrorMessage(response.message);
-              addNotification({ type: 'warning', message: response.message });
-              setInfoCardContent({ type: 'error', text: response.message });
-            }
-            if (response instanceof Error) {
-              addNotification({ type: 'error', message: t('error.internalServer') });
-              setInfoCardContent({ type: 'error', text: t('error.internalServer') });
-            }
-          })
-          .finally(() => setIsLoading(false));
-      }
-      if (search.type === EUserSearch.DNI) {
-        UserApiService.findAllByDNI(search.value, sorting, skipItems, itemsPerPage)
-          .then((response: IResponse) => {
-            if (response.statusCode === 200) {
-              setData(response.data.data);
-              setColumns(tableColumns);
-              setTotalItems(response.data.count);
-              setErrorMessage('');
-            }
-            if (response.statusCode > 399) {
-              setErrorMessage(response.message);
-              addNotification({ type: 'error', message: response.message });
-              setInfoCardContent({ type: 'error', text: response.message });
-            }
-            if (response instanceof Error) {
-              addNotification({ type: 'error', message: t('error.internalServer') });
-              setInfoCardContent({ type: 'error', text: t('error.internalServer') });
-            }
-          })
-          .finally(() => setIsLoading(false));
-      }
-    };
-    fetchData(search, tableManager.sorting, tableManager.pagination.pageSize);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search, tableManager]);
-
+  // Actions
   function handleRemoveUserDialog(user: IUser): void {
     setOpenDialog(true);
     setUserSelected(user);
@@ -305,94 +280,95 @@ export function UsersDataTable({ search, reload, setReload, setErrorMessage }: I
       .finally(() => setIsRemoving(false));
   }
 
-  return (
-    <>
-      {isLoading ? (
-        <LoadingDB text={t('loading.users')} className='mt-6' />
-      ) : table.getRowModel().rows?.length > 0 ? (
-        <>
-          <DBCountUsers />
-          <Table>
-            <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id} style={{ width: `${header.getSize()}px` }}>
-                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                    </TableHead>
-                  ))}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell className='px-0 py-1' key={cell.id} style={{ width: `${cell.column.getSize()}px` }}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          <Pagination
-            className='pt-6 !text-xsm text-slate-400'
-            itemsPerPage={USER_CONFIG.table.itemsPerPage}
-            pagination={pagination}
-            setPagination={setPagination}
-            table={table}
-          />
-        </>
-      ) : (
-        <InfoCard text={infoCardContent.text} type={infoCardContent.type} className='mt-3' />
-      )}
-      {/* Section: Dialog */}
-      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle className='text-xl'>{t('dialog.deleteUser.title')}</DialogTitle>
-            {errorRemoving ? <DialogDescription></DialogDescription> : <DialogDescription>{t('dialog.deleteUser.description')}</DialogDescription>}
-            <section className='flex flex-col pt-2'>
-              {errorRemoving ? (
-                <>
-                  <InfoCard text={errorRemovingContent.text} type={errorRemovingContent.type} />
-                  <footer className='mt-5 flex justify-end space-x-4'>
-                    <Button variant='default' size='sm' onClick={() => setOpenDialog(false)}>
-                      {t('button.close')}
-                    </Button>
-                  </footer>
-                </>
-              ) : (
-                <>
-                  <div className='text-sm'>
-                    <Trans
-                      i18nKey='dialog.deleteUser.content'
-                      values={{
-                        firstName: UtilsString.upperCase(userSelected.firstName),
-                        lastName: UtilsString.upperCase(userSelected.lastName),
-                        identityCard: i18n.format(userSelected.dni, 'number', i18n.resolvedLanguage),
-                      }}
-                      components={{
-                        span: <span className='font-semibold' />,
-                        i: <i />,
-                      }}
-                    />
-                  </div>
-                  <footer className='mt-5 flex justify-end space-x-4'>
-                    <Button variant='ghost' size='sm' onClick={() => setOpenDialog(false)}>
-                      {t('button.cancel')}
-                    </Button>
-                    <Button variant='remove' size='sm' onClick={() => handleRemoveUserDatabase(userSelected._id)}>
-                      {isRemoving ? <LoadingDB text={t('loading.deleting')} variant='button' /> : t('button.deleteUser')}
-                    </Button>
-                  </footer>
-                </>
-              )}
-            </section>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
-    </>
-  );
+  if (isPending) return <LoadingDB text={t('loading.users')} className='mt-6 p-0' />;
+  if (isError) return <InfoCard text={error.message} type='error' className='mt-6' />;
+
+  if (isSuccess) {
+    return (
+      <>
+        {table.getRowModel().rows?.length > 0 && (
+          <>
+            <DBCountUsers />
+            <Table>
+              <TableHeader>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <TableRow key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <TableHead key={header.id} style={{ width: `${header.getSize()}px` }}>
+                        {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                      </TableHead>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableHeader>
+              <TableBody>
+                {table.getRowModel().rows.map((row) => (
+                  <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell className='px-0 py-1' key={cell.id} style={{ width: `${cell.column.getSize()}px` }}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            <Pagination
+              className='pt-6 !text-xsm text-slate-400'
+              itemsPerPage={USER_CONFIG.table.itemsPerPage}
+              pagination={pagination}
+              setPagination={setPagination}
+              table={table}
+            />
+          </>
+        )}
+        {/* Section: Dialog */}
+        <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle className='text-xl'>{t('dialog.deleteUser.title')}</DialogTitle>
+              {errorRemoving ? <DialogDescription></DialogDescription> : <DialogDescription>{t('dialog.deleteUser.description')}</DialogDescription>}
+              <section className='flex flex-col pt-2'>
+                {errorRemoving ? (
+                  <>
+                    <InfoCard text={errorRemovingContent.text} type={errorRemovingContent.type} />
+                    <footer className='mt-5 flex justify-end space-x-4'>
+                      <Button variant='default' size='sm' onClick={() => setOpenDialog(false)}>
+                        {t('button.close')}
+                      </Button>
+                    </footer>
+                  </>
+                ) : (
+                  <>
+                    <div className='text-sm'>
+                      <Trans
+                        i18nKey='dialog.deleteUser.content'
+                        values={{
+                          firstName: UtilsString.upperCase(userSelected.firstName),
+                          lastName: UtilsString.upperCase(userSelected.lastName),
+                          identityCard: i18n.format(userSelected.dni, 'number', i18n.resolvedLanguage),
+                        }}
+                        components={{
+                          span: <span className='font-semibold' />,
+                          i: <i />,
+                        }}
+                      />
+                    </div>
+                    <footer className='mt-5 flex justify-end space-x-4'>
+                      <Button variant='ghost' size='sm' onClick={() => setOpenDialog(false)}>
+                        {t('button.cancel')}
+                      </Button>
+                      <Button variant='remove' size='sm' onClick={() => handleRemoveUserDatabase(userSelected._id)}>
+                        {isRemoving ? <LoadingDB text={t('loading.deleting')} variant='button' /> : t('button.deleteUser')}
+                      </Button>
+                    </footer>
+                  </>
+                )}
+              </section>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
+      </>
+    );
+  }
 }
