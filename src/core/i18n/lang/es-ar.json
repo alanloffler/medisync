@@ -350,6 +350,7 @@
   "warning": {
     "emptyAppointments": "No existen turnos para el paciente",
     "hourRangeNotAvailable": "No disponible de {{begin}} a {{end}}",
+    "selectProfessional": "Seleccione un profesional",
     "selectWorkingDay": "Seleccione un día laborable"
   },
   "words": {
