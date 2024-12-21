@@ -4,7 +4,7 @@ import { X } from 'lucide-react';
 import { Input } from '@core/components/ui/input';
 import { ScrollArea } from '@core/components/ui/scroll-area';
 // External imports
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { IUser } from '@users/interfaces/user.interface';
@@ -27,18 +27,21 @@ export function UsersCombo({
   const [showNoResults, setShowNoResults] = useState<boolean>(false);
   const [users, setUsers] = useState<IUser[]>([] as IUser[]);
   const DEBOUNCE_TIME: number = 500;
-  const debouncedSearch = useDebounce<string>(search, DEBOUNCE_TIME);
+  const debouncedSearch: string = useDebounce<string>(search, DEBOUNCE_TIME);
   const { i18n, t } = useTranslation();
 
   function handleSearch(event: ChangeEvent<HTMLInputElement>): void {
     setSearch(event.target.value);
   }
 
-  function handleSelectedUser(user: IUser): void {
-    searchResult(user);
-    setOpenCombobox(false);
-    setSearch('');
-  }
+  const handleSelectedUser = useCallback(
+    (user: IUser): void => {
+      searchResult(user);
+      setOpenCombobox(false);
+      setSearch('');
+    },
+    [searchResult],
+  );
 
   function handleCloseCombobox(): void {
     setOpenCombobox(false);
@@ -91,6 +94,17 @@ export function UsersCombo({
     }
   }, [debouncedSearch, searchBy, t]);
 
+  const UserItem = memo(({ user, onSelect }: { user: IUser; onSelect: (user: IUser) => void }) => (
+    <button
+      type='button'
+      onClick={() => onSelect(user)}
+      className='w-full space-x-2 rounded-sm px-1.5 py-0.5 text-left hover:bg-slate-100 hover:transition-all'
+    >
+      <span>{UtilsString.upperCase(`${user.firstName} ${user.lastName}`, 'each')}</span>
+      <span className='italic text-slate-500'>{`${t('label.identityCard')} ${i18n.format(user.dni, 'number', i18n.resolvedLanguage)}`}</span>
+    </button>
+  ));
+
   return (
     <main className='flex flex-col'>
       <section className='flex flex-row items-center space-x-3'>
@@ -113,14 +127,7 @@ export function UsersCombo({
             {users.length > 0 &&
               users.map((user) => (
                 <li key={user._id} className='list-none'>
-                  <button
-                    type='button'
-                    onClick={() => handleSelectedUser(user)}
-                    className='w-full space-x-2 rounded-sm px-1.5 py-0.5 text-left hover:bg-slate-100 hover:transition-all'
-                  >
-                    <span>{UtilsString.upperCase(`${user.firstName} ${user.lastName}`, 'each')}</span>
-                    <span className='italic text-slate-500'>{`${t('label.identityCard')} ${i18n.format(user.dni, 'number', i18n.resolvedLanguage)}`}</span>
-                  </button>
+                  <UserItem user={user} onSelect={handleSelectedUser} />
                 </li>
               ))}
             {showNoResults && (
