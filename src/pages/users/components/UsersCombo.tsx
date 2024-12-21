@@ -3,30 +3,46 @@ import { X } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Input } from '@core/components/ui/input';
 import { ScrollArea } from '@core/components/ui/scroll-area';
+// Components
+import { InfoCard } from '@core/components/common/InfoCard';
+import { LoadingText } from '@core/components/common/LoadingText';
 // External imports
 import { ChangeEvent, memo, useCallback, useEffect, useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
+import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
+import { EUserSearch, ESortingKeys } from '@users/enums/user-search.enum';
 import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
 import { useDebounce } from '@core/hooks/useDebounce';
+// Interface
+interface IUsersComboData {
+  count: number;
+  data: IUser[];
+  total: number;
+}
+
+interface IVars {
+  searchBy: string;
+}
+
 // React component
 export function UsersCombo({
   searchBy,
   searchResult,
+  sortingKey,
   placeholder,
 }: {
-  searchBy: 'name' | 'dni';
+  searchBy: EUserSearch;
   searchResult: (user: IUser) => void;
+  sortingKey: ESortingKeys;
   placeholder: string;
 }) {
-  const [error, setError] = useState<string>('');
+  const DEBOUNCE_TIME: number = 500;
   const [openCombobox, setOpenCombobox] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
-  const [showNoResults, setShowNoResults] = useState<boolean>(false);
-  const [users, setUsers] = useState<IUser[]>([] as IUser[]);
-  const DEBOUNCE_TIME: number = 500;
   const debouncedSearch: string = useDebounce<string>(search, DEBOUNCE_TIME);
   const { i18n, t } = useTranslation();
 
@@ -48,51 +64,29 @@ export function UsersCombo({
     setSearch('');
   }
 
+  const {
+    data: users,
+    error,
+    mutate: searchUsersBy,
+    isError,
+    isPending,
+    isSuccess,
+  } = useMutation<IResponse<IUsersComboData>, Error, IVars>({
+    mutationKey: ['searchUsersBy', debouncedSearch],
+    mutationFn: async (vars) => await UserApiService.searchUsersBy(debouncedSearch, [{ id: sortingKey, desc: false }], 0, 0, vars.searchBy),
+    retry: 1,
+  });
+
   useEffect(() => {
     if (debouncedSearch !== '') {
       setOpenCombobox(true);
 
-      if (searchBy === 'name') {
-        UserApiService.findAll(debouncedSearch, [{ id: 'lastName', desc: false }], 0, 10).then((response) => {
-          if (response.statusCode === 200) {
-            setShowNoResults(false);
-            setUsers(response.data.data);
-          }
-          if (response.statusCode > 399) {
-            setShowNoResults(true);
-            setUsers([]);
-            setError(response.message);
-          }
-          if (response instanceof Error) {
-            setShowNoResults(true);
-            setUsers([]);
-            setError(t('error.internalServer'));
-          }
-        });
-      }
-      if (searchBy === 'dni') {
-        UserApiService.findAllByDNI(debouncedSearch, [{ id: 'dni', desc: false }], 0, 10).then((response) => {
-          if (response.statusCode === 200) {
-            setShowNoResults(false);
-            setUsers(response.data.data);
-          }
-          if (response.statusCode > 399) {
-            setShowNoResults(true);
-            setUsers([]);
-            setError(response.message);
-          }
-          if (response instanceof Error) {
-            setShowNoResults(true);
-            setUsers([]);
-            setError(t('error.internalServer'));
-          }
-        });
-      }
+      if (searchBy === EUserSearch.NAME) searchUsersBy({ searchBy: EUserSearch.NAME });
+      if (searchBy === EUserSearch.IDENTITY) searchUsersBy({ searchBy: EUserSearch.IDENTITY });
     } else {
-      setUsers([]);
       setOpenCombobox(false);
     }
-  }, [debouncedSearch, searchBy, t]);
+  }, [debouncedSearch, searchBy, searchUsersBy]);
 
   const UserItem = memo(({ user, onSelect }: { user: IUser; onSelect: (user: IUser) => void }) => (
     <button
@@ -123,18 +117,16 @@ export function UsersCombo({
       </section>
       {openCombobox && (
         <section className='absolute mt-9 flex min-w-[50%] flex-row text-sm font-normal'>
-          <ScrollArea className='mt-1 max-h-40 w-full overflow-auto rounded-md border bg-popover p-1 shadow-md'>
-            {users.length > 0 &&
-              users.map((user) => (
+          <ScrollArea className='mt-1 max-h-40 w-full overflow-auto rounded-md border bg-popover p-2 shadow-md'>
+            {isPending && <LoadingText text={t('search.searching.users')} suffix='...' className='text-left' />}
+            {isError && <InfoCard type='error' text={error.message} className='justify-start' />}
+            {isSuccess &&
+              users.data.data.length > 0 &&
+              users.data.data.map((user) => (
                 <li key={user._id} className='list-none'>
                   <UserItem user={user} onSelect={handleSelectedUser} />
                 </li>
               ))}
-            {showNoResults && (
-              <li className='list-none'>
-                <span className='italic text-rose-500'>{error}</span>
-              </li>
-            )}
           </ScrollArea>
         </section>
       )}
