@@ -15,6 +15,7 @@ import type { ITimeSlot } from '@appointments/interfaces/appointment.interface';
 import type { IUser } from '@users/interfaces/user.interface';
 import { CalendarService } from '@appointments/services/calendar.service';
 import { EDialogAction } from '@appointments/enums/dialog.enum';
+import { EUserSearch, ESortingKeys } from '@users/enums/user-search.enum';
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { RESERVE_APPOINTMENT_CONFIG as RA_CONFIG } from '@config/appointments/reserve-appointments.config';
 import { UtilsString } from '@core/services/utils/string.service';
@@ -83,7 +84,14 @@ export default function ReserveAppointments() {
       if (action === EDialogAction.RESERVE) {
         const reserveDialogContent: IDialog = {
           action: EDialogAction.RESERVE,
-          content: <UsersCombo searchBy='dni' searchResult={(e) => setUserSelected(e)} placeholder={t('placeholder.userCombobox')} />,
+          content: (
+            <UsersCombo
+              placeholder={t('placeholder.userCombobox')}
+              searchBy={EUserSearch.IDENTITY}
+              searchResult={(e) => setUserSelected(e)}
+              sortingKey={ESortingKeys.FIRST_NAME}
+            />
+          ),
           description: t('dialog.reserveAppointment.description'),
           title: t('dialog.reserveAppointment.title'),
         };
