@@ -58,7 +58,7 @@ interface IVars {
 const defaultSorting: SortingState = [{ id: USER_CONFIG.table.defaultSortingId, desc: USER_CONFIG.table.defaultSortingType }];
 const defaultPagination: PaginationState = { pageIndex: 0, pageSize: USER_CONFIG.table.defaultPageSize };
 // React component
-export function UsersDataTable({ search, reload, setReload }: IDataTableUsers) {
+export function UsersDataTable({ reload, search, setReload }: IDataTableUsers) {
   const [columns, setColumns] = useState<ColumnDef<IUser>[]>([]);
   const [errorRemoving, setErrorRemoving] = useState<boolean>(false);
   const [errorRemovingContent, setErrorRemovingContent] = useState<IInfoCard>({ type: 'success', text: '' });
@@ -264,7 +264,7 @@ export function UsersDataTable({ search, reload, setReload }: IDataTableUsers) {
           addNotification({ type: 'success', message: response.message });
           setOpenDialog(false);
           setUserSelected({} as IUser);
-          setReload(new Date().getTime());
+          setReload(crypto.randomUUID());
         }
         if (response.statusCode > 399) {
           setErrorRemoving(true);
