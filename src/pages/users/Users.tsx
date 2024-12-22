@@ -23,7 +23,6 @@ import { useDebounce } from '@core/hooks/useDebounce';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 // React component
 export default function Users() {
-  const [errorMessage, setErrorMessage] = useState<string>('');
   const [reload, setReload] = useState<string>('');
   const [search, setSearch] = useState<IUserSearch>({ value: '', type: EUserSearch.NAME });
   const [createMiniScope, createMiniAnimation] = useAnimate();
@@ -122,7 +121,6 @@ export default function Users() {
                   )}
                 </div>
               </div>
-              {errorMessage && <div className='flex flex-row items-center text-xs font-medium text-rose-400'>{errorMessage}</div>}
             </div>
           </CardContent>
         </Card>
@@ -168,7 +166,7 @@ export default function Users() {
           </CardTitle>
           {/* Table */}
           <CardContent>
-            <UsersDataTable reload={reload} search={debouncedSearch} setErrorMessage={setErrorMessage} setReload={setReload} />
+            <UsersDataTable reload={reload} search={debouncedSearch} setReload={setReload} />
           </CardContent>
         </Card>
       </section>
