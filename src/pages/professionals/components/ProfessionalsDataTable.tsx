@@ -59,7 +59,7 @@ interface IVars {
 const defaultSorting: SortingState = [{ id: PROF_CONFIG.table.defaultSortingId, desc: PROF_CONFIG.table.defaultSortingType }];
 const defaultPagination: PaginationState = { pageIndex: 0, pageSize: PROF_CONFIG.table.defaultPageSize };
 // React component
-export function ProfessionalsDataTable({ reload, search, setReload }: IDataTableProfessionals) {
+export function ProfessionalsDataTable({ clearDropdown, reload, search, setReload }: IDataTableProfessionals) {
   const [columns, setColumns] = useState<ColumnDef<IProfessional>[]>([]);
   const [isRemovingProfessional, setIsRemovingProfessional] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
@@ -144,8 +144,10 @@ export function ProfessionalsDataTable({ reload, search, setReload }: IDataTable
   }, [sorting, pagination]);
 
   useEffect(() => {
+    if (search.type === EProfessionalSearch.DROPDOWN) clearDropdown();
     setSorting(defaultSorting);
     setPagination(defaultPagination);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reload]);
 
   const tableColumns: ColumnDef<IProfessional>[] = [
