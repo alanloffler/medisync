@@ -1,6 +1,7 @@
 import type { IResponse } from '@core/interfaces/response.interface';
+import type { ITableManager } from '@core/interfaces/table.interface';
 import type { IUserForm } from '@users/interfaces/user.interface';
-import type { SortingState } from '@tanstack/react-table';
+import type { IUserSearch } from '@users/interfaces/user-search.interface';
 import { APP_CONFIG } from '@config/app.config';
 import { EMethods } from '@core/enums/methods.enum';
 import { EUserSearch } from '@users/enums/user-search.enum';
@@ -29,21 +30,24 @@ export class UserApiService {
     }
   }
 
-  // CHECKED: TRQ used on 
+  // CHECKED: TRQ used on
   // - UsersCombo.tsx
   // - UsersDataTable.tsx
   // Find all users by identity number (many users with partial identity number search)
-  public static async searchUsersBy(search: string, sorting: SortingState, skip: number, limit: number, searchBy: string) {
+  public static async searchUsersBy(search: IUserSearch, tableManager: ITableManager, skip: number) {
+    const { type, value } = search;
+    const { pagination, sorting } = tableManager;
+
     let path: string = '';
-    if (searchBy === EUserSearch.NAME) path = `${this.API_URL}/users`;
-    if (searchBy === EUserSearch.IDENTITY) path = `${this.API_URL}/users/byIdentityNumber`;
-    if (!searchBy || searchBy === '') throw new Error('Dev Error: searchBy is required and must be a valid enum of EUserSearch');
+    if (type === EUserSearch.NAME) path = `${this.API_URL}/users`;
+    if (type === EUserSearch.IDENTITY) path = `${this.API_URL}/users/byIdentityNumber`;
+    if (!type) throw new Error('Dev Error: searchBy is required and must be a valid enum of EUserSearch');
 
     const url: URL = new URL(path);
 
-    url.searchParams.append('search', search);
+    url.searchParams.append('search', value);
     url.searchParams.append('skip', skip.toString());
-    url.searchParams.append('limit', limit.toString());
+    url.searchParams.append('limit', pagination.pageSize.toString());
     url.searchParams.append('sk', sorting[0].id);
     url.searchParams.append('sv', sorting[0].desc ? 'desc' : 'asc');
 
