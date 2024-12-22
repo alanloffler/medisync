@@ -33,7 +33,7 @@ export class UserApiService {
   // CHECKED: TRQ used on
   // - UsersCombo.tsx
   // - UsersDataTable.tsx
-  // Find all users by identity number (many users with partial identity number search)
+  // Find all users by identity number or name (many users with partial search)
   public static async searchUsersBy(search: IUserSearch, tableManager: ITableManager, skip: number) {
     const { type, value } = search;
     const { pagination, sorting } = tableManager;
