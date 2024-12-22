@@ -64,17 +64,17 @@ export function UsersDataTable({ reload, search, setReload }: IDataTableUsers) {
   const [errorRemovingContent, setErrorRemovingContent] = useState<IInfoCard>({ type: 'success', text: '' });
   const [isRemoving, setIsRemoving] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
-  const [skipItems, setSkipItems] = useState<number>(0);
   const [pagination, setPagination] = useState<PaginationState>(defaultPagination);
+  const [skipItems, setSkipItems] = useState<number>(0);
   const [sorting, setSorting] = useState<SortingState>(defaultSorting);
   const [tableManager, setTableManager] = useState<ITableManager>({ sorting, pagination });
   const [totalItems, setTotalItems] = useState<number>(0);
   const [userSelected, setUserSelected] = useState<IUser>({} as IUser);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const delimiter = useDelimiter();
-  const firstUpdate = useRef(true);
+  const firstUpdate = useRef<boolean>(true);
   const navigate = useNavigate();
-  const prevDeps = useRef<{ search: IUserSearch; tableManager: ITableManager }>({ search, tableManager });
+  const prevDeps = useRef<IVars>({ search, skipItems, tableManager });
   const truncate = useTruncateText();
   const { i18n, t } = useTranslation();
 
@@ -88,8 +88,7 @@ export function UsersDataTable({ reload, search, setReload }: IDataTableUsers) {
     isSuccess,
   } = useMutation<IResponse<IUsersData>, Error, IVars>({
     mutationKey: ['searchUsersBy', search, tableManager, skipItems],
-    mutationFn: async ({ search, skipItems, tableManager }) =>
-      await UserApiService.searchUsersBy(search, tableManager, skipItems),
+    mutationFn: async ({ search, skipItems, tableManager }) => await UserApiService.searchUsersBy(search, tableManager, skipItems),
     onSuccess: (response) => {
       setColumns(tableColumns);
       setTotalItems(response.data.count);
@@ -285,6 +284,7 @@ export function UsersDataTable({ reload, search, setReload }: IDataTableUsers) {
   if (isSuccess) {
     return (
       <>
+        {/* Section: Data table */}
         {table.getRowModel().rows?.length > 0 && (
           <>
             <DBCountUsers />
