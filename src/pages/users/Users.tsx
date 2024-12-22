@@ -24,7 +24,7 @@ import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 // React component
 export default function Users() {
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const [reload, setReload] = useState<number>(0);
+  const [reload, setReload] = useState<string>('');
   const [search, setSearch] = useState<IUserSearch>({ value: '', type: EUserSearch.NAME });
   const [createMiniScope, createMiniAnimation] = useAnimate();
   const [createScope, createAnimation] = useAnimate();
@@ -48,7 +48,7 @@ export default function Users() {
 
   function handleReload(): void {
     setSearch({ value: '', type: EUserSearch.NAME });
-    setReload(new Date().getTime());
+    setReload(crypto.randomUUID());
   }
 
   return (
@@ -168,7 +168,7 @@ export default function Users() {
           </CardTitle>
           {/* Table */}
           <CardContent>
-            <UsersDataTable key={reload} reload={reload} search={debouncedSearch} setErrorMessage={setErrorMessage} setReload={setReload} />
+            <UsersDataTable reload={reload} search={debouncedSearch} setErrorMessage={setErrorMessage} setReload={setReload} />
           </CardContent>
         </Card>
       </section>
