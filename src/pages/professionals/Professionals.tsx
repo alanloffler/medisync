@@ -28,7 +28,6 @@ import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 export default function Professionals() {
   const [debounceTime, setDebounceTime] = useState<number>(APP_CONFIG.debounceTime);
   const [dropdownPlaceholder, setDropdownPlaceholder] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string>('');
   const [reload, setReload] = useState<string>('');
   const [search, setSearch] = useState<IProfessionalSearch>({ value: '', type: EProfessionalSearch.INPUT });
   const [specSelected, setSpecSelected] = useState<string | undefined>(undefined);
@@ -138,7 +137,6 @@ export default function Professionals() {
                     </button>
                   )}
                 </div>
-                {errorMessage && <div className='flex flex-row items-center text-xs font-medium text-rose-400'>{errorMessage}</div>}
               </div>
             </section>
           </CardContent>
@@ -186,7 +184,7 @@ export default function Professionals() {
               </section>
             </CardTitle>
             <CardContent>
-              <ProfessionalsDataTable reload={reload} search={debouncedSearch} setErrorMessage={setErrorMessage} setReload={setReload} />
+              <ProfessionalsDataTable reload={reload} search={debouncedSearch} setReload={setReload} />
             </CardContent>
           </Card>
         </section>
