@@ -29,42 +29,125 @@ import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
 import { Trans, useTranslation } from 'react-i18next';
 import { useEffect, useRef, useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 // Imports
 import type { IDataTableProfessionals, ITableManager } from '@core/interfaces/table.interface';
-import type { IInfoCard } from '@core/components/common/interfaces/infocard.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
+import type { IProfessionalSearch } from '@professionals/interfaces/professional-search.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
-import { EProfessionalSearch, type IProfessionalSearch } from '@professionals/interfaces/professional-search.interface';
+import { EProfessionalSearch } from '@professionals/enums/professional-search.enum';
 import { PROFESSIONALS_CONFIG as PROF_CONFIG } from '@config/professionals/professionals.config';
 import { PROFESSIONAL_VIEW_CONFIG as PV_CONFIG } from '@config/professionals/professional-view.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 import { useTruncateText } from '@core/hooks/useTruncateText';
+// Interfaces
+interface IProfessionalsData {
+  count: number;
+  data: IProfessional[];
+  total: number;
+}
+
+interface IVars {
+  search: IProfessionalSearch;
+  skipItems: number;
+  tableManager: ITableManager;
+}
 // Default values for pagination and sorting
 const defaultSorting: SortingState = [{ id: PROF_CONFIG.table.defaultSortingId, desc: PROF_CONFIG.table.defaultSortingType }];
 const defaultPagination: PaginationState = { pageIndex: 0, pageSize: PROF_CONFIG.table.defaultPageSize };
 // React component
-export function ProfessionalsDataTable({ search, reload, setReload, setErrorMessage }: IDataTableProfessionals) {
+export function ProfessionalsDataTable({ reload, search, setReload }: IDataTableProfessionals) {
   const [columns, setColumns] = useState<ColumnDef<IProfessional>[]>([]);
-  const [data, setData] = useState<IProfessional[]>([]);
-  const [infoCard, setInfoCard] = useState<IInfoCard>({ text: '', type: 'error' });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isRemovingProfessional, setIsRemovingProfessional] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [pagination, setPagination] = useState<PaginationState>(defaultPagination);
   const [professionalSelected, setProfessionalSelected] = useState<IProfessional>({} as IProfessional);
+  const [skipItems, setSkipItems] = useState<number>(0);
   const [sorting, setSorting] = useState<SortingState>(defaultSorting);
   const [tableManager, setTableManager] = useState<ITableManager>({ sorting, pagination });
   const [totalItems, setTotalItems] = useState<number>(0);
   const addNotification = useNotificationsStore((state) => state.addNotification);
-  const firstUpdate = useRef(true);
+  const firstUpdate = useRef<boolean>(true);
   const navigate = useNavigate();
-  const prevDeps = useRef<{ search: IProfessionalSearch; tableManager: ITableManager }>({ search, tableManager });
+  const prevDeps = useRef<IVars>({ search, skipItems, tableManager });
   const truncate = useTruncateText();
   const { i18n, t } = useTranslation();
-  // #region Table columns
+
+  // Fetch professionals
+  const {
+    data,
+    error,
+    mutate: searchProfessionalsBy,
+    isError,
+    isPending,
+    isSuccess,
+  } = useMutation<IResponse<IProfessionalsData>, Error, IVars>({
+    mutationKey: ['searchProfessionalsBy', search, tableManager, skipItems],
+    mutationFn: async () => await ProfessionalApiService.searchProfessionalsBy(search, tableManager, skipItems),
+    onSuccess: (response) => {
+      setColumns(tableColumns);
+      setTotalItems(response.data.count);
+    },
+    onError: (error) => {
+      addNotification({ type: 'error', message: error.message });
+    },
+    retry: 1,
+  });
+
+  useEffect(() => {
+    if (prevDeps.current.search.value !== search.value) {
+      setPagination(defaultPagination);
+      prevDeps.current.search = search;
+      setSkipItems(0);
+    } else {
+      setSkipItems(tableManager.pagination.pageIndex * tableManager.pagination.pageSize);
+    }
+
+    if (search.value !== '') {
+      searchProfessionalsBy({ search, skipItems, tableManager });
+    } else {
+      searchProfessionalsBy({ search: { type: EProfessionalSearch.INPUT, value: '' }, skipItems, tableManager });
+    }
+  }, [search, searchProfessionalsBy, skipItems, tableManager]);
+
+  // Table manager
+  const table: ITable<IProfessional> = useReactTable({
+    columns: columns,
+    data: data?.data.data ?? [],
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    manualPagination: true,
+    manualSorting: true,
+    onPaginationChange: setPagination,
+    onSortingChange: setSorting,
+    rowCount: totalItems,
+    state: {
+      sorting,
+      pagination,
+    },
+  });
+
+  useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }
+    setTableManager({
+      sorting: sorting,
+      pagination: pagination,
+    });
+  }, [sorting, pagination]);
+
+  useEffect(() => {
+    setSorting(defaultSorting);
+    setPagination(defaultPagination);
+  }, [reload]);
+
   const tableColumns: ColumnDef<IProfessional>[] = [
     {
       accessorKey: 'index',
@@ -204,123 +287,12 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
       ),
     },
   ];
-  // #endregion
-  // #region Table constructor
-  // const isSmallDevice = useMediaQuery('only screen and (max-width : 639px)');
-  // const isMediumDevice = useMediaQuery('only screen and (min-width : 640px) and (max-width : 767px)');
-  // const isLargeDevice = useMediaQuery('only screen and (min-width : 768px) and (max-width : 1023px)');
-  // const isExtraLargeDevice = useMediaQuery('only screen and (min-width : 1024px)');
 
-  // const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>({
-  //   index: !isSmallDevice,
-  //   lastName: true,
-  //   area: false,
-  //   specialization: true,
-  //   available: false,
-  // });
-
-  const table: ITable<IProfessional> = useReactTable({
-    columns: columns,
-    data: data,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    manualPagination: true,
-    manualSorting: true,
-    onPaginationChange: setPagination,
-    onSortingChange: setSorting,
-    rowCount: totalItems,
-    state: {
-      sorting,
-      pagination,
-      // columnVisibility,
-    },
-    // onColumnVisibilityChange: setColumnVisibility,
-  });
-  // #endregion
-  // #region Load data, pagination and sorting
-  useEffect(() => {
-    if (firstUpdate.current) {
-      firstUpdate.current = false;
-      return;
-    }
-    setTableManager({
-      sorting: sorting,
-      pagination: pagination,
-    });
-  }, [sorting, pagination]);
-
-  useEffect(() => {
-    setSorting(defaultSorting);
-    setPagination(defaultPagination);
-  }, [reload]);
-
-  useEffect(() => {
-    const fetchData = (search: IProfessionalSearch, sorting: SortingState, itemsPerPage: number) => {
-      setIsLoading(true);
-
-      let skipItems: number;
-
-      if (prevDeps.current.search.value !== search.value) {
-        setPagination(defaultPagination);
-        prevDeps.current.search = search;
-        skipItems = 0;
-      } else {
-        skipItems = tableManager.pagination.pageIndex * tableManager.pagination.pageSize;
-      }
-
-      if (search.type === EProfessionalSearch.DROPDOWN) {
-        ProfessionalApiService.findBySpecialization(search.value, sorting, skipItems, itemsPerPage)
-          .then((response: IResponse) => {
-            if (response.statusCode === 200) {
-              setData(response.data.data);
-              setColumns(tableColumns);
-              setTotalItems(response.data.count);
-              setErrorMessage('');
-            }
-            if (response.statusCode > 399) {
-              setErrorMessage(response.message);
-              addNotification({ type: 'error', message: response.message });
-              setInfoCard({ text: response.message, type: 'warning' });
-            }
-            if (response instanceof Error) {
-              addNotification({ type: 'error', message: t('error.internalServer') });
-              setInfoCard({ type: 'error', text: t('error.internalServer') });
-            }
-          })
-          .finally(() => setIsLoading(false));
-      }
-      if (search.type === EProfessionalSearch.INPUT) {
-        ProfessionalApiService.findAll(search.value, sorting, skipItems, itemsPerPage)
-          .then((response: IResponse) => {
-            if (response.statusCode === 200) {
-              setData(response.data.data);
-              setColumns(tableColumns);
-              setTotalItems(response.data.count);
-              setErrorMessage('');
-            }
-            if (response.statusCode > 399) {
-              setErrorMessage(response.message);
-              addNotification({ type: 'error', message: response.message });
-              setInfoCard({ text: response.message, type: 'warning' });
-            }
-            if (response instanceof Error) {
-              addNotification({ type: 'error', message: t('error.internalServer') });
-              setInfoCard({ type: 'error', text: t('error.internalServer') });
-            }
-          })
-          .finally(() => setIsLoading(false));
-      }
-    };
-    fetchData(search, tableManager.sorting, tableManager.pagination.pageSize);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search, tableManager]);
-  // #endregion
-  // #region Remove professional
+  // Actions
   function handleRemoveDialog(professional: IProfessional): void {
-    setProfessionalSelected(professional);
     setOpenDialog(true);
+    setProfessionalSelected(professional);
+    // TODO: implement dialog action
     console.log(professional);
   }
   // TODO: display error on UI ???
@@ -334,7 +306,7 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
             addNotification({ type: 'success', message: response.message });
             setOpenDialog(false);
             setProfessionalSelected({} as IProfessional);
-            setReload(new Date().getTime());
+            setReload(crypto.randomUUID());
           }
           if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
           if (response instanceof Error) addNotification({ type: 'error', message: t('error.internalServer') });
@@ -342,109 +314,85 @@ export function ProfessionalsDataTable({ search, reload, setReload, setErrorMess
         .finally(() => setIsRemovingProfessional(false));
     }
   }
-  // #endregion
-  return (
-    <>
-      {isLoading ? (
-        <LoadingDB text={t('loading.professionals')} className='mt-3' />
-      ) : table.getRowModel().rows?.length > 0 ? (
-        <>
-          <DBCountProfessionals />
-          <Table>
-            <TableHeader className='bg-slate-100'>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id} style={{ width: `${header.getSize()}px` }} className='h-10'>
-                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                    </TableHead>
-                  ))}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell className='px-0 py-1' key={cell.id} style={{ width: `${cell.column.getSize()}px` }}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          <Pagination
-            className='pt-6 !text-xsm text-slate-400'
-            itemsPerPage={PROF_CONFIG.table.itemsPerPage}
-            pagination={pagination}
-            setPagination={setPagination}
-            table={table}
-          />
-        </>
-      ) : (
-        <InfoCard text={infoCard.text} type={infoCard.type} className='mt-3' />
-      )}
-      {/* Section: Dialog */}
-      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle className='text-xl'>{t('dialog.deleteProfessional.title')}</DialogTitle>
-            <DialogDescription>{t('dialog.deleteProfessional.description')}</DialogDescription>
-          </DialogHeader>
-          <section className='flex flex-col'>
-            <div>
-              <Trans
-                i18nKey='dialog.deleteProfessional.content'
-                values={{
-                  titleAbbreviation: UtilsString.upperCase(professionalSelected.title?.abbreviation),
-                  firstName: UtilsString.upperCase(professionalSelected.firstName),
-                  lastName: UtilsString.upperCase(professionalSelected.lastName),
-                  identityCard: i18n.format(professionalSelected.dni, 'number', i18n.resolvedLanguage),
-                }}
-                components={{
-                  span: <span className='font-semibold' />,
-                  i: <i />,
-                }}
-              />
-            </div>
-          </section>
-          <footer className='flex justify-end space-x-4'>
-            <Button variant='ghost' size='sm' onClick={() => setOpenDialog(false)}>
-              {t('button.cancel')}
-            </Button>
-            <Button variant='remove' size='sm' onClick={() => removeProfessional(professionalSelected._id)}>
-              {isRemovingProfessional ? <LoadingDB variant='button' text={t('loading.deleting')} /> : t('button.deleteProfessional')}
-            </Button>
-          </footer>
-        </DialogContent>
-      </Dialog>
-    </>
-  );
-}
-{
-  /* <div>
-    <section>
-      <h1>useMediaQuery</h1>
-      Resize your browser windows to see changes.
-      <article>
-        <figure className={isSmallDevice ? "bg-red-400" : ""}>
-          phone
-          <figcaption>Small</figcaption>
-        </figure>
-        <figure className={isMediumDevice ? "bg-red-400" : ""}>
-          tablet
-          <figcaption>Medium</figcaption>
-        </figure>
-        <figure className={isLargeDevice ? "bg-red-400" : ""}>
-          laptop
-          <figcaption>Large</figcaption>
-        </figure>
-        <figure className={isExtraLargeDevice ? "bg-red-400" : ""}>
-          desktop
-          <figcaption>Extra Large</figcaption>
-        </figure>
-      </article>
-    </section>
-    </div> */
+
+  if (isPending) return <LoadingDB text={t('loading.professionals')} className='mt-6 p-0' />;
+  if (isError) return <InfoCard text={error.message} type='error' className='mt-6' />;
+
+  if (isSuccess) {
+    return (
+      <>
+        {/* Section: Data table */}
+        {table.getRowModel().rows?.length > 0 && (
+          <>
+            <DBCountProfessionals />
+            <Table>
+              <TableHeader className='bg-slate-100'>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <TableRow key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <TableHead key={header.id} style={{ width: `${header.getSize()}px` }} className='h-10'>
+                        {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                      </TableHead>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableHeader>
+              <TableBody>
+                {table.getRowModel().rows.map((row) => (
+                  <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell className='px-0 py-1' key={cell.id} style={{ width: `${cell.column.getSize()}px` }}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            <Pagination
+              className='pt-6 !text-xsm text-slate-400'
+              itemsPerPage={PROF_CONFIG.table.itemsPerPage}
+              pagination={pagination}
+              setPagination={setPagination}
+              table={table}
+            />
+          </>
+        )}
+        {/* Section: Dialog */}
+        <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle className='text-xl'>{t('dialog.deleteProfessional.title')}</DialogTitle>
+              <DialogDescription>{t('dialog.deleteProfessional.description')}</DialogDescription>
+            </DialogHeader>
+            <section className='flex flex-col'>
+              <div>
+                <Trans
+                  i18nKey='dialog.deleteProfessional.content'
+                  values={{
+                    titleAbbreviation: UtilsString.upperCase(professionalSelected.title?.abbreviation),
+                    firstName: UtilsString.upperCase(professionalSelected.firstName),
+                    lastName: UtilsString.upperCase(professionalSelected.lastName),
+                    identityCard: i18n.format(professionalSelected.dni, 'number', i18n.resolvedLanguage),
+                  }}
+                  components={{
+                    span: <span className='font-semibold' />,
+                    i: <i />,
+                  }}
+                />
+              </div>
+            </section>
+            <footer className='flex justify-end space-x-4'>
+              <Button variant='ghost' size='sm' onClick={() => setOpenDialog(false)}>
+                {t('button.cancel')}
+              </Button>
+              <Button variant='remove' size='sm' onClick={() => removeProfessional(professionalSelected._id)}>
+                {isRemovingProfessional ? <LoadingDB variant='button' text={t('loading.deleting')} /> : t('button.deleteProfessional')}
+              </Button>
+            </footer>
+          </DialogContent>
+        </Dialog>
+      </>
+    );
+  }
 }
