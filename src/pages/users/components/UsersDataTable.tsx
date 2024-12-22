@@ -64,6 +64,7 @@ export function UsersDataTable({ reload, search, setReload }: IDataTableUsers) {
   const [errorRemovingContent, setErrorRemovingContent] = useState<IInfoCard>({ type: 'success', text: '' });
   const [isRemoving, setIsRemoving] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const [skipItems, setSkipItems] = useState<number>(0);
   const [pagination, setPagination] = useState<PaginationState>(defaultPagination);
   const [sorting, setSorting] = useState<SortingState>(defaultSorting);
   const [tableManager, setTableManager] = useState<ITableManager>({ sorting, pagination });
@@ -86,9 +87,9 @@ export function UsersDataTable({ reload, search, setReload }: IDataTableUsers) {
     isPending,
     isSuccess,
   } = useMutation<IResponse<IUsersData>, Error, IVars>({
-    mutationKey: ['searchUsersBy', search, tableManager],
+    mutationKey: ['searchUsersBy', search, tableManager, skipItems],
     mutationFn: async ({ search, skipItems, tableManager }) =>
-      await UserApiService.searchUsersBy(search.value, tableManager.sorting, skipItems, tableManager.pagination.pageSize, search.type),
+      await UserApiService.searchUsersBy(search, tableManager, skipItems),
     onSuccess: (response) => {
       setColumns(tableColumns);
       setTotalItems(response.data.count);
@@ -100,14 +101,12 @@ export function UsersDataTable({ reload, search, setReload }: IDataTableUsers) {
   });
 
   useEffect(() => {
-    let skipItems: number;
-
     if (prevDeps.current.search.value !== search.value) {
       setPagination(defaultPagination);
       prevDeps.current.search = search;
-      skipItems = 0;
+      setSkipItems(0);
     } else {
-      skipItems = tableManager.pagination.pageIndex * tableManager.pagination.pageSize;
+      setSkipItems(tableManager.pagination.pageIndex * tableManager.pagination.pageSize);
     }
 
     if (search.value !== '') {
@@ -115,7 +114,7 @@ export function UsersDataTable({ reload, search, setReload }: IDataTableUsers) {
     } else {
       searchUsersBy({ search: { value: '', type: EUserSearch.NAME }, skipItems, tableManager });
     }
-  }, [search, searchUsersBy, tableManager]);
+  }, [search, searchUsersBy, skipItems, tableManager]);
 
   // Table manager
   const table: ITable<IUser> = useReactTable({
