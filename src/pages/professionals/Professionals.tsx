@@ -10,7 +10,7 @@ import { ProfessionalsDataTable } from '@professionals/components/ProfessionalsD
 import { SelectSpecialties } from '@core/components/common/SelectSpecialties';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
-import { type ChangeEvent, useEffect, useState } from 'react';
+import { type ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useAnimate } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -40,28 +40,34 @@ export default function Professionals() {
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
   const { t } = useTranslation();
 
-  function handleSearchByProfessional(event: ChangeEvent<HTMLInputElement>): void {
-    setDebounceTime(APP_CONFIG.debounceTime);
-    setSpecSelected(undefined);
-    setSearch({ value: event.target.value, type: EProfessionalSearch.INPUT });
-  }
+  const handleSearchByProfessional = useCallback(
+    (event: ChangeEvent<HTMLInputElement>): void => {
+      setDebounceTime(APP_CONFIG.debounceTime);
+      setSpecSelected(undefined);
+      setSearch({ value: event.target.value, type: EProfessionalSearch.INPUT });
+    },
+    [setSearch],
+  );
 
-  function handleSearchBySpecialization(specialization: ISpecialization): void {
-    setDebounceTime(0);
-    setSpecSelected(specialization.name);
-    setDropdownPlaceholder(UtilsString.upperCase(specialization.name, 'each'));
-    setSearch({ value: specialization._id, type: EProfessionalSearch.DROPDOWN });
-  }
+  const handleSearchBySpecialization = useCallback(
+    (specialization: ISpecialization): void => {
+      setDebounceTime(0);
+      setSpecSelected(specialization.name);
+      setDropdownPlaceholder(UtilsString.upperCase(specialization.name, 'each'));
+      setSearch({ value: specialization._id, type: EProfessionalSearch.DROPDOWN });
+    },
+    [setSearch, setDropdownPlaceholder, setSpecSelected],
+  );
 
-  function handleClearSearch(): void {
+  const handleClearSearch = useCallback((): void => {
     setSpecSelected(undefined);
     setSearch({ value: '', type: EProfessionalSearch.INPUT });
-  }
+  }, []);
 
-  function handleReload(): void {
+  const handleReload = useCallback((): void => {
     setSearch({ value: '', type: EProfessionalSearch.INPUT });
     setReload(crypto.randomUUID());
-  }
+  }, []);
 
   useEffect(() => {
     setItemSelected(HEADER_CONFIG.headerMenu[2].id);
