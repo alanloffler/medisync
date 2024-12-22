@@ -46,7 +46,7 @@ export default function Professionals() {
       setSpecSelected(undefined);
       setSearch({ value: event.target.value, type: EProfessionalSearch.INPUT });
     },
-    [setSearch],
+    [setDebounceTime, setSearch, setSpecSelected],
   );
 
   const handleSearchBySpecialization = useCallback(
@@ -56,18 +56,24 @@ export default function Professionals() {
       setDropdownPlaceholder(UtilsString.upperCase(specialization.name, 'each'));
       setSearch({ value: specialization._id, type: EProfessionalSearch.DROPDOWN });
     },
-    [setSearch, setDropdownPlaceholder, setSpecSelected],
+    [setSearch, setDropdownPlaceholder, setSpecSelected, setDebounceTime],
   );
+  // function handleSearchBySpecialization(specialization: ISpecialization): void {
+  //   setDebounceTime(0);
+  //   setSpecSelected(specialization.name);
+  //   setDropdownPlaceholder(UtilsString.upperCase(specialization.name, 'each'));
+  //   setSearch({ value: specialization._id, type: EProfessionalSearch.DROPDOWN });
+  // }
 
   const handleClearSearch = useCallback((): void => {
     setSpecSelected(undefined);
     setSearch({ value: '', type: EProfessionalSearch.INPUT });
-  }, []);
+  }, [setSearch, setSpecSelected]);
 
   const handleReload = useCallback((): void => {
     setSearch({ value: '', type: EProfessionalSearch.INPUT });
     setReload(crypto.randomUUID());
-  }, []);
+  }, [setSearch, setReload]);
 
   useEffect(() => {
     setItemSelected(HEADER_CONFIG.headerMenu[2].id);
