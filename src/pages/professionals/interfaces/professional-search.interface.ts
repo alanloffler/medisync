@@ -1,7 +1,4 @@
-export enum EProfessionalSearch {
-  INPUT = 'professional',
-  DROPDOWN = 'specialization',
-}
+import { EProfessionalSearch } from '@professionals/enums/professional-search.enum';
 
 export interface IProfessionalSearch {
   value: string;
