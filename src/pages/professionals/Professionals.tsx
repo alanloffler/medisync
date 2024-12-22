@@ -185,7 +185,7 @@ export default function Professionals() {
               </section>
             </CardTitle>
             <CardContent>
-              <ProfessionalsDataTable reload={reload} search={debouncedSearch} setReload={setReload} />
+              <ProfessionalsDataTable clearDropdown={handleClearSearch} reload={reload} search={debouncedSearch} setReload={setReload} />
             </CardContent>
           </Card>
         </section>
