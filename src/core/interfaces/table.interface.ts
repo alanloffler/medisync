@@ -5,7 +5,6 @@ import type { PaginationState, SortingState } from '@tanstack/react-table';
 
 export interface IDataTable {
   reload: string;
-  setErrorMessage?: React.Dispatch<React.SetStateAction<string>>;
   setReload: React.Dispatch<React.SetStateAction<string>>;
 }
 
