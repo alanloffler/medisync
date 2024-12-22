@@ -29,7 +29,7 @@ export default function Professionals() {
   const [debounceTime, setDebounceTime] = useState<number>(APP_CONFIG.debounceTime);
   const [dropdownPlaceholder, setDropdownPlaceholder] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const [reload, setReload] = useState<number>(0);
+  const [reload, setReload] = useState<string>('');
   const [search, setSearch] = useState<IProfessionalSearch>({ value: '', type: EProfessionalSearch.INPUT });
   const [specSelected, setSpecSelected] = useState<string | undefined>(undefined);
   const [addProfScope, addProfAnimation] = useAnimate();
@@ -60,7 +60,7 @@ export default function Professionals() {
 
   function handleReload(): void {
     setSearch({ value: '', type: EProfessionalSearch.INPUT });
-    setReload(Math.random());
+    setReload(crypto.randomUUID());
   }
 
   useEffect(() => {
@@ -186,7 +186,7 @@ export default function Professionals() {
               </section>
             </CardTitle>
             <CardContent>
-              <ProfessionalsDataTable key={reload} reload={reload} search={debouncedSearch} setErrorMessage={setErrorMessage} setReload={setReload} />
+              <ProfessionalsDataTable reload={reload} search={debouncedSearch} setErrorMessage={setErrorMessage} setReload={setReload} />
             </CardContent>
           </Card>
         </section>
