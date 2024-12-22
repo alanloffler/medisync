@@ -1,31 +1,43 @@
-import type { IProfessional, IProfessionalForm } from '@professionals/interfaces/professional.interface';
-import type { IResponse } from '@core/interfaces/response.interface';
-import type { SortingState } from '@tanstack/react-table';
 import i18next from 'i18next';
+import type { IProfessional, IProfessionalForm } from '@professionals/interfaces/professional.interface';
+import type { IProfessionalSearch } from '@professionals/interfaces/professional-search.interface';
+import type { IResponse } from '@core/interfaces/response.interface';
+import type { ITableManager } from '@core/interfaces/table.interface';
+import type { SortingState } from '@tanstack/react-table';
 import { APP_CONFIG } from '@config/app.config';
 import { EMethods } from '@core/enums/methods.enum';
+import { EProfessionalSearch } from '@professionals/enums/professional-search.enum';
 import { ProfessionalUtils } from '@professionals/services/professional.utils';
+import { UtilsUrl } from '@core/services/utils/url.service';
 
 export class ProfessionalApiService {
   private static readonly API_URL: string = import.meta.env.VITE_API_URL;
 
-  public static async findAll(search: string, sorting: SortingState, skip: number, limit: number) {
-    const url: string = `${this.API_URL}/professionals?search=${search}&skip=${skip}&limit=${limit}&sk=${sorting[0].id}&sv=${sorting[0].desc ? 'desc' : 'asc'}`;
+  // CHECKED: TRQ used on
+  // - ProfessionalsDataTable.tsx
+  // Find all professionals by name or specialization (many professionals with partial search)
+  public static async searchProfessionalsBy(search: IProfessionalSearch, tableManager: ITableManager, skip: number) {
+    const { type, value } = search;
+    const { pagination, sorting } = tableManager;
 
-    try {
-      const query: Response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json;charset=UTF-8',
-        },
-      });
+    let path: string = '';
+    if (type === EProfessionalSearch.INPUT) path = `${this.API_URL}/professionals`;
+    if (type === EProfessionalSearch.DROPDOWN) path = `${this.API_URL}/professionals/specialization`;
+    if (!type) throw new Error('Dev Error: searchBy is required and must be a valid enum of EProfessionalSearch');
 
-      return await query.json();
-    } catch (error) {
-      return error;
-    }
+    const url: URL = new URL(path);
+
+    if (type === EProfessionalSearch.INPUT) url.searchParams.append('search', value);
+    if (type === EProfessionalSearch.DROPDOWN) url.searchParams.append('id', value);
+    url.searchParams.append('skip', skip.toString());
+    url.searchParams.append('limit', pagination.pageSize.toString());
+    url.searchParams.append('sk', sorting[0].id);
+    url.searchParams.append('sv', sorting[0].desc ? 'desc' : 'asc');
+
+    return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
+  // POSSIBLE DEPRECATED, will be used inside searchProfessionalsBy
   public static async findBySpecialization(id: string, sorting: SortingState, skip: number, limit: number) {
     const url: string = `${this.API_URL}/professionals/specialization?id=${id}&limit=${limit}&skip=${skip}&sk=${sorting[0].id}&sv=${sorting[0].desc ? 'desc' : 'asc'}`;
 
