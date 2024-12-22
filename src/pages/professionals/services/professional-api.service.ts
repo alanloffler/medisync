@@ -3,7 +3,6 @@ import type { IProfessional, IProfessionalForm } from '@professionals/interfaces
 import type { IProfessionalSearch } from '@professionals/interfaces/professional-search.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { ITableManager } from '@core/interfaces/table.interface';
-import type { SortingState } from '@tanstack/react-table';
 import { APP_CONFIG } from '@config/app.config';
 import { EMethods } from '@core/enums/methods.enum';
 import { EProfessionalSearch } from '@professionals/enums/professional-search.enum';
@@ -35,24 +34,6 @@ export class ProfessionalApiService {
     url.searchParams.append('sv', sorting[0].desc ? 'desc' : 'asc');
 
     return await UtilsUrl.fetch(url, EMethods.GET);
-  }
-
-  // POSSIBLE DEPRECATED, will be used inside searchProfessionalsBy
-  public static async findBySpecialization(id: string, sorting: SortingState, skip: number, limit: number) {
-    const url: string = `${this.API_URL}/professionals/specialization?id=${id}&limit=${limit}&skip=${skip}&sk=${sorting[0].id}&sv=${sorting[0].desc ? 'desc' : 'asc'}`;
-
-    try {
-      const query: Response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json;charset=UTF-8',
-        },
-      });
-
-      return await query.json();
-    } catch (error) {
-      return error;
-    }
   }
 
   public static async create(data: IProfessionalForm) {
