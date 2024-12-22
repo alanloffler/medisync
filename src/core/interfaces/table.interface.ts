@@ -13,6 +13,7 @@ export interface IDataTableAppointments extends IDataTable {
 }
 
 export interface IDataTableProfessionals extends IDataTable {
+  clearDropdown: () => void;
   search: IProfessionalSearch;
 }
 
