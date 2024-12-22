@@ -15,9 +15,10 @@ import { useAnimate } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 // Imports
+import type { IProfessionalSearch } from '@professionals/interfaces/professional-search.interface';
 import type { ISpecialization } from '@core/interfaces/specialization.interface';
 import { APP_CONFIG } from '@config/app.config';
-import { EProfessionalSearch, type IProfessionalSearch } from '@professionals/interfaces/professional-search.interface';
+import { EProfessionalSearch } from '@professionals/enums/professional-search.enum';
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { PROFESSIONALS_CONFIG as PROF_CONFIG } from '@config/professionals/professionals.config';
 import { UtilsString } from '@core/services/utils/string.service';
