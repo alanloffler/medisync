@@ -344,8 +344,8 @@ export function UsersDataTable({ reload, search }: IDataTableUsers) {
                   <Trans
                     i18nKey='dialog.deleteUser.content'
                     values={{
-                      firstName: UtilsString.upperCase(userSelected?.firstName),
-                      lastName: UtilsString.upperCase(userSelected?.lastName),
+                      firstName: UtilsString.upperCase(userSelected?.firstName, 'each'),
+                      lastName: UtilsString.upperCase(userSelected?.lastName, 'each'),
                       identityCard: i18n.format(userSelected?.dni, 'number', i18n.resolvedLanguage),
                     }}
                     components={{
