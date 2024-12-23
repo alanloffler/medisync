@@ -251,7 +251,6 @@ export function UsersDataTable({ reload, search }: IDataTableUsers) {
 
   // Actions
   function handleRemoveUserDialog(user: IUser): void {
-    setUserSelected(undefined);
     setOpenDialog(true);
     setUserSelected(user);
   }
