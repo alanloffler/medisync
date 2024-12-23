@@ -3,7 +3,7 @@ import { ArrowDownUp, FileText, Mail, MailX, PencilLine, Trash2 } from 'lucide-r
 // External components:
 // https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@core/components/ui/table';
 // Tanstack Data Table: https://tanstack.com/table/latest
 import {
@@ -31,7 +31,6 @@ import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 // Imports
 import type { IDataTableUsers, ITableManager } from '@core/interfaces/table.interface';
-import type { IInfoCard } from '@core/components/common/interfaces/infocard.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
 import type { IUserSearch } from '@users/interfaces/user-search.interface';
@@ -58,18 +57,15 @@ interface IVars {
 const defaultSorting: SortingState = [{ id: USER_CONFIG.table.defaultSortingId, desc: USER_CONFIG.table.defaultSortingType }];
 const defaultPagination: PaginationState = { pageIndex: 0, pageSize: USER_CONFIG.table.defaultPageSize };
 // React component
-export function UsersDataTable({ reload, search, setReload }: IDataTableUsers) {
+export function UsersDataTable({ reload, search }: IDataTableUsers) {
   const [columns, setColumns] = useState<ColumnDef<IUser>[]>([]);
-  const [errorRemoving, setErrorRemoving] = useState<boolean>(false);
-  const [errorRemovingContent, setErrorRemovingContent] = useState<IInfoCard>({ type: 'success', text: '' });
-  const [isRemoving, setIsRemoving] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [pagination, setPagination] = useState<PaginationState>(defaultPagination);
   const [skipItems, setSkipItems] = useState<number>(0);
   const [sorting, setSorting] = useState<SortingState>(defaultSorting);
   const [tableManager, setTableManager] = useState<ITableManager>({ sorting, pagination });
   const [totalItems, setTotalItems] = useState<number>(0);
-  const [userSelected, setUserSelected] = useState<IUser>({} as IUser);
+  const [userSelected, setUserSelected] = useState<IUser | undefined>(undefined);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const delimiter = useDelimiter();
   const firstUpdate = useRef<boolean>(true);
@@ -255,35 +251,37 @@ export function UsersDataTable({ reload, search, setReload }: IDataTableUsers) {
 
   // Actions
   function handleRemoveUserDialog(user: IUser): void {
+    setUserSelected(undefined);
     setOpenDialog(true);
     setUserSelected(user);
   }
 
-  function handleRemoveUserDatabase(id: string): void {
-    setIsRemoving(true);
-    setErrorRemoving(false);
+  const {
+    error: errorDeleting,
+    mutate: deleteUser,
+    isError: isErrorDeleting,
+    isPending: isPendingDelete,
+  } = useMutation<IResponse<IUser>, Error, { id: string }>({
+    mutationKey: ['deleteUser', userSelected?._id],
+    mutationFn: async ({ id }) => await UserApiService.remove(id),
+    onSuccess: (response) => {
+      setOpenDialog(false);
+      addNotification({ type: 'success', message: response.message });
+      searchUsersBy({ search, skipItems, tableManager });
+    },
+    onError: (error) => {
+      addNotification({ type: 'error', message: error.message });
+    },
+    retry: 1,
+  });
 
-    UserApiService.remove(id)
-      .then((response: IResponse) => {
-        if (response.statusCode === 200) {
-          addNotification({ type: 'success', message: response.message });
-          setOpenDialog(false);
-          setUserSelected({} as IUser);
-          setReload(crypto.randomUUID());
-        }
-        if (response.statusCode > 399) {
-          setErrorRemoving(true);
-          setErrorRemovingContent({ type: 'error', text: response.message });
-          addNotification({ type: 'error', message: response.message });
-        }
-        if (response instanceof Error) {
-          setErrorRemoving(true);
-          setErrorRemovingContent({ type: 'error', text: t('error.internalServer') });
-          addNotification({ type: 'error', message: t('error.internalServer') });
-        }
-      })
-      .finally(() => setIsRemoving(false));
+  function handleRemoveUserDatabase(id?: string): void {
+    id && deleteUser({ id });
   }
+
+  useEffect(() => {
+    !openDialog && setUserSelected(undefined);
+  }, [openDialog]);
 
   if (isPending) return <LoadingDB text={t('loading.users')} className='mt-6 p-0' />;
   if (isError) return <InfoCard text={error.message} type='error' className='mt-6' />;
@@ -333,45 +331,48 @@ export function UsersDataTable({ reload, search, setReload }: IDataTableUsers) {
           <DialogContent>
             <DialogHeader>
               <DialogTitle className='text-xl'>{t('dialog.deleteUser.title')}</DialogTitle>
-              {errorRemoving ? <DialogDescription></DialogDescription> : <DialogDescription>{t('dialog.deleteUser.description')}</DialogDescription>}
-              <section className='flex flex-col pt-2'>
-                {errorRemoving ? (
-                  <>
-                    <InfoCard text={errorRemovingContent.text} type={errorRemovingContent.type} />
-                    <footer className='mt-5 flex justify-end space-x-4'>
-                      <Button variant='default' size='sm' onClick={() => setOpenDialog(false)}>
-                        {t('button.close')}
-                      </Button>
-                    </footer>
-                  </>
-                ) : (
-                  <>
-                    <div className='text-sm'>
-                      <Trans
-                        i18nKey='dialog.deleteUser.content'
-                        values={{
-                          firstName: UtilsString.upperCase(userSelected.firstName),
-                          lastName: UtilsString.upperCase(userSelected.lastName),
-                          identityCard: i18n.format(userSelected.dni, 'number', i18n.resolvedLanguage),
-                        }}
-                        components={{
-                          span: <span className='font-semibold' />,
-                          i: <i />,
-                        }}
-                      />
-                    </div>
-                    <footer className='mt-5 flex justify-end space-x-4'>
-                      <Button variant='ghost' size='sm' onClick={() => setOpenDialog(false)}>
-                        {t('button.cancel')}
-                      </Button>
-                      <Button variant='remove' size='sm' onClick={() => handleRemoveUserDatabase(userSelected._id)}>
-                        {isRemoving ? <LoadingDB text={t('loading.deleting')} variant='button' /> : t('button.deleteUser')}
-                      </Button>
-                    </footer>
-                  </>
-                )}
-              </section>
+              {isErrorDeleting ? (
+                <DialogDescription></DialogDescription>
+              ) : (
+                <DialogDescription>{t('dialog.deleteUser.description')}</DialogDescription>
+              )}
             </DialogHeader>
+            <section className='flex flex-col'>
+              {isErrorDeleting ? (
+                <InfoCard text={errorDeleting.message} type='error' />
+              ) : (
+                <div className='text-sm'>
+                  <Trans
+                    i18nKey='dialog.deleteUser.content'
+                    values={{
+                      firstName: UtilsString.upperCase(userSelected?.firstName),
+                      lastName: UtilsString.upperCase(userSelected?.lastName),
+                      identityCard: i18n.format(userSelected?.dni, 'number', i18n.resolvedLanguage),
+                    }}
+                    components={{
+                      span: <span className='font-semibold' />,
+                      i: <i />,
+                    }}
+                  />
+                </div>
+              )}
+            </section>
+            <DialogFooter className='flex justify-end'>
+              {isErrorDeleting ? (
+                <Button variant='default' size='sm' onClick={() => setOpenDialog(false)}>
+                  {t('button.close')}
+                </Button>
+              ) : (
+                <div className='flex space-x-4'>
+                  <Button variant='ghost' size='sm' onClick={() => setOpenDialog(false)}>
+                    {t('button.cancel')}
+                  </Button>
+                  <Button variant='remove' size='sm' onClick={() => handleRemoveUserDatabase(userSelected?._id)}>
+                    {isPendingDelete ? <LoadingDB className='p-0' text={t('loading.deleting')} variant='button' /> : t('button.deleteUser')}
+                  </Button>
+                </div>
+              )}
+            </DialogFooter>
           </DialogContent>
         </Dialog>
       </>
