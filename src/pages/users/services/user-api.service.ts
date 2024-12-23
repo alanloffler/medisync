@@ -71,21 +71,12 @@ export class UserApiService {
     }
   }
 
+  // CHECKED: TRQ used on
+  // - UsersDataTable.tsx
   public static async remove(id: string) {
-    const url: string = `${this.API_URL}/users/${id}`;
-
-    try {
-      const query: Response = await fetch(url, {
-        headers: {
-          'content-type': 'application/json;charset=UTF-8',
-        },
-        method: 'DELETE',
-      });
-
-      return await query.json();
-    } catch (error) {
-      return error;
-    }
+    const url: URL = new URL(`${this.API_URL}/users/${id}`);
+    
+    return await UtilsUrl.fetch(url, EMethods.DELETE);
   }
 
   public static async update(id: string, data: IUserForm) {
