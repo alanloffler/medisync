@@ -148,19 +148,10 @@ export class ProfessionalApiService {
     }
   }
 
+  // CHECKED: used on ProfessionalsDataTable.tsx
   public static async remove(id: string) {
-    const url: string = `${this.API_URL}/professionals/${id}`;
-    try {
-      const query: Response = await fetch(url, {
-        method: 'DELETE',
-        headers: {
-          'content-type': 'application/json;charset=UTF-8',
-        },
-      });
+    const url: URL = new URL(`${this.API_URL}/professionals/${id}`);
 
-      return await query.json();
-    } catch (error) {
-      return error;
-    }
+    return await UtilsUrl.fetch(url, EMethods.DELETE);
   }
 }
