@@ -28,6 +28,7 @@ export function ApposTable({
   const navigate = useNavigate();
   const { i18n, t } = useTranslation();
 
+  // Actions
   const handleRowClick = useCallback(
     (row: Row<IAppointmentView>, cell: Cell<IAppointmentView, unknown>): void => {
       if (cell.column.getIndex() < row.getAllCells().length - 1) navigate(`/appointments/${row.original._id}`);
@@ -39,6 +40,7 @@ export function ApposTable({
     setRefresh(crypto.randomUUID());
   }, [setRefresh]);
 
+  // Table manager
   const columns: ColumnDef<IAppointmentView>[] = useMemo(
     () => [
       {
