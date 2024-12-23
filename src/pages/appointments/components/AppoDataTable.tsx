@@ -92,7 +92,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
       }
     },
     onError: (error: Error) => {
-      addNotification({ type: 'error', message: error.message })
+      addNotification({ type: 'error', message: error.message });
     },
   });
 
@@ -323,7 +323,9 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
             table={table}
           />
         </>
-      ) : (<InfoCard type='warning' text={response?.message} />)}
+      ) : (
+        <InfoCard type='warning' text={response?.message} />
+      )}
       {/* Section: Dialog */}
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent>
