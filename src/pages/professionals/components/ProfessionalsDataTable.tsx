@@ -3,7 +3,7 @@ import { ArrowDownUp, FileText, PencilLine, Trash2 } from 'lucide-react';
 // External components:
 // https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@core/components/ui/table';
 // Tanstack Data Table: https://tanstack.com/table/latest
 import {
@@ -59,12 +59,11 @@ interface IVars {
 const defaultSorting: SortingState = [{ id: PROF_CONFIG.table.defaultSortingId, desc: PROF_CONFIG.table.defaultSortingType }];
 const defaultPagination: PaginationState = { pageIndex: 0, pageSize: PROF_CONFIG.table.defaultPageSize };
 // React component
-export function ProfessionalsDataTable({ clearDropdown, reload, search, setReload }: IDataTableProfessionals) {
+export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataTableProfessionals) {
   const [columns, setColumns] = useState<ColumnDef<IProfessional>[]>([]);
-  const [isRemovingProfessional, setIsRemovingProfessional] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [pagination, setPagination] = useState<PaginationState>(defaultPagination);
-  const [professionalSelected, setProfessionalSelected] = useState<IProfessional>({} as IProfessional);
+  const [professionalSelected, setProfessionalSelected] = useState<IProfessional | undefined>(undefined);
   const [skipItems, setSkipItems] = useState<number>(0);
   const [sorting, setSorting] = useState<SortingState>(defaultSorting);
   const [tableManager, setTableManager] = useState<ITableManager>({ sorting, pagination });
@@ -86,7 +85,7 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search, setReloa
     isSuccess,
   } = useMutation<IResponse<IProfessionalsData>, Error, IVars>({
     mutationKey: ['searchProfessionalsBy', search, tableManager, skipItems],
-    mutationFn: async () => await ProfessionalApiService.searchProfessionalsBy(search, tableManager, skipItems),
+    mutationFn: async ({ search, skipItems, tableManager }) => await ProfessionalApiService.searchProfessionalsBy(search, tableManager, skipItems),
     onSuccess: (response) => {
       setColumns(tableColumns);
       setTotalItems(response.data.count);
@@ -301,29 +300,34 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search, setReloa
   function handleRemoveDialog(professional: IProfessional): void {
     setOpenDialog(true);
     setProfessionalSelected(professional);
-    // TODO: implement dialog action
-    console.log(professional);
   }
 
-  // TODO: display error on UI ???
-  function removeProfessional(id: string): void {
-    if (id) {
-      setIsRemovingProfessional(true);
+  const {
+    error: errorDeleting,
+    mutate: deleteProfessional,
+    isError: isErrorDeleting,
+    isPending: isPendingDelete,
+  } = useMutation<IResponse<IProfessional>, Error, { id: string }>({
+    mutationKey: ['deleteProfessional', professionalSelected?._id],
+    mutationFn: async ({ id }) => await ProfessionalApiService.remove(id),
+    onSuccess: (response) => {
+      setOpenDialog(false);
+      addNotification({ type: 'success', message: response.message });
+      searchProfessionalsBy({ search, skipItems, tableManager });
+    },
+    onError: (error) => {
+      addNotification({ type: 'error', message: t(error.message) });
+    },
+    retry: 1,
+  });
 
-      ProfessionalApiService.remove(id)
-        .then((response: IResponse) => {
-          if (response.statusCode === 200) {
-            addNotification({ type: 'success', message: response.message });
-            setOpenDialog(false);
-            setProfessionalSelected({} as IProfessional);
-            setReload(crypto.randomUUID());
-          }
-          if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
-          if (response instanceof Error) addNotification({ type: 'error', message: t('error.internalServer') });
-        })
-        .finally(() => setIsRemovingProfessional(false));
-    }
+  function handleRemoveProfessionalDatabase(id?: string): void {
+    id && deleteProfessional({ id });
   }
+
+  useEffect(() => {
+    !openDialog && setProfessionalSelected(undefined);
+  }, [openDialog]);
 
   if (isPending) return <LoadingDB text={t('loading.professionals')} className='mt-6 p-0' />;
   if (isError) return <InfoCard text={error.message} type='error' className='mt-6' />;
@@ -373,33 +377,49 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search, setReloa
           <DialogContent>
             <DialogHeader>
               <DialogTitle className='text-xl'>{t('dialog.deleteProfessional.title')}</DialogTitle>
-              <DialogDescription>{t('dialog.deleteProfessional.description')}</DialogDescription>
+              {isErrorDeleting ? (
+                <DialogDescription></DialogDescription>
+              ) : (
+                <DialogDescription>{t('dialog.deleteProfessional.description')}</DialogDescription>
+              )}
             </DialogHeader>
             <section className='flex flex-col'>
-              <div>
-                <Trans
-                  i18nKey='dialog.deleteProfessional.content'
-                  values={{
-                    titleAbbreviation: UtilsString.upperCase(professionalSelected.title?.abbreviation),
-                    firstName: UtilsString.upperCase(professionalSelected.firstName),
-                    lastName: UtilsString.upperCase(professionalSelected.lastName),
-                    identityCard: i18n.format(professionalSelected.dni, 'number', i18n.resolvedLanguage),
-                  }}
-                  components={{
-                    span: <span className='font-semibold' />,
-                    i: <i />,
-                  }}
-                />
-              </div>
+              {isErrorDeleting ? (
+                <InfoCard text={errorDeleting.message} type='error' />
+              ) : (
+                <div className='text-sm'>
+                  <Trans
+                    i18nKey='dialog.deleteProfessional.content'
+                    values={{
+                      titleAbbreviation: UtilsString.upperCase(professionalSelected?.title?.abbreviation),
+                      firstName: UtilsString.upperCase(professionalSelected?.firstName),
+                      lastName: UtilsString.upperCase(professionalSelected?.lastName),
+                      identityCard: i18n.format(professionalSelected?.dni, 'number', i18n.resolvedLanguage),
+                    }}
+                    components={{
+                      span: <span className='font-semibold' />,
+                      i: <i />,
+                    }}
+                  />
+                </div>
+              )}
             </section>
-            <footer className='flex justify-end space-x-4'>
-              <Button variant='ghost' size='sm' onClick={() => setOpenDialog(false)}>
-                {t('button.cancel')}
-              </Button>
-              <Button variant='remove' size='sm' onClick={() => removeProfessional(professionalSelected._id)}>
-                {isRemovingProfessional ? <LoadingDB variant='button' text={t('loading.deleting')} /> : t('button.deleteProfessional')}
-              </Button>
-            </footer>
+            <DialogFooter className='flex justify-end'>
+              {isErrorDeleting ? (
+                <Button variant='default' size='sm' onClick={() => setOpenDialog(false)}>
+                  {t('button.close')}
+                </Button>
+              ) : (
+                <div className='flex space-x-4'>
+                  <Button variant='ghost' size='sm' onClick={() => setOpenDialog(false)}>
+                    {t('button.cancel')}
+                  </Button>
+                  <Button variant='remove' size='sm' onClick={() => handleRemoveProfessionalDatabase(professionalSelected?._id)}>
+                    {isPendingDelete ? <LoadingDB variant='button' text={t('loading.deleting')} /> : t('button.deleteProfessional')}
+                  </Button>
+                </div>
+              )}
+            </DialogFooter>
           </DialogContent>
         </Dialog>
       </>
