@@ -107,6 +107,9 @@
       "content": "Vas a eliminar de la base de datos al paciente <span>{{firstName}} {{lastName}}</span> con DNI <i>{{identityCard}}</i>"
     },
     "error": {
+      "createAppointment": {
+        "title": "Error creando el turno"
+      },
       "createProfessional": {
         "title": "Error creando profesional"
       },
