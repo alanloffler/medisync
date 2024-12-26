@@ -1,8 +1,7 @@
-import type { IAppointmentForm } from '@appointments/interfaces/appointment.interface';
+import type { IAppointment, IAppointmentForm } from '@appointments/interfaces/appointment.interface';
 import type { IAppointmentSearch } from '@appointments/interfaces/appointment-search.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { SortingState } from '@tanstack/react-table';
-import { APP_CONFIG } from '@config/app.config';
 import { EMethods } from '@core/enums/methods.enum';
 import { UtilsUrl } from '@core/services/utils/url.service';
 
@@ -120,7 +119,7 @@ export class AppointmentApiService {
   }
 
   // CHECKED: used on DialogReserve.tsx
-  public static async create(data: IAppointmentForm): Promise<IResponse> {
+  public static async create(data: IAppointmentForm): Promise<IResponse<IAppointment>> {
     const path: string = `${this.API_URL}/appointments`;
     const url: URL = UtilsUrl.create(path);
 
@@ -143,28 +142,12 @@ export class AppointmentApiService {
       return e;
     }
   }
-  // WIP: method for use with TRQ
-  public static async remove(id: string) {
-    const url: string = `${this.API_URL}/appointments/${id}`;
+  // CHECKED: used on DialogReserve.tsx
+  public static async remove(id: string): Promise<IResponse<IAppointment>> {
+    const path: string = `${this.API_URL}/appointments/${id}`;
+    const url: URL = UtilsUrl.create(path);
 
-    try {
-      const query: Response = await fetch(url, {
-        method: 'DELETE',
-        headers: {
-          'content-type': 'application/json;charset=UTF-8',
-        },
-      });
-
-      const response: IResponse = await query.json();
-      if (!query.ok) throw new Error(response.message);
-
-      return response;
-    } catch (error) {
-      if (error instanceof TypeError) {
-        throw new Error(APP_CONFIG.error.server);
-      }
-      throw error;
-    }
+    return await UtilsUrl.fetch(url, EMethods.DELETE);
   }
 
   // ApposRecord component methods
