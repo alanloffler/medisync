@@ -12,7 +12,9 @@ import { useMutation } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { IResponse } from '@core/interfaces/response.interface';
+import type { ITableManager } from '@core/interfaces/table.interface';
 import type { IUser } from '@users/interfaces/user.interface';
+import type { IUserSearch } from '@users/interfaces/user-search.interface';
 import { EUserSearch, ESortingKeys } from '@users/enums/user-search.enum';
 import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
@@ -25,9 +27,10 @@ interface IUsersComboData {
 }
 
 interface IVars {
-  searchBy: string;
+  search: IUserSearch;
+  skipItems: number;
+  tableManager: ITableManager;
 }
-
 // React component
 export function UsersCombo({
   searchBy,
@@ -73,20 +76,22 @@ export function UsersCombo({
     isSuccess,
   } = useMutation<IResponse<IUsersComboData>, Error, IVars>({
     mutationKey: ['searchUsersBy', debouncedSearch],
-    mutationFn: async (vars) => await UserApiService.searchUsersBy(debouncedSearch, [{ id: sortingKey, desc: false }], 0, 0, vars.searchBy),
+    mutationFn: async (vars) => await UserApiService.searchUsersBy(vars.search, vars.tableManager, vars.skipItems),
     retry: 1,
   });
 
   useEffect(() => {
     if (debouncedSearch !== '') {
       setOpenCombobox(true);
-      searchUsersBy({ searchBy });
-      // if (searchBy === EUserSearch.NAME) searchUsersBy({ searchBy: EUserSearch.NAME });
-      // if (searchBy === EUserSearch.IDENTITY) searchUsersBy({ searchBy: EUserSearch.IDENTITY });
+      searchUsersBy({
+        search: { value: debouncedSearch, type: searchBy },
+        tableManager: { pagination: { pageIndex: 0, pageSize: 1000000 }, sorting: [{ id: sortingKey, desc: false }] },
+        skipItems: 0,
+      });
     } else {
       setOpenCombobox(false);
     }
-  }, [debouncedSearch, searchBy, searchUsersBy]);
+  }, [debouncedSearch, searchBy, searchUsersBy, sortingKey]);
 
   const UserItem = memo(({ user, onSelect }: { user: IUser; onSelect: (user: IUser) => void }) => (
     <button
