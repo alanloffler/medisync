@@ -15,13 +15,12 @@ import { useMutation } from '@tanstack/react-query';
 import type { IDialog } from '@core/interfaces/dialog.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
-import type { ITimeSlot } from '@appointments/interfaces/appointment.interface';
+import type { IAppointment, ITimeSlot } from '@appointments/interfaces/appointment.interface';
 import type { IUser } from '@users/interfaces/user.interface';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { EDialogAction } from '@appointments/enums/dialog.enum';
 import { UtilsString } from '@core/services/utils/string.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
-
 // Interfaces
 interface IProps {
   content: { messages: IDialog; slot: ITimeSlot };
@@ -48,15 +47,6 @@ export function DialogReserve({ content, date, openState, professional, setHandl
   const { i18n, t } = useTranslation();
   const locale: string = i18n.resolvedLanguage || i18n.language;
 
-  const handleResetDialog = useCallback((): void => {
-    setUser({} as IUser);
-  }, [setUser]);
-
-  useEffect(() => {
-    if (openState.open === false) handleResetDialog();
-  }, [handleResetDialog, openState.open]);
-
-  // TODO: useCallback
   function generateSummary(userSelected: IUser): JSX.Element {
     return (
       <div className='space-y-2'>
@@ -109,24 +99,35 @@ export function DialogReserve({ content, date, openState, professional, setHandl
     );
   }
 
-  async function cancelAppointment(slot: ITimeSlot, isOnly?: boolean): Promise<void> {
-    if (slot.appointment) {
-      const slotAppointmentDay: string = slot.appointment.day;
+  // Action remove appointment
+  const {
+    error: removeError,
+    mutate: removeAppointment,
+    isError: isErrorRemove,
+    isPending: isPendingRemove,
+    reset: resetRemove,
+  } = useMutation<IResponse<IAppointment>, Error, { slot: ITimeSlot; isOnly?: boolean }>({
+    mutationKey: ['remove-appointment', user._id, selectedSlot.id],
+    mutationFn: async ({ slot }) => {
+      if (!slot.appointment) throw new Error('Dev Error: There is no appointment on slot');
+      return await AppointmentApiService.remove(slot.appointment._id);
+    },
+    onSuccess: (response, { slot, isOnly }) => {
+      openState.setOpen(false);
+      addNotification({ type: 'success', message: response.message });
+      setRefreshAppos(crypto.randomUUID());
+      if (isOnly === true && slot.appointment) setHandleDaysWithAppos({ day: slot.appointment.day, action: 'delete', id: crypto.randomUUID() });
+    },
+    onError: (error) => {
+      addNotification({ type: 'error', message: error.message });
+    },
+    retry: 1,
+  });
 
-      AppointmentApiService.remove(slot.appointment._id).then((response) => {
-        if (response.statusCode === 200) {
-          addNotification({ type: 'success', message: response.message });
-          handleResetDialog();
-          setRefreshAppos(crypto.randomUUID());
-          if (isOnly === true) {
-            setHandleDaysWithAppos({ day: slotAppointmentDay, action: 'delete', id: crypto.randomUUID() });
-          }
-          openState.setOpen(false);
-        }
-        if (response.statusCode > 399) addNotification({ type: 'error', message: response.message });
-        if (response instanceof Error) addNotification({ type: 'error', message: t('error.internalServer') });
-      });
-    }
+  function handleRemoveAppointment(slot: ITimeSlot, isOnly?: boolean): void {
+    if (slot.appointment) {
+      removeAppointment({ slot, isOnly });
+    } else console.log("Dev Error: There's no appointment on slot");
   }
 
   // Action reserve appointment
@@ -135,6 +136,7 @@ export function DialogReserve({ content, date, openState, professional, setHandl
     mutate: reserveAppointment,
     isError: isErrorReserve,
     isPending: isPendingReserve,
+    reset: resetReserve,
   } = useMutation<IResponse, Error, IVars>({
     mutationKey: ['reserve-appointment', user._id, selectedSlot.id],
     mutationFn: async ({ day, hour, professional, slot, user }) =>
@@ -146,11 +148,10 @@ export function DialogReserve({ content, date, openState, professional, setHandl
         user,
       }),
     onSuccess: (response) => {
+      openState.setOpen(false);
       addNotification({ type: 'success', message: response.message });
       setRefreshAppos(crypto.randomUUID());
       setHandleDaysWithAppos({ day: format(date ?? new Date(), 'YYYY-MM-DD'), action: 'create', id: crypto.randomUUID() });
-      handleResetDialog();
-      openState.setOpen(false);
     },
     onError: (error) => {
       addNotification({ type: 'error', message: error.message });
@@ -161,6 +162,7 @@ export function DialogReserve({ content, date, openState, professional, setHandl
   function handleReserveAppointment(): void {
     if (professional && user) {
       const formattedDate: string = format(date ?? new Date(), 'YYYY-MM-DD');
+      
       reserveAppointment({
         day: formattedDate,
         hour: selectedSlot.begin,
@@ -173,16 +175,30 @@ export function DialogReserve({ content, date, openState, professional, setHandl
     }
   }
 
+  const handleResetDialog = useCallback((): void => {
+    setUser({} as IUser);
+    if (isErrorRemove) resetRemove();
+    if (isErrorReserve) resetReserve();
+  }, [isErrorRemove, isErrorReserve, resetRemove, resetReserve, setUser]);
+
+  useEffect(() => {
+    if (openState.open === false) {
+      handleResetDialog();
+    }
+  }, [handleResetDialog, openState.open]);
+
   return (
     <Dialog open={openState.open} onOpenChange={openState.setOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className='text-xl'>{isErrorReserve ? t('dialog.error.createAppointment.title') : dialogContent.title}</DialogTitle>
-          {!isErrorReserve && <DialogDescription>{dialogContent.description}</DialogDescription>}
+          <DialogTitle className='text-xl'>
+            {isErrorReserve ? t('dialog.error.createAppointment') : isErrorRemove ? t('dialog.error.deleteAppointment') : dialogContent.title}
+          </DialogTitle>
+          <DialogDescription>{!isErrorReserve && !isErrorRemove && dialogContent.description}</DialogDescription>
           <section className='z-50 pt-4'>
-            {isErrorReserve ? (
-              <InfoCard type='error' text={reserveError.message} />
-            ) : (
+            {isErrorReserve && <InfoCard type='error' text={reserveError.message} />}
+            {isErrorRemove && <InfoCard type='error' text={removeError.message} />}
+            {!isErrorReserve && !isErrorRemove && (
               <>
                 {dialogContent.action === EDialogAction.RESERVE && !user._id && dialogContent.content}
                 {dialogContent.action === EDialogAction.RESERVE && user._id && generateSummary(user)}
@@ -191,7 +207,7 @@ export function DialogReserve({ content, date, openState, professional, setHandl
             )}
           </section>
           <footer className='flex justify-end gap-6 pt-4'>
-            {isErrorReserve ? (
+            {isErrorReserve || isErrorRemove ? (
               <Button variant='default' size='sm' onClick={() => openState.setOpen(false)}>
                 {t('button.tryAgain')}
               </Button>
@@ -209,9 +225,13 @@ export function DialogReserve({ content, date, openState, professional, setHandl
                 )}
               </Button>
             )}
-            {dialogContent.action === EDialogAction.CANCEL && (
-              <Button variant='remove' size='sm' onClick={() => cancelAppointment(selectedSlot, dialogContent.isOnly)}>
-                {t('button.deleteAppointment')}
+            {dialogContent.action === EDialogAction.CANCEL && !isErrorRemove && (
+              <Button variant='remove' size='sm' onClick={() => handleRemoveAppointment(selectedSlot, dialogContent.isOnly)}>
+                {isPendingRemove ? (
+                  <LoadingDB text={t('loading.deleting')} spinnerColor='fill-white' className='text-white' />
+                ) : (
+                  t('button.deleteAppointment')
+                )}
               </Button>
             )}
           </footer>
