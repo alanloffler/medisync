@@ -32,7 +32,12 @@ export class AppointmentApiService {
     }
   }
   // CHECKED: used on appointments.tsx
-  public static async findSearch(search: IAppointmentSearch[], sorting: SortingState, skip: number, limit: number) {
+  public static async findSearch(
+    search: IAppointmentSearch[],
+    sorting: SortingState,
+    skip: number,
+    limit: number,
+  ): Promise<IResponse<IAppointment[]>> {
     const path: string = `${this.API_URL}/appointments/search`;
     const url = UtilsUrl.create(path);
 
@@ -47,7 +52,7 @@ export class AppointmentApiService {
     return await UtilsUrl.fetch(url, EMethods.POST, body);
   }
   // CHECKED: used on StatusSelect.tsx
-  public static async update(id: string, status: string): Promise<IResponse> {
+  public static async update(id: string, status: string): Promise<IResponse<IAppointment>> {
     const path: string = `${this.API_URL}/appointments/${id}`;
     const url = UtilsUrl.create(path);
 
@@ -63,8 +68,8 @@ export class AppointmentApiService {
   // CHECKED: used on DateSelection.tsx
   public static async daysWithAppos(professionalId: string, year: number, month: number) {
     let transformedMonth: string, transformedYear: string;
-    (month < 10) ? transformedMonth = `0${month}` : transformedMonth = `${month}`;
-    (year < 10) ? transformedYear = `0${year}` : transformedYear = `${year}`;
+    month < 10 ? (transformedMonth = `0${month}`) : (transformedMonth = `${month}`);
+    year < 10 ? (transformedYear = `0${year}`) : (transformedYear = `${year}`);
 
     const path: string = `${this.API_URL}/appointments/daysWithAppos`;
     const url = UtilsUrl.create(path, { professionalId, year: transformedYear, month: transformedMonth });
