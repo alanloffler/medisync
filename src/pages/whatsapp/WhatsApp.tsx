@@ -18,7 +18,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
-import { APP_CONFIG } from '@config/app.config';
+// import { APP_CONFIG } from '@config/app.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
@@ -36,7 +36,8 @@ export default function WhatsApp() {
       setIsLoading(true);
       // TODO: manage errors
       if (type === 'user') {
-        setLoadingMessage(APP_CONFIG.loadingDB.findOneUser);
+        // TODO: replace with translations
+        setLoadingMessage('APP_CONFIG.loadingDB.findOneUser');
 
         UserApiService.findOne(id)
           .then((response: IResponse) => {
@@ -48,7 +49,7 @@ export default function WhatsApp() {
           .finally(() => setIsLoading(false));
       }
       if (type === 'professional') {
-        setLoadingMessage(APP_CONFIG.loadingDB.findOneProfessional);
+        setLoadingMessage('APP_CONFIG.loadingDB.findOneProfessional');
 
         ProfessionalApiService.findOne(id)
           .then((response: IResponse) => {
