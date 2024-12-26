@@ -48,7 +48,8 @@ export class AppointmentApiService {
   }
   // CHECKED: used on StatusSelect.tsx
   public static async update(id: string, status: string): Promise<IResponse> {
-    const url: string = `${this.API_URL}/appointments/${id}`;
+    const path: string = `${this.API_URL}/appointments/${id}`;
+    const url = UtilsUrl.create(path);
 
     return await UtilsUrl.fetch(url, EMethods.PATCH, { status });
   }
@@ -201,27 +202,4 @@ export class AppointmentApiService {
       return error;
     }
   }
-
-  // Generic fetch method
-  // private static async fetch(url: string | URL, method: EMethods, body?: any) {
-  //   try {
-  //     const query: Response = await fetch(url, {
-  //       method: method,
-  //       headers: {
-  //         'content-type': 'application/json;charset=UTF-8',
-  //       },
-  //       body: JSON.stringify(body),
-  //     });
-
-  //     const response: IResponse = await query.json();
-  //     if (!query.ok) throw new Error(response.message);
-
-  //     return response;
-  //   } catch (error) {
-  //     if (error instanceof TypeError) {
-  //       throw new Error(APP_CONFIG.error.server);
-  //     }
-  //     throw error;
-  //   }
-  // }
 }
