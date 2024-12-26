@@ -1,11 +1,6 @@
 export const APP_CONFIG = {
   debounceTime: 500,
   redirectTime: 5000,
-  // TODO: when translated all, remove this
-  error: {
-    server: 'Error interno del servidor'
-  },
-  // In use
   i18n: {
     locale: 'es',
   },
@@ -15,14 +10,11 @@ export const APP_CONFIG = {
     text: 'Cargando',
   },
   loadingDB: {
-    defaultText: 'Cargando información de la base de datos',
-    findProfesionals: 'Cargando profesionales',
-    findUsers: 'Cargando pacientes',
-    findOneProfessional: 'Cargando información del profesional',
-    // findOneUser: 'Cargando información del paciente',
-    settings: {
-      duration: 0.4,
-      size: 18,
-    },
+    duration: 0.4,
+    size: 18,
+  },
+  // TODO: when translated all, remove this
+  error: {
+    server: 'Error interno del servidor',
   },
 };
