@@ -15,6 +15,7 @@ import type { IResponse } from '@core/interfaces/response.interface';
 import type { ITableManager } from '@core/interfaces/table.interface';
 import type { IUser } from '@users/interfaces/user.interface';
 import type { IUserSearch } from '@users/interfaces/user-search.interface';
+import { APP_CONFIG } from '@config/app.config';
 import { EUserSearch, ESortingKeys } from '@users/enums/user-search.enum';
 import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
@@ -43,7 +44,7 @@ export function UsersCombo({
   sortingKey: ESortingKeys;
   placeholder: string;
 }) {
-  const DEBOUNCE_TIME: number = 500;
+  const DEBOUNCE_TIME: number = APP_CONFIG.debounceTime ?? 500;
   const [openCombobox, setOpenCombobox] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
   const debouncedSearch: string = useDebounce<string>(search, DEBOUNCE_TIME);
