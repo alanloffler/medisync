@@ -1,5 +1,6 @@
 // External imports
 import { cva } from 'class-variance-authority';
+import { useTranslation } from 'react-i18next';
 // Imports
 import { APP_CONFIG } from '@config/app.config';
 import { cn } from '@lib/utils';
@@ -38,6 +39,8 @@ interface ILoadingDB {
 }
 // React component
 export function LoadingDB({ absolute, className, empty, iconSize, size, spinnerColor, text, variant }: ILoadingDB) {
+  const { t } = useTranslation();
+
   return (
     <div
       className={cn(
@@ -46,8 +49,8 @@ export function LoadingDB({ absolute, className, empty, iconSize, size, spinnerC
       )}
     >
       <svg
-        width={iconSize || APP_CONFIG.loadingDB.settings.size}
-        height={iconSize || APP_CONFIG.loadingDB.settings.size}
+        width={iconSize || APP_CONFIG.loadingDB.size}
+        height={iconSize || APP_CONFIG.loadingDB.size}
         viewBox='0 0 24 24'
         className={cn('fill-primary', spinnerColor)}
       >
@@ -55,13 +58,13 @@ export function LoadingDB({ absolute, className, empty, iconSize, size, spinnerC
           <animateTransform
             attributeName='transform'
             type='rotate'
-            dur={APP_CONFIG.loadingDB.settings.duration}
+            dur={APP_CONFIG.loadingDB.duration}
             values='0 12 12;360 12 12'
             repeatCount='indefinite'
           />
         </path>
       </svg>
-      {!empty && <span>{text || APP_CONFIG.loadingDB.defaultText}</span>}
+      {!empty && <span>{text || t('loading.default')}</span>}
     </div>
   );
 }
