@@ -119,22 +119,12 @@ export class AppointmentApiService {
     }
   }
 
-  public static async create(data: IAppointmentForm) {
-    const url: string = `${this.API_URL}/appointments`;
+  // CHECKED: used on DialogReserve.tsx
+  public static async create(data: IAppointmentForm): Promise<IResponse> {
+    const path: string = `${this.API_URL}/appointments`;
+    const url: URL = UtilsUrl.create(path);
 
-    try {
-      const query = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json;charset=UTF-8',
-        },
-        body: JSON.stringify(data),
-      });
-
-      return await query.json();
-    } catch (error) {
-      return error;
-    }
+    return await UtilsUrl.fetch(url, EMethods.POST, data);
   }
 
   public static async findOne(id: string) {
