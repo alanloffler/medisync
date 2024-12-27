@@ -13,13 +13,13 @@ import { MouseEvent, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { Trans, useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 // Imports
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
-// import { APP_CONFIG } from '@config/app.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
@@ -28,39 +28,7 @@ import { WHATSAPP_CONFIG } from '@config/whatsapp.config';
 export default function WhatsApp() {
   const navigate = useNavigate();
   const { id, type } = useParams();
-
-  // useEffect(() => {
-  //   if (id) {
-  //     setIsLoading(true);
-  //     // TODO: manage errors
-  //     if (type === 'user') {
-  //       // TODO: replace with translations
-  //       setLoadingMessage('APP_CONFIG.loadingDB.findOneUser');
-
-  //       UserApiService.findOne(id)
-  //         .then((response: IResponse) => {
-  //           if (response.statusCode === 200) {
-  //             setAddressee(response.data);
-  //             whatsappForm.setValue('phone', response.data.phone);
-  //           }
-  //         })
-  //         .finally(() => setIsLoading(false));
-  //     }
-  //     if (type === 'professional') {
-  //       setLoadingMessage('APP_CONFIG.loadingDB.findOneProfessional');
-
-  //       ProfessionalApiService.findOne(id)
-  //         .then((response: IResponse) => {
-  //           if (response.statusCode === 200) {
-  //             setAddressee(response.data);
-  //             whatsappForm.setValue('phone', response.data.phone);
-  //           }
-  //         })
-  //         .finally(() => setIsLoading(false));
-  //     }
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [id]);
+  const { t } = useTranslation();
 
   const whatsappSchema = z.object({
     phone: z.coerce.number(),
@@ -87,8 +55,6 @@ export default function WhatsApp() {
     if (user?.data.phone) whatsappForm.setValue('phone', Number(`549${user?.data.phone}`));
   }, [user?.data.phone, whatsappForm]);
 
-
-
   function sendMessage(e: z.infer<typeof whatsappSchema>) {
     console.log(e);
   }
@@ -103,7 +69,7 @@ export default function WhatsApp() {
       {/* Section: Page Header */}
       <section className='flex items-center justify-between'>
         <PageHeader title={''} breadcrumb={WHATSAPP_CONFIG.breadcrumb} />
-        <BackButton label={WHATSAPP_CONFIG.button.back} />
+        <BackButton label={t('button.back')} />
       </section>
       {/* Section: Page Content */}
       <section className='mx-auto mt-4 flex w-full flex-row px-2 md:w-[500px]'>
@@ -114,18 +80,38 @@ export default function WhatsApp() {
                 <svg width='100' height='100' viewBox='0 0 464 488' className='h-4 w-4'>
                   <path d='M462 228q0 93-66 159t-160 66q-56 0-109-28L2 464l40-120q-32-54-32-116q0-93 66-158.5T236 4t160 65.5T462 228zM236 39q-79 0-134.5 55.5T46 228q0 62 36 111l-24 70l74-23q49 31 104 31q79 0 134.5-55.5T426 228T370.5 94.5T236 39zm114 241q-1-1-10-7q-3-1-19-8.5t-19-8.5q-9-3-13 2q-1 3-4.5 7.5t-7.5 9t-5 5.5q-4 6-12 1q-34-17-45-27q-7-7-13.5-15t-12-15t-5.5-8q-3-7 3-11q4-6 8-10l6-9q2-5-1-10q-4-13-17-41q-3-9-12-9h-11q-9 0-15 7q-19 19-19 45q0 24 22 57l2 3q2 3 4.5 6.5t7 9t9 10.5t10.5 11.5t13 12.5t14.5 11.5t16.5 10t18 8.5q16 6 27.5 10t18 5t9.5 1t7-1t5-1q9-1 21.5-9t15.5-17q8-21 3-26z' />
                 </svg>
-                <span>{WHATSAPP_CONFIG.title}</span>
+                <span>{t('cardTitle.phoneMessage')}</span>
               </section>
             </CardTitle>
           </CardHeader>
           <CardContent>
             {isLoading ? (
-              <LoadingDB text={'loadingMessage'} className='mt-3' />
+              <LoadingDB text={t(type === 'user' ? 'loading.userDetails' : 'loading.professionalDetails')} className='mt-3' />
             ) : (
               <>
                 <section className='mt-1 text-base'>
-                  {WHATSAPP_CONFIG.subtitle}
-                  <span className='font-bold'>{UtilsString.upperCase(` ${user?.data.firstName} ${user?.data.lastName}`, 'each')}</span>.
+                  {type === 'user' && (
+                    <Trans
+                      i18nKey='cardContent.phoneMessage.user'
+                      values={{
+                        patient: UtilsString.upperCase(`${user?.data.firstName} ${user?.data.lastName}`, 'each'),
+                      }}
+                      components={{
+                        span: <span className='font-semibold' />,
+                      }}
+                    />
+                  )}
+                  {type === 'professional' && (
+                    <Trans
+                      i18nKey='cardContent.phoneMessage.professional'
+                      values={{
+                        professional: UtilsString.upperCase(`${user?.data.firstName} ${user?.data.lastName}`, 'each'),
+                      }}
+                      components={{
+                        span: <span className='font-semibold' />,
+                      }}
+                    />
+                  )}
                 </section>
                 {/* Section: Form */}
                 <Form {...whatsappForm}>
@@ -135,7 +121,7 @@ export default function WhatsApp() {
                       name='phone'
                       render={({ field }) => (
                         <FormItem className=''>
-                          <FormLabel>{WHATSAPP_CONFIG.label.phone}</FormLabel>
+                          <FormLabel>{t('label.phone')}</FormLabel>
                           <FormControl className='h-9'>
                             <Input {...field} />
                           </FormControl>
@@ -148,7 +134,7 @@ export default function WhatsApp() {
                       name='message'
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{WHATSAPP_CONFIG.label.message}</FormLabel>
+                          <FormLabel>{t('label.message')}</FormLabel>
                           <FormControl>
                             <Textarea {...field} />
                           </FormControl>
@@ -157,11 +143,11 @@ export default function WhatsApp() {
                       )}
                     />
                     <footer className='grid grid-cols-1 space-y-2 pt-2 md:flex md:justify-end md:gap-6 md:space-y-0'>
-                      <Button type='submit' variant='default' className='order-1 md:order-2 lg:order-2'>
-                        {WHATSAPP_CONFIG.button.sendMessage}
+                      <Button type='submit' disabled={!whatsappForm.formState.isValid} variant='default' className='order-1 md:order-2 lg:order-2'>
+                        {t('button.sendPhoneMessage')}
                       </Button>
                       <Button variant='ghost' onClick={handleCancel} className='order-2 md:order-1 lg:order-1'>
-                        {WHATSAPP_CONFIG.button.cancel}
+                        {t('button.cancel')}
                       </Button>
                     </footer>
                   </form>
