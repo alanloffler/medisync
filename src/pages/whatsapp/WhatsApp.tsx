@@ -9,9 +9,10 @@ import { BackButton } from '@core/components/common/BackButton';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
 // External imports
-import { MouseEvent, useEffect, useState } from 'react';
+import { MouseEvent, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 // Imports
@@ -25,49 +26,47 @@ import { UtilsString } from '@core/services/utils/string.service';
 import { WHATSAPP_CONFIG } from '@config/whatsapp.config';
 // React component
 export default function WhatsApp() {
-  const [addressee, setAddressee] = useState<IProfessional | IUser>({} as IProfessional | IUser);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [loadingMessage, setLoadingMessage] = useState<string>('');
   const navigate = useNavigate();
   const { id, type } = useParams();
 
-  useEffect(() => {
-    if (id) {
-      setIsLoading(true);
-      // TODO: manage errors
-      if (type === 'user') {
-        // TODO: replace with translations
-        setLoadingMessage('APP_CONFIG.loadingDB.findOneUser');
+  // useEffect(() => {
+  //   if (id) {
+  //     setIsLoading(true);
+  //     // TODO: manage errors
+  //     if (type === 'user') {
+  //       // TODO: replace with translations
+  //       setLoadingMessage('APP_CONFIG.loadingDB.findOneUser');
 
-        UserApiService.findOne(id)
-          .then((response: IResponse) => {
-            if (response.statusCode === 200) {
-              setAddressee(response.data);
-              whatsappForm.setValue('phone', response.data.phone);
-            }
-          })
-          .finally(() => setIsLoading(false));
-      }
-      if (type === 'professional') {
-        setLoadingMessage('APP_CONFIG.loadingDB.findOneProfessional');
+  //       UserApiService.findOne(id)
+  //         .then((response: IResponse) => {
+  //           if (response.statusCode === 200) {
+  //             setAddressee(response.data);
+  //             whatsappForm.setValue('phone', response.data.phone);
+  //           }
+  //         })
+  //         .finally(() => setIsLoading(false));
+  //     }
+  //     if (type === 'professional') {
+  //       setLoadingMessage('APP_CONFIG.loadingDB.findOneProfessional');
 
-        ProfessionalApiService.findOne(id)
-          .then((response: IResponse) => {
-            if (response.statusCode === 200) {
-              setAddressee(response.data);
-              whatsappForm.setValue('phone', response.data.phone);
-            }
-          })
-          .finally(() => setIsLoading(false));
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  //       ProfessionalApiService.findOne(id)
+  //         .then((response: IResponse) => {
+  //           if (response.statusCode === 200) {
+  //             setAddressee(response.data);
+  //             whatsappForm.setValue('phone', response.data.phone);
+  //           }
+  //         })
+  //         .finally(() => setIsLoading(false));
+  //     }
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [id]);
 
   const whatsappSchema = z.object({
     phone: z.coerce.number(),
     message: z.string(),
   });
+
   const whatsappForm = useForm<z.infer<typeof whatsappSchema>>({
     defaultValues: {
       phone: 0,
@@ -75,6 +74,20 @@ export default function WhatsApp() {
     },
     resolver: zodResolver(whatsappSchema),
   });
+
+  const { data: user, isLoading } = useQuery<IResponse<IUser | IProfessional>, Error>({
+    queryKey: ['whatsapp', id, type],
+    queryFn: async () => {
+      if (id && type) return type === 'user' ? await UserApiService.findOne(id) : await ProfessionalApiService.findOne(id);
+    },
+    retry: 1,
+  });
+
+  useEffect(() => {
+    if (user?.data.phone) whatsappForm.setValue('phone', Number(`549${user?.data.phone}`));
+  }, [user?.data.phone, whatsappForm]);
+
+
 
   function sendMessage(e: z.infer<typeof whatsappSchema>) {
     console.log(e);
@@ -107,12 +120,12 @@ export default function WhatsApp() {
           </CardHeader>
           <CardContent>
             {isLoading ? (
-              <LoadingDB text={loadingMessage} className='mt-3' />
+              <LoadingDB text={'loadingMessage'} className='mt-3' />
             ) : (
               <>
                 <section className='mt-1 text-base'>
                   {WHATSAPP_CONFIG.subtitle}
-                  <span className='font-bold'>{UtilsString.upperCase(` ${addressee.firstName} ${addressee.lastName}`)}</span>.
+                  <span className='font-bold'>{UtilsString.upperCase(` ${user?.data.firstName} ${user?.data.lastName}`, 'each')}</span>.
                 </section>
                 {/* Section: Form */}
                 <Form {...whatsappForm}>
@@ -159,13 +172,5 @@ export default function WhatsApp() {
         </Card>
       </section>
     </main>
-    // <div>
-    //   <h1>WhatsApp for {professional.lastName} - {id}</h1>
-    //   <form onSubmit={(e) => sendMessage(e)}>
-    //     <input type="text" defaultValue={professional.phone} />
-    //     <textarea />
-    //     <button type='submit'>{WHATSAPP_CONFIG.button.sendMessage}</button>
-    //   </form>
-    // </div>
   );
 }
