@@ -6,6 +6,7 @@
     "create": "Create",
     "email": "Email",
     "home": "Home",
+    "phoneMessage": "WhatsApp message",
     "professionalDetails": "Details",
     "professionalUpdate": "Update",
     "professionals": "Professionals",
@@ -30,6 +31,7 @@
     "reserve": "Reserve",
     "reserveAppointment": "Reserve appointment",
     "sendEmail": "Send email",
+    "sendPhoneMessage": "Send message",
     "today": "Today",
     "tryAgain": "Try again",
     "updateProfessional": "Update professional",
@@ -48,6 +50,7 @@
       "statistics": "Statistics"
     },
     "email": "Send email to {{username}}",
+    "phoneMessage": "Send WhatsApp message",
     "professionalData": "Professional data",
     "professionalsList": "Professionals list",
     "scheduleConfiguration": "Schedule configuration",
@@ -57,6 +60,10 @@
     "viewAppointment": "Appointment"
   },
   "cardContent": {
+    "phoneMessage": {
+      "professional": "You are going to send a WhatsApp text message to professional {{professional}}'s cell phone",
+      "user": "You are going to send a WhatsApp text message to professional {{patient}}'s cell phone"
+    },
     "userSince": "Patient since {{date}}"
   },
   "chart": {
@@ -162,6 +169,7 @@
     "firstName": "Name",
     "identityCard": "IC",
     "lastName": "Last name",
+    "message": "Message",
     "notActive": "Inactive",
     "phone": "Phone",
     "professional": "Professional",
@@ -184,6 +192,7 @@
     "deleting": "Deleting",
     "generatingPDF": "Generating PDF",
     "professional": "Loading professional",
+    "professionalDetails": "Loading professional information",
     "professionals": "Loading professionals",
     "schedule": "Loading schedule",
     "sending": "Sending",
