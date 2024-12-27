@@ -61,8 +61,8 @@
   },
   "cardContent": {
     "phoneMessage": {
-      "professional": "Vas a enviar un mensaje de texto de WhatsApp al teléfono celular del profesional {{professional}}",
-      "user": "Vas a enviar un mensaje de texto de WhatsApp al teléfono celular del paciente {{patient}}"
+      "professional": "Vas a enviar un mensaje de texto de WhatsApp al teléfono celular del profesional <span>{{professional}}</span>.",
+      "user": "Vas a enviar un mensaje de texto de WhatsApp al teléfono celular del paciente <span>{{patient}}</span>."
     },
     "userSince": "Paciente desde el {{date}}"
   },
