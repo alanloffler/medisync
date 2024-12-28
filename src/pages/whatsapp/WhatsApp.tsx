@@ -125,7 +125,7 @@ export default function WhatsApp() {
                         <FormItem className=''>
                           <FormLabel>{t('label.phone')}</FormLabel>
                           <FormControl className='h-9'>
-                            <Input {...field} />
+                            <Input className='pointer-events-none' {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -145,7 +145,12 @@ export default function WhatsApp() {
                       )}
                     />
                     <footer className='grid grid-cols-1 space-y-2 pt-2 md:flex md:justify-end md:gap-6 md:space-y-0'>
-                      <Button type='submit' disabled={!whatsappForm.formState.isValid} variant='default' className='order-1 md:order-2 lg:order-2'>
+                      <Button
+                        type='submit'
+                        disabled={whatsappForm.watch('message') === '' || !user?.data.phone}
+                        variant='default'
+                        className='order-1 md:order-2 lg:order-2'
+                      >
                         {t('button.sendPhoneMessage')}
                       </Button>
                       <Button variant='ghost' onClick={handleCancel} className='order-2 md:order-1 lg:order-1'>
