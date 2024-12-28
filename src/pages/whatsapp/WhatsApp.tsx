@@ -6,13 +6,14 @@ import { Input } from '@core/components/ui/input';
 import { Textarea } from '@core/components/ui/textarea';
 // Components
 import { BackButton } from '@core/components/common/BackButton';
+import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
 // External imports
 import { MouseEvent, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Trans, useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -43,7 +44,8 @@ export default function WhatsApp() {
     },
     resolver: zodResolver(whatsappSchema),
   });
-
+  
+  // TODO: manage errors and loading
   const { data: user, isLoading } = useQuery<IResponse<IUser | IProfessional>, Error>({
     queryKey: ['whatsapp', id, type],
     queryFn: async () => {
@@ -65,13 +67,16 @@ export default function WhatsApp() {
   }, [user?.data.phone, whatsappForm]);
 
   // Actions
-  async function sendMessage(data: z.infer<typeof whatsappSchema>): Promise<void> {
+  const { mutate: sendMessage, isSuccess: messageSent } = useMutation<IResponse<any>, Error, z.infer<typeof whatsappSchema>>({
+    mutationKey: ['whatsapp', 'send'],
+    mutationFn: async (data) => await WhatsappApiService.send(data),
+    retry: 1,
+  });
 
-    const send = await WhatsappApiService.send(data);
-
-    console.log(send);
+  async function handleSendMessage(data: z.infer<typeof whatsappSchema>): Promise<void> {
+    sendMessage(data);
   }
-  
+
   function handleCancel(event: MouseEvent<HTMLButtonElement>): void {
     event.preventDefault();
     navigate(-1);
@@ -97,6 +102,7 @@ export default function WhatsApp() {
             {isLoading ? (
               <LoadingDB text={t(type === 'user' ? 'loading.userDetails' : 'loading.professionalDetails')} />
             ) : (
+              messageSent ? <InfoCard type='success' text='Mensaje enviado exitosamente' /> :
               <>
                 <section className='text-base'>
                   {type === 'user' && (
@@ -124,7 +130,7 @@ export default function WhatsApp() {
                 </section>
                 {/* Section: Form */}
                 <Form {...whatsappForm}>
-                  <form onSubmit={whatsappForm.handleSubmit(sendMessage)} className='mt-4 flex flex-col gap-4'>
+                  <form onSubmit={whatsappForm.handleSubmit(handleSendMessage)} className='mt-4 flex flex-col gap-4'>
                     <FormField
                       control={whatsappForm.control}
                       name='phone'
