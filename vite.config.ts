@@ -19,6 +19,7 @@ export default defineConfig({
       '@professionals': path.resolve(__dirname, './src/pages/professionals'),
       '@settings': path.resolve(__dirname, './src/pages/settings'),
       '@users': path.resolve(__dirname, './src/pages/users'),
+      '@whatsapp': path.resolve(__dirname, './src/pages/whatsapp'),
     },
   },
 });
