@@ -196,6 +196,7 @@
     "professionals": "Loading professionals",
     "schedule": "Loading schedule",
     "sending": "Sending",
+    "sendingPhoneMessage": "Sending message. Wait a moment...",
     "updating": "Updating",
     "userDetails": "Loading patient information",
     "users": "Loading patients"
