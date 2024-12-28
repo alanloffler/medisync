@@ -57,6 +57,8 @@ export default function WhatsApp() {
 
   function sendMessage(e: z.infer<typeof whatsappSchema>) {
     console.log(e);
+    const { phone, message } = e;
+    window.open(`https://web.whatsapp.com/send?phone=${phone}&text=${message}&app_absent=0`, '_blank');
   }
 
   function handleCancel(event: MouseEvent<HTMLButtonElement>): void {
