@@ -44,7 +44,7 @@ export default function WhatsApp() {
     },
     resolver: zodResolver(whatsappSchema),
   });
-  
+
   // TODO: manage errors and loading
   const { data: user, isLoading } = useQuery<IResponse<IUser | IProfessional>, Error>({
     queryKey: ['whatsapp', id, type],
@@ -67,7 +67,14 @@ export default function WhatsApp() {
   }, [user?.data.phone, whatsappForm]);
 
   // Actions
-  const { mutate: sendMessage, isSuccess: messageSent } = useMutation<IResponse<any>, Error, z.infer<typeof whatsappSchema>>({
+  // TODO: type response when setted on backend and on service
+  const {
+    error: errorMessage,
+    mutate: sendMessage,
+    isError: isErrorMessage,
+    isPending: isPendingMessage,
+    isSuccess: isSuccessMessage,
+  } = useMutation<IResponse<any>, Error, z.infer<typeof whatsappSchema>>({
     mutationKey: ['whatsapp', 'send'],
     mutationFn: async (data) => await WhatsappApiService.send(data),
     retry: 1,
@@ -101,8 +108,9 @@ export default function WhatsApp() {
           <CardContent className='pt-5'>
             {isLoading ? (
               <LoadingDB text={t(type === 'user' ? 'loading.userDetails' : 'loading.professionalDetails')} />
+            ) : isSuccessMessage ? (
+              <InfoCard type='success' text='Mensaje enviado exitosamente' />
             ) : (
-              messageSent ? <InfoCard type='success' text='Mensaje enviado exitosamente' /> :
               <>
                 <section className='text-base'>
                   {type === 'user' && (
@@ -157,7 +165,9 @@ export default function WhatsApp() {
                         </FormItem>
                       )}
                     />
-                    <footer className='grid grid-cols-1 space-y-2 pt-2 md:flex md:justify-end md:gap-6 md:space-y-0'>
+                    {isPendingMessage && <LoadingDB text={t('loading.sendingPhoneMessage')} className='w-full justify-start p-0 text-primary' />}
+                    {isErrorMessage && <InfoCard type='error' text={errorMessage.message} className='justify-start p-0 text-rose-400' />}
+                    <footer className='grid grid-cols-1 space-y-2 md:flex md:justify-end md:gap-6 md:space-y-0'>
                       <Button
                         type='submit'
                         disabled={whatsappForm.watch('message') === '' || !user?.data.phone}
