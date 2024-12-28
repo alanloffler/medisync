@@ -24,6 +24,7 @@ import { ProfessionalApiService } from '@professionals/services/professional-api
 import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
 import { WHATSAPP_CONFIG } from '@config/whatsapp.config';
+import { WhatsappApiService } from '@whatsapp/services/whatsapp-api.service';
 // React component
 export default function WhatsApp() {
   const navigate = useNavigate();
@@ -63,17 +64,14 @@ export default function WhatsApp() {
     }
   }, [user?.data.phone, whatsappForm]);
 
-  function sendMessage(e: z.infer<typeof whatsappSchema>): void {
-    const { phone, message } = e;
+  // Actions
+  async function sendMessage(data: z.infer<typeof whatsappSchema>): Promise<void> {
 
-    const url: URL = new URL('https://web.whatsapp.com/send');
-    url.searchParams.append('phone', phone.toString());
-    url.searchParams.append('text', message);
-    url.searchParams.append('app_absent', '0');
+    const send = await WhatsappApiService.send(data);
 
-    window.open(url, '_blank');
+    console.log(send);
   }
-
+  
   function handleCancel(event: MouseEvent<HTMLButtonElement>): void {
     event.preventDefault();
     navigate(-1);
