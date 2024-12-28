@@ -32,7 +32,8 @@
       "@lib/*": ["./src/lib/*"],
       "@professionals/*": ["./src/pages/professionals/*"],
       "@settings/*": ["./src/pages/settings/*"],
-      "@users/*": ["./src/pages/users/*"]
+      "@users/*": ["./src/pages/users/*"],
+      "@whatsapp/*": ["./src/pages/whatsapp/*"]
     }
   },
   "include": ["src"],
