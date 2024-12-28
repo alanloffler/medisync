@@ -52,13 +52,26 @@ export default function WhatsApp() {
   });
 
   useEffect(() => {
-    if (user?.data.phone) whatsappForm.setValue('phone', Number(`549${user?.data.phone}`));
+    // TODO: Add template message from lang files
+    if (user?.data.phone) {
+      let content: string = '';
+      whatsappForm.setValue('phone', Number(`549${user?.data.phone}`));
+      content += 'Hola Alan\n';
+      content += 'Mensaje de WhatsApp\n';
+      whatsappForm.setValue('message', content);
+      whatsappForm.setFocus('message');
+    }
   }, [user?.data.phone, whatsappForm]);
 
-  function sendMessage(e: z.infer<typeof whatsappSchema>) {
-    console.log(e);
+  function sendMessage(e: z.infer<typeof whatsappSchema>): void {
     const { phone, message } = e;
-    window.open(`https://web.whatsapp.com/send?phone=${phone}&text=${message}&app_absent=0`, '_blank');
+
+    const url: URL = new URL('https://web.whatsapp.com/send');
+    url.searchParams.append('phone', phone.toString());
+    url.searchParams.append('text', message);
+    url.searchParams.append('app_absent', '0');
+
+    window.open(url, '_blank');
   }
 
   function handleCancel(event: MouseEvent<HTMLButtonElement>): void {
