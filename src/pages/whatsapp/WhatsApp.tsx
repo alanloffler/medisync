@@ -33,6 +33,7 @@ import { socket } from '@core/services/socket.service';
 // React component
 export default function WhatsApp() {
   const [qrcode, setQrcode] = useState<string | null>(null);
+  const [socketId, setSocketId] = useState<string | undefined>(undefined);
   const [whatsappConnected, setWhatsappConnected] = useState<boolean>(false);
   const navigate = useNavigate();
   const { id, type } = useParams();
@@ -43,6 +44,7 @@ export default function WhatsApp() {
 
     function connect() {
       console.log('Socket: user connected', socket.id);
+      setSocketId(socket.id);
     }
 
     function disconnect(reason: string) {
@@ -50,7 +52,7 @@ export default function WhatsApp() {
       setWhatsappConnected(false);
     }
 
-    function status(status: { message: string, connected: boolean }) {
+    function status(status: { message: string; connected: boolean }) {
       console.log('WhatsApp Status: ', { message: status.message, connected: status.connected });
       if (status.connected) {
         setWhatsappConnected(true);
@@ -137,112 +139,137 @@ export default function WhatsApp() {
   }
 
   return (
-    <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
+    <main className='flex flex-1 flex-col gap-2 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
       {/* Section: Page Header */}
       <section className='flex items-center justify-between'>
         <PageHeader title={''} breadcrumb={WHATSAPP_CONFIG.breadcrumb} />
         <BackButton label={t('button.back')} />
       </section>
       {/* Section: Page Content */}
-      {!whatsappConnected ? (
-        <>
-          {!qrcode && <InfoCard type='error' text='Debes conectarte a WhatsApp' />}
-          {qrcode && <section className=' mx-auto w-full md:w-1/4'><QRCode size={100} style={{ height: 'auto', maxWidth: '100%', width: '100%' }} value={qrcode} viewBox={`0 0 128 128`} /></section>}
-        </>
-      ) : (
-        <InfoCard type='success' text='Conectado a WhatsApp' />
-      )}
+
       {/* {`qrcode: ${qrcode}`} */}
-      <section className='mx-auto mt-4 flex w-full flex-row px-2 md:w-[500px]'>
-        <Card className='w-full'>
-          <header className='flex items-center justify-start gap-3 rounded-b-none rounded-t-lg border-b bg-card p-4 text-lg font-semibold leading-none tracking-tight'>
-            <svg width='100' height='100' viewBox='0 0 464 488' className='h-4 w-4'>
-              <path d='M462 228q0 93-66 159t-160 66q-56 0-109-28L2 464l40-120q-32-54-32-116q0-93 66-158.5T236 4t160 65.5T462 228zM236 39q-79 0-134.5 55.5T46 228q0 62 36 111l-24 70l74-23q49 31 104 31q79 0 134.5-55.5T426 228T370.5 94.5T236 39zm114 241q-1-1-10-7q-3-1-19-8.5t-19-8.5q-9-3-13 2q-1 3-4.5 7.5t-7.5 9t-5 5.5q-4 6-12 1q-34-17-45-27q-7-7-13.5-15t-12-15t-5.5-8q-3-7 3-11q4-6 8-10l6-9q2-5-1-10q-4-13-17-41q-3-9-12-9h-11q-9 0-15 7q-19 19-19 45q0 24 22 57l2 3q2 3 4.5 6.5t7 9t9 10.5t10.5 11.5t13 12.5t14.5 11.5t16.5 10t18 8.5q16 6 27.5 10t18 5t9.5 1t7-1t5-1q9-1 21.5-9t15.5-17q8-21 3-26z' />
-            </svg>
-            <span>{t('cardTitle.phoneMessage')}</span>
-          </header>
-          <CardContent className='pt-5'>
-            {isLoading ? (
-              <LoadingDB text={t(type === 'user' ? 'loading.userDetails' : 'loading.professionalDetails')} />
-            ) : isSuccessMessage ? (
-              <InfoCard type='success' text='Mensaje enviado exitosamente' />
-            ) : (
-              <>
-                <section className='text-base'>
-                  {type === 'user' && (
-                    <Trans
-                      i18nKey='cardContent.phoneMessage.user'
-                      values={{
-                        patient: UtilsString.upperCase(`${user?.data.firstName} ${user?.data.lastName}`, 'each'),
-                      }}
-                      components={{
-                        span: <span className='font-semibold' />,
-                      }}
-                    />
+      <section className='grid gap-6 md:grid-cols-6 md:gap-6 lg:grid-cols-6 xl:grid-cols-6'>
+        <section className='col-span-1 border-none bg-slate-200 bg-transparent shadow-none md:col-span-2 lg:col-span-2 xl:col-span-2'>
+          <Card>
+            <header className='flex items-center justify-start gap-3 rounded-b-none rounded-t-lg border-b bg-card p-4 text-sm font-semibold leading-none tracking-tight'>
+              Service status
+            </header>
+            <CardContent className='space-y-6 pt-6'>
+              <div className='flex w-fit items-center justify-start space-x-2 rounded-md bg-stone-200 px-2 py-1 text-xsm'>
+                <span className='font-semibold text-stone-600'>Socket Id.</span>
+                <span className='text-stone-500'>{socketId ? socketId : 'Sin conexión con el servidor'}</span>
+              </div>
+              {!whatsappConnected ? (
+                <div className='flex flex-col items-center space-y-6'>
+                  <InfoCard type='error' text='Debes conectarte a WhatsApp' className='w-full justify-start p-0' />
+                  <Button variant='default' size='sm' className='w-fit'>
+                    Conectar
+                  </Button>
+                  {/* {!qrcode && <InfoCard type='error' text='Debes conectarte a WhatsApp' className='w-full justify-start p-0' />} */}
+
+                  {qrcode && (
+                    <section className='mx-auto w-full md:w-1/4'>
+                      <QRCode size={100} style={{ height: 'auto', maxWidth: '100%', width: '100%' }} value={qrcode} viewBox={`0 0 128 128`} />
+                    </section>
                   )}
-                  {type === 'professional' && (
-                    <Trans
-                      i18nKey='cardContent.phoneMessage.professional'
-                      values={{
-                        professional: UtilsString.upperCase(`${user?.data.firstName} ${user?.data.lastName}`, 'each'),
-                      }}
-                      components={{
-                        span: <span className='font-semibold' />,
-                      }}
-                    />
-                  )}
-                </section>
-                {/* Section: Form */}
-                <Form {...whatsappForm}>
-                  <form onSubmit={whatsappForm.handleSubmit(handleSendMessage)} className='mt-4 flex flex-col gap-4'>
-                    <FormField
-                      control={whatsappForm.control}
-                      name='phone'
-                      render={({ field }) => (
-                        <FormItem className=''>
-                          <FormLabel>{t('label.phone')}</FormLabel>
-                          <FormControl className='h-9'>
-                            <Input className='pointer-events-none' {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={whatsappForm.control}
-                      name='message'
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{t('label.message')}</FormLabel>
-                          <FormControl>
-                            <Textarea {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    {JSON.stringify(errorMessage?.message)}
-                    {isPendingMessage && <LoadingDB text={t('loading.sendingPhoneMessage')} className='w-full justify-start p-0 text-primary' />}
-                    {isErrorMessage && <InfoCard type='error' text={errorMessage.message} className='justify-start p-0 text-rose-400' />}
-                    <footer className='grid grid-cols-1 space-y-2 md:flex md:justify-end md:gap-6 md:space-y-0'>
-                      <Button
-                        type='submit'
-                        disabled={whatsappForm.watch('message') === '' || !user?.data.phone}
-                        variant='default'
-                        className='order-1 md:order-2 lg:order-2'
-                      >
-                        {t('button.sendPhoneMessage')}
-                      </Button>
-                      <Button variant='ghost' onClick={handleCancel} className='order-2 md:order-1 lg:order-1'>
-                        {t('button.cancel')}
-                      </Button>
-                    </footer>
-                  </form>
-                </Form>
-              </>
-            )}
-          </CardContent>
-        </Card>
+                </div>
+              ) : (
+                <InfoCard type='success' text='Conectado a WhatsApp' className='w-full justify-start p-0 text-green-500' />
+              )}
+            </CardContent>
+          </Card>
+        </section>
+        <section className='col-span-1 h-fit overflow-y-auto md:col-span-4 lg:col-span-4 xl:col-span-4'>
+          <Card className='w-full max-w-[500px]'>
+            <header className='flex items-center justify-start gap-3 rounded-b-none rounded-t-lg border-b bg-card p-4 text-lg font-semibold leading-none tracking-tight'>
+              <svg width='100' height='100' viewBox='0 0 464 488' className='h-4 w-4'>
+                <path d='M462 228q0 93-66 159t-160 66q-56 0-109-28L2 464l40-120q-32-54-32-116q0-93 66-158.5T236 4t160 65.5T462 228zM236 39q-79 0-134.5 55.5T46 228q0 62 36 111l-24 70l74-23q49 31 104 31q79 0 134.5-55.5T426 228T370.5 94.5T236 39zm114 241q-1-1-10-7q-3-1-19-8.5t-19-8.5q-9-3-13 2q-1 3-4.5 7.5t-7.5 9t-5 5.5q-4 6-12 1q-34-17-45-27q-7-7-13.5-15t-12-15t-5.5-8q-3-7 3-11q4-6 8-10l6-9q2-5-1-10q-4-13-17-41q-3-9-12-9h-11q-9 0-15 7q-19 19-19 45q0 24 22 57l2 3q2 3 4.5 6.5t7 9t9 10.5t10.5 11.5t13 12.5t14.5 11.5t16.5 10t18 8.5q16 6 27.5 10t18 5t9.5 1t7-1t5-1q9-1 21.5-9t15.5-17q8-21 3-26z' />
+              </svg>
+              <span>{t('cardTitle.phoneMessage')}</span>
+            </header>
+            <CardContent className='pt-5'>
+              {isLoading ? (
+                <LoadingDB text={t(type === 'user' ? 'loading.userDetails' : 'loading.professionalDetails')} />
+              ) : isSuccessMessage ? (
+                <InfoCard type='success' text='Mensaje enviado exitosamente' />
+              ) : (
+                <>
+                  <section className='text-base'>
+                    {type === 'user' && (
+                      <Trans
+                        i18nKey='cardContent.phoneMessage.user'
+                        values={{
+                          patient: UtilsString.upperCase(`${user?.data.firstName} ${user?.data.lastName}`, 'each'),
+                        }}
+                        components={{
+                          span: <span className='font-semibold' />,
+                        }}
+                      />
+                    )}
+                    {type === 'professional' && (
+                      <Trans
+                        i18nKey='cardContent.phoneMessage.professional'
+                        values={{
+                          professional: UtilsString.upperCase(`${user?.data.firstName} ${user?.data.lastName}`, 'each'),
+                        }}
+                        components={{
+                          span: <span className='font-semibold' />,
+                        }}
+                      />
+                    )}
+                  </section>
+                  {/* Section: Form */}
+                  <Form {...whatsappForm}>
+                    <form onSubmit={whatsappForm.handleSubmit(handleSendMessage)} className='mt-4 flex flex-col gap-4'>
+                      <FormField
+                        control={whatsappForm.control}
+                        name='phone'
+                        render={({ field }) => (
+                          <FormItem className=''>
+                            <FormLabel>{t('label.phone')}</FormLabel>
+                            <FormControl className='h-9'>
+                              <Input className='pointer-events-none' {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={whatsappForm.control}
+                        name='message'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t('label.message')}</FormLabel>
+                            <FormControl>
+                              <Textarea {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      {JSON.stringify(errorMessage?.message)}
+                      {isPendingMessage && <LoadingDB text={t('loading.sendingPhoneMessage')} className='w-full justify-start p-0 text-primary' />}
+                      {isErrorMessage && <InfoCard type='error' text={errorMessage.message} className='justify-start p-0 text-rose-400' />}
+                      <footer className='grid grid-cols-1 space-y-2 md:flex md:justify-end md:gap-6 md:space-y-0'>
+                        <Button
+                          type='submit'
+                          disabled={whatsappForm.watch('message') === '' || !user?.data.phone}
+                          variant='default'
+                          className='order-1 md:order-2 lg:order-2'
+                        >
+                          {t('button.sendPhoneMessage')}
+                        </Button>
+                        <Button variant='ghost' onClick={handleCancel} className='order-2 md:order-1 lg:order-1'>
+                          {t('button.cancel')}
+                        </Button>
+                      </footer>
+                    </form>
+                  </Form>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        </section>
       </section>
     </main>
   );
