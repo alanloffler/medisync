@@ -1,20 +1,23 @@
-// External components: https://ui.shadcn.com/docs/components
+// External components:
+// https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
 import { Card, CardContent } from '@core/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@core/components/ui/form';
 import { Input } from '@core/components/ui/input';
 import { Textarea } from '@core/components/ui/textarea';
+// QRCode: https://github.com/rosskhanas/react-qr-code#readme
+import QRCode from 'react-qr-code';
 // Components
 import { BackButton } from '@core/components/common/BackButton';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
 // External imports
-import { MouseEvent, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { MouseEvent, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { useForm } from 'react-hook-form';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useNavigate, useParams } from 'react-router-dom';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 // Imports
@@ -26,12 +29,56 @@ import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
 import { WHATSAPP_CONFIG } from '@config/whatsapp.config';
 import { WhatsappApiService } from '@whatsapp/services/whatsapp-api.service';
+import { socket } from '@core/services/socket.service';
 // React component
 export default function WhatsApp() {
+  const [qrcode, setQrcode] = useState<string | null>(null);
+  const [whatsappConnected, setWhatsappConnected] = useState<boolean>(false);
   const navigate = useNavigate();
   const { id, type } = useParams();
   const { t } = useTranslation();
 
+  useEffect(() => {
+    socket.connect();
+
+    function connect() {
+      console.log('Socket: user connected', socket.id);
+    }
+
+    function disconnect(reason: string) {
+      console.log('Socket: user disconnected', reason);
+      setWhatsappConnected(false);
+    }
+
+    function status(status: { message: string, connected: boolean }) {
+      console.log('WhatsApp Status: ', { message: status.message, connected: status.connected });
+      if (status.connected) {
+        setWhatsappConnected(true);
+      } else {
+        setWhatsappConnected(false);
+      }
+    }
+
+    function qr(qrcode: string) {
+      console.log(qrcode);
+      setQrcode(qrcode);
+    }
+
+    socket.on('connect', connect);
+    socket.on('disconnect', disconnect);
+    socket.on('status', status);
+    socket.on('qr', qr);
+
+    return () => {
+      socket.off('connect', connect);
+      socket.off('disconnect', disconnect);
+      socket.off('status', status);
+      socket.off('qr', qr);
+      socket.disconnect();
+    };
+  }, []);
+
+  // Form and schema
   const whatsappSchema = z.object({
     phone: z.coerce.number(),
     message: z.string(),
@@ -97,6 +144,15 @@ export default function WhatsApp() {
         <BackButton label={t('button.back')} />
       </section>
       {/* Section: Page Content */}
+      {!whatsappConnected ? (
+        <>
+          {!qrcode && <InfoCard type='error' text='Debes conectarte a WhatsApp' />}
+          {qrcode && <section className=' mx-auto w-full md:w-1/4'><QRCode size={100} style={{ height: 'auto', maxWidth: '100%', width: '100%' }} value={qrcode} viewBox={`0 0 128 128`} /></section>}
+        </>
+      ) : (
+        <InfoCard type='success' text='Conectado a WhatsApp' />
+      )}
+      {/* {`qrcode: ${qrcode}`} */}
       <section className='mx-auto mt-4 flex w-full flex-row px-2 md:w-[500px]'>
         <Card className='w-full'>
           <header className='flex items-center justify-start gap-3 rounded-b-none rounded-t-lg border-b bg-card p-4 text-lg font-semibold leading-none tracking-tight'>
@@ -165,6 +221,7 @@ export default function WhatsApp() {
                         </FormItem>
                       )}
                     />
+                    {JSON.stringify(errorMessage?.message)}
                     {isPendingMessage && <LoadingDB text={t('loading.sendingPhoneMessage')} className='w-full justify-start p-0 text-primary' />}
                     {isErrorMessage && <InfoCard type='error' text={errorMessage.message} className='justify-start p-0 text-rose-400' />}
                     <footer className='grid grid-cols-1 space-y-2 md:flex md:justify-end md:gap-6 md:space-y-0'>
