@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { RefreshCw } from 'lucide-react';
+import { Check, RefreshCw, X } from 'lucide-react';
 // External components:
 // https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
@@ -32,12 +32,14 @@ import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
 import { WHATSAPP_CONFIG } from '@config/whatsapp.config';
 import { WhatsappApiService } from '@whatsapp/services/whatsapp-api.service';
+import { cn } from '@lib/utils';
 import { socket } from '@core/services/socket.service';
 // React component
 export default function WhatsApp() {
   const [qrcode, setQrcode] = useState<string | null>(null);
   const [socketId, setSocketId] = useState<string | undefined>(undefined);
   const [whatsappConnected, setWhatsappConnected] = useState<boolean>(false);
+  const [whatsappNumber, setWhatsappNumber] = useState<string | undefined>(undefined);
   const [serverError, setServerError] = useState<boolean>(false);
   const navigate = useNavigate();
   const { id, type } = useParams();
@@ -66,11 +68,12 @@ export default function WhatsApp() {
     setWhatsappConnected(false);
   }
 
-  function status(status: { message: string; connected: boolean }) {
-    console.log('[STATUS]: WhatsApp', { message: status.message, connected: status.connected });
+  function status(status: { message: string; connected: boolean; data: string }) {
+    console.log('[STATUS]: WhatsApp', { message: status.message, connected: status.connected, data: status.data });
     if (status.connected) {
       // setSocketConnected(true);
       setWhatsappConnected(true);
+      setWhatsappNumber(status.data);
     } else {
       // setSocketConnected(false);
       setWhatsappConnected(false);
@@ -176,66 +179,66 @@ export default function WhatsApp() {
       <section className='grid gap-6 md:grid-cols-6 md:gap-6 lg:grid-cols-6 xl:grid-cols-6'>
         <section className='col-span-1 border-none bg-slate-200 bg-transparent shadow-none md:col-span-2 lg:col-span-2 xl:col-span-2'>
           <Card>
-            <header className='flex items-center justify-between gap-3 rounded-b-none rounded-t-lg border-b bg-card p-2 pl-4 text-sm font-semibold leading-none tracking-tight'>
-              <span>Service status</span>
-              <Button variant='ghost' size='miniIcon' onClick={handleReconnect} disabled={serverError}>
-                <RefreshCw size={14} strokeWidth={1.5} />
-              </Button>
+            <header
+              className={cn(
+                'flex items-center justify-between gap-3 rounded-b-none rounded-t-lg border-b bg-card text-sm font-semibold leading-none tracking-tight',
+                serverError ? 'p-4' : 'p-2 pl-4',
+              )}
+            >
+              <span>{t('cardTitle.serviceStatus')}</span>
+              {!serverError && (
+                <Button variant='ghost' size='miniIcon' onClick={handleReconnect} className='hover:bg-fuchsia-100'>
+                  <RefreshCw size={16} strokeWidth={2} className='stroke-fuchsia-400' />
+                </Button>
+              )}
             </header>
-            <CardContent className='space-y-6 pt-6'>
+            <CardContent className='space-y-4 pt-6'>
               {serverError && (
                 <div className='flex flex-col items-center space-y-6'>
-                  <InfoCard type='error' text='Sin conexión con el servidor' className='w-full justify-start p-0 text-xsm' />
+                  <InfoCard type='error' text={t('error.serverConnection')} className='w-full justify-start p-0 text-xsm' />
                   <Button variant='secondary' size='sm' className='text-xsm'>
-                    Servicio técnico
+                    {t('button.technicalService')}
                   </Button>
                 </div>
               )}
               {!serverError && connectingSocket && <LoadingDB text='Conectando con el servidor' className='p-0 !text-xsm text-foreground' />}
               {socketConnected && (
-                <div className='flex w-fit items-center justify-start space-x-2 rounded-md bg-stone-200 px-2 py-1 text-xsm'>
-                  <span className='font-semibold text-stone-600'>Socket Id.</span>
-                  <span className='text-stone-500'>{socketId ? socketId : 'Sin conexión con el servidor'}</span>
+                <div className='bg-orange-0 flex w-fit items-center justify-start space-x-3 rounded-md text-xsm'>
+                  <Check size={14} strokeWidth={3} className='stroke-emerald-400' />
+                  <span className='font-medium'>Socket</span>
+                  <span className='text-xs text-orange-400'>{socketId ? socketId : 'Sin conexión con el servidor'}</span>
                 </div>
               )}
               {whatsappConnected ? (
-                <InfoCard type='success' text='Conectado a WhatsApp' className='w-full justify-start p-0 text-xsm' />
+                <div className='bg-orange-0 flex w-fit items-center justify-start space-x-3 rounded-md text-xsm'>
+                  <Check size={14} strokeWidth={3} className='stroke-emerald-400' />
+                  <span className='font-medium'>WhatsApp</span>
+                  <span className='text-xs text-emerald-400'>{whatsappNumber}</span>
+                </div>
               ) : (
+                // <InfoCard type='success' text='Conectado a WhatsApp' className='w-full justify-start p-0 text-xsm' />
                 !serverError &&
                 !connectingSocket && (
                   <div className='space-y-6'>
-                    <InfoCard type='error' text='Sin conexión con WhatsApp' className='w-full justify-start p-0 text-xsm' />
-                    {qrcode ? (
-                      <section className='mx-auto w-3/4'>
-                        <QRCode size={100} style={{ height: 'auto', maxWidth: '100%', width: '100%' }} value={qrcode} viewBox={`0 0 128 128`} />
+                    <div className='bg-orange-0 flex w-fit items-center justify-start space-x-3 rounded-md text-xsm'>
+                      <X size={14} strokeWidth={3} className='stroke-rose-400' />
+                      <span className='font-medium'>WhatsApp</span>
+                      <span className='text-xs text-rose-400'>{'Sin conexión'}</span>
+                    </div>
+                    {/* <InfoCard type='error' text='Sin conexión con WhatsApp' className='w-full justify-start p-0 text-xsm' /> */}
+                    {true ? (
+                      <section className='flex flex-col space-y-3'>
+                        <section className='mx-auto w-3/4 space-x-3'>
+                          <QRCode size={100} style={{ height: 'auto', maxWidth: '100%', width: '100%' }} value={'qrcode'} viewBox={`0 0 128 128`} />
+                        </section>
+                        <span className='text-xsm'>Escanee el código QR para iniciar sesión</span>
                       </section>
                     ) : (
-                      <LoadingText text={'Aguarde un momento'} suffix='...' className='text-xsm text-left' />
+                      <LoadingText text={'Aguarde un momento'} suffix='...' className='text-left text-xsm' />
                     )}
                   </div>
                 )
               )}
-              {/* {!serverError && connectingSocket ? (
-                <LoadingText text='Conectando' suffix='...' />
-              ) : !socketConnected ? (
-                <div className='flex flex-col items-center space-y-6'>
-                  <InfoCard type='error' text='Sin conexión con el servidor' className='w-full justify-start p-0' />
-                  <Button variant='secondary' size='sm' className=''>Servicio técnico</Button>
-                </div>
-              ) : (
-                <>
-                  <div className='flex w-fit items-center justify-start space-x-2 rounded-md bg-stone-200 px-2 py-1 text-xsm'>
-                    <span className='font-semibold text-stone-600'>Socket Id.</span>
-                    <span className='text-stone-500'>{socketId ? socketId : 'Sin conexión con el servidor'}</span>
-                  </div>
-                  <InfoCard type='success' text='Conectado a WhatsApp' className='w-full justify-start p-0 text-green-500' />
-                </>
-              )}
-              {qrcode && (
-                <section className='mx-auto w-full md:w-1/4'>
-                  <QRCode size={100} style={{ height: 'auto', maxWidth: '100%', width: '100%' }} value={qrcode} viewBox={`0 0 128 128`} />
-                </section>
-              )} */}
             </CardContent>
           </Card>
         </section>
