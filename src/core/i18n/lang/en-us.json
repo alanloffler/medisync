@@ -32,6 +32,7 @@
     "reserveAppointment": "Reserve appointment",
     "sendEmail": "Send email",
     "sendPhoneMessage": "Send message",
+    "technicalService": "Technical service",
     "today": "Today",
     "tryAgain": "Try again",
     "updateProfessional": "Update professional",
@@ -54,6 +55,7 @@
     "professionalData": "Professional data",
     "professionalsList": "Professionals list",
     "scheduleConfiguration": "Schedule configuration",
+    "serviceStatus": "Service status",
     "updateProfessional": "Update professional",
     "updateUser": "Update patient",
     "usersList": "Patient list",
@@ -146,6 +148,7 @@
     "internalServer": "Internal server error",
     "notFoundDefault": "Not found",
     "notFoundUser": "Patient not found",
+    "serverConnection": "No server connection",
     "updateUser": "Error updating user"
   },
   "headerMenu": {
