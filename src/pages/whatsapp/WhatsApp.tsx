@@ -1,3 +1,5 @@
+// Icons: https://lucide.dev/icons/
+import { RefreshCw } from 'lucide-react';
 // External components:
 // https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
@@ -11,6 +13,7 @@ import QRCode from 'react-qr-code';
 import { BackButton } from '@core/components/common/BackButton';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
+import { LoadingText } from '@core/components/common/LoadingText';
 import { PageHeader } from '@core/components/common/PageHeader';
 // External imports
 import { MouseEvent, useEffect, useState } from 'react';
@@ -35,50 +38,74 @@ export default function WhatsApp() {
   const [qrcode, setQrcode] = useState<string | null>(null);
   const [socketId, setSocketId] = useState<string | undefined>(undefined);
   const [whatsappConnected, setWhatsappConnected] = useState<boolean>(false);
+  const [serverError, setServerError] = useState<boolean>(false);
   const navigate = useNavigate();
   const { id, type } = useParams();
   const { t } = useTranslation();
 
+  const [socketConnected, setSocketConnected] = useState<boolean>(false);
+  const [connectingSocket, setConnectingSocket] = useState<boolean>(true);
+
+  function connect() {
+    console.log('[STATUS]: socket connected', socket.id);
+    setConnectingSocket(false);
+    setSocketConnected(true);
+    setSocketId(socket.id);
+    setServerError(false);
+    setQrcode(null);
+  }
+
+  function connect_error() {
+    console.log('[ERROR]: internal server error');
+    setServerError(true);
+  }
+
+  function disconnect(reason: string) {
+    console.log('[STATUS]: socket disconnected', reason);
+    setSocketConnected(false);
+    setWhatsappConnected(false);
+  }
+
+  function status(status: { message: string; connected: boolean }) {
+    console.log('[STATUS]: WhatsApp', { message: status.message, connected: status.connected });
+    if (status.connected) {
+      // setSocketConnected(true);
+      setWhatsappConnected(true);
+    } else {
+      // setSocketConnected(false);
+      setWhatsappConnected(false);
+    }
+  }
+
+  function qr(qrcode: string) {
+    console.log(qrcode);
+    setQrcode(qrcode);
+  }
+
   useEffect(() => {
     socket.connect();
 
-    function connect() {
-      console.log('Socket: user connected', socket.id);
-      setSocketId(socket.id);
-    }
-
-    function disconnect(reason: string) {
-      console.log('Socket: user disconnected', reason);
-      setWhatsappConnected(false);
-    }
-
-    function status(status: { message: string; connected: boolean }) {
-      console.log('WhatsApp Status: ', { message: status.message, connected: status.connected });
-      if (status.connected) {
-        setWhatsappConnected(true);
-      } else {
-        setWhatsappConnected(false);
-      }
-    }
-
-    function qr(qrcode: string) {
-      console.log(qrcode);
-      setQrcode(qrcode);
-    }
-
     socket.on('connect', connect);
+    socket.on('connect_error', connect_error);
     socket.on('disconnect', disconnect);
     socket.on('status', status);
     socket.on('qr', qr);
 
     return () => {
       socket.off('connect', connect);
+      socket.off('connect_error', connect_error);
       socket.off('disconnect', disconnect);
       socket.off('status', status);
       socket.off('qr', qr);
       socket.disconnect();
     };
   }, []);
+
+  function handleReconnect(): void {
+    socket.disconnect();
+    setConnectingSocket(true);
+    socket.connect();
+  }
 
   // Form and schema
   const whatsappSchema = z.object({
@@ -146,36 +173,69 @@ export default function WhatsApp() {
         <BackButton label={t('button.back')} />
       </section>
       {/* Section: Page Content */}
-
-      {/* {`qrcode: ${qrcode}`} */}
       <section className='grid gap-6 md:grid-cols-6 md:gap-6 lg:grid-cols-6 xl:grid-cols-6'>
         <section className='col-span-1 border-none bg-slate-200 bg-transparent shadow-none md:col-span-2 lg:col-span-2 xl:col-span-2'>
           <Card>
-            <header className='flex items-center justify-start gap-3 rounded-b-none rounded-t-lg border-b bg-card p-4 text-sm font-semibold leading-none tracking-tight'>
-              Service status
+            <header className='flex items-center justify-between gap-3 rounded-b-none rounded-t-lg border-b bg-card p-2 pl-4 text-sm font-semibold leading-none tracking-tight'>
+              <span>Service status</span>
+              <Button variant='ghost' size='miniIcon' onClick={handleReconnect} disabled={serverError}>
+                <RefreshCw size={14} strokeWidth={1.5} />
+              </Button>
             </header>
             <CardContent className='space-y-6 pt-6'>
-              <div className='flex w-fit items-center justify-start space-x-2 rounded-md bg-stone-200 px-2 py-1 text-xsm'>
-                <span className='font-semibold text-stone-600'>Socket Id.</span>
-                <span className='text-stone-500'>{socketId ? socketId : 'Sin conexión con el servidor'}</span>
-              </div>
-              {!whatsappConnected ? (
+              {serverError && (
                 <div className='flex flex-col items-center space-y-6'>
-                  <InfoCard type='error' text='Debes conectarte a WhatsApp' className='w-full justify-start p-0' />
-                  <Button variant='default' size='sm' className='w-fit'>
-                    Conectar
+                  <InfoCard type='error' text='Sin conexión con el servidor' className='w-full justify-start p-0 text-xsm' />
+                  <Button variant='secondary' size='sm' className='text-xsm'>
+                    Servicio técnico
                   </Button>
-                  {/* {!qrcode && <InfoCard type='error' text='Debes conectarte a WhatsApp' className='w-full justify-start p-0' />} */}
-
-                  {qrcode && (
-                    <section className='mx-auto w-full md:w-1/4'>
-                      <QRCode size={100} style={{ height: 'auto', maxWidth: '100%', width: '100%' }} value={qrcode} viewBox={`0 0 128 128`} />
-                    </section>
-                  )}
+                </div>
+              )}
+              {!serverError && connectingSocket && <LoadingDB text='Conectando con el servidor' className='p-0 !text-xsm text-foreground' />}
+              {socketConnected && (
+                <div className='flex w-fit items-center justify-start space-x-2 rounded-md bg-stone-200 px-2 py-1 text-xsm'>
+                  <span className='font-semibold text-stone-600'>Socket Id.</span>
+                  <span className='text-stone-500'>{socketId ? socketId : 'Sin conexión con el servidor'}</span>
+                </div>
+              )}
+              {whatsappConnected ? (
+                <InfoCard type='success' text='Conectado a WhatsApp' className='w-full justify-start p-0 text-xsm' />
+              ) : (
+                !serverError &&
+                !connectingSocket && (
+                  <div className='space-y-6'>
+                    <InfoCard type='error' text='Sin conexión con WhatsApp' className='w-full justify-start p-0 text-xsm' />
+                    {qrcode ? (
+                      <section className='mx-auto w-3/4'>
+                        <QRCode size={100} style={{ height: 'auto', maxWidth: '100%', width: '100%' }} value={qrcode} viewBox={`0 0 128 128`} />
+                      </section>
+                    ) : (
+                      <LoadingText text={'Aguarde un momento'} suffix='...' className='text-xsm text-left' />
+                    )}
+                  </div>
+                )
+              )}
+              {/* {!serverError && connectingSocket ? (
+                <LoadingText text='Conectando' suffix='...' />
+              ) : !socketConnected ? (
+                <div className='flex flex-col items-center space-y-6'>
+                  <InfoCard type='error' text='Sin conexión con el servidor' className='w-full justify-start p-0' />
+                  <Button variant='secondary' size='sm' className=''>Servicio técnico</Button>
                 </div>
               ) : (
-                <InfoCard type='success' text='Conectado a WhatsApp' className='w-full justify-start p-0 text-green-500' />
+                <>
+                  <div className='flex w-fit items-center justify-start space-x-2 rounded-md bg-stone-200 px-2 py-1 text-xsm'>
+                    <span className='font-semibold text-stone-600'>Socket Id.</span>
+                    <span className='text-stone-500'>{socketId ? socketId : 'Sin conexión con el servidor'}</span>
+                  </div>
+                  <InfoCard type='success' text='Conectado a WhatsApp' className='w-full justify-start p-0 text-green-500' />
+                </>
               )}
+              {qrcode && (
+                <section className='mx-auto w-full md:w-1/4'>
+                  <QRCode size={100} style={{ height: 'auto', maxWidth: '100%', width: '100%' }} value={qrcode} viewBox={`0 0 128 128`} />
+                </section>
+              )} */}
             </CardContent>
           </Card>
         </section>
