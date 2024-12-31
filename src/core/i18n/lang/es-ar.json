@@ -148,6 +148,7 @@
     "internalServer": "Error interno del servidor",
     "notFoundDefault": "No encontrado",
     "notFoundUser": "Paciente no encontrado",
+    "notWhatsappSession": "Sin sesión de WhatsApp",
     "serverConnection": "Sin conexión con el servidor",
     "updateUser": "Error actualizando el usuario"
   },
@@ -180,10 +181,12 @@
     "scheduleTimeInit": "Inicio de turnos",
     "scheduleTitle": "Horarios de atención",
     "slotDuration": "Duración del turno",
+    "socket": "Socket",
     "specialization": "Especialización",
     "timeSlotUnavailableEnd": "Fin de descanso",
     "timeSlotUnavailableInit": "Inicio de descanso",
     "title": "Título",
+    "whatsapp": "WhatsApp",
     "workingDays": "Días laborales"
   },
   "loading": {
@@ -200,6 +203,8 @@
     "schedule": "Cargando agenda",
     "sending": "Enviando",
     "sendingPhoneMessage": "Enviando mensaje. Aguarde un momento...",
+    "serverConnecting": "Conectando con el servidor",
+    "session": "Aguarde un momento. Iniciando sesión",
     "updating": "Actualizando",
     "userDetails": "Cargando información del paciente",
     "users": "Cargando pacientes"
@@ -344,6 +349,7 @@
       "nextPage": "Siguiente página",
       "previousPage": "Anterior página"
     },
+    "reconnect": "Reconectar",
     "reload": "Recargar",
     "selectProfessional": "Seleccionar profesional",
     "selectYear": "Seleccionar año",
