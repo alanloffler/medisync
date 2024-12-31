@@ -15,6 +15,7 @@ import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { LoadingText } from '@core/components/common/LoadingText';
 import { PageHeader } from '@core/components/common/PageHeader';
+import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
 import { MouseEvent, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -185,9 +186,11 @@ export default function WhatsApp() {
             >
               <span>{t('cardTitle.serviceStatus')}</span>
               {!serverError && (
-                <Button variant='ghost' size='miniIcon' onClick={handleReconnect} className='hover:bg-fuchsia-100'>
-                  <RefreshCw size={16} strokeWidth={2} className='stroke-fuchsia-400' />
-                </Button>
+                <TooltipWrapper tooltip={t('tooltip.reconnect')}>
+                  <Button variant='ghost' size='miniIcon' onClick={handleReconnect} className='hover:bg-fuchsia-100'>
+                    <RefreshCw size={16} strokeWidth={2} className='stroke-fuchsia-400' />
+                  </Button>
+                </TooltipWrapper>
               )}
             </header>
             <CardContent className='space-y-4 pt-6'>
@@ -199,18 +202,18 @@ export default function WhatsApp() {
                   </Button>
                 </div>
               )}
-              {!serverError && connectingSocket && <LoadingDB text='Conectando con el servidor' className='p-0 !text-xsm text-foreground' />}
+              {!serverError && connectingSocket && <LoadingDB text={t('loading.serverConnecting')} className='p-0 !text-xsm text-foreground' />}
               {!serverError && !connectingSocket && socketConnected && (
                 <div className='bg-orange-0 flex w-fit items-center justify-start space-x-3 rounded-md text-xsm'>
                   <Check size={14} strokeWidth={3} className='stroke-emerald-400' />
-                  <span className='font-medium'>Socket</span>
-                  <span className='text-xs text-orange-400'>{socketId ? socketId : 'Sin conexión con el servidor'}</span>
+                  <span className='font-medium'>{t('label.socket')}</span>
+                  <span className='text-xs text-orange-400'>{socketId ? socketId : t('error.serverConnection')}</span>
                 </div>
               )}
               {!serverError && !connectingSocket && whatsappConnected && (
                 <div className='bg-orange-0 flex w-fit items-center justify-start space-x-3 rounded-md text-xsm'>
                   <Check size={14} strokeWidth={3} className='stroke-emerald-400' />
-                  <span className='font-medium'>WhatsApp</span>
+                  <span className='font-medium'>{t('label.whatsapp')}</span>
                   <span className='text-xs text-emerald-400'>{whatsappNumber}</span>
                 </div>
               )}
@@ -218,16 +221,16 @@ export default function WhatsApp() {
                 <div className='space-y-6'>
                   <div className='bg-orange-0 flex w-fit items-center justify-start space-x-3 rounded-md text-xsm'>
                     <X size={14} strokeWidth={3} className='stroke-rose-400' />
-                    <span className='font-medium'>WhatsApp</span>
-                    <span className='text-xs text-rose-400'>{'Sin conexión'}</span>
+                    <span className='font-medium'>{t('label.whatsapp')}</span>
+                    <span className='text-xs text-rose-400'>{t('error.notWhatsappSession')}</span>
                   </div>
-                  {!qrcode && <LoadingText text={'Aguarde un momento. Iniciando sesión'} suffix='...' className='text-left text-xsm' />}
+                  {!qrcode && <LoadingText text={t('loading.session')} suffix='...' className='text-left text-xsm' />}
                   {qrcode && (
                     <section className='flex flex-col space-y-3'>
                       <section className='mx-auto w-3/4 space-x-3'>
                         <QRCode size={100} style={{ height: 'auto', maxWidth: '100%', width: '100%' }} value={qrcode} viewBox={`0 0 128 128`} />
                       </section>
-                      <span className='text-xsm'>Escanee el código QR para iniciar sesión</span>
+                      <span className='text-xsm'>{t('cardContent.scanQRCode')}</span>
                     </section>
                   )}
                 </div>
@@ -250,7 +253,7 @@ export default function WhatsApp() {
                 <InfoCard type='success' text='Mensaje enviado exitosamente' />
               ) : (
                 <>
-                  <section className='text-base'>
+                  <section className='text-sm'>
                     {type === 'user' && (
                       <Trans
                         i18nKey='cardContent.phoneMessage.user'
