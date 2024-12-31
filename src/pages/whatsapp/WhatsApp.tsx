@@ -35,6 +35,7 @@ import { WHATSAPP_CONFIG } from '@config/whatsapp.config';
 import { WhatsappApiService } from '@whatsapp/services/whatsapp-api.service';
 import { cn } from '@lib/utils';
 import { socket } from '@core/services/socket.service';
+import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export default function WhatsApp() {
   const [qrcode, setQrcode] = useState<string | undefined>(undefined);
@@ -42,6 +43,7 @@ export default function WhatsApp() {
   const [socketId, setSocketId] = useState<string | undefined>(undefined);
   const [whatsappConnected, setWhatsappConnected] = useState<boolean>(false);
   const [whatsappNumber, setWhatsappNumber] = useState<string | undefined>(undefined);
+  const addNotification = useNotificationsStore((state) => state.addNotification);
   const navigate = useNavigate();
   const { id, type } = useParams();
   const { t } = useTranslation();
@@ -155,6 +157,10 @@ export default function WhatsApp() {
   } = useMutation<IResponse<any>, Error, z.infer<typeof whatsappSchema>>({
     mutationKey: ['whatsapp', 'send'],
     mutationFn: async (data) => await WhatsappApiService.send(data),
+    onError: (error) => {
+      console.log(error.message);
+      addNotification({ type: 'error', message: error.message });
+    },
     retry: 1,
   });
 
