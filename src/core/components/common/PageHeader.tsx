@@ -11,7 +11,7 @@ export function PageHeader({ title, breadcrumb }: { title: string; breadcrumb: I
   return (
     <div className='w-fit space-y-3'>
       <BreadCrumb paths={breadcrumb} />
-      <h1 className='text-lg font-semibold leading-none tracking-normal'>{t(title)}</h1>
+      {title && <h1 className='text-lg font-semibold leading-none tracking-normal'>{t(title)}</h1>}
     </div>
   );
 }
