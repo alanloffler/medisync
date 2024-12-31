@@ -66,6 +66,7 @@
       "professional": "You are going to send a WhatsApp text message to professional <span>{{professional}}'s</span> cell phone.",
       "user": "You are going to send a WhatsApp text message to patient <span>{{patient}}'s</span> cell phone."
     },
+    "scanQRCode": "Scan the QR code to log in",
     "userSince": "Patient since {{date}}"
   },
   "chart": {
