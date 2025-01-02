@@ -75,7 +75,7 @@ export class UserApiService {
   // - UsersDataTable.tsx
   public static async remove(id: string) {
     const url: URL = new URL(`${this.API_URL}/users/${id}`);
-    
+
     return await UtilsUrl.fetch(url, EMethods.DELETE);
   }
 
@@ -108,16 +108,11 @@ export class UserApiService {
     return await this.fetch(url, EMethods.GET);
   }
 
-  public static async differenceBetweenMonths(month: number, year: number) {
-    const actualMonth = this.countByMonth(month, year);
-    const prevMonth = this.countByMonth(month - 1, year);
+  public static async newUsersToday(): Promise<IResponse<{ percentage: number; today: number; total: number }>> {
+    const path: string = `${this.API_URL}/users/newUsersToday`;
+    const url: URL = new URL(path);
 
-    const response = await Promise.all([actualMonth, prevMonth]);
-
-    let percentage: number;
-    response[0].data.total >= response[1].data.total ? (percentage = 100) : (percentage = -100);
-
-    return (response[0].data.total / response[1].data.total) * percentage;
+    return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
   private static async fetch(url: string, method: EMethods, body?: any) {
