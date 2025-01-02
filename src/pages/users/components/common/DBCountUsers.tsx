@@ -13,13 +13,15 @@ import { UserApiService } from '@users/services/user-api.service';
 export function DBCountUsers() {
   const { t } = useTranslation();
 
-  const { data, isError, isLoading } = useQuery<IResponse<{ percentage: number; today: number; total: number }>>({
+  const { data, error, isError, isLoading } = useQuery<IResponse<{ percentage: number; today: number; total: number }>>({
     queryKey: ['users', 'DBCountUsers'],
     queryFn: async () => await UserApiService.newUsersToday(),
+    refetchOnWindowFocus: 'always',
+    retry: 1,
   });
 
   if (isLoading) return <LoadingDB variant='default' empty />;
-  if (isError) return <main className='py-2'></main>;
+  if (isError) return <main className='flex justify-end py-3 text-xsm font-normal text-rose-400'>{error.message}</main>;
 
   return (
     data?.data && (
