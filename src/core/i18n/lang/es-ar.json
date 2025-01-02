@@ -306,7 +306,7 @@
       "user": "Paciente"
     },
     "difference": {
-      "lastMonth": "que el mes pasado"
+      "yesterday": "que ayer"
     },
     "totalItems": {
       "appointments_one": "{{count}} turno en total",

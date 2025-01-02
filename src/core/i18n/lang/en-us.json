@@ -306,7 +306,7 @@
       "user": "Patient"
     },
     "difference": {
-      "lastMonth": "than last month"
+      "yesterday": "than yesterday"
     },
     "totalItems": {
       "appointments_one": "{{count}} appointment in total",
