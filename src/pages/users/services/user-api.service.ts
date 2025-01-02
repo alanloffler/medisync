@@ -1,6 +1,6 @@
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { ITableManager } from '@core/interfaces/table.interface';
-import type { IUserForm } from '@users/interfaces/user.interface';
+import type { IUser, IUserForm } from '@users/interfaces/user.interface';
 import type { IUserSearch } from '@users/interfaces/user-search.interface';
 import { APP_CONFIG } from '@config/app.config';
 import { EMethods } from '@core/enums/methods.enum';
@@ -11,23 +11,13 @@ import { UtilsUrl } from '@core/services/utils/url.service';
 export class UserApiService {
   private static readonly API_URL: string = import.meta.env.VITE_API_URL;
 
-  public static async create(data: IUserForm) {
+  // CHECKED: TRQ used on CreateUser.tsx
+  public static async create(data: IUserForm): Promise<IResponse<IUser>> {
     const transformedData: IUserForm = UserUtils.lowercaseFormItems(data);
-    const url: string = `${this.API_URL}/users`;
+    const path: string = `${this.API_URL}/users`;
+    const url: URL = new URL(path);
 
-    try {
-      const query: Response = await fetch(url, {
-        body: JSON.stringify(transformedData),
-        headers: {
-          'content-type': 'application/json;charset=UTF-8',
-        },
-        method: 'POST',
-      });
-
-      return await query.json();
-    } catch (error) {
-      return error;
-    }
+    return await UtilsUrl.fetch(url, EMethods.POST, transformedData);
   }
 
   // CHECKED: TRQ used on
