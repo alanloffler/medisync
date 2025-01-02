@@ -37,7 +37,7 @@ import { cn } from '@lib/utils';
 import { socket } from '@core/services/socket.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
-export default function WhatsApp() {
+export default function WhatsApp(): JSX.Element {
   const [qrcode, setQrcode] = useState<string | undefined>(undefined);
   const [serverError, setServerError] = useState<boolean>(false);
   const [socketId, setSocketId] = useState<string | undefined>(undefined);
