@@ -108,6 +108,8 @@ export class UserApiService {
     return await this.fetch(url, EMethods.GET);
   }
 
+  // CHECKED: TRQ used on
+  // - DBCountUsers.tsx
   public static async newUsersToday(): Promise<IResponse<{ percentage: number; today: number; total: number }>> {
     const path: string = `${this.API_URL}/users/newUsersToday`;
     const url: URL = new URL(path);
