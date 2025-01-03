@@ -8,10 +8,13 @@ import { EUserSearch } from '@users/enums/user-search.enum';
 import { UserUtils } from '@users/services/user.utils';
 import { UtilsUrl } from '@core/services/utils/url.service';
 
+// Checked: all
+// TRQ fetch: all
+// Typed response: all but searchUsersBy
+
 export class UserApiService {
   private static readonly API_URL: string = import.meta.env.VITE_API_URL;
 
-  // CHECKED: TRQ used on CreateUser.tsx OK!
   public static async create(data: IUserForm): Promise<IResponse<IUser>> {
     const transformedData: IUserForm = UserUtils.lowercaseFormItems(data);
     const path: string = `${this.API_URL}/users`;
@@ -20,9 +23,6 @@ export class UserApiService {
     return await UtilsUrl.fetch(url, EMethods.POST, transformedData);
   }
 
-  // CHECKED: TRQ used on
-  // - UsersCombo.tsx
-  // - UsersDataTable.tsx
   // Find all users by identity number or name (many users with partial search)
   public static async searchUsersBy(search: IUserSearch, tableManager: ITableManager, skip: number) {
     const { type, value } = search;
@@ -44,10 +44,6 @@ export class UserApiService {
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
-  // CHECKED: TRQ used on
-  // SendEmail.tsx OK!
-  // UpdateUser.tsx OK!
-  // WhatsApp.tsx
   public static async findOne(id: string): Promise<IResponse<IUser>> {
     const path: string = `${this.API_URL}/users/${id}`;
     const url: URL = new URL(path);
@@ -55,17 +51,6 @@ export class UserApiService {
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
-  // CHECKED: TRQ used on
-  // - UsersDataTable.tsx
-  public static async remove(id: string) {
-    const path: string = `${this.API_URL}/users/${id}`;
-    const url: URL = new URL(path);
-
-    return await UtilsUrl.fetch(url, EMethods.DELETE);
-  }
-
-  // CHECKED: TRQ used on
-  // - UpdateUser.tsx OK!
   public static async update(id: string, data: IUserForm): Promise<IResponse<IUser>> {
     const transformedData: IUserForm = UserUtils.lowercaseFormItems(data);
     const path: string = `${this.API_URL}/users/${id}`;
@@ -74,8 +59,13 @@ export class UserApiService {
     return await UtilsUrl.fetch(url, EMethods.PATCH, transformedData);
   }
 
-  // CHECKED: TRQ used on
-  // - DBCountUsers.tsx OK!
+  public static async remove(id: string): Promise<IResponse<IUser>> {
+    const path: string = `${this.API_URL}/users/${id}`;
+    const url: URL = new URL(path);
+
+    return await UtilsUrl.fetch(url, EMethods.DELETE);
+  }
+
   public static async newUsersToday(): Promise<IResponse<IUserStats>> {
     const path: string = `${this.API_URL}/users/newUsersToday`;
     const url: URL = new URL(path);
