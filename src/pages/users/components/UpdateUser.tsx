@@ -21,6 +21,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 // Imports
 import type { IResponse } from '@core/interfaces/response.interface';
+import type { IUpdateUserVars } from '@users/interfaces/mutation-vars.interface';
 import type { IUser } from '@users/interfaces/user.interface';
 import { USER_SCHEMA } from '@config/schemas/user.schema';
 import { USER_UPDATE_CONFIG as UU_CONFIG } from '@config/users/user-update.config';
@@ -66,17 +67,12 @@ export default function UpdateUser() {
     isError && addNotification({ type: 'error', message: error?.message });
   }, [addNotification, error?.message, isError]);
 
-  interface IVars {
-    id: string;
-    data: z.infer<typeof userSchema>;
-  }
-
   const {
     error: errorUpdating,
     mutate: updateUser,
     isError: isErrorUpdating,
     isPending: isUpdating,
-  } = useMutation<IResponse<IUser>, Error, IVars>({
+  } = useMutation<IResponse<IUser>, Error, IUpdateUserVars>({
     mutationKey: ['users', 'update', id],
     mutationFn: async ({ id, data }) => await UserApiService.update(id, data),
     onError: (error) => {
