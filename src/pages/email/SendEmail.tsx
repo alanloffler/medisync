@@ -26,10 +26,10 @@ import type { IUser } from '@users/interfaces/user.interface';
 import { EMAIL_CONFIG } from '@config/email.config';
 import { EmailApiService } from '@email/services/email.service';
 import { UserApiService } from '@users/services/user-api.service';
+import { UtilsString } from '@core/services/utils/string.service';
 import { emailSchema } from '@email/schemas/email.schema';
 import { motion } from '@core/services/motion.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
-import { UtilsString } from '@core/services/utils/string.service';
 // React component
 export default function SendEmail() {
   const addNotification = useNotificationsStore((state) => state.addNotification);
@@ -42,9 +42,12 @@ export default function SendEmail() {
     data: user,
     isPending,
     isSuccess,
-  } = useQuery<IResponse<IUser>>({
+  } = useQuery<IResponse<IUser>, Error>({
     queryKey: ['user', id],
-    queryFn: async () => id && (await UserApiService.findOne(id)),
+    queryFn: async () => {
+      if (!id) throw new Error('Dev Error: There is no user id');
+      return await UserApiService.findOne(id);
+    },
     retry: 1,
   });
 
@@ -72,8 +75,8 @@ export default function SendEmail() {
     mutationKey: ['sendEmail', id],
     mutationFn: async (data: z.infer<typeof emailSchema>) => await EmailApiService.sendEmail(data),
     retry: 0,
-    onSuccess: (success) => addNotification({ type: 'success', message: success.message }),
     onError: (error) => addNotification({ type: 'error', message: error.message }),
+    onSuccess: (success) => addNotification({ type: 'success', message: success.message }),
   });
 
   function handleSendEmail(data: z.infer<typeof emailSchema>): void {
