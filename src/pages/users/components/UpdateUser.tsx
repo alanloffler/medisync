@@ -13,7 +13,7 @@ import { PageHeader } from '@core/components/common/PageHeader';
 // External imports
 import { MouseEvent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
@@ -21,21 +21,20 @@ import { zodResolver } from '@hookform/resolvers/zod';
 // Imports
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
-import { APP_CONFIG } from '@config/app.config';
+// import { APP_CONFIG } from '@config/app.config';
 import { USER_SCHEMA } from '@config/schemas/user.schema';
 import { USER_UPDATE_CONFIG as UU_CONFIG } from '@config/users/user-update.config';
 import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 import { userSchema } from '@users/schemas/user.schema';
-import { error } from 'console';
 // React component
 export default function UpdateUser() {
-  const [errorMessage, setErrorMessage] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  // const [errorMessage, setErrorMessage] = useState<string>('');
+  // const [isLoading, setIsLoading] = useState<boolean>(false);
   // const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
-  const [user, setUser] = useState<IUser>({} as IUser);
+  // const [user, setUser] = useState<IUser>({} as IUser);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -47,34 +46,49 @@ export default function UpdateUser() {
 
   // TODO: replace both of this methods, findOne with useQuery/useMutation and update with useMutation
   useEffect(() => {
-    if (id) {
-      setIsLoading(true);
-
-      UserApiService.findOne(id)
-        .then((response: IResponse) => {
-          if (response.statusCode === 200) {
-            setUser(response.data);
-            updateForm.setValue('dni', response.data.dni);
-            updateForm.setValue('email', response.data.email);
-            updateForm.setValue('firstName', UtilsString.upperCase(response.data.firstName, 'each'));
-            updateForm.setValue('lastName', UtilsString.upperCase(response.data.lastName, 'each'));
-            updateForm.setValue('phone', response.data.phone);
-          }
-          if (response.statusCode > 399) {
-            setOpenDialog(true);
-            setErrorMessage(response.message);
-            addNotification({ type: 'error', message: response.message });
-          }
-          if (response instanceof Error) {
-            setOpenDialog(true);
-            setErrorMessage(APP_CONFIG.error.server);
-            addNotification({ type: 'error', message: APP_CONFIG.error.server });
-          }
-        })
-        .finally(() => setIsLoading(false));
-    }
+    // if (id) {
+    //   setIsLoading(true);
+    //   UserApiService.findOne(id)
+    //     .then((response: IResponse) => {
+    //       if (response.statusCode === 200) {
+    //         setUser(response.data);
+    //         updateForm.setValue('dni', response.data.dni);
+    //         updateForm.setValue('email', response.data.email);
+    //         updateForm.setValue('firstName', UtilsString.upperCase(response.data.firstName, 'each'));
+    //         updateForm.setValue('lastName', UtilsString.upperCase(response.data.lastName, 'each'));
+    //         updateForm.setValue('phone', response.data.phone);
+    //       }
+    //       if (response.statusCode > 399) {
+    //         setOpenDialog(true);
+    //         // setErrorMessage(response.message);
+    //         addNotification({ type: 'error', message: response.message });
+    //       }
+    //       if (response instanceof Error) {
+    //         setOpenDialog(true);
+    //         // setErrorMessage(APP_CONFIG.error.server);
+    //         addNotification({ type: 'error', message: APP_CONFIG.error.server });
+    //       }
+    //     })
+    //     .finally(() => setIsLoading(false));
+    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  const { data: user, isLoading } = useQuery<IResponse<IUser>, Error>({
+    queryKey: ['users', 'findOne', id],
+    queryFn: async () => await UserApiService.findOne(id!),
+    retry: 1,
+  });
+
+  useEffect(() => {
+    if (user) {
+      updateForm.setValue('dni', user?.data.dni);
+      updateForm.setValue('email', user?.data.email);
+      updateForm.setValue('firstName', UtilsString.upperCase(user?.data.firstName, 'each'));
+      updateForm.setValue('lastName', UtilsString.upperCase(user?.data.lastName, 'each'));
+      updateForm.setValue('phone', user?.data.phone);
+    }
+  }, [user, updateForm]);
 
   interface IVars {
     id: string;
@@ -94,7 +108,7 @@ export default function UpdateUser() {
       addNotification({ type: 'error', message: error.message });
     },
     onSuccess: (response) => {
-      navigate(`/users/${user._id}`);
+      navigate(`/users/${user?.data._id}`);
       addNotification({ type: 'success', message: response.message });
     },
     retry: 1,
@@ -106,13 +120,16 @@ export default function UpdateUser() {
 
   function handleCancel(event: MouseEvent<HTMLButtonElement>): void {
     event.preventDefault();
-    updateForm.reset();
-    updateForm.setValue('dni', user.dni);
-    updateForm.setValue('email', user.email);
-    updateForm.setValue('firstName', UtilsString.upperCase(user.firstName, 'each'));
-    updateForm.setValue('lastName', UtilsString.upperCase(user.lastName, 'each'));
-    updateForm.setValue('phone', user.phone);
-    navigate('/users');
+
+    if (user) {
+      updateForm.reset();
+      updateForm.setValue('dni', user?.data.dni);
+      updateForm.setValue('email', user?.data.email);
+      updateForm.setValue('firstName', UtilsString.upperCase(user?.data.firstName, 'each'));
+      updateForm.setValue('lastName', UtilsString.upperCase(user?.data.lastName, 'each'));
+      updateForm.setValue('phone', user?.data.phone);
+      navigate('/users');
+    }
   }
 
   return (
@@ -123,7 +140,7 @@ export default function UpdateUser() {
         <BackButton label={t('button.back')} />
       </header>
       {/* Section: Form */}
-      <section className='mt-6 flex flex-col w-full md:w-[500px] gap-4 mx-auto'>
+      <section className='mx-auto mt-6 flex w-full flex-col gap-4 md:w-[500px]'>
         <Card className='w-full md:grid-cols-2'>
           <CardHeader>
             <CardTitle className='flex items-center justify-between'>
