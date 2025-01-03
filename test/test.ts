@@ -157,3 +157,29 @@ export class AppoSchedule {
   //     });
   //   }
   // }, [appointments, isPlaceholderData, limit, page]);
+
+// REMOVED ON DATABASE, POSSIBLE USED ON ANOTHER STATS DATA FETCH
+// async countByMonth(month: string, year: string): Promise<IResponse<IDataUser>> {
+    //   const _month = parseInt(month);
+    //   const _year = parseInt(year);
+    //   const actualYear = new Date().getFullYear();
+  
+    //   const monthSchema = z.number().min(1).max(12);
+    //   const yearSchema = z.number().min(2022).max(actualYear);
+  
+    //   if (!monthSchema.safeParse(_month).success) throw new HttpException(USERS_CONFIG.inlineValidation.month, HttpStatus.BAD_REQUEST);
+    //   if (!yearSchema.safeParse(_year).success) throw new HttpException(USERS_CONFIG.inlineValidation.year, HttpStatus.BAD_REQUEST);
+  
+    //   const startDate = new Date(_year, _month - 1, 1);
+    //   const endDate = new Date(_year, _month, 1);
+  
+    //   const count = await this.userModel.countDocuments({ createdAt: { $gte: startDate, $lt: endDate } });
+  
+    //   if (count === 0) return { statusCode: 200, message: USERS_CONFIG.response.success.databaseCount, data: { total: 0 } };
+    //   if (!count) throw new HttpException(USERS_CONFIG.response.error.databaseCount, HttpStatus.BAD_REQUEST);
+  
+    //   const allUsers = await this.userModel.countDocuments();
+    //   if (!allUsers) throw new HttpException(USERS_CONFIG.response.error.databaseCount, HttpStatus.BAD_REQUEST);
+    //   // console.log((count * 100) / allUsers);
+    //   return { statusCode: 200, message: USERS_CONFIG.response.success.databaseCount, data: { total: (count * 100) / allUsers } };
+    // }
