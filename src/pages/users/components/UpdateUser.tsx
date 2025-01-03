@@ -8,6 +8,7 @@ import { Form, FormField, FormControl, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@core/components/ui/input';
 // Components
 import { BackButton } from '@core/components/common/BackButton';
+import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
 // External imports
@@ -21,7 +22,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 // Imports
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
-// import { APP_CONFIG } from '@config/app.config';
 import { USER_SCHEMA } from '@config/schemas/user.schema';
 import { USER_UPDATE_CONFIG as UU_CONFIG } from '@config/users/user-update.config';
 import { UserApiService } from '@users/services/user-api.service';
@@ -30,11 +30,7 @@ import { useNotificationsStore } from '@core/stores/notifications.store';
 import { userSchema } from '@users/schemas/user.schema';
 // React component
 export default function UpdateUser() {
-  // const [errorMessage, setErrorMessage] = useState<string>('');
-  // const [isLoading, setIsLoading] = useState<boolean>(false);
-  // const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
-  // const [user, setUser] = useState<IUser>({} as IUser);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -44,37 +40,13 @@ export default function UpdateUser() {
     resolver: zodResolver(userSchema),
   });
 
-  // TODO: replace both of this methods, findOne with useQuery/useMutation and update with useMutation
-  useEffect(() => {
-    // if (id) {
-    //   setIsLoading(true);
-    //   UserApiService.findOne(id)
-    //     .then((response: IResponse) => {
-    //       if (response.statusCode === 200) {
-    //         setUser(response.data);
-    //         updateForm.setValue('dni', response.data.dni);
-    //         updateForm.setValue('email', response.data.email);
-    //         updateForm.setValue('firstName', UtilsString.upperCase(response.data.firstName, 'each'));
-    //         updateForm.setValue('lastName', UtilsString.upperCase(response.data.lastName, 'each'));
-    //         updateForm.setValue('phone', response.data.phone);
-    //       }
-    //       if (response.statusCode > 399) {
-    //         setOpenDialog(true);
-    //         // setErrorMessage(response.message);
-    //         addNotification({ type: 'error', message: response.message });
-    //       }
-    //       if (response instanceof Error) {
-    //         setOpenDialog(true);
-    //         // setErrorMessage(APP_CONFIG.error.server);
-    //         addNotification({ type: 'error', message: APP_CONFIG.error.server });
-    //       }
-    //     })
-    //     .finally(() => setIsLoading(false));
-    // }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
-
-  const { data: user, isLoading } = useQuery<IResponse<IUser>, Error>({
+  const {
+    data: user,
+    error,
+    isError,
+    isLoading,
+    isSuccess,
+  } = useQuery<IResponse<IUser>, Error>({
     queryKey: ['users', 'findOne', id],
     queryFn: async () => await UserApiService.findOne(id!),
     retry: 1,
@@ -89,6 +61,10 @@ export default function UpdateUser() {
       updateForm.setValue('phone', user?.data.phone);
     }
   }, [user, updateForm]);
+
+  useEffect(() => {
+    isError && addNotification({ type: 'error', message: error?.message });
+  }, [addNotification, error?.message, isError]);
 
   interface IVars {
     id: string;
@@ -152,9 +128,9 @@ export default function UpdateUser() {
             <CardDescription className='sr-only'></CardDescription>
           </CardHeader>
           <CardContent>
-            {isLoading ? (
-              <LoadingDB text={t('loading.userDetails')} className='mt-3' />
-            ) : (
+            {isError && <InfoCard type='error' text={error?.message} className='mx-auto mt-3' />}
+            {isLoading && <LoadingDB text={t('loading.userDetails')} className='mt-3' />}
+            {isSuccess && (
               <Form {...updateForm}>
                 <form onSubmit={updateForm.handleSubmit(handleUpdateUser)} className='space-y-4'>
                   {/* Form field: DNI */}
