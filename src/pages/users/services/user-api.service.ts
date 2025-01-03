@@ -2,7 +2,6 @@ import type { IResponse } from '@core/interfaces/response.interface';
 import type { ITableManager } from '@core/interfaces/table.interface';
 import type { IUser, IUserForm } from '@users/interfaces/user.interface';
 import type { IUserSearch } from '@users/interfaces/user-search.interface';
-import { APP_CONFIG } from '@config/app.config';
 import { EMethods } from '@core/enums/methods.enum';
 import { EUserSearch } from '@users/enums/user-search.enum';
 import { UserUtils } from '@users/services/user.utils';
@@ -11,7 +10,7 @@ import { UtilsUrl } from '@core/services/utils/url.service';
 export class UserApiService {
   private static readonly API_URL: string = import.meta.env.VITE_API_URL;
 
-  // CHECKED: TRQ used on CreateUser.tsx
+  // CHECKED: TRQ used on CreateUser.tsx OK!
   public static async create(data: IUserForm): Promise<IResponse<IUser>> {
     const transformedData: IUserForm = UserUtils.lowercaseFormItems(data);
     const path: string = `${this.API_URL}/users`;
@@ -64,7 +63,7 @@ export class UserApiService {
   }
 
   // CHECKED: TRQ used on
-  // - UpdateUser.tsx
+  // - UpdateUser.tsx OK!
   public static async update(id: string, data: IUserForm): Promise<IResponse<IUser>> {
     const transformedData: IUserForm = UserUtils.lowercaseFormItems(data);
     const path: string = `${this.API_URL}/users/${id}`;
@@ -74,33 +73,11 @@ export class UserApiService {
   }
 
   // CHECKED: TRQ used on
-  // - DBCountUsers.tsx
+  // - DBCountUsers.tsx OK!
   public static async newUsersToday(): Promise<IResponse<{ percentage: number; today: number; total: number }>> {
     const path: string = `${this.API_URL}/users/newUsersToday`;
     const url: URL = new URL(path);
 
     return await UtilsUrl.fetch(url, EMethods.GET);
-  }
-
-  private static async fetch(url: string, method: EMethods, body?: any) {
-    try {
-      const query: Response = await fetch(url, {
-        method: method,
-        headers: {
-          'content-type': 'application/json;charset=UTF-8',
-        },
-        body: JSON.stringify(body),
-      });
-
-      const response: IResponse = await query.json();
-      if (!query.ok) throw new Error(response.message);
-
-      return response;
-    } catch (error) {
-      if (error instanceof TypeError) {
-        throw new Error(APP_CONFIG.error.server);
-      }
-      throw error;
-    }
   }
 }
