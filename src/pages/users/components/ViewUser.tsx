@@ -14,8 +14,10 @@ import { format } from '@formkit/tempo';
 import { useAnimate } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
+import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { USER_VIEW_CONFIG as UV_CONFIG } from '@config/users/user-view.config';
@@ -29,7 +31,7 @@ import { useNotificationsStore } from '@core/stores/notifications.store';
 export default function ViewUser() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showCard, setShowCard] = useState<boolean>(false);
-  const [user, setUser] = useState<IUser>({} as IUser);
+  // const [user, setUser] = useState<IUser>({} as IUser);
   const [gotoScope, gotoAnimation] = useAnimate();
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const delimiter = useDelimiter();
@@ -38,28 +40,39 @@ export default function ViewUser() {
   const { i18n, t } = useTranslation();
   const { id } = useParams();
 
-  useEffect(() => {
-    if (id) {
-      setItemSelected(HEADER_CONFIG.headerMenu[3].id);
-      setIsLoading(true);
+  // useEffect(() => {
+  //   if (id) {
+  //     setItemSelected(HEADER_CONFIG.headerMenu[3].id);
+  //     setIsLoading(true);
 
-      UserApiService.findOne(id)
-        .then((response) => {
-          if (response.statusCode === 200) {
-            setUser(response.data);
-            setShowCard(true);
-          }
-          if (response.statusCode > 399) {
-            addNotification({ type: 'error', message: response.message });
-          }
-          if (response instanceof Error) {
-            addNotification({ type: 'error', message: t('error.internalServer') });
-          }
-        })
-        .finally(() => setIsLoading(false));
+  //     UserApiService.findOne(id)
+  //       .then((response) => {
+  //         if (response.statusCode === 200) {
+  //           setUser(response.data);
+  //           setShowCard(true);
+  //         }
+  //         if (response.statusCode > 399) {
+  //           addNotification({ type: 'error', message: response.message });
+  //         }
+  //         if (response instanceof Error) {
+  //           addNotification({ type: 'error', message: t('error.internalServer') });
+  //         }
+  //       })
+  //       .finally(() => setIsLoading(false));
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [id]);
+
+  const { data: user, isSuccess } = useQuery<IResponse<IUser>, Error>({
+    queryKey: ['users', 'findOne', id],
+    queryFn: async () => await UserApiService.findOne(id!),
+  });
+
+  useEffect(() => {
+    if (isSuccess) {
+      setShowCard(true);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [isSuccess]);
 
   function gotoAnimationOver(): void {
     const { keyframes, options } = motion.x(3).type('bounce').animate();
@@ -87,51 +100,51 @@ export default function ViewUser() {
           showCard && (
             <Card className='col-span-1 mx-auto h-fit w-full md:col-span-2 lg:col-span-2 xl:col-span-2'>
               <header className='relative flex items-center justify-center rounded-t-lg bg-slate-200 p-3 text-slate-700'>
-                <h1 className='text-center text-xl font-bold'>{UtilsString.upperCase(`${user.firstName} ${user.lastName}`, 'each')}</h1>
+                <h1 className='text-center text-xl font-bold'>{UtilsString.upperCase(`${user?.data.firstName} ${user?.data.lastName}`, 'each')}</h1>
               </header>
               <CardContent className='mt-3 space-y-3 overflow-auto'>
                 <section className='flex items-center space-x-3'>
                   <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
                     <CreditCard size={17} strokeWidth={2} />
                   </div>
-                  <span className='text-sm'>{i18n.format(user.dni, 'number', i18n.resolvedLanguage)}</span>
+                  <span className='text-sm'>{i18n.format(user?.data.dni, 'number', i18n.resolvedLanguage)}</span>
                 </section>
                 <section className='flex items-center space-x-3'>
                   <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
                     <Smartphone size={17} strokeWidth={2} />
                   </div>
-                  <span className='text-sm'>{delimiter(user.phone, '-', 6)}</span>
+                  <span className='text-sm'>{user?.data.phone && delimiter(user?.data.phone, '-', 6)}</span>
                 </section>
-                {user.email && (
+                {user?.data.email && (
                   <section className='flex items-center space-x-3'>
                     <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
                       <Mail size={17} strokeWidth={2} />
                     </div>
-                    <span className='text-sm'>{user.email}</span>
+                    <span className='text-sm'>{user.data.email}</span>
                   </section>
                 )}
-                <section className='pt-2 text-sm'>
-                  {t('cardContent.userSince', { date: format(user.createdAt, 'long', localStorage.getItem('i18nextLng') ?? i18n.resolvedLanguage) })}
-                </section>
+                {user?.data.createdAt && <section className='pt-2 text-sm'>
+                  {t('cardContent.userSince', { date: format(user?.data.createdAt, 'long', localStorage.getItem('i18nextLng') ?? i18n.resolvedLanguage) })}
+                </section>}
               </CardContent>
               <section className='flex items-center justify-end space-x-2 border-t p-2'>
                 <TableButton
-                  callback={() => navigate(`/email/${user._id}`)}
+                  callback={() => navigate(`/email/${user?.data._id}`)}
                   className='hover:text-sky-500'
-                  disabled={!user.email}
+                  disabled={!user?.data.email}
                   tooltip={t('tooltip.sendEmail')}
                 >
                   <Send size={18} strokeWidth={1.5} />
                 </TableButton>
                 <TableButton
-                  callback={() => navigate(`/whatsapp/${user._id}`)}
+                  callback={() => navigate(`/whatsapp/${user?.data._id}`)}
                   className='hover:text-green-500'
                   tooltip={t('tooltip.sendMessage')}
                 >
                   <MessageCircle size={18} strokeWidth={1.5} />
                 </TableButton>
                 <TableButton
-                  callback={() => navigate(`/users/update/${user._id}`)}
+                  callback={() => navigate(`/users/update/${user?.data._id}`)}
                   className='hover:text-fuchsia-500'
                   tooltip={t('tooltip.updateUser')}
                 >
@@ -151,7 +164,7 @@ export default function ViewUser() {
         )}
         {showCard && (
           <section className='col-span-1 overflow-y-auto md:col-span-3 lg:col-span-3 xl:col-span-4'>
-            <ApposRecord userId={user._id} />
+            <ApposRecord userId={user!.data._id} />
           </section>
         )}
       </section>
