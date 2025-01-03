@@ -57,7 +57,8 @@ export class UserApiService {
   // CHECKED: TRQ used on
   // - UsersDataTable.tsx
   public static async remove(id: string) {
-    const url: URL = new URL(`${this.API_URL}/users/${id}`);
+    const path: string = `${this.API_URL}/users/${id}`;
+    const url: URL = new URL(path);
 
     return await UtilsUrl.fetch(url, EMethods.DELETE);
   }
