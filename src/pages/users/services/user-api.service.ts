@@ -73,11 +73,6 @@ export class UserApiService {
     return await UtilsUrl.fetch(url, EMethods.PATCH, transformedData);
   }
 
-  public static async countAll() {
-    const url: string = `${this.API_URL}/users/databaseCount`;
-    return await this.fetch(url, EMethods.GET);
-  }
-
   public static async countByMonth(month: number, year: number) {
     const url: string = `${this.API_URL}/users/countByMonth?m=${month}&y=${year}`;
     return await this.fetch(url, EMethods.GET);
