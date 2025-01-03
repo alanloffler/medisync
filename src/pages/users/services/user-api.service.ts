@@ -45,7 +45,7 @@ export class UserApiService {
   }
 
   // CHECKED: TRQ used on
-  // SendEmail.tsx
+  // SendEmail.tsx OK!
   // UpdateUser.tsx
   // WhatsApp.tsx
   public static async findOne(id: string): Promise<IResponse<IUser>> {
@@ -63,23 +63,14 @@ export class UserApiService {
     return await UtilsUrl.fetch(url, EMethods.DELETE);
   }
 
-  public static async update(id: string, data: IUserForm) {
+  // CHECKED: TRQ used on
+  // - UpdateUser.tsx
+  public static async update(id: string, data: IUserForm): Promise<IResponse<IUser>> {
     const transformedData: IUserForm = UserUtils.lowercaseFormItems(data);
-    const url: string = `${this.API_URL}/users/${id}`;
+    const path: string = `${this.API_URL}/users/${id}`;
+    const url: URL = new URL(path);
 
-    try {
-      const query: Response = await fetch(url, {
-        body: JSON.stringify(transformedData),
-        headers: {
-          'content-type': 'application/json;charset=UTF-8',
-        },
-        method: 'PATCH',
-      });
-
-      return await query.json();
-    } catch (error) {
-      return error;
-    }
+    return await UtilsUrl.fetch(url, EMethods.PATCH, transformedData);
   }
 
   public static async countAll() {
