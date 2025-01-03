@@ -73,11 +73,6 @@ export class UserApiService {
     return await UtilsUrl.fetch(url, EMethods.PATCH, transformedData);
   }
 
-  public static async countByMonth(month: number, year: number) {
-    const url: string = `${this.API_URL}/users/countByMonth?m=${month}&y=${year}`;
-    return await this.fetch(url, EMethods.GET);
-  }
-
   // CHECKED: TRQ used on
   // - DBCountUsers.tsx
   public static async newUsersToday(): Promise<IResponse<{ percentage: number; today: number; total: number }>> {
