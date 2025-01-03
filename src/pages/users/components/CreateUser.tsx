@@ -82,8 +82,8 @@ export default function CreateUser() {
         <BackButton label={t('button.back')} />
       </header>
       {/* Section: Form */}
-      <section className='mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-2 lg:gap-6'>
-        <Card className='w-full md:grid-cols-2'>
+      <section className='mx-auto mt-6 flex w-full flex-col gap-4 md:w-[500px]'>
+        <Card className='w-full'>
           <CardTitle className='flex rounded-b-none bg-card-header text-slate-700'>
             <header className='flex items-center gap-3.5 p-2'>
               <FilePlus2 size={16} strokeWidth={2} />
