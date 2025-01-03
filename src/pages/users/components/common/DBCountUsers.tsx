@@ -8,12 +8,13 @@ import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { IResponse } from '@core/interfaces/response.interface';
+import type { IUserStats } from '@users/interfaces/user-stats.interface';
 import { UserApiService } from '@users/services/user-api.service';
 // React component
 export function DBCountUsers() {
   const { t } = useTranslation();
 
-  const { data, error, isError, isLoading } = useQuery<IResponse<{ percentage: number; today: number; total: number }>>({
+  const { data, error, isError, isLoading } = useQuery<IResponse<IUserStats>>({
     queryKey: ['users', 'DBCountUsers'],
     queryFn: async () => await UserApiService.newUsersToday(),
     refetchOnWindowFocus: 'always',
