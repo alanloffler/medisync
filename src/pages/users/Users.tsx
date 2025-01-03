@@ -166,7 +166,7 @@ export default function Users() {
           </CardTitle>
           {/* Table */}
           <CardContent>
-            <UsersDataTable reload={reload} search={debouncedSearch} setReload={setReload} />
+            <UsersDataTable reload={reload} search={debouncedSearch} setSearch={setSearch} setReload={setReload} />
           </CardContent>
         </Card>
       </section>
