@@ -43,6 +43,7 @@ export default function UpdateUser() {
     resolver: zodResolver(userSchema),
   });
 
+  // TODO: replace both of this methods, findOne with useQuery/useMutation and update with useMutation
   useEffect(() => {
     if (id) {
       setIsLoading(true);
@@ -78,6 +79,7 @@ export default function UpdateUser() {
 
     UserApiService.update(user._id, data)
       .then((response: IResponse) => {
+        console.log(response);
         if (response.statusCode === 200) {
           navigate(`/users/${user._id}`);
           addNotification({ type: 'success', message: response.message });
