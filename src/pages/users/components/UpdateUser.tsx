@@ -2,7 +2,7 @@
 import { FilePen } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@core/components/ui/card';
+import { Card, CardContent, CardTitle } from '@core/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
 import { Form, FormField, FormControl, FormItem, FormLabel, FormMessage } from '@core/components/ui/form';
 import { Input } from '@core/components/ui/input';
@@ -114,16 +114,13 @@ export default function UpdateUser() {
       {/* Section: Form */}
       <section className='mx-auto mt-6 flex w-full flex-col gap-4 md:w-[500px]'>
         <Card className='w-full md:grid-cols-2'>
-          <CardHeader>
-            <CardTitle className='flex items-center justify-between'>
-              <div className='flex items-center gap-2'>
-                <FilePen size={16} strokeWidth={2} />
-                <span>{t('cardTitle.updateUser')}</span>
-              </div>
-            </CardTitle>
-            <CardDescription className='sr-only'></CardDescription>
-          </CardHeader>
-          <CardContent>
+          <CardTitle className='flex rounded-b-none bg-card-header text-slate-700'>
+            <header className='flex items-center gap-3.5 p-2'>
+              <FilePen size={16} strokeWidth={2} />
+              {t('cardTitle.updateUser')}
+            </header>
+          </CardTitle>
+          <CardContent className='pt-6'>
             {isError && <InfoCard type='error' text={error?.message} className='mx-auto mt-3' />}
             {isLoading && <LoadingDB text={t('loading.userDetails')} className='mt-3' />}
             {isSuccess && (
