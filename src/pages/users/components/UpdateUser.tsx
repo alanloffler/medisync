@@ -13,6 +13,7 @@ import { PageHeader } from '@core/components/common/PageHeader';
 // External imports
 import { MouseEvent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useMutation } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
@@ -27,11 +28,12 @@ import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 import { userSchema } from '@users/schemas/user.schema';
+import { error } from 'console';
 // React component
 export default function UpdateUser() {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  // const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [user, setUser] = useState<IUser>({} as IUser);
   const addNotification = useNotificationsStore((state) => state.addNotification);
@@ -74,28 +76,32 @@ export default function UpdateUser() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  function handleUpdateUser(data: z.infer<typeof userSchema>): void {
-    setIsUpdating(true);
+  interface IVars {
+    id: string;
+    data: z.infer<typeof userSchema>;
+  }
 
-    UserApiService.update(user._id, data)
-      .then((response: IResponse) => {
-        console.log(response);
-        if (response.statusCode === 200) {
-          navigate(`/users/${user._id}`);
-          addNotification({ type: 'success', message: response.message });
-        }
-        if (response.statusCode > 399) {
-          setOpenDialog(true);
-          setErrorMessage(response.message);
-          addNotification({ type: 'error', message: response.message });
-        }
-        if (response instanceof Error) {
-          setOpenDialog(true);
-          setErrorMessage(APP_CONFIG.error.server);
-          addNotification({ type: 'error', message: APP_CONFIG.error.server });
-        }
-      })
-      .finally(() => setIsUpdating(false));
+  const {
+    error: errorUpdating,
+    mutate: updateUser,
+    isError: isErrorUpdating,
+    isPending: isUpdating,
+  } = useMutation<IResponse<IUser>, Error, IVars>({
+    mutationKey: ['users', 'update', id],
+    mutationFn: async ({ id, data }) => await UserApiService.update(id, data),
+    onError: (error) => {
+      setOpenDialog(true);
+      addNotification({ type: 'error', message: error.message });
+    },
+    onSuccess: (response) => {
+      navigate(`/users/${user._id}`);
+      addNotification({ type: 'success', message: response.message });
+    },
+    retry: 1,
+  });
+
+  function handleUpdateUser(data: z.infer<typeof userSchema>): void {
+    id && updateUser({ id, data });
   }
 
   function handleCancel(event: MouseEvent<HTMLButtonElement>): void {
@@ -117,7 +123,7 @@ export default function UpdateUser() {
         <BackButton label={t('button.back')} />
       </header>
       {/* Section: Form */}
-      <section className='mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-2 lg:gap-6'>
+      <section className='mt-6 flex flex-col w-full md:w-[500px] gap-4 mx-auto'>
         <Card className='w-full md:grid-cols-2'>
           <CardHeader>
             <CardTitle className='flex items-center justify-between'>
@@ -230,7 +236,7 @@ export default function UpdateUser() {
             <DialogTitle className='text-lg'>{t('error.updateUser')}</DialogTitle>
             <DialogDescription className='sr-only'></DialogDescription>
           </DialogHeader>
-          <section className='flex flex-col text-sm'>{errorMessage}</section>
+          {isErrorUpdating && <section className='flex flex-col text-sm'>{errorUpdating.message}</section>}
           <footer className='flex justify-end space-x-4'>
             <Button variant='destructive' size='sm' onClick={() => setOpenDialog(false)}>
               {t('button.close')}
