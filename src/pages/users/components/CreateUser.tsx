@@ -13,21 +13,22 @@ import { PageHeader } from '@core/components/common/PageHeader';
 // External imports
 import { MouseEvent, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 // Imports
 import type { IResponse } from '@core/interfaces/response.interface';
+import type { IUser } from '@users/interfaces/user.interface';
 import { USER_CREATE_CONFIG as UC_CONFIG } from '@config/users/user-create.config';
 import { USER_SCHEMA } from '@config/schemas/user.schema';
 import { UserApiService } from '@users/services/user-api.service';
+import { UtilsString } from '@core/services/utils/string.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 import { userSchema } from '@users/schemas/user.schema';
 // React component
 export default function CreateUser() {
-  const [errorMessage, setErrorMessage] = useState<string>('');
-  const [isCreating, setIsCreating] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const navigate = useNavigate();
@@ -46,28 +47,27 @@ export default function CreateUser() {
     defaultValues: defaultValues,
   });
 
-  function handleCreateUser(data: z.infer<typeof userSchema>): void {
-    setIsCreating(true);
-
-    UserApiService.create(data)
-      .then((response: IResponse) => {
-        if (response.statusCode === 200) {
-          navigate(`/users/${response.data._id}`);
-          addNotification({ type: 'success', message: response.message });
-        }
-        if (response.statusCode > 399) {
-          setOpenDialog(true);
-          setErrorMessage(response.message);
-          addNotification({ type: 'error', message: response.message });
-        }
-        if (response instanceof Error) {
-          setOpenDialog(true);
-          setErrorMessage(t('error.internalServer'));
-          addNotification({ type: 'error', message: t('error.internalServer') });
-        }
-      })
-      .finally(() => setIsCreating(false));
-  }
+  const {
+    error,
+    mutate: handleCreateUser,
+    isError,
+    isPending,
+  } = useMutation<IResponse<IUser>, Error, z.infer<typeof userSchema>>({
+    mutationKey: ['users', 'create'],
+    mutationFn: async (data: z.infer<typeof userSchema>) => await UserApiService.create(data),
+    onError: (error) => {
+      setOpenDialog(true);
+      addNotification({ type: 'error', message: error.message });
+    },
+    onSuccess: (response) => {
+      navigate(`/users/${response.data._id}`);
+      addNotification({
+        type: 'success',
+        message: `${response.message} - ${UtilsString.upperCase(response.data.firstName, 'each')} ${UtilsString.upperCase(response.data.lastName, 'each')}`,
+      });
+    },
+    retry: 1,
+  });
 
   function handleCancel(event: MouseEvent<HTMLButtonElement | HTMLDivElement | HTMLInputElement>): void {
     event.preventDefault();
@@ -92,7 +92,7 @@ export default function CreateUser() {
           </CardTitle>
           <CardContent>
             <Form {...createForm}>
-              <form onSubmit={createForm.handleSubmit(handleCreateUser)} className='space-y-4 pt-6'>
+              <form onSubmit={createForm.handleSubmit((data) => handleCreateUser(data))} className='space-y-4 pt-6'>
                 {/* Form field: DNI */}
                 <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                   <FormField
@@ -170,7 +170,7 @@ export default function CreateUser() {
                 {/* Buttons */}
                 <footer className='grid grid-cols-1 space-y-2 pt-2 md:flex md:justify-end md:gap-6 md:space-y-0'>
                   <Button type='submit' size='sm' className='order-1 md:order-2 lg:order-2'>
-                    {isCreating ? <LoadingDB text={t('loading.creating')} variant='button' /> : t('button.addUser')}
+                    {isPending ? <LoadingDB text={t('loading.creating')} variant='button' /> : t('button.addUser')}
                   </Button>
                   <Button variant='ghost' size='sm' onClick={handleCancel} className='order-2 md:order-1 lg:order-1'>
                     {t('button.cancel')}
@@ -188,7 +188,7 @@ export default function CreateUser() {
             <DialogTitle className='text-lg'>{t('error.createUser')}</DialogTitle>
             <DialogDescription className='sr-only'></DialogDescription>
           </DialogHeader>
-          <section className='flex flex-col text-sm'>{errorMessage}</section>
+          {isError && <section className='flex flex-col text-sm'>{error.message}</section>}
           <footer className='flex justify-end space-x-4'>
             <Button variant='destructive' size='sm' onClick={() => setOpenDialog(false)}>
               {t('button.close')}
