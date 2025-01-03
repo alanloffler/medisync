@@ -2,6 +2,7 @@ import type { IResponse } from '@core/interfaces/response.interface';
 import type { ITableManager } from '@core/interfaces/table.interface';
 import type { IUser, IUserForm } from '@users/interfaces/user.interface';
 import type { IUserSearch } from '@users/interfaces/user-search.interface';
+import type { IUserStats } from '@users/interfaces/user-stats.interface';
 import { EMethods } from '@core/enums/methods.enum';
 import { EUserSearch } from '@users/enums/user-search.enum';
 import { UserUtils } from '@users/services/user.utils';
@@ -45,7 +46,7 @@ export class UserApiService {
 
   // CHECKED: TRQ used on
   // SendEmail.tsx OK!
-  // UpdateUser.tsx
+  // UpdateUser.tsx OK!
   // WhatsApp.tsx
   public static async findOne(id: string): Promise<IResponse<IUser>> {
     const path: string = `${this.API_URL}/users/${id}`;
@@ -75,7 +76,7 @@ export class UserApiService {
 
   // CHECKED: TRQ used on
   // - DBCountUsers.tsx OK!
-  public static async newUsersToday(): Promise<IResponse<{ percentage: number; today: number; total: number }>> {
+  public static async newUsersToday(): Promise<IResponse<IUserStats>> {
     const path: string = `${this.API_URL}/users/newUsersToday`;
     const url: URL = new URL(path);
 
