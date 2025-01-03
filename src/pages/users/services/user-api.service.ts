@@ -44,21 +44,15 @@ export class UserApiService {
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
-  public static async findOne(id: string) {
-    const url: string = `${this.API_URL}/users/${id}`;
+  // CHECKED: TRQ used on
+  // SendEmail.tsx
+  // UpdateUser.tsx
+  // WhatsApp.tsx
+  public static async findOne(id: string): Promise<IResponse<IUser>> {
+    const path: string = `${this.API_URL}/users/${id}`;
+    const url: URL = new URL(path);
 
-    try {
-      const query: Response = await fetch(url, {
-        headers: {
-          'content-type': 'application/json;charset=UTF-8',
-        },
-        method: 'GET',
-      });
-
-      return await query.json();
-    } catch (error) {
-      return error;
-    }
+    return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
   // CHECKED: TRQ used on
