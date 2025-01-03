@@ -57,7 +57,7 @@ interface IVars {
 const defaultSorting: SortingState = [{ id: USER_CONFIG.table.defaultSortingId, desc: USER_CONFIG.table.defaultSortingType }];
 const defaultPagination: PaginationState = { pageIndex: 0, pageSize: USER_CONFIG.table.defaultPageSize };
 // React component
-export function UsersDataTable({ reload, search }: IDataTableUsers) {
+export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
   const [columns, setColumns] = useState<ColumnDef<IUser>[]>([]);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [pagination, setPagination] = useState<PaginationState>(defaultPagination);
@@ -264,9 +264,9 @@ export function UsersDataTable({ reload, search }: IDataTableUsers) {
     mutationKey: ['deleteUser', userSelected?._id],
     mutationFn: async ({ id }) => await UserApiService.remove(id),
     onSuccess: (response) => {
+      setSearch({ value: '', type: EUserSearch.NAME });
       setOpenDialog(false);
       addNotification({ type: 'success', message: response.message });
-      searchUsersBy({ search, skipItems, tableManager });
     },
     onError: (error) => {
       addNotification({ type: 'error', message: error.message });
