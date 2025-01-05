@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons
-import { CalendarDays, Clock, Link as LinkIcon, MessageCircle, Printer, Send } from 'lucide-react';
+import { CalendarDays, Clock, Link as LinkIcon, Mail, MailX, MessageCircle, Printer } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Card, CardContent, CardHeader, CardTitle } from '@core/components/ui/card';
 // Components
@@ -20,6 +20,7 @@ import { BackButton } from '@core/components/common/BackButton';
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { UtilsString } from '@core/services/utils/string.service';
 import { VIEW_APPOINTMENT_CONFIG as VA_CONFIG } from '@config/appointments/view-appointment.config';
+import { cn } from '@lib/utils';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 import { useLegibleDate } from '@core/hooks/useDateToString';
 // React component
@@ -139,9 +140,9 @@ export default function ViewAppointment() {
                 <a
                   href={`https://mail.google.com/mail/?view=cm&to=${email.to}&su=${email.subject}&body=${email.body}`}
                   target='_blank'
-                  className='transition-colors hover:text-indigo-500'
+                  className={cn('transition-colors hover:text-indigo-500', !appointment.user?.email && 'pointer-events-none')}
                 >
-                  <Send size={20} strokeWidth={2} />
+                  {appointment.user?.email ? <Mail size={20} strokeWidth={2} /> : <MailX size={20} strokeWidth={2} className='stroke-rose-400' />}
                 </a>
                 <button className='transition-colors hover:fill-indigo-500'>
                   <MessageCircle size={20} strokeWidth={2} />
