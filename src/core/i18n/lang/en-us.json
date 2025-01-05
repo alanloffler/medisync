@@ -120,6 +120,7 @@
       "createAppointment": "Error creating the appointment",
       "createProfessional": "Error creating professional",
       "deleteAppointment": "Error deleting the appointment",
+      "deleteUser": "Error deleting patient",
       "updateProfessional": "Error updating professional"
     }
   },
