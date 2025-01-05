@@ -188,6 +188,7 @@ export default function ViewUser() {
                 >
                   {!user.data.email ? <MailX size={18} strokeWidth={1.5} /> : <Mail size={18} strokeWidth={1.5} />}
                 </TableButton>
+                {/* Replace icon with svg for Whatsapp */}
                 <TableButton
                   callback={() => navigate(`/whatsapp/${user.data._id}`)}
                   className='hover:text-green-500'
