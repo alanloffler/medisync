@@ -120,6 +120,7 @@
       "createAppointment": "Error creando el turno",
       "createProfessional": "Error creando profesional",
       "deleteAppointment": "Error eliminando el turno",
+      "deleteUser": "Error al eliminar el paciente",
       "updateProfessional": "Error actualizando profesional"
     }
   },
