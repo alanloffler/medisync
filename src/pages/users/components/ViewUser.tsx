@@ -16,8 +16,8 @@ import { format } from '@formkit/tempo';
 import { useAnimate } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { useTranslation } from 'react-i18next';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { Trans, useTranslation } from 'react-i18next';
 // Imports
 import type { IDialog } from '@core/interfaces/dialog.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
@@ -66,14 +66,52 @@ export default function ViewUser() {
     setDialogData({
       title: t('dialog.deleteUser.title'),
       description: t('dialog.deleteUser.description'),
-      content: 'This is the content when removing an user',
-      callback: handleRemoveUser,
+      content: (
+        <div>
+          <Trans
+            i18nKey='dialog.deleteUser.content'
+            values={{
+              firstName: UtilsString.upperCase(user?.data.firstName, 'each'),
+              lastName: UtilsString.upperCase(user?.data.lastName, 'each'),
+              identityCard: i18n.format(user?.data.dni, 'number', i18n.resolvedLanguage),
+            }}
+            components={{
+              span: <span className='font-semibold' />,
+              i: <i />,
+            }}
+          />
+        </div>
+      ),
+      callback: () => handleRemoveUser({ id: id! }),
     });
   }
 
-  function handleRemoveUser(): void {
-    console.log(`Remove user ${user?.data.firstName}`, user?.data._id);
-  }
+  const {
+    mutate: handleRemoveUser,
+    isError: isErrorDeleting,
+    isPending: isDeleting,
+    reset: resetDeleting,
+  } = useMutation<IResponse<IUser>, Error, { id: string }>({
+    mutationKey: ['users', 'remove', id],
+    mutationFn: async ({ id }) => await UserApiService.remove(id),
+    onError: (error) => {
+      setDialogData({
+        title: t('dialog.error.deleteUser'),
+        content: error.message,
+      });
+    },
+    onSuccess: (response) => {
+      addNotification({ type: 'success', message: response.message });
+      navigate('/users');
+    },
+    retry: 1,
+  });
+
+  useEffect(() => {
+    if (openDialog === false) {
+      setTimeout(() => resetDeleting(), 1000);
+    }
+  }, [openDialog, resetDeleting]);
 
   function gotoAnimationOver(): void {
     const { keyframes, options } = motion.x(3).type('bounce').animate();
@@ -196,16 +234,25 @@ export default function ViewUser() {
           <DialogContent>
             <DialogHeader>
               <DialogTitle className='text-xl'>{dialogData.title}</DialogTitle>
-              <DialogDescription>{dialogData.description}</DialogDescription>
+              {!isErrorDeleting && <DialogDescription>{dialogData.description}</DialogDescription>}
             </DialogHeader>
-            <section className='flex flex-col'>{dialogData.content}</section>
-            <footer className='flex flex-col md:justify-end md:flex-row gap-4'>
-              <Button variant='ghost' size='sm' onClick={() => setOpenDialog(false)} className='order-2 md:order-1'>
-                {t('button.cancel')}
-              </Button>
-              <Button variant='remove' size='sm' onClick={dialogData.callback} className='order-1 md:order-2'>
-                {true ? <LoadingDB className='p-0' text={t('loading.deleting')} variant='button' /> : t('button.deleteUser')}
-              </Button>
+            <section className='flex text-sm'>{dialogData.content}</section>
+            <footer className='flex flex-col gap-4 md:flex-row md:justify-end'>
+              {isErrorDeleting && (
+                <Button variant='default' size='sm' onClick={() => setOpenDialog(false)}>
+                  {t('button.tryAgain')}
+                </Button>
+              )}
+              {!isErrorDeleting && (
+                <>
+                  <Button variant='ghost' size='sm' onClick={() => setOpenDialog(false)} className='order-2 md:order-1'>
+                    {t('button.cancel')}
+                  </Button>
+                  <Button variant='remove' size='sm' onClick={dialogData.callback} className='order-1 md:order-2'>
+                    {isDeleting ? <LoadingDB className='p-0' text={t('loading.deleting')} variant='button' /> : t('button.deleteUser')}
+                  </Button>
+                </>
+              )}
             </footer>
           </DialogContent>
         )}
