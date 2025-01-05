@@ -4,7 +4,7 @@ export interface IDialog {
   action?: string;
   callback?: () => void;
   content: ReactNode;
-  description: string;
+  description?: string;
   isOnly?: boolean;
   title: string;
 }
