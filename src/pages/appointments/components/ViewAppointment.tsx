@@ -103,7 +103,7 @@ export default function ViewAppointment() {
               <CardTitle className='px-3 text-base'>
                 <header className='flex flex-row justify-between'>
                   <div className='flex flex-row items-center gap-2'>
-                    <CalendarDays className='h-4 w-4' />
+                    <CalendarDays size={18} strokeWidth={2} />
                     <span>{t('cardTitle.viewAppointment')}</span>
                   </div>
                   <div className='flex flex-row items-center'>
@@ -123,25 +123,25 @@ export default function ViewAppointment() {
                 </Link>
               </h1>
               <h2 className='flex items-center gap-5 text-base font-medium'>
-                <CalendarDays className='h-5 w-5' strokeWidth={2} />
+                <CalendarDays size={20} strokeWidth={2} />
                 <span>{date}</span>
               </h2>
               <h2 className='flex items-center gap-5 text-base font-medium'>
-                <Clock className='h-5 w-5' strokeWidth={2} />
+                <Clock size={20} strokeWidth={2} />
                 <span>
                   {appointment.hour} {t('words.hoursAbbreviation')}
                 </span>
               </h2>
               <footer className='flex justify-end space-x-5'>
                 <button className='transition-colors hover:text-indigo-500' onClick={downloadPDF}>
-                  <Printer className='h-5 w-5' strokeWidth={2} />
+                  <Printer size={20} strokeWidth={2} />
                 </button>
                 <a
                   href={`https://mail.google.com/mail/?view=cm&to=${email.to}&su=${email.subject}&body=${email.body}`}
                   target='_blank'
                   className='transition-colors hover:text-indigo-500'
                 >
-                  <Send className='h-5 w-5' strokeWidth={2} />
+                  <Send size={20} strokeWidth={2} />
                 </a>
                 <button className='transition-colors hover:fill-indigo-500'>
                   <MessageCircle size={20} strokeWidth={2} />
