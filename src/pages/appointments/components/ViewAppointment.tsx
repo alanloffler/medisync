@@ -1,7 +1,7 @@
 // Icons: https://lucide.dev/icons
-import { CalendarDays, Clock, Link as LinkIcon, Mail, MailX, MessageCircle, Printer } from 'lucide-react';
+import { CalendarDays, Clock, Mail, MailX, MessageCircle, Printer } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
-import { Card, CardContent, CardHeader, CardTitle } from '@core/components/ui/card';
+import { Card, CardContent, CardTitle } from '@core/components/ui/card';
 // Components
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
@@ -100,30 +100,27 @@ export default function ViewAppointment() {
       ) : (
         <>
           <Card className='mx-auto w-full md:w-1/2 lg:w-1/2'>
-            <CardHeader>
-              <CardTitle className='px-3 text-base'>
-                <header className='flex flex-row justify-between'>
-                  <div className='flex flex-row items-center gap-2'>
-                    <CalendarDays size={18} strokeWidth={2} />
-                    <span>{t('cardTitle.viewAppointment')}</span>
-                  </div>
-                  <div className='flex flex-row items-center'>
-                    {UtilsString.upperCase(
-                      `${appointment.professional?.title.abbreviation} ${appointment.professional?.firstName} ${appointment.professional?.lastName}`,
-                      'each',
-                    )}
-                  </div>
-                </header>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className='mt-4 space-y-4'>
-              <h1 className='flex items-center justify-center gap-2 text-center text-2xl font-semibold'>
-                <span>{UtilsString.upperCase(`${appointment.user?.firstName} ${appointment.user?.lastName}`, 'each')}</span>
-                <Link to={`/users/${appointment.user?._id}`}>
-                  <LinkIcon className='h-3.5 w-3.5' strokeWidth={2} />
-                </Link>
-              </h1>
-              <h2 className='flex items-center gap-5 text-base font-medium'>
+            <CardTitle className='rounded-b-none bg-primary px-4 py-3 text-base text-background'>
+              <header className='flex flex-row justify-between'>
+                <div className='flex flex-row items-center gap-2'>
+                  <CalendarDays size={18} strokeWidth={2} />
+                  <span>{t('cardTitle.viewAppointment')}</span>
+                </div>
+                <div className='flex flex-row items-center'>
+                  {UtilsString.upperCase(
+                    `${appointment.professional?.title.abbreviation} ${appointment.professional?.firstName} ${appointment.professional?.lastName}`,
+                    'each',
+                  )}
+                </div>
+              </header>
+            </CardTitle>
+            <CardContent className='mt-6 space-y-3'>
+              <Link to={`/users/${appointment.user?._id}`}>
+                <span className='flex justify-center text-xl font-semibold underline-offset-2 hover:underline'>
+                  {UtilsString.upperCase(`${appointment.user?.firstName} ${appointment.user?.lastName}`, 'each')}
+                </span>
+              </Link>
+              <h2 className='flex items-center gap-5 pt-2 text-base font-medium'>
                 <CalendarDays size={20} strokeWidth={2} />
                 <span>{date}</span>
               </h2>
@@ -134,6 +131,7 @@ export default function ViewAppointment() {
                 </span>
               </h2>
               <footer className='flex justify-end space-x-5'>
+                {/* TODO: animate all buttons with color and bounce`` */}
                 <button className='transition-colors hover:text-indigo-500' onClick={downloadPDF}>
                   <Printer size={20} strokeWidth={2} />
                 </button>
