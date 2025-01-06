@@ -101,7 +101,7 @@ export default function ViewAppointment() {
           <Card className='mx-auto w-full md:w-1/2 lg:w-1/2'>
             <CardTitle className='rounded-b-none bg-primary px-4 py-3 text-base text-background'>
               <header className='flex flex-row justify-between'>
-                <div className='flex flex-row items-center gap-2'>
+                <div className='flex flex-row items-center gap-4'>
                   <CalendarDays size={18} strokeWidth={2} />
                   <span>{t('cardTitle.viewAppointment')}</span>
                 </div>
