@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { ArrowRight, CalendarClock, CalendarDays, Mail, PencilLine, Send, Share2, Smartphone, Tag, Trash2 } from 'lucide-react';
+import { ArrowRight, CalendarClock, CalendarDays, Mail, PencilLine, Share2, Smartphone, Tag, Trash2 } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Badge } from '@core/components/ui/badge';
 import { Button } from '@core/components/ui/button';
@@ -198,7 +198,7 @@ export default function ViewProfessional() {
                         }
                         className='transition-transform hover:scale-110 hover:bg-white hover:text-fuchsia-400 hover:animate-in'
                       >
-                        <Send size={18} strokeWidth={1.5} />
+                        <Mail size={18} strokeWidth={1.5} />
                       </Button>
                     </TooltipWrapper>
                     <TooltipWrapper tooltip={t('tooltip.share')}>
