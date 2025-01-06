@@ -19,7 +19,6 @@ import { useAnimate } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 // Imports
-import type { IEmail } from '@core/interfaces/email.interface';
 import type { IInfoCard } from '@core/components/common/interfaces/infocard.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
@@ -32,7 +31,6 @@ import { useDelimiter } from '@core/hooks/useDelimiter';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export default function ViewProfessional() {
-  const [email, setEmail] = useState<IEmail>({} as IEmail);
   const [infoCard, setInfoCard] = useState<IInfoCard>({} as IInfoCard);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [legibleWorkingDays, setLegibleWorkingDays] = useState<string>('');
@@ -55,15 +53,15 @@ export default function ViewProfessional() {
         .then((response: IResponse) => {
           if (response.statusCode === 200) {
             setProfessional(response.data);
-            setEmail({
-              to: response.data.email,
-              subject: t('email.sendToProfessional.subject'),
-              body: t('email.sendToProfessional.body', {
-                titleAbbreviation: UtilsString.upperCase(response.data.title.abbreviation),
-                firstName: UtilsString.upperCase(response.data.firstName, 'each'),
-                lastName: UtilsString.upperCase(response.data.lastName, 'each'),
-              }),
-            });
+            // setEmail({
+            //   to: response.data.email,
+            //   subject: t('email.sendToProfessional.subject'),
+            //   body: t('email.sendToProfessional.body', {
+            //     titleAbbreviation: UtilsString.upperCase(response.data.title.abbreviation),
+            //     firstName: UtilsString.upperCase(response.data.firstName, 'each'),
+            //     lastName: UtilsString.upperCase(response.data.lastName, 'each'),
+            //   }),
+            // });
             setShowCard(true);
 
             const legibleWorkingDays: string = CalendarService.getLegibleWorkingDays(response.data.configuration.workingDays, true, selectedLocale);
@@ -194,7 +192,7 @@ export default function ViewProfessional() {
                         variant='ghost'
                         size='miniIcon'
                         className='transition-transform hover:scale-110 hover:bg-fuchsia-100 hover:text-fuchsia-400 hover:animate-in'
-                        onClick={() => navigate(`/email/${professional._id}`)}
+                        onClick={() => navigate(`/email/professional/${professional._id}`)}
                       >
                         <Mail size={18} strokeWidth={1.5} />
                       </Button>
