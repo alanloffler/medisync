@@ -20,7 +20,6 @@ import { BackButton } from '@core/components/common/BackButton';
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { UtilsString } from '@core/services/utils/string.service';
 import { VIEW_APPOINTMENT_CONFIG as VA_CONFIG } from '@config/appointments/view-appointment.config';
-import { cn } from '@lib/utils';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 import { useLegibleDate } from '@core/hooks/useDateToString';
 // React component
@@ -114,37 +113,49 @@ export default function ViewAppointment() {
                 </div>
               </header>
             </CardTitle>
-            <CardContent className='mt-6 space-y-3'>
+            <CardContent className='mt-2 space-y-3 p-4'>
               <Link to={`/users/${appointment.user?._id}`}>
                 <span className='flex justify-center text-xl font-semibold underline-offset-2 hover:underline'>
                   {UtilsString.upperCase(`${appointment.user?.firstName} ${appointment.user?.lastName}`, 'each')}
                 </span>
               </Link>
-              <h2 className='flex items-center gap-5 pt-2 text-base font-medium'>
+              <h2 className='flex items-center gap-5 pt-2 text-sm'>
                 <CalendarDays size={20} strokeWidth={2} />
                 <span>{date}</span>
               </h2>
-              <h2 className='flex items-center gap-5 text-base font-medium'>
+              <h2 className='flex items-center gap-5 text-sm'>
                 <Clock size={20} strokeWidth={2} />
                 <span>
                   {appointment.hour} {t('words.hoursAbbreviation')}
                 </span>
               </h2>
-              <footer className='flex justify-end space-x-5'>
-                {/* TODO: animate all buttons with color and bounce`` */}
-                <button className='transition-colors hover:text-indigo-500' onClick={downloadPDF}>
-                  <Printer size={20} strokeWidth={2} />
-                </button>
-                <a
-                  href={`https://mail.google.com/mail/?view=cm&to=${email.to}&su=${email.subject}&body=${email.body}`}
-                  target='_blank'
-                  className={cn('transition-colors hover:text-indigo-500', !appointment.user?.email && 'pointer-events-none')}
-                >
-                  {appointment.user?.email ? <Mail size={20} strokeWidth={2} /> : <MailX size={20} strokeWidth={2} className='stroke-rose-400' />}
-                </a>
-                <button className='transition-colors hover:fill-indigo-500'>
-                  <MessageCircle size={20} strokeWidth={2} />
-                </button>
+              <footer className='flex justify-between pt-2'>
+                <div>
+                  <button
+                    className='flex items-center gap-2 rounded-sm bg-stone-100 px-2 py-1.5 text-xs text-stone-600 transition-colors hover:bg-stone-200 hover:text-stone-600'
+                    onClick={downloadPDF}
+                  >
+                    <Printer size={14} strokeWidth={2} />
+                    <span>{t('label.print')}</span>
+                  </button>
+                </div>
+                <div className='flex items-center space-x-4'>
+                  <span className='text-xsm font-medium text-slate-600'>{t('label.sendBy')}</span>
+                  <button
+                    className='flex items-center gap-2 rounded-sm bg-slate-100 px-2 py-1.5 text-xs text-slate-600 transition-colors hover:bg-sky-100 hover:text-sky-600'
+                    onClick={() => console.log('Send by email')}
+                  >
+                    {appointment.user?.email ? <Mail size={14} strokeWidth={2} /> : <MailX size={14} strokeWidth={2} className='stroke-rose-400' />}
+                    <span>{t('button.email')}</span>
+                  </button>
+                  <button
+                    className='flex items-center gap-2 rounded-sm bg-slate-100 px-2 py-1.5 text-xs text-slate-600 transition-colors hover:bg-emerald-100 hover:text-emerald-600'
+                    onClick={() => console.log('Send by message')}
+                  >
+                    <MessageCircle size={14} strokeWidth={2} />
+                    <span>{t('label.message')}</span>
+                  </button>
+                </div>
               </footer>
             </CardContent>
           </Card>
