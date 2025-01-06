@@ -223,7 +223,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
               <Trash2 size={16} strokeWidth={1.5} />
             </TableButton>
             <TableButton
-              callback={() => navigate(`/email/${row.original._id}`)}
+              callback={() => navigate(`/email/user/${row.original._id}`)}
               className='hover:text-sky-500'
               disabled={!row.original.email}
               tooltip={t('tooltip.sendEmail')}
