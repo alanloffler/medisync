@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { ArrowRight, CalendarClock, CalendarDays, Mail, PencilLine, Share2, Smartphone, Tag, Trash2 } from 'lucide-react';
+import { ArrowRight, CalendarClock, CalendarDays, Mail, MessageCircle, PencilLine, Share2, Smartphone, Tag, Trash2 } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Badge } from '@core/components/ui/badge';
 import { Button } from '@core/components/ui/button';
@@ -196,16 +196,26 @@ export default function ViewProfessional() {
                         onClick={() =>
                           window.open(`https://mail.google.com/mail/?view=cm&to=${email.to}&su=${email.subject}&body=${email.body}`, '_blank')
                         }
-                        className='transition-transform hover:scale-110 hover:bg-white hover:text-fuchsia-400 hover:animate-in'
+                        className='transition-transform hover:scale-110 hover:bg-fuchsia-100 hover:text-fuchsia-400 hover:animate-in'
                       >
                         <Mail size={18} strokeWidth={1.5} />
+                      </Button>
+                    </TooltipWrapper>
+                    <TooltipWrapper tooltip={t('tooltip.sendMessage')}>
+                      <Button
+                        variant='ghost'
+                        size='miniIcon'
+                        className='transition-transform hover:scale-110 hover:bg-sky-100 hover:text-sky-400 hover:animate-in'
+                        onClick={() => navigate(`/whatsapp/professional/${professional._id}`)}
+                      >
+                        <MessageCircle size={18} strokeWidth={1.5} />
                       </Button>
                     </TooltipWrapper>
                     <TooltipWrapper tooltip={t('tooltip.share')}>
                       <Button
                         variant='ghost'
                         size='miniIcon'
-                        className='transition-transform hover:scale-110 hover:bg-white hover:text-sky-400 hover:animate-in'
+                        className='transition-transform hover:scale-110 hover:bg-pink-100 hover:text-pink-400 hover:animate-in'
                       >
                         <Share2 size={18} strokeWidth={1.5} />
                       </Button>
@@ -215,7 +225,7 @@ export default function ViewProfessional() {
                         variant='ghost'
                         size='miniIcon'
                         onClick={() => navigate(`/professionals/update/${professional._id}`)}
-                        className='transition-transform hover:scale-110 hover:bg-white hover:text-orange-400 hover:animate-in'
+                        className='transition-transform hover:scale-110 hover:bg-orange-100 hover:text-orange-400 hover:animate-in'
                       >
                         <PencilLine size={18} strokeWidth={1.5} />
                       </Button>
