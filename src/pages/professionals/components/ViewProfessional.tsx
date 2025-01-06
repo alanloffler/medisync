@@ -193,10 +193,8 @@ export default function ViewProfessional() {
                       <Button
                         variant='ghost'
                         size='miniIcon'
-                        onClick={() =>
-                          window.open(`https://mail.google.com/mail/?view=cm&to=${email.to}&su=${email.subject}&body=${email.body}`, '_blank')
-                        }
                         className='transition-transform hover:scale-110 hover:bg-fuchsia-100 hover:text-fuchsia-400 hover:animate-in'
+                        onClick={() => navigate(`/email/${professional._id}`)}
                       >
                         <Mail size={18} strokeWidth={1.5} />
                       </Button>
