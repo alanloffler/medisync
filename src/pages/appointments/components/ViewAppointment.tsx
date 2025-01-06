@@ -71,12 +71,15 @@ export default function ViewAppointment() {
         .toCanvas(input)
         .then(function (canvas) {
           const pdf: jsPDF = new jsPDF('p', 'px', 'a4', false);
-          const pdfWidth: number = pdf.internal.pageSize.getWidth();
-          const pdfHeight: number = pdf.internal.pageSize.getHeight();
+          // const pdfWidth: number = pdf.internal.pageSize.getWidth();
+          // const pdfHeight: number = pdf.internal.pageSize.getHeight();
+          const pdfWidth: number = pdf.canvas.width;
+          const pdfHeight: number = pdf.canvas.height;
           const imgWidth: number = canvas.width;
           const imgHeight: number = canvas.height;
           const ratio: number = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-          const imgX: number = (pdfWidth - imgWidth * ratio) / 2;
+          // const imgX: number = (pdfWidth - imgWidth * ratio) / 2;
+          const imgX: number = 0;
           const imgY: number = 0;
 
           pdf.addImage(canvas, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
@@ -87,7 +90,7 @@ export default function ViewAppointment() {
   }
 
   return (
-    <main ref={pdfRef} className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8'>
+    <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8'>
       {/* Section: Page Header */}
       <section className='flex items-center justify-between'>
         <PageHeader title={t('pageTitle.viewAppointment')} breadcrumb={VA_CONFIG.breadcrumb} />
@@ -98,7 +101,7 @@ export default function ViewAppointment() {
         <LoadingDB variant='card' text={t('loading.appointmentDetails')} absolute />
       ) : (
         <>
-          <Card className='mx-auto w-full md:w-1/2 lg:w-1/2'>
+          <Card ref={pdfRef} className='mx-auto w-full md:w-1/2 lg:w-1/2'>
             <CardTitle className='rounded-b-none bg-primary px-4 py-3 text-base text-background'>
               <header className='flex flex-row justify-between'>
                 <div className='flex flex-row items-center gap-4'>
