@@ -25,6 +25,7 @@ import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
 import { EMAIL_CONFIG } from '@config/email.config';
 import { EmailApiService } from '@email/services/email.service';
+import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
 import { emailSchema } from '@email/schemas/email.schema';
@@ -35,7 +36,7 @@ export default function SendEmail() {
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const navigate = useNavigate();
   const sendScope = useRef(null);
-  const { id } = useParams();
+  const { id, type } = useParams();
   const { t } = useTranslation();
 
   const {
@@ -43,10 +44,11 @@ export default function SendEmail() {
     isPending,
     isSuccess,
   } = useQuery<IResponse<IUser>, Error>({
-    queryKey: ['user', id],
+    queryKey: ['user', type, id],
     queryFn: async () => {
       if (!id) throw new Error('Dev Error: There is no user id');
-      return await UserApiService.findOne(id);
+      if (type === 'user') return await UserApiService.findOne(id);
+      if (type === 'professional') return await ProfessionalApiService.findOne(id);
     },
     retry: 1,
   });
@@ -71,16 +73,16 @@ export default function SendEmail() {
     isPending: isPendingMutation,
     isSuccess: isSuccessMutation,
     mutate,
-  } = useMutation<IResponse, Error, z.infer<typeof emailSchema>>({
+  } = useMutation<IResponse, Error, { data: z.infer<typeof emailSchema> }>({
     mutationKey: ['sendEmail', id],
-    mutationFn: async (data: z.infer<typeof emailSchema>) => await EmailApiService.sendEmail(data),
+    mutationFn: async ({ data }) => await EmailApiService.sendEmail(data),
     retry: 0,
     onError: (error) => addNotification({ type: 'error', message: error.message }),
     onSuccess: (success) => addNotification({ type: 'success', message: success.message }),
   });
 
   function handleSendEmail(data: z.infer<typeof emailSchema>): void {
-    mutate(data);
+    mutate({ data });
   }
 
   function resetForm(): void {
