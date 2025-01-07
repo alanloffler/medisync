@@ -10,7 +10,6 @@ import { BackButton } from '@core/components/common/BackButton';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
-import { TableButton } from '@core/components/common/TableButton';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
 import { format } from '@formkit/tempo';
@@ -212,10 +211,16 @@ export default function ViewUser() {
                     <PencilLine size={18} strokeWidth={1.5} />
                   </Button>
                 </TooltipWrapper>
-                {/* TODO: create dialog for user delete */}
-                <TableButton callback={handleRemoveUserDialog} className='hover:text-red-400' tooltip={t('tooltip.deleteUser')}>
-                  <Trash2 size={18} strokeWidth={1.5} />
-                </TableButton>
+                <TooltipWrapper tooltip={t('tooltip.delete')}>
+                  <Button
+                    variant='ghost'
+                    size='miniIcon'
+                    onClick={handleRemoveUserDialog}
+                    className='transition-transform hover:scale-110 hover:bg-red-100 hover:text-red-400 hover:animate-in'
+                  >
+                    <Trash2 size={18} strokeWidth={1.5} />
+                  </Button>
+                </TooltipWrapper>
               </section>
             </Card>
           )}
