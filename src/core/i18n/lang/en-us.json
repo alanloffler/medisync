@@ -126,7 +126,7 @@
     }
   },
   "email": {
-    "body": "Body",
+    "body": "Message",
     "description": "This email will be sent from your administrator account {{account}}",
     "sendAppointment": {
       "subject": "Appointment confirmation",
