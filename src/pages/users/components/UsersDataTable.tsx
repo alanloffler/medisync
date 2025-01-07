@@ -209,22 +209,22 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
         header: () => <div className='text-center'>{t(USER_CONFIG.table.header[4])}</div>,
         cell: ({ row }) => (
           <div className='mx-auto flex w-fit flex-row items-center justify-center space-x-2'>
-            <TableButton callback={() => navigate(`/users/${row.original._id}`)} className='hover:text-sky-500' tooltip={t('tooltip.details')}>
+            <TableButton callback={() => navigate(`/users/${row.original._id}`)} className='hover:text-sky-400' tooltip={t('tooltip.details')}>
               <FileText size={16} strokeWidth={1.5} />
             </TableButton>
             <TableButton
               callback={() => navigate(`/users/update/${row.original._id}`)}
-              className='hover:text-fuchsia-500'
+              className='hover:text-amber-400'
               tooltip={t('tooltip.edit')}
             >
               <PencilLine size={16} strokeWidth={1.5} />
             </TableButton>
-            <TableButton callback={() => handleRemoveUserDialog(row.original)} className='hover:text-rose-500' tooltip={t('tooltip.delete')}>
+            <TableButton callback={() => handleRemoveUserDialog(row.original)} className='hover:text-red-400' tooltip={t('tooltip.delete')}>
               <Trash2 size={16} strokeWidth={1.5} />
             </TableButton>
             <TableButton
               callback={() => navigate(`/email/user/${row.original._id}`)}
-              className='hover:text-sky-500'
+              className='hover:text-purple-400'
               disabled={!row.original.email}
               tooltip={t('tooltip.sendEmail')}
             >
@@ -232,7 +232,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
             </TableButton>
             <TableButton
               callback={() => navigate(`/whatsapp/user/${row.original._id}`)}
-              className='hover:text-green-500'
+              className='hover:text-emerald-400'
               tooltip={t('tooltip.sendMessage')}
             >
               <MessageCircle size={16} strokeWidth={1.5} />
