@@ -126,7 +126,7 @@
     }
   },
   "email": {
-    "body": "Cuerpo",
+    "body": "Mensaje",
     "description": "Este email va a ser enviado desde tu cuenta de administrador {{account}}",
     "sendAppointment": {
       "subject": "Confirmación de turno",
