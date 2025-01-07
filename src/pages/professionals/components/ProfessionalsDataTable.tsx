@@ -279,7 +279,7 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
             </TableButton>
             <TableButton
               callback={() => navigate(`/whatsapp/professional/${row.original._id}`)}
-              className='hover:fill-green-500'
+              className='hover:text-emerald-500'
               tooltip={t('tooltip.sendMessage')}
             >
               <MessageCircle size={16} strokeWidth={1.5} />
