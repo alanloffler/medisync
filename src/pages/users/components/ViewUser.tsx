@@ -182,7 +182,7 @@ export default function ViewUser() {
               <section className='flex items-center justify-end space-x-2 border-t p-2'>
                 <TableButton
                   callback={() => navigate(`/email/${user.data._id}`)}
-                  className='hover:text-sky-500'
+                  className='hover:text-purple-400'
                   disabled={!user.data.email}
                   tooltip={t('tooltip.sendEmail')}
                 >
@@ -190,20 +190,20 @@ export default function ViewUser() {
                 </TableButton>
                 <TableButton
                   callback={() => navigate(`/whatsapp/${user.data._id}`)}
-                  className='hover:text-green-500'
+                  className='hover:text-emerald-400'
                   tooltip={t('tooltip.sendMessage')}
                 >
                   <MessageCircle size={18} strokeWidth={1.5} />
                 </TableButton>
                 <TableButton
                   callback={() => navigate(`/users/update/${user.data._id}`)}
-                  className='hover:text-fuchsia-500'
+                  className='hover:text-amber-400'
                   tooltip={t('tooltip.updateUser')}
                 >
                   <PencilLine size={18} strokeWidth={1.5} />
                 </TableButton>
                 {/* TODO: create dialog for user delete */}
-                <TableButton callback={handleRemoveUserDialog} className='hover:text-rose-500' tooltip={t('tooltip.deleteUser')}>
+                <TableButton callback={handleRemoveUserDialog} className='hover:text-red-400' tooltip={t('tooltip.deleteUser')}>
                   <Trash2 size={18} strokeWidth={1.5} />
                 </TableButton>
               </section>
