@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { ArrowDownUp, FileText, MessageCircle, PencilLine, Trash2 } from 'lucide-react';
+import { ArrowDownUp, FileText, Mail, MailX, MessageCircle, PencilLine, Trash2 } from 'lucide-react';
 // External components:
 // https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
@@ -276,6 +276,14 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
             </TableButton>
             <TableButton callback={() => handleRemoveDialog(row.original)} className='hover:text-red-400' tooltip={t('tooltip.edit')}>
               <Trash2 size={16} strokeWidth={1.5} />
+            </TableButton>
+            <TableButton
+              callback={() => navigate(`/email/professional/${row.original._id}`)}
+              className='hover:text-purple-400'
+              disabled={!row.original.email}
+              tooltip={t('tooltip.sendEmail')}
+            >
+              {!row.original.email ? <MailX size={16} strokeWidth={1.5} /> : <Mail size={16} strokeWidth={1.5} />}
             </TableButton>
             <TableButton
               callback={() => navigate(`/whatsapp/professional/${row.original._id}`)}
