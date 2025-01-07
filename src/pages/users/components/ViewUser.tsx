@@ -11,6 +11,7 @@ import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
 import { TableButton } from '@core/components/common/TableButton';
+import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
 import { format } from '@formkit/tempo';
 import { useAnimate } from 'motion/react';
@@ -180,28 +181,37 @@ export default function ViewUser() {
                 )}
               </CardContent>
               <section className='flex items-center justify-end space-x-2 border-t p-2'>
-                <TableButton
-                  callback={() => navigate(`/email/${user.data._id}`)}
-                  className='hover:text-purple-400'
-                  disabled={!user.data.email}
-                  tooltip={t('tooltip.sendEmail')}
-                >
-                  {!user.data.email ? <MailX size={18} strokeWidth={1.5} /> : <Mail size={18} strokeWidth={1.5} />}
-                </TableButton>
-                <TableButton
-                  callback={() => navigate(`/whatsapp/${user.data._id}`)}
-                  className='hover:text-emerald-400'
-                  tooltip={t('tooltip.sendMessage')}
-                >
-                  <MessageCircle size={18} strokeWidth={1.5} />
-                </TableButton>
-                <TableButton
-                  callback={() => navigate(`/users/update/${user.data._id}`)}
-                  className='hover:text-amber-400'
-                  tooltip={t('tooltip.updateUser')}
-                >
-                  <PencilLine size={18} strokeWidth={1.5} />
-                </TableButton>
+                <TooltipWrapper tooltip={t('tooltip.sendEmail')}>
+                  <Button
+                    variant='ghost'
+                    size='miniIcon'
+                    className='transition-transform hover:scale-110 hover:bg-purple-100 hover:text-purple-400 hover:animate-in disabled:opacity-100'
+                    onClick={() => navigate(`/email/${user.data._id}`)}
+                    disabled={!user.data.email}
+                  >
+                    {!user.data.email ? <MailX size={18} strokeWidth={1.5} className='stroke-red-400' /> : <Mail size={18} strokeWidth={1.5} />}
+                  </Button>
+                </TooltipWrapper>
+                <TooltipWrapper tooltip={t('tooltip.sendMessage')}>
+                  <Button
+                    variant='ghost'
+                    size='miniIcon'
+                    className='transition-transform hover:scale-110 hover:bg-emerald-100 hover:text-emerald-400 hover:animate-in'
+                    onClick={() => navigate(`/whatsapp/${user.data._id}`)}
+                  >
+                    <MessageCircle size={18} strokeWidth={1.5} />
+                  </Button>
+                </TooltipWrapper>
+                <TooltipWrapper tooltip={t('tooltip.edit')}>
+                  <Button
+                    variant='ghost'
+                    size='miniIcon'
+                    onClick={() => navigate(`/users/update/${user.data._id}`)}
+                    className='transition-transform hover:scale-110 hover:bg-amber-100 hover:text-amber-400 hover:animate-in'
+                  >
+                    <PencilLine size={18} strokeWidth={1.5} />
+                  </Button>
+                </TooltipWrapper>
                 {/* TODO: create dialog for user delete */}
                 <TableButton callback={handleRemoveUserDialog} className='hover:text-red-400' tooltip={t('tooltip.deleteUser')}>
                   <Trash2 size={18} strokeWidth={1.5} />
