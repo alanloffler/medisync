@@ -262,24 +262,24 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
           <div className='mx-auto flex w-fit flex-row items-center justify-center space-x-2'>
             <TableButton
               callback={() => navigate(`/professionals/${row.original._id}`)}
-              className='hover:text-sky-500'
+              className='hover:text-sky-400'
               tooltip={t('tooltip.details')}
             >
               <FileText size={16} strokeWidth={1.5} />
             </TableButton>
             <TableButton
               callback={() => navigate(`/professionals/update/${row.original._id}`)}
-              className='hover:text-fuchsia-500'
+              className='hover:text-amber-400'
               tooltip={t('tooltip.delete')}
             >
               <PencilLine size={16} strokeWidth={1.5} />
             </TableButton>
-            <TableButton callback={() => handleRemoveDialog(row.original)} className='hover:text-rose-500' tooltip={t('tooltip.edit')}>
+            <TableButton callback={() => handleRemoveDialog(row.original)} className='hover:text-red-400' tooltip={t('tooltip.edit')}>
               <Trash2 size={16} strokeWidth={1.5} />
             </TableButton>
             <TableButton
               callback={() => navigate(`/whatsapp/professional/${row.original._id}`)}
-              className='hover:text-emerald-500'
+              className='hover:text-emerald-400'
               tooltip={t('tooltip.sendMessage')}
             >
               <MessageCircle size={16} strokeWidth={1.5} />
