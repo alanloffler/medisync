@@ -191,7 +191,7 @@ export default function ViewProfessional() {
                       <Button
                         variant='ghost'
                         size='miniIcon'
-                        className='transition-transform hover:scale-110 hover:bg-fuchsia-100 hover:text-fuchsia-400 hover:animate-in'
+                        className='transition-transform hover:scale-110 hover:bg-purple-100 hover:text-purple-400 hover:animate-in'
                         onClick={() => navigate(`/email/professional/${professional._id}`)}
                       >
                         <Mail size={18} strokeWidth={1.5} />
@@ -201,7 +201,7 @@ export default function ViewProfessional() {
                       <Button
                         variant='ghost'
                         size='miniIcon'
-                        className='transition-transform hover:scale-110 hover:bg-sky-100 hover:text-sky-400 hover:animate-in'
+                        className='transition-transform hover:scale-110 hover:bg-emerald-100 hover:text-emerald-400 hover:animate-in'
                         onClick={() => navigate(`/whatsapp/professional/${professional._id}`)}
                       >
                         <MessageCircle size={18} strokeWidth={1.5} />
@@ -221,7 +221,7 @@ export default function ViewProfessional() {
                         variant='ghost'
                         size='miniIcon'
                         onClick={() => navigate(`/professionals/update/${professional._id}`)}
-                        className='transition-transform hover:scale-110 hover:bg-orange-100 hover:text-orange-400 hover:animate-in'
+                        className='transition-transform hover:scale-110 hover:bg-amber-100 hover:text-amber-400 hover:animate-in'
                       >
                         <PencilLine size={18} strokeWidth={1.5} />
                       </Button>
