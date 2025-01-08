@@ -90,7 +90,7 @@ export default function ViewAppointment() {
   }
 
   return (
-    <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8'>
+    <main className='flex flex-1 flex-col gap-4 p-4 md:p-8'>
       {/* Section: Page Header */}
       <section className='flex items-center justify-between'>
         <PageHeader title={t('pageTitle.viewAppointment')} breadcrumb={VA_CONFIG.breadcrumb} />
@@ -101,7 +101,7 @@ export default function ViewAppointment() {
         <LoadingDB variant='card' text={t('loading.appointmentDetails')} absolute />
       ) : (
         <>
-          <Card ref={pdfRef} className='mx-auto w-full md:w-1/2 lg:w-1/2'>
+          <Card ref={pdfRef} className='mx-auto w-full mt-4 md:w-1/2 lg:w-1/2'>
             <CardTitle className='rounded-b-none bg-primary px-4 py-3 text-base text-background'>
               <header className='flex flex-row justify-between'>
                 <div className='flex flex-row items-center gap-4'>
@@ -132,36 +132,36 @@ export default function ViewAppointment() {
                   {appointment.hour} {t('words.hoursAbbreviation')}
                 </span>
               </h2>
-              <footer className='flex justify-between pt-2'>
-                <div>
-                  <button
-                    className='flex items-center gap-2 rounded-sm bg-stone-100 px-2 py-1.5 text-xs text-stone-600 transition-colors hover:bg-stone-200 hover:text-stone-600'
-                    onClick={downloadPDF}
-                  >
-                    <Printer size={14} strokeWidth={2} />
-                    <span>{t('label.print')}</span>
-                  </button>
-                </div>
-                <div className='flex items-center space-x-4'>
-                  <span className='text-xsm font-medium text-slate-600'>{t('label.sendBy')}</span>
-                  <button
-                    className='flex items-center gap-2 rounded-sm bg-slate-100 px-2 py-1.5 text-xs text-slate-600 transition-colors hover:bg-sky-100 hover:text-sky-600'
-                    onClick={() => console.log('Send by email')}
-                  >
-                    {appointment.user?.email ? <Mail size={14} strokeWidth={2} /> : <MailX size={14} strokeWidth={2} className='stroke-rose-400' />}
-                    <span>{t('button.email')}</span>
-                  </button>
-                  <button
-                    className='flex items-center gap-2 rounded-sm bg-slate-100 px-2 py-1.5 text-xs text-slate-600 transition-colors hover:bg-emerald-100 hover:text-emerald-600'
-                    onClick={() => console.log('Send by message')}
-                  >
-                    <MessageCircle size={14} strokeWidth={2} />
-                    <span>{t('label.message')}</span>
-                  </button>
-                </div>
-              </footer>
             </CardContent>
           </Card>
+          <footer className='mx-auto flex w-full justify-between md:w-1/2 lg:w-1/2'>
+            <div>
+              <button
+                className='flex items-center gap-2 rounded-sm bg-transparent px-2 py-1.5 text-xs text-stone-600 transition-colors hover:bg-stone-200 hover:text-stone-600'
+                onClick={downloadPDF}
+              >
+                <Printer size={14} strokeWidth={2} />
+                <span>{t('label.print')}</span>
+              </button>
+            </div>
+            <div className='flex items-center space-x-4'>
+              <span className='text-xsm font-medium text-slate-600'>{t('label.sendBy')}</span>
+              <button
+                className='flex items-center gap-2 rounded-sm bg-transparent px-2 py-1.5 text-xs text-slate-600 transition-colors hover:bg-sky-100 hover:text-sky-600'
+                onClick={() => console.log('Send by email')}
+              >
+                {appointment.user?.email ? <Mail size={14} strokeWidth={2} /> : <MailX size={14} strokeWidth={2} className='stroke-red-400' />}
+                <span>{t('button.email')}</span>
+              </button>
+              <button
+                className='flex items-center gap-2 rounded-sm bg-transparent px-2 py-1.5 text-xs text-slate-600 transition-colors hover:bg-emerald-100 hover:text-emerald-600'
+                onClick={() => console.log('Send by message')}
+              >
+                <MessageCircle size={14} strokeWidth={2} />
+                <span>{t('label.message')}</span>
+              </button>
+            </div>
+          </footer>
           {pdfIsGenerating && <LoadingDB variant='default' text={t('loading.generatingPDF')} className='text-slate-800' />}
         </>
       )}
