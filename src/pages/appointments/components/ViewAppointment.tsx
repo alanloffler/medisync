@@ -101,7 +101,7 @@ export default function ViewAppointment() {
         <LoadingDB variant='card' text={t('loading.appointmentDetails')} absolute />
       ) : (
         <>
-          <Card ref={pdfRef} className='mx-auto w-full mt-4 md:w-1/2 lg:w-1/2'>
+          <Card ref={pdfRef} className='mx-auto mt-4 w-full md:w-[500px] lg:w-[500px]'>
             <CardTitle className='rounded-b-none bg-primary px-4 py-3 text-base text-background'>
               <header className='flex flex-row justify-between'>
                 <div className='flex flex-row items-center gap-4'>
@@ -116,7 +116,7 @@ export default function ViewAppointment() {
                 </div>
               </header>
             </CardTitle>
-            <CardContent className='mt-2 space-y-3 p-4'>
+            <CardContent className='space-y-3 p-6'>
               <Link to={`/users/${appointment.user?._id}`}>
                 <span className='flex justify-center text-xl font-semibold underline-offset-2 hover:underline'>
                   {UtilsString.upperCase(`${appointment.user?.firstName} ${appointment.user?.lastName}`, 'each')}
@@ -134,14 +134,20 @@ export default function ViewAppointment() {
               </h2>
             </CardContent>
           </Card>
-          <footer className='mx-auto flex w-full justify-between md:w-1/2 lg:w-1/2'>
-            <div>
+          <footer className='mx-auto flex w-full justify-between md:w-[500px] lg:w-[500px]'>
+            <div className='flex gap-2'>
               <button
                 className='flex items-center gap-2 rounded-sm bg-transparent px-2 py-1.5 text-xs text-stone-600 transition-colors hover:bg-stone-200 hover:text-stone-600'
                 onClick={downloadPDF}
               >
-                <Printer size={14} strokeWidth={2} />
-                <span>{t('label.print')}</span>
+                {pdfIsGenerating ? (
+                  <LoadingDB iconSize={16} variant='default' text={t('loading.generatingPDF')} className='p-0 text-xs text-foreground' />
+                ) : (
+                  <>
+                    <Printer size={14} strokeWidth={2} />
+                    <span>{t('label.print')}</span>
+                  </>
+                )}
               </button>
             </div>
             <div className='flex items-center space-x-4'>
@@ -162,7 +168,6 @@ export default function ViewAppointment() {
               </button>
             </div>
           </footer>
-          {pdfIsGenerating && <LoadingDB variant='default' text={t('loading.generatingPDF')} className='text-slate-800' />}
         </>
       )}
     </main>
