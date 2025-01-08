@@ -68,21 +68,21 @@ export default function ViewAppointment() {
       setPdfIsGenerating(true);
 
       htmlToImage
-        .toCanvas(input)
+        .toCanvas(input, { backgroundColor: '#f1f5f9', style: { height: '100%', marginTop: '50' } })
         .then(function (canvas) {
           const pdf: jsPDF = new jsPDF('p', 'px', 'a4', false);
-          // const pdfWidth: number = pdf.internal.pageSize.getWidth();
-          // const pdfHeight: number = pdf.internal.pageSize.getHeight();
-          const pdfWidth: number = pdf.canvas.width;
-          const pdfHeight: number = pdf.canvas.height;
+          const pdfWidth: number = pdf.internal.pageSize.getWidth();
+          const pdfHeight: number = pdf.internal.pageSize.getHeight();
+          console.log(pdfWidth, pdfHeight);
+
           const imgWidth: number = canvas.width;
           const imgHeight: number = canvas.height;
           const ratio: number = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-          // const imgX: number = (pdfWidth - imgWidth * ratio) / 2;
-          const imgX: number = 0;
+          const imgX: number = (pdfWidth - imgWidth * ratio) / 2;
           const imgY: number = 0;
 
-          pdf.addImage(canvas, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+          pdf.addImage(canvas, 'PNG', imgX, imgY, pdfWidth, pdfHeight);
+          // pdf.addImage(canvas, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
           pdf.save(`${appointment.user.dni}-${appointment.day}.pdf`);
         })
         .finally(() => setPdfIsGenerating(false));
@@ -90,7 +90,7 @@ export default function ViewAppointment() {
   }
 
   return (
-    <main className='flex flex-1 flex-col gap-4 p-4 md:p-8'>
+    <main className='flex flex-1 flex-col p-4 md:p-8'>
       {/* Section: Page Header */}
       <section className='flex items-center justify-between'>
         <PageHeader title={t('pageTitle.viewAppointment')} breadcrumb={VA_CONFIG.breadcrumb} />
@@ -101,39 +101,39 @@ export default function ViewAppointment() {
         <LoadingDB variant='card' text={t('loading.appointmentDetails')} absolute />
       ) : (
         <>
-          <Card ref={pdfRef} className='mx-auto mt-4 w-full md:w-[500px] lg:w-[500px]'>
-            <CardTitle className='rounded-b-none bg-primary px-4 py-3 text-base text-background'>
-              <header className='flex flex-row justify-between'>
-                <div className='flex flex-row items-center gap-4'>
-                  <CalendarDays size={18} strokeWidth={2} />
-                  <span>{t('cardTitle.viewAppointment')}</span>
-                </div>
-                <div className='flex flex-row items-center'>
-                  {UtilsString.upperCase(
-                    `${appointment.professional?.title.abbreviation} ${appointment.professional?.firstName} ${appointment.professional?.lastName}`,
-                    'each',
-                  )}
-                </div>
-              </header>
-            </CardTitle>
-            <CardContent className='space-y-3 p-6'>
-              <Link to={`/users/${appointment.user?._id}`}>
-                <span className='flex justify-center text-xl font-semibold underline-offset-2 hover:underline'>
-                  {UtilsString.upperCase(`${appointment.user?.firstName} ${appointment.user?.lastName}`, 'each')}
-                </span>
-              </Link>
-              <h2 className='flex items-center gap-5 pt-2 text-sm'>
-                <CalendarDays size={20} strokeWidth={2} />
-                <span>{date}</span>
-              </h2>
-              <h2 className='flex items-center gap-5 text-sm'>
-                <Clock size={20} strokeWidth={2} />
-                <span>
-                  {appointment.hour} {t('words.hoursAbbreviation')}
-                </span>
-              </h2>
-            </CardContent>
-          </Card>
+          <div ref={pdfRef} className='py-4'>
+            <Card className='mx-auto w-full md:w-[500px] lg:w-[500px]'>
+              <CardTitle className='rounded-b-none bg-primary px-4 py-3 text-base text-background'>
+                <header className='flex flex-row justify-between'>
+                  <div className='flex flex-row items-center gap-4'>
+                    <CalendarDays size={18} strokeWidth={2} />
+                    <span>{t('cardTitle.viewAppointment')}</span>
+                  </div>
+                  <div className='flex flex-row items-center'>
+                    {UtilsString.upperCase(
+                      `${appointment.professional?.title.abbreviation} ${appointment.professional?.firstName} ${appointment.professional?.lastName}`,
+                      'each',
+                    )}
+                  </div>
+                </header>
+              </CardTitle>
+              <CardContent className='space-y-3 p-6'>
+                <Link to={`/users/${appointment.user?._id}`}>
+                  <span className='flex justify-center text-xl font-semibold underline-offset-2 hover:underline'>
+                    {UtilsString.upperCase(`${appointment.user?.firstName} ${appointment.user?.lastName}`, 'each')}
+                  </span>
+                </Link>
+                <h2 className='flex items-center gap-5 pt-2 text-sm'>
+                  <CalendarDays size={20} strokeWidth={2} />
+                  <div>{date}</div>
+                </h2>
+                <h2 className='flex items-center gap-5 text-sm'>
+                  <Clock size={20} strokeWidth={2} />
+                  <div className='flex w-full'>{`${appointment.hour} ${t('words.hoursAbbreviation')}`}</div>
+                </h2>
+              </CardContent>
+            </Card>
+          </div>
           <footer className='mx-auto flex w-full justify-between md:w-[500px] lg:w-[500px]'>
             <div className='flex gap-2'>
               <button
