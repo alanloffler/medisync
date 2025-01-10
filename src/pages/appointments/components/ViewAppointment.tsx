@@ -58,7 +58,7 @@ export default function ViewAppointment() {
 
   function downloadPDF(): void {
     const input: HTMLDivElement | null = pdfRef.current;
-
+    // TODO: send pdf as attachment! Research
     if (input) {
       setPdfIsGenerating(true);
 
