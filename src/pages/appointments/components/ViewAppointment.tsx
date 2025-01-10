@@ -63,7 +63,7 @@ export default function ViewAppointment() {
       setPdfIsGenerating(true);
 
       htmlToImage
-        .toCanvas(input, { backgroundColor: '#f1f5f9', style: { height: '100%', marginTop: '50' } })
+        .toCanvas(input, { backgroundColor: '#f1f5f9', width: 2480, height: 3508 })
         .then(function (canvas) {
           const pdf: jsPDF = new jsPDF('p', 'px', 'a4', false);
           const pdfWidth: number = pdf.internal.pageSize.getWidth();
@@ -73,9 +73,8 @@ export default function ViewAppointment() {
           const ratio: number = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
           const imgX: number = (pdfWidth - imgWidth * ratio) / 2;
           const imgY: number = 0;
-
-          pdf.addImage(canvas, 'PNG', imgX, imgY, pdfWidth, pdfHeight);
-          // pdf.addImage(canvas, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+          
+          pdf.addImage(canvas, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
           pdf.save(`${appointment?.data.user.dni}-${appointment?.data.day}.pdf`);
         })
         .finally(() => setPdfIsGenerating(false));
@@ -100,7 +99,7 @@ export default function ViewAppointment() {
       )}
       {isSuccess && (
         <>
-          <div ref={pdfRef} className='py-4'>
+          <div ref={pdfRef} className='mt-6 py-4'>
             <Card className='mx-auto w-full md:w-[500px] lg:w-[500px]'>
               <CardTitle className='rounded-b-none bg-primary px-4 py-3 text-base text-background'>
                 <header className='flex flex-row justify-between'>
