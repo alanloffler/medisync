@@ -31,9 +31,9 @@ import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 // Imports
 import type { IDataTableUsers, ITableManager } from '@core/interfaces/table.interface';
+import type { IPaginatedUsersVars } from '@users/interfaces/mutation-vars.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
-import type { IUser } from '@users/interfaces/user.interface';
-import type { IUserSearch } from '@users/interfaces/user-search.interface';
+import type { IUser, IUsersData } from '@users/interfaces/user.interface';
 import { EUserSearch } from '@users/enums/user-search.enum';
 import { USER_CONFIG } from '@config/users/users.config';
 import { UserApiService } from '@users/services/user-api.service';
@@ -41,18 +41,6 @@ import { UtilsString } from '@core/services/utils/string.service';
 import { useDelimiter } from '@core/hooks/useDelimiter';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 import { useTruncateText } from '@core/hooks/useTruncateText';
-// Interfaces
-interface IUsersData {
-  count: number;
-  data: IUser[];
-  total: number;
-}
-
-interface IVars {
-  search: IUserSearch;
-  skipItems: number;
-  tableManager: ITableManager;
-}
 // Default values for pagination and sorting
 const defaultSorting: SortingState = [{ id: USER_CONFIG.table.defaultSortingId, desc: USER_CONFIG.table.defaultSortingType }];
 const defaultPagination: PaginationState = { pageIndex: 0, pageSize: USER_CONFIG.table.defaultPageSize };
@@ -70,7 +58,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
   const delimiter = useDelimiter();
   const firstUpdate = useRef<boolean>(true);
   const navigate = useNavigate();
-  const prevDeps = useRef<IVars>({ search, skipItems, tableManager });
+  const prevDeps = useRef<IPaginatedUsersVars>({ search, skipItems, tableManager });
   const truncate = useTruncateText();
   const { i18n, t } = useTranslation();
 
@@ -82,7 +70,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
     isError,
     isPending,
     isSuccess,
-  } = useMutation<IResponse<IUsersData>, Error, IVars>({
+  } = useMutation<IResponse<IUsersData>, Error, IPaginatedUsersVars>({
     mutationKey: ['searchUsersBy', search, tableManager, skipItems],
     mutationFn: async ({ search, skipItems, tableManager }) => await UserApiService.searchUsersBy(search, tableManager, skipItems),
     onSuccess: (response) => {
