@@ -11,3 +11,9 @@ export interface IUser extends IUserForm {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface IUsersData {
+  count: number;
+  data: IUser[];
+  total: number;
+}
