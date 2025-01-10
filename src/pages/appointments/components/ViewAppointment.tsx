@@ -3,6 +3,8 @@ import { CalendarDays, Clock, Mail, MailX, MessageCircle, Printer } from 'lucide
 // External components: https://ui.shadcn.com/docs/components
 import { Card, CardContent, CardTitle } from '@core/components/ui/card';
 // Components
+import { BackButton } from '@core/components/common/BackButton';
+import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
 // External imports
@@ -11,55 +13,48 @@ import jsPDF from 'jspdf';
 import { format } from '@formkit/tempo';
 import { useEffect, useRef, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
-import type { IAppointmentView } from '@appointments/interfaces/appointment.interface';
-import type { IEmail } from '@core/interfaces/email.interface';
+import type { IAppointment } from '@appointments/interfaces/appointment.interface';
+import type { IResponse } from '@core/interfaces/response.interface';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
-import { BackButton } from '@core/components/common/BackButton';
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { UtilsString } from '@core/services/utils/string.service';
 import { VIEW_APPOINTMENT_CONFIG as VA_CONFIG } from '@config/appointments/view-appointment.config';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
-import { useLegibleDate } from '@core/hooks/useDateToString';
 // React component
 export default function ViewAppointment() {
-  const [appointment, setAppointment] = useState<IAppointmentView>({} as IAppointmentView);
-  const [dataIsLoading, setDataIsLoading] = useState<boolean>(false);
   const [date, setDate] = useState<string>('');
-  const [email, setEmail] = useState<IEmail>({} as IEmail);
   const [pdfIsGenerating, setPdfIsGenerating] = useState<boolean>(false);
-  const legibleDate = useLegibleDate();
   const pdfRef = useRef<HTMLDivElement>(null);
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
-  const { id } = useParams();
   const { i18n, t } = useTranslation();
+  const { id } = useParams();
 
   useEffect(() => {
     setItemSelected(HEADER_CONFIG.headerMenu[1].id);
   }, [setItemSelected]);
 
+  const {
+    data: appointment,
+    error,
+    isError,
+    isLoading,
+    isSuccess,
+  } = useQuery<IResponse<IAppointment>>({
+    queryKey: ['appointments', 'findOne', id],
+    queryFn: () => AppointmentApiService.findOne(id!),
+    retry: 1,
+  });
+
   useEffect(() => {
-    if (id) {
-      setDataIsLoading(true);
-
-      AppointmentApiService.findOne(id)
-        .then((response) => {
-          setAppointment(response.data);
-
-          const legibleDate: string = format(appointment.day, 'full', i18n.language);
-          const capitalized = UtilsString.upperCase(legibleDate, 'first');
-          capitalized && setDate(capitalized);
-
-          setEmail({
-            to: response.data.user.email || VA_CONFIG.email.default,
-            subject: i18n.t('email.sendAppointment.subject'),
-            body: i18n.t('email.sendAppointment.body', { firstName: UtilsString.upperCase(response.data.user.firstName, 'each') }),
-          });
-        })
-        .finally(() => setDataIsLoading(false));
+    if (appointment) {
+      const legibleDate: string = format(appointment.data.day, 'full', i18n.language);
+      const capitalized = UtilsString.upperCase(legibleDate, 'first');
+      setDate(capitalized);
     }
-  }, [appointment.day, i18n.language, i18n, id, legibleDate]);
+  }, [appointment, i18n.language]);
 
   function downloadPDF(): void {
     const input: HTMLDivElement | null = pdfRef.current;
@@ -73,8 +68,6 @@ export default function ViewAppointment() {
           const pdf: jsPDF = new jsPDF('p', 'px', 'a4', false);
           const pdfWidth: number = pdf.internal.pageSize.getWidth();
           const pdfHeight: number = pdf.internal.pageSize.getHeight();
-          console.log(pdfWidth, pdfHeight);
-
           const imgWidth: number = canvas.width;
           const imgHeight: number = canvas.height;
           const ratio: number = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
@@ -83,7 +76,7 @@ export default function ViewAppointment() {
 
           pdf.addImage(canvas, 'PNG', imgX, imgY, pdfWidth, pdfHeight);
           // pdf.addImage(canvas, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
-          pdf.save(`${appointment.user.dni}-${appointment.day}.pdf`);
+          pdf.save(`${appointment?.data.user.dni}-${appointment?.data.day}.pdf`);
         })
         .finally(() => setPdfIsGenerating(false));
     }
@@ -97,9 +90,15 @@ export default function ViewAppointment() {
         <BackButton label={t('button.back')} />
       </section>
       {/* Section: Page content (Appo details card) */}
-      {dataIsLoading ? (
-        <LoadingDB variant='card' text={t('loading.appointmentDetails')} absolute />
-      ) : (
+      {isLoading && <LoadingDB variant='card' text={t('loading.appointmentDetails')} absolute />}
+      {isError && (
+        <InfoCard
+          type='error'
+          text={error.message}
+          className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white px-3 py-2 shadow-sm'
+        />
+      )}
+      {isSuccess && (
         <>
           <div ref={pdfRef} className='py-4'>
             <Card className='mx-auto w-full md:w-[500px] lg:w-[500px]'>
@@ -111,16 +110,16 @@ export default function ViewAppointment() {
                   </div>
                   <div className='flex flex-row items-center'>
                     {UtilsString.upperCase(
-                      `${appointment.professional?.title.abbreviation} ${appointment.professional?.firstName} ${appointment.professional?.lastName}`,
+                      `${appointment?.data.professional.title.abbreviation} ${appointment?.data.professional.firstName} ${appointment?.data.professional.lastName}`,
                       'each',
                     )}
                   </div>
                 </header>
               </CardTitle>
               <CardContent className='space-y-3 p-6'>
-                <Link to={`/users/${appointment.user?._id}`}>
+                <Link to={`/users/${appointment?.data.user._id}`}>
                   <span className='flex justify-center text-xl font-semibold underline-offset-2 hover:underline'>
-                    {UtilsString.upperCase(`${appointment.user?.firstName} ${appointment.user?.lastName}`, 'each')}
+                    {UtilsString.upperCase(`${appointment?.data.user.firstName} ${appointment?.data.user.lastName}`, 'each')}
                   </span>
                 </Link>
                 <h2 className='flex items-center gap-5 pt-2 text-sm'>
@@ -129,7 +128,7 @@ export default function ViewAppointment() {
                 </h2>
                 <h2 className='flex items-center gap-5 text-sm'>
                   <Clock size={20} strokeWidth={2} />
-                  <div className='flex w-full'>{`${appointment.hour} ${t('words.hoursAbbreviation')}`}</div>
+                  <div className='flex w-full'>{`${appointment?.data.hour} ${t('words.hoursAbbreviation')}`}</div>
                 </h2>
               </CardContent>
             </Card>
@@ -156,7 +155,7 @@ export default function ViewAppointment() {
                 className='flex items-center gap-2 rounded-sm bg-transparent px-2 py-1.5 text-xs text-slate-600 transition-colors hover:bg-sky-100 hover:text-sky-600'
                 onClick={() => console.log('Send by email')}
               >
-                {appointment.user?.email ? <Mail size={14} strokeWidth={2} /> : <MailX size={14} strokeWidth={2} className='stroke-red-400' />}
+                {appointment?.data.user.email ? <Mail size={14} strokeWidth={2} /> : <MailX size={14} strokeWidth={2} className='stroke-red-400' />}
                 <span>{t('button.email')}</span>
               </button>
               <button
