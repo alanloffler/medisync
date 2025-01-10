@@ -83,22 +83,22 @@ export class AppointmentApiService {
   }
 
   // FIXME: check if is unused method
-  public static async findAllByUserAndProfessional(userId: string, professionalId: string) {
-    const url: string = `${this.API_URL}/appointments/byUserAndProfessional?user=${userId}&professional=${professionalId}`;
+  // public static async findAllByUserAndProfessional(userId: string, professionalId: string) {
+  //   const url: string = `${this.API_URL}/appointments/byUserAndProfessional?user=${userId}&professional=${professionalId}`;
 
-    try {
-      const query: Response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json;charset=UTF-8',
-        },
-      });
+  //   try {
+  //     const query: Response = await fetch(url, {
+  //       method: 'GET',
+  //       headers: {
+  //         'content-type': 'application/json;charset=UTF-8',
+  //       },
+  //     });
 
-      return await query.json();
-    } catch (error) {
-      return error;
-    }
-  }
+  //     return await query.json();
+  //   } catch (error) {
+  //     return error;
+  //   }
+  // }
 
   public static async findApposRecordWithFilters(userId: string, professionalId?: string, year?: string) {
     if (userId) {
