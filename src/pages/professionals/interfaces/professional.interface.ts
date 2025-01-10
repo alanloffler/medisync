@@ -42,3 +42,9 @@ interface IProfessionalConfiguration {
   };
   workingDays: IWorkingDay[];
 }
+
+export interface IProfessionalsData {
+  count: number;
+  data: IProfessional[];
+  total: number;
+}
