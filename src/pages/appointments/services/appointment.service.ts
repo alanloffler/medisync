@@ -132,22 +132,14 @@ export class AppointmentApiService {
     return await UtilsUrl.fetch(url, EMethods.POST, data);
   }
 
-  public static async findOne(id: string) {
-    const url: string = `${this.API_URL}/appointments/${id}`;
+  // CHECKED: used on ViewAppointment.tsx
+  public static async findOne(id: string): Promise<IResponse<IAppointment>> {
+    const path: string = `${this.API_URL}/appointments/${id}`;
+    const url: URL = new URL(path);
 
-    try {
-      const query: Response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json;charset=UTF-8',
-        },
-      });
-
-      return await query.json();
-    } catch (e) {
-      return e;
-    }
+    return await UtilsUrl.fetch(url, EMethods.GET);
   }
+
   // CHECKED: used on DialogReserve.tsx
   public static async remove(id: string): Promise<IResponse<IAppointment>> {
     const path: string = `${this.API_URL}/appointments/${id}`;
