@@ -33,8 +33,8 @@ import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 // Imports
 import type { IDataTableProfessionals, ITableManager } from '@core/interfaces/table.interface';
-import type { IProfessional } from '@professionals/interfaces/professional.interface';
-import type { IProfessionalSearch } from '@professionals/interfaces/professional-search.interface';
+import type { IPaginatedProfessionalsVars } from '@professionals/interfaces/mutation-vars.interface';
+import type { IProfessional, IProfessionalsData } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import { EProfessionalSearch } from '@professionals/enums/professional-search.enum';
 import { PROFESSIONALS_CONFIG as PROF_CONFIG } from '@config/professionals/professionals.config';
@@ -43,18 +43,6 @@ import { ProfessionalApiService } from '@professionals/services/professional-api
 import { UtilsString } from '@core/services/utils/string.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 import { useTruncateText } from '@core/hooks/useTruncateText';
-// Interfaces
-interface IProfessionalsData {
-  count: number;
-  data: IProfessional[];
-  total: number;
-}
-
-interface IVars {
-  search: IProfessionalSearch;
-  skipItems: number;
-  tableManager: ITableManager;
-}
 // Default values for pagination and sorting
 const defaultSorting: SortingState = [{ id: PROF_CONFIG.table.defaultSortingId, desc: PROF_CONFIG.table.defaultSortingType }];
 const defaultPagination: PaginationState = { pageIndex: 0, pageSize: PROF_CONFIG.table.defaultPageSize };
@@ -71,7 +59,7 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const firstUpdate = useRef<boolean>(true);
   const navigate = useNavigate();
-  const prevDeps = useRef<IVars>({ search, skipItems, tableManager });
+  const prevDeps = useRef<IPaginatedProfessionalsVars>({ search, skipItems, tableManager });
   const truncate = useTruncateText();
   const { i18n, t } = useTranslation();
 
@@ -83,7 +71,7 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
     isError,
     isPending,
     isSuccess,
-  } = useMutation<IResponse<IProfessionalsData>, Error, IVars>({
+  } = useMutation<IResponse<IProfessionalsData>, Error, IPaginatedProfessionalsVars>({
     mutationKey: ['searchProfessionalsBy', search, tableManager, skipItems],
     mutationFn: async ({ search, skipItems, tableManager }) => await ProfessionalApiService.searchProfessionalsBy(search, tableManager, skipItems),
     onSuccess: (response) => {
