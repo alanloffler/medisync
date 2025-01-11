@@ -68,7 +68,8 @@ export default function SendEmail() {
   const bodyInput: string = emailForm.watch('body', '');
 
   useEffect(() => {
-    if (isSuccess) user.data.email && emailForm.setValue('to', [user?.data.email]);
+    if (isSuccess) user.data.email && emailForm.setValue('to', ['a', 'l']);
+    // if (isSuccess) user.data.email && emailForm.setValue('to', [user?.data.email]);
   }, [emailForm, isSuccess, user?.data.email]);
 
   const {
@@ -129,20 +130,24 @@ export default function SendEmail() {
                           <FormLabel>{t('email.to')}</FormLabel>
                           <FormControl className='h-9'>
                             <>
-                              {/* <Input type='text' disabled className='disabled:!opacity-100' defaultValue={field.value} /> */}
-                              <section className='flex h-10 w-full items-center rounded-md bg-slate-100/70 px-3 py-2 text-sm'>
-                                <span className='flex items-center space-x-2 rounded-full bg-fuchsia-200 py-1 pl-2 pr-1 text-xsm font-light text-fuchsia-700'>
-                                  <span>{field.value}</span>
-                                  <button
-                                    className='flex h-4 w-4 items-center justify-center rounded-full bg-fuchsia-300 hover:bg-fuchsia-500 hover:text-fuchsia-100'
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      resetForm();
-                                    }}
+                              <section className='flex h-10 w-full items-center space-x-2 rounded-md bg-slate-100/70 px-3 py-2 text-sm'>
+                                {field.value.map((item, index) => (
+                                  <span
+                                    key={index}
+                                    className='flex items-center space-x-2 rounded-full bg-fuchsia-200 py-1 pl-2 pr-1 text-xsm font-light text-fuchsia-700'
                                   >
-                                    <X size={10} strokeWidth={2} />
-                                  </button>
-                                </span>
+                                    <span>{item}</span>
+                                    <button
+                                      className='flex h-4 w-4 items-center justify-center rounded-full bg-fuchsia-300 hover:bg-fuchsia-500 hover:text-fuchsia-100'
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        resetForm();
+                                      }}
+                                    >
+                                      <X size={10} strokeWidth={2} />
+                                    </button>
+                                  </span>
+                                ))}
                               </section>
                             </>
                           </FormControl>
@@ -181,12 +186,13 @@ export default function SendEmail() {
                   />
                 </form>
                 <footer className='flex flex-col items-center justify-end gap-6 pt-6 md:flex-row'>
+                  here{t('test')}
                   <Button className='order-2 w-full md:order-1 md:w-fit' size='sm' variant='ghost' onClick={resetForm}>
                     {t('button.cancel')}
                   </Button>
                   <Button
                     type='submit'
-                    disabled={isPending || isPendingMutation || !subjectInput || !bodyInput}
+                    // disabled={isPending || isPendingMutation || !subjectInput || !bodyInput}
                     size='sm'
                     variant='default'
                     className='order-1 w-full gap-2 md:order-2 md:w-fit'
