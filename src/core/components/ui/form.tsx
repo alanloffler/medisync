@@ -12,6 +12,7 @@ import {
 
 import { cn } from "@lib/utils"
 import { Label } from "@core/components/ui/label"
+import i18next from "i18next"
 
 const Form = FormProvider
 
@@ -159,7 +160,7 @@ const FormMessage = React.forwardRef<
       className={cn("text-xs font-light text-destructive", className)}
       {...props}
     >
-      {body}
+      {i18next.t(body as string)}
     </p>
   )
 })
