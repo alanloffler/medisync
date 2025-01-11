@@ -31,7 +31,7 @@ export function DBCountProfessionals() {
     <main className='flex flex-row justify-end gap-2 py-3 text-xsm font-normal text-slate-400'>
       {total && (
         <section className='flex items-center space-x-1'>
-          <Database size={16} strokeWidth={2} className='text-blue-400' />
+          <Database size={16} strokeWidth={2} className='text-orange-400' />
           <span>{t('table.totalItems.professionals', { count: total })}</span>
         </section>
       )}
