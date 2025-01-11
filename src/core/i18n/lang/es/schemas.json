@@ -1,8 +1,18 @@
 {
   "schema": {
     "email": {
+      "empty": "Email vacio",
+      "invalid": "Email inválido para {{email}}",
+      "max": {
+        "body": "El mensaje no debe superar los 1000 caracteres",
+        "subject": "El asunto no debe superar los 100 caracteres"
+      },
       "min": {
+        "body": "El mensaje debe poseer al menos 5 caracteres",
         "subject": "El asunto debe poseer al menos 5 caracteres"
+      },
+      "nonEmpty": {
+        "to": "Debes ingresar al menos un destinatario"
       }
     }
   }

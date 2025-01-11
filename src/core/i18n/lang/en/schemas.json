@@ -1,8 +1,18 @@
 {
   "schema": {
     "email": {
+      "empty": "Empty email",
+      "invalid": "Invalid email for {{email}}",
+      "max": {
+        "body": "The body should not exceed 1000 characters",
+        "subject": "The subject should not exceed 100 characters"
+      },
       "min": {
+        "body": "The message must be at least 5 characters long",
         "subject": "The subject must be at least 5 characters long"
+      },
+      "nonEmpty": {
+        "to": "You must enter at least one recipient"
       }
     }
   }
