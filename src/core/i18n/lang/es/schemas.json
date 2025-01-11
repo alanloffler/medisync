@@ -1,0 +1,9 @@
+{
+  "schema": {
+    "email": {
+      "min": {
+        "subject": "El asunto debe poseer al menos 5 caracteres"
+      }
+    }
+  }
+}
