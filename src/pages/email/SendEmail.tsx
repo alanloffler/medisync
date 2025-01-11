@@ -129,7 +129,7 @@ export default function SendEmail() {
                           <FormLabel>{t('email.to')}</FormLabel>
                           <FormControl className='h-9'>
                             <>
-                              <section className='flex h-10 w-full items-center space-x-2 rounded-md bg-slate-100/70 px-3 py-2 text-sm'>
+                              <section className='flex h-fit w-full items-center space-x-2 overflow-x-auto rounded-md bg-slate-100/70 px-1.5 py-1.5 text-sm'>
                                 {field.value.map((item, index) => (
                                   <span
                                     key={index}
