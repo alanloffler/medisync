@@ -54,7 +54,7 @@ export default function SendEmail() {
   });
 
   const defaultValues = {
-    to: [user?.data.email],
+    to: [''],
     subject: '',
     body: '',
   };
@@ -68,8 +68,7 @@ export default function SendEmail() {
   const bodyInput: string = emailForm.watch('body', '');
 
   useEffect(() => {
-    if (isSuccess) user.data.email && emailForm.setValue('to', ['a', 'l']);
-    // if (isSuccess) user.data.email && emailForm.setValue('to', [user?.data.email]);
+    if (isSuccess) user.data.email && emailForm.setValue('to', [user?.data.email]);
   }, [emailForm, isSuccess, user?.data.email]);
 
   const {
@@ -152,7 +151,19 @@ export default function SendEmail() {
                             </>
                           </FormControl>
                         </section>
-                        <FormMessage />
+                        {Array.isArray(emailForm.formState.errors.to) ? (
+                          <div className='space-y-1'>
+                            {emailForm.formState.errors.to.map((error, idx) => (
+                              <div key={idx} className='text-xs font-light text-destructive'>
+                                {emailForm.getValues('to')[idx] === ''
+                                  ? t('schema.email.empty')
+                                  : t(error.message, { email: emailForm.getValues('to')[idx] })}
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <FormMessage />
+                        )}
                       </FormItem>
                     )}
                   />
@@ -186,13 +197,12 @@ export default function SendEmail() {
                   />
                 </form>
                 <footer className='flex flex-col items-center justify-end gap-6 pt-6 md:flex-row'>
-                  here{t('test')}
                   <Button className='order-2 w-full md:order-1 md:w-fit' size='sm' variant='ghost' onClick={resetForm}>
                     {t('button.cancel')}
                   </Button>
                   <Button
                     type='submit'
-                    // disabled={isPending || isPendingMutation || !subjectInput || !bodyInput}
+                    disabled={isPending || isPendingMutation || !subjectInput || !bodyInput}
                     size='sm'
                     variant='default'
                     className='order-1 w-full gap-2 md:order-2 md:w-fit'
