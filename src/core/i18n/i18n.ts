@@ -1,6 +1,8 @@
 import Backend from 'i18next-http-backend';
-import en from './lang/en-us.json';
-import es from './lang/es-ar.json';
+import en from './lang/en/en-us.json';
+import es from './lang/es/es-ar.json';
+import enSchemas from './lang/en/schemas.json';
+import esSchemas from './lang/es/schemas.json';
 import i18n from 'i18next';
 import { APP_CONFIG } from '@config/app.config';
 import { initReactI18next } from 'react-i18next';
@@ -26,8 +28,8 @@ i18n
       },
     },
     resources: {
-      en: { translation: en },
-      es: { translation: es },
+      en: { translation: { ...en, ...enSchemas } },
+      es: { translation: { ...es, ...esSchemas } },
     },
   });
 
