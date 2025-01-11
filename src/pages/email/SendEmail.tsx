@@ -64,6 +64,9 @@ export default function SendEmail() {
     defaultValues: defaultValues,
   });
 
+  const subjectInput: string = emailForm.watch('subject', '');
+  const bodyInput: string = emailForm.watch('body', '');
+
   useEffect(() => {
     if (isSuccess) user.data.email && emailForm.setValue('to', [user?.data.email]);
   }, [emailForm, isSuccess, user?.data.email]);
@@ -183,7 +186,7 @@ export default function SendEmail() {
                   </Button>
                   <Button
                     type='submit'
-                    disabled={isPending || isPendingMutation}
+                    disabled={isPending || isPendingMutation || !subjectInput || !bodyInput}
                     size='sm'
                     variant='default'
                     className='order-1 w-full gap-2 md:order-2 md:w-fit'
