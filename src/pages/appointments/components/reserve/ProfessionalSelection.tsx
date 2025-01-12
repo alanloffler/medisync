@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next';
 // Imports
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import { CalendarService } from '@appointments/services/calendar.service';
-import { useReserveFilters } from '@appointments/hooks/useReserveFilters';
 // Interface
 interface IProps {
   professional?: IProfessional;
@@ -19,7 +18,6 @@ interface IProps {
 export function ProfessionalSelection({ professional, setSelected }: IProps) {
   const [legibleSchedule, setLegibleSchedule] = useState<string>('');
   const { i18n, t } = useTranslation();
-  const { setFilters } = useReserveFilters();
   const locale: string = i18n.resolvedLanguage || i18n.language;
 
   const legibleWorkingDays: string = useMemo(() => {
@@ -35,9 +33,8 @@ export function ProfessionalSelection({ professional, setSelected }: IProps) {
         professional.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd || undefined,
       );
       setLegibleSchedule(legibleSchedule);
-      setFilters({ professional: professional._id });
     }
-  }, [professional, setFilters]);
+  }, [professional]);
 
   return (
     <section className='flex w-full flex-col space-y-4'>
