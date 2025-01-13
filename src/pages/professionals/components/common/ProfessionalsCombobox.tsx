@@ -8,7 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@core/components/ui/pop
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingText } from '@core/components/common/LoadingText';
 // External imports
-import { useEffect, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 // Imports
 import type { IInfoCard } from '@core/components/common/interfaces/infocard.interface';
@@ -55,6 +55,13 @@ export function ProfessionalsCombobox({ onSelectProfessional, options, className
     if (error?.message !== undefined) addNotification({ type: 'error', message: error?.message });
   }, [error?.message, addNotification]);
 
+  function handleSelectProfessional(currentValue: SetStateAction<string | undefined>, professional: IProfessional): void {
+    setValue(currentValue);
+    setOpenCombobox(false);
+    onSelectProfessional(professional);
+    setFilters({ professionalParam: professional._id });
+  }
+
   function handleClear(): void {
     setValue('');
     onSelectProfessional(undefined);
@@ -100,12 +107,7 @@ export function ProfessionalsCombobox({ onSelectProfessional, options, className
                           className='text-xsm'
                           key={professional._id}
                           value={`${professional.title.abbreviation} ${professional.firstName} ${professional.lastName}`}
-                          onSelect={(currentValue) => {
-                            setValue(currentValue);
-                            setOpenCombobox(false);
-                            onSelectProfessional(professional);
-                            setFilters({ professionalParam: professional._id });
-                          }}
+                          onSelect={(currentValue) => handleSelectProfessional(currentValue, professional)}
                         >
                           <Check
                             className={cn(
