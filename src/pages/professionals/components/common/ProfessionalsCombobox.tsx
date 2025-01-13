@@ -37,7 +37,7 @@ export function ProfessionalsCombobox({ onSelectProfessional, options, className
   const [value, setValue] = useState<string>('');
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const { loadingText, notFoundText, placeholder, searchText } = options;
-  const { professional, clearFilters } = useReserveFilters();
+  const { professionalParam, clearFilters, setFilters } = useReserveFilters();
 
   const {
     data: professionals,
@@ -57,15 +57,16 @@ export function ProfessionalsCombobox({ onSelectProfessional, options, className
 
   function handleClear(): void {
     setValue('');
-    clearFilters({ professional: undefined });
+    clearFilters({ professionalParam });
   }
 
   useEffect(() => {
-    if (professional) {
-      const finded = professionals?.data.find((prof) => prof._id === professional);
+    if (professionalParam) {
+      console.log('professional inside combobox', professionalParam);
+      const finded = professionals?.data.find((prof) => prof._id === professionalParam);
       finded && setValue(`${finded.title.abbreviation} ${finded.firstName} ${finded.lastName}`);
     }
-  }, [professional, professionals]);
+  }, [professionals?.data, professionalParam]);
 
   return (
     <section className='flex items-center space-x-3'>
@@ -102,6 +103,7 @@ export function ProfessionalsCombobox({ onSelectProfessional, options, className
                             setValue(currentValue);
                             setOpenCombobox(false);
                             onSelectProfessional(professional);
+                            setFilters({ professionalParam: professional._id });
                           }}
                         >
                           <Check
