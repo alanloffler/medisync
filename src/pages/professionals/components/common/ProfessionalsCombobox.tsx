@@ -70,7 +70,6 @@ export function ProfessionalsCombobox({ onSelectProfessional, options, className
 
   useEffect(() => {
     if (professionalParam) {
-      console.log('professional inside combobox', professionalParam);
       const finded = professionals?.data.find((prof) => prof._id === professionalParam);
       finded && setValue(`${finded.title.abbreviation} ${finded.firstName} ${finded.lastName}`);
     }
@@ -83,10 +82,10 @@ export function ProfessionalsCombobox({ onSelectProfessional, options, className
           <Button
             role='combobox'
             aria-expanded={openCombobox}
-            className={cn('h-10 w-full justify-between bg-white !text-sm font-normal text-foreground shadow-sm hover:bg-white', className)}
+            className={cn('h-9 w-full justify-between !bg-slate-100/70 px-3 !text-sm font-normal text-foreground hover:!bg-slate-100', className)}
           >
             {isLoading ? <LoadingText text={loadingText} suffix='...' /> : value ? UtilsString.upperCase(value, 'each') : placeholder}
-            <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
+            <ChevronsUpDown size={14} strokeWidth={2} className='ml-3 shrink-0 text-primary opacity-100' />
           </Button>
         </PopoverTrigger>
         <PopoverContent className='mt-2 w-full border p-0 shadow-sm' align='start'>
@@ -130,7 +129,7 @@ export function ProfessionalsCombobox({ onSelectProfessional, options, className
         </PopoverContent>
       </Popover>
       {value && (
-        <Button variant='clear' size='icon5' onClick={handleClear}>
+        <Button variant='clear' size='icon5' className='bg-rose-400 text-white hover:bg-rose-500' onClick={handleClear}>
           <X size={14} strokeWidth={2} />
         </Button>
       )}
