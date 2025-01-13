@@ -10,7 +10,7 @@ import type { IProfessional } from '@professionals/interfaces/professional.inter
 import { CalendarService } from '@appointments/services/calendar.service';
 // Interface
 interface IProps {
-  professional?: IProfessional;
+  professional: IProfessional | undefined;
   setSelected: Dispatch<SetStateAction<IProfessional | undefined>>;
   setDisabledDays: Dispatch<SetStateAction<number[]>>;
 }
