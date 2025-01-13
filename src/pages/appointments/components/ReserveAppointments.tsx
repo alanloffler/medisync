@@ -35,7 +35,7 @@ export default function ReserveAppointments() {
   // Common with ProfessionalSelection and DateSelection
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [disabledDays, setDisabledDays] = useState<number[]>(DISABLED_DAYS);
-  const [professionalSelected, setProfessionalSelected] = useState<IProfessional>();
+  const [professionalSelected, setProfessionalSelected] = useState<IProfessional | undefined>(undefined);
   // Dialog
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   // In DailySchedule & DialogReserve
@@ -73,6 +73,7 @@ export default function ReserveAppointments() {
 
   useEffect(() => {
     setSelectedLegibleDate($legibleTodayDate);
+    // selectedDate && setFilters({ date: format(selectedDate, 'YYYY-MM-DD') });
   }, [selectedDate, $legibleTodayDate]);
 
   // DIALOG
