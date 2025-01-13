@@ -21,7 +21,7 @@ import { useNotificationsStore } from '@core/stores/notifications.store';
 import { useReserveFilters } from '@appointments/hooks/useReserveFilters';
 // Interface
 interface IProfessionalsCombobox {
-  onSelectProfessional: (professional: IProfessional) => void;
+  onSelectProfessional: (professional: IProfessional | undefined) => void;
   options: {
     loadingText: string;
     notFoundText: string;
@@ -34,7 +34,7 @@ interface IProfessionalsCombobox {
 export function ProfessionalsCombobox({ onSelectProfessional, options, className }: IProfessionalsCombobox) {
   const [infoCard, setInfoCard] = useState<IInfoCard>({} as IInfoCard);
   const [openCombobox, setOpenCombobox] = useState<boolean>(false);
-  const [value, setValue] = useState<string>('');
+  const [value, setValue] = useState<string | undefined>(undefined);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const { loadingText, notFoundText, placeholder, searchText } = options;
   const { professionalParam, clearFilters, setFilters } = useReserveFilters();
@@ -57,6 +57,7 @@ export function ProfessionalsCombobox({ onSelectProfessional, options, className
 
   function handleClear(): void {
     setValue('');
+    onSelectProfessional(undefined);
     clearFilters({ professionalParam });
   }
 
