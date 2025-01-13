@@ -9,7 +9,7 @@ import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingText } from '@core/components/common/LoadingText';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
-import { SetStateAction, useEffect, useState } from 'react';
+import { SetStateAction, useCallback, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
@@ -58,12 +58,15 @@ export function ProfessionalsCombobox({ onSelectProfessional, options, className
     if (error?.message !== undefined) addNotification({ type: 'error', message: error?.message });
   }, [error?.message, addNotification]);
 
-  function handleSelectProfessional(currentValue: SetStateAction<string | undefined>, professional: IProfessional): void {
-    setValue(currentValue);
-    setOpenCombobox(false);
-    onSelectProfessional(professional);
-    setFilters({ professionalParam: professional._id });
-  }
+  const handleSelectProfessional = useCallback(
+    (currentValue: SetStateAction<string | undefined>, professional: IProfessional): void => {
+      setValue(currentValue);
+      setOpenCombobox(false);
+      onSelectProfessional(professional);
+      setFilters({ professionalParam: professional._id });
+    },
+    [onSelectProfessional, setFilters],
+  );
 
   function handleClear(): void {
     setValue('');
@@ -74,9 +77,9 @@ export function ProfessionalsCombobox({ onSelectProfessional, options, className
   useEffect(() => {
     if (professionalParam) {
       const finded = professionals?.data.find((prof) => prof._id === professionalParam);
-      finded && setValue(`${finded.title.abbreviation} ${finded.firstName} ${finded.lastName}`);
+      if (finded) handleSelectProfessional(`${finded.title.abbreviation} ${finded.firstName} ${finded.lastName}`, finded);
     }
-  }, [professionals?.data, professionalParam]);
+  }, [professionals?.data, professionalParam, handleSelectProfessional, value]);
 
   return (
     <section className='flex items-center space-x-3'>
