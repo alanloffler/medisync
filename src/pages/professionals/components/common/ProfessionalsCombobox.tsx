@@ -7,9 +7,11 @@ import { Popover, PopoverContent, PopoverTrigger } from '@core/components/ui/pop
 // Components
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingText } from '@core/components/common/LoadingText';
+import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
 import { SetStateAction, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 // Imports
 import type { IInfoCard } from '@core/components/common/interfaces/infocard.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
@@ -38,6 +40,7 @@ export function ProfessionalsCombobox({ onSelectProfessional, options, className
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const { loadingText, notFoundText, placeholder, searchText } = options;
   const { professionalParam, clearFilters, setFilters } = useReserveFilters();
+  const { t } = useTranslation();
 
   const {
     data: professionals,
@@ -129,9 +132,11 @@ export function ProfessionalsCombobox({ onSelectProfessional, options, className
         </PopoverContent>
       </Popover>
       {value && (
-        <Button variant='clear' size='icon5' className='bg-rose-400 text-white hover:bg-rose-500' onClick={handleClear}>
-          <X size={14} strokeWidth={2} />
-        </Button>
+        <TooltipWrapper tooltip={t('tooltip.delete')}>
+          <Button variant='clear' size='icon5' className='bg-rose-400 text-white hover:bg-rose-500' onClick={handleClear}>
+            <X size={14} strokeWidth={2} />
+          </Button>
+        </TooltipWrapper>
       )}
     </section>
   );
