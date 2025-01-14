@@ -77,9 +77,11 @@ export function DateSelection({ date, disabledDays, professional, handleDaysWith
 
   // Reset calendar when professional, year or month changes
   useEffect(() => {
-    setDate(undefined);
-    setCalendarKey(crypto.randomUUID());
-    fetchDaysWithAppos();
+    if (professional) {
+      setDate(undefined);
+      fetchDaysWithAppos();
+      setCalendarKey(crypto.randomUUID());
+    }
   }, [professional, setDate, selectedMonth, selectedYear, fetchDaysWithAppos]);
 
   // Handle days with appointments when action from schedule is create or delete
@@ -119,7 +121,11 @@ export function DateSelection({ date, disabledDays, professional, handleDaysWith
         key={calendarKey}
         locale={calendarLocale}
         mode='single'
-        onDayClick={(event) => professional && setSelectedDate(event)}
+        onDayClick={(event) => {
+          if (professional) {
+            setSelectedDate(event);
+          }
+        }}
         onMonthChange={(month) => {
           setSelectedMonth(month.getMonth());
           setSelectedYear(month.getFullYear());
