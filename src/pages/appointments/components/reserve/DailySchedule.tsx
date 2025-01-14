@@ -24,6 +24,7 @@ import { CalendarService } from '@appointments/services/calendar.service';
 import { EDialogAction } from '@appointments/enums/dialog.enum';
 import { UtilsString } from '@core/services/utils/string.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
+// import { useReserveFilters } from '@appointments/hooks/useReserveFilters';
 // Interface
 interface IProps {
   date?: Date;
@@ -43,6 +44,7 @@ export const DailySchedule = memo(({ date, handleDialog, professional, refreshAp
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const navigate = useNavigate();
   const { i18n, t } = useTranslation();
+  // const { professionalParam, setFilters } = useReserveFilters();
 
   const {
     data: appointments,
@@ -104,6 +106,8 @@ export const DailySchedule = memo(({ date, handleDialog, professional, refreshAp
 
   useEffect(() => {
     if (!date) setTodayIsWorkingDay(false);
+    //  selectedDate && setFilters({ professionalParam, dateParam: format(selectedDate, 'YYYY-MM-DD') as string });
+  // }, [date, professionalParam, selectedDate, setFilters]);
   }, [date]);
 
   // Cached methods between re-renders
