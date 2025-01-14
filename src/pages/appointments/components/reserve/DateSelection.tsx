@@ -107,7 +107,6 @@ export function DateSelection({ date, disabledDays, professional, handleDaysWith
         <span className='flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-center leading-none text-background'>2</span>
         {t('section.appointments.reserve.steps.title2')}
       </h5>
-      {JSON.stringify(date)}
       <Calendar
         className='mx-auto text-card-foreground'
         defaultMonth={new Date(selectedYear, selectedMonth)}
