@@ -1,7 +1,10 @@
 // Icons: https://lucide.dev/icons/
-import { CalendarClock, CalendarDays } from 'lucide-react';
+import { CalendarClock, CalendarDays, X } from 'lucide-react';
+// External components: https://ui.shadcn.com/docs/components
+import { Button } from '@core/components/ui/button';
 // Components
 import { ProfessionalsCombobox } from '@professionals/components/common/ProfessionalsCombobox';
+import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,12 +13,13 @@ import type { IProfessional } from '@professionals/interfaces/professional.inter
 import { CalendarService } from '@appointments/services/calendar.service';
 // Interface
 interface IProps {
+  clearFilters: () => void;
   professional: IProfessional | undefined;
   setSelected: Dispatch<SetStateAction<IProfessional | undefined>>;
   setDisabledDays: Dispatch<SetStateAction<number[]>>;
 }
 // React component
-export function ProfessionalSelection({ professional, setSelected }: IProps) {
+export function ProfessionalSelection({ clearFilters, professional, setSelected }: IProps) {
   const [legibleSchedule, setLegibleSchedule] = useState<string>('');
   const { i18n, t } = useTranslation();
   const locale: string = i18n.resolvedLanguage || i18n.language;
@@ -42,7 +46,7 @@ export function ProfessionalSelection({ professional, setSelected }: IProps) {
         <span className='flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-center leading-none text-background'>1</span>
         {t('section.appointments.reserve.steps.title1')}
       </h5>
-      <div className=''>
+      <div className='flex items-center space-x-3'>
         <ProfessionalsCombobox
           onSelectProfessional={(professional) => setSelected(professional)}
           options={{
@@ -53,6 +57,13 @@ export function ProfessionalSelection({ professional, setSelected }: IProps) {
           }}
           className='w-fit bg-input hover:bg-input-hover'
         />
+        {professional && (
+          <TooltipWrapper tooltip={t('tooltip.delete')}>
+            <Button variant='clear' size='icon5' className='bg-rose-400 text-white hover:bg-rose-500' onClick={clearFilters}>
+              <X size={14} strokeWidth={2} />
+            </Button>
+          </TooltipWrapper>
+        )}
       </div>
       {professional && (
         <section className='flex w-full flex-col space-y-1 text-sm font-normal text-slate-500'>
