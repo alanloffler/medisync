@@ -39,7 +39,7 @@ export function ProfessionalsCombobox({ onSelectProfessional, options, className
   const [value, setValue] = useState<string | undefined>(undefined);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const { loadingText, notFoundText, placeholder, searchText } = options;
-  const { professionalParam, clearFilters, setFilters } = useReserveFilters();
+  const { dateParam, professionalParam, clearFilters, setFilters } = useReserveFilters();
   const { t } = useTranslation();
 
   const {
@@ -71,7 +71,7 @@ export function ProfessionalsCombobox({ onSelectProfessional, options, className
   function handleClear(): void {
     setValue('');
     onSelectProfessional(undefined);
-    clearFilters({ professionalParam });
+    clearFilters({ professionalParam, dateParam });
   }
 
   useEffect(() => {
