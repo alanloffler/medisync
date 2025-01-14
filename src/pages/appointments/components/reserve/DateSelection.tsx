@@ -16,8 +16,6 @@ import { AppointmentApiService } from '@appointments/services/appointment.servic
 import { CalendarService } from '@appointments/services/calendar.service';
 import { RESERVE_APPOINTMENT_CONFIG as RA_CONFIG } from '@config/appointments/reserve-appointments.config';
 import { cn } from '@lib/utils';
-import { useReserveFilters } from '@appointments/hooks/useReserveFilters';
-import { format, parse } from '@formkit/tempo';
 // Interface
 interface IProps {
   date?: Date;
@@ -36,7 +34,6 @@ export function DateSelection({ date, disabledDays, professional, handleDaysWith
   const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth());
   const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
   const { i18n, t } = useTranslation();
-  const { dateParam, professionalParam, setFilters } = useReserveFilters();
 
   // Locale language
   const selectedLocale: string = i18n.resolvedLanguage || i18n.language;
@@ -81,33 +78,11 @@ export function DateSelection({ date, disabledDays, professional, handleDaysWith
   // Reset calendar when professional, year or month changes
   useEffect(() => {
     if (professional) {
-      dateParam && console.log('dateParam', parse(dateParam, 'YYYY-MM-DD'));
-      if (dateParam) {
-        setDate(parse(dateParam, 'YYYY-MM-DD'));
-        setCalendarKey(crypto.randomUUID());
-      } else setDate(undefined);
+      setDate(undefined);
       fetchDaysWithAppos();
       setCalendarKey(crypto.randomUUID());
     }
   }, [professional, setDate, selectedMonth, selectedYear, fetchDaysWithAppos]);
-
-  useEffect(() => {
-    console.log('date effect', date);
-    date && setFilters({ professionalParam, dateParam: format(date, 'YYYY-MM-DD') });
-    // console.log('dateParam', dateParam);
-    // console.log('dateParam parsed', dateParam && parse(dateParam, 'YYYY-MM-DD'));
-    // dateParam && setSelectedDate(parse(dateParam, 'YYYY-MM-DD'));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [date]);
-
-  // useEffect(() => {
-  //   console.log('dateParam', dateParam);
-  //   if (dateParam) {
-  //     setDate(parse(dateParam, 'YYYY-MM-DD'));
-  //     console.log(parse(dateParam, 'YYYY-MM-DD'));
-  //     setCalendarKey(crypto.randomUUID());
-  //   }
-  // }, []);
 
   // Handle days with appointments when action from schedule is create or delete
   useEffect(() => {
@@ -132,6 +107,7 @@ export function DateSelection({ date, disabledDays, professional, handleDaysWith
         <span className='flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-center leading-none text-background'>2</span>
         {t('section.appointments.reserve.steps.title2')}
       </h5>
+      {JSON.stringify(date)}
       <Calendar
         className='mx-auto text-card-foreground'
         defaultMonth={new Date(selectedYear, selectedMonth)}
