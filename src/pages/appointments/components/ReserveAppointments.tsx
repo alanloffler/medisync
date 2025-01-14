@@ -20,6 +20,7 @@ import { HEADER_CONFIG } from '@config/layout/header.config';
 import { RESERVE_APPOINTMENT_CONFIG as RA_CONFIG } from '@config/appointments/reserve-appointments.config';
 import { UtilsString } from '@core/services/utils/string.service';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
+import { useReserveFilters } from '@appointments/hooks/useReserveFilters';
 // Constants
 const DISABLED_DAYS: number[] = RA_CONFIG.calendar.disabledDays;
 // React component
@@ -36,6 +37,8 @@ export default function ReserveAppointments() {
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [disabledDays, setDisabledDays] = useState<number[]>(DISABLED_DAYS);
   const [professionalSelected, setProfessionalSelected] = useState<IProfessional | undefined>(undefined);
+  const [professionalKey, setProfessionalKey] = useState<string>('');
+
   // Dialog
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   // In DailySchedule & DialogReserve
@@ -44,11 +47,32 @@ export default function ReserveAppointments() {
   // In DateSelection & DailySchedule
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
 
+  const { dateParam, professionalParam, clearFilters, setFilters } = useReserveFilters();
+
   // PAGE
   // Set header menu item selected
   useEffect(() => {
     setItemSelected(HEADER_CONFIG.headerMenu[1].id);
   }, [setItemSelected]);
+
+  useEffect(() => {
+    if (professionalSelected) {
+      setFilters({ professionalParam: professionalSelected._id });
+    }
+  }, [professionalSelected, setFilters]);
+
+  useEffect(() => {
+    if (selectedDate) {
+      setFilters({ dateParam: format(selectedDate, 'YYYY-MM-DD') });
+    }
+  }, [selectedDate, setFilters]);
+
+  function handleClearFilters(): void {
+    clearFilters({ dateParam, professionalParam });
+    setProfessionalSelected(undefined);
+    setSelectedDate(undefined);
+    setProfessionalKey(crypto.randomUUID());
+  }
 
   // CALENDAR
   // Set disabled days by professional selected
@@ -73,7 +97,6 @@ export default function ReserveAppointments() {
 
   useEffect(() => {
     setSelectedLegibleDate($legibleTodayDate);
-    // selectedDate && setFilters({ date: format(selectedDate, 'YYYY-MM-DD') });
   }, [selectedDate, $legibleTodayDate]);
 
   // DIALOG
@@ -138,7 +161,13 @@ export default function ReserveAppointments() {
       <section className='flex flex-col gap-6 overflow-x-auto md:flex-row lg:flex-row'>
         {/* Section: Left side */}
         <section className='mx-auto flex h-fit w-full min-w-fit flex-col gap-4 rounded-lg bg-background p-4 md:w-fit md:gap-6 lg:w-1/3 lg:gap-6'>
-          <ProfessionalSelection professional={professionalSelected} setDisabledDays={setDisabledDays} setSelected={setProfessionalSelected} />
+          <ProfessionalSelection
+            key={professionalKey}
+            clearFilters={handleClearFilters}
+            professional={professionalSelected}
+            setDisabledDays={setDisabledDays}
+            setSelected={setProfessionalSelected}
+          />
           <DateSelection
             date={date}
             disabledDays={disabledDays}
