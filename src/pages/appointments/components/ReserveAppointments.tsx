@@ -34,7 +34,6 @@ export default function ReserveAppointments() {
   const selectedLocale: string = i18n.resolvedLanguage || i18n.language;
 
   // Common with ProfessionalSelection and DateSelection
-  const [date, setDate] = useState<Date | undefined>(undefined);
   const [disabledDays, setDisabledDays] = useState<number[]>(DISABLED_DAYS);
   const [professionalSelected, setProfessionalSelected] = useState<IProfessional | undefined>(undefined);
   const [professionalKey, setProfessionalKey] = useState<string>('');
@@ -175,11 +174,9 @@ export default function ReserveAppointments() {
             setSelected={setProfessionalSelected}
           />
           <DateSelection
-            date={date}
             disabledDays={disabledDays}
             professional={professionalSelected}
             handleDaysWithAppos={handleDaysWithAppos}
-            setDate={setDate}
             selectedDate={selectedDate}
             setSelectedDate={setSelectedDate}
           />
@@ -201,7 +198,7 @@ export default function ReserveAppointments() {
           messages: dialogContent,
           slot: selectedSlot,
         }}
-        date={date}
+        date={selectedDate}
         openState={{ open: openDialog, setOpen: setOpenDialog }}
         professional={professionalSelected}
         setHandleDaysWithAppos={setHandleDaysWithAppos}
