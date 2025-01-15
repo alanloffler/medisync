@@ -7,6 +7,7 @@ import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 import { es, enUS, Locale } from 'date-fns/locale';
+// import { parse } from '@formkit/tempo';
 import { useMutation } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
@@ -16,23 +17,24 @@ import { AppointmentApiService } from '@appointments/services/appointment.servic
 import { CalendarService } from '@appointments/services/calendar.service';
 import { RESERVE_APPOINTMENT_CONFIG as RA_CONFIG } from '@config/appointments/reserve-appointments.config';
 import { cn } from '@lib/utils';
+// import { useReserveFilters } from '@appointments/hooks/useReserveFilters';
 // Interface
 interface IProps {
-  date?: Date;
   disabledDays: number[];
   professional?: IProfessional;
-  setDate: Dispatch<SetStateAction<Date | undefined>>;
   handleDaysWithAppos: { day: string; action: string; id: string } | undefined;
+  selectedDate: Date | undefined;
   setSelectedDate: Dispatch<SetStateAction<Date | undefined>>;
 }
 // React component
-export function DateSelection({ date, disabledDays, professional, handleDaysWithAppos, setDate, setSelectedDate }: IProps) {
+export function DateSelection({ disabledDays, professional, handleDaysWithAppos, selectedDate, setSelectedDate }: IProps) {
   const [calendarKey, setCalendarKey] = useState<string>('');
   const [calendarLocale, setCalendarLocale] = useState<Locale>();
   const [calendarMonths, setCalendarMonths] = useState<string[]>([]);
   const [calendarYears, setCalendarYears] = useState<string[]>([]);
   const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth());
   const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
+  // const { dateParam } = useReserveFilters();
   const { i18n, t } = useTranslation();
 
   // Locale language
@@ -75,14 +77,31 @@ export function DateSelection({ date, disabledDays, professional, handleDaysWith
     setCalendarKey(crypto.randomUUID());
   }, []);
 
-  // Reset calendar when professional, year or month changes
   useEffect(() => {
     if (professional) {
-      setDate(undefined);
+
+      console.log('fetchDaysWithAppos');
+      setSelectedDate(undefined);
       fetchDaysWithAppos();
-      setCalendarKey(crypto.randomUUID());
     }
-  }, [professional, setDate, selectedMonth, selectedYear, fetchDaysWithAppos]);
+  }, [professional, setSelectedDate, fetchDaysWithAppos]);
+
+  // Reset calendar when professional, year or month changes
+  // useEffect(() => {
+  //   if (professional) {
+  //     setDate(undefined);
+  //     fetchDaysWithAppos();
+  //     setCalendarKey(crypto.randomUUID());
+  //   }
+  // }, [professional, setDate, selectedMonth, selectedYear, fetchDaysWithAppos]);
+
+  // useEffect(() => {
+    // if (professional) {
+      // setDate(undefined);
+      // fetchDaysWithAppos();
+      // setCalendarKey(crypto.randomUUID());
+    // }
+  // }, [professional, selectedMonth, selectedYear, fetchDaysWithAppos]);
 
   // Handle days with appointments when action from schedule is create or delete
   useEffect(() => {
@@ -107,6 +126,7 @@ export function DateSelection({ date, disabledDays, professional, handleDaysWith
         <span className='flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-center leading-none text-background'>2</span>
         {t('section.appointments.reserve.steps.title2')}
       </h5>
+      {JSON.stringify(selectedDate)}
       <Calendar
         className='mx-auto text-card-foreground'
         defaultMonth={new Date(selectedYear, selectedMonth)}
@@ -123,6 +143,7 @@ export function DateSelection({ date, disabledDays, professional, handleDaysWith
         mode='single'
         onDayClick={(event) => {
           if (professional) {
+            console.log('event', event);
             setSelectedDate(event);
           }
         }}
@@ -130,7 +151,7 @@ export function DateSelection({ date, disabledDays, professional, handleDaysWith
           setSelectedMonth(month.getMonth());
           setSelectedYear(month.getFullYear());
         }}
-        selected={date}
+        selected={selectedDate}
         showOutsideDays={false}
         toYear={Number(calendarYears[calendarYears.length - 1])}
         footer={isPending && <LoadingDB text={t('loading.appointments')} className='mx-0 text-xs [&_svg]:w-3' />}
