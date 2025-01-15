@@ -156,6 +156,12 @@ export default function ReserveAppointments() {
     [selectedLocale, t],
   );
 
+//   useEffect(() => {
+
+//     setSelectedDate(parse('2025-01-15', 'YYYY-MM-DD'));
+//   // setCalendarKey(crypto.randomUUID());
+// }, [setSelectedDate]);
+
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6'>
       <section className='flex flex-col gap-6 overflow-x-auto md:flex-row lg:flex-row'>
@@ -174,19 +180,18 @@ export default function ReserveAppointments() {
             professional={professionalSelected}
             handleDaysWithAppos={handleDaysWithAppos}
             setDate={setDate}
+            selectedDate={selectedDate}
             setSelectedDate={setSelectedDate}
           />
         </section>
         {/* Section: Right side */}
         <section className='flex flex-col gap-4 md:w-full md:gap-6 lg:w-2/3 lg:gap-6'>
           <DailySchedule
-            date={date}
             handleDialog={handleDialog}
             professional={professionalSelected}
             refreshAppos={refreshAppos}
             selectedDate={selectedDate}
             selectedLegibleDate={selectedLegibleDate}
-            setDate={setDate}
           />
         </section>
       </section>
