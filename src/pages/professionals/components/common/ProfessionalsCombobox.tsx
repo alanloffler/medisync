@@ -66,14 +66,15 @@ export function ProfessionalsCombobox({ className, onSelectProfessional, options
 
   useEffect(() => {
     if (professionalParam && professionals?.data) {
-      const find = professionals.data.find((professional) => professional._id === professionalParam);
-      
+      const find: IProfessional | undefined = professionals.data.find((professional) => professional._id === professionalParam);
+
       if (find) {
-        setValue(`${find.title.abbreviation} ${find.firstName} ${find.lastName}`);
         onSelectProfessional(find);
+        setValue(`${find.title.abbreviation} ${find.firstName} ${find.lastName}`);
       }
     }
-  }, [onSelectProfessional, professionalParam, professionals?.data]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [professionalParam, professionals?.data]);
 
   return (
     <Popover open={openCombobox} onOpenChange={setOpenCombobox}>
