@@ -9,7 +9,7 @@ import { LoadingDB } from '@core/components/common/LoadingDB';
 import { StatusSelect } from '@appointments/components/common/StatusSelect';
 // External imports
 import { format } from '@formkit/tempo';
-import { memo, useCallback, useEffect, useMemo, useState, type Dispatch, type SetStateAction } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -26,16 +26,14 @@ import { UtilsString } from '@core/services/utils/string.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // Interface
 interface IProps {
-  date?: Date;
   handleDialog: (action: EDialogAction, slot: ITimeSlot, isOnly?: boolean) => void;
   professional?: IProfessional;
   refreshAppos: string;
   selectedDate?: Date;
   selectedLegibleDate?: string;
-  setDate: Dispatch<SetStateAction<Date | undefined>>;
 }
 // React component
-export const DailySchedule = memo(({ date, handleDialog, professional, refreshAppos, selectedDate, selectedLegibleDate, setDate }: IProps) => {
+export const DailySchedule = memo(({ handleDialog, professional, refreshAppos, selectedDate, selectedLegibleDate }: IProps) => {
   const [availableSlotsToReserve, setAvailableSlotsToReserve] = useState<number>(0);
   const [schedule, setSchedule] = useState<AppoSchedule | null>(null);
   const [timeSlots, setTimeSlots] = useState<ITimeSlot[]>([] as ITimeSlot[]);
@@ -74,7 +72,6 @@ export const DailySchedule = memo(({ date, handleDialog, professional, refreshAp
   useEffect(() => {
     // OK, reset calendar selected day
     // If change professional then is undefined
-    setDate(selectedDate);
 
     if (professional && selectedDate) {
       const dayOfWeekSelected: number = selectedDate.getDay();
@@ -100,11 +97,11 @@ export const DailySchedule = memo(({ date, handleDialog, professional, refreshAp
       fetchAppos();
       setTodayIsWorkingDay(todayIsWorkingDay);
     }
-  }, [addNotification, fetchAppos, professional, refreshAppos, selectedDate, setDate, t]);
+  }, [addNotification, fetchAppos, professional, refreshAppos, selectedDate, t]);
 
   useEffect(() => {
-    if (!date) setTodayIsWorkingDay(false);
-  }, [date]);
+    if (!selectedDate) setTodayIsWorkingDay(false);
+  }, [selectedDate]);
 
   // Cached methods between re-renders
   const memoizedHandleDialog = useCallback(
@@ -221,7 +218,7 @@ export const DailySchedule = memo(({ date, handleDialog, professional, refreshAp
                   )}
                   {/* Buttons */}
                   <div className='flex w-[100px] flex-row justify-center'>
-                    {!slot.appointment?.user && AppoSchedule.isDatetimeInFuture(date, slot.begin) && (
+                    {!slot.appointment?.user && AppoSchedule.isDatetimeInFuture(selectedDate, slot.begin) && (
                       <div className='flex w-full justify-center'>
                         <Button
                           className='w-full space-x-1.5 bg-emerald-400 px-1.5 py-1.5 text-emerald-50 hover:bg-emerald-500 hover:text-emerald-50 md:pr-2.5'
@@ -234,7 +231,7 @@ export const DailySchedule = memo(({ date, handleDialog, professional, refreshAp
                         </Button>
                       </div>
                     )}
-                    {slot.appointment?.user && AppoSchedule.isDatetimeInFuture(date, slot.begin) && (
+                    {slot.appointment?.user && AppoSchedule.isDatetimeInFuture(selectedDate, slot.begin) && (
                       <div className='flex w-full justify-center'>
                         <Button
                           className='w-full space-x-1.5 bg-rose-400 px-1.5 py-1.5 text-rose-100 hover:bg-rose-500 hover:text-rose-100'
@@ -247,7 +244,7 @@ export const DailySchedule = memo(({ date, handleDialog, professional, refreshAp
                         </Button>
                       </div>
                     )}
-                    {(slot.appointment?.user || !slot.appointment?.user) && !AppoSchedule.isDatetimeInFuture(date, slot.begin) && (
+                    {(slot.appointment?.user || !slot.appointment?.user) && !AppoSchedule.isDatetimeInFuture(selectedDate, slot.begin) && (
                       <div className='flex flex-1 items-center justify-center rounded-md bg-slate-100 px-1.5 py-1.5 text-slate-400'>
                         <CircleSlash2 size={16} strokeWidth={2} />
                       </div>
