@@ -18,6 +18,7 @@ import { ProfessionalApiService } from '@professionals/services/professional-api
 import { UtilsString } from '@core/services/utils/string.service';
 import { cn } from '@lib/utils';
 import { useNotificationsStore } from '@core/stores/notifications.store';
+import { useReserveFilters } from '@appointments/hooks/useReserveFilters';
 // Interface
 interface IProfessionalsCombobox {
   onSelectProfessional: (professional: IProfessional | undefined) => void;
@@ -36,6 +37,7 @@ export function ProfessionalsCombobox({ className, onSelectProfessional, options
   const [value, setValue] = useState<string | undefined>(undefined);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const { loadingText, notFoundText, placeholder, searchText } = options;
+  const { professionalParam } = useReserveFilters();
 
   const {
     data: professionals,
@@ -61,6 +63,17 @@ export function ProfessionalsCombobox({ className, onSelectProfessional, options
     },
     [onSelectProfessional],
   );
+
+  useEffect(() => {
+    if (professionalParam && professionals?.data) {
+      const find = professionals.data.find((professional) => professional._id === professionalParam);
+      
+      if (find) {
+        setValue(`${find.title.abbreviation} ${find.firstName} ${find.lastName}`);
+        onSelectProfessional(find);
+      }
+    }
+  }, [onSelectProfessional, professionalParam, professionals?.data]);
 
   return (
     <Popover open={openCombobox} onOpenChange={setOpenCombobox}>
