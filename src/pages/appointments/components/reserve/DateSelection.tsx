@@ -7,7 +7,7 @@ import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 import { es, enUS, Locale } from 'date-fns/locale';
-// import { parse } from '@formkit/tempo';
+import { parse } from '@formkit/tempo';
 import { useMutation } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
@@ -18,7 +18,6 @@ import { CalendarService } from '@appointments/services/calendar.service';
 import { RESERVE_APPOINTMENT_CONFIG as RA_CONFIG } from '@config/appointments/reserve-appointments.config';
 import { cn } from '@lib/utils';
 import { useReserveFilters } from '@appointments/hooks/useReserveFilters';
-import { parse } from '@formkit/tempo';
 // Interface
 interface IProps {
   disabledDays: number[];
@@ -37,22 +36,7 @@ export function DateSelection({ disabledDays, professional, handleDaysWithAppos,
   const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
   const { dateParam, professionalParam } = useReserveFilters();
   const { i18n, t } = useTranslation();
-
-  // Locale language
   const selectedLocale: string = i18n.resolvedLanguage || i18n.language;
-
-  // useEffect(() => {
-  //   console.log('set calendar years and months');
-
-  //   const calendarYears: string[] = CalendarService.generateYearsRange(RA_CONFIG.calendar.yearsRange);
-  //   setCalendarYears(calendarYears);
-
-  //   const calendarMonths: string[] = CalendarService.generateMonths(selectedLocale);
-  //   setCalendarMonths(calendarMonths);
-
-  //   if (selectedLocale === 'es') setCalendarLocale(es);
-  //   if (selectedLocale === 'en') setCalendarLocale(enUS);
-  // }, [selectedLocale]);
 
   // Fetch days with appointments
   const {
@@ -80,20 +64,10 @@ export function DateSelection({ disabledDays, professional, handleDaysWithAppos,
     setCalendarKey(crypto.randomUUID());
   }, []);
 
-  // useEffect(() => {
-  //   if (professional) {
-  //     console.log('fetchDaysWithAppos');
-  //     setSelectedDate(undefined);
-  //     fetchDaysWithAppos();
-  //   }
-  // }, [professional, setSelectedDate, fetchDaysWithAppos]);
-
   useEffect(() => {
-    console.log('render date selection');
-    
     if (professionalParam !== null) {
-      // console.log('professionalParam', professionalParam);
       fetchDaysWithAppos();
+
       const calendarYears: string[] = CalendarService.generateYearsRange(RA_CONFIG.calendar.yearsRange);
       setCalendarYears(calendarYears);
 
@@ -104,15 +78,12 @@ export function DateSelection({ disabledDays, professional, handleDaysWithAppos,
       if (selectedLocale === 'en') setCalendarLocale(enUS);
 
       if (dateParam !== null && dateParam !== undefined) {
-        // console.log('dateParam', dateParam);
-        const toDate: Date = parse(dateParam, 'YYYY-MM-DD');
-        // console.log(toDate);
-        setSelectedDate(toDate);
+        const dateParamTransformed: Date = parse(dateParam, 'YYYY-MM-DD');
+
+        setSelectedDate(dateParamTransformed);
         setCalendarKey(crypto.randomUUID());
       }
     } else {
-      console.log('there is no professionalParam');
-      console.log('there is no dateParam');
       setSelectedDate(undefined);
     }
   }, [dateParam, fetchDaysWithAppos, professionalParam, selectedLocale, setSelectedDate]);
@@ -155,10 +126,7 @@ export function DateSelection({ disabledDays, professional, handleDaysWithAppos,
         locale={calendarLocale}
         mode='single'
         onDayClick={(event) => {
-          if (professional) {
-            console.log('event', event);
-            setSelectedDate(event);
-          }
+          if (professional) setSelectedDate(event);
         }}
         onMonthChange={(month) => {
           setSelectedMonth(month.getMonth());
@@ -193,8 +161,8 @@ export function DateSelection({ disabledDays, professional, handleDaysWithAppos,
           className='h-7 w-fit px-2 text-xs disabled:pointer-events-auto disabled:cursor-not-allowed'
           disabled={!professional}
           onClick={() => {
-            setSelectedMonth(new Date().getMonth());
             setSelectedYear(new Date().getFullYear());
+            setSelectedMonth(new Date().getMonth());
             setSelectedDate(new Date());
             setCalendarKey(crypto.randomUUID());
           }}
@@ -205,10 +173,10 @@ export function DateSelection({ disabledDays, professional, handleDaysWithAppos,
           calendarMonths={calendarMonths}
           calendarYears={calendarYears}
           disabled={!professional}
-          selectedMonth={selectedMonth}
-          selectedYear={selectedYear}
           selectMonth={selectMonth}
           selectYear={selectYear}
+          selectedMonth={selectedMonth}
+          selectedYear={selectedYear}
         />
       </section>
     </section>
