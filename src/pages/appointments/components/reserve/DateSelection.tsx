@@ -105,6 +105,13 @@ export function DateSelection({ disabledDays, professional, handleDaysWithAppos,
     }
   }, [daysWithAppos?.data, handleDaysWithAppos]);
 
+  // Fetch days with appointments on month or year change
+  useEffect(() => {
+    if (professional) {
+      fetchDaysWithAppos();
+    }
+  }, [fetchDaysWithAppos, professional, selectedMonth, selectedYear]);
+
   return (
     <section className={cn('flex flex-col space-y-3')}>
       <h5 className='flex items-center gap-2 text-xsm font-semibold uppercase'>
