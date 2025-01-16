@@ -25,43 +25,67 @@ import { useReserveFilters } from '@appointments/hooks/useReserveFilters';
 const DISABLED_DAYS: number[] = RA_CONFIG.calendar.disabledDays;
 // React component
 export default function ReserveAppointments() {
+  const [dialogContent, setDialogContent] = useState<IDialog>({} as IDialog);
+  const [disabledDays, setDisabledDays] = useState<number[]>(DISABLED_DAYS);
   const [handleDaysWithAppos, setHandleDaysWithAppos] = useState<{ day: string; action: string; id: string } | undefined>();
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const [professionalKey, setProfessionalKey] = useState<string>('');
+  const [professionalSelected, setProfessionalSelected] = useState<IProfessional | undefined>(undefined);
   const [refreshAppos, setRefreshAppos] = useState<string>('');
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [selectedLegibleDate, setSelectedLegibleDate] = useState<string>('');
   const [selectedSlot, setSelectedSlot] = useState<ITimeSlot>({} as ITimeSlot);
   const [userSelected, setUserSelected] = useState<IUser>({} as IUser);
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
+  const { dateParam, professionalParam, clearFilters, setFilters } = useReserveFilters();
   const { i18n, t } = useTranslation();
   const selectedLocale: string = i18n.resolvedLanguage || i18n.language;
 
-  // Common with ProfessionalSelection and DateSelection
-  const [disabledDays, setDisabledDays] = useState<number[]>(DISABLED_DAYS);
-  const [professionalSelected, setProfessionalSelected] = useState<IProfessional | undefined>(undefined);
-  const [professionalKey, setProfessionalKey] = useState<string>('');
-
-  // Dialog
-  const [openDialog, setOpenDialog] = useState<boolean>(false);
-  // In DailySchedule & DialogReserve
-  const [dialogContent, setDialogContent] = useState<IDialog>({} as IDialog);
-  const [selectedLegibleDate, setSelectedLegibleDate] = useState<string>('');
-  // In DateSelection & DailySchedule
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-
-  const { dateParam, professionalParam, clearFilters, setFilters } = useReserveFilters();
-
-  // PAGE
   // Set header menu item selected
   useEffect(() => {
     setItemSelected(HEADER_CONFIG.headerMenu[1].id);
   }, [setItemSelected]);
 
-  // useEffect(() => {
-  //   if (professionalSelected) {
-  //     setFilters({ professionalParam: professionalSelected._id });
-  //   }
-  // }, [professionalSelected, setFilters]);
+  // Initialize from URL parameters
+  useEffect(() => {
+    if (dateParam) {
+      setSelectedDate(parse(dateParam, 'YYYY-MM-DD'));
+    }
+  }, [dateParam]);
+
+  // Calculate disabled days
+  const $getDisabledDays = useMemo(() => {
+    return (professionalSelected: IProfessional | undefined) => {
+      return CalendarService.getDisabledDays(professionalSelected?.configuration.workingDays ?? []);
+    };
+  }, []);
+
+  // Handle professional selection and changes
+  const isManualSelection = useRef(false);
 
   useEffect(() => {
-    console.log('selected date on reserve appointment', selectedDate);
+    if (!professionalSelected) return;
+
+    // Always update disabled days
+    const disabledDays = $getDisabledDays(professionalSelected);
+    setDisabledDays(disabledDays);
+
+    // Always set professional filter
+    setFilters({ professionalParam: professionalSelected._id });
+
+    // Clear date only if it's a manual selection
+    if (isManualSelection.current) {
+      clearFilters({ dateParam });
+      setSelectedDate(undefined);
+    }
+
+    // Reset the flag after processing
+    isManualSelection.current = true;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [professionalSelected, $getDisabledDays, setFilters, clearFilters]);
+
+  // Handle date changes
+  useEffect(() => {
     if (selectedDate) {
       setFilters({ dateParam: format(selectedDate, 'YYYY-MM-DD') });
     }
@@ -72,91 +96,9 @@ export default function ReserveAppointments() {
     setProfessionalSelected(undefined);
     setSelectedDate(undefined);
     setProfessionalKey(crypto.randomUUID());
+    isManualSelection.current = false;
   }
 
-  // CALENDAR
-  // Set disabled days by professional selected
-  const $getDisabledDays = useMemo(() => {
-    return (professionalSelected: IProfessional | undefined) => {
-      return CalendarService.getDisabledDays(professionalSelected?.configuration.workingDays ?? []);
-    };
-  }, []);
-
-  // useEffect(() => {
-  //   if (professionalSelected) {
-  //     setFilters({ professionalParam: professionalSelected._id });
-  //     clearFilters({ dateParam });
-  //     setSelectedDate(undefined);
-  //   }
-
-  //   const disabledDays = $getDisabledDays(professionalSelected);
-  //   setDisabledDays(disabledDays);
-  // }, [professionalSelected, $getDisabledDays, setFilters, clearFilters]);
-
-  useEffect(() => {
-    if (dateParam || professionalParam) {
-      // Set initial date if provided in URL
-      if (dateParam) {
-        setSelectedDate(parse(dateParam, 'YYYY-MM-DD'));
-      }
-      // Don't clear anything on first load
-    }
-  }, []);
-// Handle professional changes after initial render
-const previousProfessionalRef = useRef<string | undefined>();
-  
-useEffect(() => {
-  if (!professionalSelected) return;
-
-  // Skip the first render
-  if (previousProfessionalRef.current === undefined) {
-    previousProfessionalRef.current = professionalSelected._id;
-    return;
-  }
-
-  // Only clear date and update filters if the professional actually changed
-  if (previousProfessionalRef.current !== professionalSelected._id) {
-    setFilters({ professionalParam: professionalSelected._id });
-    clearFilters({ dateParam });
-    setSelectedDate(undefined);
-  }
-
-  // Update disabled days
-  const disabledDays = $getDisabledDays(professionalSelected);
-  setDisabledDays(disabledDays);
-
-  // Update ref for next comparison
-  previousProfessionalRef.current = professionalSelected._id;
-}, [professionalSelected, $getDisabledDays, setFilters, clearFilters]);
-
-// Handle date changes
-useEffect(() => {
-  if (selectedDate) {
-    setFilters({ dateParam: format(selectedDate, 'YYYY-MM-DD') });
-  }
-}, [selectedDate, setFilters]);
-
-  // const isInitialRender = useRef(true);
-
-  // useEffect(() => {
-  //   if (professionalSelected) {
-  //     setFilters({ professionalParam: professionalSelected._id });
-
-  //     if (!isInitialRender.current) {
-  //       // Only clear dateParam and setSelectedDate on subsequent renders
-  //       clearFilters({ dateParam });
-  //       setSelectedDate(undefined);
-  //     }
-  //   }
-
-  //   const disabledDays = $getDisabledDays(professionalSelected);
-  //   setDisabledDays(disabledDays);
-
-  //   // Mark as not initial render after the first run
-  //   isInitialRender.current = false;
-  // }, [professionalSelected, $getDisabledDays]);
-
-  // SCHEDULE
   // Set legible date
   const $legibleTodayDate: string = useMemo(() => {
     return format(selectedDate!, 'full', selectedLocale);
@@ -166,7 +108,7 @@ useEffect(() => {
     setSelectedLegibleDate($legibleTodayDate);
   }, [selectedDate, $legibleTodayDate]);
 
-  // DIALOG
+  // Dialog handler
   const handleDialog = useCallback(
     (action: EDialogAction, slot: ITimeSlot, isOnly?: boolean): void => {
       setOpenDialog(true);
@@ -223,14 +165,9 @@ useEffect(() => {
     [selectedLocale, t],
   );
 
-  // useEffect(() => {
-  //   setSelectedDate(parse('2025-01-15', 'YYYY-MM-DD'));
-  // }, [setSelectedDate]);
-
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6'>
       <section className='flex flex-col gap-6 overflow-x-auto md:flex-row lg:flex-row'>
-        {/* Section: Left side */}
         <section className='mx-auto flex h-fit w-full min-w-fit flex-col gap-4 rounded-lg bg-background p-4 md:w-fit md:gap-6 lg:w-1/3 lg:gap-6'>
           <ProfessionalSelection
             key={professionalKey}
@@ -247,7 +184,6 @@ useEffect(() => {
             setSelectedDate={setSelectedDate}
           />
         </section>
-        {/* Section: Right side */}
         <section className='flex flex-col gap-4 md:w-full md:gap-6 lg:w-2/3 lg:gap-6'>
           <DailySchedule
             handleDialog={handleDialog}
@@ -258,7 +194,6 @@ useEffect(() => {
           />
         </section>
       </section>
-      {/* Section: Dialog */}
       <DialogReserve
         content={{
           messages: dialogContent,
