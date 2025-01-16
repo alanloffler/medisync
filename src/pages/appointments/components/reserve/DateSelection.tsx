@@ -17,7 +17,8 @@ import { AppointmentApiService } from '@appointments/services/appointment.servic
 import { CalendarService } from '@appointments/services/calendar.service';
 import { RESERVE_APPOINTMENT_CONFIG as RA_CONFIG } from '@config/appointments/reserve-appointments.config';
 import { cn } from '@lib/utils';
-// import { useReserveFilters } from '@appointments/hooks/useReserveFilters';
+import { useReserveFilters } from '@appointments/hooks/useReserveFilters';
+import { parse } from '@formkit/tempo';
 // Interface
 interface IProps {
   disabledDays: number[];
@@ -34,22 +35,24 @@ export function DateSelection({ disabledDays, professional, handleDaysWithAppos,
   const [calendarYears, setCalendarYears] = useState<string[]>([]);
   const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth());
   const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
-  // const { dateParam } = useReserveFilters();
+  const { dateParam, professionalParam } = useReserveFilters();
   const { i18n, t } = useTranslation();
 
   // Locale language
   const selectedLocale: string = i18n.resolvedLanguage || i18n.language;
 
-  useEffect(() => {
-    const calendarYears: string[] = CalendarService.generateYearsRange(RA_CONFIG.calendar.yearsRange);
-    setCalendarYears(calendarYears);
+  // useEffect(() => {
+  //   console.log('set calendar years and months');
 
-    const calendarMonths: string[] = CalendarService.generateMonths(selectedLocale);
-    setCalendarMonths(calendarMonths);
+  //   const calendarYears: string[] = CalendarService.generateYearsRange(RA_CONFIG.calendar.yearsRange);
+  //   setCalendarYears(calendarYears);
 
-    if (selectedLocale === 'es') setCalendarLocale(es);
-    if (selectedLocale === 'en') setCalendarLocale(enUS);
-  }, [selectedLocale]);
+  //   const calendarMonths: string[] = CalendarService.generateMonths(selectedLocale);
+  //   setCalendarMonths(calendarMonths);
+
+  //   if (selectedLocale === 'es') setCalendarLocale(es);
+  //   if (selectedLocale === 'en') setCalendarLocale(enUS);
+  // }, [selectedLocale]);
 
   // Fetch days with appointments
   const {
@@ -77,31 +80,42 @@ export function DateSelection({ disabledDays, professional, handleDaysWithAppos,
     setCalendarKey(crypto.randomUUID());
   }, []);
 
-  useEffect(() => {
-    if (professional) {
-
-      console.log('fetchDaysWithAppos');
-      setSelectedDate(undefined);
-      fetchDaysWithAppos();
-    }
-  }, [professional, setSelectedDate, fetchDaysWithAppos]);
-
-  // Reset calendar when professional, year or month changes
   // useEffect(() => {
   //   if (professional) {
-  //     setDate(undefined);
+  //     console.log('fetchDaysWithAppos');
+  //     setSelectedDate(undefined);
   //     fetchDaysWithAppos();
-  //     setCalendarKey(crypto.randomUUID());
   //   }
-  // }, [professional, setDate, selectedMonth, selectedYear, fetchDaysWithAppos]);
+  // }, [professional, setSelectedDate, fetchDaysWithAppos]);
 
-  // useEffect(() => {
-    // if (professional) {
-      // setDate(undefined);
-      // fetchDaysWithAppos();
-      // setCalendarKey(crypto.randomUUID());
-    // }
-  // }, [professional, selectedMonth, selectedYear, fetchDaysWithAppos]);
+  useEffect(() => {
+    console.log('render date selection');
+    
+    if (professionalParam !== null) {
+      // console.log('professionalParam', professionalParam);
+      fetchDaysWithAppos();
+      const calendarYears: string[] = CalendarService.generateYearsRange(RA_CONFIG.calendar.yearsRange);
+      setCalendarYears(calendarYears);
+
+      const calendarMonths: string[] = CalendarService.generateMonths(selectedLocale);
+      setCalendarMonths(calendarMonths);
+
+      if (selectedLocale === 'es') setCalendarLocale(es);
+      if (selectedLocale === 'en') setCalendarLocale(enUS);
+
+      if (dateParam !== null && dateParam !== undefined) {
+        // console.log('dateParam', dateParam);
+        const toDate: Date = parse(dateParam, 'YYYY-MM-DD');
+        // console.log(toDate);
+        setSelectedDate(toDate);
+        setCalendarKey(crypto.randomUUID());
+      }
+    } else {
+      console.log('there is no professionalParam');
+      console.log('there is no dateParam');
+      setSelectedDate(undefined);
+    }
+  }, [dateParam, fetchDaysWithAppos, professionalParam, selectedLocale, setSelectedDate]);
 
   // Handle days with appointments when action from schedule is create or delete
   useEffect(() => {
@@ -126,9 +140,8 @@ export function DateSelection({ disabledDays, professional, handleDaysWithAppos,
         <span className='flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-center leading-none text-background'>2</span>
         {t('section.appointments.reserve.steps.title2')}
       </h5>
-      {JSON.stringify(selectedDate)}
       <Calendar
-        className='mx-auto text-card-foreground'
+        className={cn('mx-auto text-card-foreground', !professional && 'pointer-events-none opacity-50')}
         defaultMonth={new Date(selectedYear, selectedMonth)}
         disabled={[
           new Date(2024, 11, 24),
@@ -177,7 +190,8 @@ export function DateSelection({ disabledDays, professional, handleDaysWithAppos,
       <section className='-mt-3 flex w-full flex-row items-center justify-center space-x-3'>
         <Button
           variant='default'
-          className='h-7 w-fit px-2 text-xs'
+          className='h-7 w-fit px-2 text-xs disabled:pointer-events-auto disabled:cursor-not-allowed'
+          disabled={!professional}
           onClick={() => {
             setSelectedMonth(new Date().getMonth());
             setSelectedYear(new Date().getFullYear());

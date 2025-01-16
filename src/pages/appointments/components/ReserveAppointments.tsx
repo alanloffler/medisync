@@ -6,8 +6,8 @@ import { ProfessionalSelection } from '@appointments/components/reserve/Professi
 import { UsersCombo } from '@users/components/UsersCombo';
 // External imports
 import { Trans, useTranslation } from 'react-i18next';
-import { format } from '@formkit/tempo';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { format, parse } from '@formkit/tempo';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 // Imports
 import type { IDialog } from '@core/interfaces/dialog.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
@@ -54,13 +54,14 @@ export default function ReserveAppointments() {
     setItemSelected(HEADER_CONFIG.headerMenu[1].id);
   }, [setItemSelected]);
 
-  useEffect(() => {
-    if (professionalSelected) {
-      setFilters({ professionalParam: professionalSelected._id });
-    }
-  }, [professionalSelected, setFilters]);
+  // useEffect(() => {
+  //   if (professionalSelected) {
+  //     setFilters({ professionalParam: professionalSelected._id });
+  //   }
+  // }, [professionalSelected, setFilters]);
 
   useEffect(() => {
+    console.log('selected date on reserve appointment', selectedDate);
     if (selectedDate) {
       setFilters({ dateParam: format(selectedDate, 'YYYY-MM-DD') });
     }
@@ -81,12 +82,79 @@ export default function ReserveAppointments() {
     };
   }, []);
 
-  useEffect(() => {
-    setSelectedDate(undefined);
+  // useEffect(() => {
+  //   if (professionalSelected) {
+  //     setFilters({ professionalParam: professionalSelected._id });
+  //     clearFilters({ dateParam });
+  //     setSelectedDate(undefined);
+  //   }
 
-    const disabledDays = $getDisabledDays(professionalSelected);
-    setDisabledDays(disabledDays);
-  }, [professionalSelected, $getDisabledDays]);
+  //   const disabledDays = $getDisabledDays(professionalSelected);
+  //   setDisabledDays(disabledDays);
+  // }, [professionalSelected, $getDisabledDays, setFilters, clearFilters]);
+
+  useEffect(() => {
+    if (dateParam || professionalParam) {
+      // Set initial date if provided in URL
+      if (dateParam) {
+        setSelectedDate(parse(dateParam, 'YYYY-MM-DD'));
+      }
+      // Don't clear anything on first load
+    }
+  }, []);
+// Handle professional changes after initial render
+const previousProfessionalRef = useRef<string | undefined>();
+  
+useEffect(() => {
+  if (!professionalSelected) return;
+
+  // Skip the first render
+  if (previousProfessionalRef.current === undefined) {
+    previousProfessionalRef.current = professionalSelected._id;
+    return;
+  }
+
+  // Only clear date and update filters if the professional actually changed
+  if (previousProfessionalRef.current !== professionalSelected._id) {
+    setFilters({ professionalParam: professionalSelected._id });
+    clearFilters({ dateParam });
+    setSelectedDate(undefined);
+  }
+
+  // Update disabled days
+  const disabledDays = $getDisabledDays(professionalSelected);
+  setDisabledDays(disabledDays);
+
+  // Update ref for next comparison
+  previousProfessionalRef.current = professionalSelected._id;
+}, [professionalSelected, $getDisabledDays, setFilters, clearFilters]);
+
+// Handle date changes
+useEffect(() => {
+  if (selectedDate) {
+    setFilters({ dateParam: format(selectedDate, 'YYYY-MM-DD') });
+  }
+}, [selectedDate, setFilters]);
+
+  // const isInitialRender = useRef(true);
+
+  // useEffect(() => {
+  //   if (professionalSelected) {
+  //     setFilters({ professionalParam: professionalSelected._id });
+
+  //     if (!isInitialRender.current) {
+  //       // Only clear dateParam and setSelectedDate on subsequent renders
+  //       clearFilters({ dateParam });
+  //       setSelectedDate(undefined);
+  //     }
+  //   }
+
+  //   const disabledDays = $getDisabledDays(professionalSelected);
+  //   setDisabledDays(disabledDays);
+
+  //   // Mark as not initial render after the first run
+  //   isInitialRender.current = false;
+  // }, [professionalSelected, $getDisabledDays]);
 
   // SCHEDULE
   // Set legible date
@@ -155,11 +223,9 @@ export default function ReserveAppointments() {
     [selectedLocale, t],
   );
 
-//   useEffect(() => {
-
-//     setSelectedDate(parse('2025-01-15', 'YYYY-MM-DD'));
-//   // setCalendarKey(crypto.randomUUID());
-// }, [setSelectedDate]);
+  // useEffect(() => {
+  //   setSelectedDate(parse('2025-01-15', 'YYYY-MM-DD'));
+  // }, [setSelectedDate]);
 
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6'>
