@@ -82,7 +82,7 @@ export default function Appointments() {
               <span>{t('button.generateAppointment')}</span>
             </Button>
           </div>
-          <AppoFlowCard />
+          <AppoFlowCard className='w-full md:max-w-[300px]' />
         </section>
         <Card className='col-span-1 h-fit space-y-4 overflow-y-auto p-0 md:col-span-4 lg:col-span-3 xl:col-span-3'>
           <header className='flex items-center space-x-3.5 rounded-t-lg bg-slate-200 px-3.5 py-2 text-slate-700'>
