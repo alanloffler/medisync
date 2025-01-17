@@ -16,6 +16,10 @@ import type { IResponse } from '@core/interfaces/response.interface';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { cn } from '@lib/utils';
 // Interfaces
+interface IProps {
+  className?: string;
+}
+
 interface IStatistic {
   count: IStatisticElement;
   diff?: number;
@@ -29,7 +33,7 @@ interface IStatisticElement {
 // Constants
 const intervalTime: number = 5000;
 // React component
-export function AppoFlowCard() {
+export function AppoFlowCard({ className }: IProps) {
   const [flowValue, setFlowValue] = useState<IStatistic | undefined>(undefined);
   const { i18n, t } = useTranslation();
 
@@ -60,7 +64,7 @@ export function AppoFlowCard() {
   }, [flowContent, isError]);
 
   return (
-    <Card className='flex flex-col bg-amber-100 text-amber-500'>
+    <Card className={cn(className, 'flex flex-col bg-amber-100 text-amber-500')}>
       {!isError && (isLoading || flowValue === undefined) ? (
         <LoadingText text={t('loading.default')} suffix='...' className='mx-auto my-auto py-4 !text-xsm text-amber-500' />
       ) : (
@@ -109,7 +113,7 @@ export function AppoFlowCard() {
           )}
         </>
       )}
-      {isError && <span className='!text-xsm mx-auto my-auto'>{error.message}</span>}
+      {isError && <span className='mx-auto my-auto !text-xsm'>{error.message}</span>}
     </Card>
   );
 }
