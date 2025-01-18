@@ -1,6 +1,6 @@
 import Backend from 'i18next-http-backend';
-import en from './lang/en/en-us.json';
-import es from './lang/es/es-ar.json';
+import en from './lang/en/en-US.json';
+import es from './lang/es/es-AR.json';
 import enSchemas from './lang/en/schemas.json';
 import esSchemas from './lang/es/schemas.json';
 import i18n from 'i18next';
@@ -28,8 +28,8 @@ i18n
       },
     },
     resources: {
-      en: { translation: { ...en, ...enSchemas } },
-      es: { translation: { ...es, ...esSchemas } },
+      'en': { translation: { ...en, ...enSchemas } },
+      'es': { translation: { ...es, ...esSchemas } },
     },
   });
 
