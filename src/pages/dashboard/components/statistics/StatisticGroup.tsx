@@ -2,7 +2,7 @@
 import { CalendarCheck, Users } from 'lucide-react';
 import { HealthBadgeId } from '@core/components/icons/HealthIcons';
 // Components
-import { AppoFlowCard } from '@appointments/components/AppoFlowCard';
+// import { AppoFlowCard } from '@appointments/components/AppoFlowCard';
 import { DashboardTitle } from '@dashboard/components/common/DashboardTitle';
 import { Statistic } from '@dashboard/components/statistics/Statistic';
 import { StatisticChart } from '@dashboard/components/statistics/StatisticChart';
@@ -56,7 +56,7 @@ export function StatisticGroup() {
     <section className='flex flex-col space-y-2'>
       <DashboardTitle title={t('cardTitle.dashboard.statistics')} />
       <section className='grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4 lg:gap-8'>
-        <AppoFlowCard />
+        {/* <AppoFlowCard /> */}
         <Statistic
           content={DASHBOARD_CONFIG.statisticGroup.items[0].content}
           error={apposError}
