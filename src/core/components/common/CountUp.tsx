@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useInView, useMotionValue, useSpring } from 'motion/react';
+import { useTranslation } from 'react-i18next';
 
 interface CountUpProps {
   to: number;
@@ -9,28 +10,18 @@ interface CountUpProps {
   duration?: number;
   className?: string;
   startWhen?: boolean;
-  separator?: string;
   onStart?: () => void;
   onEnd?: () => void;
 }
 
-export function CountUp({
-  to,
-  from = 0,
-  direction = 'up',
-  delay = 0,
-  duration = 2,
-  className = '',
-  startWhen = true,
-  separator = '',
-  onStart,
-  onEnd,
-}: CountUpProps) {
+export function CountUp({ to, from = 0, direction = 'up', delay = 0, duration = 2, className = '', startWhen = true, onStart, onEnd }: CountUpProps) {
   const ref = useRef<HTMLSpanElement | null>(null);
   const motionValue = useMotionValue(direction === 'down' ? to : from);
 
   const damping: number = 20 + 40 * (1 / duration);
   const stiffness: number = 100 * (1 / duration);
+
+  const { i18n } = useTranslation();
 
   const springValue = useSpring(motionValue, {
     damping,
@@ -69,25 +60,19 @@ export function CountUp({
         clearTimeout(durationTimeoutId);
       };
     }
-  }, [isInView, startWhen, motionValue, direction, from, to, delay, onStart, onEnd, duration]);
+  }, [isInView, startWhen, motionValue, direction, from, to, delay, onStart, onEnd, duration, i18n]);
 
   useEffect(() => {
-    const unsubscribe: () => void = springValue.on('change', (latest: number) => {
+    const unsubscribe = springValue.on('change', (latest: number) => {
       if (ref.current) {
-        const options: Intl.NumberFormatOptions = {
-          useGrouping: !!separator,
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 0,
-        };
+        const formattedNumber: string = i18n.format(latest, 'integer', i18n.resolvedLanguage);
 
-        const formattedNumber: string = Intl.NumberFormat('en-US', options).format(latest);
-
-        ref.current.textContent = separator ? formattedNumber.replace(/,/g, separator) : formattedNumber;
+        ref.current.textContent = formattedNumber;
       }
     });
 
     return () => unsubscribe();
-  }, [springValue, separator]);
+  }, [i18n, springValue]);
 
   return <span className={`${className}`} ref={ref} />;
 }
