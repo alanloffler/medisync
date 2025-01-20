@@ -17,8 +17,8 @@ export function Statistic({ children, content, error, isLoading, path, title, va
 
   const animation = {
     item: {
-      initial: { scale: 1, border: '1px solid transparent' },
-      animate: { scale: 1.05, border: '1px solid #e2e8f0', transition: { type: 'spring', stiffness: 800, damping: 20, duration: 0.2, delay: 0 } }, // slate-200
+      initial: { scale: 1 },
+      animate: { scale: 1.05, transition: { type: 'spring', stiffness: 800, damping: 20, duration: 0.2, delay: 0 } }, // slate-200
     },
   };
 
