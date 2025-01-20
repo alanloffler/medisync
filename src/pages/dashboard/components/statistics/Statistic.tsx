@@ -1,65 +1,19 @@
 // External components: https://ui.shadcn.com/docs/components
 import { Card, CardContent } from '@core/components/ui/card';
 // Components
+import { CountUp } from '@core/components/common/CountUp';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
 import { motion } from 'motion/react';
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { IStatistic } from '@dashboard/interfaces/statistic.interface';
 // React component
 export function Statistic({ children, content, error, isLoading, path, title, value1, value2 }: IStatistic) {
-  const targetNumber = value1?.toString();
-  const [displayedDigits, setDisplayedDigits] = useState<number[]>(new Array(targetNumber?.length).fill(0));
   const navigate = useNavigate();
   const { t } = useTranslation();
-
-  useEffect(() => {
-    if (targetNumber === undefined) return;
-
-    const counters = new Array(targetNumber.length).fill(0);
-    const timeouts: ReturnType<typeof setTimeout>[] = [];
-
-    function updateDigit(index: number) {
-      if (counters[index] < 30) {
-        setDisplayedDigits((prev) => {
-          const updatedDigits = [...prev];
-          updatedDigits[index] = randomNumber();
-          return updatedDigits;
-        });
-
-        counters[index]++;
-
-        if (counters[index] <= 20) {
-          timeouts[index] = setTimeout(() => updateDigit(index), 50);
-        } else {
-          const newDelay = 50 + (counters[index] - 20) * 30;
-          timeouts[index] = setTimeout(() => updateDigit(index), newDelay);
-        }
-      } else {
-        setDisplayedDigits((prev) => {
-          const updatedDigits = [...prev];
-          updatedDigits[index] = parseInt(targetNumber![index]);
-          return updatedDigits;
-        });
-
-        clearTimeout(timeouts[index]);
-      }
-    }
-
-    for (let i = 0; i < targetNumber.length; i++) {
-      updateDigit(i);
-    }
-
-    return () => timeouts.forEach((timeout) => clearTimeout(timeout));
-  }, [targetNumber]);
-
-  function randomNumber(): number {
-    return Math.floor(Math.random() * 10);
-  }
 
   const animation = {
     item: {
@@ -89,11 +43,7 @@ export function Statistic({ children, content, error, isLoading, path, title, va
               <div>{children}</div>
             </section>
             <CardContent className='space-y-2 p-4 pt-0'>
-              <div className='flex flex-row items-center text-3xl font-bold text-dark-default'>
-                {displayedDigits.map((digit, index) => (
-                  <span key={index}>{digit}</span>
-                ))}
-              </div>
+              <CountUp from={0} to={Number(value1)} className='flex flex-row items-center text-3xl font-bold text-dark-default' />
               <p className='text-left text-xs text-dark-default'>{t(content, { count: Number(value2) })}</p>
             </CardContent>
           </>
