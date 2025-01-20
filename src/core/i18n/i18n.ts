@@ -22,14 +22,23 @@ i18n
               style: 'decimal',
               minimumFractionDigits: 0,
               maximumFractionDigits: 1,
+              useGrouping: true
+            }).format(value);
+
+          case 'integer':
+            return new Intl.NumberFormat(lng, {
+              style: 'decimal',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+              useGrouping: true
             }).format(value);
         }
         return value;
       },
     },
     resources: {
-      'en': { translation: { ...en, ...enSchemas } },
-      'es': { translation: { ...es, ...esSchemas } },
+      en: { translation: { ...en, ...enSchemas } },
+      es: { translation: { ...es, ...esSchemas } },
     },
   });
 
