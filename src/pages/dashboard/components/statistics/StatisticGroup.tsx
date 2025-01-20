@@ -1,7 +1,8 @@
 // Icons: https://lucide.dev/icons/
-import { Users } from 'lucide-react';
+import { CalendarCheck, Users } from 'lucide-react';
 import { HealthBadgeId } from '@core/components/icons/HealthIcons';
 // Components
+import { AppoFlowCard } from '@appointments/components/AppoFlowCard';
 import { DashboardTitle } from '@dashboard/components/common/DashboardTitle';
 import { Statistic } from '@dashboard/components/statistics/Statistic';
 import { StatisticChart } from '@dashboard/components/statistics/StatisticChart';
@@ -11,22 +12,21 @@ import { useTranslation } from 'react-i18next';
 // Imports
 import { DASHBOARD_CONFIG } from '@config/dashboard/dashboard.config';
 import { DashboardApiService } from '@dashboard/services/dashboard-api.service';
-import { AppoFlowCard } from '@appointments/components/AppoFlowCard';
 // React component
 export function StatisticGroup() {
   const { t } = useTranslation();
 
-  // const {
-  //   data: apposData,
-  //   error: apposError,
-  //   isLoading: apposDataIsLoading,
-  // } = useQuery({
-  //   queryKey: ['dashboard', 'appos'],
-  //   queryFn: async () => await DashboardApiService.countAppointments(),
-  //   refetchOnWindowFocus: false,
-  //   retry: 1,
-  //   staleTime: 0,
-  // });
+  const {
+    data: apposData,
+    error: apposError,
+    isLoading: apposDataIsLoading,
+  } = useQuery({
+    queryKey: ['dashboard', 'appos'],
+    queryFn: async () => await DashboardApiService.countAppointments(),
+    refetchOnWindowFocus: false,
+    retry: 1,
+    staleTime: 0,
+  });
 
   const {
     data: usersData,
@@ -57,7 +57,7 @@ export function StatisticGroup() {
       <DashboardTitle title={t('cardTitle.dashboard.statistics')} />
       <section className='grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4 lg:gap-8'>
         <AppoFlowCard />
-        {/* <Statistic
+        <Statistic
           content={DASHBOARD_CONFIG.statisticGroup.items[0].content}
           error={apposError}
           isLoading={apposDataIsLoading}
@@ -69,7 +69,7 @@ export function StatisticGroup() {
           <div className='rounded-full bg-fuchsia-100 p-2'>
             <CalendarCheck size={18} strokeWidth={2} className='text-fuchsia-400' />
           </div>
-        </Statistic> */}
+        </Statistic>
         <Statistic
           content={DASHBOARD_CONFIG.statisticGroup.items[2].content}
           error={usersError}
