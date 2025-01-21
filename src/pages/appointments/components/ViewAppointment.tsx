@@ -26,6 +26,8 @@ import { UtilsString } from '@core/services/utils/string.service';
 import { VIEW_APPOINTMENT_CONFIG as VA_CONFIG } from '@config/appointments/view-appointment.config';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
+import { IMessage } from '@whatsapp/interfaces/message.interface';
+import { WhatsappApiService } from '@whatsapp/services/whatsapp-api.service';
 // React component
 export default function ViewAppointment() {
   const [date, setDate] = useState<string>('');
@@ -72,6 +74,14 @@ export default function ViewAppointment() {
   } = useMutation<IResponse, Error, IEmailData>({
     mutationKey: ['send-email', 'with-pdf'],
     mutationFn: async (data) => await EmailApiService.sendEmail(data),
+    onError: (error) => addNotification({ type: 'error', message: error.message }),
+    onSuccess: (response) => addNotification({ type: 'success', message: response.message }),
+    retry: 0,
+  });
+
+  const { mutate: sendWhatsappMessage } = useMutation<IResponse, Error, IMessage>({
+    mutationKey: ['send-whatsapp', 'message'],
+    mutationFn: async (data) => await WhatsappApiService.send(data),
     onError: (error) => addNotification({ type: 'error', message: error.message }),
     onSuccess: (response) => addNotification({ type: 'success', message: response.message }),
     retry: 0,
@@ -136,7 +146,20 @@ export default function ViewAppointment() {
   async function sendMessageWithPDF(): Promise<void> {
     console.log('Send pdf receipt by whatsapp message');
     console.log('Phone', appointment?.data.user.phone);
-    resetEmailStatus();
+    if (appointment?.data.user.phone) {
+      resetEmailStatus();
+
+      const professionalName: string = UtilsString.upperCase(`${appointment?.data.professional.title.abbreviation} ${appointment?.data.professional.firstName} ${appointment?.data.professional.lastName}`, 'each');
+      const appointmentDay: string = UtilsString.upperCase(format(appointment?.data.day, 'full', i18n.language), 'first');
+      const appointmentHour: string = `${appointment.data.hour} horas`;
+      
+      const messageData: IMessage = {
+        phone: appointment?.data.user.phone,
+        message: `*Medisync* - Constancia de turno\n\nEste es el comprobante de tu turno con _${professionalName}_, para el día *${appointmentDay}* a las *${appointmentHour}*.\n\n¡Gracias por utilizar Medisync para reservar tu turno!`,
+      };
+
+      sendWhatsappMessage(messageData);
+    }
   }
 
   return (
