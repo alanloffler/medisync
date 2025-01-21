@@ -134,12 +134,10 @@ export default function ViewAppointment() {
 
   return (
     <main className='flex flex-1 flex-col p-4 md:p-8'>
-      {/* Section: Page Header */}
       <section className='flex items-center justify-between'>
         <PageHeader title={t('pageTitle.viewAppointment')} breadcrumb={VA_CONFIG.breadcrumb} />
         <BackButton label={t('button.back')} />
       </section>
-      {/* Section: Page content (Appo details card) */}
       {isLoading && <LoadingDB variant='card' text={t('loading.appointmentDetails')} absolute />}
       {isError && (
         <InfoCard
