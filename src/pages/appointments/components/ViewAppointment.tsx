@@ -18,16 +18,16 @@ import { useTranslation } from 'react-i18next';
 // Imports
 import type { IAppointment } from '@appointments/interfaces/appointment.interface';
 import type { IEmailAttachment, IEmailData } from '@email/interfaces/email.interface';
+import type { IMessage } from '@whatsapp/interfaces/message.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { EmailApiService } from '@email/services/email.service';
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { UtilsString } from '@core/services/utils/string.service';
 import { VIEW_APPOINTMENT_CONFIG as VA_CONFIG } from '@config/appointments/view-appointment.config';
+import { WhatsappApiService } from '@whatsapp/services/whatsapp-api.service';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
-import { IMessage } from '@whatsapp/interfaces/message.interface';
-import { WhatsappApiService } from '@whatsapp/services/whatsapp-api.service';
 // React component
 export default function ViewAppointment() {
   const [date, setDate] = useState<string>('');
@@ -79,7 +79,15 @@ export default function ViewAppointment() {
     retry: 0,
   });
 
-  const { mutate: sendWhatsappMessage } = useMutation<IResponse, Error, IMessage>({
+  const {
+    data: whatsappResponse,
+    error: whatsappError,
+    isError: isSendingWhatsappError,
+    isPending: isSendingWhatsapp,
+    isSuccess: isSendingWhatsappSuccess,
+    mutate: sendWhatsappMessage,
+    reset: resetWhatsappStatus,
+  } = useMutation<IResponse, Error, IMessage>({
     mutationKey: ['send-whatsapp', 'message'],
     mutationFn: async (data) => await WhatsappApiService.send(data),
     onError: (error) => addNotification({ type: 'error', message: error.message }),
@@ -124,6 +132,7 @@ export default function ViewAppointment() {
   async function sendEmailWithPDF() {
     if (appointment?.data.user.email) {
       resetEmailStatus();
+      resetWhatsappStatus();
 
       const pdf: jsPDF | undefined = await generatePDF();
       const attachments: IEmailAttachment[] = [];
@@ -143,16 +152,18 @@ export default function ViewAppointment() {
     }
   }
 
-  async function sendMessageWithPDF(): Promise<void> {
-    console.log('Send pdf receipt by whatsapp message');
-    console.log('Phone', appointment?.data.user.phone);
+  async function sendPhoneMessage(): Promise<void> {
     if (appointment?.data.user.phone) {
       resetEmailStatus();
+      resetWhatsappStatus();
 
-      const professionalName: string = UtilsString.upperCase(`${appointment?.data.professional.title.abbreviation} ${appointment?.data.professional.firstName} ${appointment?.data.professional.lastName}`, 'each');
+      const professionalName: string = UtilsString.upperCase(
+        `${appointment?.data.professional.title.abbreviation} ${appointment?.data.professional.firstName} ${appointment?.data.professional.lastName}`,
+        'each',
+      );
       const appointmentDay: string = UtilsString.upperCase(format(appointment?.data.day, 'full', i18n.language), 'first');
       const appointmentHour: string = `${appointment.data.hour} horas`;
-      
+
       const messageData: IMessage = {
         phone: appointment?.data.user.phone,
         message: `*Medisync* - Constancia de turno\n\nEste es el comprobante de tu turno con _${professionalName}_, para el día *${appointmentDay}* a las *${appointmentHour}*.\n\n¡Gracias por utilizar Medisync para reservar tu turno!`,
@@ -234,7 +245,7 @@ export default function ViewAppointment() {
                 </button>
                 <button
                   className='flex items-center gap-2 rounded-sm bg-transparent px-2 py-1.5 text-xs text-slate-600 transition-colors hover:bg-emerald-100 hover:text-emerald-600'
-                  onClick={sendMessageWithPDF}
+                  onClick={sendPhoneMessage}
                 >
                   <MessageCircle size={14} strokeWidth={2} />
                   <span>{t('label.message')}</span>
@@ -255,6 +266,19 @@ export default function ViewAppointment() {
                   )}
                   {isSendingEmailSuccess && !isSendingEmailError && !pdfIsGenerating && !isSendingEmail && (
                     <InfoCard type='success' text={emailResponse.message} iconSize={17} className='!p-0 !text-xsm text-foreground' />
+                  )}
+                </Card>
+              )}
+              {(isSendingWhatsapp || isSendingWhatsappError || isSendingWhatsappSuccess) && (
+                <Card className='p-2 pr-3'>
+                  {isSendingWhatsapp && (
+                    <LoadingDB iconSize={17} variant='default' text={t('loading.sendingPhoneMessage')} className='!p-0 !text-xsm text-foreground' />
+                  )}
+                  {isSendingWhatsappError && (
+                    <InfoCard type='error' text={t(whatsappError.message)} iconSize={17} className='!p-0 !text-xsm text-foreground' />
+                  )}
+                  {isSendingWhatsappSuccess && !isSendingWhatsappError && !isSendingWhatsapp && (
+                    <InfoCard type='success' text={whatsappResponse.message} iconSize={17} className='!p-0 !text-xsm text-foreground' />
                   )}
                 </Card>
               )}
