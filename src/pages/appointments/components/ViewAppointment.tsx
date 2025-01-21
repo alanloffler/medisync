@@ -12,12 +12,12 @@ import * as htmlToImage from 'html-to-image';
 import jsPDF from 'jspdf';
 import { format } from '@formkit/tempo';
 import { useEffect, useRef, useState } from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useParams, Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { IAppointment } from '@appointments/interfaces/appointment.interface';
-import type { IEmailAttachment } from '@email/interfaces/email.interface';
+import type { IEmailAttachment, IEmailData } from '@email/interfaces/email.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { EmailApiService } from '@email/services/email.service';
@@ -25,10 +25,12 @@ import { HEADER_CONFIG } from '@config/layout/header.config';
 import { UtilsString } from '@core/services/utils/string.service';
 import { VIEW_APPOINTMENT_CONFIG as VA_CONFIG } from '@config/appointments/view-appointment.config';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
+import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export default function ViewAppointment() {
   const [date, setDate] = useState<string>('');
   const [pdfIsGenerating, setPdfIsGenerating] = useState<boolean>(false);
+  const addNotification = useNotificationsStore((state) => state.addNotification);
   const pdfRef = useRef<HTMLDivElement>(null);
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
   const { i18n, t } = useTranslation();
@@ -58,13 +60,29 @@ export default function ViewAppointment() {
     }
   }, [appointment, i18n.language]);
 
-  function downloadPDF(): void {
+  const {
+    data: emailResponse,
+    error: emailError,
+    isError: isSendingEmailError,
+    isPending: isSendingEmail,
+    isSuccess: isSendingEmailSuccess,
+    mutate: sendEmailWithAttachment,
+    reset: resetEmailError,
+  } = useMutation<IResponse, Error, IEmailData>({
+    mutationKey: ['send-email', 'with-pdf'],
+    mutationFn: async (data) => await EmailApiService.sendEmail(data),
+    onError: (error) => addNotification({ type: 'error', message: error.message }),
+    onSuccess: (response) => addNotification({ type: 'success', message: response.message }),
+    retry: 0,
+  });
+
+  async function generatePDF(): Promise<jsPDF | undefined> {
     const input: HTMLDivElement | null = pdfRef.current;
-    // TODO: send pdf as attachment! Research
+    
     if (input) {
       setPdfIsGenerating(true);
 
-      htmlToImage
+      return htmlToImage
         .toCanvas(input, { backgroundColor: '#f1f5f9' })
         .then(function (canvas) {
           const pdf: jsPDF = new jsPDF('p', 'px', 'a4', false);
@@ -77,29 +95,40 @@ export default function ViewAppointment() {
           const imgY: number = 0;
 
           pdf.addImage(canvas, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
-          sendEmailWithPDF(pdf);
-          // pdf.save(`${appointment?.data.user.dni}-${appointment?.data.day}.pdf`);
+
+          return pdf;
         })
         .finally(() => setPdfIsGenerating(false));
     }
   }
 
-  async function sendEmailWithPDF(pdf: jsPDF) {
+  async function downloadPDF(): Promise<void> {
+    const pdf: jsPDF | undefined = await generatePDF();
+    if (pdf) {
+      const blob: Blob = pdf.output('blob');
+      window.open(URL.createObjectURL(blob));
+    }
+  }
+
+  async function sendEmailWithPDF() {
     if (appointment?.data.user.email) {
+      if (emailError) resetEmailError();
+
+      const pdf: jsPDF | undefined = await generatePDF();
       const attachments: IEmailAttachment[] = [];
       const filename: string = `${appointment?.data.user.dni}-${appointment?.data.day}.pdf`;
-      const output: string = pdf.output('datauristring', { filename: filename });
+      const output: string | undefined = pdf?.output('datauristring', { filename: filename });
 
-      attachments.push({ filename: filename, path: output });
+      if (output) attachments.push({ filename: filename, path: output });
 
-      EmailApiService.sendEmail({
+      const emailData: IEmailData = {
         to: [appointment.data.user.email],
         body: 'This is the constancy of the appointment',
         subject: 'Constancy',
         attachments,
-      })
-        .then((data) => console.log(data))
-        .finally(() => console.log(pdf.output('datauristring').length));
+      };
+
+      sendEmailWithAttachment(emailData);
     }
   }
 
@@ -154,39 +183,54 @@ export default function ViewAppointment() {
               </CardContent>
             </Card>
           </div>
-          <footer className='mx-auto flex w-full justify-between md:w-[500px] lg:w-[500px]'>
-            <div className='flex gap-2'>
-              <button
-                className='flex items-center gap-2 rounded-sm bg-transparent px-2 py-1.5 text-xs text-stone-600 transition-colors hover:bg-stone-200 hover:text-stone-600'
-                onClick={downloadPDF}
-              >
-                {pdfIsGenerating ? (
-                  <LoadingDB iconSize={16} variant='default' text={t('loading.generatingPDF')} className='p-0 text-xs text-foreground' />
-                ) : (
-                  <>
-                    <Printer size={14} strokeWidth={2} />
-                    <span>{t('label.print')}</span>
-                  </>
-                )}
-              </button>
+          <footer className='mx-auto flex w-full flex-col space-y-3 md:w-[500px] lg:w-[500px]'>
+            <div className='flex w-full justify-between'>
+              <div className='flex gap-2'>
+                <button
+                  className='flex items-center gap-2 rounded-sm bg-transparent px-2 py-1.5 text-xs text-stone-600 transition-colors hover:bg-stone-200 hover:text-stone-600'
+                  onClick={downloadPDF}
+                >
+                  <Printer size={14} strokeWidth={2} />
+                  <span>{t('label.print')}</span>
+                </button>
+              </div>
+              <div className='flex items-center space-x-4'>
+                <span className='text-xsm font-medium text-slate-600'>{t('label.sendBy')}</span>
+                <button
+                  className='flex items-center gap-2 rounded-sm bg-transparent px-2 py-1.5 text-xs text-slate-600 transition-colors hover:bg-sky-100 hover:text-sky-600 disabled:pointer-events-none'
+                  disabled={isSendingEmail || pdfIsGenerating}
+                  onClick={sendEmailWithPDF}
+                >
+                  {appointment?.data.user.email ? <Mail size={14} strokeWidth={2} /> : <MailX size={14} strokeWidth={2} className='stroke-red-400' />}
+                  <span>{t('button.email')}</span>
+                </button>
+                <button
+                  className='flex items-center gap-2 rounded-sm bg-transparent px-2 py-1.5 text-xs text-slate-600 transition-colors hover:bg-emerald-100 hover:text-emerald-600'
+                  onClick={() => console.log('Send by message')}
+                >
+                  <MessageCircle size={14} strokeWidth={2} />
+                  <span>{t('label.message')}</span>
+                </button>
+              </div>
             </div>
-            <div className='flex items-center space-x-4'>
-              <span className='text-xsm font-medium text-slate-600'>{t('label.sendBy')}</span>
-              <button
-                className='flex items-center gap-2 rounded-sm bg-transparent px-2 py-1.5 text-xs text-slate-600 transition-colors hover:bg-sky-100 hover:text-sky-600'
-                onClick={() => console.log('Send by email')}
-              >
-                {appointment?.data.user.email ? <Mail size={14} strokeWidth={2} /> : <MailX size={14} strokeWidth={2} className='stroke-red-400' />}
-                <span>{t('button.email')}</span>
-              </button>
-              <button
-                className='flex items-center gap-2 rounded-sm bg-transparent px-2 py-1.5 text-xs text-slate-600 transition-colors hover:bg-emerald-100 hover:text-emerald-600'
-                onClick={() => console.log('Send by message')}
-              >
-                <MessageCircle size={14} strokeWidth={2} />
-                <span>{t('label.message')}</span>
-              </button>
-            </div>
+            <section className='mx-auto flex items-center space-x-2'>
+              {(pdfIsGenerating || isSendingEmail || isSendingEmailError || isSendingEmailSuccess) && (
+                <Card className='p-2 pr-3'>
+                  {pdfIsGenerating && (
+                    <LoadingDB iconSize={17} variant='default' text={t('loading.generatingPDF')} className='!p-0 !text-xsm text-foreground' />
+                  )}
+                  {isSendingEmail && (
+                    <LoadingDB iconSize={17} variant='default' text={t('loading.sendingEmail')} className='!p-0 !text-xsm text-foreground' />
+                  )}
+                  {isSendingEmailError && (
+                    <InfoCard type='error' text={t(emailError.message)} iconSize={17} className='!p-0 !text-xsm text-foreground' />
+                  )}
+                  {isSendingEmailSuccess && !isSendingEmailError && !pdfIsGenerating && !isSendingEmail && (
+                    <InfoCard type='success' text={emailResponse.message} iconSize={17} className='!p-0 !text-xsm text-foreground' />
+                  )}
+                </Card>
+              )}
+            </section>
           </footer>
         </>
       )}
