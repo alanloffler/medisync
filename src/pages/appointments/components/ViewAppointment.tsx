@@ -17,13 +17,14 @@ import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { IAppointment } from '@appointments/interfaces/appointment.interface';
+import type { IEmailAttachment } from '@email/interfaces/email.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
+import { EmailApiService } from '@email/services/email.service';
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { UtilsString } from '@core/services/utils/string.service';
 import { VIEW_APPOINTMENT_CONFIG as VA_CONFIG } from '@config/appointments/view-appointment.config';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
-import { EmailApiService } from '@email/services/email.service';
 // React component
 export default function ViewAppointment() {
   const [date, setDate] = useState<string>('');
@@ -76,29 +77,29 @@ export default function ViewAppointment() {
           const imgY: number = 0;
 
           pdf.addImage(canvas, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
-          sendEmail(pdf);
+          sendEmailWithPDF(pdf);
           // pdf.save(`${appointment?.data.user.dni}-${appointment?.data.day}.pdf`);
         })
         .finally(() => setPdfIsGenerating(false));
     }
   }
 
-  async function sendEmail(pdf: jsPDF) {
+  async function sendEmailWithPDF(pdf: jsPDF) {
     if (appointment?.data.user.email) {
-      // const buffer = Buffer.from(pdf.output('arraybuffer'));
-      // console.log(buffer.length);
-      // const blob = new Blob([buffer], { type: 'application/pdf' });
-      // console.log(blob.size);
+      const attachments: IEmailAttachment[] = [];
+      const filename: string = `${appointment?.data.user.dni}-${appointment?.data.day}.pdf`;
+      const output: string = pdf.output('datauristring', { filename: filename });
+
+      attachments.push({ filename: filename, path: output });
+
       EmailApiService.sendEmail({
         to: [appointment.data.user.email],
         body: 'This is the constancy of the appointment',
         subject: 'Constancy',
-        attachments:
-          [{
-            filename: `${appointment?.data.user.dni}-${appointment?.data.day}.pdf`,
-            content: pdf.output('datauristring'),
-          }],
-      }).then((data) => console.log(data)).finally(() => console.log(pdf.output('datauristring').length));
+        attachments,
+      })
+        .then((data) => console.log(data))
+        .finally(() => console.log(pdf.output('datauristring').length));
     }
   }
 
