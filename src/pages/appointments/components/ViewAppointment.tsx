@@ -54,6 +54,7 @@ export default function ViewAppointment() {
 
   useEffect(() => {
     if (appointment) {
+      console.log(appointment);
       const legibleDate: string = format(appointment.data.day, 'full', i18n.language);
       const capitalized = UtilsString.upperCase(legibleDate, 'first');
       setDate(capitalized);
@@ -67,7 +68,7 @@ export default function ViewAppointment() {
     isPending: isSendingEmail,
     isSuccess: isSendingEmailSuccess,
     mutate: sendEmailWithAttachment,
-    reset: resetEmailError,
+    reset: resetEmailStatus,
   } = useMutation<IResponse, Error, IEmailData>({
     mutationKey: ['send-email', 'with-pdf'],
     mutationFn: async (data) => await EmailApiService.sendEmail(data),
@@ -78,7 +79,7 @@ export default function ViewAppointment() {
 
   async function generatePDF(): Promise<jsPDF | undefined> {
     const input: HTMLDivElement | null = pdfRef.current;
-    
+
     if (input) {
       setPdfIsGenerating(true);
 
@@ -112,7 +113,7 @@ export default function ViewAppointment() {
 
   async function sendEmailWithPDF() {
     if (appointment?.data.user.email) {
-      if (emailError) resetEmailError();
+      resetEmailStatus();
 
       const pdf: jsPDF | undefined = await generatePDF();
       const attachments: IEmailAttachment[] = [];
@@ -130,6 +131,12 @@ export default function ViewAppointment() {
 
       sendEmailWithAttachment(emailData);
     }
+  }
+
+  async function sendMessageWithPDF(): Promise<void> {
+    console.log('Send pdf receipt by whatsapp message');
+    console.log('Phone', appointment?.data.user.phone);
+    resetEmailStatus();
   }
 
   return (
@@ -196,7 +203,7 @@ export default function ViewAppointment() {
                 <span className='text-xsm font-medium text-slate-600'>{t('label.sendBy')}</span>
                 <button
                   className='flex items-center gap-2 rounded-sm bg-transparent px-2 py-1.5 text-xs text-slate-600 transition-colors hover:bg-sky-100 hover:text-sky-600 disabled:pointer-events-none'
-                  disabled={isSendingEmail || pdfIsGenerating}
+                  disabled={!appointment.data.user.email || isSendingEmail || pdfIsGenerating}
                   onClick={sendEmailWithPDF}
                 >
                   {appointment?.data.user.email ? <Mail size={14} strokeWidth={2} /> : <MailX size={14} strokeWidth={2} className='stroke-red-400' />}
@@ -204,7 +211,7 @@ export default function ViewAppointment() {
                 </button>
                 <button
                   className='flex items-center gap-2 rounded-sm bg-transparent px-2 py-1.5 text-xs text-slate-600 transition-colors hover:bg-emerald-100 hover:text-emerald-600'
-                  onClick={() => console.log('Send by message')}
+                  onClick={sendMessageWithPDF}
                 >
                   <MessageCircle size={14} strokeWidth={2} />
                   <span>{t('label.message')}</span>
