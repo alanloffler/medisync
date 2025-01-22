@@ -17,7 +17,7 @@ export function TooltipWrapper({ children, tooltip }: ITooltipWrapper) {
     <TooltipProvider delayDuration={0.3}>
       <Tooltip>
         <TooltipTrigger asChild>{children}</TooltipTrigger>
-        <TooltipContent>
+        <TooltipContent className='max-w-[150px]'>
           <p className='select-none text-xs font-normal'>{tooltip}</p>
         </TooltipContent>
       </Tooltip>
