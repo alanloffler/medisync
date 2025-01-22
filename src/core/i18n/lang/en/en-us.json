@@ -381,6 +381,15 @@
     "selectProfessional": "Select a professional",
     "selectWorkingDay": "Select a business day"
   },
+  "whatsapp": {
+    "template": {
+      "appointmentReceipt": {
+        "header": "*{{appName}}* - Appointment receipt\n\n",
+        "body": "Hello _{{userName}}_, this is the receipt of your appointment with _{{professionalName}}_, for the day *{{appointmentDay}}* at *{{appointmentHour}} hours*.\n\n",
+        "footer": "Thank you for booking your appointment.\n{{adminName}} from {{appName}}."
+      }
+    }
+  },
   "words": {
     "and": "and",
     "appointmentPrefix": "A",
