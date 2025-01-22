@@ -7,10 +7,12 @@ import { LoadingDB } from '@core/components/common/LoadingDB';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
 import { ReactNode, useEffect, useState } from 'react';
+import { useAnimate } from 'motion/react';
 import { useMutation } from '@tanstack/react-query';
 // Imports
 import type { IResponse } from '@core/interfaces/response.interface';
 import { REMOVE_DIALOG_CONFIG } from '@config/common.config';
+import { motion } from '@core/services/motion.service';
 // Interfaces
 interface IRemoveDialog {
   action: () => Promise<IResponse | Error>;
@@ -31,6 +33,7 @@ interface IDialogTexts {
 // React component
 export function RemoveDialog({ action, callback, dialogContent, dialogTexts, tooltip, triggerButton }: IRemoveDialog) {
   const [openDialog, setOpenDialog] = useState(false);
+  const [scope, animation] = useAnimate();
 
   const { error, isError, isPending, mutate, reset } = useMutation({
     mutationFn: action,
@@ -52,17 +55,27 @@ export function RemoveDialog({ action, callback, dialogContent, dialogTexts, too
     mutate();
   }
 
+  function animateOver(): void {
+    const { keyframes, options } = motion.scale(1.1).type('bounce').animate();
+    animation(scope.current, keyframes, options);
+  }
+
+  function animateOut(): void {
+    const { keyframes, options } = motion.scale(1).type('bounce').animate();
+    animation(scope.current, keyframes, options);
+  }
+
   return (
     <>
       <TooltipWrapper tooltip={tooltip}>
-        <Button
+        <button
+          className='flex h-7 w-7 items-center justify-center rounded-md bg-transparent hover:bg-red-100/75 hover:text-red-400'
           onClick={() => setOpenDialog(true)}
-          variant='ghost'
-          size='miniIcon'
-          className='transition-transform hover:scale-110 hover:bg-red-100 hover:text-red-400 hover:animate-in'
+          onMouseOut={animateOut}
+          onMouseOver={animateOver}
         >
-          {triggerButton}
-        </Button>
+          <div ref={scope}>{triggerButton}</div>
+        </button>
       </TooltipWrapper>
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent>
