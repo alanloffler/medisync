@@ -63,9 +63,9 @@ export function ApposRecord({ userId }: { userId: string }) {
   return (
     <main>
       <Card className='flex w-full flex-col gap-3'>
-        <section className='flex flex-row items-center space-x-2 border-b border-slate-200 p-3'>
+        <section className='flex flex-row items-center space-x-4 border-b border-slate-200 p-4'>
           <CalendarClock size={18} strokeWidth={2} />
-          <span className='text-xsm font-semibold uppercase'>{t('cardTitle.appointmentsRecord')}</span>
+          <span className='text-base font-semibold'>{t('cardTitle.appointmentsRecord')}</span>
         </section>
         <CardContent className='flex flex-col gap-3'>
           <ApposFilters userId={userId} disabled={disabledFilters} />
