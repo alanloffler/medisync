@@ -366,6 +366,8 @@
     "reload": "Recargar",
     "selectProfessional": "Seleccionar profesional",
     "selectYear": "Seleccionar año",
+    "sendAppoByEmail": "Enviar turno por email",
+    "sendAppoByMessage": "Enviar turno por WhatsApp",
     "sendEmail": "Enviar email",
     "sendMessage": "Enviar WhatsApp",
     "settings": "Configuraciones",

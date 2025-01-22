@@ -366,6 +366,8 @@
     "reload": "Reload",
     "selectProfessional": "Select professional",
     "selectYear": "Select year",
+    "sendAppoByEmail": "Send appointment by email",
+    "sendAppoByMessage": "Send appointment by WhatsApp",
     "sendEmail": "Send email",
     "sendMessage": "Send WhatsApp",
     "settings": "Settings",
