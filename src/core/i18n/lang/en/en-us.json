@@ -143,7 +143,14 @@
     "sentError": "Email not sent. A shipping error has occurred.",
     "sentSuccess": "Email sent. You will be redirected in <NumberFlow />",
     "subject": "Subject",
-    "to": "To"
+    "to": "To",
+    "template": {
+      "appointmentReceipt": {
+        "subject": "{{appName}} - Appointment receipt",
+        "body": "Hello <i>{{userName}}</i>, this is the receipt of your appointment with <i>{{professionalName}}</i>, for the day <b>{{appointmentDay}}</b> at <b>{{appointmentHour}} hours</b>.<br><br>",
+        "footer": "Thank you for booking your appointment.<br>{{adminName}} from {{appName}}."
+      }
+    }
   },
   "error": {
     "createUser": "Error creating user",
