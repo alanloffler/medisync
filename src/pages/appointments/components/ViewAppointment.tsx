@@ -157,16 +157,23 @@ export default function ViewAppointment() {
       resetEmailStatus();
       resetWhatsappStatus();
 
+      // TODO: when there's a session, get the admin full name
+      const adminName: string = 'Admin account';
       const professionalName: string = UtilsString.upperCase(
         `${appointment?.data.professional.title.abbreviation} ${appointment?.data.professional.firstName} ${appointment?.data.professional.lastName}`,
         'each',
       );
+      const userName: string = UtilsString.upperCase(`${appointment?.data.user.firstName} ${appointment?.data.user.lastName}`, 'each');
       const appointmentDay: string = UtilsString.upperCase(format(appointment?.data.day, 'full', i18n.language), 'first');
-      const appointmentHour: string = `${appointment.data.hour} horas`;
+      const appointmentHour: string = appointment.data.hour;
+
+      let message: string = `${t('whatsapp.template.appointmentReceipt.header', { appName: t('appName') })}`;
+      message += `${t('whatsapp.template.appointmentReceipt.body', { userName, professionalName, appointmentDay, appointmentHour })}`;
+      message += `${t('whatsapp.template.appointmentReceipt.footer', { appName: t('appName'), adminName })}`;
 
       const messageData: IMessage = {
         phone: appointment?.data.user.phone,
-        message: `*Medisync* - Constancia de turno\n\nEste es el comprobante de tu turno con _${professionalName}_, para el día *${appointmentDay}* a las *${appointmentHour}*.\n\n¡Gracias por utilizar Medisync para reservar tu turno!`,
+        message: message,
       };
 
       sendWhatsappMessage(messageData);
