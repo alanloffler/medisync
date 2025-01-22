@@ -182,41 +182,41 @@ export default function ViewUser() {
               <section className='flex items-center justify-end space-x-2 border-t p-2'>
                 <TooltipWrapper tooltip={t('tooltip.sendEmail')}>
                   <Button
-                    variant='ghost'
-                    size='miniIcon'
                     className='transition-transform hover:scale-110 hover:bg-purple-50 hover:text-purple-400 hover:animate-in disabled:opacity-100'
-                    onClick={() => navigate(`/email/user/${user.data._id}`)}
                     disabled={!user.data.email}
+                    onClick={() => navigate(`/email/user/${user.data._id}`)}
+                    size='miniIcon'
+                    variant='ghost'
                   >
                     {!user.data.email ? <MailX size={18} strokeWidth={1.5} className='stroke-red-400' /> : <Mail size={18} strokeWidth={1.5} />}
                   </Button>
                 </TooltipWrapper>
                 <TooltipWrapper tooltip={t('tooltip.sendMessage')}>
                   <Button
-                    variant='ghost'
-                    size='miniIcon'
                     className='transition-transform hover:scale-110 hover:bg-emerald-50 hover:text-emerald-400 hover:animate-in'
                     onClick={() => navigate(`/whatsapp/user/${user.data._id}`)}
+                    size='miniIcon'
+                    variant='ghost'
                   >
                     <MessageCircle size={18} strokeWidth={1.5} />
                   </Button>
                 </TooltipWrapper>
                 <TooltipWrapper tooltip={t('tooltip.edit')}>
                   <Button
-                    variant='ghost'
-                    size='miniIcon'
-                    onClick={() => navigate(`/users/update/${user.data._id}`)}
                     className='transition-transform hover:scale-110 hover:bg-amber-50 hover:text-amber-400 hover:animate-in'
+                    onClick={() => navigate(`/users/update/${user.data._id}`)}
+                    size='miniIcon'
+                    variant='ghost'
                   >
                     <PencilLine size={18} strokeWidth={1.5} />
                   </Button>
                 </TooltipWrapper>
                 <TooltipWrapper tooltip={t('tooltip.delete')}>
                   <Button
-                    variant='ghost'
-                    size='miniIcon'
-                    onClick={handleRemoveUserDialog}
                     className='transition-transform hover:scale-110 hover:bg-red-50 hover:text-red-400 hover:animate-in'
+                    onClick={handleRemoveUserDialog}
+                    size='miniIcon'
+                    variant='ghost'
                   >
                     <Trash2 size={18} strokeWidth={1.5} />
                   </Button>
