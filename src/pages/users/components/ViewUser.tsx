@@ -188,7 +188,7 @@ export default function ViewUser() {
                     size='miniIcon'
                     variant='ghost'
                   >
-                    {!user.data.email ? <MailX size={18} strokeWidth={1.5} className='stroke-red-400' /> : <Mail size={18} strokeWidth={1.5} />}
+                    {!user.data.email ? <MailX size={17} strokeWidth={1.5} className='stroke-red-400' /> : <Mail size={17} strokeWidth={1.5} />}
                   </Button>
                 </TooltipWrapper>
                 <TooltipWrapper tooltip={t('tooltip.sendMessage')}>
@@ -198,7 +198,7 @@ export default function ViewUser() {
                     size='miniIcon'
                     variant='ghost'
                   >
-                    <MessageCircle size={18} strokeWidth={1.5} />
+                    <MessageCircle size={17} strokeWidth={1.5} />
                   </Button>
                 </TooltipWrapper>
                 <TooltipWrapper tooltip={t('tooltip.edit')}>
@@ -208,7 +208,7 @@ export default function ViewUser() {
                     size='miniIcon'
                     variant='ghost'
                   >
-                    <PencilLine size={18} strokeWidth={1.5} />
+                    <PencilLine size={17} strokeWidth={1.5} />
                   </Button>
                 </TooltipWrapper>
                 <TooltipWrapper tooltip={t('tooltip.delete')}>
@@ -218,7 +218,7 @@ export default function ViewUser() {
                     size='miniIcon'
                     variant='ghost'
                   >
-                    <Trash2 size={18} strokeWidth={1.5} />
+                    <Trash2 size={17} strokeWidth={1.5} />
                   </Button>
                 </TooltipWrapper>
               </section>
