@@ -143,7 +143,14 @@
     "sentError": "Email no enviado. Ha sucedido un error de envío.",
     "sentSuccess": "Email enviado. Serás redirigido en <NumberFlow />",
     "subject": "Asunto",
-    "to": "Para"
+    "to": "Para",
+    "template": {
+      "appointmentReceipt": {
+        "subject": "{{appName}} - Comprobante de turno",
+        "body": "Hola <i>{{userName}}</i>, este es el comprobante de tu turno con <i>{{professionalName}}</i>, para el día <b>{{appointmentDay}}</b> a las <b>{{appointmentHour}} horas</b>.<br><br>",
+        "footer": "Gracias por reservar tu turno.<br>{{adminName}} de {{appName}}."
+      }
+    }
   },
   "error": {
     "createUser": "Error al crear el usuario",
