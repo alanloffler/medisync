@@ -10,7 +10,7 @@ import { BackButton } from '@core/components/common/BackButton';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
-import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
+import { TableButton } from '@core/components/common/TableButton';
 // External imports
 import { Trans, useTranslation } from 'react-i18next';
 import { format } from '@formkit/tempo';
@@ -126,12 +126,10 @@ export default function ViewUser() {
   return (
     <>
       <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
-        {/* Section: Page Header */}
         <header className='flex items-center justify-between'>
           <PageHeader title={t('pageTitle.viewUser')} breadcrumb={UV_CONFIG.breadcrumb} />
           <BackButton label={t('button.back')} />
         </header>
-        {/* Section: Page Content */}
         <section className='grid w-full gap-4 md:grid-cols-5 md:gap-8 lg:grid-cols-5 lg:gap-8 xl:grid-cols-6 xl:gap-8'>
           {isLoading && (
             <LoadingDB
@@ -180,47 +178,34 @@ export default function ViewUser() {
                 )}
               </CardContent>
               <section className='flex items-center justify-end space-x-2 border-t p-2'>
-                <TooltipWrapper tooltip={t('tooltip.sendEmail')}>
-                  <Button
-                    className='transition-transform hover:scale-110 hover:bg-purple-50 hover:text-purple-400 hover:animate-in disabled:opacity-100'
-                    disabled={!user.data.email}
-                    onClick={() => navigate(`/email/user/${user.data._id}`)}
-                    size='miniIcon'
-                    variant='ghost'
-                  >
-                    {!user.data.email ? <MailX size={17} strokeWidth={1.5} className='stroke-red-400' /> : <Mail size={17} strokeWidth={1.5} />}
-                  </Button>
-                </TooltipWrapper>
-                <TooltipWrapper tooltip={t('tooltip.sendMessage')}>
-                  <Button
-                    className='transition-transform hover:scale-110 hover:bg-emerald-50 hover:text-emerald-400 hover:animate-in'
-                    onClick={() => navigate(`/whatsapp/user/${user.data._id}`)}
-                    size='miniIcon'
-                    variant='ghost'
-                  >
-                    <MessageCircle size={17} strokeWidth={1.5} />
-                  </Button>
-                </TooltipWrapper>
-                <TooltipWrapper tooltip={t('tooltip.edit')}>
-                  <Button
-                    className='transition-transform hover:scale-110 hover:bg-amber-50 hover:text-amber-400 hover:animate-in'
-                    onClick={() => navigate(`/users/update/${user.data._id}`)}
-                    size='miniIcon'
-                    variant='ghost'
-                  >
-                    <PencilLine size={17} strokeWidth={1.5} />
-                  </Button>
-                </TooltipWrapper>
-                <TooltipWrapper tooltip={t('tooltip.delete')}>
-                  <Button
-                    className='transition-transform hover:scale-110 hover:bg-red-50 hover:text-red-400 hover:animate-in'
-                    onClick={handleRemoveUserDialog}
-                    size='miniIcon'
-                    variant='ghost'
-                  >
-                    <Trash2 size={17} strokeWidth={1.5} />
-                  </Button>
-                </TooltipWrapper>
+                <TableButton
+                  callback={() => navigate(`/email/user/${user.data._id}`)}
+                  className='h-8 w-8 hover:bg-purple-100/75 hover:text-purple-400'
+                  tooltip={t('tooltip.sendEmail')}
+                >
+                  {!user.data.email ? <MailX size={17} strokeWidth={1.5} className='stroke-red-400' /> : <Mail size={17} strokeWidth={1.5} />}
+                </TableButton>
+                <TableButton
+                  callback={() => navigate(`/whatsapp/user/${user.data._id}`)}
+                  className='h-8 w-8 hover:bg-emerald-100/75 hover:text-emerald-400'
+                  tooltip={t('tooltip.sendMessage')}
+                >
+                  <MessageCircle size={17} strokeWidth={1.5} />
+                </TableButton>
+                <TableButton
+                  callback={() => navigate(`/users/update/${user.data._id}`)}
+                  className='h-8 w-8 hover:bg-amber-100/75 hover:text-amber-400'
+                  tooltip={t('tooltip.edit')}
+                >
+                  <PencilLine size={17} strokeWidth={1.5} />
+                </TableButton>
+                <TableButton
+                  callback={handleRemoveUserDialog}
+                  className='h-8 w-8 hover:bg-red-100/75 hover:text-red-400'
+                  tooltip={t('tooltip.delete')}
+                >
+                  <Trash2 size={17} strokeWidth={1.5} />
+                </TableButton>
               </section>
             </Card>
           )}
@@ -232,12 +217,12 @@ export default function ViewUser() {
         </section>
         <footer className='mx-auto'>
           <Button
-            variant='default'
-            size='default'
             className='flex items-center gap-3'
             onClick={() => navigate('/users')}
-            onMouseOver={gotoAnimationOver}
             onMouseOut={gotoAnimationOut}
+            onMouseOver={gotoAnimationOver}
+            size='default'
+            variant='default'
           >
             {t('button.goToUsers')}
             <ArrowRight ref={gotoScope} size={16} strokeWidth={2} />
