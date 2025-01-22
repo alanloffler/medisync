@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { Calendar, Clock, FileText, MessageCircle, Trash2 } from 'lucide-react';
+import { Calendar, Clock, FileText, Mail, MailX, MessageCircle, Trash2 } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@core/components/ui/table';
 // Components
@@ -77,7 +77,15 @@ export function ApposTable({
               <FileText size={17} strokeWidth={1.5} />
             </TableButton>
             <TableButton
-              callback={() => navigate(`/whatsapp/user/${row.original._id}`)}
+              callback={() => console.log(`/email/user/${row.original._id}`)}
+              className='hover:bg-purple-100/75 hover:text-purple-400'
+              disabled={!row.original.user.email}
+              tooltip={t('tooltip.sendEmail')}
+            >
+              {!row.original.user.email ? <MailX size={17} strokeWidth={1.5} className='stroke-red-400' /> : <Mail size={17} strokeWidth={1.5} />}
+            </TableButton>
+            <TableButton
+              callback={() => console.log(`/whatsapp/user/${row.original._id}`)}
               className='hover:bg-emerald-100/75 hover:text-emerald-400'
               tooltip={t('tooltip.sendMessage')}
             >
