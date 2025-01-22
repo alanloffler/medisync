@@ -381,6 +381,15 @@
     "selectProfessional": "Seleccione un profesional",
     "selectWorkingDay": "Seleccione un día laborable"
   },
+  "whatsapp": {
+    "template": {
+      "appointmentReceipt": {
+        "header": "*{{appName}}* - Comprobante de turno\n\n",
+        "body": "Hola _{{userName}}_, este es el comprobante de tu turno con _{{professionalName}}_, para el día *{{appointmentDay}}* a las *{{appointmentHour}} horas*.\n\n",
+        "footer": "Gracias por reservar tu turno.\n{{adminName}} de {{appName}}."
+      }
+    }
+  },
   "words": {
     "and": "y",
     "appointmentPrefix": "T",
