@@ -181,6 +181,7 @@ export default function ViewUser() {
                 <TableButton
                   callback={() => navigate(`/email/user/${user.data._id}`)}
                   className='h-8 w-8 hover:bg-purple-100/75 hover:text-purple-400'
+                  disabled={!user.data.email}
                   tooltip={t('tooltip.sendEmail')}
                 >
                   {!user.data.email ? <MailX size={17} strokeWidth={1.5} className='stroke-red-400' /> : <Mail size={17} strokeWidth={1.5} />}
