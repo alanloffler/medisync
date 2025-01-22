@@ -52,34 +52,40 @@ export function ApposTable({
       {
         accessorKey: 'lastName',
         cell: ({ row }) => (
-          <div>
-            {UtilsString.upperCase(
-              `${row.original.professional?.title.abbreviation} ${row.original.professional?.firstName} ${row.original.professional?.lastName}`,
-              'each',
-            )}
+          <div className='flex flex-col gap-1 lg:flex-row lg:items-center lg:justify-between'>
+            <div>
+              {UtilsString.upperCase(
+                `${row.original.professional?.title.abbreviation} ${row.original.professional?.firstName} ${row.original.professional?.lastName}`,
+                'each',
+              )}
+            </div>
+            <div className='text-xsm text-slate-500'>{UtilsString.upperCase(row.original.professional.specialization.name, 'each')}</div>
           </div>
         ),
         header: () => <div className='text-left'>{t(UV_CONFIG.table.header[1])}</div>,
       },
       {
         accessorKey: 'actions',
-        size: 100,
+        size: 90,
         cell: ({ row }) => (
           <div className='flex items-center justify-center space-x-2'>
-            <TableButton callback={() => navigate(`/appointments/${row.original._id}`)} tooltip={t('tooltip.details')} className='hover:text-sky-500'>
-              <FileText size={16} strokeWidth={1.5} />
+            <TableButton
+              callback={() => navigate(`/appointments/${row.original._id}`)}
+              tooltip={t('tooltip.details')}
+              className='hover:bg-sky-100/75 hover:text-sky-400'
+            >
+              <FileText size={17} strokeWidth={1.5} />
             </TableButton>
             <TableButton
               callback={() => navigate(`/whatsapp/user/${row.original._id}`)}
+              className='hover:bg-emerald-100/75 hover:text-emerald-400'
               tooltip={t('tooltip.sendMessage')}
-              className='hover:text-green-500'
             >
-              <MessageCircle size={16} strokeWidth={1.5} />
+              <MessageCircle size={17} strokeWidth={1.5} />
             </TableButton>
             <RemoveDialog
               action={() => AppointmentApiService.remove(row.original._id)}
               callback={handleRefresh}
-              triggerButton={<Trash2 size={16} strokeWidth={1.5} />}
               dialogContent={
                 <section className='flex flex-col space-y-3'>
                   <section className='flex flex-row gap-1'>
@@ -120,6 +126,7 @@ export function ApposTable({
                 title: t('dialog.deleteAppointment.title'),
               }}
               tooltip={t('tooltip.delete')}
+              triggerButton={<Trash2 size={17} strokeWidth={1.5} />}
             />
           </div>
         ),
