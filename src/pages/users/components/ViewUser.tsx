@@ -147,7 +147,7 @@ export default function ViewUser() {
           )}
           {isSuccess && (
             <Card className='col-span-1 mx-auto h-fit w-full md:col-span-2 lg:col-span-2 xl:col-span-2'>
-              <header className='relative flex items-center justify-center rounded-t-lg bg-slate-200 p-3 text-slate-700'>
+              <header className='relative flex items-center justify-center rounded-t-lg bg-primary p-3 text-white'>
                 <h1 className='text-center text-xl font-bold'>{UtilsString.upperCase(`${user.data.firstName} ${user.data.lastName}`, 'each')}</h1>
               </header>
               <CardContent className='mt-3 space-y-3 overflow-auto'>
@@ -184,7 +184,7 @@ export default function ViewUser() {
                   <Button
                     variant='ghost'
                     size='miniIcon'
-                    className='transition-transform hover:scale-110 hover:bg-purple-100 hover:text-purple-400 hover:animate-in disabled:opacity-100'
+                    className='transition-transform hover:scale-110 hover:bg-purple-50 hover:text-purple-400 hover:animate-in disabled:opacity-100'
                     onClick={() => navigate(`/email/user/${user.data._id}`)}
                     disabled={!user.data.email}
                   >
@@ -195,7 +195,7 @@ export default function ViewUser() {
                   <Button
                     variant='ghost'
                     size='miniIcon'
-                    className='transition-transform hover:scale-110 hover:bg-emerald-100 hover:text-emerald-400 hover:animate-in'
+                    className='transition-transform hover:scale-110 hover:bg-emerald-50 hover:text-emerald-400 hover:animate-in'
                     onClick={() => navigate(`/whatsapp/user/${user.data._id}`)}
                   >
                     <MessageCircle size={18} strokeWidth={1.5} />
@@ -206,7 +206,7 @@ export default function ViewUser() {
                     variant='ghost'
                     size='miniIcon'
                     onClick={() => navigate(`/users/update/${user.data._id}`)}
-                    className='transition-transform hover:scale-110 hover:bg-amber-100 hover:text-amber-400 hover:animate-in'
+                    className='transition-transform hover:scale-110 hover:bg-amber-50 hover:text-amber-400 hover:animate-in'
                   >
                     <PencilLine size={18} strokeWidth={1.5} />
                   </Button>
@@ -216,7 +216,7 @@ export default function ViewUser() {
                     variant='ghost'
                     size='miniIcon'
                     onClick={handleRemoveUserDialog}
-                    className='transition-transform hover:scale-110 hover:bg-red-100 hover:text-red-400 hover:animate-in'
+                    className='transition-transform hover:scale-110 hover:bg-red-50 hover:text-red-400 hover:animate-in'
                   >
                     <Trash2 size={18} strokeWidth={1.5} />
                   </Button>
