@@ -12,12 +12,12 @@ import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
+import { Trans, useTranslation } from 'react-i18next';
 import { format } from '@formkit/tempo';
 import { useAnimate } from 'motion/react';
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Trans, useTranslation } from 'react-i18next';
+import { useNavigate, useParams } from 'react-router-dom';
 // Imports
 import type { IDialog } from '@core/interfaces/dialog.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
@@ -185,7 +185,7 @@ export default function ViewUser() {
                     variant='ghost'
                     size='miniIcon'
                     className='transition-transform hover:scale-110 hover:bg-purple-100 hover:text-purple-400 hover:animate-in disabled:opacity-100'
-                    onClick={() => navigate(`/email/${user.data._id}`)}
+                    onClick={() => navigate(`/email/user/${user.data._id}`)}
                     disabled={!user.data.email}
                   >
                     {!user.data.email ? <MailX size={18} strokeWidth={1.5} className='stroke-red-400' /> : <Mail size={18} strokeWidth={1.5} />}
@@ -196,7 +196,7 @@ export default function ViewUser() {
                     variant='ghost'
                     size='miniIcon'
                     className='transition-transform hover:scale-110 hover:bg-emerald-100 hover:text-emerald-400 hover:animate-in'
-                    onClick={() => navigate(`/whatsapp/${user.data._id}`)}
+                    onClick={() => navigate(`/whatsapp/user/${user.data._id}`)}
                   >
                     <MessageCircle size={18} strokeWidth={1.5} />
                   </Button>
