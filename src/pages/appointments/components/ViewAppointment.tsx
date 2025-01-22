@@ -129,7 +129,7 @@ export default function ViewAppointment() {
     }
   }
 
-  async function sendEmailWithPDF() {
+  async function sendEmailWithPDF(): Promise<void> {
     if (appointment?.data.user.email) {
       resetEmailStatus();
       resetWhatsappStatus();
@@ -141,26 +141,21 @@ export default function ViewAppointment() {
 
       if (output) attachments.push({ filename: filename, path: output });
 
-      const adminName: string = 'Admin account';
-      const userName: string = UtilsString.upperCase(`${appointment?.data.user.firstName} ${appointment?.data.user.lastName}`, 'each');
-      const professionalName: string = UtilsString.upperCase(
-        `${appointment?.data.professional.title.abbreviation} ${appointment?.data.professional.firstName} ${appointment?.data.professional.lastName}`,
-        'each',
-      );
-      const appointmentDay: string = UtilsString.upperCase(format(appointment?.data.day, 'full', i18n.language), 'first');
-      const appointmentHour: string = appointment?.data.hour;
+      const translatedData = getTranslatedData(appointment?.data);
+      if (translatedData) {
+        const { userName, professionalName, appointmentDay, appointmentHour, adminName } = translatedData;
+        let body: string = t('email.template.appointmentReceipt.body', { userName, professionalName, appointmentDay, appointmentHour });
+        body += t('email.template.appointmentReceipt.footer', { adminName, appName: t('appName') });
 
-      let body: string = t('email.template.appointmentReceipt.body', { userName, professionalName, appointmentDay, appointmentHour });
-      body += t('email.template.appointmentReceipt.footer', { adminName, appName: t('appName') });
+        const emailData: IEmailData = {
+          to: [appointment.data.user.email],
+          body: body,
+          subject: t('email.template.appointmentReceipt.subject', { appName: t('appName') }),
+          attachments,
+        };
 
-      const emailData: IEmailData = {
-        to: [appointment.data.user.email],
-        body: body,
-        subject: t('email.template.appointmentReceipt.subject', { appName: t('appName') }),
-        attachments,
-      };
-
-      sendEmailWithAttachment(emailData);
+        sendEmailWithAttachment(emailData);
+      }
     }
   }
 
@@ -170,14 +165,8 @@ export default function ViewAppointment() {
       resetWhatsappStatus();
 
       // TODO: when there's a session, get the admin full name
-      const adminName: string = 'Admin account';
-      const professionalName: string = UtilsString.upperCase(
-        `${appointment?.data.professional.title.abbreviation} ${appointment?.data.professional.firstName} ${appointment?.data.professional.lastName}`,
-        'each',
-      );
-      const userName: string = UtilsString.upperCase(`${appointment?.data.user.firstName} ${appointment?.data.user.lastName}`, 'each');
-      const appointmentDay: string = UtilsString.upperCase(format(appointment?.data.day, 'full', i18n.language), 'first');
-      const appointmentHour: string = appointment.data.hour;
+      const translatedData = getTranslatedData(appointment.data);
+      const { adminName, userName, professionalName, appointmentDay, appointmentHour } = translatedData;
 
       let message: string = `${t('whatsapp.template.appointmentReceipt.header', { appName: t('appName') })}`;
       message += `${t('whatsapp.template.appointmentReceipt.body', { userName, professionalName, appointmentDay, appointmentHour })}`;
@@ -190,6 +179,19 @@ export default function ViewAppointment() {
 
       sendWhatsappMessage(messageData);
     }
+  }
+
+  function getTranslatedData(appointment: IAppointment) {
+    const adminName: string = 'Admin account';
+    const userName: string = UtilsString.upperCase(`${appointment.user.firstName} ${appointment.user.lastName}`, 'each');
+    const professionalName: string = UtilsString.upperCase(
+      `${appointment.professional.title.abbreviation} ${appointment.professional.firstName} ${appointment.professional.lastName}`,
+      'each',
+    );
+    const appointmentDay: string = UtilsString.upperCase(format(appointment.day, 'full', i18n.language), 'first');
+    const appointmentHour: string = appointment.hour;
+
+    return { adminName, userName, professionalName, appointmentDay, appointmentHour };
   }
 
   return (
