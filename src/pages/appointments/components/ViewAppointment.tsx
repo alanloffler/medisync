@@ -141,10 +141,22 @@ export default function ViewAppointment() {
 
       if (output) attachments.push({ filename: filename, path: output });
 
+      const adminName: string = 'Admin account';
+      const userName: string = UtilsString.upperCase(`${appointment?.data.user.firstName} ${appointment?.data.user.lastName}`, 'each');
+      const professionalName: string = UtilsString.upperCase(
+        `${appointment?.data.professional.title.abbreviation} ${appointment?.data.professional.firstName} ${appointment?.data.professional.lastName}`,
+        'each',
+      );
+      const appointmentDay: string = UtilsString.upperCase(format(appointment?.data.day, 'full', i18n.language), 'first');
+      const appointmentHour: string = appointment?.data.hour;
+
+      let body: string = t('email.template.appointmentReceipt.body', { userName, professionalName, appointmentDay, appointmentHour });
+      body += t('email.template.appointmentReceipt.footer', { adminName, appName: t('appName') });
+
       const emailData: IEmailData = {
         to: [appointment.data.user.email],
-        body: 'This is the constancy of the appointment',
-        subject: 'Constancy',
+        body: body,
+        subject: t('email.template.appointmentReceipt.subject', { appName: t('appName') }),
         attachments,
       };
 
