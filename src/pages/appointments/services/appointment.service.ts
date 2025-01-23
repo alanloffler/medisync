@@ -1,4 +1,4 @@
-import type { IAppointment, IAppointmentForm } from '@appointments/interfaces/appointment.interface';
+import type { IAppointment, IAppointmentForm, IAppointmentView } from '@appointments/interfaces/appointment.interface';
 import type { IAppointmentSearch } from '@appointments/interfaces/appointment-search.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { SortingState } from '@tanstack/react-table';
@@ -99,28 +99,20 @@ export class AppointmentApiService {
   //     return error;
   //   }
   // }
-
-  public static async findApposRecordWithFilters(userId: string, professionalId?: string, year?: string) {
+  // CHECKED: used on ApposRecord.tsx
+  public static async findApposRecordWithFilters(userId: string, professionalId?: string, year?: string): Promise<IResponse<IAppointmentView[]>> {
     if (userId) {
-      let url: string = `${this.API_URL}/appointments/byFilters?u=${userId}`;
+      const path: string = `${this.API_URL}/appointments/byFilters`;
+      const url: URL = new URL(path);
 
-      professionalId !== 'null' && professionalId ? (url = `${url}&p=${professionalId}`) : (url = `${url}`);
-      year !== 'null' && year ? (url = `${url}&y=${year}`) : (url = `${url}`);
+      url.searchParams.append('u', userId);
 
-      try {
-        const query: Response = await fetch(url, {
-          method: 'GET',
-          headers: {
-            'content-type': 'application/json;charset=UTF-8',
-          },
-        });
+      if (professionalId && professionalId !== null) url.searchParams.append('p', professionalId);
+      if (year && year !== null) url.searchParams.append('y', year);
 
-        return await query.json();
-      } catch (error) {
-        return error;
-      }
+      return await UtilsUrl.fetch(url, EMethods.GET);
     } else {
-      console.log('userId is undefined');
+      throw new Error('Dev Error: UserId is required');
     }
   }
 
