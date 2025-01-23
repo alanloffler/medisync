@@ -87,6 +87,7 @@ export default function WhatsApp(): JSX.Element {
   }
 
   useEffect(() => {
+    socket.disconnect();
     socket.connect();
 
     socket.on('connect', connect);
