@@ -9,6 +9,7 @@ import { ApposRecord } from '@appointments/components/appos-record/ApposRecord';
 import { BackButton } from '@core/components/common/BackButton';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
+import { MessageStatus } from '@whatsapp/common/MessageStatus';
 import { PageHeader } from '@core/components/common/PageHeader';
 import { TableButton } from '@core/components/common/TableButton';
 // External imports
@@ -144,71 +145,74 @@ export default function ViewUser() {
             </Card>
           )}
           {isSuccess && (
-            <Card className='col-span-1 mx-auto h-fit w-full md:col-span-2 lg:col-span-2 xl:col-span-2'>
-              <header className='relative flex items-center justify-center rounded-t-lg bg-primary p-3 text-white'>
-                <h1 className='text-center text-xl font-bold'>{UtilsString.upperCase(`${user.data.firstName} ${user.data.lastName}`, 'each')}</h1>
-              </header>
-              <CardContent className='mt-3 space-y-3 overflow-auto'>
-                <section className='flex items-center space-x-3'>
-                  <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
-                    <CreditCard size={17} strokeWidth={2} />
-                  </div>
-                  <span className='text-sm'>{i18n.format(user.data.dni, 'number', i18n.resolvedLanguage)}</span>
-                </section>
-                <section className='flex items-center space-x-3'>
-                  <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
-                    <Smartphone size={17} strokeWidth={2} />
-                  </div>
-                  <span className='text-sm'>{delimiter(user.data.phone, '-', 6)}</span>
-                </section>
-                {user.data.email && (
+            <section className='col-span-1 mx-auto h-fit w-full md:col-span-2 lg:col-span-2 xl:col-span-2'>
+              <Card>
+                <header className='relative flex items-center justify-center rounded-t-lg bg-primary p-3 text-white'>
+                  <h1 className='text-center text-xl font-bold'>{UtilsString.upperCase(`${user.data.firstName} ${user.data.lastName}`, 'each')}</h1>
+                </header>
+                <CardContent className='mt-3 space-y-3 overflow-auto'>
                   <section className='flex items-center space-x-3'>
                     <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
-                      <Mail size={17} strokeWidth={2} />
+                      <CreditCard size={17} strokeWidth={2} />
                     </div>
-                    <span className='text-sm'>{user.data.email}</span>
+                    <span className='text-sm'>{i18n.format(user.data.dni, 'number', i18n.resolvedLanguage)}</span>
                   </section>
-                )}
-                {user.data.createdAt && (
-                  <section className='pt-2 text-sm'>
-                    {t('cardContent.userSince', {
-                      date: format(user.data.createdAt, 'long', localStorage.getItem('i18nextLng') ?? i18n.resolvedLanguage),
-                    })}
+                  <section className='flex items-center space-x-3'>
+                    <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
+                      <Smartphone size={17} strokeWidth={2} />
+                    </div>
+                    <span className='text-sm'>{delimiter(user.data.phone, '-', 6)}</span>
                   </section>
-                )}
-              </CardContent>
-              <section className='flex items-center justify-end space-x-2 border-t p-2'>
-                <TableButton
-                  callback={() => navigate(`/email/user/${user.data._id}`)}
-                  className='h-8 w-8 hover:bg-purple-100/75 hover:text-purple-400'
-                  disabled={!user.data.email}
-                  tooltip={t('tooltip.sendEmail')}
-                >
-                  {!user.data.email ? <MailX size={17} strokeWidth={1.5} className='stroke-red-400' /> : <Mail size={17} strokeWidth={1.5} />}
-                </TableButton>
-                <TableButton
-                  callback={() => navigate(`/whatsapp/user/${user.data._id}`)}
-                  className='h-8 w-8 hover:bg-emerald-100/75 hover:text-emerald-400'
-                  tooltip={t('tooltip.sendMessage')}
-                >
-                  <MessageCircle size={17} strokeWidth={1.5} />
-                </TableButton>
-                <TableButton
-                  callback={() => navigate(`/users/update/${user.data._id}`)}
-                  className='h-8 w-8 hover:bg-amber-100/75 hover:text-amber-400'
-                  tooltip={t('tooltip.edit')}
-                >
-                  <PencilLine size={17} strokeWidth={1.5} />
-                </TableButton>
-                <TableButton
-                  callback={handleRemoveUserDialog}
-                  className='h-8 w-8 hover:bg-red-100/75 hover:text-red-400'
-                  tooltip={t('tooltip.delete')}
-                >
-                  <Trash2 size={17} strokeWidth={1.5} />
-                </TableButton>
-              </section>
-            </Card>
+                  {user.data.email && (
+                    <section className='flex items-center space-x-3'>
+                      <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
+                        <Mail size={17} strokeWidth={2} />
+                      </div>
+                      <span className='text-sm'>{user.data.email}</span>
+                    </section>
+                  )}
+                  {user.data.createdAt && (
+                    <section className='pt-2 text-sm'>
+                      {t('cardContent.userSince', {
+                        date: format(user.data.createdAt, 'long', localStorage.getItem('i18nextLng') ?? i18n.resolvedLanguage),
+                      })}
+                    </section>
+                  )}
+                </CardContent>
+                <section className='flex items-center justify-end space-x-2 border-t p-2'>
+                  <TableButton
+                    callback={() => navigate(`/email/user/${user.data._id}`)}
+                    className='h-8 w-8 hover:bg-purple-100/75 hover:text-purple-400'
+                    disabled={!user.data.email}
+                    tooltip={t('tooltip.sendEmail')}
+                  >
+                    {!user.data.email ? <MailX size={17} strokeWidth={1.5} className='stroke-red-400' /> : <Mail size={17} strokeWidth={1.5} />}
+                  </TableButton>
+                  <TableButton
+                    callback={() => navigate(`/whatsapp/user/${user.data._id}`)}
+                    className='h-8 w-8 hover:bg-emerald-100/75 hover:text-emerald-400'
+                    tooltip={t('tooltip.sendMessage')}
+                  >
+                    <MessageCircle size={17} strokeWidth={1.5} />
+                  </TableButton>
+                  <TableButton
+                    callback={() => navigate(`/users/update/${user.data._id}`)}
+                    className='h-8 w-8 hover:bg-amber-100/75 hover:text-amber-400'
+                    tooltip={t('tooltip.edit')}
+                  >
+                    <PencilLine size={17} strokeWidth={1.5} />
+                  </TableButton>
+                  <TableButton
+                    callback={handleRemoveUserDialog}
+                    className='h-8 w-8 hover:bg-red-100/75 hover:text-red-400'
+                    tooltip={t('tooltip.delete')}
+                  >
+                    <Trash2 size={17} strokeWidth={1.5} />
+                  </TableButton>
+                </section>
+              </Card>
+              <MessageStatus className='mt-3 py-1' />
+            </section>
           )}
           {isSuccess && (
             <section className='col-span-1 overflow-y-auto md:col-span-3 lg:col-span-3 xl:col-span-4'>
