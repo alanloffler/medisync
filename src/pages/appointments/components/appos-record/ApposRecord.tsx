@@ -69,10 +69,10 @@ export function ApposRecord({ userId }: { userId: string }) {
         </section>
         <CardContent className='flex flex-col gap-3'>
           <ApposFilters userId={userId} disabled={disabledFilters} />
-          {isLoading && <LoadingDB variant='default' text={t('loading.appointments')} />}
+          {isLoading && <LoadingDB variant='default' text={t('loading.appointments')} className='pt-4' />}
           {!error ? (
             appointments.length > 0 ? (
-              <ApposTable appointments={appointments} setRefresh={setRefresh} />
+              !isLoading && <ApposTable appointments={appointments} setRefresh={setRefresh} />
             ) : (
               <InfoCard type='warning' text={t('warning.emptyAppointments')} className='pt-5' />
             )
