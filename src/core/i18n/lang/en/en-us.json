@@ -22,6 +22,7 @@
     "back": "Go back",
     "cancel": "Cancel",
     "close": "Close",
+    "connect": "Connect",
     "deleteAppointment": "Delete appointment",
     "deleteProfessional": "Delete professional",
     "deleteUser": "Delete patient",
@@ -391,6 +392,10 @@
     "selectWorkingDay": "Select a business day"
   },
   "whatsapp": {
+    "status": {
+      "connected": "WhatsApp connected",
+      "disconnected": "WhatsApp disconnected"
+    },
     "template": {
       "appointmentReceipt": {
         "header": "*{{appName}}* - Appointment receipt\n\n",

@@ -22,6 +22,7 @@
     "back": "Volver",
     "cancel": "Cancelar",
     "close": "Cerrar",
+    "connect": "Conectar",
     "deleteAppointment": "Eliminar turno",
     "deleteProfessional": "Eliminar profesional",
     "deleteUser": "Eliminar paciente",
@@ -391,6 +392,10 @@
     "selectWorkingDay": "Seleccione un día laborable"
   },
   "whatsapp": {
+    "status": {
+      "connected": "WhatsApp conectado",
+      "disconnected": "WhatsApp desconectado"
+    },
     "template": {
       "appointmentReceipt": {
         "header": "*{{appName}}* - Comprobante de turno\n\n",
