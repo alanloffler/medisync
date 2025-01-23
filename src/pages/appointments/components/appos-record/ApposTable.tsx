@@ -47,7 +47,7 @@ export function ApposTable({
         accessorKey: 'day',
         size: 80,
         cell: ({ row }) => <DateTime day={row.original.day} hour={row.original.hour} />,
-        header: () => <div className='text-center'>{t(UV_CONFIG.table.header[0])}</div>,
+        header: () => <div className='text-center text-[11px] font-medium uppercase text-slate-400'>{t(UV_CONFIG.table.header[0])}</div>,
       },
       {
         accessorKey: 'lastName',
@@ -62,7 +62,7 @@ export function ApposTable({
             <div className='text-xsm text-slate-500'>{UtilsString.upperCase(row.original.professional.specialization.name, 'each')}</div>
           </div>
         ),
-        header: () => <div className='text-left'>{t(UV_CONFIG.table.header[1])}</div>,
+        header: () => <div className='text-left text-[11px] font-medium uppercase text-slate-400'>{t(UV_CONFIG.table.header[1])}</div>,
       },
       {
         accessorKey: 'actions',
@@ -138,7 +138,7 @@ export function ApposTable({
             />
           </div>
         ),
-        header: () => <div className='text-center'>{t(UV_CONFIG.table.header[2])}</div>,
+        header: () => <div className='text-center text-[11px] font-medium uppercase text-slate-400'>{t(UV_CONFIG.table.header[2])}</div>,
       },
     ],
     [handleRefresh, i18n.language, navigate, t],
