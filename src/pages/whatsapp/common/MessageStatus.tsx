@@ -28,6 +28,7 @@ export function MessageStatus({ className }: IProps) {
 
     return () => {
       socket.off('status', socketStatus);
+      socket.disconnect();
     };
   }, []);
 
@@ -44,7 +45,7 @@ export function MessageStatus({ className }: IProps) {
         </div>
         <div>{status !== undefined && status ? t('whatsapp.status.connected') : t('whatsapp.status.disconnected')}</div>
       </section>
-      {status !== undefined && !status && (
+      {(!status) && (
         <Button size='xs' className='bg-foreground text-xs text-background hover:bg-foreground/80'>
           {t('button.connect')}
         </Button>
