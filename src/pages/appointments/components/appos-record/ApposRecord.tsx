@@ -9,6 +9,7 @@ import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
 import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { IAppointmentView } from '@appointments/interfaces/appointment.interface';
@@ -18,47 +19,28 @@ import { useApposFilters } from '@appointments/hooks/useApposFilters';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export function ApposRecord({ userId }: { userId: string }) {
-  const [appointments, setAppointments] = useState<IAppointmentView[]>([]);
   const [disabledFilters, setDisabledFilters] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [refresh, setRefresh] = useState<string>('');
   const addNotification = useNotificationsStore((state) => state.addNotification);
-  const { i18n, t } = useTranslation();
   const { professional, year } = useApposFilters();
+  const { t } = useTranslation();
+
+  const {
+    data: appointments,
+    error: errorAppos,
+    isError: isErrorAppos,
+    isLoading: isLoadingAppos,
+    isSuccess: isSuccessAppos,
+  } = useQuery<IResponse<IAppointmentView[]>, Error>({
+    queryKey: ['appointments', userId, professional, year, refresh],
+    queryFn: async () => await AppointmentApiService.findApposRecordWithFilters(userId, professional, year),
+    retry: 1,
+  });
 
   useEffect(() => {
-    setIsLoading(true);
-
-    AppointmentApiService.findApposRecordWithFilters(userId, professional, year)
-      .then((response: IResponse) => {
-        if (response.statusCode === 200) {
-          if (response.data.length > 0) {
-            setAppointments(response.data);
-          } else {
-            setAppointments([]);
-            setDisabledFilters(true);
-          }
-        }
-        if (response.statusCode > 399) {
-          setError(true);
-          setErrorMessage(response.message);
-          addNotification({ type: 'error', message: response.message });
-        }
-        if (response instanceof Error) {
-          setError(true);
-          setErrorMessage(i18n.t('error.internalServer'));
-          addNotification({ type: 'error', message: i18n.t('error.internalServer') });
-        }
-      })
-      .finally(() => setIsLoading(false));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [professional, year, userId, refresh]);
-
-  useEffect(() => {
-    setErrorMessage(i18n.t('error.internalServer'));
-  }, [i18n.language, i18n]);
+    setDisabledFilters(isErrorAppos);
+    isErrorAppos && addNotification({ type: 'error', message: errorAppos.message });
+  }, [addNotification, errorAppos?.message, isErrorAppos]);
 
   return (
     <main>
@@ -69,15 +51,12 @@ export function ApposRecord({ userId }: { userId: string }) {
         </section>
         <CardContent className='flex flex-col gap-3'>
           <ApposFilters userId={userId} disabled={disabledFilters} />
-          {isLoading && <LoadingDB variant='default' text={t('loading.appointments')} className='pt-4' />}
-          {!error ? (
-            appointments.length > 0 ? (
-              !isLoading && <ApposTable appointments={appointments} setRefresh={setRefresh} />
-            ) : (
-              <InfoCard type='warning' text={t('warning.emptyAppointments')} className='pt-5' />
-            )
+          {isLoadingAppos && <LoadingDB variant='default' text={t('loading.appointments')} className='mt-4' />}
+          {isErrorAppos && <InfoCard type={'error'} text={errorAppos.message} className='pt-4' />}
+          {isSuccessAppos && appointments.data.length > 0 ? (
+            <ApposTable appointments={appointments.data} setRefresh={setRefresh} />
           ) : (
-            <InfoCard type='error' text={errorMessage} className='pt-5' />
+            !isLoadingAppos && !isErrorAppos && <InfoCard type='warning' text={appointments?.message} className='mt-4' />
           )}
         </CardContent>
       </Card>
