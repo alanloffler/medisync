@@ -83,15 +83,21 @@ export class AppointmentApiService {
   }
 
   // CHECKED: used on ApposRecord.tsx
-  public static async findApposRecordWithFilters(userId: string, professionalId?: string, year?: string): Promise<IResponse<IAppointmentView[]>> {
+  public static async findApposRecordWithFilters(
+    userId: string,
+    professionalId?: string,
+    year?: string,
+  ): Promise<IResponse<IAppointmentView[]>> {
     if (userId) {
       const path: string = `${this.API_URL}/appointments/byFilters`;
-      const url: URL = new URL(path);
 
-      url.searchParams.append('u', userId);
+      const params = {
+        u: userId,
+        p: professionalId,
+        y: year,
+      };
 
-      if (professionalId && professionalId !== null) url.searchParams.append('p', professionalId);
-      if (year && year !== null) url.searchParams.append('y', year);
+      const url: URL = UtilsUrl.create(path, params);
 
       return await UtilsUrl.fetch(url, EMethods.GET);
     } else {
