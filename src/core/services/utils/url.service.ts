@@ -2,9 +2,9 @@ import type { IResponse } from '@core/interfaces/response.interface';
 import { EMethods } from '@core/enums/methods.enum';
 
 export class UtilsUrl {
-  public static create(path: string, params?: Record<string, string>): URL {
+  public static create(path: string, params?: Record<string, string | undefined>): URL {
     const url = new URL(path);
-    if (params) Object.entries(params).forEach(([key, value]) => url.searchParams.set(key, value));
+    if (params) Object.entries(params).forEach(([key, value]) => value && url.searchParams.set(key, value));
 
     return url;
   }
