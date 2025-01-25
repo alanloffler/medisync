@@ -67,10 +67,6 @@ export function ApposFilters({ userId, disabled }: { userId: string; disabled: b
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
-  useEffect(() => {
-    console.log('check professional years on db');
-  }, [professional]);
-
   function clearButtonAnimationOver(): void {
     const { keyframes, options } = motion.scale(1.1).type('bounce').animate();
     clearButtonAnimation(clearButtonScope.current, keyframes, options);
