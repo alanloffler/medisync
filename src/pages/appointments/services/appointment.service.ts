@@ -87,6 +87,7 @@ export class AppointmentApiService {
     userId: string,
     professionalId?: string,
     year?: string,
+    limit?: number,
   ): Promise<IResponse<IAppointmentView[]>> {
     if (userId) {
       const path: string = `${this.API_URL}/appointments/byFilters`;
@@ -95,6 +96,7 @@ export class AppointmentApiService {
         u: userId,
         p: professionalId,
         y: year,
+        l: String(limit),
       };
 
       const url: URL = UtilsUrl.create(path, params);
