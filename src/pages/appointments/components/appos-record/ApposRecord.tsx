@@ -20,6 +20,7 @@ import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export function ApposRecord({ userId }: { userId: string }) {
   const [disabledFilters, setDisabledFilters] = useState<boolean>(false);
+  const [limit, setLimit] = useState<number>(1);
   const [refresh, setRefresh] = useState<string>('');
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const { professional, year } = useApposFilters();
@@ -32,8 +33,8 @@ export function ApposRecord({ userId }: { userId: string }) {
     isLoading: isLoadingAppos,
     isSuccess: isSuccessAppos,
   } = useQuery<IResponse<IAppointmentView[]>, Error>({
-    queryKey: ['appointments', userId, professional, year, refresh],
-    queryFn: async () => await AppointmentApiService.findApposRecordWithFilters(userId, professional, year),
+    queryKey: ['appointments', userId, professional, year, limit, refresh],
+    queryFn: async () => await AppointmentApiService.findApposRecordWithFilters(userId, professional, year, limit),
     retry: 1,
   });
 
@@ -54,7 +55,8 @@ export function ApposRecord({ userId }: { userId: string }) {
           {isLoadingAppos && <LoadingDB variant='default' text={t('loading.appointments')} className='mt-4' />}
           {isErrorAppos && <InfoCard type={'error'} text={errorAppos.message} className='pt-4' />}
           {isSuccessAppos && appointments.data.length > 0 ? (
-            <ApposTable appointments={appointments.data} setRefresh={setRefresh} />
+            <><ApposTable appointments={appointments.data} setRefresh={setRefresh} />
+            {JSON.stringify(appointments?.pagination)}</>
           ) : (
             !isLoadingAppos && !isErrorAppos && <InfoCard type='warning' text={appointments?.message} className='mt-4' />
           )}
