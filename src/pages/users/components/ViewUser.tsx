@@ -211,7 +211,7 @@ export default function ViewUser() {
                   </TableButton>
                 </section>
               </Card>
-              <MessageStatus className='mt-3 py-1' />
+              {/* <MessageStatus className='mt-3 py-1' /> */}
             </section>
           )}
           {isSuccess && (
