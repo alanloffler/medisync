@@ -85,18 +85,20 @@ export class AppointmentApiService {
   // CHECKED: used on ApposRecord.tsx
   public static async findApposRecordWithFilters(
     userId: string,
+    limit?: number,
+    page?: number,
     professionalId?: string,
     year?: string,
-    limit?: number,
   ): Promise<IResponse<IAppointmentView[]>> {
     if (userId) {
       const path: string = `${this.API_URL}/appointments/byFilters`;
 
       const params = {
         u: userId,
+        l: String(limit),
+        pg: String(page),
         p: professionalId,
         y: year,
-        l: String(limit),
       };
 
       const url: URL = UtilsUrl.create(path, params);
@@ -104,7 +106,7 @@ export class AppointmentApiService {
       return await UtilsUrl.fetch(url, EMethods.GET);
     } else {
       throw new Error('Dev Error: UserId is required');
-    }
+    }``
   }
 
   // CHECKED: used on DialogReserve.tsx
