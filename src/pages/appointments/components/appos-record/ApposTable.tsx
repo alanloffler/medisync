@@ -17,6 +17,7 @@ import type { IAppointmentView } from '@appointments/interfaces/appointment.inte
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { USER_VIEW_CONFIG as UV_CONFIG } from '@config/users/user-view.config';
 import { UtilsString } from '@core/services/utils/string.service';
+import { Pagination } from '@core/components/common/Pagination';
 // React component
 export function ApposTable({
   appointments,
@@ -151,6 +152,7 @@ export function ApposTable({
   });
 
   return (
+    <>
     <Table>
       <TableHeader>
         {table.getHeaderGroups().map((headerGroup) => (
@@ -180,5 +182,11 @@ export function ApposTable({
         ))}
       </TableBody>
     </Table>
+    <Pagination
+      table={table}
+      pagination={pagination}
+      setPagination={setPagination}
+    />
+    </>
   );
 }
