@@ -4,12 +4,23 @@ import { Calendar, Clock, FileText, Mail, MailX, MessageCircle, Trash2 } from 'l
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@core/components/ui/table';
 // Components
 import { DateTime } from '@core/components/common/DateTime';
+import { Pagination } from '@core/components/common/Pagination';
 import { RemoveDialog } from '@core/components/common/RemoveDialog';
 import { TableButton } from '@core/components/common/TableButton';
 // External imports
 import { Trans, useTranslation } from 'react-i18next';
 import { format } from '@formkit/tempo';
-import { type Cell, type ColumnDef, flexRender, getCoreRowModel, type Row, useReactTable } from '@tanstack/react-table';
+import {
+  type Cell,
+  type ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  PaginationState,
+  type Row,
+  useReactTable,
+} from '@tanstack/react-table';
 import { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 // Imports
@@ -17,14 +28,19 @@ import type { IAppointmentView } from '@appointments/interfaces/appointment.inte
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { USER_VIEW_CONFIG as UV_CONFIG } from '@config/users/user-view.config';
 import { UtilsString } from '@core/services/utils/string.service';
-import { Pagination } from '@core/components/common/Pagination';
 // React component
 export function ApposTable({
   appointments,
+  pagination,
+  setPagination,
   setRefresh,
+  totalItems,
 }: {
   appointments: IAppointmentView[];
+  pagination: PaginationState;
+  setPagination: React.Dispatch<React.SetStateAction<PaginationState>>;
   setRefresh: React.Dispatch<React.SetStateAction<string>>;
+  totalItems: number;
 }) {
   const navigate = useNavigate();
   const { i18n, t } = useTranslation();
@@ -146,47 +162,54 @@ export function ApposTable({
   );
 
   const table = useReactTable<IAppointmentView>({
-    data: appointments,
     columns,
+    data: appointments,
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    manualPagination: true,
+    onPaginationChange: setPagination,
+    rowCount: totalItems,
+    state: {
+      // columnVisibility,
+      // sorting,
+      pagination,
+    },
+    // onColumnVisibilityChange: setColumnVisibility,
   });
 
   return (
     <>
-    <Table>
-      <TableHeader>
-        {table.getHeaderGroups().map((headerGroup) => (
-          <TableRow key={headerGroup.id}>
-            {headerGroup.headers.map((header) => (
-              <TableHead key={header.id} style={{ width: `${header.getSize()}px` }}>
-                {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-              </TableHead>
-            ))}
-          </TableRow>
-        ))}
-      </TableHeader>
-      <TableBody className='text-sm'>
-        {table.getRowModel().rows.map((row) => (
-          <TableRow key={row.id} className='hover:bg-slate-50/70'>
-            {row.getVisibleCells().map((cell) => (
-              <TableCell
-                onClick={() => handleRowClick(row, cell)}
-                className={`px-0 py-1 ${cell.column.id !== 'actions' && 'hover:cursor-pointer'}`}
-                key={cell.id}
-                style={{ width: `${cell.column.getSize()}px` }}
-              >
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </TableCell>
-            ))}
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-    <Pagination
-      table={table}
-      pagination={pagination}
-      setPagination={setPagination}
-    />
+      <Table>
+        <TableHeader>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <TableHead key={header.id} style={{ width: `${header.getSize()}px` }}>
+                  {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                </TableHead>
+              ))}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody className='text-sm'>
+          {table.getRowModel().rows.map((row) => (
+            <TableRow key={row.id} className='hover:bg-slate-50/70'>
+              {row.getVisibleCells().map((cell) => (
+                <TableCell
+                  onClick={() => handleRowClick(row, cell)}
+                  className={`px-0 py-1 ${cell.column.id !== 'actions' && 'hover:cursor-pointer'}`}
+                  key={cell.id}
+                  style={{ width: `${cell.column.getSize()}px` }}
+                >
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      <Pagination itemsPerPage={[5, 10, 20, 50]} pagination={pagination} setPagination={setPagination} table={table} />
     </>
   );
 }
