@@ -7,15 +7,17 @@ import type { IApposFilters } from '@appointments/interfaces/appos-filters.inter
 export function useApposFilters() {
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const month = searchParams.get('m') as IApposFilters['month'];
+  const page = searchParams.get('pg') as IApposFilters['page'];
   const professional: IApposFilters['professional'] = searchParams.get('p') as IApposFilters['professional'];
   const year = searchParams.get('y') as IApposFilters['year'];
-  const month = searchParams.get('m') as IApposFilters['month'];
 
   const setFilters = useCallback((filters: IApposFilters) => {
     setSearchParams((params) => {
+      if (filters.month !== undefined) params.set('m', filters.month);
+      if (filters.page !== undefined) params.set('pg', filters.page);
       if (filters.professional !== undefined) params.set('p', filters.professional);
       if (filters.year !== undefined) params.set('y', filters.year);
-      if (filters.month !== undefined) params.set('m', filters.month);
 
       return params;
     });
@@ -24,9 +26,10 @@ export function useApposFilters() {
 
   const clearFilters = useCallback((filters: Partial<IApposFilters>) => {
     setSearchParams((params) => {
+      if (filters.month !== undefined) params.delete('m');
+      if (filters.page !== undefined) params.delete('pg');
       if (filters.professional !== undefined) params.delete('p');
       if (filters.year !== undefined) params.delete('y');
-      if (filters.month !== undefined) params.delete('m');
 
       return params;
     });
@@ -34,9 +37,10 @@ export function useApposFilters() {
   }, []);
 
   return {
+    month,
+    page,
     professional,
     year,
-    month,
     setFilters,
     clearFilters,
   };
