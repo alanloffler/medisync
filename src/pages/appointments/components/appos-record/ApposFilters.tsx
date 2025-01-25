@@ -21,13 +21,13 @@ import { useApposFilters } from '@appointments/hooks/useApposFilters';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export function ApposFilters({ userId, disabled }: { userId: string; disabled: boolean }) {
+  const [clearButtonScope, clearButtonAnimation] = useAnimate();
   const [loadingProfessionals, setLoadingProfessionals] = useState<boolean>(false);
   const [loadingYears, setLoadingYears] = useState<boolean>(false);
   const [professionalError, setProfessionalError] = useState<boolean>(false);
   const [professionals, setProfessionals] = useState<IProfessional[]>([]);
   const [yearError, setYearError] = useState<boolean>(false);
   const [years, setYears] = useState<string[]>([]);
-  const [clearButtonScope, clearButtonAnimation] = useAnimate();
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const { i18n, t } = useTranslation();
   const { professional, year, setFilters, clearFilters } = useApposFilters();
