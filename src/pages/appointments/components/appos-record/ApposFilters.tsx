@@ -106,7 +106,7 @@ export function ApposFilters({ userId, disabled }: { userId: string; disabled: b
             <SelectGroup>
               {professionals.map((professional) => (
                 <SelectItem className='py-1.5 text-xsm [&_svg]:h-3 [&_svg]:w-3' key={crypto.randomUUID()} value={professional._id}>
-                  {UtilsString.upperCase(`${professional.title.abbreviation} ${professional.firstName} ${professional.lastName}`, 'each')}
+                  {UtilsString.upperCase(`${professional.title.abbreviation} ${professional.lastName}, ${professional.firstName}`, 'each')}
                 </SelectItem>
               ))}
             </SelectGroup>
