@@ -2,7 +2,7 @@
 import { CirclePlus, List, ListRestart, PlusCircle, Search, X } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
-import { Card, CardContent, CardTitle } from '@core/components/ui/card';
+import { Card, CardContent } from '@core/components/ui/card';
 import { Input } from '@core/components/ui/input';
 // Components
 import { PageHeader } from '@core/components/common/PageHeader';
@@ -126,12 +126,12 @@ export default function Users() {
         </Card>
         {/* Section: Right side content */}
         <Card className='col-span-1 h-fit overflow-y-auto md:col-span-4 lg:col-span-3 xl:col-span-3'>
-          <CardTitle className='flex items-center justify-between gap-2 rounded-b-none bg-card-header text-slate-700'>
-            <header className='flex items-center gap-3.5 px-2'>
-              <List size={16} strokeWidth={2} />
-              {t('cardTitle.usersList')}
+          <div className='flex items-center justify-between rounded-b-none border-b py-[14px] px-4'>
+            <header className='flex flex-row items-center space-x-4 border-slate-200'>
+              <List size={18} strokeWidth={2} />
+              <span className='text-base font-semibold'>{t('cardTitle.usersList')}</span>
             </header>
-            <section className='flex items-center gap-2'>
+            <section className='flex items-center space-x-3'>
               <TooltipWrapper tooltip={t('tooltip.reload')}>
                 <Button
                   size='miniIcon'
@@ -143,7 +143,7 @@ export default function Users() {
                   }
                   onMouseOut={() => reloadAnimation(reloadScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })}
                 >
-                  <ListRestart size={16} strokeWidth={2} />
+                  <ListRestart size={17} strokeWidth={1.5} />
                 </Button>
               </TooltipWrapper>
               <TooltipWrapper tooltip={t('tooltip.addUser')}>
@@ -159,11 +159,11 @@ export default function Users() {
                     createMiniAnimation(createMiniScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
                   }
                 >
-                  <CirclePlus size={16} strokeWidth={2} />
+                  <CirclePlus size={17} strokeWidth={1.5} />
                 </Button>
               </TooltipWrapper>
             </section>
-          </CardTitle>
+          </div>
           {/* Table */}
           <CardContent>
             <UsersDataTable reload={reload} search={debouncedSearch} setSearch={setSearch} setReload={setReload} />
