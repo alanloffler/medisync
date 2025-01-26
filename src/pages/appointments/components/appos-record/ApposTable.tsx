@@ -8,8 +8,6 @@ import { Pagination } from '@core/components/common/Pagination';
 import { RemoveDialog } from '@core/components/common/RemoveDialog';
 import { TableButton } from '@core/components/common/TableButton';
 // External imports
-import { Trans, useTranslation } from 'react-i18next';
-import { format } from '@formkit/tempo';
 import {
   type Cell,
   type ColumnDef,
@@ -21,6 +19,8 @@ import {
   type Row,
   useReactTable,
 } from '@tanstack/react-table';
+import { Trans, useTranslation } from 'react-i18next';
+import { format } from '@formkit/tempo';
 import { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 // Imports
@@ -64,12 +64,12 @@ export function ApposTable({
         accessorKey: 'day',
         size: 80,
         cell: ({ row }) => <DateTime day={row.original.day} hour={row.original.hour} />,
-        header: () => <div className='text-center text-[11px] font-medium uppercase text-slate-400'>{t(UV_CONFIG.table.appointments.header[0])}</div>,
+        header: () => <div className='text-center'>{t(UV_CONFIG.table.appointments.header[0])}</div>,
       },
       {
         accessorKey: 'lastName',
         cell: ({ row }) => (
-          <div className='flex flex-col gap-1 lg:flex-row lg:items-center lg:justify-between'>
+          <div className='flex flex-col gap-1 md:flex-row md:items-center md:justify-between lg:flex-col lg:items-start lg:justify-start xl:flex-row xl:items-center xl:justify-between'>
             <div>
               {UtilsString.upperCase(
                 `${row.original.professional?.title.abbreviation} ${row.original.professional?.firstName} ${row.original.professional?.lastName}`,
@@ -79,13 +79,13 @@ export function ApposTable({
             <div className='text-xsm text-slate-500'>{UtilsString.upperCase(row.original.professional.specialization.name, 'each')}</div>
           </div>
         ),
-        header: () => <div className='text-left text-[11px] font-medium uppercase text-slate-400'>{t(UV_CONFIG.table.appointments.header[1])}</div>,
+        header: () => <div className='text-left'>{t(UV_CONFIG.table.appointments.header[1])}</div>,
       },
       {
         accessorKey: 'actions',
         size: 90,
         cell: ({ row }) => (
-          <div className='flex items-center justify-center space-x-2'>
+          <div className='flex items-center justify-center space-x-0.5 md:space-x-2'>
             <TableButton
               callback={() => navigate(`/appointments/${row.original._id}`)}
               tooltip={t('tooltip.details')}
@@ -155,7 +155,7 @@ export function ApposTable({
             />
           </div>
         ),
-        header: () => <div className='text-center text-[11px] font-medium uppercase text-slate-400'>{t(UV_CONFIG.table.appointments.header[2])}</div>,
+        header: () => <div className='text-center'>{t(UV_CONFIG.table.appointments.header[2])}</div>,
       },
     ],
     [handleRefresh, i18n.language, navigate, t],
@@ -181,7 +181,7 @@ export function ApposTable({
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
+            <TableRow key={headerGroup.id} className='border-t bg-slate-50 text-[11px] font-medium uppercase text-slate-500'>
               {headerGroup.headers.map((header) => (
                 <TableHead key={header.id} style={{ width: `${header.getSize()}px` }}>
                   {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
