@@ -51,7 +51,7 @@ export default function Users() {
   }
 
   return (
-    <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
+    <main className='flex flex-1 flex-col gap-8 p-4 md:p-8'>
       {/* Section: Page Header */}
       <header className='flex items-center justify-between'>
         <PageHeader title={t('pageTitle.users')} breadcrumb={USER_CONFIG.breadcrumb} />
@@ -126,7 +126,7 @@ export default function Users() {
         </Card>
         {/* Section: Right side content */}
         <Card className='col-span-1 h-fit overflow-y-auto md:col-span-4 lg:col-span-3 xl:col-span-3'>
-          <div className='flex items-center justify-between rounded-b-none border-b py-[14px] px-4'>
+          <div className='flex items-center justify-between rounded-b-none border-b px-4 py-[14px]'>
             <header className='flex flex-row items-center space-x-4 border-slate-200'>
               <List size={18} strokeWidth={2} />
               <span className='text-base font-semibold'>{t('cardTitle.usersList')}</span>
