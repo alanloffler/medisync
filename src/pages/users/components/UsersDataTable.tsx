@@ -42,6 +42,7 @@ import { USER_CONFIG } from '@config/users/users.config';
 import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
 import { useDelimiter } from '@core/hooks/useDelimiter';
+import { useMediaQuery } from '@core/hooks/useMediaQuery';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 import { useTruncateText } from '@core/hooks/useTruncateText';
 // Default values for pagination and sorting
@@ -64,6 +65,21 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
   const prevDeps = useRef<IPaginatedUsersVars>({ search, skipItems, tableManager });
   const truncate = useTruncateText();
   const { i18n, t } = useTranslation();
+
+  // Table column visibility
+  const isSmallDevice = useMediaQuery('only screen and (max-width : 639px)');
+  const isMediumDevice = useMediaQuery('only screen and (max-width : 767px)');
+  const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>({
+    identityCard: !isSmallDevice,
+    phone: !isMediumDevice,
+  });
+
+  useEffect(() => {
+    setColumnVisibility({
+      identityCard: !isSmallDevice,
+      phone: !isMediumDevice,
+    });
+  }, [isMediumDevice, isSmallDevice]);
 
   // Fetch users
   const {
@@ -112,12 +128,14 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
     getSortedRowModel: getSortedRowModel(),
     manualPagination: true,
     manualSorting: true,
+    onColumnVisibilityChange: setColumnVisibility,
     onPaginationChange: setPagination,
     onSortingChange: setSorting,
     rowCount: totalItems,
     state: {
-      sorting,
+      columnVisibility,
       pagination,
+      sorting,
     },
   });
 
@@ -163,7 +181,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
         cell: ({ row }) => <div className='text-left'>{UtilsString.upperCase(`${row.original.lastName}, ${row.original.firstName}`, 'each')}</div>,
       },
       {
-        accessorKey: 'dni',
+        accessorKey: 'identityCard',
         size: 80,
         header: ({ column }) => (
           <div className='text-left'>
@@ -202,11 +220,12 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
           <div className='mx-auto flex w-fit flex-row items-center justify-center space-x-0.5 md:space-x-2'>
             <TableButton
               callback={() => navigate(`/users/${row.original._id}`)}
-              className='hover:bg-sky-100/75 hover:text-sky-400'
+              className='hidden hover:bg-sky-100/75 hover:text-sky-400 sm:block'
               tooltip={t('tooltip.details')}
             >
               <FileText size={17} strokeWidth={1.5} />
             </TableButton>
+
             <TableButton
               callback={() => navigate(`/users/update/${row.original._id}`)}
               className='hover:bg-amber-100/75 hover:text-amber-400'
