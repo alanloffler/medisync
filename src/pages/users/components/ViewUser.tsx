@@ -147,8 +147,10 @@ export default function ViewUser() {
           {isSuccess && (
             <section className='col-span-1 mx-auto h-fit w-full md:col-span-3 lg:col-span-2 xl:col-span-2'>
               <Card>
-                <header className='relative flex items-center justify-center rounded-t-lg bg-primary p-3 text-white'>
-                  <h1 className='text-center text-xl font-bold'>{UtilsString.upperCase(`${user.data.firstName} ${user.data.lastName}`, 'each')}</h1>
+                <header className='relative flex items-center justify-center rounded-t-lg bg-primary p-4 text-white'>
+                  <h1 className='text-center text-lg font-semibold'>
+                    {UtilsString.upperCase(`${user.data.firstName} ${user.data.lastName}`, 'each')}
+                  </h1>
                 </header>
                 <CardContent className='mt-3 space-y-3 overflow-auto'>
                   <section className='flex items-center space-x-3'>
