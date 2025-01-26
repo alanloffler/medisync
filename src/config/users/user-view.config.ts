@@ -8,6 +8,7 @@ export const USER_VIEW_CONFIG = {
     header: ['table.header.date', 'table.header.professional', 'table.header.actions'],
     appointments: {
       defaultItemsPerPage: 5,
+      itemsPerPageOptions : [5, 10, 20, 50],
     },
   },
 };
