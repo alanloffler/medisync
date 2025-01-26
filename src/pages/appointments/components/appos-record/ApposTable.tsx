@@ -72,7 +72,7 @@ export function ApposTable({
           <div className='flex flex-col gap-1 md:flex-row md:items-center md:justify-between lg:flex-col lg:items-start lg:justify-start xl:flex-row xl:items-center xl:justify-between'>
             <div>
               {UtilsString.upperCase(
-                `${row.original.professional?.title.abbreviation} ${row.original.professional?.firstName} ${row.original.professional?.lastName}`,
+                `${row.original.professional?.title.abbreviation} ${row.original.professional?.lastName}, ${row.original.professional?.firstName}`,
                 'each',
               )}
             </div>
