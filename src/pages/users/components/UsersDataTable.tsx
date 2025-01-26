@@ -4,6 +4,7 @@ import { ArrowDownUp, FileText, Mail, MailX, MessageCircle, PencilLine, Trash2 }
 // https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
+import { Separator } from '@core/components/ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@core/components/ui/table';
 // Tanstack Data Table: https://tanstack.com/table/latest
 import {
@@ -149,7 +150,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
         header: ({ column }) => (
           <div className='text-left'>
             <button
-              className='flex items-center gap-2 hover:text-accent-foreground uppercase'
+              className='flex items-center gap-2 uppercase hover:text-accent-foreground'
               onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
             >
               {t(USER_CONFIG.table.header[1])}
@@ -165,7 +166,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
         header: ({ column }) => (
           <div className='text-left'>
             <button
-              className='flex items-center gap-2 hover:text-accent-foreground uppercase'
+              className='flex items-center gap-2 uppercase hover:text-accent-foreground'
               onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
             >
               {t(USER_CONFIG.table.header[2])}
@@ -173,7 +174,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
             </button>
           </div>
         ),
-        cell: ({ row }) => <div className='text-left'>{i18n.format(row.original.dni, 'number', i18n.resolvedLanguage)}</div>,
+        cell: ({ row }) => <div className='text-left text-xsm text-slate-500'>{i18n.format(row.original.dni, 'number', i18n.resolvedLanguage)}</div>,
       },
       {
         accessorKey: 'phone',
@@ -181,7 +182,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
         header: ({ column }) => (
           <div className='text-center'>
             <button
-              className='flex items-center gap-2 hover:text-accent-foreground uppercase'
+              className='flex items-center gap-2 uppercase hover:text-accent-foreground'
               onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
             >
               {t(USER_CONFIG.table.header[3])}
@@ -189,41 +190,52 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
             </button>
           </div>
         ),
-        cell: ({ row }) => <div className='text-left text-sm'>{delimiter(row.original.phone, '-', 6)}</div>,
+        cell: ({ row }) => <div className='text-left text-xsm text-slate-500'>{delimiter(row.original.phone, '-', 6)}</div>,
       },
       {
         accessorKey: 'actions',
         size: 100,
         header: () => <div className='text-center uppercase'>{t(USER_CONFIG.table.header[4])}</div>,
         cell: ({ row }) => (
-          <div className='mx-auto flex w-fit flex-row items-center justify-center space-x-2'>
-            <TableButton callback={() => navigate(`/users/${row.original._id}`)} className='hover:text-sky-400' tooltip={t('tooltip.details')}>
-              <FileText size={16} strokeWidth={1.5} />
+          <div className='mx-auto flex w-fit flex-row items-center justify-center space-x-0.5 md:space-x-2'>
+            <TableButton
+              callback={() => navigate(`/users/${row.original._id}`)}
+              className='hover:bg-sky-100/75 hover:text-sky-400'
+              tooltip={t('tooltip.details')}
+            >
+              <FileText size={17} strokeWidth={1.5} />
             </TableButton>
             <TableButton
               callback={() => navigate(`/users/update/${row.original._id}`)}
-              className='hover:text-amber-400'
+              className='hover:bg-amber-100/75 hover:text-amber-400'
               tooltip={t('tooltip.edit')}
             >
-              <PencilLine size={16} strokeWidth={1.5} />
-            </TableButton>
-            <TableButton callback={() => handleRemoveUserDialog(row.original)} className='hover:text-red-400' tooltip={t('tooltip.delete')}>
-              <Trash2 size={16} strokeWidth={1.5} />
+              <PencilLine size={17} strokeWidth={1.5} />
             </TableButton>
             <TableButton
+              callback={() => handleRemoveUserDialog(row.original)}
+              className='hover:bg-red-100/75 hover:text-red-400'
+              tooltip={t('tooltip.delete')}
+            >
+              <Trash2 size={17} strokeWidth={1.5} />
+            </TableButton>
+            <div className='px-1'>
+              <Separator orientation='vertical' className='h-5 w-[1px]' />
+            </div>
+            <TableButton
               callback={() => navigate(`/email/user/${row.original._id}`)}
-              className='hover:text-purple-400'
+              className='hover:bg-purple-100/75 hover:text-purple-400'
               disabled={!row.original.email}
               tooltip={t('tooltip.sendEmail')}
             >
-              {!row.original.email ? <MailX size={16} strokeWidth={1.5} /> : <Mail size={16} strokeWidth={1.5} />}
+              {!row.original.email ? <MailX size={17} strokeWidth={1.5} /> : <Mail size={17} strokeWidth={1.5} />}
             </TableButton>
             <TableButton
               callback={() => navigate(`/whatsapp/user/${row.original._id}`)}
-              className='hover:text-emerald-400'
+              className='hover:bg-emerald-100/75 hover:text-emerald-400'
               tooltip={t('tooltip.sendMessage')}
             >
-              <MessageCircle size={16} strokeWidth={1.5} />
+              <MessageCircle size={17} strokeWidth={1.5} />
             </TableButton>
           </div>
         ),
