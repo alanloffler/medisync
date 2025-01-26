@@ -5,9 +5,9 @@ export const USER_VIEW_CONFIG = {
     { id: 3, name: 'breadcrumb.userDetails', path: '' },
   ],
   table: {
-    header: ['table.header.date', 'table.header.professional', 'table.header.actions'],
     appointments: {
       defaultItemsPerPage: 5,
+      header: ['table.header.date', 'table.header.professional', 'table.header.actions'],
       itemsPerPageOptions : [5, 10, 20, 50],
     },
   },
