@@ -214,13 +214,13 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
       },
       {
         accessorKey: 'actions',
-        size: 100,
+        size: 80,
         header: () => <div className='text-center uppercase'>{t(USER_CONFIG.table.header[4])}</div>,
         cell: ({ row }) => (
           <div className='mx-auto flex w-fit flex-row items-center justify-center space-x-0.5 md:space-x-2'>
             <TableButton
               callback={() => navigate(`/users/${row.original._id}`)}
-              className='hidden hover:bg-sky-100/75 hover:text-sky-400 sm:block'
+              className='hidden hover:bg-sky-100/75 hover:text-sky-400 sm:flex'
               tooltip={t('tooltip.details')}
             >
               <FileText size={17} strokeWidth={1.5} />
