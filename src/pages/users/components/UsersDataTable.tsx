@@ -13,8 +13,10 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  type Cell,
   type ColumnDef,
   type PaginationState,
+  type Row,
   type SortingState,
   type Table as ITable,
   useReactTable,
@@ -27,7 +29,7 @@ import { Pagination } from '@core/components/common/Pagination';
 import { TableButton } from '@core/components/common/TableButton';
 // External imports
 import { Trans, useTranslation } from 'react-i18next';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 // Imports
@@ -269,6 +271,13 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
     retry: 1,
   });
 
+  const handleRowClick = useCallback(
+    (row: Row<IUser>, cell: Cell<IUser, unknown>): void => {
+      if (cell.column.getIndex() < row.getAllCells().length - 1) navigate(`/users/${row.original._id}`);
+    },
+    [navigate],
+  );
+
   function handleRemoveUserDatabase(id?: string): void {
     id && deleteUser({ id });
   }
@@ -301,9 +310,14 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
               </TableHeader>
               <TableBody>
                 {table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                  <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'} className='hover:bg-slate-50/70'>
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell className='px-0 py-1' key={cell.id} style={{ width: `${cell.column.getSize()}px` }}>
+                      <TableCell
+                        className={`px-0 py-1 ${cell.column.id !== 'actions' && 'hover:cursor-pointer'}`}
+                        onClick={() => handleRowClick(row, cell)}
+                        key={cell.id}
+                        style={{ width: `${cell.column.getSize()}px` }}
+                      >
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </TableCell>
                     ))}
