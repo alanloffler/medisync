@@ -18,6 +18,7 @@ import { AppointmentApiService } from '@appointments/services/appointment.servic
 import { UtilsString } from '@core/services/utils/string.service';
 import { motion } from '@core/services/motion.service';
 import { useApposFilters } from '@appointments/hooks/useApposFilters';
+import { useMediaQuery } from '@core/hooks/useMediaQuery';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export function ApposFilters({ userId, disabled }: { userId: string; disabled: boolean }) {
@@ -29,6 +30,7 @@ export function ApposFilters({ userId, disabled }: { userId: string; disabled: b
   const [yearError, setYearError] = useState<boolean>(false);
   const [years, setYears] = useState<string[]>([]);
   const addNotification = useNotificationsStore((state) => state.addNotification);
+  const isSmallDevice = useMediaQuery('only screen and (max-width : 639px)');
   const { i18n, t } = useTranslation();
   const { professional, year, setFilters, clearFilters } = useApposFilters();
 
@@ -80,9 +82,9 @@ export function ApposFilters({ userId, disabled }: { userId: string; disabled: b
   return (
     <main className='flex w-full items-center justify-between rounded-md bg-slate-100 p-2'>
       <section className='flex items-center justify-start space-x-4'>
-        <section className='flex items-center space-x-2'>
-          <Filter size={14} strokeWidth={1.5} />
-          <h1 className='text-xsm font-medium'>{t('search.filter.appointments')}</h1>
+        <section className='flex items-center pl-1.5 space-x-2'>
+          <Filter size={17} strokeWidth={1.5} />
+          {!isSmallDevice && <div className='text-xsm font-medium'>{t('search.filter.appointments')}</div>}
         </section>
         <Select
           disabled={disabled || professionalError || professionals.length === 0}
