@@ -39,9 +39,9 @@ export function Pagination({ className, itemsPerPage, pagination, setPagination,
         </Select>
       </section>
       <section>
-        {t('pagination.page')} {pagination.pageIndex + 1} {t('pagination.of')} {table.getPageCount()}
+        {!isSmallDevice && t('pagination.page')} {pagination.pageIndex + 1} {t('pagination.of')} {table.getPageCount()}
       </section>
-      <section className={`flex items-center space-x-4 ${table.getPageCount() <= 1 && 'opacity-0'}`}>
+      <section className={`flex items-center space-x-2 md:space-x-4 ${table.getPageCount() <= 1 && 'opacity-0'}`}>
         <TooltipWrapper tooltip={t('tooltip.pagination.firstPage')}>
           <Button
             variant='ghost'
