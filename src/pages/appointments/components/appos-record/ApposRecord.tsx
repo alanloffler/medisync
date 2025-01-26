@@ -5,6 +5,7 @@ import { Card, CardContent } from '@core/components/ui/card';
 // Components
 import { ApposFilters } from '@appointments/components/appos-record/ApposFilters';
 import { ApposTable } from '@appointments/components/appos-record/ApposTable';
+import { CardHeaderSecondary } from '@core/components/common/header/CardHeaderSecondary';
 import { DBCount } from '@core/components/common/DBCount';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
@@ -56,10 +57,9 @@ export function ApposRecord({ userId }: { userId: string }) {
   return (
     <main>
       <Card className='flex w-full flex-col gap-3'>
-        <section className='flex flex-row items-center space-x-4 border-b border-slate-200 p-4'>
+        <CardHeaderSecondary title={t('cardTitle.appointmentsRecord')}>
           <CalendarClock size={18} strokeWidth={2} />
-          <span className='text-base font-semibold'>{t('cardTitle.appointmentsRecord')}</span>
-        </section>
+        </CardHeaderSecondary>
         <CardContent className='flex flex-col gap-3'>
           <ApposFilters userId={userId} disabled={disabledFilters} />
           {isLoadingAppos && <LoadingDB variant='default' text={t('loading.appointments')} className='mt-4' />}
