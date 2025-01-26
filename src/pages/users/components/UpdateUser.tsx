@@ -8,6 +8,7 @@ import { Form, FormField, FormControl, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@core/components/ui/input';
 // Components
 import { BackButton } from '@core/components/common/BackButton';
+import { CardHeaderPrimary } from '@core/components/common/header/CardHeaderPrimary';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
@@ -114,10 +115,9 @@ export default function UpdateUser() {
       {/* Section: Form */}
       <section className='mx-auto mt-6 flex w-full flex-col gap-4 md:w-[500px]'>
         <Card className='w-full md:grid-cols-2'>
-          <header className='flex items-center space-x-4 rounded-t-lg bg-primary p-4 text-lg font-semibold text-white'>
+          <CardHeaderPrimary title={t('cardTitle.updateUser')}>
             <FilePen size={18} strokeWidth={2} />
-            <span>{t('cardTitle.updateUser')}</span>
-          </header>
+          </CardHeaderPrimary>
           <CardContent className='pt-6'>
             {isError && <InfoCard type='error' text={error?.message} className='mx-auto mt-3' />}
             {isLoading && <LoadingDB text={t('loading.userDetails')} className='mt-3' />}
@@ -184,19 +184,22 @@ export default function UpdateUser() {
                         </FormItem>
                       )}
                     />
-                    <FormField
-                      control={updateForm.control}
-                      name='phone'
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{t('label.phone')}</FormLabel>
-                          <FormControl className='h-9'>
-                            <Input type='number' placeholder={t('placeholder.phone')} {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    <div className='flex flex-row'>
+                      <div>Here code</div>
+                      <FormField
+                        control={updateForm.control}
+                        name='phone'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t('label.phone')}</FormLabel>
+                            <FormControl className='h-9'>
+                              <Input type='number' placeholder={t('placeholder.phone')} {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                   </section>
                   {/* Buttons */}
                   <footer className='grid grid-cols-1 space-y-2 pt-2 md:flex md:justify-end md:gap-6 md:space-y-0'>
