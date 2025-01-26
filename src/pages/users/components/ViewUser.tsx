@@ -7,9 +7,10 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 // Components
 import { ApposRecord } from '@appointments/components/appos-record/ApposRecord';
 import { BackButton } from '@core/components/common/BackButton';
+import { CardHeaderPrimary } from '@core/components/common/header/CardHeaderPrimary';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
-import { MessageStatus } from '@whatsapp/common/MessageStatus';
+// import { MessageStatus } from '@whatsapp/common/MessageStatus';
 import { PageHeader } from '@core/components/common/PageHeader';
 import { TableButton } from '@core/components/common/TableButton';
 // External imports
@@ -147,11 +148,7 @@ export default function ViewUser() {
           {isSuccess && (
             <section className='col-span-1 mx-auto h-fit w-full md:col-span-3 lg:col-span-2 xl:col-span-2'>
               <Card>
-                <header className='relative flex items-center justify-center rounded-t-lg bg-primary p-4 text-white'>
-                  <h1 className='text-center text-lg font-semibold'>
-                    {UtilsString.upperCase(`${user.data.firstName} ${user.data.lastName}`, 'each')}
-                  </h1>
-                </header>
+                <CardHeaderPrimary className='justify-center' title={UtilsString.upperCase(`${user.data.firstName} ${user.data.lastName}`, 'each')} />
                 <CardContent className='mt-3 space-y-3 overflow-auto'>
                   <section className='flex items-center space-x-3'>
                     <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
