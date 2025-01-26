@@ -57,9 +57,7 @@ export function ApposRecord({ userId }: { userId: string }) {
   return (
     <main>
       <Card className='flex w-full flex-col gap-3'>
-        <CardHeaderSecondary title={t('cardTitle.appointmentsRecord')}>
-          <CalendarClock size={18} strokeWidth={2} />
-        </CardHeaderSecondary>
+        <CardHeaderSecondary title={t('cardTitle.appointmentsRecord')} icon={<CalendarClock size={16} strokeWidth={2} />} />
         <CardContent className='flex flex-col gap-3'>
           <ApposFilters userId={userId} disabled={disabledFilters} />
           {isLoadingAppos && <LoadingDB variant='default' text={t('loading.appointments')} className='mt-4' />}
