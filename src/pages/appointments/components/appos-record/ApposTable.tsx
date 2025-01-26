@@ -209,7 +209,13 @@ export function ApposTable({
           ))}
         </TableBody>
       </Table>
-      <Pagination itemsPerPage={[5, 10, 20, 50]} pagination={pagination} setPagination={setPagination} table={table} />
+      <Pagination
+        className='pt-6 !text-xsm text-slate-400'
+        itemsPerPage={UV_CONFIG.table.appointments.itemsPerPageOptions}
+        pagination={pagination}
+        setPagination={setPagination}
+        table={table}
+      />
     </>
   );
 }
