@@ -5,6 +5,7 @@ import { Card, CardContent } from '@core/components/ui/card';
 // Components
 import { ApposFilters } from '@appointments/components/appos-record/ApposFilters';
 import { ApposTable } from '@appointments/components/appos-record/ApposTable';
+import { DBCount } from '@core/components/common/DBCount';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
@@ -38,7 +39,8 @@ export function ApposRecord({ userId }: { userId: string }) {
     isSuccess: isSuccessAppos,
   } = useQuery<IResponse<IAppointmentView[]>, Error>({
     queryKey: ['appointments', userId, professional, year, pagination.pageIndex, pagination.pageSize, refresh],
-    queryFn: async () => await AppointmentApiService.findApposRecordWithFilters(userId, pagination.pageSize, pagination.pageIndex, professional, year),
+    queryFn: async () =>
+      await AppointmentApiService.findApposRecordWithFilters(userId, pagination.pageSize, pagination.pageIndex, professional, year),
     retry: 1,
   });
 
@@ -64,6 +66,7 @@ export function ApposRecord({ userId }: { userId: string }) {
           {isErrorAppos && <InfoCard type={'error'} text={errorAppos.message} className='pt-4' />}
           {isSuccessAppos && appointments.data.length > 0 ? (
             <>
+              <DBCount text={'table.totalItems.appointments'} value={appointments.pagination?.totalItems} className='justify-end' />
               <ApposTable
                 appointments={appointments.data}
                 pagination={pagination}
@@ -71,7 +74,6 @@ export function ApposRecord({ userId }: { userId: string }) {
                 setRefresh={setRefresh}
                 totalItems={appointments.pagination?.totalItems ?? 0}
               />
-              {appointments.pagination?.totalItems}
             </>
           ) : (
             !isLoadingAppos && !isErrorAppos && <InfoCard type='warning' text={appointments?.message} className='mt-4' />
