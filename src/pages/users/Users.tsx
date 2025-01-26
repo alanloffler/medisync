@@ -5,6 +5,7 @@ import { Button } from '@core/components/ui/button';
 import { Card, CardContent } from '@core/components/ui/card';
 import { Input } from '@core/components/ui/input';
 // Components
+import { CardHeaderSecondary } from '@core/components/common/header/CardHeaderSecondary';
 import { PageHeader } from '@core/components/common/PageHeader';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 import { UsersDataTable } from '@users/components/UsersDataTable';
@@ -126,11 +127,7 @@ export default function Users() {
         </Card>
         {/* Section: Right side content */}
         <Card className='col-span-1 h-fit overflow-y-auto md:col-span-4 lg:col-span-3 xl:col-span-3'>
-          <div className='flex items-center justify-between rounded-b-none border-b px-4 py-[14px]'>
-            <header className='flex flex-row items-center space-x-4 border-slate-200'>
-              <List size={18} strokeWidth={2} />
-              <span className='text-base font-semibold'>{t('cardTitle.usersList')}</span>
-            </header>
+          <CardHeaderSecondary title={t('cardTitle.usersList')} icon={<List size={18} strokeWidth={2} />}>
             <section className='flex items-center space-x-3'>
               <TooltipWrapper tooltip={t('tooltip.reload')}>
                 <Button
@@ -163,7 +160,7 @@ export default function Users() {
                 </Button>
               </TooltipWrapper>
             </section>
-          </div>
+          </CardHeaderSecondary>
           {/* Table */}
           <CardContent>
             <UsersDataTable reload={reload} search={debouncedSearch} setSearch={setSearch} setReload={setReload} />
