@@ -6,14 +6,18 @@ import { cn } from '@lib/utils';
 interface IProps {
   children?: ReactNode;
   className?: string;
+  icon?: ReactNode;
   title: string;
 }
 // React component
-export function CardHeaderSecondary({ className, children, title }: IProps) {
+export function CardHeaderSecondary({ children, className, icon, title }: IProps) {
   return (
-    <main className={cn('flex items-center space-x-4 rounded-t-lg border-b p-4 text-lg font-semibold', className)}>
+    <main className={cn('flex items-center justify-between rounded-t-lg border-b p-4 text-lg font-semibold', className)}>
+      <div className='flex items-center space-x-4'>
+        {icon}
+        <span>{title}</span>
+      </div>
       {children}
-      <span>{title}</span>
     </main>
   );
 }
