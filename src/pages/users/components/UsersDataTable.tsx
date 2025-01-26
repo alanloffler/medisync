@@ -139,7 +139,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
       {
         accessorKey: 'index',
         size: 50,
-        header: () => <div className='text-center'>{t(USER_CONFIG.table.header[0])}</div>,
+        header: () => <div className='text-center uppercase'>{t(USER_CONFIG.table.header[0])}</div>,
         cell: ({ row }) => (
           <div className='mx-auto w-fit rounded-md bg-slate-100 px-1.5 py-1 text-center text-xs text-slate-400'>{truncate(row.original._id, -3)}</div>
         ),
@@ -149,7 +149,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
         header: ({ column }) => (
           <div className='text-left'>
             <button
-              className='flex items-center gap-2 hover:text-accent-foreground'
+              className='flex items-center gap-2 hover:text-accent-foreground uppercase'
               onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
             >
               {t(USER_CONFIG.table.header[1])}
@@ -157,7 +157,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
             </button>
           </div>
         ),
-        cell: ({ row }) => <div className='text-left'>{UtilsString.upperCase(`${row.original.firstName} ${row.original.lastName}`, 'each')}</div>,
+        cell: ({ row }) => <div className='text-left'>{UtilsString.upperCase(`${row.original.lastName}, ${row.original.firstName}`, 'each')}</div>,
       },
       {
         accessorKey: 'dni',
@@ -165,7 +165,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
         header: ({ column }) => (
           <div className='text-left'>
             <button
-              className='flex items-center gap-2 hover:text-accent-foreground'
+              className='flex items-center gap-2 hover:text-accent-foreground uppercase'
               onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
             >
               {t(USER_CONFIG.table.header[2])}
@@ -181,7 +181,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
         header: ({ column }) => (
           <div className='text-center'>
             <button
-              className='flex items-center gap-2 hover:text-accent-foreground'
+              className='flex items-center gap-2 hover:text-accent-foreground uppercase'
               onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
             >
               {t(USER_CONFIG.table.header[3])}
@@ -194,7 +194,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
       {
         accessorKey: 'actions',
         size: 100,
-        header: () => <div className='text-center'>{t(USER_CONFIG.table.header[4])}</div>,
+        header: () => <div className='text-center uppercase'>{t(USER_CONFIG.table.header[4])}</div>,
         cell: ({ row }) => (
           <div className='mx-auto flex w-fit flex-row items-center justify-center space-x-2'>
             <TableButton callback={() => navigate(`/users/${row.original._id}`)} className='hover:text-sky-400' tooltip={t('tooltip.details')}>
@@ -278,7 +278,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
             <Table>
               <TableHeader>
                 {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id}>
+                  <TableRow key={headerGroup.id} className='border-t bg-slate-50 text-[11px] font-medium text-slate-500'>
                     {headerGroup.headers.map((header) => (
                       <TableHead key={header.id} style={{ width: `${header.getSize()}px` }}>
                         {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
