@@ -145,7 +145,7 @@ export default function ViewUser() {
             </Card>
           )}
           {isSuccess && (
-            <section className='col-span-1 mx-auto h-fit w-full md:col-span-2 lg:col-span-2 xl:col-span-2'>
+            <section className='col-span-1 mx-auto h-fit w-full md:col-span-3 lg:col-span-2 xl:col-span-2'>
               <Card>
                 <header className='relative flex items-center justify-center rounded-t-lg bg-primary p-3 text-white'>
                   <h1 className='text-center text-xl font-bold'>{UtilsString.upperCase(`${user.data.firstName} ${user.data.lastName}`, 'each')}</h1>
@@ -215,7 +215,7 @@ export default function ViewUser() {
             </section>
           )}
           {isSuccess && (
-            <section className='col-span-1 overflow-y-auto md:col-span-3 lg:col-span-3 xl:col-span-4'>
+            <section className='col-span-1 overflow-y-auto md:col-span-5 lg:col-span-3 xl:col-span-4'>
               <ApposRecord userId={user.data._id} />
             </section>
           )}
