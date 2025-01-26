@@ -10,15 +10,17 @@ import { useTranslation } from 'react-i18next';
 // Imports
 import type { IPagination } from '@core/components/common/interfaces/pagination.interface';
 import { cn } from '@lib/utils';
+import { useMediaQuery } from '@core/hooks/useMediaQuery';
 // React component
 export function Pagination({ className, itemsPerPage, pagination, setPagination, table }: IPagination<any>) {
-  const { t } = useTranslation();
   const ITEMS: number[] = itemsPerPage ?? [5, 10, 20, 50];
+  const isSmallDevice = useMediaQuery('only screen and (max-width : 639px)');
+  const { t } = useTranslation();
 
   return (
     <section className={cn('flex items-center justify-between text-sm text-foreground', className)}>
       <section className='flex w-fit flex-row items-center space-x-4'>
-        <p className='w-fit'>{t('pagination.rowsPerPage')}</p>
+        {!isSmallDevice && <p className='w-fit'>{t('pagination.rowsPerPage')}</p>}
         <Select value={`${table.getState().pagination.pageSize}`} onValueChange={(e) => setPagination({ pageIndex: 0, pageSize: parseInt(e) })}>
           <TooltipWrapper tooltip={t('tooltip.pagination.itemsPerPage')}>
             <SelectTrigger className='h-8 w-16 bg-input text-xs text-slate-700 hover:bg-input-hover [&_svg]:opacity-100'>
