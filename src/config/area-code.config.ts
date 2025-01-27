@@ -7,12 +7,12 @@ export const AREA_CODE = [
     label: 'Argentina',
     lang: 'es',
   },
-  { 
-    id: 2, 
-    code: '1', 
-    abbreviation: 'US', 
-    icon: 'united-states', 
-    label: 'United States', 
-    lang: 'en', 
+  {
+    id: 2,
+    code: '1',
+    abbreviation: 'US',
+    icon: 'united-states',
+    label: 'United States',
+    lang: 'en',
   },
 ];
