@@ -2,6 +2,11 @@ import { USER_SCHEMA } from '@config/schemas/user.schema';
 import { z } from 'zod';
 
 export const userSchema = z.object({
+  areaCode: z.coerce
+    .number()
+    .min(USER_SCHEMA.areaCode.min.value, { message: USER_SCHEMA.areaCode.min.message })
+    .max(USER_SCHEMA.areaCode.max.value, { message: USER_SCHEMA.areaCode.max.message }),
+    
   dni: z.coerce
     .number()
     .min(USER_SCHEMA.dni.min.value, { message: USER_SCHEMA.dni.min.message })
