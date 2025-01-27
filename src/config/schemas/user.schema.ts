@@ -1,4 +1,16 @@
 export const USER_SCHEMA = {
+  areaCode: {
+    message: 'Debes ingresar un código de área',
+    min: {
+      value: 1,
+      message: 'El teléfono debe poseer al menos 1 dígito',
+    },
+    max: {
+      value: 999,
+      message: 'El teléfono no debe superar los 3 dígitos',
+    },
+  },
+
   dni: {
     message: 'Debes ingresar un DNI',
     min: {
