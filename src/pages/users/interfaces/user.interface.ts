@@ -1,4 +1,5 @@
 export interface IUserForm {
+  areaCode: number;
   dni: number;
   email?: string;
   firstName: string;
