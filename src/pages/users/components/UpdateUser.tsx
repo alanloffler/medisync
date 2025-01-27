@@ -30,6 +30,7 @@ import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 import { userSchema } from '@users/schemas/user.schema';
+import { SelectPhoneArea } from '@core/components/common/SelectPhoneArea';
 // React component
 export default function UpdateUser() {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
@@ -184,22 +185,22 @@ export default function UpdateUser() {
                         </FormItem>
                       )}
                     />
-                    <div className='flex flex-row'>
-                      <div>Here code</div>
-                      <FormField
-                        control={updateForm.control}
-                        name='phone'
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{t('label.phone')}</FormLabel>
-                            <FormControl className='h-9'>
-                              <Input type='number' placeholder={t('placeholder.phone')} {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
+                    <FormField
+                      control={updateForm.control}
+                      name='phone'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t('label.phone')}</FormLabel>
+                          <FormControl className='h-9'>
+                            <div className='flex flex-row items-center space-x-3'>
+                              <SelectPhoneArea />
+                              <Input type='number' placeholder={t('placeholder.phone')} {...field} className='h-9' />
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </section>
                   {/* Buttons */}
                   <footer className='grid grid-cols-1 space-y-2 pt-2 md:flex md:justify-end md:gap-6 md:space-y-0'>
