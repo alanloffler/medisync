@@ -198,7 +198,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
       },
       {
         accessorKey: 'phone',
-        size: 80,
+        size: 150,
         header: ({ column }) => (
           <div className='text-center'>
             <button
@@ -210,7 +210,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
             </button>
           </div>
         ),
-        cell: ({ row }) => <div className='text-left text-xsm text-slate-500'>{delimiter(row.original.phone, '-', 6)}</div>,
+        cell: ({ row }) => <div className='text-left text-xsm text-slate-500'>{`(${row.original.areaCode}) ${delimiter(row.original.phone, '-', 6)}`}</div>,
       },
       {
         accessorKey: 'actions',
