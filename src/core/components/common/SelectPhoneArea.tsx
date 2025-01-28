@@ -41,15 +41,17 @@ export const SelectPhoneArea = forwardRef<HTMLDivElement, IProps>(({ setArea, va
   return (
     <div ref={ref} {...props}>
       <Select value={areaCode?.code} onValueChange={onValueChange}>
-        <SelectTrigger className='h-9 w-[55px] bg-input p-2 text-xs hover:bg-input-hover'>
+        <SelectTrigger className='h-9 bg-input p-2 text-xs hover:bg-input-hover'>
           <SelectValue>
-            <img
-              width={18}
-              height={18}
-              src={new URL(`../../../assets/icons/i18n/${areaCode?.icon}.svg`, import.meta.url).href}
-              alt={areaCode?.label}
-              className='mr-2'
-            />
+            <section className='mr-1 flex flex-row items-center gap-1'>
+              <img
+                width={18}
+                height={18}
+                src={new URL(`../../../assets/icons/i18n/${areaCode?.icon}.svg`, import.meta.url).href}
+                alt={areaCode?.label}
+              />
+              <div>{areaCode?.code}</div>
+            </section>
           </SelectValue>
         </SelectTrigger>
         <SelectContent onCloseAutoFocus={(e) => e.preventDefault()} className='min-w-0' align='end'>
