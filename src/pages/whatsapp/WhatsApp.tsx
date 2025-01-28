@@ -11,6 +11,7 @@ import { Textarea } from '@core/components/ui/textarea';
 import QRCode from 'react-qr-code';
 // Components
 import { BackButton } from '@core/components/common/BackButton';
+import { CardHeaderSecondary } from '@core/components/common/header/CardHeaderSecondary';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { LoadingText } from '@core/components/common/LoadingText';
@@ -178,7 +179,7 @@ export default function WhatsApp(): JSX.Element {
     <main className='flex flex-1 flex-col gap-6 p-6 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
       {/* Section: Page Header */}
       <section className='flex items-center justify-between'>
-        <PageHeader title={''} breadcrumb={WHATSAPP_CONFIG.breadcrumb} />
+        <PageHeader breadcrumb={WHATSAPP_CONFIG.breadcrumb} />
         <BackButton label={t('button.back')} />
       </section>
       {/* Section: Page Content */}
@@ -195,7 +196,7 @@ export default function WhatsApp(): JSX.Element {
               {!serverError && (
                 <TooltipWrapper tooltip={t('tooltip.reconnect')}>
                   <Button variant='ghost' size='miniIcon' onClick={handleReconnect} className='hover:bg-fuchsia-100'>
-                    <RefreshCw size={16} strokeWidth={2} className='stroke-fuchsia-400' />
+                    <RefreshCw size={17} strokeWidth={2} className='stroke-fuchsia-400' />
                   </Button>
                 </TooltipWrapper>
               )}
@@ -247,13 +248,14 @@ export default function WhatsApp(): JSX.Element {
         </section>
         <section className='col-span-1 h-fit overflow-y-auto md:col-span-3 lg:col-span-4 xl:col-span-4'>
           <Card className='w-full md:max-w-[550px]'>
-
-            {/* <header className='flex items-center justify-start gap-3 rounded-b-none rounded-t-lg border-b bg-card p-4 text-lg font-semibold leading-none tracking-tight'>
-              <svg width='100' height='100' viewBox='0 0 464 488' className='h-4 w-4'>
-                <path d='M462 228q0 93-66 159t-160 66q-56 0-109-28L2 464l40-120q-32-54-32-116q0-93 66-158.5T236 4t160 65.5T462 228zM236 39q-79 0-134.5 55.5T46 228q0 62 36 111l-24 70l74-23q49 31 104 31q79 0 134.5-55.5T426 228T370.5 94.5T236 39zm114 241q-1-1-10-7q-3-1-19-8.5t-19-8.5q-9-3-13 2q-1 3-4.5 7.5t-7.5 9t-5 5.5q-4 6-12 1q-34-17-45-27q-7-7-13.5-15t-12-15t-5.5-8q-3-7 3-11q4-6 8-10l6-9q2-5-1-10q-4-13-17-41q-3-9-12-9h-11q-9 0-15 7q-19 19-19 45q0 24 22 57l2 3q2 3 4.5 6.5t7 9t9 10.5t10.5 11.5t13 12.5t14.5 11.5t16.5 10t18 8.5q16 6 27.5 10t18 5t9.5 1t7-1t5-1q9-1 21.5-9t15.5-17q8-21 3-26z' />
-              </svg>
-              <span>{t('cardTitle.phoneMessage')}</span>
-            </header> */}
+            <CardHeaderSecondary
+              title={t('cardTitle.phoneMessage')}
+              icon={
+                <svg width='100' height='100' viewBox='0 0 464 488' className='h-4 w-4'>
+                  <path d='M462 228q0 93-66 159t-160 66q-56 0-109-28L2 464l40-120q-32-54-32-116q0-93 66-158.5T236 4t160 65.5T462 228zM236 39q-79 0-134.5 55.5T46 228q0 62 36 111l-24 70l74-23q49 31 104 31q79 0 134.5-55.5T426 228T370.5 94.5T236 39zm114 241q-1-1-10-7q-3-1-19-8.5t-19-8.5q-9-3-13 2q-1 3-4.5 7.5t-7.5 9t-5 5.5q-4 6-12 1q-34-17-45-27q-7-7-13.5-15t-12-15t-5.5-8q-3-7 3-11q4-6 8-10l6-9q2-5-1-10q-4-13-17-41q-3-9-12-9h-11q-9 0-15 7q-19 19-19 45q0 24 22 57l2 3q2 3 4.5 6.5t7 9t9 10.5t10.5 11.5t13 12.5t14.5 11.5t16.5 10t18 8.5q16 6 27.5 10t18 5t9.5 1t7-1t5-1q9-1 21.5-9t15.5-17q8-21 3-26z' />
+                </svg>
+              }
+            />
             <CardContent className='pt-5'>
               {isLoading ? (
                 <LoadingDB text={t(type === 'user' ? 'loading.userDetails' : 'loading.professionalDetails')} />
@@ -317,7 +319,7 @@ export default function WhatsApp(): JSX.Element {
                       {JSON.stringify(errorMessage?.message)}
                       {isPendingMessage && <LoadingDB text={t('loading.sendingPhoneMessage')} className='w-full justify-start p-0 text-primary' />}
                       {isErrorMessage && <InfoCard type='error' text={errorMessage.message} className='justify-start p-0 text-rose-400' />}
-                      <footer className='grid grid-cols-1 mt-2 space-y-2 md:flex md:justify-end md:gap-6 md:space-y-0'>
+                      <footer className='mt-2 grid grid-cols-1 space-y-2 md:flex md:justify-end md:gap-6 md:space-y-0'>
                         <Button
                           type='submit'
                           disabled={whatsappForm.watch('message') === '' || !user?.data.phone || !whatsappConnected}
