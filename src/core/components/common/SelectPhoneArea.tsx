@@ -1,11 +1,11 @@
 // External components: https://ui.shadcn.com/docs/components
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@core/components/ui/select';
 // External imports
-import { type Dispatch, type SetStateAction, useEffect, useState } from 'react';
+import { type ComponentPropsWithoutRef, type Dispatch, forwardRef, type SetStateAction, useEffect, useState } from 'react';
 // Imports
 import { AREA_CODE } from '@config/area-code.config';
 // Interface
-interface IProps {
+interface IProps extends ComponentPropsWithoutRef<'div'> {
   setArea: Dispatch<SetStateAction<number | undefined>>;
   value: number;
 }
@@ -20,7 +20,7 @@ interface IAreaCode {
   default?: boolean;
 }
 // React component
-export function SelectPhoneArea({ setArea, value }: IProps) {
+export const SelectPhoneArea = forwardRef<HTMLDivElement, IProps>(({ setArea, value, ...props }, ref) => {
   const [areaCode, setAreaCode] = useState<IAreaCode | undefined>();
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export function SelectPhoneArea({ setArea, value }: IProps) {
     } else {
       setAreaCode(AREA_CODE.find((area: IAreaCode) => area.code === String(value)));
     }
-  }, [value, setArea]);
+  }, [setArea, value]);
 
   function onValueChange(e: string): void {
     const areaCode: IAreaCode = AREA_CODE.find((area: IAreaCode) => area.code === e) ?? AREA_CODE[0];
@@ -39,7 +39,7 @@ export function SelectPhoneArea({ setArea, value }: IProps) {
   }
 
   return (
-    <>
+    <div ref={ref} {...props}>
       <Select value={areaCode?.code} onValueChange={onValueChange}>
         <SelectTrigger className='h-9 w-[55px] bg-input p-2 text-xs hover:bg-input-hover'>
           <SelectValue>
@@ -65,6 +65,6 @@ export function SelectPhoneArea({ setArea, value }: IProps) {
           </SelectGroup>
         </SelectContent>
       </Select>
-    </>
+    </div>
   );
-}
+});
