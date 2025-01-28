@@ -25,7 +25,8 @@ export const SelectPhoneArea = forwardRef<HTMLDivElement, IProps>(({ setArea, va
 
   useEffect(() => {
     if (isNaN(value)) {
-      setAreaCode(AREA_CODE[0]);
+      // setAreaCode(AREA_CODE[0]);
+      setAreaCode(undefined);
       if (setArea) setArea(Number(AREA_CODE[0].code));
     } else {
       setAreaCode(AREA_CODE.find((area: IAreaCode) => area.code === String(value)));
@@ -42,17 +43,21 @@ export const SelectPhoneArea = forwardRef<HTMLDivElement, IProps>(({ setArea, va
     <div ref={ref} {...props}>
       <Select value={areaCode?.code} onValueChange={onValueChange}>
         <SelectTrigger className='h-9 bg-input p-2 text-xs hover:bg-input-hover'>
-          <SelectValue>
-            <section className='mr-1 flex flex-row items-center gap-1'>
-              <img
-                width={18}
-                height={18}
-                src={new URL(`../../../assets/icons/i18n/${areaCode?.icon}.svg`, import.meta.url).href}
-                alt={areaCode?.label}
-              />
-              <div>{areaCode?.code}</div>
-            </section>
-          </SelectValue>
+          {areaCode ? (
+            <SelectValue>
+              <section className='mr-1 flex flex-row items-center gap-1'>
+                <img
+                  width={18}
+                  height={18}
+                  src={new URL(`../../../assets/icons/i18n/${areaCode?.icon}.svg`, import.meta.url).href}
+                  alt={areaCode?.label}
+                />
+                <div>{areaCode?.code}</div>
+              </section>
+            </SelectValue>
+          ) : (
+            <div className='min-w-[25px]'></div>
+          )}
         </SelectTrigger>
         <SelectContent onCloseAutoFocus={(e) => e.preventDefault()} className='min-w-0' align='end'>
           <SelectGroup>
