@@ -182,6 +182,7 @@
     "description": "Descripción",
     "email": "Correo electrónico",
     "firstName": "Nombre",
+    "from": "De",
     "identityCard": "DNI",
     "lastName": "Apellido",
     "message": "Mensaje",
@@ -199,6 +200,7 @@
     "timeSlotUnavailableEnd": "Fin de descanso",
     "timeSlotUnavailableInit": "Inicio de descanso",
     "title": "Título",
+    "to": "Para",
     "whatsapp": "WhatsApp",
     "workingDays": "Días laborales"
   },

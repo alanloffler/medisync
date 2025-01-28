@@ -182,6 +182,7 @@
     "description": "Description",
     "email": "Email",
     "firstName": "Name",
+    "from": "From",
     "identityCard": "IC",
     "lastName": "Last name",
     "message": "Message",
@@ -199,6 +200,7 @@
     "timeSlotUnavailableEnd": "End of break",
     "timeSlotUnavailableInit": "Begin of break",
     "title": "Title",
+    "to": "To",
     "whatsapp": "WhatsApp",
     "workingDays": "Working days"
   },
