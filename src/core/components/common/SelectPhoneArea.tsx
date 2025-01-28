@@ -42,7 +42,7 @@ export const SelectPhoneArea = forwardRef<HTMLDivElement, IProps>(({ setArea, va
   return (
     <div ref={ref} {...props}>
       <Select value={areaCode?.code} onValueChange={onValueChange}>
-        <SelectTrigger className='h-9 bg-input p-2 text-xs hover:bg-input-hover'>
+        <SelectTrigger className='h-9 bg-input p-2 text-xs ring-offset-background hover:bg-input-hover data-[state=open]:outline-none data-[state=open]:ring-1 data-[state=open]:ring-ring data-[state=open]:ring-offset-0'>
           {areaCode ? (
             <SelectValue>
               <section className='mr-1 flex flex-row items-center gap-1'>
