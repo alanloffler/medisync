@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { Check, RefreshCw, X } from 'lucide-react';
+import { Check, RefreshCw, Smartphone, X } from 'lucide-react';
 // External components:
 // https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
@@ -36,15 +36,18 @@ import { WHATSAPP_CONFIG } from '@config/whatsapp.config';
 import { WhatsappApiService } from '@whatsapp/services/whatsapp-api.service';
 import { cn } from '@lib/utils';
 import { socket } from '@core/services/socket.service';
+import { useDelimiter } from '@core/hooks/useDelimiter';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export default function WhatsApp(): JSX.Element {
   const [qrcode, setQrcode] = useState<string | undefined>(undefined);
   const [serverError, setServerError] = useState<boolean>(false);
+  const [displayPhone, setDisplayPhone] = useState<string | undefined>(undefined);
   const [socketId, setSocketId] = useState<string | undefined>(undefined);
   const [whatsappConnected, setWhatsappConnected] = useState<boolean>(false);
   const [whatsappNumber, setWhatsappNumber] = useState<string | undefined>(undefined);
   const addNotification = useNotificationsStore((state) => state.addNotification);
+  const delimiter = useDelimiter();
   const navigate = useNavigate();
   const { id, type } = useParams();
   const { t } = useTranslation();
@@ -139,13 +142,15 @@ export default function WhatsApp(): JSX.Element {
   useEffect(() => {
     // TODO: Add template message from lang files
     if (user?.data.phone) {
-      let content: string = '';
+      // let content: string = '';
       whatsappForm.setValue('phone', Number(`${user?.data.areaCode}${user?.data.phone}`));
-      content += 'Hola Alan\n';
-      content += 'Mensaje de WhatsApp\n';
-      whatsappForm.setValue('message', content);
+      // content += 'Hola Alan\n';
+      // content += 'Mensaje de WhatsApp\n';
+      // whatsappForm.setValue('message', content);
       whatsappForm.setFocus('message');
     }
+    setDisplayPhone(`(+${user?.data.areaCode}) ${user?.data.phone && delimiter(user?.data.phone, '-', 6)}`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.data.areaCode, user?.data.phone, whatsappForm]);
 
   // Actions
@@ -290,14 +295,31 @@ export default function WhatsApp(): JSX.Element {
                   {/* Section: Form */}
                   <Form {...whatsappForm}>
                     <form onSubmit={whatsappForm.handleSubmit(handleSendMessage)} className='mt-4 flex flex-col gap-4'>
+                      <section className='flex h-full w-full items-center space-x-3 rounded-md'>
+                        <FormLabel>{t('label.from')}</FormLabel>
+                        <div className='flex items-center space-x-2 rounded-full bg-fuchsia-200 px-2 py-1 text-xsm font-light text-fuchsia-700'>
+                          <Smartphone size={15} strokeWidth={2} className='stroke-fuchsia-700' />
+                          <span>Admin</span>
+                        </div>
+                        <span className='text-xs font-light text-muted-foreground'>{`(+${whatsappNumber?.slice(0, -10)}) ${whatsappNumber && delimiter(whatsappNumber?.slice(-10), '-', 6)}`}</span>
+                      </section>
                       <FormField
                         control={whatsappForm.control}
                         name='phone'
                         render={({ field }) => (
-                          <FormItem className=''>
-                            <FormLabel>{t('label.phone')}</FormLabel>
+                          <FormItem>
                             <FormControl className='h-9'>
-                              <Input className='pointer-events-none' {...field} />
+                              <section className='flex h-full w-full items-center space-x-3 rounded-md'>
+                                <FormLabel>{t('label.to')}</FormLabel>
+                                <div className='flex items-center space-x-2 rounded-full bg-fuchsia-200 px-2 py-1 text-xsm font-light text-fuchsia-700'>
+                                  <Smartphone size={15} strokeWidth={2} className='stroke-fuchsia-700' />
+                                  <span className=''>
+                                    {UtilsString.upperCase(user?.data.firstName, 'each')} {UtilsString.upperCase(user?.data.lastName, 'each')}
+                                  </span>
+                                </div>
+                                <span className='text-xs font-light text-muted-foreground'>{displayPhone}</span>
+                                <Input className='sr-only pointer-events-none' {...field} />
+                              </section>
                             </FormControl>
                             <FormMessage />
                           </FormItem>
