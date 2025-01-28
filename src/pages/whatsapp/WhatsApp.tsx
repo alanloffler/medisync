@@ -145,7 +145,7 @@ export default function WhatsApp(): JSX.Element {
       whatsappForm.setValue('message', content);
       whatsappForm.setFocus('message');
     }
-  }, [user?.data.phone, whatsappForm]);
+  }, [user?.data.areaCode, user?.data.phone, whatsappForm]);
 
   // Actions
   // TODO: type response when setted on backend and on service
