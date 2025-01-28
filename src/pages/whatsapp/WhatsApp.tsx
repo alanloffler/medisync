@@ -139,7 +139,7 @@ export default function WhatsApp(): JSX.Element {
     // TODO: Add template message from lang files
     if (user?.data.phone) {
       let content: string = '';
-      whatsappForm.setValue('phone', Number(`549${user?.data.phone}`));
+      whatsappForm.setValue('phone', Number(`${user?.data.areaCode}${user?.data.phone}`));
       content += 'Hola Alan\n';
       content += 'Mensaje de WhatsApp\n';
       whatsappForm.setValue('message', content);
