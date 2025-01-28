@@ -12,6 +12,7 @@ import { CardHeaderPrimary } from '@core/components/common/header/CardHeaderPrim
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
+import { SelectPhoneArea } from '@core/components/common/SelectPhoneArea';
 // External imports
 import { MouseEvent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -30,9 +31,10 @@ import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 import { userSchema } from '@users/schemas/user.schema';
-import { SelectPhoneArea } from '@core/components/common/SelectPhoneArea';
 // React component
 export default function UpdateUser() {
+  const [area, setArea] = useState<number | undefined>();
+  const [errorMsg, setErrorMsg] = useState<string>('');
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const navigate = useNavigate();
@@ -57,11 +59,15 @@ export default function UpdateUser() {
 
   useEffect(() => {
     if (user) {
+      updateForm.setValue('areaCode', user?.data.areaCode);
       updateForm.setValue('dni', user?.data.dni);
       updateForm.setValue('email', user?.data.email);
       updateForm.setValue('firstName', UtilsString.upperCase(user?.data.firstName, 'each'));
       updateForm.setValue('lastName', UtilsString.upperCase(user?.data.lastName, 'each'));
       updateForm.setValue('phone', user?.data.phone);
+
+      setArea(user?.data.areaCode);
+      if (isNaN(user?.data.areaCode)) setErrorMsg('must update user');
     }
   }, [user, updateForm]);
 
@@ -89,7 +95,9 @@ export default function UpdateUser() {
   });
 
   function handleUpdateUser(data: z.infer<typeof userSchema>): void {
-    id && updateUser({ id, data });
+    if (id) {
+      updateUser({ id, data });
+    } else return;
   }
 
   function handleCancel(event: MouseEvent<HTMLButtonElement>): void {
@@ -97,6 +105,7 @@ export default function UpdateUser() {
 
     if (user) {
       updateForm.reset();
+      updateForm.setValue('areaCode', user?.data.areaCode);
       updateForm.setValue('dni', user?.data.dni);
       updateForm.setValue('email', user?.data.email);
       updateForm.setValue('firstName', UtilsString.upperCase(user?.data.firstName, 'each'));
@@ -105,6 +114,10 @@ export default function UpdateUser() {
       navigate('/users');
     }
   }
+
+  useEffect(() => {
+    updateForm.setValue('areaCode', Number(area));
+  }, [area, updateForm]);
 
   return (
     <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
@@ -185,22 +198,35 @@ export default function UpdateUser() {
                         </FormItem>
                       )}
                     />
-                    <FormField
-                      control={updateForm.control}
-                      name='phone'
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{t('label.phone')}</FormLabel>
-                          <FormControl className='h-9'>
-                            <div className='flex flex-row items-center space-x-3'>
-                              <SelectPhoneArea />
-                              <Input type='number' placeholder={t('placeholder.phone')} {...field} className='h-9' />
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    <div className='flex flex-row items-center space-x-2'>
+                      <FormField
+                        control={updateForm.control}
+                        name='areaCode'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t('label.phone')}</FormLabel>
+                            <FormControl className='h-9'>
+                              <SelectPhoneArea setArea={setArea} {...field} value={Number(field.value)} />
+                            </FormControl>
+                            {`Area: ${area}`}
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={updateForm.control}
+                        name='phone'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel> </FormLabel>
+                            <FormControl>
+                              <Input type='number' placeholder={t('placeholder.phone')} {...field} className='!mt-8 h-9' />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                   </section>
                   {/* Buttons */}
                   <footer className='grid grid-cols-1 space-y-2 pt-2 md:flex md:justify-end md:gap-6 md:space-y-0'>
@@ -211,6 +237,7 @@ export default function UpdateUser() {
                       {t('button.cancel')}
                     </Button>
                   </footer>
+                  {errorMsg && <div className='justify-left flex items-center text-xs text-muted-foreground'>No area, must update</div>}
                 </form>
               </Form>
             )}
