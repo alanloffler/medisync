@@ -10,6 +10,7 @@ import { Input } from '@core/components/ui/input';
 import { BackButton } from '@core/components/common/BackButton';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
+import { SelectPhoneArea } from '@core/components/common/SelectPhoneArea';
 // External imports
 import { MouseEvent, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -35,6 +36,7 @@ export default function CreateUser() {
   const { t } = useTranslation();
 
   const defaultValues = {
+    areaCode: undefined,
     dni: '' as unknown as number,
     email: '',
     firstName: '',
@@ -153,19 +155,34 @@ export default function CreateUser() {
                       </FormItem>
                     )}
                   />
-                  <FormField
-                    control={createForm.control}
-                    name='phone'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t('label.phone')}</FormLabel>
-                        <FormControl className='h-9'>
-                          <Input type='number' placeholder={t('placeholder.phone')} {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <div className='flex flex-row items-center space-x-3'>
+                    <FormField
+                      control={createForm.control}
+                      name='areaCode'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t('label.phone')}</FormLabel>
+                          <FormControl className='h-9'>
+                            <SelectPhoneArea {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={createForm.control}
+                      name='phone'
+                      render={({ field }) => (
+                        <FormItem className='flex-1'>
+                          <FormLabel> </FormLabel>
+                          <FormControl>
+                            <Input type='number' placeholder={t('placeholder.phone')} {...field} className='!mt-8 h-9' />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </section>
                 {/* Buttons */}
                 <footer className='grid grid-cols-1 space-y-2 pt-2 md:flex md:justify-end md:gap-6 md:space-y-0'>
