@@ -4,8 +4,13 @@ import { BreadCrumb } from '@core/components/common/BreadCrumb';
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { IBreadcrumb } from '@core/components/common/interfaces/breadcrumb.interface';
+// Interface
+interface IProps {
+  title?: string;
+  breadcrumb: IBreadcrumb[];
+}
 // React component
-export function PageHeader({ title, breadcrumb }: { title: string; breadcrumb: IBreadcrumb[] }) {
+export function PageHeader({ title, breadcrumb }: IProps) {
   const { t } = useTranslation();
 
   return (
