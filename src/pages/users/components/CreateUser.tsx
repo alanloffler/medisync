@@ -2,12 +2,13 @@
 import { FilePlus2 } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
-import { Card, CardContent, CardTitle } from '@core/components/ui/card';
+import { Card, CardContent } from '@core/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
 import { Form, FormField, FormControl, FormItem, FormLabel, FormMessage } from '@core/components/ui/form';
 import { Input } from '@core/components/ui/input';
 // Components
 import { BackButton } from '@core/components/common/BackButton';
+import { CardHeaderPrimary } from '@core/components/common/header/CardHeaderPrimary';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
 import { SelectPhoneArea } from '@core/components/common/SelectPhoneArea';
@@ -86,12 +87,9 @@ export default function CreateUser() {
       {/* Section: Form */}
       <section className='mx-auto mt-6 flex w-full flex-col gap-4 md:w-[500px]'>
         <Card className='w-full'>
-          <CardTitle className='flex rounded-b-none bg-card-header text-slate-700'>
-            <header className='flex items-center gap-3.5 p-2'>
-              <FilePlus2 size={16} strokeWidth={2} />
-              {t('cardTitle.createUser')}
-            </header>
-          </CardTitle>
+          <CardHeaderPrimary title={t('cardTitle.createUser')}>
+            <FilePlus2 size={18} strokeWidth={2} />
+          </CardHeaderPrimary>
           <CardContent>
             <Form {...createForm}>
               <form onSubmit={createForm.handleSubmit((data) => handleCreateUser(data))} className='space-y-4 pt-6'>
