@@ -20,6 +20,7 @@ export interface IProfessionalForm {
 export interface IProfessional {
   _id: string;
   area: IArea;
+  areaCode: number;
   available: boolean;
   configuration: IProfessionalConfiguration;
   description: string;
