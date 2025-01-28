@@ -198,7 +198,7 @@ export default function UpdateUser() {
                         </FormItem>
                       )}
                     />
-                    <div className='flex flex-row items-center space-x-2'>
+                    <div className='flex flex-row items-center space-x-3'>
                       <FormField
                         control={updateForm.control}
                         name='areaCode'
@@ -208,7 +208,6 @@ export default function UpdateUser() {
                             <FormControl className='h-9'>
                               <SelectPhoneArea setArea={setArea} {...field} value={Number(field.value)} />
                             </FormControl>
-                            {`Area: ${area}`}
                             <FormMessage />
                           </FormItem>
                         )}
@@ -217,7 +216,7 @@ export default function UpdateUser() {
                         control={updateForm.control}
                         name='phone'
                         render={({ field }) => (
-                          <FormItem>
+                          <FormItem className='flex-1'>
                             <FormLabel> </FormLabel>
                             <FormControl>
                               <Input type='number' placeholder={t('placeholder.phone')} {...field} className='!mt-8 h-9' />
