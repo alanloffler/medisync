@@ -6,7 +6,7 @@ import { type ComponentPropsWithoutRef, type Dispatch, forwardRef, type SetState
 import { AREA_CODE } from '@config/area-code.config';
 // Interface
 interface IProps extends ComponentPropsWithoutRef<'div'> {
-  setArea: Dispatch<SetStateAction<number | undefined>>;
+  setArea?: Dispatch<SetStateAction<number | undefined>>;
   value: number;
 }
 
@@ -26,7 +26,7 @@ export const SelectPhoneArea = forwardRef<HTMLDivElement, IProps>(({ setArea, va
   useEffect(() => {
     if (isNaN(value)) {
       setAreaCode(AREA_CODE[0]);
-      setArea(Number(AREA_CODE[0].code));
+      if (setArea) setArea(Number(AREA_CODE[0].code));
     } else {
       setAreaCode(AREA_CODE.find((area: IAreaCode) => area.code === String(value)));
     }
@@ -35,7 +35,7 @@ export const SelectPhoneArea = forwardRef<HTMLDivElement, IProps>(({ setArea, va
   function onValueChange(e: string): void {
     const areaCode: IAreaCode = AREA_CODE.find((area: IAreaCode) => area.code === e) ?? AREA_CODE[0];
     setAreaCode(areaCode);
-    setArea(Number(e));
+    if (setArea) setArea(Number(e));
   }
 
   return (
