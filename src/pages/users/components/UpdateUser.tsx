@@ -88,7 +88,7 @@ export default function UpdateUser() {
       addNotification({ type: 'error', message: error.message });
     },
     onSuccess: (response) => {
-      navigate(`/users/${user?.data._id}`);
+      navigate('/users');
       addNotification({ type: 'success', message: response.message });
     },
     retry: 1,
