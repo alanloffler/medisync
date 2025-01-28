@@ -127,7 +127,7 @@ export default function UpdateUser() {
         <BackButton label={t('button.back')} />
       </header>
       {/* Section: Form */}
-      <section className='mx-auto mt-6 flex w-full flex-col gap-4 md:w-[500px]'>
+      <section className='mx-auto mt-6 flex w-full flex-col gap-4 md:w-[550px]'>
         <Card className='w-full md:grid-cols-2'>
           <CardHeaderPrimary title={t('cardTitle.updateUser')}>
             <FilePen size={18} strokeWidth={2} />
