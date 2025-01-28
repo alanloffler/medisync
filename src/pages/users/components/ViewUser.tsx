@@ -160,7 +160,7 @@ export default function ViewUser() {
                     <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
                       <Smartphone size={17} strokeWidth={2} />
                     </div>
-                    <span className='text-sm'>{delimiter(user.data.phone, '-', 6)}</span>
+                    <span className='text-sm'>{`(${user.data.areaCode}) ${delimiter(user.data.phone, '-', 6)}`}</span>
                   </section>
                   {user.data.email && (
                     <section className='flex items-center space-x-3'>
