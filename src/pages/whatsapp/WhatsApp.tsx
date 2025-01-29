@@ -22,13 +22,15 @@ import { MouseEvent, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 // Imports
+import type { IAppointmentView } from '@appointments/interfaces/appointment.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
+import { EUserType } from '@core/enums/user-type.enum';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
@@ -38,6 +40,12 @@ import { cn } from '@lib/utils';
 import { socket } from '@core/services/socket.service';
 import { useDelimiter } from '@core/hooks/useDelimiter';
 import { useNotificationsStore } from '@core/stores/notifications.store';
+// Interface
+interface IAppoLocationState {
+  appointment: IAppointmentView;
+  template: string;
+  type: string;
+}
 // React component
 export default function WhatsApp(): JSX.Element {
   const [qrcode, setQrcode] = useState<string | undefined>(undefined);
@@ -48,12 +56,15 @@ export default function WhatsApp(): JSX.Element {
   const [whatsappNumber, setWhatsappNumber] = useState<string | undefined>(undefined);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const delimiter = useDelimiter();
+  const location = useLocation();
   const navigate = useNavigate();
-  const { id, type } = useParams();
+  const { id } = useParams();
   const { t } = useTranslation();
 
   const [socketConnected, setSocketConnected] = useState<boolean>(false);
   const [connectingSocket, setConnectingSocket] = useState<boolean>(true);
+
+  const { appointment, type, template } = location.state as IAppoLocationState;
 
   function connect() {
     console.log('[STATUS]: socket connected', socket.id);
@@ -134,10 +145,24 @@ export default function WhatsApp(): JSX.Element {
   const { data: user, isLoading } = useQuery<IResponse<IUser | IProfessional>, Error>({
     queryKey: ['whatsapp', id, type],
     queryFn: async () => {
-      if (id && type) return type === 'user' ? await UserApiService.findOne(id) : await ProfessionalApiService.findOne(id);
+      if (id && type) {
+        if (type === EUserType.USER) return await UserApiService.findOne(id);
+        if (type === EUserType.PROFESSIONAL) return await ProfessionalApiService.findOne(id);
+      }
     },
     retry: 1,
   });
+
+  useEffect(() => {
+    console.log('template', template);
+    if (template === 'appointment') {
+      const content: string = `Hola _${UtilsString.upperCase(user?.data.firstName, 'each')}_, este es el detalle de tu turno.\n\n`;
+      whatsappForm.setValue('message', UtilsString.convertText(content, 'toHtml'));
+    }
+    if (template === 'empty') {
+      console.log('empty template');
+    }
+  }, [template, user?.data.firstName, whatsappForm]);
 
   useEffect(() => {
     // TODO: Add template message from lang files
@@ -332,7 +357,10 @@ export default function WhatsApp(): JSX.Element {
                           <FormItem>
                             <FormLabel>{t('label.message')}</FormLabel>
                             <FormControl>
-                              <Textarea {...field} />
+                              <>
+                                {template === 'appointment' && <div {...field} dangerouslySetInnerHTML={{ __html: field.value }} />}
+                                {template !== 'appointment' && <Textarea {...field} />}
+                              </>
                             </FormControl>
                             <FormMessage />
                           </FormItem>
