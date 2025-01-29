@@ -27,6 +27,7 @@ import { useNavigate } from 'react-router-dom';
 // Imports
 import type { IAppointmentView } from '@appointments/interfaces/appointment.interface';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
+import { EUserType } from '@core/enums/user-type.enum';
 import { USER_VIEW_CONFIG as UV_CONFIG } from '@config/users/user-view.config';
 import { UtilsString } from '@core/services/utils/string.service';
 // React component
@@ -57,6 +58,13 @@ export function ApposTable({
   const handleRefresh = useCallback((): void => {
     setRefresh(crypto.randomUUID());
   }, [setRefresh]);
+
+  const handleSendAppoByMessage = useCallback(
+    (appointment: IAppointmentView): void => {
+      navigate(`/whatsapp/${appointment.user._id}`, { state: { appointment, type: EUserType.USER, template: 'appointment' } });
+    },
+    [navigate],
+  );
 
   // Table manager
   const columns: ColumnDef<IAppointmentView>[] = useMemo(
@@ -151,7 +159,8 @@ export function ApposTable({
               {!row.original.user.email ? <MailX size={17} strokeWidth={1.5} className='stroke-red-400' /> : <Mail size={17} strokeWidth={1.5} />}
             </TableButton>
             <TableButton
-              callback={() => console.log(`/whatsapp/user/${row.original._id}`)}
+              callback={() => handleSendAppoByMessage(row.original)}
+              // callback={() => navigate(`/whatsapp/user/${row.original.user._id}/appointment`, { state: { appointment: row.original.professional } })}
               className='hover:bg-emerald-100/75 hover:text-emerald-400'
               tooltip={t('tooltip.sendAppoByMessage')}
             >
@@ -162,7 +171,7 @@ export function ApposTable({
         header: () => <div className='text-center'>{t(UV_CONFIG.table.appointments.header[2])}</div>,
       },
     ],
-    [handleRefresh, i18n.language, navigate, t],
+    [handleRefresh, handleSendAppoByMessage, i18n.language, navigate, t],
   );
 
   const table = useReactTable<IAppointmentView>({
