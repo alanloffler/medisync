@@ -26,4 +26,35 @@ export class UtilsString {
 
     return result;
   }
+
+  public static convertText(text: string, type = 'toHtml'): string {
+    if (type === 'toHtml') {
+      text = text.replace(/\\\*/g, '&#42;').replace(/\\_/g, '&#95;').replace(/\\~/g, '&#126;').replace(/\\`/g, '&#96;');
+    }
+
+    const patterns: { [key: string]: [RegExp, string][] } = {
+      toHtml: [
+        [/\*((?!\*)[^*]+)\*/g, '<b>$1</b>'],
+        [/_((?!_)[^_]+)_/g, '<i>$1</i>'],
+        [/~((?!~)[^~]+)~/g, '<s>$1</s>'],
+        [/```((?!```)[^`]+)```/g, '<code>$1</code>'],
+        [/&#42;/g, '*'],
+        [/&#95;/g, '_'],
+        [/&#126;/g, '~'],
+        [/&#96;/g, '`'],
+      ],
+      toWhatsApp: [
+        [/<b>(.*?)<\/b>/g, '*$1*'],
+        [/<strong>(.*?)<\/strong>/g, '*$1*'],
+        [/<i>(.*?)<\/i>/g, '_$1_'],
+        [/<em>(.*?)<\/em>/g, '_$1_'],
+        [/<s>(.*?)<\/s>/g, '~$1~'],
+        [/<strike>(.*?)<\/strike>/g, '~$1~'],
+        [/<del>(.*?)<\/del>/g, '~$1~'],
+        [/<code>(.*?)<\/code>/g, '```$1```'],
+      ],
+    };
+
+    return patterns[type].reduce((text, [pattern, replacement]) => text.replace(pattern, replacement), text);
+  }
 }
