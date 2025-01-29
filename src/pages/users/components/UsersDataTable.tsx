@@ -38,6 +38,8 @@ import type { IPaginatedUsersVars } from '@users/interfaces/mutation-vars.interf
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser, IUsersData } from '@users/interfaces/user.interface';
 import { EUserSearch } from '@users/enums/user-search.enum';
+import { EUserType } from '@core/enums/user-type.enum';
+import { EWhatsappTemplate } from '@whatsapp/enums/template.enum';
 import { USER_CONFIG } from '@config/users/users.config';
 import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
@@ -254,7 +256,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
               {!row.original.email ? <MailX size={17} strokeWidth={1.5} /> : <Mail size={17} strokeWidth={1.5} />}
             </TableButton>
             <TableButton
-              callback={() => navigate(`/whatsapp/${row.original._id}`, { state: { type: 'user', template: 'empty' } })}
+              callback={() => navigate(`/whatsapp/${row.original._id}`, { state: { type: EUserType.USER, template: EWhatsappTemplate.EMPTY } })}
               className='hover:bg-emerald-100/75 hover:text-emerald-400'
               tooltip={t('tooltip.sendMessage')}
             >
