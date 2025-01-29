@@ -210,7 +210,9 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
             </button>
           </div>
         ),
-        cell: ({ row }) => <div className='text-left text-xsm text-slate-500'>{`(+${row.original.areaCode}) ${delimiter(row.original.phone, '-', 6)}`}</div>,
+        cell: ({ row }) => (
+          <div className='text-left text-xsm text-slate-500'>{`(+${row.original.areaCode}) ${delimiter(row.original.phone, '-', 6)}`}</div>
+        ),
       },
       {
         accessorKey: 'actions',
@@ -252,7 +254,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
               {!row.original.email ? <MailX size={17} strokeWidth={1.5} /> : <Mail size={17} strokeWidth={1.5} />}
             </TableButton>
             <TableButton
-              callback={() => navigate(`/whatsapp/user/${row.original._id}`)}
+              callback={() => navigate(`/whatsapp/${row.original._id}`, { state: { type: 'user', template: 'empty' } })}
               className='hover:bg-emerald-100/75 hover:text-emerald-400'
               tooltip={t('tooltip.sendMessage')}
             >
