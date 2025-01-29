@@ -24,6 +24,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import type { IDialog } from '@core/interfaces/dialog.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
+import { EUserType } from '@core/enums/user-type.enum';
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { USER_VIEW_CONFIG as UV_CONFIG } from '@config/users/user-view.config';
 import { UserApiService } from '@users/services/user-api.service';
@@ -188,7 +189,7 @@ export default function ViewUser() {
                     {!user.data.email ? <MailX size={17} strokeWidth={1.5} className='stroke-red-400' /> : <Mail size={17} strokeWidth={1.5} />}
                   </TableButton>
                   <TableButton
-                    callback={() => navigate(`/whatsapp/user/${user.data._id}`)}
+                    callback={() => navigate(`/whatsapp/${user.data._id}`, { state: { type: EUserType.USER, template: 'empty' } })}
                     className='h-8 w-8 hover:bg-emerald-100/75 hover:text-emerald-400'
                     tooltip={t('tooltip.sendMessage')}
                   >
