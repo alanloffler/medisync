@@ -12,6 +12,7 @@ import QRCode from 'react-qr-code';
 // Components
 import { BackButton } from '@core/components/common/BackButton';
 import { CardHeaderSecondary } from '@core/components/common/header/CardHeaderSecondary';
+import { FakeTextarea } from './components/FakeTextarea';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { LoadingText } from '@core/components/common/LoadingText';
@@ -20,9 +21,10 @@ import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
 import { MouseEvent, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { format } from '@formkit/tempo';
 import { useForm } from 'react-hook-form';
-import { useMutation, useQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 // Imports
@@ -31,6 +33,7 @@ import type { IProfessional } from '@professionals/interfaces/professional.inter
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
 import { EUserType } from '@core/enums/user-type.enum';
+import { EWhatsappTemplate } from './enums/template.enum';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
@@ -50,7 +53,6 @@ interface IAppoLocationState {
 export default function WhatsApp(): JSX.Element {
   const [qrcode, setQrcode] = useState<string | undefined>(undefined);
   const [serverError, setServerError] = useState<boolean>(false);
-  const [displayPhone, setDisplayPhone] = useState<string | undefined>(undefined);
   const [socketId, setSocketId] = useState<string | undefined>(undefined);
   const [whatsappConnected, setWhatsappConnected] = useState<boolean>(false);
   const [whatsappNumber, setWhatsappNumber] = useState<string | undefined>(undefined);
@@ -58,8 +60,8 @@ export default function WhatsApp(): JSX.Element {
   const delimiter = useDelimiter();
   const location = useLocation();
   const navigate = useNavigate();
+  const { i18n, t } = useTranslation();
   const { id } = useParams();
-  const { t } = useTranslation();
 
   const [socketConnected, setSocketConnected] = useState<boolean>(false);
   const [connectingSocket, setConnectingSocket] = useState<boolean>(true);
@@ -154,29 +156,23 @@ export default function WhatsApp(): JSX.Element {
   });
 
   useEffect(() => {
-    console.log('template', template);
-    if (template === 'appointment') {
-      const content: string = `Hola _${UtilsString.upperCase(user?.data.firstName, 'each')}_, este es el detalle de tu turno.\n\n`;
-      whatsappForm.setValue('message', UtilsString.convertText(content, 'toHtml'));
-    }
-    if (template === 'empty') {
-      console.log('empty template');
-    }
-  }, [template, user?.data.firstName, whatsappForm]);
-
-  useEffect(() => {
-    // TODO: Add template message from lang files
     if (user?.data.phone) {
-      // let content: string = '';
       whatsappForm.setValue('phone', Number(`${user?.data.areaCode}${user?.data.phone}`));
-      // content += 'Hola Alan\n';
-      // content += 'Mensaje de WhatsApp\n';
-      // whatsappForm.setValue('message', content);
-      whatsappForm.setFocus('message');
     }
-    setDisplayPhone(`(+${user?.data.areaCode}) ${user?.data.phone && delimiter(user?.data.phone, '-', 6)}`);
+
+    if (template === EWhatsappTemplate.APPOINTMENT) {
+      let content: string = `Hola *${UtilsString.upperCase(user?.data.firstName, 'each')}*, este es el detalle de tu turno.\n\n`;
+      content += `*Profesional:* ${UtilsString.upperCase(appointment.professional.title.abbreviation, 'each')} ${UtilsString.upperCase(appointment.professional.firstName, 'each')} ${UtilsString.upperCase(appointment.professional.lastName, 'each')}\n`;
+      content += `*Fecha:* ${format(appointment.day, 'long', i18n.resolvedLanguage)}\n*Horario:* ${appointment.hour} hs.\n\n`;
+      content += `_Si no podes asistir, debes cancelar tu turno con 24 hs. de anticipación._\n\n`;
+      content += `*${t('appName')}* - Turnos médicos`;
+      whatsappForm.setValue('message', content);
+    }
+
+    if (template === EWhatsappTemplate.EMPTY) whatsappForm.setFocus('message');
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.data.areaCode, user?.data.phone, whatsappForm]);
+  }, [appointment, i18n.resolvedLanguage, template, user?.data, whatsappForm]);
 
   // Actions
   // TODO: type response when setted on backend and on service
@@ -206,7 +202,7 @@ export default function WhatsApp(): JSX.Element {
   }
 
   return (
-    <main className='flex flex-1 flex-col gap-6 p-6 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
+    <main className='flex flex-1 flex-col gap-6 p-6 md:gap-8 md:p-8'>
       {/* Section: Page Header */}
       <section className='flex items-center justify-between'>
         <PageHeader breadcrumb={WHATSAPP_CONFIG.breadcrumb} />
@@ -214,7 +210,7 @@ export default function WhatsApp(): JSX.Element {
       </section>
       {/* Section: Page Content */}
       <section className='grid gap-6 md:grid-cols-6 md:gap-8'>
-        <section className='col-span-1 border-none bg-slate-200 bg-transparent shadow-none md:col-span-3 lg:col-span-2'>
+        <section className='col-span-1 border-none bg-slate-200 bg-transparent shadow-none md:col-span-2 lg:col-span-2'>
           <Card>
             <header
               className={cn(
@@ -276,7 +272,7 @@ export default function WhatsApp(): JSX.Element {
             </CardContent>
           </Card>
         </section>
-        <section className='col-span-1 h-fit overflow-y-auto md:col-span-3 lg:col-span-4 xl:col-span-4'>
+        <section className='col-span-1 h-fit md:col-span-4 lg:col-span-4'>
           <Card className='w-full md:max-w-[550px]'>
             <CardHeaderSecondary
               title={t('cardTitle.phoneMessage')}
@@ -319,8 +315,8 @@ export default function WhatsApp(): JSX.Element {
                   </section>
                   {/* Section: Form */}
                   <Form {...whatsappForm}>
-                    <form onSubmit={whatsappForm.handleSubmit(handleSendMessage)} className='mt-4 flex flex-col gap-4'>
-                      <section className='flex h-full w-full items-center space-x-3 rounded-md'>
+                    <form onSubmit={whatsappForm.handleSubmit(handleSendMessage)} className='mt-6 flex flex-col gap-4'>
+                      <section className='flex items-center space-x-3'>
                         <FormLabel>{t('label.from')}</FormLabel>
                         <div className='flex items-center space-x-2 rounded-full bg-fuchsia-200 px-2 py-1 text-xsm font-light text-fuchsia-700'>
                           <Smartphone size={15} strokeWidth={2} className='stroke-fuchsia-700' />
@@ -333,17 +329,17 @@ export default function WhatsApp(): JSX.Element {
                         name='phone'
                         render={({ field }) => (
                           <FormItem>
-                            <FormControl className='h-9'>
-                              <section className='flex h-full w-full items-center space-x-3 rounded-md'>
+                            <FormControl>
+                              <section className='flex items-center space-x-3'>
                                 <FormLabel>{t('label.to')}</FormLabel>
                                 <div className='flex items-center space-x-2 rounded-full bg-fuchsia-200 px-2 py-1 text-xsm font-light text-fuchsia-700'>
                                   <Smartphone size={15} strokeWidth={2} className='stroke-fuchsia-700' />
-                                  <span className=''>
+                                  <span>
                                     {UtilsString.upperCase(user?.data.firstName, 'each')} {UtilsString.upperCase(user?.data.lastName, 'each')}
                                   </span>
                                 </div>
-                                <span className='text-xs font-light text-muted-foreground'>{displayPhone}</span>
-                                <Input className='sr-only pointer-events-none' {...field} />
+                                <span className='text-xs font-light text-muted-foreground'>{`(+${user?.data.areaCode}) ${user?.data.phone && delimiter(user?.data.phone, '-', 6)}`}</span>
+                                <Input className='sr-only pointer-events-none w-0' {...field} />
                               </section>
                             </FormControl>
                             <FormMessage />
@@ -358,8 +354,10 @@ export default function WhatsApp(): JSX.Element {
                             <FormLabel>{t('label.message')}</FormLabel>
                             <FormControl>
                               <>
-                                {template === 'appointment' && <div {...field} dangerouslySetInnerHTML={{ __html: field.value }} />}
-                                {template !== 'appointment' && <Textarea {...field} />}
+                                {template === EWhatsappTemplate.APPOINTMENT && (
+                                  <FakeTextarea {...field} text={UtilsString.convertText(field.value, 'toHtml')} />
+                                )}
+                                {template === EWhatsappTemplate.EMPTY && <Textarea {...field} />}
                               </>
                             </FormControl>
                             <FormMessage />
