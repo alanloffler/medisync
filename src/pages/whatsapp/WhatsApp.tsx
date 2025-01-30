@@ -83,7 +83,7 @@ export default function WhatsApp(): JSX.Element {
     setServerError(true);
   }
 
-  function disconnect(reason: string) {
+  function disconnect(_reason: string) {
     // console.log('[STATUS]: socket disconnected', reason);
     setSocketConnected(false);
     setWhatsappConnected(false);
