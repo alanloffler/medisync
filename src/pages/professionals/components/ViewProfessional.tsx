@@ -21,7 +21,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 // Imports
 import type { IInfoCard } from '@core/components/common/interfaces/infocard.interface';
-import type { IProfessional } from '@professionals/interfaces/professional.interface';
+import type { IProfessional } from '@professionals/interfaces/professional?.data.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import { CalendarService } from '@appointments/services/calendar.service';
 import { EUserType } from '@core/enums/user-type.enum';
@@ -32,12 +32,13 @@ import { UtilsString } from '@core/services/utils/string.service';
 import { motion } from '@core/services/motion.service';
 import { useDelimiter } from '@core/hooks/useDelimiter';
 import { useNotificationsStore } from '@core/stores/notifications.store';
+import { useQuery } from '@tanstack/react-query';
 // React component
 export default function ViewProfessional() {
   const [infoCard, setInfoCard] = useState<IInfoCard>({} as IInfoCard);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [legibleWorkingDays, setLegibleWorkingDays] = useState<string>('');
-  const [professional, setProfessional] = useState<IProfessional>({} as IProfessional);
+  // const [professional, setProfessional] = useState<IProfessional>({} as IProfessional);
   const [showCard, setShowCard] = useState<boolean>(false);
   const [gotoScope, gotoAnimation] = useAnimate();
   const addNotification = useNotificationsStore((state) => state.addNotification);
@@ -46,43 +47,54 @@ export default function ViewProfessional() {
   const { i18n, t } = useTranslation();
   const { id } = useParams();
 
+  const { data: professional, isSuccess } = useQuery<IResponse<IProfessional>, Error>({
+    queryKey: ['professional', 'findOne', id],
+    queryFn: async () => await ProfessionalApiService.findOne(id!),
+  });
+
   useEffect(() => {
-    if (id) {
-      const selectedLocale = i18n.resolvedLanguage || i18n.language;
+    const selectedLocale = i18n.resolvedLanguage || i18n.language;
+    const legibleWorkingDays: string = CalendarService.getLegibleWorkingDays(professional?.data.configuration.workingDays, true, selectedLocale);
+    setLegibleWorkingDays(legibleWorkingDays);
+  }, [i18n.language, i18n.resolvedLanguage, professional?.data.configuration.workingDays]);
 
-      setIsLoading(true);
+  // useEffect(() => {
+  //   if (id) {
+  //     const selectedLocale = i18n.resolvedLanguage || i18n.language;
 
-      ProfessionalApiService.findOne(id)
-        .then((response: IResponse) => {
-          if (response.statusCode === 200) {
-            setProfessional(response.data);
-            // setEmail({
-            //   to: response.data.email,
-            //   subject: t('email.sendToProfessional.subject'),
-            //   body: t('email.sendToProfessional.body', {
-            //     titleAbbreviation: UtilsString.upperCase(response.data.title.abbreviation),
-            //     firstName: UtilsString.upperCase(response.data.firstName, 'each'),
-            //     lastName: UtilsString.upperCase(response.data.lastName, 'each'),
-            //   }),
-            // });
-            setShowCard(true);
+  //     setIsLoading(true);
 
-            const legibleWorkingDays: string = CalendarService.getLegibleWorkingDays(response.data.configuration.workingDays, true, selectedLocale);
-            setLegibleWorkingDays(legibleWorkingDays);
-          }
-          if (response.statusCode > 399) {
-            setInfoCard({ type: 'warning', text: response.message });
-            addNotification({ type: 'warning', message: response.message });
-          }
-          if (response instanceof Error) {
-            setInfoCard({ type: 'error', text: t('error.internalServer') });
-            addNotification({ type: 'error', message: t('error.internalServer') });
-          }
-        })
-        .finally(() => setIsLoading(false));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, i18n.resolvedLanguage]);
+  //     ProfessionalApiService.findOne(id)
+  //       .then((response: IResponse) => {
+  //         if (response.statusCode === 200) {
+  //           setProfessional(response.data);
+  //           // setEmail({
+  //           //   to: response.data.email,
+  //           //   subject: t('email.sendToProfessional.subject'),
+  //           //   body: t('email.sendToProfessional.body', {
+  //           //     titleAbbreviation: UtilsString.upperCase(response.data.title.abbreviation),
+  //           //     firstName: UtilsString.upperCase(response.data.firstName, 'each'),
+  //           //     lastName: UtilsString.upperCase(response.data.lastName, 'each'),
+  //           //   }),
+  //           // });
+  //           setShowCard(true);
+
+  //           const legibleWorkingDays: string = CalendarService.getLegibleWorkingDays(response.data.configuration.workingDays, true, selectedLocale);
+  //           setLegibleWorkingDays(legibleWorkingDays);
+  //         }
+  //         if (response.statusCode > 399) {
+  //           setInfoCard({ type: 'warning', text: response.message });
+  //           addNotification({ type: 'warning', message: response.message });
+  //         }
+  //         if (response instanceof Error) {
+  //           setInfoCard({ type: 'error', text: t('error.internalServer') });
+  //           addNotification({ type: 'error', message: t('error.internalServer') });
+  //         }
+  //       })
+  //       .finally(() => setIsLoading(false));
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [id, i18n.resolvedLanguage]);
 
   function gotoAnimateOver(): void {
     const { keyframes, options } = motion.x(3).type('bounce').animate();
@@ -104,10 +116,13 @@ export default function ViewProfessional() {
       {/* Section: Page content */}
       <section className='mx-auto mt-4 flex w-full flex-row px-2 md:w-[550px]'>
         <Card className='w-full'>
-          {showCard ? (
+          {isSuccess ? (
             <CardHeaderPrimary
               className='justify-center'
-              title={UtilsString.upperCase(`${professional.title.abbreviation} ${professional.firstName} ${professional.lastName}`, 'each')}
+              title={UtilsString.upperCase(
+                `${professional?.data.title.abbreviation} ${professional?.data.firstName} ${professional?.data.lastName}`,
+                'each',
+              )}
             />
           ) : (
             <InfoCard type={infoCard.type} text={infoCard.text} className='py-6' />
@@ -115,17 +130,17 @@ export default function ViewProfessional() {
           {isLoading ? (
             <LoadingDB text={t('loading.professional')} className='-mt-12 py-6' />
           ) : (
-            showCard && (
+            isSuccess && (
               <>
                 <CardContent className='mt-6 space-y-6'>
-                  {professional.description && (
+                  {professional?.data.description && (
                     <section className='flex space-x-4 text-ellipsis rounded-md bg-slate-100 px-4 py-3 italic text-slate-600'>
-                      <span>{UtilsString.upperCase(professional.description)}</span>
+                      <span>{UtilsString.upperCase(professional?.data.description)}</span>
                     </section>
                   )}
                   <section className='space-y-3'>
                     <h2 className='pt-2 text-xs font-medium uppercase leading-none text-slate-500'>{t('label.scheduleTitle')}</h2>
-                    {professional.configuration?.workingDays && (
+                    {professional?.data.configuration?.workingDays && (
                       <div className='flex items-center space-x-3'>
                         <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
                           <CalendarDays size={17} strokeWidth={2} />
@@ -133,63 +148,64 @@ export default function ViewProfessional() {
                         <span className='text-sm'>{legibleWorkingDays}</span>
                       </div>
                     )}
-                    {professional.configuration?.scheduleTimeInit && professional.configuration?.scheduleTimeEnd && (
+                    {professional?.data.configuration.scheduleTimeInit && professional?.data.configuration.scheduleTimeEnd && (
                       <div className='flex items-center space-x-3'>
                         <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
                           <CalendarClock size={17} strokeWidth={2} />
                         </div>
                         <span className='text-sm'>
-                          {professional.configuration?.scheduleTimeInit &&
-                            professional.configuration?.scheduleTimeEnd &&
-                            !professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableInit &&
-                            !professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableEnd &&
-                            `${professional.configuration.scheduleTimeInit} ${t('words.hoursSeparator')} ${professional.configuration.scheduleTimeEnd}`}
-                          {professional.configuration?.scheduleTimeInit &&
-                            professional.configuration?.scheduleTimeEnd &&
-                            professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableInit &&
-                            professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableEnd &&
-                            `${professional.configuration.scheduleTimeInit} ${t('words.hoursSeparator')} ${professional.configuration.unavailableTimeSlot?.timeSlotUnavailableInit} ${t('words.slotsSeparator')} ${professional.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd} ${t('words.hoursSeparator')} ${professional.configuration.scheduleTimeEnd}`}
+                          here
+                          {professional?.data.configuration?.scheduleTimeInit &&
+                            professional?.data.configuration?.scheduleTimeEnd &&
+                            !professional?.data.configuration?.unavailableTimeSlot?.timeSlotUnavailableInit &&
+                            !professional?.data.configuration?.unavailableTimeSlot?.timeSlotUnavailableEnd &&
+                            `${professional?.data.configuration.scheduleTimeInit} ${t('words.hoursSeparator')} ${professional?.data.configuration.scheduleTimeEnd}`}
+                          {professional?.data.configuration?.scheduleTimeInit &&
+                            professional?.data.configuration?.scheduleTimeEnd &&
+                            professional?.data.configuration?.unavailableTimeSlot?.timeSlotUnavailableInit &&
+                            professional?.data.configuration?.unavailableTimeSlot?.timeSlotUnavailableEnd &&
+                            `${professional?.data.configuration.scheduleTimeInit} ${t('words.hoursSeparator')} ${professional?.data.configuration.unavailableTimeSlot?.timeSlotUnavailableInit} ${t('words.slotsSeparator')} ${professional?.data.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd} ${t('words.hoursSeparator')} ${professional?.data.configuration.scheduleTimeEnd}`}
                         </span>
                       </div>
                     )}
                   </section>
                   <section className='space-y-3'>
                     <h2 className='pt-2 text-xs font-medium uppercase leading-none text-slate-500'>{t('label.contact')}</h2>
-                    {professional.phone && (
+                    {professional?.data.phone && (
                       <div className='flex items-center space-x-3'>
                         <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
                           <Smartphone size={17} strokeWidth={2} />
                         </div>
-                        <span className='text-sm'>{delimiter(professional.phone, '-', 6)}</span>
+                        <span className='text-sm'>{delimiter(professional?.data.phone, '-', 6)}</span>
                       </div>
                     )}
-                    {professional.email && (
+                    {professional?.data.email && (
                       <div className='flex items-center space-x-3'>
                         <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
                           <Mail size={17} strokeWidth={2} />
                         </div>
-                        <span className='text-sm'>{professional.email}</span>
+                        <span className='text-sm'>{professional?.data.email}</span>
                       </div>
                     )}
-                    {professional.area && professional.specialization && (
+                    {professional?.data.area && professional?.data.specialization && (
                       <div className='flex justify-end space-x-4 pt-3'>
                         <Badge variant='default'>
                           <Tag size={13} strokeWidth={2} className='stroke-slate-600' />
-                          <span>{UtilsString.upperCase(professional.area.name)}</span>
+                          <span>{UtilsString.upperCase(professional?.data.area.name)}</span>
                         </Badge>
                         <Badge variant='default'>
                           <Tag size={13} strokeWidth={2} className='stroke-slate-600' />
-                          <span>{UtilsString.upperCase(professional.specialization.name)}</span>
+                          <span>{UtilsString.upperCase(professional?.data.specialization.name)}</span>
                         </Badge>
                       </div>
                     )}
                   </section>
                 </CardContent>
                 <CardFooter className='justify-between border-t p-2'>
-                  <AvailableProfessional items={PV_CONFIG.select} data={{ _id: professional._id, available: professional.available }} />
+                  <AvailableProfessional items={PV_CONFIG.select} data={{ _id: professional?.data._id, available: professional?.data.available }} />
                   <section className='flex items-center justify-end space-x-2'>
                     <TableButton
-                      callback={() => navigate(`/professionals/update/${professional._id}`)}
+                      callback={() => navigate(`/professionals/update/${professional?.data._id}`)}
                       className='h-8 w-8 hover:bg-amber-100/75 hover:text-amber-400'
                       tooltip={t('tooltip.edit')}
                     >
@@ -201,10 +217,10 @@ export default function ViewProfessional() {
                         <Trans
                           i18nKey={'dialog.deleteProfessional.content'}
                           values={{
-                            titleAbbreviation: UtilsString.upperCase(professional.title.abbreviation),
-                            firstName: UtilsString.upperCase(professional.firstName, 'each'),
-                            lastName: UtilsString.upperCase(professional.lastName, 'each'),
-                            identityCard: i18n.format(professional.dni, 'number', i18n.resolvedLanguage),
+                            titleAbbreviation: UtilsString.upperCase(professional?.data.title.abbreviation),
+                            firstName: UtilsString.upperCase(professional?.data.firstName, 'each'),
+                            lastName: UtilsString.upperCase(professional?.data.lastName, 'each'),
+                            identityCard: i18n.format(professional?.data.dni, 'number', i18n.resolvedLanguage),
                           }}
                           components={{
                             span: <span className='font-semibold' />,
@@ -225,7 +241,7 @@ export default function ViewProfessional() {
                       <Separator orientation='vertical' className='h-5' />
                     </div>
                     <TableButton
-                      callback={() => navigate(`/email/professional/${professional._id}`)}
+                      callback={() => navigate(`/email/professional/${professional?.data._id}`)}
                       className='h-8 w-8 hover:bg-purple-100/75 hover:text-purple-400'
                       tooltip={t('tooltip.sendEmail')}
                     >
@@ -233,7 +249,9 @@ export default function ViewProfessional() {
                     </TableButton>
                     <TableButton
                       callback={() =>
-                        navigate(`/whatsapp/${professional._id}`, { state: { type: EUserType.PROFESSIONAL, template: EWhatsappTemplate.EMPTY } })
+                        navigate(`/whatsapp/${professional?.data._id}`, {
+                          state: { type: EUserType.PROFESSIONAL, template: EWhatsappTemplate.EMPTY },
+                        })
                       }
                       className='h-8 w-8 hover:bg-emerald-100/75 hover:text-emerald-400'
                       tooltip={t('tooltip.sendMessage')}
