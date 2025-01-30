@@ -157,21 +157,25 @@ export default function WhatsApp(): JSX.Element {
   });
 
   useEffect(() => {
-    console.log(appointment);
     if (user?.data.phone) {
       whatsappForm.setValue('phone', Number(`${user?.data.areaCode}${user?.data.phone}`));
-    }
 
-    if (template === EWhatsappTemplate.APPOINTMENT) {
-      let content: string = `Hola *${UtilsString.upperCase(user?.data.firstName, 'each')}*, este es el detalle de tu turno.\n\n`;
-      content += `*Profesional:* ${UtilsString.upperCase(appointment.professional.title.abbreviation, 'each')} ${UtilsString.upperCase(appointment.professional.firstName, 'each')} ${UtilsString.upperCase(appointment.professional.lastName, 'each')}\n`;
-      content += `*Fecha:* ${format(appointment.day, 'long', i18n.resolvedLanguage)}\n*Horario:* ${appointment.hour} hs.\n\n`;
-      content += `_Si no podes asistir, debes cancelar tu turno con 24 hs. de anticipación._\n\n`;
-      content += `*${t('appName')}* - Turnos médicos`;
-      whatsappForm.setValue('message', content);
-    }
+      if (template === EWhatsappTemplate.APPOINTMENT) {
+        let content: string = `${t('whatsapp.template.appointment.header', { firstName: UtilsString.upperCase(appointment.user.firstName, 'each') })}`;
+        content += `${t('whatsapp.template.appointment.body', {
+          professional: UtilsString.upperCase(
+            `${appointment.professional.title.abbreviation} ${appointment.professional.firstName} ${appointment.professional.lastName}`,
+            'each',
+          ),
+          date: format(appointment.day, 'long', i18n.resolvedLanguage),
+          hour: appointment.hour,
+        })}`;
+        content += `${t('whatsapp.template.appointment.footer', { adminName: 'Admin', appName: t('appName') })}`;
+        whatsappForm.setValue('message', content);
+      }
 
-    if (template === EWhatsappTemplate.EMPTY) whatsappForm.setFocus('message');
+      if (template === EWhatsappTemplate.EMPTY) whatsappForm.setFocus('message');
+    }
   }, [appointment, i18n.resolvedLanguage, t, template, user?.data, whatsappForm]);
 
   // Actions
