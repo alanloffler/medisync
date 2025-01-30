@@ -404,6 +404,11 @@
       "disconnected": "WhatsApp desconectado"
     },
     "template": {
+      "appointment": {
+        "header": "Hola *{{firstName}}*, este es el detalle de tu turno.\n\n",
+        "body": "*Profesional:* {{professional}}\n*Fecha:* {{date}}\n*Horario:* {{hour}} hs.\n\n",
+        "footer": "_Si no podes asistir, debes cancelar tu turno con 24 hs. de anticipación._\n\n_{{adminName}}_ de *{{appName}}*"
+      },
       "appointmentReceipt": {
         "header": "*{{appName}}* - Comprobante de turno\n\n",
         "body": "Hola _{{userName}}_, este es el comprobante de tu turno con _{{professionalName}}_, para el día *{{appointmentDay}}* a las *{{appointmentHour}} horas*.\n\n",

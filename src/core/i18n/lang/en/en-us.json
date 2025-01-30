@@ -404,6 +404,11 @@
       "disconnected": "WhatsApp disconnected"
     },
     "template": {
+      "appointment": {
+        "header": "Hello *{{firstName}}*, this is the detail of your appointment.\n\n",
+        "body": "*Professional:* {{professional}}\n*Date:* {{date}}\n*Hour:* {{hour}} h.\n\n",
+        "footer": "_If you cannot attend, you must cancel your appointment with 24 hours in advance._\n\n_{{adminName}}_ from *{{appName}}*"
+      },
       "appointmentReceipt": {
         "header": "*{{appName}}* - Appointment receipt\n\n",
         "body": "Hello _{{userName}}_, this is the receipt of your appointment with _{{professionalName}}_, for the day *{{appointmentDay}}* at *{{appointmentHour}} hours*.\n\n",
