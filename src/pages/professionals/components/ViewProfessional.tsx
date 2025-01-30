@@ -9,7 +9,6 @@ import { Separator } from '@core/components/ui/separator';
 import { AvailableProfessional } from '@professionals/components/common/AvailableProfessional';
 import { BackButton } from '@core/components/common/BackButton';
 import { CardHeaderPrimary } from '@core/components/common/header/CardHeaderPrimary';
-import { IconMedic } from '@core/components/icons/IconMedic';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
@@ -103,7 +102,7 @@ export default function ViewProfessional() {
         <BackButton label={t('button.back')} />
       </header>
       {/* Section: Page content */}
-      <section className='mx-auto mt-4 flex w-full flex-row px-2 md:w-[500px]'>
+      <section className='mx-auto mt-4 flex w-full flex-row px-2 md:w-[550px]'>
         <Card className='w-full'>
           {showCard ? (
             <CardHeaderPrimary
@@ -121,12 +120,11 @@ export default function ViewProfessional() {
                 <CardContent className='mt-6 space-y-6'>
                   {professional.description && (
                     <section className='flex space-x-4 text-ellipsis rounded-md bg-slate-100 px-4 py-3 italic text-slate-600'>
-                      <IconMedic name={professional.specialization.icon} size={20} />
                       <span>{UtilsString.upperCase(professional.description)}</span>
                     </section>
                   )}
                   <section className='space-y-3'>
-                    <h2 className='pt-2 text-xsm font-semibold uppercase leading-none text-slate-700'>{t('label.scheduleTitle')}</h2>
+                    <h2 className='pt-2 text-xs font-medium uppercase leading-none text-slate-500'>{t('label.scheduleTitle')}</h2>
                     {professional.configuration?.workingDays && (
                       <div className='flex items-center space-x-3'>
                         <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
@@ -156,7 +154,7 @@ export default function ViewProfessional() {
                     )}
                   </section>
                   <section className='space-y-3'>
-                    <h2 className='pt-2 text-xsm font-semibold uppercase leading-none text-slate-700'>{t('label.contact')}</h2>
+                    <h2 className='pt-2 text-xs font-medium uppercase leading-none text-slate-500'>{t('label.contact')}</h2>
                     {professional.phone && (
                       <div className='flex items-center space-x-3'>
                         <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
