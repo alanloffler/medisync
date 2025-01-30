@@ -144,6 +144,9 @@ export default function WhatsApp(): JSX.Element {
   });
 
   // TODO: manage errors and loading
+  // TODO: check if data is passed by location state then do not fetch this data
+  // This is possible passing area code and phone number from database and receiving it in location state
+  // at the appointment property
   const { data: user, isLoading } = useQuery<IResponse<IUser | IProfessional>, Error>({
     queryKey: ['whatsapp', id, type],
     queryFn: async () => {
@@ -156,6 +159,7 @@ export default function WhatsApp(): JSX.Element {
   });
 
   useEffect(() => {
+    console.log(appointment);
     if (user?.data.phone) {
       whatsappForm.setValue('phone', Number(`${user?.data.areaCode}${user?.data.phone}`));
     }
@@ -171,8 +175,7 @@ export default function WhatsApp(): JSX.Element {
 
     if (template === EWhatsappTemplate.EMPTY) whatsappForm.setFocus('message');
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [appointment, i18n.resolvedLanguage, template, user?.data, whatsappForm]);
+  }, [appointment, i18n.resolvedLanguage, t, template, user?.data, whatsappForm]);
 
   // Actions
   // TODO: type response when setted on backend and on service
