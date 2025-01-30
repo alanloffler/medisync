@@ -214,7 +214,7 @@ export default function WhatsApp(): JSX.Element {
       </section>
       {/* Section: Page Content */}
       <section className='grid gap-6 md:grid-cols-6 md:gap-8'>
-        <section className='col-span-1 border-none bg-slate-200 bg-transparent shadow-none md:col-span-2 lg:col-span-2'>
+        <section className='col-span-1 border-none bg-slate-200 bg-transparent shadow-none md:col-span-3 lg:col-span-2'>
           <Card>
             <header
               className={cn(
@@ -276,7 +276,7 @@ export default function WhatsApp(): JSX.Element {
             </CardContent>
           </Card>
         </section>
-        <section className='col-span-1 h-fit md:col-span-4 lg:col-span-4'>
+        <section className='col-span-1 h-fit md:col-span-3 lg:col-span-4'>
           <Card className='w-full md:max-w-[550px]'>
             <CardHeaderSecondary
               title={t('cardTitle.phoneMessage')}
