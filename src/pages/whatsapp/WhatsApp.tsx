@@ -370,7 +370,7 @@ export default function WhatsApp(): JSX.Element {
                         )}
                       />
                       {JSON.stringify(errorMessage?.message)}
-                      {isPendingMessage && <LoadingDB text={t('loading.sendingPhoneMessage')} className='w-full justify-start p-0 text-primary' />}
+                      {isPendingMessage && <LoadingDB text={t('loading.sendingPhoneMessage')} className='w-full justify-start p-0' />}
                       {isErrorMessage && <InfoCard type='error' text={errorMessage.message} className='justify-start p-0 text-rose-400' />}
                       <footer className='mt-2 grid grid-cols-1 space-y-2 md:flex md:justify-end md:gap-6 md:space-y-0'>
                         <Button
