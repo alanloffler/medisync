@@ -401,7 +401,8 @@
   "whatsapp": {
     "status": {
       "connected": "WhatsApp connected",
-      "disconnected": "WhatsApp disconnected"
+      "disconnected": "WhatsApp disconnected",
+      "messageSent": "Message sent successfully"
     },
     "template": {
       "appointment": {
