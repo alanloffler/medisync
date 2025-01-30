@@ -64,6 +64,11 @@
     "viewAppointment": "Turno"
   },
   "cardContent": {
+    "formatText": {
+      "title": "Formato de texto:",
+      "bold": "<b>negrita:</b> *negrita*",
+      "italic": "<i>itálica:</i> _itálica_"
+    },
     "phoneMessage": {
       "professional": "Vas a enviar un mensaje de texto de WhatsApp al teléfono celular del profesional <span>{{professional}}</span>.",
       "user": "Vas a enviar un mensaje de texto de WhatsApp al teléfono celular del paciente <span>{{patient}}</span>."

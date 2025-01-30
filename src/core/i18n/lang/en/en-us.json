@@ -64,6 +64,11 @@
     "viewAppointment": "Appointment"
   },
   "cardContent": {
+    "formatText": {
+      "title": "Text format:",
+      "bold": "<b>bold:</b> *bold*",
+      "italic": "<i>italic:</i> _italic_"
+    },
     "phoneMessage": {
       "professional": "You are going to send a WhatsApp text message to professional <span>{{professional}}'s</span> cell phone.",
       "user": "You are going to send a WhatsApp text message to patient <span>{{patient}}'s</span> cell phone."
