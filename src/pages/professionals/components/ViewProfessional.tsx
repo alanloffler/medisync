@@ -31,6 +31,7 @@ import { UtilsString } from '@core/services/utils/string.service';
 import { motion } from '@core/services/motion.service';
 import { useDelimiter } from '@core/hooks/useDelimiter';
 import { useNotificationsStore } from '@core/stores/notifications.store';
+import { CardHeaderPrimary } from '@core/components/common/header/CardHeaderPrimary';
 // React component
 export default function ViewProfessional() {
   const [infoCard, setInfoCard] = useState<IInfoCard>({} as IInfoCard);
@@ -104,11 +105,10 @@ export default function ViewProfessional() {
       <section className='mx-auto mt-4 flex w-full flex-row px-2 md:w-[500px]'>
         <Card className='w-full'>
           {showCard ? (
-            <div className='relative flex items-center justify-center rounded-t-lg bg-slate-200 p-3 text-slate-700'>
-              <h1 className='text-center text-xl font-bold'>
-                {UtilsString.upperCase(`${professional.title.abbreviation} ${professional.firstName} ${professional.lastName}`, 'each')}
-              </h1>
-            </div>
+            <CardHeaderPrimary
+              className='justify-center'
+              title={UtilsString.upperCase(`${professional.title.abbreviation} ${professional.firstName} ${professional.lastName}`, 'each')}
+            />
           ) : (
             <InfoCard type={infoCard.type} text={infoCard.text} className='py-6' />
           )}
