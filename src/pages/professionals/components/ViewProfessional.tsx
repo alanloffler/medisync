@@ -23,6 +23,8 @@ import type { IInfoCard } from '@core/components/common/interfaces/infocard.inte
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import { CalendarService } from '@appointments/services/calendar.service';
+import { EUserType } from '@core/enums/user-type.enum';
+import { EWhatsappTemplate } from '@whatsapp/enums/template.enum';
 import { PROFESSIONAL_VIEW_CONFIG as PV_CONFIG } from '@config/professionals/professional-view.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
@@ -202,7 +204,9 @@ export default function ViewProfessional() {
                         variant='ghost'
                         size='miniIcon'
                         className='transition-transform hover:scale-110 hover:bg-emerald-100 hover:text-emerald-400 hover:animate-in'
-                        onClick={() => navigate(`/whatsapp/professional/${professional._id}`)}
+                        onClick={() =>
+                          navigate(`/whatsapp/${professional._id}`, { state: { type: EUserType.PROFESSIONAL, template: EWhatsappTemplate.EMPTY } })
+                        }
                       >
                         <MessageCircle size={18} strokeWidth={1.5} />
                       </Button>
