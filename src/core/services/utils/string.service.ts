@@ -27,9 +27,13 @@ export class UtilsString {
     return result;
   }
 
-  public static convertText(text: string, type = 'toHtml'): string {
+  public static convertText(text: string, type: 'toHtml' | 'toWhatsApp' = 'toHtml'): string {
     if (type === 'toHtml') {
-      text = text.replace(/\\\*/g, '&#42;').replace(/\\_/g, '&#95;').replace(/\\~/g, '&#126;').replace(/\\`/g, '&#96;');
+      text = text.replace(/\\\*/g, '&#42;')
+                 .replace(/\\_/g, '&#95;')
+                 .replace(/\\~/g, '&#126;')
+                 .replace(/\\`/g, '&#96;')
+                 .replace(/\n/g, '<br>');
     }
 
     const patterns: { [key: string]: [RegExp, string][] } = {
@@ -44,6 +48,8 @@ export class UtilsString {
         [/&#96;/g, '`'],
       ],
       toWhatsApp: [
+        [/<br\s*\/?>/gi, '\n'],
+        [/<br\s*>\s*<\/br>/gi, '\n'],
         [/<b>(.*?)<\/b>/g, '*$1*'],
         [/<strong>(.*?)<\/strong>/g, '*$1*'],
         [/<i>(.*?)<\/i>/g, '_$1_'],
