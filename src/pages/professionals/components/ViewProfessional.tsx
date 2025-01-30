@@ -1,18 +1,20 @@
 // Icons: https://lucide.dev/icons/
-import { ArrowRight, CalendarClock, CalendarDays, Mail, MessageCircle, PencilLine, Share2, Smartphone, Tag, Trash2 } from 'lucide-react';
+import { ArrowRight, CalendarClock, CalendarDays, Mail, MessageCircle, PencilLine, Smartphone, Tag, Trash2 } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Badge } from '@core/components/ui/badge';
 import { Button } from '@core/components/ui/button';
 import { Card, CardContent, CardFooter } from '@core/components/ui/card';
+import { Separator } from '@core/components/ui/separator';
 // Components
 import { AvailableProfessional } from '@professionals/components/common/AvailableProfessional';
 import { BackButton } from '@core/components/common/BackButton';
+import { CardHeaderPrimary } from '@core/components/common/header/CardHeaderPrimary';
 import { IconMedic } from '@core/components/icons/IconMedic';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
 import { RemoveDialog } from '@core/components/common/RemoveDialog';
-import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
+import { TableButton } from '@core/components/common/TableButton';
 // External imports
 import { Trans, useTranslation } from 'react-i18next';
 import { useAnimate } from 'motion/react';
@@ -31,7 +33,6 @@ import { UtilsString } from '@core/services/utils/string.service';
 import { motion } from '@core/services/motion.service';
 import { useDelimiter } from '@core/hooks/useDelimiter';
 import { useNotificationsStore } from '@core/stores/notifications.store';
-import { CardHeaderPrimary } from '@core/components/common/header/CardHeaderPrimary';
 // React component
 export default function ViewProfessional() {
   const [infoCard, setInfoCard] = useState<IInfoCard>({} as IInfoCard);
@@ -188,48 +189,14 @@ export default function ViewProfessional() {
                 </CardContent>
                 <CardFooter className='justify-between border-t p-2'>
                   <AvailableProfessional items={PV_CONFIG.select} data={{ _id: professional._id, available: professional.available }} />
-                  <section className='space-x-2'>
-                    <TooltipWrapper tooltip={t('tooltip.sendEmail')}>
-                      <Button
-                        variant='ghost'
-                        size='miniIcon'
-                        className='transition-transform hover:scale-110 hover:bg-purple-100 hover:text-purple-400 hover:animate-in'
-                        onClick={() => navigate(`/email/professional/${professional._id}`)}
-                      >
-                        <Mail size={18} strokeWidth={1.5} />
-                      </Button>
-                    </TooltipWrapper>
-                    <TooltipWrapper tooltip={t('tooltip.sendMessage')}>
-                      <Button
-                        variant='ghost'
-                        size='miniIcon'
-                        className='transition-transform hover:scale-110 hover:bg-emerald-100 hover:text-emerald-400 hover:animate-in'
-                        onClick={() =>
-                          navigate(`/whatsapp/${professional._id}`, { state: { type: EUserType.PROFESSIONAL, template: EWhatsappTemplate.EMPTY } })
-                        }
-                      >
-                        <MessageCircle size={18} strokeWidth={1.5} />
-                      </Button>
-                    </TooltipWrapper>
-                    <TooltipWrapper tooltip={t('tooltip.share')}>
-                      <Button
-                        variant='ghost'
-                        size='miniIcon'
-                        className='transition-transform hover:scale-110 hover:bg-pink-100 hover:text-pink-400 hover:animate-in'
-                      >
-                        <Share2 size={18} strokeWidth={1.5} />
-                      </Button>
-                    </TooltipWrapper>
-                    <TooltipWrapper tooltip={t('tooltip.edit')}>
-                      <Button
-                        variant='ghost'
-                        size='miniIcon'
-                        onClick={() => navigate(`/professionals/update/${professional._id}`)}
-                        className='transition-transform hover:scale-110 hover:bg-amber-100 hover:text-amber-400 hover:animate-in'
-                      >
-                        <PencilLine size={18} strokeWidth={1.5} />
-                      </Button>
-                    </TooltipWrapper>
+                  <section className='flex items-center justify-end space-x-2'>
+                    <TableButton
+                      callback={() => navigate(`/professionals/update/${professional._id}`)}
+                      className='h-8 w-8 hover:bg-amber-100/75 hover:text-amber-400'
+                      tooltip={t('tooltip.edit')}
+                    >
+                      <PencilLine size={17} strokeWidth={1.5} />
+                    </TableButton>
                     <RemoveDialog
                       action={() => Promise.resolve({} as IResponse)}
                       dialogContent={
@@ -254,8 +221,27 @@ export default function ViewProfessional() {
                         removeButton: t('button.deleteProfessional'),
                       }}
                       tooltip={t('tooltip.delete')}
-                      triggerButton={<Trash2 size={18} strokeWidth={1.5} />}
+                      triggerButton={<Trash2 size={17} strokeWidth={1.5} />}
                     />
+                    <div className='px-1'>
+                      <Separator orientation='vertical' className='h-5' />
+                    </div>
+                    <TableButton
+                      callback={() => navigate(`/email/professional/${professional._id}`)}
+                      className='h-8 w-8 hover:bg-purple-100/75 hover:text-purple-400'
+                      tooltip={t('tooltip.sendEmail')}
+                    >
+                      <Mail size={17} strokeWidth={1.5} />
+                    </TableButton>
+                    <TableButton
+                      callback={() =>
+                        navigate(`/whatsapp/${professional._id}`, { state: { type: EUserType.PROFESSIONAL, template: EWhatsappTemplate.EMPTY } })
+                      }
+                      className='h-8 w-8 hover:bg-emerald-100/75 hover:text-emerald-400'
+                      tooltip={t('tooltip.sendMessage')}
+                    >
+                      <MessageCircle size={17} strokeWidth={1.5} />
+                    </TableButton>
                   </section>
                 </CardFooter>
               </>
