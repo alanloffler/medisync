@@ -32,11 +32,13 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 // Imports
+import type { EUserType } from '@core/enums/user-type.enum';
 import type { IDataTableProfessionals, ITableManager } from '@core/interfaces/table.interface';
 import type { IPaginatedProfessionalsVars } from '@professionals/interfaces/mutation-vars.interface';
 import type { IProfessional, IProfessionalsData } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import { EProfessionalSearch } from '@professionals/enums/professional-search.enum';
+import { EWhatsappTemplate } from '@whatsapp/enums/template.enum';
 import { PROFESSIONALS_CONFIG as PROF_CONFIG } from '@config/professionals/professionals.config';
 import { PROFESSIONAL_VIEW_CONFIG as PV_CONFIG } from '@config/professionals/professional-view.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
@@ -274,7 +276,9 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
               {!row.original.email ? <MailX size={16} strokeWidth={1.5} /> : <Mail size={16} strokeWidth={1.5} />}
             </TableButton>
             <TableButton
-              callback={() => navigate(`/whatsapp/professional/${row.original._id}`)}
+              callback={() =>
+                navigate(`/whatsapp/${row.original._id}`, { state: { type: EUserType.PROFESSIONAL, template: EWhatsappTemplate.EMPTY } })
+              }
               className='hover:text-emerald-400'
               tooltip={t('tooltip.sendMessage')}
             >
