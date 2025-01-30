@@ -4,6 +4,7 @@ import { ArrowRight, CreditCard, Mail, MailX, MessageCircle, PencilLine, Smartph
 import { Button } from '@core/components/ui/button';
 import { Card, CardContent } from '@core/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
+import { Separator } from '@core/components/ui/separator';
 // Components
 import { ApposRecord } from '@appointments/components/appos-record/ApposRecord';
 import { BackButton } from '@core/components/common/BackButton';
@@ -182,6 +183,23 @@ export default function ViewUser() {
                 </CardContent>
                 <section className='flex items-center justify-end space-x-2 border-t p-2'>
                   <TableButton
+                    callback={() => navigate(`/users/update/${user.data._id}`)}
+                    className='h-8 w-8 hover:bg-amber-100/75 hover:text-amber-400'
+                    tooltip={t('tooltip.edit')}
+                  >
+                    <PencilLine size={17} strokeWidth={1.5} />
+                  </TableButton>
+                  <TableButton
+                    callback={handleRemoveUserDialog}
+                    className='h-8 w-8 hover:bg-red-100/75 hover:text-red-400'
+                    tooltip={t('tooltip.delete')}
+                  >
+                    <Trash2 size={17} strokeWidth={1.5} />
+                  </TableButton>
+                  <div className='px-1'>
+                    <Separator orientation='vertical' className='h-5 w-[1px]' />
+                  </div>
+                  <TableButton
                     callback={() => navigate(`/email/user/${user.data._id}`)}
                     className='h-8 w-8 hover:bg-purple-100/75 hover:text-purple-400'
                     disabled={!user.data.email}
@@ -195,20 +213,6 @@ export default function ViewUser() {
                     tooltip={t('tooltip.sendMessage')}
                   >
                     <MessageCircle size={17} strokeWidth={1.5} />
-                  </TableButton>
-                  <TableButton
-                    callback={() => navigate(`/users/update/${user.data._id}`)}
-                    className='h-8 w-8 hover:bg-amber-100/75 hover:text-amber-400'
-                    tooltip={t('tooltip.edit')}
-                  >
-                    <PencilLine size={17} strokeWidth={1.5} />
-                  </TableButton>
-                  <TableButton
-                    callback={handleRemoveUserDialog}
-                    className='h-8 w-8 hover:bg-red-100/75 hover:text-red-400'
-                    tooltip={t('tooltip.delete')}
-                  >
-                    <Trash2 size={17} strokeWidth={1.5} />
                   </TableButton>
                 </section>
               </Card>
