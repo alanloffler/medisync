@@ -12,11 +12,13 @@ import { useMutation } from '@tanstack/react-query';
 // Imports
 import type { IResponse } from '@core/interfaces/response.interface';
 import { REMOVE_DIALOG_CONFIG } from '@config/common.config';
+import { cn } from '@lib/utils';
 import { motion } from '@core/services/motion.service';
 // Interfaces
 interface IRemoveDialog {
   action: () => Promise<IResponse | Error>;
   callback?: any;
+  className?: string;
   dialogContent: ReactNode;
   dialogTexts: IDialogTexts;
   tooltip: string;
@@ -31,7 +33,7 @@ interface IDialogTexts {
   title?: string;
 }
 // React component
-export function RemoveDialog({ action, callback, dialogContent, dialogTexts, tooltip, triggerButton }: IRemoveDialog) {
+export function RemoveDialog({ action, callback, className, dialogContent, dialogTexts, tooltip, triggerButton }: IRemoveDialog) {
   const [openDialog, setOpenDialog] = useState(false);
   const [scope, animation] = useAnimate();
 
@@ -69,7 +71,7 @@ export function RemoveDialog({ action, callback, dialogContent, dialogTexts, too
     <>
       <TooltipWrapper tooltip={tooltip}>
         <button
-          className='flex h-7 w-7 items-center justify-center rounded-md bg-transparent hover:bg-red-100/75 hover:text-red-400'
+          className={cn('flex h-8 w-8 items-center justify-center rounded-md bg-transparent hover:bg-red-100/75 hover:text-red-400', className)}
           onClick={() => setOpenDialog(true)}
           onMouseOut={animateOut}
           onMouseOver={animateOver}
