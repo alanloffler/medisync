@@ -70,7 +70,7 @@ export default function WhatsApp(): JSX.Element {
   const { appointment, type, template } = location.state as IAppoLocationState;
 
   function connect() {
-    console.log('[STATUS]: socket connected', socket.id);
+    // console.log('[STATUS]: socket connected', socket.id);
     setConnectingSocket(false);
     setSocketConnected(true);
     setSocketId(socket.id);
@@ -79,18 +79,18 @@ export default function WhatsApp(): JSX.Element {
   }
 
   function connect_error() {
-    console.log('[ERROR]: internal server error');
+    // console.log('[ERROR]: internal server error');
     setServerError(true);
   }
 
   function disconnect(reason: string) {
-    console.log('[STATUS]: socket disconnected', reason);
+    // console.log('[STATUS]: socket disconnected', reason);
     setSocketConnected(false);
     setWhatsappConnected(false);
   }
 
   function status(status: { message: string; connected: boolean; data: string }) {
-    console.log('[STATUS]: WhatsApp', { message: status.message, connected: status.connected, data: status.data });
+    // console.log('[STATUS]: WhatsApp', { message: status.message, connected: status.connected, data: status.data });
     if (status.connected) {
       setWhatsappConnected(true);
       setWhatsappNumber(status.data);
@@ -100,7 +100,7 @@ export default function WhatsApp(): JSX.Element {
   }
 
   function qr(qrcode: string) {
-    console.log(qrcode);
+    // console.log(qrcode);
     setQrcode(qrcode);
   }
 
@@ -190,7 +190,7 @@ export default function WhatsApp(): JSX.Element {
     mutationKey: ['whatsapp', 'send'],
     mutationFn: async (data) => await WhatsappApiService.send(data),
     onError: (error) => {
-      console.log(error.message);
+      // console.log(error.message);
       addNotification({ type: 'error', message: error.message });
     },
     retry: 1,
