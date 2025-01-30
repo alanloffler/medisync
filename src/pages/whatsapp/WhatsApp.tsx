@@ -33,7 +33,7 @@ import type { IProfessional } from '@professionals/interfaces/professional.inter
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
 import { EUserType } from '@core/enums/user-type.enum';
-import { EWhatsappTemplate } from './enums/template.enum';
+import { EWhatsappTemplate } from '@whatsapp/enums/template.enum';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
@@ -144,9 +144,6 @@ export default function WhatsApp(): JSX.Element {
   });
 
   // TODO: manage errors and loading
-  // TODO: check if data is passed by location state then do not fetch this data
-  // This is possible passing area code and phone number from database and receiving it in location state
-  // at the appointment property
   const { data: user, isLoading } = useQuery<IResponse<IUser | IProfessional>, Error>({
     queryKey: ['whatsapp', id, type],
     queryFn: async () => {
@@ -174,7 +171,6 @@ export default function WhatsApp(): JSX.Element {
     }
 
     if (template === EWhatsappTemplate.EMPTY) whatsappForm.setFocus('message');
-
   }, [appointment, i18n.resolvedLanguage, t, template, user?.data, whatsappForm]);
 
   // Actions
@@ -290,6 +286,8 @@ export default function WhatsApp(): JSX.Element {
                 <LoadingDB text={t(type === 'user' ? 'loading.userDetails' : 'loading.professionalDetails')} />
               ) : isSuccessMessage ? (
                 <InfoCard type='success' text='Mensaje enviado exitosamente' />
+              ) : serverError ? (
+                <InfoCard type='error' text={t('error.serverConnection')} className='w-full justify-start p-0 text-xsm' />
               ) : (
                 <>
                   <section className='text-sm'>
@@ -325,7 +323,11 @@ export default function WhatsApp(): JSX.Element {
                           <Smartphone size={15} strokeWidth={2} className='stroke-fuchsia-700' />
                           <span>Admin</span>
                         </div>
-                        <span className='text-xs font-light text-muted-foreground'>{`(+${whatsappNumber?.slice(0, -10)}) ${whatsappNumber && delimiter(whatsappNumber?.slice(-10), '-', 6)}`}</span>
+                        {whatsappConnected ? (
+                          <span className='text-xs font-light text-muted-foreground'>{`(+${whatsappNumber?.slice(0, -10)}) ${whatsappNumber && delimiter(whatsappNumber?.slice(-10), '-', 6)}`}</span>
+                        ) : (
+                          <span className='text-xs text-rose-400'>{t('error.notWhatsappSession')}</span>
+                        )}
                       </section>
                       <FormField
                         control={whatsappForm.control}
