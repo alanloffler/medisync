@@ -1,11 +1,12 @@
 // Icons: https://lucide.dev/icons/
-import { Check, RefreshCw, Smartphone, X } from 'lucide-react';
+import { Check, Info, RefreshCw, Smartphone, X } from 'lucide-react';
 // External components:
 // https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
 import { Card, CardContent } from '@core/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@core/components/ui/form';
 import { Input } from '@core/components/ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@core/components/ui/popover';
 import { Textarea } from '@core/components/ui/textarea';
 // QRCode: https://github.com/rosskhanas/react-qr-code#readme
 import QRCode from 'react-qr-code';
@@ -356,7 +357,27 @@ export default function WhatsApp(): JSX.Element {
                         name='message'
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{t('label.message')}</FormLabel>
+                            <div className='flex justify-between pb-1'>
+                              <FormLabel>{t('label.message')}</FormLabel>
+                              {template === EWhatsappTemplate.EMPTY && (
+                                <Popover>
+                                  <PopoverTrigger>
+                                    <Info size={15} strokeWidth={2} className='text-muted-foreground' />
+                                  </PopoverTrigger>
+                                  <PopoverContent className='w-fit'>
+                                    <section className='flex flex-col gap-1 text-xsm text-muted-foreground'>
+                                      <div className='pb-1 font-semibold'>{t('cardContent.formatText.title')}</div>
+                                      <div>
+                                        <Trans i18nKey={'cardContent.formatText.bold'} components={{ b: <b /> }} />
+                                      </div>
+                                      <div>
+                                        <Trans i18nKey={'cardContent.formatText.italic'} components={{ i: <i /> }} />
+                                      </div>
+                                    </section>
+                                  </PopoverContent>
+                                </Popover>
+                              )}
+                            </div>
                             <FormControl>
                               <>
                                 {template === EWhatsappTemplate.APPOINTMENT && (
