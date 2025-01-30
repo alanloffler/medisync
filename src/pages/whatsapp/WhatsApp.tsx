@@ -290,7 +290,7 @@ export default function WhatsApp(): JSX.Element {
               {isLoading ? (
                 <LoadingDB text={t(type === 'user' ? 'loading.userDetails' : 'loading.professionalDetails')} />
               ) : isSuccessMessage ? (
-                <InfoCard type='success' text='Mensaje enviado exitosamente' />
+                <InfoCard type='success' text={t('whatsapp.status.messageSent')} />
               ) : serverError ? (
                 <InfoCard type='error' text={t('error.serverConnection')} className='w-full justify-start p-0 text-xsm' />
               ) : (
@@ -326,6 +326,7 @@ export default function WhatsApp(): JSX.Element {
                         <FormLabel>{t('label.from')}</FormLabel>
                         <div className='flex items-center space-x-2 rounded-full bg-fuchsia-200 px-2 py-1 text-xsm font-light text-fuchsia-700'>
                           <Smartphone size={15} strokeWidth={2} className='stroke-fuchsia-700' />
+                          {/* TODO: must be dynamic, take name from logged administrator */}
                           <span>Admin</span>
                         </div>
                         {whatsappConnected ? (
