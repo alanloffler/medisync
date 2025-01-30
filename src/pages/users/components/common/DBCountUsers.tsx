@@ -21,7 +21,7 @@ export function DBCountUsers() {
     retry: 1,
   });
 
-  if (isLoading) return <LoadingDB variant='default' empty />;
+  if (isLoading) return <LoadingDB variant='default' empty className='py-3' />;
   if (isError) return <main className='flex justify-end py-3 text-xsm font-normal text-rose-400'>{error.message}</main>;
 
   return (
