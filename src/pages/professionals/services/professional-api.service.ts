@@ -55,22 +55,14 @@ export class ProfessionalApiService {
     }
   }
 
+  // CHECKED: used on ViewProfessional.tsx
   public static async findOne(id: string) {
-    const url: string = `${this.API_URL}/professionals/${id}`;
+    const path: string = `${this.API_URL}/professionals/${id}`;
+    const url: URL = new URL(path);
 
-    try {
-      const query: Response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json;charset=UTF-8',
-        },
-      });
-
-      return await query.json();
-    } catch (e) {
-      return e;
-    }
+    return await UtilsUrl.fetch(url, EMethods.GET);
   }
+
   // TODO FORMATTED DATA TO LOWER CASE INPUTS
   public static async update(id: string, data: IProfessionalForm) {
     const url: string = `${this.API_URL}/professionals/${id}`;
