@@ -2,9 +2,10 @@
 import { CirclePlus, List, ListRestart, PlusCircle, Search, X } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
-import { Card, CardContent, CardTitle } from '@core/components/ui/card';
+import { Card, CardContent } from '@core/components/ui/card';
 import { Input } from '@core/components/ui/input';
 // Components
+import { CardHeaderSecondary } from '@core/components/common/header/CardHeaderSecondary';
 import { PageHeader } from '@core/components/common/PageHeader';
 import { ProfessionalsDataTable } from '@professionals/components/ProfessionalsDataTable';
 import { SelectSpecialties } from '@core/components/common/SelectSpecialties';
@@ -158,12 +159,8 @@ export default function Professionals() {
           />
           {/* Section: Professionals Table */}
           <Card>
-            <CardTitle className='flex items-center justify-between gap-2 rounded-b-none bg-card-header text-slate-700'>
-              <header className='flex items-center gap-3.5 px-2'>
-                <List size={16} strokeWidth={2} />
-                {t('cardTitle.professionalsList')}
-              </header>
-              <section className='flex items-center gap-2'>
+            <CardHeaderSecondary title={t('cardTitle.professionalsList')} icon={<List size={18} strokeWidth={2} />}>
+              <section className='flex items-center space-x-3'>
                 <TooltipWrapper tooltip={t('tooltip.reload')}>
                   <Button
                     ref={reloadScope}
@@ -173,7 +170,7 @@ export default function Professionals() {
                     onMouseOver={reloadAnimationOver}
                     onMouseOut={reloadAnimationOut}
                   >
-                    <ListRestart size={16} strokeWidth={2} />
+                    <ListRestart size={17} strokeWidth={1.5} />
                   </Button>
                 </TooltipWrapper>
                 <TooltipWrapper tooltip={t('tooltip.addProfessional')}>
@@ -185,11 +182,11 @@ export default function Professionals() {
                     onMouseOver={addProfessionalIconAnimationOver}
                     onMouseOut={addProfessionalIconAnimationOut}
                   >
-                    <CirclePlus size={16} strokeWidth={2} />
+                    <CirclePlus size={17} strokeWidth={1.5} />
                   </Button>
                 </TooltipWrapper>
               </section>
-            </CardTitle>
+            </CardHeaderSecondary>
             <CardContent>
               <ProfessionalsDataTable clearDropdown={handleClearSearch} reload={reload} search={debouncedSearch} setReload={setReload} />
             </CardContent>
