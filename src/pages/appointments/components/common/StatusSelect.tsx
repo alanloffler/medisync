@@ -1,6 +1,7 @@
 // External components: https://ui.shadcn.com/docs/components
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger } from '@core/components/ui/select';
 // Components
+import { Dot } from '@core/components/common/ui/Dot';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
 import { isAfter, parse } from '@formkit/tempo';
@@ -24,7 +25,6 @@ interface IStatusSelect {
 
 interface IStatusOption {
   label: string;
-  style: { dark: string; light: string };
   value: string;
 }
 // Constants
@@ -32,34 +32,18 @@ const statusOptions: IStatusOption[] = [
   {
     value: EStatus.ATTENDED,
     label: `status.${EStatus.ATTENDED}`,
-    style: {
-      dark: 'bg-emerald-200',
-      light: 'bg-emerald-400',
-    },
   },
   {
     value: EStatus.NOT_ATTENDED,
     label: `status.${EStatus.NOT_ATTENDED}`,
-    style: {
-      dark: 'bg-rose-200',
-      light: 'bg-rose-400',
-    },
   },
   {
     value: EStatus.NOT_STATUS,
     label: `status.${EStatus.NOT_STATUS}`,
-    style: {
-      dark: 'bg-slate-200',
-      light: 'bg-slate-400',
-    },
   },
   {
     value: EStatus.WAITING,
     label: `status.${EStatus.WAITING}`,
-    style: {
-      dark: 'bg-amber-200',
-      light: 'bg-amber-400',
-    },
   },
 ];
 // React component
@@ -70,7 +54,7 @@ export function StatusSelect({ appointment, className, mode, showLabel = false }
   const { t } = useTranslation();
 
   useEffect(() => {
-    const futureDate = isAfter(parse(`${day}T${hour}`, 'YYYY-MM-DDTHH:mm'), new Date());
+    const futureDate: boolean = isAfter(parse(`${day}T${hour}`, 'YYYY-MM-DDTHH:mm'), new Date());
     futureDate ? setItemSelected(EStatus.WAITING) : setItemSelected(status);
   }, [day, hour, status]);
 
@@ -101,16 +85,18 @@ export function StatusSelect({ appointment, className, mode, showLabel = false }
         <SelectTrigger
           className={cn('flex flex-row items-center justify-center space-x-1 bg-transparent p-0 disabled:cursor-default [&_svg]:hidden', className)}
         >
-          <div
-            className={cn(
-              'flex h-4 w-4 items-center justify-center rounded-full bg-rose-200',
-              statusOptions.find((item) => item.value === itemSelected)?.style.dark,
-            )}
-          >
-            <span
-              className={cn('h-2.5 w-2.5 rounded-full bg-rose-400', statusOptions.find((item) => item.value === itemSelected)?.style.light)}
-            ></span>
-          </div>
+          <Dot
+            color={
+              itemSelected === EStatus.ATTENDED
+                ? 'green'
+                : itemSelected === EStatus.NOT_ATTENDED
+                  ? 'red'
+                  : itemSelected === EStatus.WAITING
+                    ? 'yellow'
+                    : 'slate'
+            }
+            size={16}
+          />
           {showLabel && <section>{t(`status.${itemSelected}`)}</section>}
         </SelectTrigger>
       </TooltipWrapper>
@@ -121,9 +107,18 @@ export function StatusSelect({ appointment, className, mode, showLabel = false }
             .map((option) => (
               <SelectItem key={crypto.randomUUID()} value={option.value} className='[&_svg]:h-3 [&_svg]:w-3'>
                 <div className='flex flex-row items-center space-x-2'>
-                  <div className={cn('flex h-4 w-4 items-center justify-center rounded-full', option.style.dark)}>
-                    <div className={cn('h-2.5 w-2.5 rounded-full', option.style.light)}></div>
-                  </div>
+                  <Dot
+                    color={
+                      option.value === EStatus.ATTENDED
+                        ? 'green'
+                        : option.value === EStatus.NOT_ATTENDED
+                          ? 'red'
+                          : option.value === EStatus.WAITING
+                            ? 'yellow'
+                            : 'slate'
+                    }
+                    size={14}
+                  />
                   <div className='text-xs'>{t(option.label)}</div>
                 </div>
               </SelectItem>
