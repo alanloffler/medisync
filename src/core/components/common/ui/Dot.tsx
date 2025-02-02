@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { cn } from '@lib/utils';
 // Interfaces
 interface IProps {
-  color?: 'green' | 'red' | 'yellow';
+  color?: 'green' | 'red' | 'slate' | 'yellow';
   label?: string;
   size?: number;
 }
@@ -31,6 +31,7 @@ export function Dot({ color, label, size }: IProps) {
     const colors: IColor[] = [
       { color: 'green', dark: 'bg-emerald-400', light: 'bg-emerald-200' },
       { color: 'red', dark: 'bg-rose-400', light: 'bg-rose-200' },
+      { color: 'slate', dark: 'bg-slate-400', light: 'bg-slate-200' },
       { color: 'yellow', dark: 'bg-amber-400', light: 'bg-amber-200' },
     ];
 
