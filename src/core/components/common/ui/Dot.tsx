@@ -61,7 +61,7 @@ export function Dot({ color, label, size }: IProps) {
       >
         <span className={cn(`rounded-full`, selectedColor.dark)} style={{ width: dotSize.min, height: dotSize.min }}></span>
       </section>
-      <section>{label}</section>
+      {label && <section>{label}</section>}
     </main>
   );
 }
