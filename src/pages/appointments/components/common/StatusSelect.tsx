@@ -95,7 +95,7 @@ export function StatusSelect({ appointment, className, mode, showLabel = false }
                     ? 'yellow'
                     : 'slate'
             }
-            size={16}
+            size={17}
           />
           {showLabel && <section>{t(`status.${itemSelected}`)}</section>}
         </SelectTrigger>
