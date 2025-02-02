@@ -12,7 +12,7 @@ import { UsersDataTable } from '@users/components/UsersDataTable';
 // External imports
 import { ChangeEvent, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { spring, useAnimate } from 'motion/react';
+import { useAnimate } from 'motion/react';
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { IUserSearch } from '@users/interfaces/user-search.interface';
@@ -20,14 +20,15 @@ import { APP_CONFIG } from '@config/app.config';
 import { EUserSearch } from '@users/enums/user-search.enum';
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { USER_CONFIG } from '@config/users/users.config';
+import { motion } from '@core/services/motion.service';
 import { useDebounce } from '@core/hooks/useDebounce';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 // React component
 export default function Users() {
   const [reload, setReload] = useState<string>('');
   const [search, setSearch] = useState<IUserSearch>({ value: '', type: EUserSearch.NAME });
-  const [createMiniScope, createMiniAnimation] = useAnimate();
-  const [createScope, createAnimation] = useAnimate();
+  const [addUserIconScope, addUserIconAnimation] = useAnimate();
+  const [addUserScope, addUserAnimation] = useAnimate();
   const [reloadScope, reloadAnimation] = useAnimate();
   const debouncedSearch = useDebounce<IUserSearch>(search, APP_CONFIG.debounceTime);
   const navigate = useNavigate();
@@ -51,6 +52,36 @@ export default function Users() {
     setReload(crypto.randomUUID());
   }
 
+  function addUserAnimationOver(): void {
+    const { keyframes, options } = motion.scale(1.2).type('bounce').animate();
+    addUserAnimation(addUserScope.current, keyframes, options);
+  }
+
+  function addUserAnimationOut(): void {
+    const { keyframes, options } = motion.scale(1).type('bounce').animate();
+    addUserAnimation(addUserScope.current, keyframes, options);
+  }
+
+  function reloadAnimationOver(): void {
+    const { keyframes, options } = motion.scale(1.1).type('bounce').animate();
+    reloadAnimation(reloadScope.current, keyframes, options);
+  }
+
+  function reloadAnimationOut(): void {
+    const { keyframes, options } = motion.scale(1).type('bounce').animate();
+    reloadAnimation(reloadScope.current, keyframes, options);
+  }
+
+  function addUserIconAnimationOver(): void {
+    const { keyframes, options } = motion.scale(1.1).type('bounce').animate();
+    addUserIconAnimation(addUserIconScope.current, keyframes, options);
+  }
+
+  function addUserIconAnimationOut(): void {
+    const { keyframes, options } = motion.scale(1).type('bounce').animate();
+    addUserIconAnimation(addUserIconScope.current, keyframes, options);
+  }
+
   return (
     <main className='flex flex-1 flex-col gap-8 p-4 md:p-8'>
       {/* Section: Page Header */}
@@ -64,16 +95,8 @@ export default function Users() {
           <CardContent className='p-0'>
             <div className='flex flex-col gap-6 md:w-full'>
               <Link to={`/users/create`} className='w-fit'>
-                <Button
-                  variant={'default'}
-                  size={'sm'}
-                  className='gap-2'
-                  onMouseOver={() =>
-                    createAnimation(createScope.current, { scale: 1.2 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                  }
-                  onMouseOut={() => createAnimation(createScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })}
-                >
-                  <PlusCircle ref={createScope} size={16} strokeWidth={2} />
+                <Button variant='default' size='sm' className='gap-2' onMouseOver={addUserAnimationOver} onMouseOut={addUserAnimationOut}>
+                  <PlusCircle ref={addUserScope} size={16} strokeWidth={2} />
                   {t('button.addUser')}
                 </Button>
               </Link>
@@ -131,30 +154,24 @@ export default function Users() {
             <section className='flex items-center space-x-3'>
               <TooltipWrapper tooltip={t('tooltip.reload')}>
                 <Button
+                  ref={reloadScope}
                   size='miniIcon'
                   variant='tableHeader'
-                  ref={reloadScope}
                   onClick={handleReload}
-                  onMouseOver={() =>
-                    reloadAnimation(reloadScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                  }
-                  onMouseOut={() => reloadAnimation(reloadScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })}
+                  onMouseOut={reloadAnimationOut}
+                  onMouseOver={reloadAnimationOver}
                 >
                   <ListRestart size={17} strokeWidth={1.5} />
                 </Button>
               </TooltipWrapper>
               <TooltipWrapper tooltip={t('tooltip.addUser')}>
                 <Button
-                  ref={createMiniScope}
+                  ref={addUserIconScope}
                   size='miniIcon'
                   variant='tableHeaderPrimary'
                   onClick={() => navigate('/users/create')}
-                  onMouseOver={() =>
-                    createMiniAnimation(createMiniScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                  }
-                  onMouseOut={() =>
-                    createMiniAnimation(createMiniScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                  }
+                  onMouseOut={addUserIconAnimationOut}
+                  onMouseOver={addUserIconAnimationOver}
                 >
                   <CirclePlus size={17} strokeWidth={1.5} />
                 </Button>
