@@ -16,6 +16,8 @@ import { Textarea } from '@core/components/ui/textarea';
 import InputMask from '@mona-health/react-input-mask';
 // Components
 import { BackButton } from '@core/components/common/BackButton';
+import { CardHeaderPrimary } from '@core/components/common/header/CardHeaderPrimary';
+import { FormHeader } from '@core/components/common/form/FormHeader';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
 import { SelectSpecialtiesForm } from '@core/components/common/SelectSpecialtiesForm';
@@ -43,7 +45,6 @@ import { UtilsString } from '@core/services/utils/string.service';
 import { generateWeekOfWorkingDays } from '@professionals/utils/week-working-days.util';
 import { professionalSchema } from '@professionals/schemas/professional.schema';
 import { useNotificationsStore } from '@core/stores/notifications.store';
-import { CardHeaderPrimary } from '@core/components/common/header/CardHeaderPrimary';
 // React component
 export default function CreateProfessional() {
   const [areas, setAreas] = useState<IArea[]>([]);
@@ -241,9 +242,7 @@ export default function CreateProfessional() {
               <section className='grid grid-cols-1 space-y-6 md:grid-cols-2 md:space-y-0'>
                 {/* Section: Professional data (left side) */}
                 <section className='flex flex-col gap-4 md:pr-6'>
-                  <h1 className='mb-3 rounded-sm bg-slate-200/50 px-2 py-1 text-base font-semibold text-slate-700'>
-                    {t('cardTitle.professionalData')}
-                  </h1>
+                  <FormHeader title={t('cardTitle.professionalData')} />
                   {/* Form fields: area and specialization */}
                   <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <SelectSpecialtiesForm formControl={createForm.control} callback={handleChangeArea} />
@@ -429,9 +428,7 @@ export default function CreateProfessional() {
                 </section>
                 {/* Section: Schedule (right side) */}
                 <section className='flex flex-col gap-4 border-t pt-6 md:border-l md:border-t-0 md:pl-6 md:pt-0'>
-                  <h1 className='mb-3 rounded-sm bg-slate-200/50 px-2 py-1 text-base font-semibold text-slate-700'>
-                    {t('cardTitle.scheduleConfiguration')}
-                  </h1>
+                  <FormHeader title={t('cardTitle.scheduleConfiguration')} className='mb-1.5' />
                   {/* Form fields: Schedule working days */}
                   <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
