@@ -11,7 +11,7 @@ import { ProfessionalsDataTable } from '@professionals/components/ProfessionalsD
 import { SelectSpecialties } from '@core/components/common/SelectSpecialties';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
-import { AnimationPlaybackControls, useAnimate } from 'motion/react';
+import { type AnimationPlaybackControls, useAnimate } from 'motion/react';
 import { type ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
