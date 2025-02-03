@@ -144,7 +144,7 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
       {
         accessorKey: 'index',
         size: 50,
-        header: () => <div className='text-center'>{t(PROF_CONFIG.table.header[0])}</div>,
+        header: () => <div className='text-center uppercase'>{t(PROF_CONFIG.table.header[0])}</div>,
         cell: ({ row }) => (
           <div className='mx-auto w-fit rounded-md bg-slate-100 px-1.5 py-1 text-center text-xs text-slate-400'>{truncate(row.original._id, -3)}</div>
         ),
@@ -158,7 +158,7 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
             ) : (
               <TooltipWrapper tooltip={t('tooltip.sort.name')}>
                 <button
-                  className='flex items-center gap-2 hover:text-accent-foreground'
+                  className='flex items-center gap-2 uppercase hover:text-accent-foreground'
                   onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
                 >
                   {t(PROF_CONFIG.table.header[1])}
@@ -184,7 +184,7 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
             ) : (
               <TooltipWrapper tooltip={t('tooltip.sort.area')}>
                 <button
-                  className='flex items-center gap-2 hover:text-accent-foreground'
+                  className='flex items-center gap-2 uppercase hover:text-accent-foreground'
                   onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
                 >
                   {t(PROF_CONFIG.table.header[2])}
@@ -206,7 +206,7 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
             ) : (
               <TooltipWrapper tooltip={t('tooltip.sort.specialty')}>
                 <button
-                  className='flex items-center gap-2 hover:text-accent-foreground'
+                  className='flex items-center gap-2 uppercase hover:text-accent-foreground'
                   onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
                 >
                   {t(PROF_CONFIG.table.header[3])}
@@ -228,7 +228,7 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
             ) : (
               <TooltipWrapper tooltip={t('tooltip.sort.availability')}>
                 <button
-                  className='flex items-center gap-2 hover:text-accent-foreground'
+                  className='flex items-center gap-2 uppercase hover:text-accent-foreground'
                   onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
                 >
                   {t(PROF_CONFIG.table.header[4])}
@@ -247,7 +247,7 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
       {
         accessorKey: 'actions',
         size: 100,
-        header: () => <div className='text-center'>{t(PROF_CONFIG.table.header[5])}</div>,
+        header: () => <div className='text-center uppercase'>{t(PROF_CONFIG.table.header[5])}</div>,
         cell: ({ row }) => (
           <div className='mx-auto flex w-fit flex-row items-center justify-center space-x-2'>
             <TableButton
@@ -335,7 +335,7 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
           <>
             <DBCountProfessionals />
             <Table>
-              <TableHeader className='bg-slate-100'>
+              <TableHeader className='border-t bg-slate-50 text-[11px] font-medium text-slate-500'>
                 {table.getHeaderGroups().map((headerGroup) => (
                   <TableRow key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
