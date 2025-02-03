@@ -1,4 +1,15 @@
 export const PROF_SCHEMA = {
+  areaCode: {
+    message: 'Debes ingresar un código de área',
+    min: {
+      value: 1,
+      message: 'Seleccione',
+    },
+    max: {
+      value: 999,
+      message: 'Seleccione',
+    },
+  },
   areaMessage: 'Debes seleccionar un área',
   availableMessage: 'Debes seleccionar una disponibilidad',
   descriptionMessage: 'Debes ingresar una descripción',
