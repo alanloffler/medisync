@@ -1,6 +1,6 @@
 // External components: https://ui.shadcn.com/docs/components
 import { Checkbox } from '@core/components/ui/checkbox';
-import { Label } from '@core/components/ui/label';
+import { FormLabel } from '@core/components/ui/form';
 // External imports
 import { range } from '@formkit/tempo';
 import { useEffect, useState } from 'react';
@@ -55,7 +55,7 @@ export function WorkingDays({ label, data, handleWorkingDaysValues }: IWorkingDa
 
   return (
     <div className='flex w-full flex-col space-y-3'>
-      <Label>{label}</Label>
+      <FormLabel>{label}</FormLabel>
       <div className='flex flex-row justify-start space-x-3'>
         {daysData &&
           daysData.map((_, index) => (
