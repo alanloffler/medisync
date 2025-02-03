@@ -69,14 +69,14 @@ export function SelectSpecialties({ callback, clear, dropdownPlaceholder, setDro
   return (
     <section className='flex flex-row items-center justify-start space-x-3 py-3'>
       <div className='flex items-center space-x-2 text-sm font-medium text-slate-500'>
-        <Filter size={16} strokeWidth={2} />
+        <Filter size={17} strokeWidth={1.5} />
         <span>{t('search.filter.by')}</span>
       </div>
       <DropdownMenu>
         <div className='flex flex-row items-center space-x-2'>
           <DropdownMenuTrigger
             disabled={!areas?.data.length}
-            className='flex min-h-7 w-fit items-center space-x-2 rounded-md bg-white px-2.5 py-1 text-sm shadow-sm'
+            className='flex min-h-8 w-fit items-center space-x-2 rounded-md bg-white px-2.5 py-1 text-sm shadow-sm'
           >
             {isLoading && <LoadingText suffix='...' text={t('loading.default')} />}
             {isError && <span className='text-rose-400'>{dropdownPlaceholder}</span>}
@@ -107,13 +107,13 @@ export function SelectSpecialties({ callback, clear, dropdownPlaceholder, setDro
             areas?.data.length > 0 &&
             areas?.data.map((area) => (
               <DropdownMenuSub key={area._id}>
-                <DropdownMenuSubTrigger className='p-1 text-xsm'>
+                <DropdownMenuSubTrigger className='p-1.5 text-xsm'>
                   <span>{UtilsString.upperCase(area.name)}</span>
                 </DropdownMenuSubTrigger>
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent>
                     {area.specializations.map((spec) => (
-                      <DropdownMenuItem className='p-1 text-xsm' key={spec._id} onClick={() => callback(spec)}>
+                      <DropdownMenuItem className='p-1.5 text-xsm' key={spec._id} onClick={() => callback(spec)}>
                         <span>{UtilsString.upperCase(spec.name)}</span>
                       </DropdownMenuItem>
                     ))}
