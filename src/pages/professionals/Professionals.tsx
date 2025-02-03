@@ -134,7 +134,7 @@ export default function Professionals() {
                     value={search.type === EProfessionalSearch.INPUT ? search.value : ''}
                     type='text'
                     placeholder={t('search.professional')}
-                    className='bg-background pl-9 shadow-sm'
+                    className='bg-background pl-9 shadow-sm md:w-1/2 lg:w-full'
                   />
                   {search.type === EProfessionalSearch.INPUT && search.value && (
                     <button
@@ -149,7 +149,7 @@ export default function Professionals() {
             </section>
           </CardContent>
         </Card>
-        <section className='col-span-1 overflow-y-auto md:col-span-4 lg:col-span-3 xl:col-span-3'>
+        <section className='col-span-1 overflow-y-auto md:col-span-4 lg:col-span-3 xl:col-span-3 space-y-3'>
           <SelectSpecialties
             callback={handleSearchBySpecialization}
             clear={handleClearSearch}
