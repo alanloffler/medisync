@@ -14,7 +14,7 @@ import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
 import { SelectPhoneArea } from '@core/components/common/SelectPhoneArea';
 // External imports
-import { MouseEvent, useEffect, useState } from 'react';
+import { type MouseEvent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -129,9 +129,7 @@ export default function UpdateUser() {
       {/* Section: Form */}
       <section className='mx-auto mt-6 flex w-full flex-col gap-4 md:w-[550px]'>
         <Card className='w-full md:grid-cols-2'>
-          <CardHeaderPrimary title={t('cardTitle.updateUser')}>
-            <FilePen size={18} strokeWidth={2} />
-          </CardHeaderPrimary>
+          <CardHeaderPrimary title={t('cardTitle.updateUser')} icon={<FilePen size={18} strokeWidth={2} />} />
           <CardContent className='pt-6'>
             {isError && <InfoCard type='error' text={error?.message} className='mx-auto mt-3' />}
             {isLoading && <LoadingDB text={t('loading.userDetails')} className='mt-3' />}
