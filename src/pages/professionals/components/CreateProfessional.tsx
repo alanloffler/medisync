@@ -20,6 +20,7 @@ import { CardHeaderPrimary } from '@core/components/common/header/CardHeaderPrim
 import { FormHeader } from '@core/components/common/form/FormHeader';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
+import { SelectPhoneArea } from '@core/components/common/SelectPhoneArea';
 import { SelectSpecialtiesForm } from '@core/components/common/SelectSpecialtiesForm';
 import { WorkingDays } from '@professionals/components/common/WorkingDays';
 // External imports
@@ -114,6 +115,7 @@ export default function CreateProfessional() {
 
   const defaultValues = {
     area: '',
+    areaCode: undefined,
     available: true,
     configuration: {
       scheduleTimeEnd: '',
@@ -364,7 +366,7 @@ export default function CreateProfessional() {
                       )}
                     />
                   </section>
-                  {/* Form fields: dni */}
+                  {/* Form fields: identity card and phone */}
                   <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
                       control={createForm.control}
@@ -379,9 +381,6 @@ export default function CreateProfessional() {
                         </FormItem>
                       )}
                     />
-                  </section>
-                  {/* Form fields: email and phone */}
-                  <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
                       control={createForm.control}
                       name='email'
@@ -395,19 +394,36 @@ export default function CreateProfessional() {
                         </FormItem>
                       )}
                     />
-                    <FormField
-                      control={createForm.control}
-                      name='phone'
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{t('label.phone')}</FormLabel>
-                          <FormControl className='h-9'>
-                            <Input type='number' placeholder={t('placeholder.phone')} {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                  </section>
+                  {/* Form fields: phone */}
+                  <section className='grid grid-cols-1 gap-6 md:grid-cols-1'>
+                    <div className='flex flex-row items-center space-x-3'>
+                      <FormField
+                        control={createForm.control}
+                        name='areaCode'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t('label.phone')}</FormLabel>
+                            <FormControl className='h-9'>
+                              <SelectPhoneArea {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={createForm.control}
+                        name='phone'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl className='h-9'>
+                              <Input type='number' placeholder={t('placeholder.phone')} {...field} className='!mt-8 h-9' />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                   </section>
                   {/* Form fields: description */}
                   <section className='grid grid-cols-1 gap-6 md:grid-cols-1'>
