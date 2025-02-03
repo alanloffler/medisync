@@ -10,9 +10,9 @@ import { PageHeader } from '@core/components/common/PageHeader';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 import { UsersDataTable } from '@users/components/UsersDataTable';
 // External imports
-import { ChangeEvent, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAnimate } from 'motion/react';
+import { type AnimationPlaybackControls, useAnimate } from 'motion/react';
+import { type ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { IUserSearch } from '@users/interfaces/user-search.interface';
@@ -52,34 +52,34 @@ export default function Users() {
     setReload(crypto.randomUUID());
   }
 
-  function addUserAnimationOver(): void {
+  function addUserAnimationOver(): AnimationPlaybackControls {
     const { keyframes, options } = motion.scale(1.2).type('bounce').animate();
-    addUserAnimation(addUserScope.current, keyframes, options);
+    return addUserAnimation(addUserScope.current, keyframes, options);
   }
 
-  function addUserAnimationOut(): void {
+  function addUserAnimationOut(): AnimationPlaybackControls {
     const { keyframes, options } = motion.scale(1).type('bounce').animate();
-    addUserAnimation(addUserScope.current, keyframes, options);
+    return addUserAnimation(addUserScope.current, keyframes, options);
   }
 
-  function reloadAnimationOver(): void {
+  function reloadAnimationOver(): AnimationPlaybackControls {
     const { keyframes, options } = motion.scale(1.1).type('bounce').animate();
-    reloadAnimation(reloadScope.current, keyframes, options);
+    return reloadAnimation(reloadScope.current, keyframes, options);
   }
 
-  function reloadAnimationOut(): void {
+  function reloadAnimationOut(): AnimationPlaybackControls {
     const { keyframes, options } = motion.scale(1).type('bounce').animate();
-    reloadAnimation(reloadScope.current, keyframes, options);
+    return reloadAnimation(reloadScope.current, keyframes, options);
   }
 
-  function addUserIconAnimationOver(): void {
+  function addUserIconAnimationOver(): AnimationPlaybackControls {
     const { keyframes, options } = motion.scale(1.1).type('bounce').animate();
-    addUserIconAnimation(addUserIconScope.current, keyframes, options);
+    return addUserIconAnimation(addUserIconScope.current, keyframes, options);
   }
 
-  function addUserIconAnimationOut(): void {
+  function addUserIconAnimationOut(): AnimationPlaybackControls {
     const { keyframes, options } = motion.scale(1).type('bounce').animate();
-    addUserIconAnimation(addUserIconScope.current, keyframes, options);
+    return addUserIconAnimation(addUserIconScope.current, keyframes, options);
   }
 
   return (
