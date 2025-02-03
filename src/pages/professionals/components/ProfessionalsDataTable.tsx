@@ -45,6 +45,7 @@ import { ProfessionalApiService } from '@professionals/services/professional-api
 import { UtilsString } from '@core/services/utils/string.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 import { useTruncateText } from '@core/hooks/useTruncateText';
+import { Separator } from '@core/components/ui/separator';
 // Default values for pagination and sorting
 const defaultSorting: SortingState = [{ id: PROF_CONFIG.table.defaultSortingId, desc: PROF_CONFIG.table.defaultSortingType }];
 const defaultPagination: PaginationState = { pageIndex: 0, pageSize: PROF_CONFIG.table.defaultPageSize };
@@ -249,40 +250,47 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
         size: 100,
         header: () => <div className='text-center uppercase'>{t(PROF_CONFIG.table.header[5])}</div>,
         cell: ({ row }) => (
-          <div className='mx-auto flex w-fit flex-row items-center justify-center space-x-2'>
+          <div className='mx-auto flex w-fit flex-row items-center justify-center space-x-0.5 md:space-x-2'>
             <TableButton
               callback={() => navigate(`/professionals/${row.original._id}`)}
-              className='hover:text-sky-400'
+              className='hidden hover:bg-sky-100/75 hover:text-sky-400 sm:flex'
               tooltip={t('tooltip.details')}
             >
-              <FileText size={16} strokeWidth={1.5} />
+              <FileText size={17} strokeWidth={1.5} />
             </TableButton>
             <TableButton
               callback={() => navigate(`/professionals/update/${row.original._id}`)}
-              className='hover:text-amber-400'
-              tooltip={t('tooltip.delete')}
+              className='hover:bg-amber-100/75 hover:text-amber-400'
+              tooltip={t('tooltip.edit')}
             >
-              <PencilLine size={16} strokeWidth={1.5} />
-            </TableButton>
-            <TableButton callback={() => handleRemoveDialog(row.original)} className='hover:text-red-400' tooltip={t('tooltip.edit')}>
-              <Trash2 size={16} strokeWidth={1.5} />
+              <PencilLine size={17} strokeWidth={1.5} />
             </TableButton>
             <TableButton
+              callback={() => handleRemoveDialog(row.original)}
+              className='hover:bg-red-100/75 hover:text-red-400'
+              tooltip={t('tooltip.delete')}
+            >
+              <Trash2 size={17} strokeWidth={1.5} />
+            </TableButton>
+            <div className='px-1'>
+              <Separator orientation='vertical' className='h-5 w-[1px]' />
+            </div>
+            <TableButton
               callback={() => navigate(`/email/professional/${row.original._id}`)}
-              className='hover:text-purple-400'
+              className='hover:bg-purple-100/75 hover:text-purple-400'
               disabled={!row.original.email}
               tooltip={t('tooltip.sendEmail')}
             >
-              {!row.original.email ? <MailX size={16} strokeWidth={1.5} /> : <Mail size={16} strokeWidth={1.5} />}
+              {!row.original.email ? <MailX size={17} strokeWidth={1.5} /> : <Mail size={17} strokeWidth={1.5} />}
             </TableButton>
             <TableButton
               callback={() =>
                 navigate(`/whatsapp/${row.original._id}`, { state: { type: EUserType.PROFESSIONAL, template: EWhatsappTemplate.EMPTY } })
               }
-              className='hover:text-emerald-400'
+              className='hover:bg-emerald-100/75 hover:text-emerald-400'
               tooltip={t('tooltip.sendMessage')}
             >
-              <MessageCircle size={16} strokeWidth={1.5} />
+              <MessageCircle size={17} strokeWidth={1.5} />
             </TableButton>
           </div>
         ),
@@ -339,7 +347,7 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
                 {table.getHeaderGroups().map((headerGroup) => (
                   <TableRow key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
-                      <TableHead key={header.id} style={{ width: `${header.getSize()}px` }} className='h-10'>
+                      <TableHead key={header.id} style={{ width: `${header.getSize()}px` }}>
                         {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                       </TableHead>
                     ))}
