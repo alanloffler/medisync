@@ -15,6 +15,10 @@ let timeSlotUnavailableEnd: string | undefined;
 export const professionalSchema = z.object({
   available: z.boolean({ message: PROF_SCHEMA.availableMessage }),
   area: z.string().min(1, { message: PROF_SCHEMA.areaMessage }),
+  areaCode: z.coerce
+  .number({ message: PROF_SCHEMA.areaCode.message })
+  .min(PROF_SCHEMA.areaCode.min.value, { message: PROF_SCHEMA.areaCode.min.message })
+  .max(PROF_SCHEMA.areaCode.max.value, { message: PROF_SCHEMA.areaCode.max.message }),
   specialization: z.string().min(1, { message: PROF_SCHEMA.specializationMessage }),
   title: z.string().min(1, { message: PROF_SCHEMA.titleAbbreviationMessage }),
   firstName: z.string().min(1, { message: PROF_SCHEMA.firstNameMessage }),
