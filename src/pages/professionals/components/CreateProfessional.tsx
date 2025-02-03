@@ -244,7 +244,7 @@ export default function CreateProfessional() {
               <section className='grid grid-cols-1 space-y-6 md:grid-cols-2 md:space-y-0'>
                 {/* Section: Professional data (left side) */}
                 <section className='flex flex-col gap-4 md:pr-6'>
-                  <FormHeader title={t('cardTitle.professionalData')} />
+                  <FormHeader step={1} title={t('cardTitle.professionalData')} />
                   {/* Form fields: area and specialization */}
                   <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <SelectSpecialtiesForm formControl={createForm.control} callback={handleChangeArea} />
@@ -444,7 +444,7 @@ export default function CreateProfessional() {
                 </section>
                 {/* Section: Schedule (right side) */}
                 <section className='flex flex-col gap-4 border-t pt-6 md:border-l md:border-t-0 md:pl-6 md:pt-0'>
-                  <FormHeader title={t('cardTitle.scheduleConfiguration')} className='mb-1.5' />
+                  <FormHeader step={2} title={t('cardTitle.scheduleConfiguration')} className='mb-1.5' />
                   {/* Form fields: Schedule working days */}
                   <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                     <FormField
