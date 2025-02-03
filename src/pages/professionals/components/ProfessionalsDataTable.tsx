@@ -12,8 +12,10 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  type Cell,
   type ColumnDef,
   type PaginationState,
+  type Row,
   type SortingState,
   type Table as ITable,
   useReactTable,
@@ -28,7 +30,7 @@ import { TableButton } from '@core/components/common/TableButton';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
 import { Trans, useTranslation } from 'react-i18next';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 // Imports
@@ -151,7 +153,7 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
         ),
       },
       {
-        accessorKey: 'lastName',
+        accessorKey: 'fullName',
         header: ({ column }) => (
           <div className='text-left'>
             {totalItems === 1 ? (
@@ -171,7 +173,7 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
         ),
         cell: ({ row }) => (
           <div className='text-left'>
-            {UtilsString.upperCase(`${row.original.title.abbreviation} ${row.original.firstName} ${row.original.lastName}`, 'each')}
+            {UtilsString.upperCase(`${row.original.title.abbreviation} ${row.original.lastName}, ${row.original.firstName}`, 'each')}
           </div>
         ),
       },
@@ -195,7 +197,7 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
             )}
           </div>
         ),
-        cell: ({ row }) => <div className='text-left'>{UtilsString.upperCase(row.original.area.name)}</div>,
+        cell: ({ row }) => <div className='text-left text-xsm text-slate-500'>{UtilsString.upperCase(row.original.area.name)}</div>,
       },
       {
         accessorKey: 'specialization',
@@ -217,11 +219,11 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
             )}
           </div>
         ),
-        cell: ({ row }) => <div className='text-left text-sm'>{UtilsString.upperCase(row.original.specialization.name)}</div>,
+        cell: ({ row }) => <div className='text-left text-xsm text-slate-500'>{UtilsString.upperCase(row.original.specialization.name)}</div>,
       },
       {
         accessorKey: 'available',
-        size: 50,
+        size: 30,
         header: ({ column }) => (
           <div className='flex justify-center'>
             {totalItems === 1 ? (
@@ -240,8 +242,12 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
           </div>
         ),
         cell: ({ row }) => (
-          <section className='flex flex-row items-center justify-center'>
-            <AvailableProfessional className='h-6' data={{ _id: row.original._id, available: row.original.available }} items={PV_CONFIG.select} />
+          <section className='flex flex-row items-center'>
+            <AvailableProfessional
+              className='h-6 text-xsm text-slate-500'
+              data={{ _id: row.original._id, available: row.original.available }}
+              items={PV_CONFIG.select}
+            />
           </section>
         ),
       },
@@ -324,6 +330,13 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
     retry: 1,
   });
 
+  const handleRowClick = useCallback(
+    (row: Row<IProfessional>, cell: Cell<IProfessional, unknown>): void => {
+      if (cell.column.getIndex() < row.getAllCells().length - 1) navigate(`/professionals/${row.original._id}`);
+    },
+    [navigate],
+  );
+
   function handleRemoveProfessionalDatabase(id?: string): void {
     id && deleteProfessional({ id });
   }
@@ -356,9 +369,14 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
               </TableHeader>
               <TableBody>
                 {table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                  <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'} className='hover:bg-slate-50/70'>
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell className='px-0 py-1' key={cell.id} style={{ width: `${cell.column.getSize()}px` }}>
+                      <TableCell
+                        className={`px-0 py-1 ${cell.column.id !== 'actions' && cell.column.id !== 'available' && 'hover:cursor-pointer'}`}
+                        onClick={() => handleRowClick(row, cell)}
+                        key={cell.id}
+                        style={{ width: `${cell.column.getSize()}px` }}
+                      >
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </TableCell>
                     ))}
