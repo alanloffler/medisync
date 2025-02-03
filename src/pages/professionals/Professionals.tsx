@@ -11,8 +11,8 @@ import { ProfessionalsDataTable } from '@professionals/components/ProfessionalsD
 import { SelectSpecialties } from '@core/components/common/SelectSpecialties';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
+import { AnimationPlaybackControls, useAnimate } from 'motion/react';
 import { type ChangeEvent, useCallback, useEffect, useState } from 'react';
-import { useAnimate } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 // Imports
@@ -74,34 +74,34 @@ export default function Professionals() {
     setItemSelected(HEADER_CONFIG.headerMenu[2].id);
   }, [setItemSelected]);
 
-  function addProfessionalAnimationOver(): void {
+  function addProfessionalAnimationOver(): AnimationPlaybackControls {
     const { keyframes, options } = motion.scale(1.2).type('bounce').animate();
-    addProfAnimation(addProfScope.current, keyframes, options);
+    return addProfAnimation(addProfScope.current, keyframes, options);
   }
 
-  function addProfessionalAnimationOut(): void {
+  function addProfessionalAnimationOut(): AnimationPlaybackControls {
     const { keyframes, options } = motion.scale(1).type('bounce').animate();
-    addProfAnimation(addProfScope.current, keyframes, options);
+    return addProfAnimation(addProfScope.current, keyframes, options);
   }
 
-  function reloadAnimationOver(): void {
+  function reloadAnimationOver(): AnimationPlaybackControls {
     const { keyframes, options } = motion.scale(1.1).type('bounce').animate();
-    reloadAnimation(reloadScope.current, keyframes, options);
+    return reloadAnimation(reloadScope.current, keyframes, options);
   }
 
-  function reloadAnimationOut(): void {
+  function reloadAnimationOut(): AnimationPlaybackControls {
     const { keyframes, options } = motion.scale(1).type('bounce').animate();
-    reloadAnimation(reloadScope.current, keyframes, options);
+    return reloadAnimation(reloadScope.current, keyframes, options);
   }
 
-  function addProfessionalIconAnimationOver(): void {
+  function addProfessionalIconAnimationOver(): AnimationPlaybackControls {
     const { keyframes, options } = motion.scale(1.1).type('bounce').animate();
-    addProfIconAnimation(addProfIconScope.current, keyframes, options);
+    return addProfIconAnimation(addProfIconScope.current, keyframes, options);
   }
 
-  function addProfessionalIconAnimationOut(): void {
+  function addProfessionalIconAnimationOut(): AnimationPlaybackControls {
     const { keyframes, options } = motion.scale(1).type('bounce').animate();
-    addProfIconAnimation(addProfIconScope.current, keyframes, options);
+    return addProfIconAnimation(addProfIconScope.current, keyframes, options);
   }
 
   return (
@@ -123,7 +123,9 @@ export default function Professionals() {
                 onMouseOver={addProfessionalAnimationOver}
                 onMouseOut={addProfessionalAnimationOut}
               >
-                <PlusCircle ref={addProfScope} size={16} strokeWidth={2} />
+                <div ref={addProfScope}>
+                  <PlusCircle size={16} strokeWidth={2} />
+                </div>
                 <span>{t('button.addProfessional')}</span>
               </Button>
               <div className='flex flex-col space-y-2'>
@@ -149,7 +151,7 @@ export default function Professionals() {
             </section>
           </CardContent>
         </Card>
-        <section className='col-span-1 overflow-y-auto md:col-span-4 lg:col-span-3 xl:col-span-3 space-y-3'>
+        <section className='col-span-1 space-y-3 overflow-y-auto md:col-span-4 lg:col-span-3 xl:col-span-3'>
           <SelectSpecialties
             callback={handleSearchBySpecialization}
             clear={handleClearSearch}
