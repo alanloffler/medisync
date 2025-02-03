@@ -3,7 +3,7 @@ import { FilePlus, Menu } from 'lucide-react';
 // External components:
 // https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
-import { Card, CardContent, CardTitle } from '@core/components/ui/card';
+import { Card, CardContent } from '@core/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@core/components/ui/dropdown-menu';
 import { Form, FormField, FormControl, FormItem, FormLabel, FormMessage } from '@core/components/ui/form';
@@ -43,6 +43,7 @@ import { UtilsString } from '@core/services/utils/string.service';
 import { generateWeekOfWorkingDays } from '@professionals/utils/week-working-days.util';
 import { professionalSchema } from '@professionals/schemas/professional.schema';
 import { useNotificationsStore } from '@core/stores/notifications.store';
+import { CardHeaderPrimary } from '@core/components/common/header/CardHeaderPrimary';
 // React component
 export default function CreateProfessional() {
   const [areas, setAreas] = useState<IArea[]>([]);
@@ -206,29 +207,25 @@ export default function CreateProfessional() {
       </header>
       {/* Section: Form */}
       <Card className='mx-auto mt-6 flex w-full flex-col md:w-full lg:w-4/5'>
-        <CardTitle className='flex flex-row items-center justify-between rounded-b-none bg-card-header text-slate-700'>
-          <header className='flex items-center gap-3.5 p-2'>
-            <FilePlus size={16} strokeWidth={2} />
-            <span>{t('cardTitle.createProfessional')}</span>
-          </header>
+        <CardHeaderPrimary className='justify-between' title={t('cardTitle.createProfessional')} icon={<FilePlus size={18} strokeWidth={2} />}>
           {/* Dropdown menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
+                className='!hover:bg-transparent'
                 ref={dropdownScope}
-                variant={'tableHeader'}
-                size={'miniIcon'}
+                size='miniIcon'
                 onMouseOver={() =>
-                  dropdownAnimation(dropdownScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
+                  dropdownAnimation(dropdownScope.current, { scale: 1.2 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
                 }
                 onMouseOut={() =>
                   dropdownAnimation(dropdownScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
                 }
               >
-                <Menu size={16} strokeWidth={2} />
+                <Menu size={17} strokeWidth={1.5} />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className='w-fit' align='center'>
+            <DropdownMenuContent className='w-fit' align='end' onCloseAutoFocus={(e) => e.preventDefault()}>
               {PC_CONFIG.dropdownMenu.map((item) => (
                 <DropdownMenuItem key={item.id}>
                   <Link to={item.path}>{t(item.name)}</Link>
@@ -236,7 +233,7 @@ export default function CreateProfessional() {
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
-        </CardTitle>
+        </CardHeaderPrimary>
         <CardContent className='pt-6'>
           <Form {...createForm}>
             <form onSubmit={createForm.handleSubmit(handleCreateProfessional)}>
