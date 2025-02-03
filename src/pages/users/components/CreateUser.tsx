@@ -13,7 +13,7 @@ import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
 import { SelectPhoneArea } from '@core/components/common/SelectPhoneArea';
 // External imports
-import { MouseEvent, useState } from 'react';
+import { type MouseEvent, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
@@ -87,9 +87,7 @@ export default function CreateUser() {
       {/* Section: Form */}
       <section className='mx-auto mt-6 flex w-full flex-col gap-4 md:w-[550px]'>
         <Card className='w-full'>
-          <CardHeaderPrimary title={t('cardTitle.createUser')}>
-            <FilePlus2 size={18} strokeWidth={2} />
-          </CardHeaderPrimary>
+          <CardHeaderPrimary title={t('cardTitle.createUser')} icon={<FilePlus2 size={18} strokeWidth={2} />} />
           <CardContent>
             <Form {...createForm}>
               <form onSubmit={createForm.handleSubmit((data) => handleCreateUser(data))} className='space-y-4 pt-6'>
