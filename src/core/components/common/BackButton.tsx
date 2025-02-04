@@ -3,19 +3,19 @@ import { ArrowLeft } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
 // External imports
-import { spring, useAnimate } from 'motion/react';
+import { type AnimationPlaybackControls, spring, useAnimate } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 // React component
 export function BackButton({ label }: { label: string }) {
   const [backScope, backAnimation] = useAnimate();
   const navigate = useNavigate();
 
-  function handleMouseOver(): void {
-    backAnimation(backScope.current, { translate: '-3px' }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 });
+  function handleMouseOver(): AnimationPlaybackControls {
+    return backAnimation(backScope.current, { translate: '-3px' }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 });
   }
 
-  function handleMouseOut(): void {
-    backAnimation(backScope.current, { translate: '0px' }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 });
+  function handleMouseOut(): AnimationPlaybackControls {
+    return backAnimation(backScope.current, { translate: '0px' }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 });
   }
 
   return (
