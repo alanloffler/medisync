@@ -3,7 +3,7 @@ import { FilePlus, Menu } from 'lucide-react';
 // External components:
 // https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
-import { Card, CardContent, CardTitle } from '@core/components/ui/card';
+import { Card, CardContent } from '@core/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@core/components/ui/dropdown-menu';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@core/components/ui/form';
@@ -16,6 +16,7 @@ import { Textarea } from '@core/components/ui/textarea';
 import InputMask from '@mona-health/react-input-mask';
 // Components
 import { BackButton } from '@core/components/common/BackButton';
+import { CardHeaderPrimary } from '@core/components/common/header/CardHeaderPrimary';
 import { FormHeader } from '@core/components/common/form/FormHeader';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
@@ -258,18 +259,14 @@ export default function UpdateProfessional() {
       {/* Section: Form */}
       {!errorLoadingProfessional ? (
         <Card className='mx-auto mt-4 flex w-full flex-col md:w-full lg:w-4/5'>
-          <CardTitle className='flex flex-row items-center justify-between rounded-b-none bg-card-header text-slate-700'>
-            <header className='flex items-center gap-3.5 p-2'>
-              <FilePlus size={16} strokeWidth={2} />
-              <span>{t('cardTitle.updateProfessional')}</span>
-            </header>
+          <CardHeaderPrimary className='justify-between' title={t('cardTitle.updateProfessional')} icon={<FilePlus size={18} strokeWidth={2} />}>
             {/* Dropdown menu */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
+                  className='!hover:bg-transparent'
                   ref={dropdownScope}
-                  size={'miniIcon'}
-                  variant={'tableHeader'}
+                  size='miniIcon'
                   onMouseOver={() =>
                     dropdownAnimation(dropdownScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
                   }
@@ -277,10 +274,10 @@ export default function UpdateProfessional() {
                     dropdownAnimation(dropdownScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
                   }
                 >
-                  <Menu size={16} strokeWidth={2} />
+                  <Menu size={17} strokeWidth={1.5} />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className='w-fit' align='center'>
+              <DropdownMenuContent className='w-fit' align='end' onCloseAutoFocus={(e) => e.preventDefault()}>
                 {PU_CONFIG.dropdownMenu.map((item) => (
                   <DropdownMenuItem key={item.id}>
                     <Link to={item.path}>{t(item.name)}</Link>
@@ -288,7 +285,7 @@ export default function UpdateProfessional() {
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
-          </CardTitle>
+          </CardHeaderPrimary>
           <CardContent className='pt-6'>
             <Form {...updateForm}>
               <form onSubmit={updateForm.handleSubmit(handleUpdateProfessional)}>
@@ -533,7 +530,7 @@ export default function UpdateProfessional() {
                   </section>
                   {/* Section: Schedule (right side) */}
                   <section className='col-span-1 flex flex-col gap-4 border-t pt-6 md:col-span-3 md:border-l md:border-t-0 md:pl-6 md:pt-0 lg:col-span-3'>
-                    <FormHeader step={2} title={t('cardTitle.scheduleConfiguration')} />
+                    <FormHeader step={2} title={t('cardTitle.scheduleConfiguration')} className='mb-1.5' />
                     {/* Form fields: Schedule working days */}
                     <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                       <FormField
