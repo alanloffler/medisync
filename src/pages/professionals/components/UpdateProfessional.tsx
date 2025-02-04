@@ -73,6 +73,28 @@ export default function UpdateProfessional() {
 
   const updateForm = useForm<z.infer<typeof professionalSchema>>({
     resolver: zodResolver(professionalSchema),
+    defaultValues: {
+      area: undefined,
+      available: true,
+      configuration: {
+        scheduleTimeEnd: '',
+        scheduleTimeInit: '',
+        slotDuration: '',
+        unavailableTimeSlot: {
+          timeSlotUnavailableEnd: '',
+          timeSlotUnavailableInit: '',
+        },
+        workingDays: undefined,
+      },
+      description: '',
+      dni: '',
+      email: '',
+      firstName: '',
+      lastName: '',
+      phone: '',
+      specialization: '',
+      title: '',
+    },
   });
 
   useEffect(() => {
@@ -281,13 +303,13 @@ export default function UpdateProfessional() {
                           <FormItem>
                             <FormLabel>{t('table.header.area')}</FormLabel>
                             <Select
-                              defaultValue={field.value}
+                              // defaultValue={field.value}
                               disabled={areas.length < 1}
                               onValueChange={(event) => {
                                 field.onChange(event);
                                 handleChangeArea(event);
                               }}
-                              value={field.value}
+                              value={updateForm.watch('area') ?? ''}
                             >
                               <FormControl>
                                 <SelectTrigger className={`h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
