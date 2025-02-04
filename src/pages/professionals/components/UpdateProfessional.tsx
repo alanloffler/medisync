@@ -19,6 +19,7 @@ import { BackButton } from '@core/components/common/BackButton';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
+import { SelectPhoneArea } from '@core/components/common/SelectPhoneArea';
 import { WorkingDays } from '@professionals/components/common/WorkingDays';
 // External imports
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -47,6 +48,7 @@ import { professionalSchema } from '@professionals/schemas/professional.schema';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export default function UpdateProfessional() {
+  const [_area, setArea] = useState<number | undefined>();
   const [areas, setAreas] = useState<IArea[]>([]);
   const [areasIsLoading, setAreasIsLoading] = useState<boolean>(false);
   const [disabledSpec, setDisabledSpec] = useState<boolean>(true);
@@ -292,7 +294,7 @@ export default function UpdateProfessional() {
                 {/* Section: Form fields */}
                 <section className='grid grid-cols-1 space-y-6 md:grid-cols-8 md:space-y-0 lg:grid-cols-6'>
                   {/* Section: Professional data (left side) */}
-                  <section className='md:cols-span-5 col-span-1 flex flex-col gap-4 md:pr-6 lg:col-span-3'>
+                  <section className='col-span-1 flex flex-col gap-4 md:col-span-5 md:pr-6 lg:col-span-3'>
                     <h1 className='mb-3 rounded-sm bg-slate-200/50 px-2 py-1 text-base font-semibold text-slate-700'>
                       {t('cardTitle.professionalData')}
                     </h1>
@@ -305,7 +307,7 @@ export default function UpdateProfessional() {
                           <FormItem>
                             <FormLabel>{t('table.header.area')}</FormLabel>
                             <Select
-                              // defaultValue={field.value}
+                              defaultValue={field.value}
                               disabled={areas.length < 1}
                               onValueChange={(event) => {
                                 field.onChange(event);
@@ -468,9 +470,6 @@ export default function UpdateProfessional() {
                           </FormItem>
                         )}
                       />
-                    </section>
-                    {/* Form fields: email and phone */}
-                    <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                       <FormField
                         control={updateForm.control}
                         name='email'
@@ -484,19 +483,37 @@ export default function UpdateProfessional() {
                           </FormItem>
                         )}
                       />
-                      <FormField
-                        control={updateForm.control}
-                        name='phone'
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{t('label.phone')}</FormLabel>
-                            <FormControl className='h-9'>
-                              <Input type='number' placeholder={t('placeholder.phone')} {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                    </section>
+                    {/* Form fields: email and phone */}
+                    <section className='grid grid-cols-1'>
+                      <div className='flex flex-row items-center space-x-6'>
+                        <FormField
+                          control={updateForm.control}
+                          name='areaCode'
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>{t('label.phone')}</FormLabel>
+                              <FormControl className='h-9 w-fit'>
+                                <SelectPhoneArea setArea={setArea} {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={updateForm.control}
+                          name='phone'
+                          render={({ field }) => (
+                            <FormItem className='flex-1'>
+                              <FormLabel> </FormLabel>
+                              <FormControl className='h-9'>
+                                <Input type='number' placeholder={t('placeholder.phone')} {...field} className='!mt-8 h-9' />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
                     </section>
                     {/* Form fields: description */}
                     <section className='grid grid-cols-1 gap-6 md:grid-cols-1'>
