@@ -13,7 +13,8 @@ module.exports = {
     },
     extend: {
       fontSize: {
-        'xsm': ['13px', '15px']
+        xxs: ['11px', '13px'],
+        xsm: ['13px', '15px'],
       },
       colors: {
         background: '#ffffff',
