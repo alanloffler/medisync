@@ -236,7 +236,9 @@ export default function UpdateProfessional() {
     updateForm.reset(valuesRef.current);
     setWorkingDaysKey(crypto.randomUUID());
     updateForm.setValue('configuration.workingDays', workingDaysValuesRef);
-    setDisabledSpec(true);
+    handleChangeArea(professional.area._id);
+    updateForm.setValue('specialization', professional.specialization._id);
+    setSpecKey(crypto.randomUUID());
   }
 
   function handleWorkingDaysValues(data: IWorkingDay[]): void {
