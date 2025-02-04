@@ -16,6 +16,7 @@ import { Textarea } from '@core/components/ui/textarea';
 import InputMask from '@mona-health/react-input-mask';
 // Components
 import { BackButton } from '@core/components/common/BackButton';
+import { FormHeader } from '@core/components/common/form/FormHeader';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
@@ -295,9 +296,7 @@ export default function UpdateProfessional() {
                 <section className='grid grid-cols-1 space-y-6 md:grid-cols-8 md:space-y-0 lg:grid-cols-6'>
                   {/* Section: Professional data (left side) */}
                   <section className='col-span-1 flex flex-col gap-4 md:col-span-5 md:pr-6 lg:col-span-3'>
-                    <h1 className='mb-3 rounded-sm bg-slate-200/50 px-2 py-1 text-base font-semibold text-slate-700'>
-                      {t('cardTitle.professionalData')}
-                    </h1>
+                    <FormHeader step={1} title={t('cardTitle.professionalData')} />
                     {/* Form fields: area and specialization */}
                     <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                       <FormField
@@ -534,7 +533,7 @@ export default function UpdateProfessional() {
                   </section>
                   {/* Section: Schedule (right side) */}
                   <section className='col-span-1 flex flex-col gap-4 border-t pt-6 md:col-span-3 md:border-l md:border-t-0 md:pl-6 md:pt-0 lg:col-span-3'>
-                    <h1 className='mb-3 rounded-sm bg-slate-200/50 px-2 py-1 font-semibold text-slate-700'>{t('cardTitle.scheduleConfiguration')}</h1>
+                    <FormHeader step={2} title={t('cardTitle.scheduleConfiguration')} />
                     {/* Form fields: Schedule working days */}
                     <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
                       <FormField
