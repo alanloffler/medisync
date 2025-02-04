@@ -45,7 +45,7 @@ export const SelectPhoneArea = forwardRef<HTMLDivElement, IProps>(({ setArea, va
         <SelectTrigger className='h-9 bg-slate-100/70 p-2 text-xs ring-offset-background hover:bg-slate-100 data-[state=open]:outline-none data-[state=open]:ring-1 data-[state=open]:ring-ring data-[state=open]:ring-offset-0'>
           {areaCode ? (
             <SelectValue>
-              <section className='mr-1 flex flex-row items-center gap-1'>
+              <section className='mr-1 flex flex-row items-center gap-2'>
                 <img
                   width={18}
                   height={18}
