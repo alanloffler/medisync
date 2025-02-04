@@ -43,6 +43,14 @@ export default function UpdateUser() {
 
   const updateForm = useForm<z.infer<typeof userSchema>>({
     resolver: zodResolver(userSchema),
+    defaultValues: {
+      areaCode: undefined,
+      dni: '' as unknown as number,
+      email: '',
+      firstName: '',
+      lastName: '',
+      phone: '' as unknown as number,
+    },
   });
 
   const {
@@ -204,7 +212,7 @@ export default function UpdateUser() {
                           <FormItem>
                             <FormLabel>{t('label.phone')}</FormLabel>
                             <FormControl className='h-9'>
-                              <SelectPhoneArea setArea={setArea} {...field} value={Number(field.value)} />
+                              <SelectPhoneArea setArea={setArea} {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
