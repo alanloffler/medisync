@@ -64,7 +64,7 @@ export function WorkingDays({ label, data, handleWorkingDaysValues }: IWorkingDa
                 defaultChecked={daysData.find((value) => value.day === index)?.value || false}
                 onCheckedChange={(checked) => handleCheckedChange(index, checked as boolean)}
               />
-              <span className='text-xs font-medium'>{UtilsString.upperCase(days[index])}</span>
+              <span className='text-xs font-normal'>{UtilsString.upperCase(days[index])}</span>
             </div>
           ))}
       </div>
