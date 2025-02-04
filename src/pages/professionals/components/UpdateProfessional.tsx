@@ -77,6 +77,7 @@ export default function UpdateProfessional() {
 
   const updateForm = useForm<z.infer<typeof professionalSchema>>({
     resolver: zodResolver(professionalSchema),
+    // TODO: add areaCode and manage area state, add to schema and then on database entity
     defaultValues: {
       area: undefined,
       available: true,
