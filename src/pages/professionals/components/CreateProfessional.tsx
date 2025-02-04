@@ -241,9 +241,9 @@ export default function CreateProfessional() {
           <Form {...createForm}>
             <form onSubmit={createForm.handleSubmit(handleCreateProfessional)}>
               {/* Section: Form fields */}
-              <section className='grid grid-cols-1 space-y-6 md:grid-cols-2 md:space-y-0'>
+              <section className='grid grid-cols-1 space-y-6 md:grid-cols-8 lg:grid-cols-6 md:space-y-0'>
                 {/* Section: Professional data (left side) */}
-                <section className='flex flex-col gap-4 md:pr-6'>
+                <section className='col-span-1 flex flex-col md:col-span-5 lg:col-span-3 gap-4 md:pr-6'>
                   <FormHeader step={1} title={t('cardTitle.professionalData')} />
                   {/* Form fields: area and specialization */}
                   <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
@@ -443,7 +443,7 @@ export default function CreateProfessional() {
                   </section>
                 </section>
                 {/* Section: Schedule (right side) */}
-                <section className='flex flex-col gap-4 border-t pt-6 md:border-l md:border-t-0 md:pl-6 md:pt-0'>
+                <section className='flex flex-col col-span-1 md:col-span-3 lg:col-span-3 gap-4 border-t pt-6 md:border-l md:border-t-0 md:pl-6 md:pt-0'>
                   <FormHeader step={2} title={t('cardTitle.scheduleConfiguration')} className='mb-1.5' />
                   {/* Form fields: Schedule working days */}
                   <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
