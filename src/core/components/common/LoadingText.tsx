@@ -1,13 +1,15 @@
-import { cn } from '@lib/utils';
+// External imports
 import { useAnimate } from 'motion/react';
 import { useEffect, useMemo, useRef } from 'react';
-
+// Imports
+import { cn } from '@lib/utils';
+// Interface
 interface ILoadingText {
   className?: string;
   suffix?: string;
   text?: string;
 }
-
+// React component
 export function LoadingText({ className, suffix, text }: ILoadingText) {
   const [_, animation] = useAnimate();
   const _suffix: string[] = useMemo(() => (suffix ? suffix.split('') : []), [suffix]);
