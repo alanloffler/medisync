@@ -23,7 +23,7 @@ import { WorkingDays } from '@professionals/components/common/WorkingDays';
 // External imports
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { spring, useAnimate } from 'motion/react';
-import { useEffect, useState, MouseEvent, useRef } from 'react';
+import { type MouseEvent, useEffect, useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
@@ -266,9 +266,9 @@ export default function UpdateProfessional() {
             <Form {...updateForm}>
               <form onSubmit={updateForm.handleSubmit(handleUpdateProfessional)}>
                 {/* Section: Form fields */}
-                <section className='grid grid-cols-1 space-y-6 md:grid-cols-8 lg:grid-cols-6 md:space-y-0'>
+                <section className='grid grid-cols-1 space-y-6 md:grid-cols-8 md:space-y-0 lg:grid-cols-6'>
                   {/* Section: Professional data (left side) */}
-                  <section className='col-span-1 flex flex-col md:cols-span-5 lg:col-span-3 gap-4 md:pr-6'>
+                  <section className='md:cols-span-5 col-span-1 flex flex-col gap-4 md:pr-6 lg:col-span-3'>
                     <h1 className='mb-3 rounded-sm bg-slate-200/50 px-2 py-1 text-base font-semibold text-slate-700'>
                       {t('cardTitle.professionalData')}
                     </h1>
@@ -492,7 +492,7 @@ export default function UpdateProfessional() {
                     </section>
                   </section>
                   {/* Section: Schedule (right side) */}
-                  <section className='flex flex-col col-span-1 md:col-span-3 lg:col-span-3 gap-4 border-t pt-6 md:border-l md:border-t-0 md:pl-6 md:pt-0'>
+                  <section className='col-span-1 flex flex-col gap-4 border-t pt-6 md:col-span-3 md:border-l md:border-t-0 md:pl-6 md:pt-0 lg:col-span-3'>
                     <h1 className='mb-3 rounded-sm bg-slate-200/50 px-2 py-1 font-semibold text-slate-700'>{t('cardTitle.scheduleConfiguration')}</h1>
                     {/* Form fields: Schedule working days */}
                     <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
