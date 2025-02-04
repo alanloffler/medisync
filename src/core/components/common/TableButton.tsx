@@ -2,7 +2,7 @@
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
 import type { ReactNode } from 'react';
-import { useAnimate } from 'motion/react';
+import { type AnimationPlaybackControls, useAnimate } from 'motion/react';
 // Imports
 import { cn } from '@lib/utils';
 import { motion } from '@core/services/motion.service';
@@ -18,24 +18,27 @@ interface IProps {
 export function TableButton({ callback, children, className, disabled, tooltip }: IProps) {
   const [scope, animation] = useAnimate();
 
-  function animateOver(): void {
+  function animateOver(): AnimationPlaybackControls | undefined {
     if (disabled === false || disabled === undefined) {
       const { keyframes, options } = motion.scale(1.1).type('bounce').animate();
-      animation(scope.current, keyframes, options);
+      return animation(scope.current, keyframes, options);
     }
   }
 
-  function animateOut(): void {
+  function animateOut(): AnimationPlaybackControls | undefined {
     if (disabled === false || disabled === undefined) {
       const { keyframes, options } = motion.scale(1).type('bounce').animate();
-      animation(scope.current, keyframes, options);
+      return animation(scope.current, keyframes, options);
     }
   }
 
   return (
     <TooltipWrapper tooltip={tooltip}>
       <button
-        className={cn('flex h-7 w-7 items-center justify-center bg-transparent rounded-md disabled:pointer-events-none disabled:text-rose-500', className)}
+        className={cn(
+          'flex h-7 w-7 items-center justify-center rounded-md bg-transparent disabled:pointer-events-none disabled:text-rose-500',
+          className,
+        )}
         disabled={disabled}
         onClick={callback}
         onMouseOver={animateOver}
