@@ -213,7 +213,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
           </div>
         ),
         cell: ({ row }) => (
-          <div className='text-left text-xsm text-slate-500'>{`(+${row.original.areaCode}) ${delimiter(row.original.phone, '-', 6)}`}</div>
+          <div className='text-left text-xsm text-slate-500'>{`(${row.original.areaCode}) ${delimiter(row.original.phone, '-', 6)}`}</div>
         ),
       },
       {
