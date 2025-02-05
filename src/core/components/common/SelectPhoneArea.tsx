@@ -61,14 +61,22 @@ export const SelectPhoneArea = forwardRef<HTMLDivElement, IProps>(({ setArea, va
         </SelectTrigger>
         <SelectContent onCloseAutoFocus={(e) => e.preventDefault()} className='min-w-0' align='end'>
           <SelectGroup>
-            {AREA_CODE.map((area) => (
-              <SelectItem key={crypto.randomUUID()} value={area.code}>
-                <div className='flex flex-row items-center space-x-2'>
-                  <img width={18} height={18} src={new URL(`../../../assets/icons/i18n/${area.icon}.svg`, import.meta.url).href} alt={area.label} />
-                  <div className='text-xs'>{area.abbreviation}</div>
-                </div>
-              </SelectItem>
-            ))}
+            {AREA_CODE.map(
+              (area) =>
+                area.code.length >= 1 && (
+                  <SelectItem key={crypto.randomUUID()} value={area.code}>
+                    <div className='flex flex-row items-center space-x-2'>
+                      <img
+                        width={18}
+                        height={18}
+                        src={new URL(`../../../assets/icons/i18n/${area.icon}.svg`, import.meta.url).href}
+                        alt={area.label}
+                      />
+                      <div className='text-xs'>{area.abbreviation}</div>
+                    </div>
+                  </SelectItem>
+                ),
+            )}
           </SelectGroup>
         </SelectContent>
       </Select>
