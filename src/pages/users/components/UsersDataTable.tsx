@@ -37,6 +37,7 @@ import type { IDataTableUsers, ITableManager } from '@core/interfaces/table.inte
 import type { IPaginatedUsersVars } from '@users/interfaces/mutation-vars.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser, IUsersData } from '@users/interfaces/user.interface';
+import { AREA_CODE } from '@config/area-code.config';
 import { EUserSearch } from '@users/enums/user-search.enum';
 import { EUserType } from '@core/enums/user-type.enum';
 import { EWhatsappTemplate } from '@whatsapp/enums/template.enum';
@@ -213,7 +214,20 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
           </div>
         ),
         cell: ({ row }) => (
-          <div className='text-left text-xsm text-slate-500'>{`(${row.original.areaCode}) ${delimiter(row.original.phone, '-', 6)}`}</div>
+          <div className='flex items-center space-x-2'>
+            <img
+              className='grayscale'
+              height={18}
+              width={18}
+              src={
+                new URL(
+                  `../../../assets/icons/i18n/${AREA_CODE.find((areaCode) => areaCode.code === String(row.original.areaCode))?.icon}.svg`,
+                  import.meta.url,
+                ).href
+              }
+            />
+            <span className='text-left text-xsm text-slate-500'>{`(${row.original.areaCode}) ${delimiter(row.original.phone, '-', 6)}`}</span>
+          </div>
         ),
       },
       {
