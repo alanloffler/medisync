@@ -25,6 +25,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import type { IDialog } from '@core/interfaces/dialog.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
+import { AREA_CODE } from '@config/area-code.config';
 import { EUserType } from '@core/enums/user-type.enum';
 import { EWhatsappTemplate } from '@whatsapp/enums/template.enum';
 import { HEADER_CONFIG } from '@config/layout/header.config';
@@ -163,7 +164,19 @@ export default function ViewUser() {
                     <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
                       <Smartphone size={17} strokeWidth={2} />
                     </div>
-                    <span className='text-sm'>{`(${user.data.areaCode}) ${delimiter(user.data.phone, '-', 6)}`}</span>
+                    <div className='flex items-center space-x-2'>
+                      <img
+                        height={18}
+                        width={18}
+                        src={
+                          new URL(
+                            `../../../assets/icons/i18n/${AREA_CODE.find((areaCode) => areaCode.code === String(user.data.areaCode))?.icon}.svg`,
+                            import.meta.url,
+                          ).href
+                        }
+                      />
+                      <span className='text-sm'>{`(${user.data.areaCode}) ${delimiter(user.data.phone, '-', 6)}`}</span>
+                    </div>
                   </section>
                   {user.data.email && (
                     <section className='flex items-center space-x-3'>
