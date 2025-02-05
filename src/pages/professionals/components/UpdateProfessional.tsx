@@ -53,8 +53,6 @@ import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export default function UpdateProfessional() {
   const [_area, setArea] = useState<number | undefined>();
-  const [areas, setAreas] = useState<IArea[]>([]);
-  const [areasIsLoading, setAreasIsLoading] = useState<boolean>(false);
   const [disabledSpec, setDisabledSpec] = useState<boolean>(true);
   const [errorLoadingProfessional, setErrorLoadingProfessional] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -63,7 +61,6 @@ export default function UpdateProfessional() {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [professional, setProfessional] = useState<IProfessional>({} as IProfessional);
   const [professionalLoading, setProfessionalLoading] = useState<boolean>(true);
-  // const [slotDurationValues, setSlotDurationValues] = useState<number[]>([]);
   const [specKey, setSpecKey] = useState<string>('');
   const [specializations, setSpecializations] = useState<ISpecialization[]>([]);
   const [titles, setTitles] = useState<ITitle[]>([]);
@@ -104,28 +101,33 @@ export default function UpdateProfessional() {
     },
   });
 
-  useEffect(() => {
-    setAreasIsLoading(true);
-    setTitlesIsLoading(true);
+  const {
+    data: areas,
+    error: areasError,
+    isError: areasIsError,
+    isLoading: areasIsLoading,
+    isSuccess: areasIsSuccess,
+  } = useQuery<IResponse<IArea[]>, Error>({
+    queryKey: ['areas', 'find-all'],
+    queryFn: async () => await AreaService.findAll(),
+    retry: 1,
+  });
 
-    AreaService.findAll()
-      .then((response: IResponse) => {
-        if (response.statusCode === 200) {
-          setAreas(response.data);
-          setDisabledSpec(false);
-        }
-        if (response.statusCode > 399) {
-          updateForm.setError('area', { message: response.message });
-          updateForm.setError('specialization', { message: response.message });
-          addNotification({ type: 'error', message: response.message });
-        }
-        if (response instanceof Error) {
-          updateForm.setError('area', { message: APP_CONFIG.error.server });
-          updateForm.setError('specialization', { message: APP_CONFIG.error.server });
-          addNotification({ type: 'error', message: APP_CONFIG.error.server });
-        }
-      })
-      .finally(() => setAreasIsLoading(false));
+  useEffect(() => {
+    if (areasIsSuccess) setDisabledSpec(false);
+  }, [areasIsSuccess]);
+
+  useEffect(() => {
+    if (areasIsError) {
+      setDisabledSpec(true);
+      updateForm.setError('area', { message: areasError.message });
+      updateForm.setError('specialization', { message: areasError.message });
+      addNotification({ type: 'error', message: areasError.message });
+    }
+  }, [addNotification, areasIsError, areasError?.message, updateForm]);
+
+  useEffect(() => {
+    setTitlesIsLoading(true);
 
     TitleService.findAll()
       .then((response: IResponse) => {
@@ -209,7 +211,7 @@ export default function UpdateProfessional() {
   }, [areasIsLoading, professionalLoading]);
 
   function handleChangeArea(event: string): void {
-    const specializations = areas.find((area) => area._id === event)?.specializations || [];
+    const specializations = areas?.data.find((area) => area._id === event)?.specializations || [];
     setSpecializations(specializations);
     setDisabledSpec(false);
     updateForm.setValue('specialization', '');
@@ -315,7 +317,7 @@ export default function UpdateProfessional() {
                             <FormLabel>{t('table.header.area')}</FormLabel>
                             <Select
                               defaultValue={field.value}
-                              disabled={areas.length < 1}
+                              disabled={!areas || areas?.data.length < 1}
                               onValueChange={(event) => {
                                 field.onChange(event);
                                 handleChangeArea(event);
@@ -333,8 +335,9 @@ export default function UpdateProfessional() {
                               </FormControl>
                               <FormMessage />
                               <SelectContent>
-                                {areas.length > 0 &&
-                                  areas.map((el) => (
+                                {areas &&
+                                  areas.data.length > 0 &&
+                                  areas.data.map((el: IArea) => (
                                     <SelectItem key={el._id} value={el._id} className='text-sm'>
                                       {UtilsString.upperCase(el.name)}
                                     </SelectItem>
@@ -571,7 +574,7 @@ export default function UpdateProfessional() {
                           <FormItem className='space-y-2'>
                             <FormLabel>{t('label.slotDuration')}</FormLabel>
                             <Select
-                              disabled={areas.length < 1}
+                              disabled={areas && areas.data.length < 1}
                               onValueChange={(event) => {
                                 field.onChange(event);
                               }}
