@@ -3,11 +3,11 @@ export const PROF_SCHEMA = {
     message: 'Debes ingresar un código de área',
     min: {
       value: 1,
-      message: 'Seleccione',
+      message: 'Mínimo requerido',
     },
     max: {
       value: 999,
-      message: 'Seleccione',
+      message: 'Máximo excedido',
     },
   },
   areaMessage: 'Debes seleccionar un área',
