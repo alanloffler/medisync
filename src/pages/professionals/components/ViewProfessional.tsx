@@ -23,6 +23,7 @@ import { useQuery } from '@tanstack/react-query';
 // Imports
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
+import { AREA_CODE } from '@config/area-code.config';
 import { CalendarService } from '@appointments/services/calendar.service';
 import { EUserType } from '@core/enums/user-type.enum';
 import { EWhatsappTemplate } from '@whatsapp/enums/template.enum';
@@ -134,12 +135,24 @@ export default function ViewProfessional() {
               </section>
               <section className='space-y-3'>
                 <h2 className='pt-2 text-xs font-medium uppercase leading-none text-slate-500'>{t('label.contact')}</h2>
-                {professional.data.phone && (
+                {professional.data.areaCode && professional.data.phone && (
                   <div className='flex items-center space-x-3'>
                     <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
                       <Smartphone size={17} strokeWidth={2} />
                     </div>
-                    <span className='text-sm'>{delimiter(professional.data.phone, '-', 6)}</span>
+                    <div className='flex items-center space-x-2'>
+                      <img
+                        height={18}
+                        width={18}
+                        src={
+                          new URL(
+                            `../../../assets/icons/i18n/${AREA_CODE.find((areaCode) => areaCode.code === String(professional.data.areaCode))?.icon}.svg`,
+                            import.meta.url,
+                          ).href
+                        }
+                      />
+                      <span className='text-sm'>{`(${professional.data.areaCode}) ${delimiter(professional.data.phone, '-', 6)}`}</span>
+                    </div>
                   </div>
                 )}
                 {professional.data.email && (
