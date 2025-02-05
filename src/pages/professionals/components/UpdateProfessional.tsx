@@ -25,7 +25,7 @@ import { SelectPhoneArea } from '@core/components/common/SelectPhoneArea';
 import { WorkingDays } from '@professionals/components/common/WorkingDays';
 // External imports
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { spring, useAnimate } from 'motion/react';
+import { type AnimationPlaybackControls, useAnimate } from 'motion/react';
 import { type MouseEvent, useEffect, useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -46,6 +46,7 @@ import { ProfessionalApiService } from '@professionals/services/professional-api
 import { ScheduleService } from '@settings/services/schedule-settings.service';
 import { TitleService } from '@core/services/title.service';
 import { UtilsString } from '@core/services/utils/string.service';
+import { motion } from '@core/services/motion.service';
 import { professionalSchema } from '@professionals/schemas/professional.schema';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
@@ -251,6 +252,16 @@ export default function UpdateProfessional() {
     updateForm.setValue('configuration.workingDays', data);
   }
 
+  function dropdownMouseOver(): AnimationPlaybackControls {
+    const { options, keyframes } = motion.scale(1.1).type('bounce').animate();
+    return dropdownAnimation(dropdownScope.current, keyframes, options);
+  }
+
+  function dropdownMouseOut(): AnimationPlaybackControls {
+    const { options, keyframes } = motion.scale(1).type('bounce').animate();
+    return dropdownAnimation(dropdownScope.current, keyframes, options);
+  }
+
   return (
     <main className='flex flex-1 flex-col gap-2 p-4 md:gap-2 md:p-6 lg:gap-2 lg:p-6'>
       {/* Section: Page Header */}
@@ -269,12 +280,8 @@ export default function UpdateProfessional() {
                   className='!hover:bg-transparent'
                   ref={dropdownScope}
                   size='miniIcon'
-                  onMouseOver={() =>
-                    dropdownAnimation(dropdownScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                  }
-                  onMouseOut={() =>
-                    dropdownAnimation(dropdownScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
-                  }
+                  onMouseOver={dropdownMouseOver}
+                  onMouseOut={dropdownMouseOut}
                 >
                   <Menu size={17} strokeWidth={1.5} />
                 </Button>
