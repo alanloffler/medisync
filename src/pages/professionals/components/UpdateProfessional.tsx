@@ -28,6 +28,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { type AnimationPlaybackControls, useAnimate } from 'motion/react';
 import { type MouseEvent, useEffect, useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
+import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -62,7 +63,7 @@ export default function UpdateProfessional() {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [professional, setProfessional] = useState<IProfessional>({} as IProfessional);
   const [professionalLoading, setProfessionalLoading] = useState<boolean>(true);
-  const [slotDurationValues, setSlotDurationValues] = useState<number[]>([]);
+  // const [slotDurationValues, setSlotDurationValues] = useState<number[]>([]);
   const [specKey, setSpecKey] = useState<string>('');
   const [specializations, setSpecializations] = useState<ISpecialization[]>([]);
   const [titles, setTitles] = useState<ITitle[]>([]);
@@ -140,13 +141,14 @@ export default function UpdateProfessional() {
       })
       .finally(() => setTitlesIsLoading(false));
 
-    ScheduleService.findAllSlotDurations().then((response: number[]) => {
-      // TODO: dynamic when database entity created
-      // Manage errors then
-      setSlotDurationValues(response);
-    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const { data: slotDuration, isError: slotDurationError } = useQuery<number[], Error>({
+    queryKey: ['slot-duration'],
+    queryFn: async () => await ScheduleService.findAllSlotDurations(),
+    retry: 1,
+  });
 
   useEffect(() => {
     if (id && !areasIsLoading) {
@@ -576,14 +578,18 @@ export default function UpdateProfessional() {
                               value={String(field.value)}
                             >
                               <FormControl>
-                                <SelectTrigger className={`h-9 w-1/2 ${!field.value ? 'text-muted-foreground' : ''}`}>
-                                  <SelectValue placeholder={t('placeholder.slotDuration')} />
+                                <SelectTrigger
+                                  disabled={slotDurationError}
+                                  className={`max-w-1/2 h-9 w-fit space-x-2 disabled:text-rose-400 [&_svg]:disabled:text-foreground ${!field.value ? 'text-muted-foreground' : ''}`}
+                                >
+                                  <SelectValue placeholder={slotDurationError ? t('error.default') : t('placeholder.slotDuration')} />
                                 </SelectTrigger>
                               </FormControl>
                               <FormMessage />
                               <SelectContent>
-                                {slotDurationValues.length > 0 &&
-                                  slotDurationValues.map((el) => (
+                                {slotDuration &&
+                                  slotDuration.length > 0 &&
+                                  slotDuration.map((el: number) => (
                                     <SelectItem key={el} value={String(el)} className='text-sm'>
                                       {el}
                                     </SelectItem>
