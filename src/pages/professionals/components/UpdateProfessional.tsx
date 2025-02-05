@@ -77,9 +77,9 @@ export default function UpdateProfessional() {
 
   const updateForm = useForm<z.infer<typeof professionalSchema>>({
     resolver: zodResolver(professionalSchema),
-    // TODO: add areaCode and manage area state, add to schema and then on database entity
     defaultValues: {
       area: undefined,
+      areaCode: undefined,
       available: true,
       configuration: {
         scheduleTimeEnd: '',
@@ -176,6 +176,7 @@ export default function UpdateProfessional() {
       handleChangeArea(professional.area._id);
       setSpecKey(crypto.randomUUID());
 
+      updateForm.setValue('areaCode', professional.areaCode);
       updateForm.setValue('available', professional.available);
       updateForm.setValue('configuration.scheduleTimeEnd', professional.configuration?.scheduleTimeEnd);
       updateForm.setValue('configuration.scheduleTimeInit', professional.configuration?.scheduleTimeInit);
