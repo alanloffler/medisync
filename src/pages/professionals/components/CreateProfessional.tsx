@@ -54,8 +54,6 @@ export default function CreateProfessional() {
   const [isCreating, setIsCreating] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [specializations, setSpecializations] = useState<ISpecialization[]>([]);
-  const [titles, setTitles] = useState<ITitle[]>([]);
-  const [titlesIsLoading, setTitlesIsLoading] = useState<boolean>(false);
   const [workingDays, setWorkingDays] = useState<IWorkingDay[]>([]);
   const [workingDaysKey, setWorkingDaysKey] = useState<string>('');
   const [dropdownScope, dropdownAnimation] = useAnimate();
@@ -85,26 +83,23 @@ export default function CreateProfessional() {
     }
   }, [addNotification, areasIsError, areasError?.message]);
 
+  const {
+    data: titles,
+    error: titlesError,
+    isError: titlesIsError,
+    isLoading: titlesIsLoading,
+  } = useQuery<IResponse<ITitle[]>, Error>({
+    queryKey: ['titles', 'find-all'],
+    queryFn: async () => await TitleService.findAll(),
+  });
+
   useEffect(() => {
-    setTitlesIsLoading(true);
+    if (titlesIsError) addNotification({ type: 'error', message: titlesError.message });
+  }, [addNotification, titlesIsError, titlesError?.message]);
 
-    TitleService.findAll()
-      .then((response: IResponse) => {
-        if (response.statusCode === 200) setTitles(response.data);
-        if (response.statusCode > 399) {
-          createForm.setError('title', { message: response.message });
-          addNotification({ type: 'error', message: response.message });
-        }
-        if (response instanceof Error) {
-          createForm.setError('title', { message: t('error.internalServer') });
-          addNotification({ type: 'error', message: t('error.internalServer') });
-        }
-      })
-      .finally(() => setTitlesIsLoading(false));
-
+  useEffect(() => {
     const daysOfWeek: IWorkingDay[] = generateWeekOfWorkingDays();
     setWorkingDays(daysOfWeek);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const {
@@ -340,7 +335,7 @@ export default function CreateProfessional() {
                           <FormLabel>{t('label.title')}</FormLabel>
                           <Select
                             defaultValue={field.value}
-                            disabled={titles.length < 1}
+                            disabled={!titles || titles?.data.length < 1}
                             onValueChange={(event) => {
                               field.onChange(event);
                             }}
@@ -360,8 +355,9 @@ export default function CreateProfessional() {
                             </FormControl>
                             <FormMessage />
                             <SelectContent>
-                              {titles.length > 0 &&
-                                titles.map((el) => (
+                              {titles &&
+                                titles.data.length > 0 &&
+                                titles.data.map((el) => (
                                   <SelectItem key={el._id} value={el._id} className='text-sm'>
                                     {UtilsString.upperCase(el.name)}
                                   </SelectItem>
