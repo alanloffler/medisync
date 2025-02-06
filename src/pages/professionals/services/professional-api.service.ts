@@ -63,24 +63,15 @@ export class ProfessionalApiService {
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
-  // TODO FORMATTED DATA TO LOWER CASE INPUTS
-  public static async update(id: string, data: IProfessionalForm) {
-    const url: string = `${this.API_URL}/professionals/${id}`;
+  // CHECKED: used on UpdateProfessional.tsx
+  // TODO: FORMATTED DATA TO LOWER CASE INPUTS
+  public static async update(id: string, data: IProfessionalForm): Promise<IResponse<IProfessional>> {
+    const path: string = `${this.API_URL}/professionals/${id}`;
+    const url: URL = new URL(path);
 
-    try {
-      const query: Response = await fetch(url, {
-        method: 'PATCH',
-        headers: {
-          'content-type': 'application/json;charset=UTF-8',
-        },
-        body: JSON.stringify(data),
-      });
-
-      return await query.json();
-    } catch (e) {
-      return e;
-    }
+    return await UtilsUrl.fetch(url, EMethods.PATCH, data);
   }
+
   // TanStack query response format
   public static async updateAvailability(id: string, availability: string) {
     const url: string = `${this.API_URL}/professionals/${id}/availability`;
