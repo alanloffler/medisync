@@ -17,6 +17,7 @@ import InputMask from '@mona-health/react-input-mask';
 // Components
 import { BackButton } from '@core/components/common/BackButton';
 import { CardHeaderPrimary } from '@core/components/common/header/CardHeaderPrimary';
+import { FormError } from '@core/components/common/form/FormError';
 import { FormHeader } from '@core/components/common/form/FormHeader';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
@@ -46,14 +47,12 @@ import { UtilsString } from '@core/services/utils/string.service';
 import { generateWeekOfWorkingDays } from '@professionals/utils/week-working-days.util';
 import { professionalSchema } from '@professionals/schemas/professional.schema';
 import { useNotificationsStore } from '@core/stores/notifications.store';
-import { FormError } from '@core/components/common/form/FormError';
 // React component
 export default function CreateProfessional() {
   const [disabledSpec, setDisabledSpec] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [isCreating, setIsCreating] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
-  const [slotDurationValues, setSlotDurationValues] = useState<number[]>([]);
   const [specializations, setSpecializations] = useState<ISpecialization[]>([]);
   const [titles, setTitles] = useState<ITitle[]>([]);
   const [titlesIsLoading, setTitlesIsLoading] = useState<boolean>(false);
@@ -103,16 +102,19 @@ export default function CreateProfessional() {
       })
       .finally(() => setTitlesIsLoading(false));
 
-    ScheduleService.findAllSlotDurations().then((response: number[]) => {
-      // TODO: dynamic when database entity created
-      // Manage errors then
-      setSlotDurationValues(response);
-    });
-
     const daysOfWeek: IWorkingDay[] = generateWeekOfWorkingDays();
     setWorkingDays(daysOfWeek);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const {
+    data: slotDuration,
+    error: slotDurationError,
+    isError: slotDurationIsError,
+  } = useQuery<number[], Error>({
+    queryKey: ['slot-duration'],
+    queryFn: async () => await ScheduleService.findAllSlotDurations(),
+  });
 
   const defaultValues = {
     area: '',
@@ -525,14 +527,21 @@ export default function CreateProfessional() {
                             value={String(field.value)}
                           >
                             <FormControl>
-                              <SelectTrigger className={`h-9 w-1/2 ${!field.value ? 'text-muted-foreground' : ''}`}>
-                                <SelectValue placeholder={t('placeholder.slotDuration')} />
-                              </SelectTrigger>
+                              <div className='flex items-center space-x-3'>
+                                <SelectTrigger
+                                  className={`max-w-1/2 h-9 w-fit space-x-2 ${!field.value ? 'text-muted-foreground' : ''}`}
+                                  disabled={slotDurationIsError}
+                                >
+                                  <SelectValue placeholder={t('placeholder.slotDuration')} />
+                                </SelectTrigger>
+                                {slotDurationIsError && <FormError message={slotDurationError.message} />}
+                              </div>
                             </FormControl>
                             <FormMessage />
                             <SelectContent>
-                              {slotDurationValues.length > 0 &&
-                                slotDurationValues.map((el) => (
+                              {slotDuration &&
+                                slotDuration.length > 0 &&
+                                slotDuration.map((el) => (
                                   <SelectItem key={el} value={String(el)} className='text-sm'>
                                     {el}
                                   </SelectItem>
