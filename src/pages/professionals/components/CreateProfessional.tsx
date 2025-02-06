@@ -21,7 +21,6 @@ import { FormHeader } from '@core/components/common/form/FormHeader';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
 import { SelectPhoneArea } from '@core/components/common/SelectPhoneArea';
-import { SelectSpecialtiesForm } from '@core/components/common/SelectSpecialtiesForm';
 import { WorkingDays } from '@professionals/components/common/WorkingDays';
 // External imports
 import { Link, useNavigate } from 'react-router-dom';
@@ -242,13 +241,53 @@ export default function CreateProfessional() {
           <Form {...createForm}>
             <form onSubmit={createForm.handleSubmit(handleCreateProfessional)}>
               {/* Section: Form fields */}
-              <section className='grid grid-cols-1 space-y-6 md:grid-cols-8 lg:grid-cols-6 md:space-y-0'>
+              <section className='grid grid-cols-1 space-y-6 md:grid-cols-8 md:space-y-0 lg:grid-cols-6'>
                 {/* Section: Professional data (left side) */}
-                <section className='col-span-1 flex flex-col md:col-span-5 lg:col-span-3 gap-4 md:pr-6'>
+                <section className='col-span-1 flex flex-col gap-4 md:col-span-5 md:pr-6 lg:col-span-3'>
                   <FormHeader step={1} title={t('cardTitle.professionalData')} />
                   {/* Form fields: area and specialization */}
                   <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
-                    <SelectSpecialtiesForm formControl={createForm.control} callback={handleChangeArea} />
+                    {/* <SelectSpecialtiesForm formControl={createForm.control} callback={handleChangeArea} /> */}
+                    <FormField
+                      control={createForm.control}
+                      name='area'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t('table.header.area')}</FormLabel>
+                          <Select
+                            defaultValue={field.value}
+                            disabled={!areas || areas?.data.length < 1}
+                            onValueChange={(event) => {
+                              field.onChange(event);
+                              handleChangeArea(event);
+                            }}
+                            value={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className={`h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
+                                {areasIsLoading ? (
+                                  <LoadingDB variant='default' text={t('loading.default')} className='ml-0' />
+                                ) : areasIsError ? (
+                                  <span className='text-red-400'>{t('error.default')}</span>
+                                ) : (
+                                  <SelectValue placeholder={t('placeholder.area')} />
+                                )}
+                              </SelectTrigger>
+                            </FormControl>
+                            <FormMessage />
+                            <SelectContent>
+                              {areas &&
+                                areas.data.length > 0 &&
+                                areas.data.map((el: IArea) => (
+                                  <SelectItem key={el._id} value={el._id} className='text-sm'>
+                                    {UtilsString.upperCase(el.name)}
+                                  </SelectItem>
+                                ))}
+                            </SelectContent>
+                          </Select>
+                        </FormItem>
+                      )}
+                    />
                     {/* WIP */}
                     <FormField
                       control={createForm.control}
@@ -444,7 +483,7 @@ export default function CreateProfessional() {
                   </section>
                 </section>
                 {/* Section: Schedule (right side) */}
-                <section className='flex flex-col col-span-1 md:col-span-3 lg:col-span-3 gap-4 border-t pt-6 md:border-l md:border-t-0 md:pl-6 md:pt-0'>
+                <section className='col-span-1 flex flex-col gap-4 border-t pt-6 md:col-span-3 md:border-l md:border-t-0 md:pl-6 md:pt-0 lg:col-span-3'>
                   <FormHeader step={2} title={t('cardTitle.scheduleConfiguration')} className='mb-1.5' />
                   {/* Form fields: Schedule working days */}
                   <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
