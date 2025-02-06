@@ -19,8 +19,8 @@ export function FormError({ message }: IProps) {
     <TooltipProvider delayDuration={0.3}>
       <Tooltip>
         <TooltipTrigger asChild>
-          <div ref={scope} className='flex h-4 w-4 cursor-pointer items-center justify-center rounded-full bg-red-400 opacity-0'>
-            <span className='text-xs font-medium text-red-50'>!</span>
+          <div ref={scope} className='flex h-4 w-4 cursor-pointer items-center justify-center rounded-full bg-rose-400 opacity-0'>
+            <span className='text-xxs font-medium text-rose-50'>!</span>
           </div>
         </TooltipTrigger>
         <TooltipContent className='max-w-[150px] bg-red-50'>
