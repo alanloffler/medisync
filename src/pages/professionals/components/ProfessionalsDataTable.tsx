@@ -148,7 +148,7 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
         size: 50,
         header: () => <div className='text-center uppercase'>{t(PROF_CONFIG.table.header[0])}</div>,
         cell: ({ row }) => (
-          <div className='mx-auto w-fit rounded-md bg-slate-100 px-1.5 py-1 text-center text-xs text-slate-400'>{truncate(row.original._id, -3)}</div>
+          <div className='mx-auto w-fit rounded-md bg-slate-100 px-1.5 py-1 text-center text-xxs text-slate-400'>{truncate(row.original._id, -3)}</div>
         ),
       },
       {
