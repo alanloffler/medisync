@@ -17,6 +17,7 @@ import InputMask from '@mona-health/react-input-mask';
 // Components
 import { BackButton } from '@core/components/common/BackButton';
 import { CardHeaderPrimary } from '@core/components/common/header/CardHeaderPrimary';
+import { FormError } from '@core/components/common/form/FormError';
 import { FormHeader } from '@core/components/common/form/FormHeader';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
@@ -142,10 +143,6 @@ export default function UpdateProfessional() {
     queryKey: ['slot-duration'],
     queryFn: async () => await ScheduleService.findAllSlotDurations(),
   });
-
-  useEffect(() => {
-    if (slotDurationIsError) updateForm.setError('configuration.slotDuration', { message: slotDurationError?.message });
-  }, [slotDurationError?.message, slotDurationIsError, updateForm]);
 
   const {
     data: professional,
@@ -573,12 +570,15 @@ export default function UpdateProfessional() {
                               value={String(field.value)}
                             >
                               <FormControl>
-                                <SelectTrigger
-                                  disabled={slotDurationIsError}
-                                  className={`max-w-1/2 h-9 w-fit space-x-2 ${!field.value ? 'text-muted-foreground' : ''}`}
-                                >
-                                  <SelectValue placeholder={t('placeholder.slotDuration')} />
-                                </SelectTrigger>
+                                <section className='flex items-center space-x-3'>
+                                  <SelectTrigger
+                                    disabled={slotDurationIsError}
+                                    className={`max-w-1/2 h-9 w-fit space-x-2 ${!field.value ? 'text-muted-foreground' : ''}`}
+                                  >
+                                    <SelectValue placeholder={t('placeholder.slotDuration')} />
+                                  </SelectTrigger>
+                                  {slotDurationIsError && <FormError message={slotDurationError?.message} />}
+                                </section>
                               </FormControl>
                               <FormMessage />
                               <SelectContent>
