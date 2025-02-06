@@ -125,7 +125,7 @@ export default function CreateProfessional() {
         timeSlotUnavailableEnd: '',
         timeSlotUnavailableInit: '',
       },
-      workingDays: [],
+      workingDays: undefined,
     },
     description: '',
     dni: '',
