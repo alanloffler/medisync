@@ -46,6 +46,7 @@ import { UtilsString } from '@core/services/utils/string.service';
 import { generateWeekOfWorkingDays } from '@professionals/utils/week-working-days.util';
 import { professionalSchema } from '@professionals/schemas/professional.schema';
 import { useNotificationsStore } from '@core/stores/notifications.store';
+import { FormError } from '@core/components/common/form/FormError';
 // React component
 export default function CreateProfessional() {
   const [disabledSpec, setDisabledSpec] = useState<boolean>(true);
@@ -264,15 +265,16 @@ export default function CreateProfessional() {
                             value={field.value}
                           >
                             <FormControl>
-                              <SelectTrigger className={`h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
-                                {areasIsLoading ? (
-                                  <LoadingDB variant='default' text={t('loading.default')} className='ml-0' />
-                                ) : areasIsError ? (
-                                  <span className='text-red-400'>{t('error.default')}</span>
-                                ) : (
-                                  <SelectValue placeholder={t('placeholder.area')} />
-                                )}
-                              </SelectTrigger>
+                              <div className='flex items-center space-x-3'>
+                                <SelectTrigger className={`h-9 flex-1 ${!field.value ? 'text-muted-foreground' : ''}`}>
+                                  {areasIsLoading ? (
+                                    <LoadingDB variant='default' text={t('loading.default')} className='ml-0' />
+                                  ) : (
+                                    <SelectValue placeholder={t('placeholder.area')} />
+                                  )}
+                                </SelectTrigger>
+                                {areasIsError && <FormError message={areasError.message} />}
+                              </div>
                             </FormControl>
                             <FormMessage />
                             <SelectContent>
