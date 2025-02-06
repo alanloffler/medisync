@@ -63,8 +63,6 @@ export default function UpdateProfessional() {
   const [professionalLoading, setProfessionalLoading] = useState<boolean>(true);
   const [specKey, setSpecKey] = useState<string>('');
   const [specializations, setSpecializations] = useState<ISpecialization[]>([]);
-  const [titles, setTitles] = useState<ITitle[]>([]);
-  const [titlesIsLoading, setTitlesIsLoading] = useState<boolean>(false);
   const [workingDaysKey, setWorkingDaysKey] = useState<string>('');
   const [workingDaysValuesRef, setWorkingDaysValuesRef] = useState<IWorkingDay[]>([] as IWorkingDay[]);
   const [dropdownScope, dropdownAnimation] = useAnimate();
@@ -126,25 +124,23 @@ export default function UpdateProfessional() {
     }
   }, [addNotification, areasIsError, areasError?.message, updateForm]);
 
+  const {
+    data: titles,
+    error: titlesError,
+    isError: titlesIsError,
+    isLoading: titlesIsLoading,
+  } = useQuery<IResponse<ITitle[]>, Error>({
+    queryKey: ['titles', 'find-all'],
+    queryFn: async () => await TitleService.findAll(),
+    retry: 1,
+  });
+
   useEffect(() => {
-    setTitlesIsLoading(true);
-
-    TitleService.findAll()
-      .then((response: IResponse) => {
-        if (response.statusCode === 200) setTitles(response.data);
-        if (response.statusCode > 399) {
-          updateForm.setError('title', { message: response.message });
-          addNotification({ type: 'error', message: response.message });
-        }
-        if (response instanceof Error) {
-          updateForm.setError('title', { message: APP_CONFIG.error.server });
-          addNotification({ type: 'error', message: APP_CONFIG.error.server });
-        }
-      })
-      .finally(() => setTitlesIsLoading(false));
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (titlesIsError) {
+      updateForm.setError('title', { message: titlesError.message });
+      addNotification({ type: 'error', message: titlesError.message });
+    }
+  }, [addNotification, titlesIsError, titlesError?.message, updateForm]);
 
   const { data: slotDuration, isError: slotDurationError } = useQuery<number[], Error>({
     queryKey: ['slot-duration'],
@@ -392,7 +388,7 @@ export default function UpdateProfessional() {
                             <FormLabel>{t('label.title')}</FormLabel>
                             <Select
                               defaultValue={field.value}
-                              disabled={titles.length < 1}
+                              disabled={!titles || titles?.data.length < 1}
                               onValueChange={(event) => {
                                 field.onChange(event);
                               }}
@@ -409,8 +405,9 @@ export default function UpdateProfessional() {
                               </FormControl>
                               <FormMessage />
                               <SelectContent>
-                                {titles.length > 0 &&
-                                  titles.map((el) => (
+                                {titles &&
+                                  titles.data.length > 0 &&
+                                  titles.data.map((el: ITitle) => (
                                     <SelectItem key={el._id} value={el._id} className='text-sm'>
                                       {UtilsString.upperCase(el.name)}
                                     </SelectItem>
