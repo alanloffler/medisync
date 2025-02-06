@@ -26,7 +26,7 @@ import { WorkingDays } from '@professionals/components/common/WorkingDays';
 // External imports
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { type AnimationPlaybackControls, useAnimate } from 'motion/react';
-import { type MouseEvent, useEffect, useState, useRef } from 'react';
+import { type MouseEvent, useEffect, useState, useRef, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
@@ -54,13 +54,10 @@ import { useNotificationsStore } from '@core/stores/notifications.store';
 export default function UpdateProfessional() {
   const [_area, setArea] = useState<number | undefined>();
   const [disabledSpec, setDisabledSpec] = useState<boolean>(true);
-  const [errorLoadingProfessional, setErrorLoadingProfessional] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [infoCardContent, setInfoCardContent] = useState<IInfoCard>({ type: 'success', text: '' });
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
-  const [professional, setProfessional] = useState<IProfessional>({} as IProfessional);
-  const [professionalLoading, setProfessionalLoading] = useState<boolean>(true);
   const [specKey, setSpecKey] = useState<string>('');
   const [specializations, setSpecializations] = useState<ISpecialization[]>([]);
   const [workingDaysKey, setWorkingDaysKey] = useState<string>('');
@@ -145,70 +142,72 @@ export default function UpdateProfessional() {
     queryFn: async () => await ScheduleService.findAllSlotDurations(),
   });
 
-  useEffect(() => {
-    if (id && !areasIsLoading) {
-      ProfessionalApiService.findOne(id).then((response: IResponse) => {
-        if (response.statusCode === 200) {
-          setProfessional(response.data);
-          setWorkingDaysValuesRef(response.data.configuration?.workingDays || []);
-          setProfessionalLoading(false);
-        }
-        if (response.statusCode > 399) {
-          setErrorLoadingProfessional(true);
-          setInfoCardContent({ type: 'error', text: response.message });
-          addNotification({ type: 'error', message: response.message });
-        }
-        if (response instanceof Error) {
-          setErrorLoadingProfessional(true);
-          setInfoCardContent({ type: 'error', text: APP_CONFIG.error.server });
-          addNotification({ type: 'error', message: APP_CONFIG.error.server });
-        }
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [areasIsLoading, id]);
+  const {
+    data: professional,
+    error: professionalError,
+    isError: professionalIsError,
+    isLoading: professionalIsLoading,
+  } = useQuery<IResponse<IProfessional> | undefined, Error>({
+    queryKey: ['professional', 'find-one', id],
+    queryFn: async () => {
+      if (id) return await ProfessionalApiService.findOne(id);
+    },
+  });
 
   useEffect(() => {
-    if (!areasIsLoading && !professionalLoading) {
-      updateForm.setValue('area', professional.area._id);
-      handleChangeArea(professional.area._id);
+    if (professional?.data.configuration.workingDays && !areasIsLoading) setWorkingDaysValuesRef(professional.data.configuration.workingDays || []);
+  }, [areasIsLoading, professional?.data.configuration.workingDays]);
+
+  useEffect(() => {
+    if (professionalIsError) {
+      setInfoCardContent({ type: 'error', text: professionalError.message });
+      addNotification({ type: 'error', message: professionalError.message });
+    }
+  }, [addNotification, professionalError?.message, professionalIsError]);
+
+  const handleChangeArea = useCallback(
+    (event: string): void => {
+      const specializations = areas?.data.find((area) => area._id === event)?.specializations || [];
+      setSpecializations(specializations);
+      setDisabledSpec(false);
+      updateForm.setValue('specialization', '');
+    },
+    [areas?.data, updateForm],
+  );
+
+  useEffect(() => {
+    if (!areasIsLoading && !professionalIsLoading && professional) {
+      updateForm.setValue('area', professional.data.area._id);
+      handleChangeArea(professional.data.area._id);
       setSpecKey(crypto.randomUUID());
 
-      updateForm.setValue('areaCode', professional.areaCode);
-      updateForm.setValue('available', professional.available);
-      updateForm.setValue('configuration.scheduleTimeEnd', professional.configuration?.scheduleTimeEnd);
-      updateForm.setValue('configuration.scheduleTimeInit', professional.configuration?.scheduleTimeInit);
-      updateForm.setValue('configuration.slotDuration', professional.configuration?.slotDuration);
+      updateForm.setValue('areaCode', professional.data.areaCode);
+      updateForm.setValue('available', professional.data.available);
+      updateForm.setValue('configuration.scheduleTimeEnd', professional.data.configuration?.scheduleTimeEnd);
+      updateForm.setValue('configuration.scheduleTimeInit', professional.data.configuration?.scheduleTimeInit);
+      updateForm.setValue('configuration.slotDuration', professional.data.configuration?.slotDuration);
       updateForm.setValue(
         'configuration.unavailableTimeSlot.timeSlotUnavailableEnd',
-        professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableEnd || '',
+        professional.data.configuration?.unavailableTimeSlot?.timeSlotUnavailableEnd || '',
       );
       updateForm.setValue(
         'configuration.unavailableTimeSlot.timeSlotUnavailableInit',
-        professional.configuration?.unavailableTimeSlot?.timeSlotUnavailableInit || '',
+        professional.data.configuration?.unavailableTimeSlot?.timeSlotUnavailableInit || '',
       );
-      updateForm.setValue('configuration.workingDays', professional.configuration?.workingDays);
-      updateForm.setValue('description', professional.description);
-      updateForm.setValue('dni', professional.dni);
-      updateForm.setValue('email', professional.email);
-      updateForm.setValue('firstName', UtilsString.upperCase(professional.firstName, 'each'));
-      updateForm.setValue('lastName', UtilsString.upperCase(professional.lastName, 'each'));
-      updateForm.setValue('phone', professional.phone);
-      updateForm.setValue('specialization', professional.specialization._id);
-      updateForm.setValue('title', professional.title._id);
+      updateForm.setValue('configuration.workingDays', professional.data.configuration?.workingDays);
+      updateForm.setValue('description', professional.data.description);
+      updateForm.setValue('dni', professional.data.dni);
+      updateForm.setValue('email', professional.data.email);
+      updateForm.setValue('firstName', UtilsString.upperCase(professional.data.firstName, 'each'));
+      updateForm.setValue('lastName', UtilsString.upperCase(professional.data.lastName, 'each'));
+      updateForm.setValue('phone', professional.data.phone);
+      updateForm.setValue('specialization', professional.data.specialization._id);
+      updateForm.setValue('title', professional.data.title._id);
 
       setWorkingDaysKey(crypto.randomUUID());
       valuesRef.current = updateForm.getValues();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [areasIsLoading, professionalLoading]);
-
-  function handleChangeArea(event: string): void {
-    const specializations = areas?.data.find((area) => area._id === event)?.specializations || [];
-    setSpecializations(specializations);
-    setDisabledSpec(false);
-    updateForm.setValue('specialization', '');
-  }
+  }, [areasIsLoading, handleChangeArea, professional, professionalIsLoading, updateForm]);
 
   function handleUpdateProfessional(data: z.infer<typeof professionalSchema>): void {
     setIsUpdating(true);
@@ -240,8 +239,10 @@ export default function UpdateProfessional() {
     updateForm.reset(valuesRef.current);
     setWorkingDaysKey(crypto.randomUUID());
     updateForm.setValue('configuration.workingDays', workingDaysValuesRef);
-    handleChangeArea(professional.area._id);
-    updateForm.setValue('specialization', professional.specialization._id);
+    if (professional) {
+      handleChangeArea(professional.data.area._id);
+      updateForm.setValue('specialization', professional.data.specialization._id);
+    }
     setSpecKey(crypto.randomUUID());
   }
 
@@ -267,7 +268,7 @@ export default function UpdateProfessional() {
         <BackButton label={t('button.back')} />
       </header>
       {/* Section: Form */}
-      {!errorLoadingProfessional ? (
+      {!professionalIsError ? (
         <Card className='mx-auto mt-4 flex w-full flex-col md:w-full lg:w-4/5'>
           <CardHeaderPrimary className='justify-between' title={t('cardTitle.updateProfessional')} icon={<FilePlus size={18} strokeWidth={2} />}>
             {/* Dropdown menu */}
