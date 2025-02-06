@@ -64,7 +64,6 @@ export class ProfessionalApiService {
   }
 
   // CHECKED: used on UpdateProfessional.tsx
-  // TODO: FORMATTED DATA TO LOWER CASE INPUTS
   public static async update(id: string, data: IProfessionalForm): Promise<IResponse<IProfessional>> {
     const path: string = `${this.API_URL}/professionals/${id}`;
     const url: URL = new URL(path);
