@@ -127,10 +127,7 @@ export default function UpdateProfessional() {
   });
 
   useEffect(() => {
-    if (titlesIsError) {
-      updateForm.setError('title', { message: titlesError.message });
-      addNotification({ type: 'error', message: titlesError.message });
-    }
+    if (titlesIsError) addNotification({ type: 'error', message: titlesError.message });
   }, [addNotification, titlesIsError, titlesError?.message, updateForm]);
 
   const {
@@ -388,13 +385,16 @@ export default function UpdateProfessional() {
                               value={field.value}
                             >
                               <FormControl>
-                                <SelectTrigger className={`h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
-                                  {titlesIsLoading ? (
-                                    <LoadingDB variant='default' text={t('loading.default')} className='ml-0' />
-                                  ) : (
-                                    <SelectValue placeholder={t('placeholder.title')} />
-                                  )}
-                                </SelectTrigger>
+                                <div className='flex items-center space-x-3'>
+                                  <SelectTrigger className={`h-9 flex-1 ${!field.value ? 'text-muted-foreground' : ''}`}>
+                                    {titlesIsLoading ? (
+                                      <LoadingDB variant='default' text={t('loading.default')} className='ml-0' />
+                                    ) : (
+                                      <SelectValue placeholder={t('placeholder.title')} />
+                                    )}
+                                  </SelectTrigger>
+                                  {titlesIsError && <FormError message={titlesError.message} />}
+                                </div>
                               </FormControl>
                               <FormMessage />
                               <SelectContent>
