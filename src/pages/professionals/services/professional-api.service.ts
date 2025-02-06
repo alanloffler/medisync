@@ -56,7 +56,7 @@ export class ProfessionalApiService {
   }
 
   // CHECKED: used on ViewProfessional.tsx
-  public static async findOne(id: string) {
+  public static async findOne(id: string): Promise<IResponse<IProfessional>> {
     const path: string = `${this.API_URL}/professionals/${id}`;
     const url: URL = new URL(path);
 
