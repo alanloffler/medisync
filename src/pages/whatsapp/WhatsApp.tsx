@@ -145,7 +145,7 @@ export default function WhatsApp(): JSX.Element {
   });
 
   // TODO: manage errors and loading
-  const { data: user, isLoading } = useQuery<IResponse<IUser | IProfessional>, Error>({
+  const { data: user, isLoading } = useQuery<IResponse<IUser | IProfessional> | undefined, Error>({
     queryKey: ['whatsapp', id, type],
     queryFn: async () => {
       if (id && type) {

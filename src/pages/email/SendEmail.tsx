@@ -21,6 +21,7 @@ import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 // Imports
+import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
 import { EMAIL_CONFIG } from '@config/email.config';
@@ -43,12 +44,13 @@ export default function SendEmail() {
     data: user,
     isPending,
     isSuccess,
-  } = useQuery<IResponse<IUser>, Error>({
+  } = useQuery<IResponse<IUser | IProfessional> | undefined, Error>({
     queryKey: ['user', type, id],
     queryFn: async () => {
-      if (!id) throw new Error('Dev Error: There is no user id');
-      if (type === 'user') return await UserApiService.findOne(id);
-      if (type === 'professional') return await ProfessionalApiService.findOne(id);
+      if (id && type) {
+        if (type === 'user') return await UserApiService.findOne(id);
+        if (type === 'professional') return await ProfessionalApiService.findOne(id);
+      }
     },
   });
 
@@ -67,7 +69,7 @@ export default function SendEmail() {
   const bodyInput: string = emailForm.watch('body', '');
 
   useEffect(() => {
-    if (isSuccess) user.data.email && emailForm.setValue('to', [user?.data.email]);
+    if (isSuccess && user?.data.email) emailForm.setValue('to', [user?.data.email]);
   }, [emailForm, isSuccess, user?.data.email]);
 
   const {
