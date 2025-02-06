@@ -18,7 +18,6 @@ export function DBCountUsers() {
     queryKey: ['users', 'DBCountUsers'],
     queryFn: async () => await UserApiService.newUsersToday(),
     refetchOnWindowFocus: 'always',
-    retry: 1,
   });
 
   if (isLoading) return <LoadingDB variant='default' empty className='py-3' />;

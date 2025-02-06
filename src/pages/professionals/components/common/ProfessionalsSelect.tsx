@@ -32,7 +32,6 @@ export function ProfessionalsSelect({
   } = useQuery<IResponse<IProfessional[]>, Error>({
     queryKey: ['professionals', ['input-select']],
     queryFn: async () => await ProfessionalApiService.findAllActive(),
-    retry: 1,
   });
 
   return (

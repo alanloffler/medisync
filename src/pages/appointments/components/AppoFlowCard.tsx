@@ -45,7 +45,6 @@ export function AppoFlowCard({ className }: IProps) {
   } = useQuery<IResponse<IStatistic[]>>({
     queryKey: ['appointments', 'statistics'],
     queryFn: async () => await AppointmentApiService.getStatistics(),
-    retry: 1,
     refetchOnWindowFocus: 'always',
   });
 

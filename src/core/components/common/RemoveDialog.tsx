@@ -40,7 +40,6 @@ export function RemoveDialog({ action, callback, className, dialogContent, dialo
   const { error, isError, isPending, mutate, reset } = useMutation({
     mutationFn: action,
     mutationKey: ['remove-dialog', 'appointment'],
-    retry: 1,
     onSuccess: () => {
       if (callback) {
         setOpenDialog(false);

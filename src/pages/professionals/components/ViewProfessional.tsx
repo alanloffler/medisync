@@ -52,7 +52,6 @@ export default function ViewProfessional() {
   } = useQuery<IResponse<IProfessional>, Error>({
     queryKey: ['professional', 'find-one', id],
     queryFn: async () => await ProfessionalApiService.findOne(id!),
-    retry: 1,
   });
 
   useEffect(() => {

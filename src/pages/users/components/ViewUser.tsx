@@ -110,7 +110,6 @@ export default function ViewUser() {
       addNotification({ type: 'success', message: response.message });
       navigate('/users');
     },
-    retry: 1,
   });
 
   useEffect(() => {

@@ -42,7 +42,6 @@ export function ApposRecord({ userId }: { userId: string }) {
     queryKey: ['appointments', userId, professional, year, pagination.pageIndex, pagination.pageSize, refresh],
     queryFn: async () =>
       await AppointmentApiService.findApposRecordWithFilters(userId, pagination.pageSize, pagination.pageIndex, professional, year),
-    retry: 1,
   });
 
   useEffect(() => {

@@ -86,7 +86,6 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
     onError: (error) => {
       addNotification({ type: 'error', message: error.message });
     },
-    retry: 1,
   });
 
   useEffect(() => {
@@ -327,7 +326,6 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
     onError: (error) => {
       addNotification({ type: 'error', message: t(error.message) });
     },
-    retry: 1,
   });
 
   const handleRowClick = useCallback(

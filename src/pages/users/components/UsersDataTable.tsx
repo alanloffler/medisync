@@ -102,7 +102,6 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
     onError: (error) => {
       addNotification({ type: 'error', message: t(error.message) });
     },
-    retry: 1,
   });
 
   useEffect(() => {
@@ -305,7 +304,6 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
     onError: (error) => {
       addNotification({ type: 'error', message: error.message });
     },
-    retry: 1,
   });
 
   const handleRowClick = useCallback(

@@ -21,7 +21,6 @@ export function DBCountAppos({ className }: { className?: string }) {
     queryKey: ['appointments', 'countTotalAppointments'],
     queryFn: () => AppointmentApiService.countTotalAppointments(),
     refetchOnWindowFocus: 'always',
-    retry: 1,
   });
   if (isLoading) return <LoadingDB variant='default' empty />;
   if (isError) return <main className='py-2'></main>;

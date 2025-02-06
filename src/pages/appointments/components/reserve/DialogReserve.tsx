@@ -121,7 +121,6 @@ export function DialogReserve({ content, date, openState, professional, setHandl
     onError: (error) => {
       addNotification({ type: 'error', message: error.message });
     },
-    retry: 1,
   });
 
   function handleRemoveAppointment(slot: ITimeSlot, isOnly?: boolean): void {
@@ -156,7 +155,6 @@ export function DialogReserve({ content, date, openState, professional, setHandl
     onError: (error) => {
       addNotification({ type: 'error', message: error.message });
     },
-    retry: 1,
   });
 
   function handleReserveAppointment(): void {

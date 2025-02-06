@@ -51,7 +51,6 @@ export default function ViewAppointment() {
   } = useQuery<IResponse<IAppointment>>({
     queryKey: ['appointments', 'findOne', id],
     queryFn: () => AppointmentApiService.findOne(id!),
-    retry: 1,
   });
 
   useEffect(() => {

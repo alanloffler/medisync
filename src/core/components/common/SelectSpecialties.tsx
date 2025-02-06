@@ -49,7 +49,6 @@ export function SelectSpecialties({ callback, clear, dropdownPlaceholder, setDro
   } = useQuery<IResponse<IArea[]>>({
     queryKey: ['areas', 'findAll'],
     queryFn: async () => await AreaService.findAll(),
-    retry: 1,
   });
 
   useEffect(() => {

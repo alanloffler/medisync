@@ -31,7 +31,6 @@ export function LatestUsers() {
     queryFn: async () => {
       return await DashboardApiService.latestUsers(5);
     },
-    retry: 1,
   });
 
   const animation = {

@@ -31,7 +31,6 @@ export function LatestAppos() {
     queryFn: async () => {
       return await DashboardApiService.latestAppointments(5);
     },
-    retry: 1,
   });
 
   const animation = {

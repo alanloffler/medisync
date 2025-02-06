@@ -50,7 +50,6 @@ export default function SendEmail() {
       if (type === 'user') return await UserApiService.findOne(id);
       if (type === 'professional') return await ProfessionalApiService.findOne(id);
     },
-    retry: 1,
   });
 
   const defaultValues = {

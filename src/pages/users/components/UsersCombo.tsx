@@ -78,7 +78,6 @@ export function UsersCombo({
   } = useMutation<IResponse<IUsersComboData>, Error, IVars>({
     mutationKey: ['searchUsersBy', debouncedSearch],
     mutationFn: async (vars) => await UserApiService.searchUsersBy(vars.search, vars.tableManager, vars.skipItems),
-    retry: 1,
   });
 
   useEffect(() => {

@@ -62,7 +62,6 @@ export default function UpdateUser() {
   } = useQuery<IResponse<IUser>, Error>({
     queryKey: ['users', 'findOne', id],
     queryFn: async () => await UserApiService.findOne(id!),
-    retry: 1,
   });
 
   useEffect(() => {
@@ -99,7 +98,6 @@ export default function UpdateUser() {
       navigate('/users');
       addNotification({ type: 'success', message: response.message });
     },
-    retry: 1,
   });
 
   function handleUpdateUser(data: z.infer<typeof userSchema>): void {

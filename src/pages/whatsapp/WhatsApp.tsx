@@ -153,7 +153,6 @@ export default function WhatsApp(): JSX.Element {
         if (type === EUserType.PROFESSIONAL) return await ProfessionalApiService.findOne(id);
       }
     },
-    retry: 1,
   });
 
   useEffect(() => {
@@ -193,7 +192,6 @@ export default function WhatsApp(): JSX.Element {
       // console.log(error.message);
       addNotification({ type: 'error', message: error.message });
     },
-    retry: 1,
   });
 
   async function handleSendMessage(data: z.infer<typeof whatsappSchema>): Promise<void> {

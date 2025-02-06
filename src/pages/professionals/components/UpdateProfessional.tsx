@@ -108,7 +108,6 @@ export default function UpdateProfessional() {
   } = useQuery<IResponse<IArea[]>, Error>({
     queryKey: ['areas', 'find-all'],
     queryFn: async () => await AreaService.findAll(),
-    retry: 1,
   });
 
   useEffect(() => {
@@ -132,7 +131,6 @@ export default function UpdateProfessional() {
   } = useQuery<IResponse<ITitle[]>, Error>({
     queryKey: ['titles', 'find-all'],
     queryFn: async () => await TitleService.findAll(),
-    retry: 1,
   });
 
   useEffect(() => {
@@ -145,7 +143,6 @@ export default function UpdateProfessional() {
   const { data: slotDuration, isError: slotDurationError } = useQuery<number[], Error>({
     queryKey: ['slot-duration'],
     queryFn: async () => await ScheduleService.findAllSlotDurations(),
-    retry: 1,
   });
 
   useEffect(() => {

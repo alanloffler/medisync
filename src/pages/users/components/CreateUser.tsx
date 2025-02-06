@@ -69,7 +69,6 @@ export default function CreateUser() {
         message: `${response.message} - ${UtilsString.upperCase(response.data.firstName, 'each')} ${UtilsString.upperCase(response.data.lastName, 'each')}`,
       });
     },
-    retry: 1,
   });
 
   function handleCancel(event: MouseEvent<HTMLButtonElement | HTMLDivElement | HTMLInputElement>): void {

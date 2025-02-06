@@ -47,7 +47,6 @@ export function ProfessionalsCombobox({ className, onSelectProfessional, options
   } = useQuery<IResponse<IProfessional[]>>({
     queryKey: ['professionals', 'professionals-active'],
     queryFn: async () => await ProfessionalApiService.findAllActive(),
-    retry: 1,
   });
 
   useEffect(() => {

@@ -33,7 +33,6 @@ export function CategoriesShortcuts({ className }: { className?: string }) {
   } = useQuery<IResponse>({
     queryKey: ['specializations'],
     queryFn: async () => await SpecializationService.findAll(),
-    retry: 1,
   });
 
   const animation = {
