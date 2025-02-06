@@ -114,7 +114,7 @@ export default function UpdateProfessional() {
       setDisabledSpec(true);
       addNotification({ type: 'error', message: areasError.message });
     }
-  }, [addNotification, areasIsError, areasError?.message, updateForm]);
+  }, [addNotification, areasIsError, areasError?.message]);
 
   const {
     data: titles,
@@ -128,7 +128,7 @@ export default function UpdateProfessional() {
 
   useEffect(() => {
     if (titlesIsError) addNotification({ type: 'error', message: titlesError.message });
-  }, [addNotification, titlesIsError, titlesError?.message, updateForm]);
+  }, [addNotification, titlesIsError, titlesError?.message]);
 
   const {
     data: slotDuration,
