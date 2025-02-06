@@ -116,6 +116,10 @@ export default function CreateProfessional() {
     queryFn: async () => await ScheduleService.findAllSlotDurations(),
   });
 
+  useEffect(() => {
+    if (slotDurationIsError) addNotification({ type: 'error', message: slotDurationError.message });
+  }, [addNotification, slotDurationError?.message, slotDurationIsError]);
+
   const defaultValues = {
     area: '',
     areaCode: undefined,
