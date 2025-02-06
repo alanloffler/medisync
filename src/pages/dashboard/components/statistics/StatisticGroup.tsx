@@ -23,7 +23,6 @@ export function StatisticGroup() {
   } = useQuery({
     queryKey: ['dashboard', 'appos'],
     queryFn: async () => await DashboardApiService.countAppointments(),
-    refetchOnWindowFocus: false,
     staleTime: 0,
   });
 
@@ -34,7 +33,6 @@ export function StatisticGroup() {
   } = useQuery({
     queryKey: ['dashboard', 'users'],
     queryFn: async () => await DashboardApiService.countUsers(),
-    refetchOnWindowFocus: false,
     staleTime: 0,
   });
 
@@ -45,7 +43,6 @@ export function StatisticGroup() {
   } = useQuery({
     queryKey: ['dashboard', 'professionals'],
     queryFn: async () => await DashboardApiService.countProfessionals(),
-    refetchOnWindowFocus: false,
     staleTime: 0,
   });
 

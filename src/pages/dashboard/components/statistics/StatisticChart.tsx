@@ -42,7 +42,6 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
   const { data, isError, isLoading, isSuccess, error } = useQuery({
     queryKey: ['dashboard', 'appos-chart', daysAgo],
     queryFn: () => fetchChartData(daysAgo),
-    refetchOnWindowFocus: false,
   });
 
   const processedData: IChartDataProcessed[] = Array.isArray(data?.data)

@@ -32,7 +32,6 @@ export function SelectSpecialtiesForm({ formControl, callback }: IFormSelect) {
   } = useQuery<IResponse<IArea[]>>({
     queryKey: ['areas', ['input-form-select']],
     queryFn: async () => await AreaService.findAll(),
-    refetchOnWindowFocus: false,
     retry: 0,
     staleTime: 0,
   });
