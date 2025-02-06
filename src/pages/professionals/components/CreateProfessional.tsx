@@ -28,6 +28,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { spring, useAnimate } from 'motion/react';
 import { useEffect, useState, MouseEvent } from 'react';
 import { useForm } from 'react-hook-form';
+import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -48,8 +49,6 @@ import { professionalSchema } from '@professionals/schemas/professional.schema';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export default function CreateProfessional() {
-  const [areas, setAreas] = useState<IArea[]>([]);
-  const [areasIsLoading, setAreasIsLoading] = useState<boolean>(false);
   const [disabledSpec, setDisabledSpec] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [isCreating, setIsCreating] = useState<boolean>(false);
@@ -65,28 +64,30 @@ export default function CreateProfessional() {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  useEffect(() => {
-    setAreasIsLoading(true);
-    setTitlesIsLoading(true);
+  const {
+    data: areas,
+    error: areasError,
+    isError: areasIsError,
+    isLoading: areasIsLoading,
+    isSuccess: areasIsSuccess,
+  } = useQuery<IResponse<IArea[]>, Error>({
+    queryKey: ['areas', 'find-all'],
+    queryFn: async () => await AreaService.findAll(),
+  });
 
-    AreaService.findAll()
-      .then((response: IResponse) => {
-        if (response.statusCode === 200) {
-          setAreas(response.data);
-          setDisabledSpec(false);
-        }
-        if (response.statusCode > 399) {
-          createForm.setError('area', { message: response.message });
-          createForm.setError('specialization', { message: response.message });
-          addNotification({ type: 'error', message: response.message });
-        }
-        if (response instanceof Error) {
-          createForm.setError('area', { message: t('error.internalServer') });
-          createForm.setError('specialization', { message: t('error.internalServer') });
-          addNotification({ type: 'error', message: t('error.internalServer') });
-        }
-      })
-      .finally(() => setAreasIsLoading(false));
+  useEffect(() => {
+    if (areasIsSuccess) setDisabledSpec(false);
+  }, [areasIsSuccess]);
+
+  useEffect(() => {
+    if (areasIsError) {
+      setDisabledSpec(true);
+      addNotification({ type: 'error', message: areasError.message });
+    }
+  }, [addNotification, areasIsError, areasError?.message]);
+
+  useEffect(() => {
+    setTitlesIsLoading(true);
 
     TitleService.findAll()
       .then((response: IResponse) => {
@@ -190,7 +191,7 @@ export default function CreateProfessional() {
   }
 
   function handleChangeArea(event: string): void {
-    const specializations = areas.find((area) => area._id === event)?.specializations || [];
+    const specializations = areas?.data.find((area) => area._id === event)?.specializations || [];
     setSpecializations(specializations);
     setDisabledSpec(false);
     createForm.setValue('specialization', '');
@@ -474,7 +475,7 @@ export default function CreateProfessional() {
                         <FormItem className='space-y-2'>
                           <FormLabel>{t('label.slotDuration')}</FormLabel>
                           <Select
-                            disabled={areas.length < 1}
+                            disabled={areas && areas.data.length < 1}
                             onValueChange={(event) => {
                               field.onChange(event);
                             }}
