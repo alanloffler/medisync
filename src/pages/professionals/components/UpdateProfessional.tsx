@@ -28,7 +28,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { type AnimationPlaybackControls, useAnimate } from 'motion/react';
 import { type MouseEvent, useEffect, useState, useRef, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -40,7 +40,6 @@ import type { IResponse } from '@core/interfaces/response.interface';
 import type { ISpecialization } from '@core/interfaces/specialization.interface';
 import type { ITitle } from '@core/interfaces/title.interface';
 import type { IWorkingDay } from '@professionals/interfaces/working-days.interface';
-import { APP_CONFIG } from '@config/app.config';
 import { AreaService } from '@core/services/area.service';
 import { PROF_UPDATE_CONFIG as PU_CONFIG } from '@config/professionals.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
@@ -54,9 +53,7 @@ import { useNotificationsStore } from '@core/stores/notifications.store';
 export default function UpdateProfessional() {
   const [_area, setArea] = useState<number | undefined>();
   const [disabledSpec, setDisabledSpec] = useState<boolean>(true);
-  const [errorMessage, setErrorMessage] = useState<string>('');
   const [infoCardContent, setInfoCardContent] = useState<IInfoCard>({ type: 'success', text: '' });
-  const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [specKey, setSpecKey] = useState<string>('');
   const [specializations, setSpecializations] = useState<ISpecialization[]>([]);
@@ -209,30 +206,22 @@ export default function UpdateProfessional() {
     }
   }, [areasIsLoading, handleChangeArea, professional, professionalIsLoading, updateForm]);
 
-  function handleUpdateProfessional(data: z.infer<typeof professionalSchema>): void {
-    setIsUpdating(true);
-
-    if (id) {
-      ProfessionalApiService.update(id, data)
-        .then((response: IResponse) => {
-          if (response.statusCode === 200) {
-            navigate(`/professionals/${response.data._id}`);
-            addNotification({ type: 'success', message: response.message });
-          }
-          if (response.statusCode > 399) {
-            setOpenDialog(true);
-            setErrorMessage(response.message);
-            addNotification({ type: 'error', message: response.message });
-          }
-          if (response instanceof Error) {
-            setOpenDialog(true);
-            setErrorMessage(APP_CONFIG.error.server);
-            addNotification({ type: 'error', message: APP_CONFIG.error.server });
-          }
-        })
-        .finally(() => setIsUpdating(false));
-    }
-  }
+  const {
+    mutate: updateProfessional,
+    error: professionalUpdatingError,
+    isPending: professionalIsUpdating,
+  } = useMutation<IResponse<IProfessional>, Error, { id: string; data: z.infer<typeof professionalSchema> }>({
+    mutationKey: ['professional', 'update', id],
+    mutationFn: async ({ id, data }) => await ProfessionalApiService.update(id, data),
+    onSuccess: (response) => {
+      navigate(`/professionals/${id}`);
+      addNotification({ type: 'success', message: response.message });
+    },
+    onError: (response) => {
+      setOpenDialog(true);
+      addNotification({ type: 'error', message: response.message });
+    },
+  });
 
   function handleCancel(event: MouseEvent<HTMLButtonElement>): void {
     event.preventDefault();
@@ -295,7 +284,7 @@ export default function UpdateProfessional() {
           </CardHeaderPrimary>
           <CardContent className='pt-6'>
             <Form {...updateForm}>
-              <form onSubmit={updateForm.handleSubmit(handleUpdateProfessional)}>
+              <form onSubmit={updateForm.handleSubmit((data) => id && updateProfessional({ id, data }))}>
                 {/* Section: Form fields */}
                 <section className='grid grid-cols-1 space-y-6 md:grid-cols-8 md:space-y-0 lg:grid-cols-6'>
                   {/* Section: Professional data (left side) */}
@@ -669,7 +658,7 @@ export default function UpdateProfessional() {
                 {/* Section footer: Buttons */}
                 <footer className='grid grid-cols-1 space-y-2 pt-6 md:flex md:justify-end md:gap-6 md:space-y-0'>
                   <Button type='submit' variant='default' size='sm' className='order-1 md:order-2 lg:order-2'>
-                    {isUpdating ? <LoadingDB text={t('loading.updating')} variant='button' /> : t('button.updateProfessional')}
+                    {professionalIsUpdating ? <LoadingDB text={t('loading.updating')} variant='button' /> : t('button.updateProfessional')}
                   </Button>
                   <Button variant='ghost' size='sm' onClick={handleCancel} className='order-2 md:order-1 lg:order-1'>
                     {t('button.cancel')}
@@ -690,7 +679,7 @@ export default function UpdateProfessional() {
           <DialogHeader>
             <DialogTitle className='text-xl'>{t('dialog.error.updateProfessional')}</DialogTitle>
             <DialogDescription className='sr-only'></DialogDescription>
-            <div className='flex flex-col'>{errorMessage}</div>
+            {professionalUpdatingError && <div className='flex flex-col'>{professionalUpdatingError.message}</div>}
           </DialogHeader>
           <footer className='flex justify-end space-x-4'>
             <Button variant='remove' size='sm' onClick={() => setOpenDialog(false)}>
