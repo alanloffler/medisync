@@ -134,10 +134,18 @@ export default function UpdateProfessional() {
     }
   }, [addNotification, titlesIsError, titlesError?.message, updateForm]);
 
-  const { data: slotDuration, isError: slotDurationError } = useQuery<number[], Error>({
+  const {
+    data: slotDuration,
+    error: slotDurationError,
+    isError: slotDurationIsError,
+  } = useQuery<number[], Error>({
     queryKey: ['slot-duration'],
     queryFn: async () => await ScheduleService.findAllSlotDurations(),
   });
+
+  useEffect(() => {
+    if (slotDurationIsError) updateForm.setError('configuration.slotDuration', { message: slotDurationError?.message });
+  }, [slotDurationError?.message, slotDurationIsError, updateForm]);
 
   const {
     data: professional,
@@ -566,10 +574,10 @@ export default function UpdateProfessional() {
                             >
                               <FormControl>
                                 <SelectTrigger
-                                  disabled={slotDurationError}
-                                  className={`max-w-1/2 h-9 w-fit space-x-2 disabled:text-rose-400 [&_svg]:disabled:text-foreground ${!field.value ? 'text-muted-foreground' : ''}`}
+                                  disabled={slotDurationIsError}
+                                  className={`max-w-1/2 h-9 w-fit space-x-2 ${!field.value ? 'text-muted-foreground' : ''}`}
                                 >
-                                  <SelectValue placeholder={slotDurationError ? t('error.default') : t('placeholder.slotDuration')} />
+                                  <SelectValue placeholder={t('placeholder.slotDuration')} />
                                 </SelectTrigger>
                               </FormControl>
                               <FormMessage />
