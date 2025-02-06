@@ -112,8 +112,6 @@ export default function UpdateProfessional() {
   useEffect(() => {
     if (areasIsError) {
       setDisabledSpec(true);
-      updateForm.setError('area', { message: areasError.message });
-      updateForm.setError('specialization', { message: areasError.message });
       addNotification({ type: 'error', message: areasError.message });
     }
   }, [addNotification, areasIsError, areasError?.message, updateForm]);
@@ -313,13 +311,16 @@ export default function UpdateProfessional() {
                               value={updateForm.watch('area') ?? ''}
                             >
                               <FormControl>
-                                <SelectTrigger className={`h-9 ${!field.value ? 'text-muted-foreground' : ''}`}>
-                                  {areasIsLoading ? (
-                                    <LoadingDB variant='default' text={t('loading.default')} className='ml-0' />
-                                  ) : (
-                                    <SelectValue placeholder={t('placeholder.area')} />
-                                  )}
-                                </SelectTrigger>
+                                <div className='flex items-center space-x-3'>
+                                  <SelectTrigger className={`h-9 flex-1 ${!field.value ? 'text-muted-foreground' : ''}`}>
+                                    {areasIsLoading ? (
+                                      <LoadingDB variant='default' text={t('loading.default')} className='ml-0' />
+                                    ) : (
+                                      <SelectValue placeholder={t('placeholder.area')} />
+                                    )}
+                                  </SelectTrigger>
+                                  {areasIsError && <FormError message={areasError.message} />}
+                                </div>
                               </FormControl>
                               <FormMessage />
                               <SelectContent>
