@@ -2,6 +2,7 @@
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@core/components/ui/select';
 // Components
 import { FormError } from '@core/components/common/form/FormError';
+import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
 import { type ComponentPropsWithoutRef, type Dispatch, forwardRef, type SetStateAction, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -24,6 +25,7 @@ export const SelectPhoneArea = forwardRef<HTMLDivElement, IProps>(({ setArea, va
     data: areaCodes,
     error: areaCodesError,
     isError: areaCodesIsError,
+    isLoading: areaCodesIsLoading,
   } = useQuery<IResponse<IAreaCode[]>, Error>({
     queryKey: ['area-codes', 'find-all'],
     queryFn: async () => await AreaCodeService.findAll(),
@@ -56,7 +58,7 @@ export const SelectPhoneArea = forwardRef<HTMLDivElement, IProps>(({ setArea, va
             className='h-9 bg-slate-100/70 p-2 text-xs ring-offset-background hover:bg-slate-100 data-[state=open]:outline-none data-[state=open]:ring-1 data-[state=open]:ring-ring data-[state=open]:ring-offset-0'
             disabled={!areaCodes || areaCodesIsError}
           >
-            {areaCode ? (
+            {areaCodesIsLoading ? <LoadingDB empty className='mr-2 h-3.5 w-3.5' /> : areaCode ? (
               <SelectValue>
                 <section className='mr-2 flex flex-row items-center gap-2'>
                   <img
