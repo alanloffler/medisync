@@ -19,7 +19,7 @@ export function FormError({ message }: IProps) {
     <TooltipProvider delayDuration={0.3}>
       <Tooltip>
         <TooltipTrigger asChild>
-          <div ref={scope} className='flex h-4 w-4 cursor-pointer items-center justify-center rounded-full bg-rose-400 opacity-0'>
+          <div ref={scope} className='flex min-h-4 min-w-4 cursor-pointer items-center justify-center rounded-full bg-rose-400 opacity-0'>
             <span className='text-xxs font-medium text-rose-50'>!</span>
           </div>
         </TooltipTrigger>
