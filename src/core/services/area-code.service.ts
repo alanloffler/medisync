@@ -39,7 +39,12 @@ export class AreaCodeService {
     ];
     // const AREA_CODE2: IAreaCode[] = [];
     // if (AREA_CODE2.length === 0) throw new Error('Empty area codes');
-    throw new Error('Error fetching area codes');
-    return { statusCode: 200, message: 'Area codes loaded', data: AREA_CODE };
+    // throw new Error('Error fetching area codes');
+    // return { statusCode: 200, message: 'Area codes loaded', data: AREA_CODE };
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({ statusCode: 200, message: 'Area codes loaded', data: AREA_CODE });
+      }, 2000);
+    });
   }
 }
