@@ -495,13 +495,15 @@ export default function UpdateProfessional() {
                           control={updateForm.control}
                           name='areaCode'
                           render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>{t('label.phone')}</FormLabel>
-                              <FormControl className='h-9 w-fit'>
-                                <SelectPhoneArea setArea={setArea} {...field} />
-                              </FormControl>
+                            <div className='flex flex-col space-y-2'>
+                              <FormItem>
+                                <FormLabel>{t('label.phone')}</FormLabel>
+                                <FormControl className='h-9 w-fit'>
+                                  <SelectPhoneArea setArea={setArea} {...field} />
+                                </FormControl>
+                              </FormItem>
                               <FormMessage />
-                            </FormItem>
+                            </div>
                           )}
                         />
                         <FormField
@@ -509,8 +511,7 @@ export default function UpdateProfessional() {
                           name='phone'
                           render={({ field }) => (
                             <FormItem className='flex-1'>
-                              <FormLabel> </FormLabel>
-                              <FormControl className='h-9'>
+                              <FormControl>
                                 <Input type='number' placeholder={t('placeholder.phone')} {...field} className='!mt-8 h-9' />
                               </FormControl>
                               <FormMessage />

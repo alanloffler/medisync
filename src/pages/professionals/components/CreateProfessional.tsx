@@ -442,27 +442,29 @@ export default function CreateProfessional() {
                     />
                   </section>
                   {/* Form fields: phone */}
-                  <section className='grid grid-cols-1 gap-6 md:grid-cols-1'>
-                    <div className='flex flex-row items-center space-x-3'>
+                  <section className='grid grid-cols-1'>
+                    <div className='flex flex-row items-center space-x-6'>
                       <FormField
                         control={createForm.control}
                         name='areaCode'
                         render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{t('label.phone')}</FormLabel>
-                            <FormControl className='h-9'>
-                              <SelectPhoneArea {...field} />
-                            </FormControl>
+                          <div className='flex flex-col space-y-2'>
+                            <FormItem>
+                              <FormLabel>{t('label.phone')}</FormLabel>
+                              <FormControl className='h-9 w-fit'>
+                                <SelectPhoneArea {...field} />
+                              </FormControl>
+                            </FormItem>
                             <FormMessage />
-                          </FormItem>
+                          </div>
                         )}
                       />
                       <FormField
                         control={createForm.control}
                         name='phone'
                         render={({ field }) => (
-                          <FormItem>
-                            <FormControl className='h-9'>
+                          <FormItem className='flex-1'>
+                            <FormControl>
                               <Input type='number' placeholder={t('placeholder.phone')} {...field} className='!mt-8 h-9' />
                             </FormControl>
                             <FormMessage />
