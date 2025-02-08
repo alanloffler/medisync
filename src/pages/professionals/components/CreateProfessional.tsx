@@ -28,12 +28,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { spring, useAnimate } from 'motion/react';
 import { useEffect, useState, MouseEvent } from 'react';
 import { useForm } from 'react-hook-form';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 // Imports
 import type { IArea } from '@core/interfaces/area.interface';
+import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { ISpecialization } from '@core/interfaces/specialization.interface';
 import type { ITitle } from '@core/interfaces/title.interface';
@@ -51,7 +52,6 @@ import { useNotificationsStore } from '@core/stores/notifications.store';
 export default function CreateProfessional() {
   const [disabledSpec, setDisabledSpec] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const [isCreating, setIsCreating] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [specializations, setSpecializations] = useState<ISpecialization[]>([]);
   const [workingDays, setWorkingDays] = useState<IWorkingDay[]>([]);
@@ -144,44 +144,79 @@ export default function CreateProfessional() {
     defaultValues: defaultValues,
   });
 
-  function handleCreateProfessional(data: z.infer<typeof professionalSchema>): void {
-    const { configuration, ...formData } = data;
-    const { unavailableTimeSlot, ...configData } = configuration;
+  const { mutate: createProfessional, isPending: professionalIsCreating } = useMutation<
+    IResponse<IProfessional>,
+    Error,
+    { data: z.infer<typeof professionalSchema> }
+  >({
+    mutationKey: ['professional', 'create'],
+    mutationFn: async ({ data }) => {
+      const { configuration, ...formData } = data;
+      const { unavailableTimeSlot, ...configData } = configuration;
 
-    const formattedData = {
-      ...formData,
-      configuration: {
-        ...configData,
-        unavailableTimeSlot: {
-          timeSlotUnavailableEnd: unavailableTimeSlot?.timeSlotUnavailableEnd === '' ? undefined : unavailableTimeSlot?.timeSlotUnavailableEnd,
-          timeSlotUnavailableInit: unavailableTimeSlot?.timeSlotUnavailableInit === '' ? undefined : unavailableTimeSlot?.timeSlotUnavailableInit,
+      const formattedData = {
+        ...formData,
+        configuration: {
+          ...configData,
+          unavailableTimeSlot: {
+            timeSlotUnavailableEnd: unavailableTimeSlot?.timeSlotUnavailableEnd === '' ? undefined : unavailableTimeSlot?.timeSlotUnavailableEnd,
+            timeSlotUnavailableInit: unavailableTimeSlot?.timeSlotUnavailableInit === '' ? undefined : unavailableTimeSlot?.timeSlotUnavailableInit,
+          },
         },
-      },
-    };
+      };
+      return await ProfessionalApiService.create(formattedData);
+    },
+    onSuccess: (response) => {
+      setDisabledSpec(true);
+      addNotification({ type: 'success', message: response.message });
+      createForm.reset(defaultValues);
+      navigate(`/professionals/${response.data._id}`);
+    },
+    onError: (response) => {
+      setOpenDialog(true);
+      setErrorMessage(response.message);
+      addNotification({ type: 'error', message: response.message });
+    },
+  });
 
-    setIsCreating(true);
+  // function handleCreateProfessional(data: z.infer<typeof professionalSchema>): void {
+  //   const { configuration, ...formData } = data;
+  //   const { unavailableTimeSlot, ...configData } = configuration;
 
-    ProfessionalApiService.create(formattedData)
-      .then((response) => {
-        if (response.statusCode === 200) {
-          setDisabledSpec(true);
-          addNotification({ type: 'success', message: response.message });
-          createForm.reset(defaultValues);
-          navigate(`/professionals/${response.data._id}`);
-        }
-        if (response.statusCode > 399) {
-          setOpenDialog(true);
-          setErrorMessage(response.message);
-          addNotification({ type: 'error', message: response.message });
-        }
-        if (response instanceof Error) {
-          setOpenDialog(true);
-          setErrorMessage(t('error.internalServer'));
-          addNotification({ type: 'error', message: t('error.internalServer') });
-        }
-      })
-      .finally(() => setIsCreating(false));
-  }
+  //   const formattedData = {
+  //     ...formData,
+  //     configuration: {
+  //       ...configData,
+  //       unavailableTimeSlot: {
+  //         timeSlotUnavailableEnd: unavailableTimeSlot?.timeSlotUnavailableEnd === '' ? undefined : unavailableTimeSlot?.timeSlotUnavailableEnd,
+  //         timeSlotUnavailableInit: unavailableTimeSlot?.timeSlotUnavailableInit === '' ? undefined : unavailableTimeSlot?.timeSlotUnavailableInit,
+  //       },
+  //     },
+  //   };
+
+  // setIsCreating(true);
+
+  // ProfessionalApiService.create(formattedData)
+  //   .then((response) => {
+  //     if (response.statusCode === 200) {
+  //       setDisabledSpec(true);
+  //       addNotification({ type: 'success', message: response.message });
+  //       createForm.reset(defaultValues);
+  //       navigate(`/professionals/${response.data._id}`);
+  //     }
+  //     if (response.statusCode > 399) {
+  //       setOpenDialog(true);
+  //       setErrorMessage(response.message);
+  //       addNotification({ type: 'error', message: response.message });
+  //     }
+  //     if (response instanceof Error) {
+  //       setOpenDialog(true);
+  //       setErrorMessage(t('error.internalServer'));
+  //       addNotification({ type: 'error', message: t('error.internalServer') });
+  //     }
+  //   })
+  //   .finally(() => setIsCreating(false));
+  // }
 
   function handleCancel(event: MouseEvent<HTMLButtonElement | HTMLDivElement | HTMLInputElement>): void {
     event.preventDefault();
@@ -241,7 +276,8 @@ export default function CreateProfessional() {
         </CardHeaderPrimary>
         <CardContent className='pt-6'>
           <Form {...createForm}>
-            <form onSubmit={createForm.handleSubmit(handleCreateProfessional)}>
+            {/* <form onSubmit={createForm.handleSubmit(handleCreateProfessional)}> */}
+            <form onSubmit={createForm.handleSubmit((data) => createProfessional({ data }))}>
               {/* Section: Form fields */}
               <section className='grid grid-cols-1 space-y-6 md:grid-cols-8 md:space-y-0 lg:grid-cols-6'>
                 {/* Section: Professional data (left side) */}
@@ -625,7 +661,7 @@ export default function CreateProfessional() {
               {/* Section footer: Buttons */}
               <footer className='grid grid-cols-1 space-y-2 pt-6 md:flex md:justify-end md:gap-6 md:space-y-0'>
                 <Button type='submit' size='sm' variant='default' className='order-1 md:order-2 lg:order-2'>
-                  {isCreating ? <LoadingDB text={t('loading.creating')} variant='button'></LoadingDB> : t('button.addProfessional')}
+                  {professionalIsCreating ? <LoadingDB text={t('loading.creating')} variant='button'></LoadingDB> : t('button.addProfessional')}
                 </Button>
                 <Button variant={'ghost'} onClick={handleCancel} className='order-2 md:order-1 lg:order-1'>
                   {t('button.cancel')}
