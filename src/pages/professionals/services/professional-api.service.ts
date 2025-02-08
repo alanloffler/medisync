@@ -12,6 +12,8 @@ import { UtilsUrl } from '@core/services/utils/url.service';
 export class ProfessionalApiService {
   private static readonly API_URL: string = import.meta.env.VITE_API_URL;
 
+  // TODO: replace area codes from config file to service where the area codes return fake promise
+
   // CHECKED: TRQ used on
   // - ProfessionalsDataTable.tsx
   // Find all professionals by name or specialization (many professionals with partial search)
