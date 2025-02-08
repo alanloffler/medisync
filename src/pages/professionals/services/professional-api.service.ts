@@ -36,23 +36,16 @@ export class ProfessionalApiService {
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
-  public static async create(data: IProfessionalForm) {
+  public static async create(data: IProfessionalForm): Promise<IResponse<IProfessional>> {
+    // throw new Error('not implemented');
+
+    // This transformation must be done in the backend, same as in update
     const transformedData = ProfessionalUtils.lowercaseFormItems(data);
-    const url: string = `${this.API_URL}/professionals`;
 
-    try {
-      const query = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json;charset=UTF-8',
-        },
-        body: JSON.stringify(transformedData),
-      });
+    const path: string = `${this.API_URL}/professionals`;
+    const url: URL = UtilsUrl.create(path);
 
-      return await query.json();
-    } catch (error) {
-      return error;
-    }
+    return await UtilsUrl.fetch(url, EMethods.POST, transformedData);
   }
 
   // CHECKED: used on ViewProfessional.tsx
