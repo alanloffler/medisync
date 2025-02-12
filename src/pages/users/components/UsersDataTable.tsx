@@ -29,15 +29,16 @@ import { Pagination } from '@core/components/common/Pagination';
 import { TableButton } from '@core/components/common/TableButton';
 // External imports
 import { Trans, useTranslation } from 'react-i18next';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 // Imports
+import type { IAreaCode } from '@core/interfaces/area-code.interface';
 import type { IDataTableUsers, ITableManager } from '@core/interfaces/table.interface';
 import type { IPaginatedUsersVars } from '@users/interfaces/mutation-vars.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser, IUsersData } from '@users/interfaces/user.interface';
-import { AREA_CODE } from '@config/area-code.config';
+import { AreaCodeService } from '@core/services/area-code.service';
 import { EUserSearch } from '@users/enums/user-search.enum';
 import { EUserType } from '@core/enums/user-type.enum';
 import { EWhatsappTemplate } from '@whatsapp/enums/template.enum';
@@ -120,6 +121,11 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
     }
   }, [search, searchUsersBy, skipItems, tableManager]);
 
+  const { data: areaCode, isSuccess: areaCodeIsSuccess } = useQuery<IResponse<IAreaCode[]>, Error>({
+    queryKey: ['area-code', 'find-all'],
+    queryFn: async () => await AreaCodeService.findAll(),
+  });
+
   // Table manager
   const table: ITable<IUser> = useReactTable({
     columns: columns,
@@ -157,130 +163,129 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
     setPagination(defaultPagination);
   }, [reload]);
 
-  const tableColumns: ColumnDef<IUser>[] = useMemo(
-    () => [
-      {
-        accessorKey: 'index',
-        size: 50,
-        header: () => <div className='text-center uppercase'>{t(USER_CONFIG.table.header[0])}</div>,
-        cell: ({ row }) => (
-          <div className='mx-auto w-fit rounded-md bg-slate-100 px-1.5 py-1 text-center text-xxs text-slate-400'>{truncate(row.original._id, -3)}</div>
-        ),
-      },
-      {
-        accessorKey: 'lastName',
-        header: ({ column }) => (
-          <div className='text-left'>
-            <button
-              className='flex items-center gap-2 uppercase hover:text-accent-foreground'
-              onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-            >
-              {t(USER_CONFIG.table.header[1])}
-              <ArrowDownUp size={12} strokeWidth={2} />
-            </button>
-          </div>
-        ),
-        cell: ({ row }) => <div className='text-left'>{UtilsString.upperCase(`${row.original.lastName}, ${row.original.firstName}`, 'each')}</div>,
-      },
-      {
-        accessorKey: 'identityCard',
-        size: 80,
-        header: ({ column }) => (
-          <div className='text-left'>
-            <button
-              className='flex items-center gap-2 uppercase hover:text-accent-foreground'
-              onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-            >
-              {t(USER_CONFIG.table.header[2])}
-              <ArrowDownUp size={12} strokeWidth={2} />
-            </button>
-          </div>
-        ),
-        cell: ({ row }) => <div className='text-left text-xsm text-slate-500'>{i18n.format(row.original.dni, 'number', i18n.resolvedLanguage)}</div>,
-      },
-      {
-        accessorKey: 'phone',
-        size: 150,
-        header: ({ column }) => (
-          <div className='text-center'>
-            <button
-              className='flex items-center gap-2 uppercase hover:text-accent-foreground'
-              onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-            >
-              {t(USER_CONFIG.table.header[3])}
-              <ArrowDownUp size={12} strokeWidth={2} />
-            </button>
-          </div>
-        ),
-        cell: ({ row }) => (
-          <div className='flex items-center space-x-2'>
+  const tableColumns: ColumnDef<IUser>[] = [
+    {
+      accessorKey: 'index',
+      size: 50,
+      header: () => <div className='text-center uppercase'>{t(USER_CONFIG.table.header[0])}</div>,
+      cell: ({ row }) => (
+        <div className='mx-auto w-fit rounded-md bg-slate-100 px-1.5 py-1 text-center text-xxs text-slate-400'>{truncate(row.original._id, -3)}</div>
+      ),
+    },
+    {
+      accessorKey: 'lastName',
+      header: ({ column }) => (
+        <div className='text-left'>
+          <button
+            className='flex items-center gap-2 uppercase hover:text-accent-foreground'
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            {t(USER_CONFIG.table.header[1])}
+            <ArrowDownUp size={12} strokeWidth={2} />
+          </button>
+        </div>
+      ),
+      cell: ({ row }) => <div className='text-left'>{UtilsString.upperCase(`${row.original.lastName}, ${row.original.firstName}`, 'each')}</div>,
+    },
+    {
+      accessorKey: 'identityCard',
+      size: 80,
+      header: ({ column }) => (
+        <div className='text-left'>
+          <button
+            className='flex items-center gap-2 uppercase hover:text-accent-foreground'
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            {t(USER_CONFIG.table.header[2])}
+            <ArrowDownUp size={12} strokeWidth={2} />
+          </button>
+        </div>
+      ),
+      cell: ({ row }) => <div className='text-left text-xsm text-slate-500'>{i18n.format(row.original.dni, 'number', i18n.resolvedLanguage)}</div>,
+    },
+    {
+      accessorKey: 'phone',
+      size: 150,
+      header: ({ column }) => (
+        <div className='text-center'>
+          <button
+            className='flex items-center gap-2 uppercase hover:text-accent-foreground'
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            {t(USER_CONFIG.table.header[3])}
+            <ArrowDownUp size={12} strokeWidth={2} />
+          </button>
+        </div>
+      ),
+      cell: ({ row }) => (
+        <div className='flex items-center space-x-2'>
+          {areaCodeIsSuccess && (
             <img
               className='grayscale'
               height={18}
               width={18}
               src={
                 new URL(
-                  `../../../assets/icons/i18n/${AREA_CODE.find((areaCode) => areaCode.code === String(row.original.areaCode))?.icon}.svg`,
+                  `../../../assets/icons/i18n/${areaCode.data.find((area) => area.code === String(row.original.areaCode))?.icon}.svg`,
                   import.meta.url,
                 ).href
               }
             />
-            <span className='text-left text-xsm text-slate-500'>{`(${row.original.areaCode}) ${delimiter(row.original.phone, '-', 6)}`}</span>
-          </div>
-        ),
-      },
-      {
-        accessorKey: 'actions',
-        size: 80,
-        header: () => <div className='text-center uppercase'>{t(USER_CONFIG.table.header[4])}</div>,
-        cell: ({ row }) => (
-          <div className='mx-auto flex w-fit flex-row items-center justify-center space-x-0.5 md:space-x-2'>
-            <TableButton
-              callback={() => navigate(`/users/${row.original._id}`)}
-              className='hidden hover:bg-sky-100/75 hover:text-sky-400 sm:flex'
-              tooltip={t('tooltip.details')}
-            >
-              <FileText size={17} strokeWidth={1.5} />
-            </TableButton>
+          )}
+          <span className='text-left text-xsm text-slate-500'>{`(${row.original.areaCode}) ${delimiter(row.original.phone, '-', 6)}`}</span>
+        </div>
+      ),
+    },
+    {
+      accessorKey: 'actions',
+      size: 80,
+      header: () => <div className='text-center uppercase'>{t(USER_CONFIG.table.header[4])}</div>,
+      cell: ({ row }) => (
+        <div className='mx-auto flex w-fit flex-row items-center justify-center space-x-0.5 md:space-x-2'>
+          <TableButton
+            callback={() => navigate(`/users/${row.original._id}`)}
+            className='hidden hover:bg-sky-100/75 hover:text-sky-400 sm:flex'
+            tooltip={t('tooltip.details')}
+          >
+            <FileText size={17} strokeWidth={1.5} />
+          </TableButton>
 
-            <TableButton
-              callback={() => navigate(`/users/update/${row.original._id}`)}
-              className='hover:bg-amber-100/75 hover:text-amber-400'
-              tooltip={t('tooltip.edit')}
-            >
-              <PencilLine size={17} strokeWidth={1.5} />
-            </TableButton>
-            <TableButton
-              callback={() => handleRemoveUserDialog(row.original)}
-              className='hover:bg-red-100/75 hover:text-red-400'
-              tooltip={t('tooltip.delete')}
-            >
-              <Trash2 size={17} strokeWidth={1.5} />
-            </TableButton>
-            <div className='px-1'>
-              <Separator orientation='vertical' className='h-5 w-[1px]' />
-            </div>
-            <TableButton
-              callback={() => navigate(`/email/user/${row.original._id}`)}
-              className='hover:bg-purple-100/75 hover:text-purple-400'
-              disabled={!row.original.email}
-              tooltip={t('tooltip.sendEmail')}
-            >
-              {!row.original.email ? <MailX size={17} strokeWidth={1.5} /> : <Mail size={17} strokeWidth={1.5} />}
-            </TableButton>
-            <TableButton
-              callback={() => navigate(`/whatsapp/${row.original._id}`, { state: { type: EUserType.USER, template: EWhatsappTemplate.EMPTY } })}
-              className='hover:bg-emerald-100/75 hover:text-emerald-400'
-              tooltip={t('tooltip.sendMessage')}
-            >
-              <MessageCircle size={17} strokeWidth={1.5} />
-            </TableButton>
+          <TableButton
+            callback={() => navigate(`/users/update/${row.original._id}`)}
+            className='hover:bg-amber-100/75 hover:text-amber-400'
+            tooltip={t('tooltip.edit')}
+          >
+            <PencilLine size={17} strokeWidth={1.5} />
+          </TableButton>
+          <TableButton
+            callback={() => handleRemoveUserDialog(row.original)}
+            className='hover:bg-red-100/75 hover:text-red-400'
+            tooltip={t('tooltip.delete')}
+          >
+            <Trash2 size={17} strokeWidth={1.5} />
+          </TableButton>
+          <div className='px-1'>
+            <Separator orientation='vertical' className='h-5 w-[1px]' />
           </div>
-        ),
-      },
-    ],
-    [delimiter, i18n, navigate, t, truncate],
-  );
+          <TableButton
+            callback={() => navigate(`/email/user/${row.original._id}`)}
+            className='hover:bg-purple-100/75 hover:text-purple-400'
+            disabled={!row.original.email}
+            tooltip={t('tooltip.sendEmail')}
+          >
+            {!row.original.email ? <MailX size={17} strokeWidth={1.5} /> : <Mail size={17} strokeWidth={1.5} />}
+          </TableButton>
+          <TableButton
+            callback={() => navigate(`/whatsapp/${row.original._id}`, { state: { type: EUserType.USER, template: EWhatsappTemplate.EMPTY } })}
+            className='hover:bg-emerald-100/75 hover:text-emerald-400'
+            tooltip={t('tooltip.sendMessage')}
+          >
+            <MessageCircle size={17} strokeWidth={1.5} />
+          </TableButton>
+        </div>
+      ),
+    },
+  ];
 
   // Actions
   function handleRemoveUserDialog(user: IUser): void {
