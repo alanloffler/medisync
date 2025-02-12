@@ -185,11 +185,11 @@ export default function ViewProfessional() {
                 {professional.data.area && professional.data.specialization && (
                   <div className='flex justify-end space-x-4 pt-3'>
                     <Badge variant='default'>
-                      <Tag size={13} strokeWidth={2} className='stroke-slate-600' />
+                      <Tag size={13} strokeWidth={2} className='stroke-amber-700' />
                       <span>{UtilsString.upperCase(professional.data.area.name)}</span>
                     </Badge>
                     <Badge variant='default'>
-                      <Tag size={13} strokeWidth={2} className='stroke-slate-600' />
+                      <Tag size={13} strokeWidth={2} className='stroke-amber-700' />
                       <span>{UtilsString.upperCase(professional.data.specialization.name)}</span>
                     </Badge>
                   </div>
