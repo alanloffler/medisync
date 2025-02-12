@@ -11,6 +11,7 @@ import { BackButton } from '@core/components/common/BackButton';
 import { CardHeaderPrimary } from '@core/components/common/header/CardHeaderPrimary';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
+import { LoadingText } from '@core/components/common/LoadingText';
 import { PageHeader } from '@core/components/common/PageHeader';
 import { RemoveDialog } from '@core/components/common/RemoveDialog';
 import { TableButton } from '@core/components/common/TableButton';
@@ -21,9 +22,10 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 // Imports
+import type { IAreaCode } from '@core/interfaces/area-code.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
-import { AREA_CODE } from '@config/area-code.config';
+import { AreaCodeService } from '@core/services/area-code.service';
 import { CalendarService } from '@appointments/services/calendar.service';
 import { EUserType } from '@core/enums/user-type.enum';
 import { EWhatsappTemplate } from '@whatsapp/enums/template.enum';
@@ -65,6 +67,20 @@ export default function ViewProfessional() {
   useEffect(() => {
     if (isError) addNotification({ type: 'error', message: t(professionalError.message) });
   }, [addNotification, isError, professionalError?.message, t]);
+
+  const {
+    data: areaCode,
+    error: areaCodeError,
+    isError: areaCodeIsError,
+    isLoading: areaCodeIsLoading,
+  } = useQuery<IResponse<IAreaCode[]>, Error>({
+    queryKey: ['areaCode'],
+    queryFn: async () => await AreaCodeService.findAll(),
+  });
+
+  useEffect(() => {
+    if (areaCodeIsError) addNotification({ type: 'error', message: areaCodeError?.message });
+  }, [addNotification, areaCodeError, areaCodeIsError]);
 
   function gotoAnimateOver(): void {
     const { keyframes, options } = motion.x(3).type('bounce').animate();
@@ -135,23 +151,27 @@ export default function ViewProfessional() {
               <section className='space-y-3'>
                 <h2 className='pt-2 text-xs font-medium uppercase leading-none text-slate-500'>{t('label.contact')}</h2>
                 {professional.data.areaCode && professional.data.phone && (
-                  <div className='flex items-center space-x-3'>
+                  <div className='flex items-center space-x-3 text-sm'>
                     <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
                       <Smartphone size={17} strokeWidth={2} />
                     </div>
-                    <div className='flex items-center space-x-2'>
-                      <img
-                        height={18}
-                        width={18}
-                        src={
-                          new URL(
-                            `../../../assets/icons/i18n/${AREA_CODE.find((areaCode) => areaCode.code === String(professional.data.areaCode))?.icon}.svg`,
-                            import.meta.url,
-                          ).href
-                        }
-                      />
-                      <span className='text-sm'>{`(${professional.data.areaCode}) ${delimiter(professional.data.phone, '-', 6)}`}</span>
-                    </div>
+                    {areaCodeIsLoading && <LoadingText text={t('loading.default')} suffix='...' />}
+                    {areaCodeIsError && <span className='text-rose-400'>{areaCodeError.message}</span>}
+                    {areaCode?.data && (
+                      <div className='flex items-center space-x-2'>
+                        <img
+                          height={18}
+                          width={18}
+                          src={
+                            new URL(
+                              `../../../assets/icons/i18n/${areaCode.data.find((areaCode) => areaCode.code === String(professional.data.areaCode))?.icon}.svg`,
+                              import.meta.url,
+                            ).href
+                          }
+                        />
+                        <span>{`(${professional.data.areaCode}) ${delimiter(professional.data.phone, '-', 6)}`}</span>
+                      </div>
+                    )}
                   </div>
                 )}
                 {professional.data.email && (
