@@ -74,7 +74,7 @@ export default function ViewProfessional() {
     isError: areaCodeIsError,
     isLoading: areaCodeIsLoading,
   } = useQuery<IResponse<IAreaCode[]>, Error>({
-    queryKey: ['areaCode'],
+    queryKey: ['area-code', 'find-all'],
     queryFn: async () => await AreaCodeService.findAll(),
   });
 
