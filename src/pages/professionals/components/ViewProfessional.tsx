@@ -79,8 +79,8 @@ export default function ViewProfessional() {
   });
 
   useEffect(() => {
-    if (areaCodeIsError) addNotification({ type: 'error', message: areaCodeError?.message });
-  }, [addNotification, areaCodeError, areaCodeIsError]);
+    if (areaCodeIsError) addNotification({ type: 'error', message: areaCodeError.message });
+  }, [addNotification, areaCodeError?.message, areaCodeIsError]);
 
   function gotoAnimateOver(): void {
     const { keyframes, options } = motion.x(3).type('bounce').animate();
@@ -156,19 +156,20 @@ export default function ViewProfessional() {
                       <Smartphone size={17} strokeWidth={2} />
                     </div>
                     {areaCodeIsLoading && <LoadingText text={t('loading.default')} suffix='...' />}
-                    {areaCodeIsError && <span className='text-rose-400'>{areaCodeError.message}</span>}
-                    {areaCode?.data && (
+                    {!areaCodeIsLoading && (
                       <div className='flex items-center space-x-2'>
-                        <img
-                          height={18}
-                          width={18}
-                          src={
-                            new URL(
-                              `../../../assets/icons/i18n/${areaCode.data.find((areaCode) => areaCode.code === String(professional.data.areaCode))?.icon}.svg`,
-                              import.meta.url,
-                            ).href
-                          }
-                        />
+                        {areaCode?.data && (
+                          <img
+                            height={18}
+                            width={18}
+                            src={
+                              new URL(
+                                `../../../assets/icons/i18n/${areaCode.data.find((areaCode) => areaCode.code === String(professional.data.areaCode))?.icon}.svg`,
+                                import.meta.url,
+                              ).href
+                            }
+                          />
+                        )}
                         <span>{`(${professional.data.areaCode}) ${delimiter(professional.data.phone, '-', 6)}`}</span>
                       </div>
                     )}
