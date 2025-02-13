@@ -129,21 +129,23 @@ export default function ViewProfessional() {
                   </div>
                 )}
                 {professional.data.configuration.scheduleTimeInit && professional.data.configuration.scheduleTimeEnd && (
-                  <div className='flex items-center space-x-3'>
+                  <div className='flex items-center space-x-3 text-sm'>
                     <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
                       <CalendarClock size={17} strokeWidth={2} />
                     </div>
-                    <span className='text-sm'>
-                      {professional.data.configuration.scheduleTimeInit &&
-                        professional.data.configuration.scheduleTimeEnd &&
-                        !professional.data.configuration.unavailableTimeSlot?.timeSlotUnavailableInit &&
-                        !professional.data.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd &&
-                        `${professional.data.configuration.scheduleTimeInit} ${t('words.hoursSeparator')} ${professional.data.configuration.scheduleTimeEnd}`}
-                      {professional.data.configuration.scheduleTimeInit &&
-                        professional.data.configuration.scheduleTimeEnd &&
-                        professional.data.configuration.unavailableTimeSlot?.timeSlotUnavailableInit &&
-                        professional.data.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd &&
-                        `${professional.data.configuration.scheduleTimeInit} ${t('words.hoursSeparator')} ${professional.data.configuration.unavailableTimeSlot?.timeSlotUnavailableInit} ${t('words.slotsSeparator')} ${professional.data.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd} ${t('words.hoursSeparator')} ${professional.data.configuration.scheduleTimeEnd}`}
+                    <span>
+                      {professional.data.configuration.unavailableTimeSlot?.timeSlotUnavailableInit &&
+                      professional.data.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd
+                        ? t('cardContent.scheduleHour.interval', {
+                            timeInit: professional.data.configuration.scheduleTimeInit,
+                            timeEnd: professional.data.configuration.scheduleTimeEnd,
+                            intervalInit: professional.data.configuration.unavailableTimeSlot?.timeSlotUnavailableInit,
+                            intervalEnd: professional.data.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd,
+                          })
+                        : t('cardContent.scheduleHour.default', {
+                            timeInit: professional.data.configuration.scheduleTimeInit,
+                            timeEnd: professional.data.configuration.scheduleTimeEnd,
+                          })}
                     </span>
                   </div>
                 )}
