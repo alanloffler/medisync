@@ -9,6 +9,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@core/components/ui/pop
 // Components
 import { AppoFlowCard } from '@appointments/components/AppoFlowCard';
 import { ApposDataTable } from '@appointments/components/AppoDataTable';
+import { CardHeaderSecondary } from '@core/components/common/header/CardHeaderSecondary';
 import { DBCountAppos } from '@appointments/components/common/DBCountAppos';
 import { PageHeader } from '@core/components/common/PageHeader';
 // External imports
@@ -85,10 +86,7 @@ export default function Appointments() {
           <AppoFlowCard className='w-full md:max-w-[300px]' />
         </section>
         <Card className='col-span-1 h-fit space-y-4 overflow-y-auto p-0 md:col-span-4 lg:col-span-3 xl:col-span-3'>
-          <header className='flex items-center space-x-3.5 rounded-t-lg bg-slate-200 px-3.5 py-2 text-slate-700'>
-            <List size={16} strokeWidth={2} />
-            <h1 className='text-center text-lg font-semibold'>{t('cardTitle.appointmentsList')}</h1>
-          </header>
+          <CardHeaderSecondary title={t('cardTitle.appointmentsList')} icon={<List size={18} strokeWidth={2} />} />
           <CardContent className='pt-2'>
             <header className='space-y-2'>
               <section className='flex flex-col space-y-3 md:flex-row md:items-center md:justify-between md:space-y-0'>
