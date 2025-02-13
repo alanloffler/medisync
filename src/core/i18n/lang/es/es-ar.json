@@ -74,6 +74,10 @@
       "user": "Vas a enviar un mensaje de texto de WhatsApp al teléfono celular del paciente <span>{{patient}}</span>."
     },
     "scanQRCode": "Escanea el código QR para iniciar sesión",
+    "scheduleHour": {
+      "default": "{{timeInit}} a {{timeEnd}} horas",
+      "interval": "{{timeInit}} a {{intervalInit}} y {{intervalEnd}} a {{timeEnd}} horas"
+    },
     "userSince": "Paciente desde el {{date}}"
   },
   "chart": {
