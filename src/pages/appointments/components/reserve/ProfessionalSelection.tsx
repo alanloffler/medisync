@@ -37,6 +37,8 @@ export function ProfessionalSelection({ clearFilters, professional, setSelected 
         professional.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd || undefined,
       );
       setLegibleSchedule(legibleSchedule);
+      // TODO: replace this with translation cardContent.scheduleHour, then remove this class method
+      console.log(legibleSchedule);
     }
   }, [professional]);
 
