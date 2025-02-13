@@ -11,6 +11,7 @@ import { BackButton } from '@core/components/common/BackButton';
 import { CardHeaderPrimary } from '@core/components/common/header/CardHeaderPrimary';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
+import { LoadingText } from '@core/components/common/LoadingText';
 // import { MessageStatus } from '@whatsapp/common/MessageStatus';
 import { PageHeader } from '@core/components/common/PageHeader';
 import { TableButton } from '@core/components/common/TableButton';
@@ -25,7 +26,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import type { IDialog } from '@core/interfaces/dialog.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
-import { AREA_CODE } from '@config/area-code.config';
+import { AreaCodeService } from '@core/services/area-code.service';
 import { EUserType } from '@core/enums/user-type.enum';
 import { EWhatsappTemplate } from '@whatsapp/enums/template.enum';
 import { HEADER_CONFIG } from '@config/layout/header.config';
@@ -66,6 +67,20 @@ export default function ViewUser() {
   useEffect(() => {
     if (isError) addNotification({ type: 'error', message: error.message });
   }, [addNotification, error?.message, isError]);
+
+  const {
+    data: areaCode,
+    error: areaCodeError,
+    isError: areaCodeIsError,
+    isLoading: areaCodeIsLoading,
+  } = useQuery({
+    queryKey: ['area-code', 'find-all'],
+    queryFn: async () => await AreaCodeService.findAll(),
+  });
+
+  useEffect(() => {
+    if (areaCodeIsError) addNotification({ type: 'error', message: areaCodeError.message });
+  }, [addNotification, areaCodeError?.message, areaCodeIsError]);
 
   function handleRemoveUserDialog(): void {
     setOpenDialog(true);
@@ -159,23 +174,28 @@ export default function ViewUser() {
                     </div>
                     <span className='text-sm'>{i18n.format(user.data.dni, 'number', i18n.resolvedLanguage)}</span>
                   </section>
-                  <section className='flex items-center space-x-3'>
+                  <section className='flex items-center space-x-3 text-sm'>
                     <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
                       <Smartphone size={17} strokeWidth={2} />
                     </div>
-                    <div className='flex items-center space-x-2'>
-                      <img
-                        height={18}
-                        width={18}
-                        src={
-                          new URL(
-                            `../../../assets/icons/i18n/${AREA_CODE.find((areaCode) => areaCode.code === String(user.data.areaCode))?.icon}.svg`,
-                            import.meta.url,
-                          ).href
-                        }
-                      />
-                      <span className='text-sm'>{`(${user.data.areaCode}) ${delimiter(user.data.phone, '-', 6)}`}</span>
-                    </div>
+                    {areaCodeIsLoading && <LoadingText text={t('loading.default')} suffix='...' />}
+                    {!areaCodeIsLoading && (
+                      <div className='flex items-center space-x-2'>
+                        {areaCode?.data && (
+                          <img
+                            height={18}
+                            width={18}
+                            src={
+                              new URL(
+                                `../../../assets/icons/i18n/${areaCode.data.find((area) => area.code === String(user.data.areaCode))?.icon}.svg`,
+                                import.meta.url,
+                              ).href
+                            }
+                          />
+                        )}
+                        <span>{`(${user.data.areaCode}) ${delimiter(user.data.phone, '-', 6)}`}</span>
+                      </div>
+                    )}
                   </section>
                   {user.data.email && (
                     <section className='flex items-center space-x-3'>
