@@ -114,7 +114,7 @@ export default function ViewProfessional() {
             />
             <CardContent className='mt-6 space-y-6'>
               {professional.data.description && (
-                <section className='flex space-x-4 text-ellipsis rounded-md bg-slate-100 px-4 py-3 italic text-slate-600'>
+                <section className='flex space-x-4 text-ellipsis rounded-md bg-purple-50 px-4 py-3 italic text-purple-800'>
                   <span>{UtilsString.upperCase(professional.data.description)}</span>
                 </section>
               )}
