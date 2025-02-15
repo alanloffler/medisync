@@ -87,7 +87,7 @@ export function SelectSpecialties({ callback, clear, dropdownPlaceholder, setDro
             <Button
               ref={specializationsScope}
               variant='default'
-              size='miniIcon'
+              size='icon7'
               onClick={clear}
               onMouseOver={() =>
                 specializationsAnimation(specializationsScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })

@@ -155,7 +155,7 @@ export default function Users() {
               <TooltipWrapper tooltip={t('tooltip.reload')}>
                 <Button
                   ref={reloadScope}
-                  size='miniIcon'
+                  size='icon7'
                   variant='tableHeader'
                   onClick={handleReload}
                   onMouseOut={reloadAnimationOut}
@@ -167,7 +167,7 @@ export default function Users() {
               <TooltipWrapper tooltip={t('tooltip.addUser')}>
                 <Button
                   ref={addUserIconScope}
-                  size='miniIcon'
+                  size='icon7'
                   variant='tableHeaderPrimary'
                   onClick={() => navigate('/users/create')}
                   onMouseOut={addUserIconAnimationOut}

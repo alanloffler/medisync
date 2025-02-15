@@ -270,7 +270,7 @@ export default function UpdateProfessional() {
                 <Button
                   className='!hover:bg-transparent'
                   ref={dropdownScope}
-                  size='miniIcon'
+                  size='icon7'
                   onMouseOver={dropdownMouseOver}
                   onMouseOut={dropdownMouseOut}
                 >

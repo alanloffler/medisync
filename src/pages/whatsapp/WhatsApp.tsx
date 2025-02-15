@@ -223,7 +223,7 @@ export default function WhatsApp(): JSX.Element {
               <span>{t('cardTitle.serviceStatus')}</span>
               {!serverError && (
                 <TooltipWrapper tooltip={t('tooltip.reconnect')}>
-                  <Button variant='ghost' size='miniIcon' onClick={handleReconnect} className='hover:bg-fuchsia-100'>
+                  <Button variant='ghost' size='icon7' onClick={handleReconnect} className='hover:bg-fuchsia-100'>
                     <RefreshCw size={17} strokeWidth={2} className='stroke-fuchsia-400' />
                   </Button>
                 </TooltipWrapper>

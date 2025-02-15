@@ -254,7 +254,7 @@ export default function CreateProfessional() {
               <Button
                 className='!hover:bg-transparent'
                 ref={dropdownScope}
-                size='miniIcon'
+                size='icon7'
                 onMouseOver={() =>
                   dropdownAnimation(dropdownScope.current, { scale: 1.2 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
                 }

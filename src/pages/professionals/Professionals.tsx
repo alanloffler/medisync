@@ -166,7 +166,7 @@ export default function Professionals() {
                 <TooltipWrapper tooltip={t('tooltip.reload')}>
                   <Button
                     ref={reloadScope}
-                    size='miniIcon'
+                    size='icon7'
                     variant='tableHeader'
                     onClick={handleReload}
                     onMouseOver={reloadAnimationOver}
@@ -178,7 +178,7 @@ export default function Professionals() {
                 <TooltipWrapper tooltip={t('tooltip.addProfessional')}>
                   <Button
                     ref={addProfIconScope}
-                    size='miniIcon'
+                    size='icon7'
                     variant='tableHeaderPrimary'
                     onClick={() => navigate('/professionals/create')}
                     onMouseOver={addProfessionalIconAnimationOver}
