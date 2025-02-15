@@ -20,6 +20,7 @@ import {
 } from '@tanstack/react-table';
 // Components
 import { DateTime } from '@core/components/common/DateTime';
+import { Id } from '@core/components/common/ui/Id';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { Pagination } from '@core/components/common/Pagination';
@@ -40,7 +41,6 @@ import { AppointmentApiService } from '@appointments/services/appointment.servic
 import { UtilsString } from '@core/services/utils/string.service';
 import { useMediaQuery } from '@core/hooks/useMediaQuery';
 import { useNotificationsStore } from '@core/stores/notifications.store';
-import { useTruncateText } from '@core/hooks/useTruncateText';
 // Interface
 interface IVariables {
   itemsPerPage: number;
@@ -68,7 +68,6 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
   const isFirstTableManager = useRef<boolean>(true);
   const navigate = useNavigate();
   const prevDeps = useRef<{ search: IAppointmentSearch[]; tableManager: ITableManager }>({ search, tableManager });
-  const truncate = useTruncateText();
   const { i18n, t } = useTranslation();
 
   // Fetch appointments
@@ -171,9 +170,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
         accessorKey: 'index',
         size: 30,
         header: () => <div className='text-center'>{t(APPO_CONFIG.table.header[0])}</div>,
-        cell: ({ row }) => (
-          <div className='mx-auto w-fit rounded-md bg-slate-100 px-1.5 py-1 text-center text-xs text-slate-400'>{truncate(row.original._id, -3)}</div>
-        ),
+        cell: ({ row }) => <Id id={row.original._id} />,
       },
       {
         accessorKey: 'date',
@@ -262,7 +259,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
         ),
       },
     ],
-    [i18n, navigate, t, truncate],
+    [i18n, navigate, t],
   );
 
   // Actions
