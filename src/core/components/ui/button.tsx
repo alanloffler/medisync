@@ -19,7 +19,6 @@ const buttonVariants = cva(
         'link-table': 'p-0 font-normal underline-offset-4 hover:underline',
         tableHeader: 'rounded-full hover:bg-slate-200',
         tableHeaderPrimary: 'rounded-full hover:bg-primary/80 hover:text-white',
-        table: 'bg-slate-200 hover:bg-slate-200/80 shadow-sm text-primary-background text-sm',
         remove: 'bg-red-500 hover:bg-red-500/80 text-white',
       },
       size: {
