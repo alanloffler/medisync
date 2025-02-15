@@ -130,7 +130,7 @@ export default function Appointments() {
                       </PopoverContent>
                     </Popover>
                     {date && (
-                      <Button variant={'clear'} size='icon5' onClick={() => setDate(undefined)}>
+                      <Button variant='clear' size='icon5' onClick={() => setDate(undefined)}>
                         <X size={14} strokeWidth={2} />
                       </Button>
                     )}

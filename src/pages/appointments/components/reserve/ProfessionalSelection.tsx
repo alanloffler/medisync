@@ -61,7 +61,7 @@ export function ProfessionalSelection({ clearFilters, professional, setSelected 
         />
         {professional && (
           <TooltipWrapper tooltip={t('tooltip.delete')}>
-            <Button variant='clear' size='icon5' className='bg-rose-400 text-white hover:bg-rose-500' onClick={clearFilters}>
+            <Button variant='clear' size='icon5' onClick={clearFilters}>
               <X size={14} strokeWidth={2} />
             </Button>
           </TooltipWrapper>
