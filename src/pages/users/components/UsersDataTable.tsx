@@ -23,6 +23,7 @@ import {
 } from '@tanstack/react-table';
 // Components
 import { DBCountUsers } from '@users/components/common/DBCountUsers';
+import { Id } from '@core/components/common/ui/Id';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { Pagination } from '@core/components/common/Pagination';
@@ -48,7 +49,6 @@ import { UtilsString } from '@core/services/utils/string.service';
 import { useDelimiter } from '@core/hooks/useDelimiter';
 import { useMediaQuery } from '@core/hooks/useMediaQuery';
 import { useNotificationsStore } from '@core/stores/notifications.store';
-import { useTruncateText } from '@core/hooks/useTruncateText';
 // Default values for pagination and sorting
 const defaultSorting: SortingState = [{ id: USER_CONFIG.table.defaultSortingId, desc: USER_CONFIG.table.defaultSortingType }];
 const defaultPagination: PaginationState = { pageIndex: 0, pageSize: USER_CONFIG.table.defaultPageSize };
@@ -67,7 +67,6 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
   const firstUpdate = useRef<boolean>(true);
   const navigate = useNavigate();
   const prevDeps = useRef<IPaginatedUsersVars>({ search, skipItems, tableManager });
-  const truncate = useTruncateText();
   const { i18n, t } = useTranslation();
 
   // Table column visibility
@@ -168,9 +167,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
       accessorKey: 'index',
       size: 50,
       header: () => <div className='text-center uppercase'>{t(USER_CONFIG.table.header[0])}</div>,
-      cell: ({ row }) => (
-        <div className='mx-auto w-fit rounded-md bg-slate-100 px-1.5 py-1 text-center text-xxs text-slate-400'>{truncate(row.original._id, -3)}</div>
-      ),
+      cell: ({ row }) => <Id id={row.original._id} />,
     },
     {
       accessorKey: 'lastName',
