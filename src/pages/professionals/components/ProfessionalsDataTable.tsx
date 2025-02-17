@@ -193,7 +193,7 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
             )}
           </div>
         ),
-        cell: ({ row }) => <div className='text-left text-xsm text-slate-500'>{UtilsString.upperCase(row.original.area.name)}</div>,
+        cell: ({ row }) => <div className='text-left text-xsm text-muted-foreground'>{UtilsString.upperCase(row.original.area.name)}</div>,
       },
       {
         accessorKey: 'specialization',
@@ -215,7 +215,7 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
             )}
           </div>
         ),
-        cell: ({ row }) => <div className='text-left text-xsm text-slate-500'>{UtilsString.upperCase(row.original.specialization.name)}</div>,
+        cell: ({ row }) => <div className='text-left text-xsm text-muted-foreground'>{UtilsString.upperCase(row.original.specialization.name)}</div>,
       },
       {
         accessorKey: 'available',
@@ -240,7 +240,7 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
         cell: ({ row }) => (
           <section className='flex flex-row items-center'>
             <AvailableProfessional
-              className='h-6 text-xsm text-slate-500'
+              className='h-6 text-xsm text-muted-foreground'
               data={{ _id: row.original._id, available: row.original.available }}
               items={PV_CONFIG.select}
             />
