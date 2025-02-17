@@ -15,7 +15,7 @@ import { PageHeader } from '@core/components/common/PageHeader';
 // External imports
 import { enUS, es, Locale } from 'date-fns/locale';
 import { format } from '@formkit/tempo';
-import { spring, useAnimate } from 'motion/react';
+import { type AnimationPlaybackControls, useAnimate } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -25,6 +25,7 @@ import { APP_CONFIG } from '@config/app.config';
 import { EAppointmentSearch, type IAppointmentSearch } from '@appointments/interfaces/appointment-search.interface';
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { cn } from '@lib/utils';
+import { motion } from '@core/services/motion.service';
 import { useDebounce } from '@core/hooks/useDebounce';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 // Constants
@@ -63,6 +64,16 @@ export default function Appointments() {
     if (i18n.resolvedLanguage === 'es') setLocale(es);
   }, [i18n.resolvedLanguage]);
 
+  function animateOver(): AnimationPlaybackControls {
+    const { keyframes, options } = motion.scale(1.2).type('bounce').animate();
+    return createAnimation(createScope.current, keyframes, options);
+  }
+
+  function animateOut(): AnimationPlaybackControls {
+    const { keyframes, options } = motion.scale(1).type('bounce').animate();
+    return createAnimation(createScope.current, keyframes, options);
+  }
+
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 lg:gap-8 lg:p-8'>
       <header className='flex items-center justify-between'>
@@ -76,8 +87,8 @@ export default function Appointments() {
               size='sm'
               className='w-fit space-x-2'
               onClick={() => navigate('/reserve')}
-              onMouseOver={() => createAnimation(createScope.current, { scale: 1.2 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })}
-              onMouseOut={() => createAnimation(createScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })}
+              onMouseOver={animateOver}
+              onMouseOut={animateOut}
             >
               <PlusCircle ref={createScope} size={16} strokeWidth={2} />
               <span>{t('button.generateAppointment')}</span>
