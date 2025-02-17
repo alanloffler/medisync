@@ -291,7 +291,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
+                <TableRow key={headerGroup.id} className='border-t bg-slate-50 text-[11px] font-medium text-slate-500'>
                   {headerGroup.headers.map((header) => (
                     <TableHead key={header.id} style={{ width: `${header.getSize()}px` }} className='px-1'>
                       {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
