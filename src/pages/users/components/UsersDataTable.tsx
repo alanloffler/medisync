@@ -198,7 +198,9 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
           </button>
         </div>
       ),
-      cell: ({ row }) => <div className='text-left text-xsm text-slate-500'>{i18n.format(row.original.dni, 'number', i18n.resolvedLanguage)}</div>,
+      cell: ({ row }) => (
+        <div className='text-left text-xsm text-muted-foreground'>{i18n.format(row.original.dni, 'number', i18n.resolvedLanguage)}</div>
+      ),
     },
     {
       accessorKey: 'phone',
@@ -229,7 +231,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
               }
             />
           )}
-          <span className='text-left text-xsm text-slate-500'>{`(${row.original.areaCode}) ${delimiter(row.original.phone, '-', 6)}`}</span>
+          <span className='text-left text-xsm text-muted-foreground'>{`(${row.original.areaCode}) ${delimiter(row.original.phone, '-', 6)}`}</span>
         </div>
       ),
     },
