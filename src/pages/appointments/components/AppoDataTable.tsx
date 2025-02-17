@@ -174,7 +174,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
       },
       {
         accessorKey: 'date',
-        header: () => <div className='text-center'>{t(APPO_CONFIG.table.header[1])}</div>,
+        header: () => <div className='text-center uppercase'>{t(APPO_CONFIG.table.header[1])}</div>,
         cell: ({ row }) => (
           <div className='text-center'>
             <DateTime day={row.original.day} hour={row.original.hour} className='!text-xs' />
@@ -186,7 +186,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
         header: ({ column }) => (
           <div className='text-center'>
             <button
-              className='flex items-center gap-2 hover:text-accent-foreground'
+              className='flex items-center gap-2 uppercase hover:text-accent-foreground'
               onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
             >
               {t(APPO_CONFIG.table.header[2])}
@@ -205,7 +205,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
         header: ({ column }) => (
           <div className='text-left'>
             <button
-              className='flex items-center gap-2 hover:text-accent-foreground'
+              className='flex items-center gap-2 uppercase hover:text-accent-foreground'
               onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
             >
               {t(APPO_CONFIG.table.header[3])}
@@ -213,14 +213,16 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
             </button>
           </div>
         ),
-        cell: ({ row }) => <div className='text-left text-muted-foreground'>{i18n.format(row.original.user.dni, 'number', i18n.resolvedLanguage)}</div>,
+        cell: ({ row }) => (
+          <div className='text-left text-muted-foreground'>{i18n.format(row.original.user.dni, 'number', i18n.resolvedLanguage)}</div>
+        ),
       },
       {
         accessorKey: 'professional',
         header: ({ column }) => (
           <div className='text-center'>
             <button
-              className='flex items-center gap-2 hover:text-accent-foreground'
+              className='flex items-center gap-2 uppercase hover:text-accent-foreground'
               onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
             >
               {t(APPO_CONFIG.table.header[4])}
@@ -240,13 +242,13 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
       {
         accessorKey: 'status',
         size: 60,
-        header: () => <div className='text-center'>{t(APPO_CONFIG.table.header[5])}</div>,
+        header: () => <div className='text-center uppercase'>{t(APPO_CONFIG.table.header[5])}</div>,
         cell: ({ row }) => <StatusSelect appointment={row.original} mode='update' className='mx-auto h-5 w-5' />,
       },
       {
         accessorKey: 'actions',
         size: 100,
-        header: () => <div className='text-center'>{t(APPO_CONFIG.table.header[6])}</div>,
+        header: () => <div className='text-center uppercase'>{t(APPO_CONFIG.table.header[6])}</div>,
         cell: ({ row }) => (
           <div className='mx-auto flex w-fit flex-row items-center justify-center space-x-2'>
             <TableButton callback={() => navigate(`/appointments/${row.original._id}`)} className='hover:text-sky-500' tooltip={t('tooltip.details')}>
