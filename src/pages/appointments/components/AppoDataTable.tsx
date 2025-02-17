@@ -213,7 +213,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
             </button>
           </div>
         ),
-        cell: ({ row }) => <div className='text-left'>{i18n.format(row.original.user.dni, 'number', i18n.resolvedLanguage)}</div>,
+        cell: ({ row }) => <div className='text-left text-muted-foreground'>{i18n.format(row.original.user.dni, 'number', i18n.resolvedLanguage)}</div>,
       },
       {
         accessorKey: 'professional',
@@ -229,7 +229,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
           </div>
         ),
         cell: ({ row }) => (
-          <div className='text-left'>
+          <div className='text-left text-muted-foreground'>
             {UtilsString.upperCase(
               `${row.original.professional.title.abbreviation} ${row.original.professional.firstName} ${row.original.professional.lastName}`,
               'each',
