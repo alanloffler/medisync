@@ -9,6 +9,7 @@ import { Separator } from '@core/components/ui/separator';
 import { AvailableProfessional } from '@professionals/components/common/AvailableProfessional';
 import { BackButton } from '@core/components/common/BackButton';
 import { CardHeaderPrimary } from '@core/components/common/header/CardHeaderPrimary';
+import { ElementInfo } from '@core/components/common/ui/ElementInfo';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { LoadingText } from '@core/components/common/LoadingText';
@@ -121,70 +122,60 @@ export default function ViewProfessional() {
               <section className='space-y-3'>
                 <h2 className='pt-2 text-xs font-medium uppercase leading-none text-slate-500'>{t('label.scheduleTitle')}</h2>
                 {professional.data.configuration.workingDays && (
-                  <div className='flex items-center space-x-3'>
-                    <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
-                      <CalendarDays size={17} strokeWidth={2} />
-                    </div>
-                    <span className='text-sm'>{legibleWorkingDays}</span>
-                  </div>
+                  <ElementInfo content={legibleWorkingDays} icon={<CalendarDays size={17} strokeWidth={2} />} />
                 )}
                 {professional.data.configuration.scheduleTimeInit && professional.data.configuration.scheduleTimeEnd && (
-                  <div className='flex items-center space-x-3 text-sm'>
-                    <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
-                      <CalendarClock size={17} strokeWidth={2} />
-                    </div>
-                    <span>
-                      {professional.data.configuration.unavailableTimeSlot?.timeSlotUnavailableInit &&
-                      professional.data.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd
-                        ? t('cardContent.scheduleHour.interval', {
-                            timeInit: professional.data.configuration.scheduleTimeInit,
-                            timeEnd: professional.data.configuration.scheduleTimeEnd,
-                            intervalInit: professional.data.configuration.unavailableTimeSlot?.timeSlotUnavailableInit,
-                            intervalEnd: professional.data.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd,
-                          })
-                        : t('cardContent.scheduleHour.default', {
-                            timeInit: professional.data.configuration.scheduleTimeInit,
-                            timeEnd: professional.data.configuration.scheduleTimeEnd,
-                          })}
-                    </span>
-                  </div>
+                  <ElementInfo
+                    content={
+                      <span>
+                        {professional.data.configuration.unavailableTimeSlot?.timeSlotUnavailableInit &&
+                        professional.data.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd
+                          ? t('cardContent.scheduleHour.interval', {
+                              timeInit: professional.data.configuration.scheduleTimeInit,
+                              timeEnd: professional.data.configuration.scheduleTimeEnd,
+                              intervalInit: professional.data.configuration.unavailableTimeSlot?.timeSlotUnavailableInit,
+                              intervalEnd: professional.data.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd,
+                            })
+                          : t('cardContent.scheduleHour.default', {
+                              timeInit: professional.data.configuration.scheduleTimeInit,
+                              timeEnd: professional.data.configuration.scheduleTimeEnd,
+                            })}
+                      </span>
+                    }
+                    icon={<CalendarClock size={17} strokeWidth={2} />}
+                  />
                 )}
               </section>
               <section className='space-y-3'>
                 <h2 className='pt-2 text-xs font-medium uppercase leading-none text-slate-500'>{t('label.contact')}</h2>
                 {professional.data.areaCode && professional.data.phone && (
-                  <div className='flex items-center space-x-3 text-sm'>
-                    <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
-                      <Smartphone size={17} strokeWidth={2} />
-                    </div>
-                    {areaCodeIsLoading && <LoadingText text={t('loading.default')} suffix='...' />}
-                    {!areaCodeIsLoading && (
-                      <div className='flex items-center space-x-2'>
-                        {areaCode?.data && (
-                          <img
-                            height={18}
-                            width={18}
-                            src={
-                              new URL(
-                                `../../../assets/icons/i18n/${areaCode.data.find((areaCode) => areaCode.code === String(professional.data.areaCode))?.icon}.svg`,
-                                import.meta.url,
-                              ).href
-                            }
-                          />
+                  <ElementInfo
+                    content={
+                      <>
+                        {areaCodeIsLoading && <LoadingText text={t('loading.default')} suffix='...' />}
+                        {!areaCodeIsLoading && (
+                          <div className='flex items-center space-x-2'>
+                            {areaCode?.data && (
+                              <img
+                                height={18}
+                                width={18}
+                                src={
+                                  new URL(
+                                    `../../../assets/icons/i18n/${areaCode.data.find((areaCode) => areaCode.code === String(professional.data.areaCode))?.icon}.svg`,
+                                    import.meta.url,
+                                  ).href
+                                }
+                              />
+                            )}
+                            <span>{`(${professional.data.areaCode}) ${delimiter(professional.data.phone, '-', 6)}`}</span>
+                          </div>
                         )}
-                        <span>{`(${professional.data.areaCode}) ${delimiter(professional.data.phone, '-', 6)}`}</span>
-                      </div>
-                    )}
-                  </div>
+                      </>
+                    }
+                    icon={<Smartphone size={17} strokeWidth={2} />}
+                  />
                 )}
-                {professional.data.email && (
-                  <div className='flex items-center space-x-3'>
-                    <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
-                      <Mail size={17} strokeWidth={2} />
-                    </div>
-                    <span className='text-sm'>{professional.data.email}</span>
-                  </div>
-                )}
+                {professional.data.email && <ElementInfo content={professional.data.email} icon={<Mail size={17} strokeWidth={2} />} />}
                 {professional.data.area && professional.data.specialization && (
                   <div className='flex justify-end space-x-4 pt-3'>
                     <Badge variant='default'>
