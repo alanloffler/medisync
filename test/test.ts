@@ -290,3 +290,15 @@ export class AppoSchedule {
 //     </motion.button>
 //   );
 // }
+
+// DOT PATTERN COMPONENT
+// <DotPattern
+// glow={false}
+// width={20}
+// height={20}
+// cx={1}
+// cy={1}
+// cr={.5}
+// className={cn('px-3 pb-1 stroke-slate-300 [mask-image:radial-gradient(150px_circle_at_center,white,transparent)]')}
+// // className={cn('[mask-image:linear-gradient(to_bottom_right,white,transparent,transparent)]')}
+// />
