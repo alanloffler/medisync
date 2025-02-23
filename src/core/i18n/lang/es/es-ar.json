@@ -307,6 +307,10 @@
       "total": "en total",
       "week": "esta semana",
       "yesterday": "que ayer"
+    },
+    "attendance": {
+      "attendance": "{{count}}<small>%</small> de asistencia",
+      "nonAttendance": "{{count}}<small>%</small> de inasistencia"
     }
   },
   "status": {
