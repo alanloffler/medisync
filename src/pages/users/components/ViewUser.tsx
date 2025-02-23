@@ -9,6 +9,7 @@ import { Separator } from '@core/components/ui/separator';
 import { ApposRecord } from '@appointments/components/appos-record/ApposRecord';
 import { BackButton } from '@core/components/common/BackButton';
 import { CardHeaderPrimary } from '@core/components/common/header/CardHeaderPrimary';
+import { ElementInfo } from '@core/components/common/ui/ElementInfo';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { LoadingText } from '@core/components/common/LoadingText';
@@ -167,44 +168,39 @@ export default function ViewUser() {
             <section className='col-span-1 mx-auto h-fit w-full md:col-span-3 lg:col-span-2 xl:col-span-2'>
               <Card>
                 <CardHeaderPrimary className='justify-center' title={UtilsString.upperCase(`${user.data.firstName} ${user.data.lastName}`, 'each')} />
-                <CardContent className='mt-3 space-y-3 overflow-auto'>
-                  <section className='flex items-center space-x-3'>
-                    <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
-                      <CreditCard size={17} strokeWidth={2} />
-                    </div>
-                    <span className='text-sm'>{i18n.format(user.data.dni, 'number', i18n.resolvedLanguage)}</span>
-                  </section>
-                  <section className='flex items-center space-x-3 text-sm'>
-                    <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
-                      <Smartphone size={17} strokeWidth={2} />
-                    </div>
-                    {areaCodeIsLoading && <LoadingText text={t('loading.default')} suffix='...' />}
-                    {!areaCodeIsLoading && (
-                      <div className='flex items-center space-x-2'>
-                        {areaCode?.data && (
-                          <img
-                            height={18}
-                            width={18}
-                            src={
-                              new URL(
-                                `../../../assets/icons/i18n/${areaCode.data.find((area) => area.code === String(user.data.areaCode))?.icon}.svg`,
-                                import.meta.url,
-                              ).href
-                            }
-                          />
+                <CardContent className='mt-6 space-y-3 overflow-auto'>
+                  <ElementInfo
+                    content={i18n.format(user.data.dni, 'number', i18n.resolvedLanguage)}
+                    icon={<CreditCard size={17} strokeWidth={2} />}
+                    title={t('label.identityCardFull')}
+                  />
+                  <ElementInfo
+                    content={
+                      <>
+                        {areaCodeIsLoading && <LoadingText text={t('loading.default')} suffix='...' />}
+                        {!areaCodeIsLoading && (
+                          <div className='flex items-center space-x-2'>
+                            {areaCode?.data && (
+                              <img
+                                height={18}
+                                width={18}
+                                src={
+                                  new URL(
+                                    `../../../assets/icons/i18n/${areaCode.data.find((area) => area.code === String(user.data.areaCode))?.icon}.svg`,
+                                    import.meta.url,
+                                  ).href
+                                }
+                              />
+                            )}
+                            <span>{`(${user.data.areaCode}) ${delimiter(user.data.phone, '-', 6)}`}</span>
+                          </div>
                         )}
-                        <span>{`(${user.data.areaCode}) ${delimiter(user.data.phone, '-', 6)}`}</span>
-                      </div>
-                    )}
-                  </section>
-                  {user.data.email && (
-                    <section className='flex items-center space-x-3'>
-                      <div className='rounded-md bg-slate-100 p-1.5 text-slate-600'>
-                        <Mail size={17} strokeWidth={2} />
-                      </div>
-                      <span className='text-sm'>{user.data.email}</span>
-                    </section>
-                  )}
+                      </>
+                    }
+                    icon={<Smartphone size={17} strokeWidth={2} />}
+                    title={t('label.phone')}
+                  />
+                  {user.data.email && <ElementInfo content={user.data.email} icon={<Mail size={17} strokeWidth={2} />} title={t('label.email')} />}
                   {user.data.createdAt && (
                     <section className='pt-2 text-sm'>
                       {t('cardContent.userSince', {
