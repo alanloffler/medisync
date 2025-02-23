@@ -8,6 +8,7 @@ import { Input } from '@core/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@core/components/ui/popover';
 // Components
 import { AppoFlowCard } from '@appointments/components/AppoFlowCard';
+import { ApposAttendance } from '@appointments/components/common/ApposAttendance';
 import { ApposDataTable } from '@appointments/components/AppoDataTable';
 import { CardHeaderSecondary } from '@core/components/common/header/CardHeaderSecondary';
 import { DBCountAppos } from '@appointments/components/common/DBCountAppos';
@@ -95,6 +96,7 @@ export default function Appointments() {
             </Button>
           </div>
           <AppoFlowCard className='w-full md:max-w-[300px]' />
+          <ApposAttendance data={{ positive: 71.62, negative: 28.38 }} />
         </section>
         <Card className='col-span-1 h-fit space-y-4 overflow-y-auto p-0 md:col-span-4 lg:col-span-3 xl:col-span-3'>
           <CardHeaderSecondary title={t('cardTitle.appointmentsList')} icon={<List size={18} strokeWidth={2} />} />
