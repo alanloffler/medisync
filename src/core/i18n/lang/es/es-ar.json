@@ -193,6 +193,7 @@
     "firstName": "Nombre",
     "from": "De",
     "identityCard": "DNI",
+    "identityCardFull": "Documento de identidad",
     "lastName": "Apellido",
     "message": "Mensaje",
     "notActive": "Inactivo",

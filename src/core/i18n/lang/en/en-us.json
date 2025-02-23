@@ -193,6 +193,7 @@
     "firstName": "Name",
     "from": "From",
     "identityCard": "IC",
+    "identityCardFull": "Identity card",
     "lastName": "Last name",
     "message": "Message",
     "notActive": "Inactive",
