@@ -1,11 +1,10 @@
-// Icons: https://lucide.dev/icons/
-import { ChevronDown, ChevronRight, ChevronUp, X } from 'lucide-react';
 // External components
 import { ChartContainer } from '@core/components/ui/chart';
 import { Pie, PieChart } from 'recharts';
 // https://shadcn.com/docs/components
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@core/components/ui/hover-card';
 // Components
+import { Dot } from '@core/components/common/ui/Dot';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingText } from '@core/components/common/LoadingText';
 // External imports
@@ -63,8 +62,8 @@ export function ApposAttendance() {
             </HoverCardTrigger>
             <HoverCardContent className='w-fit p-2 text-xs'>
               <div className='flex flex-col gap-1'>
-                <section className='flex items-center gap-1'>
-                  <ChevronUp size={17} strokeWidth={3} className={`${colors.find((item) => item.attendance === EStatus.ATTENDED)?.class}`} />
+                <section className='flex items-center gap-2'>
+                  <Dot color='green' size={12} />
                   <Trans
                     i18nKey='statistics.attendance.attendance'
                     values={{ count: i18n.format(data[0].value, 'number', i18n.resolvedLanguage) }}
@@ -75,8 +74,8 @@ export function ApposAttendance() {
                   ></Trans>
                 </section>
                 <section className='flex flex-col'>
-                  <div className='flex items-center gap-1'>
-                    <ChevronDown size={17} strokeWidth={3} className={`${colors.find((item) => item.attendance === EStatus.NOT_ATTENDED)?.class}`} />
+                  <div className='flex items-center gap-2'>
+                    <Dot color='red' size={12} />
                     <Trans
                       i18nKey='statistics.attendance.nonAttendance'
                       values={{ count: i18n.format(data[1].value, 'number', i18n.resolvedLanguage) }}
@@ -88,8 +87,8 @@ export function ApposAttendance() {
                   </div>
                 </section>
                 <section className='flex flex-col'>
-                  <div className='flex items-center gap-1'>
-                    <ChevronRight size={17} strokeWidth={3} className={`${colors.find((item) => item.attendance === EStatus.WAITING)?.class}`} />
+                  <div className='flex items-center gap-2'>
+                    <Dot color='yellow' size={12} />
                     <Trans
                       i18nKey='statistics.attendance.waiting'
                       values={{ count: i18n.format(data[3].value, 'number', i18n.resolvedLanguage) }}
@@ -101,8 +100,8 @@ export function ApposAttendance() {
                   </div>
                 </section>
                 <section className='flex flex-col'>
-                  <div className='flex items-center gap-1'>
-                    <X size={17} strokeWidth={3} className={`${colors.find((item) => item.attendance === EStatus.NOT_STATUS)?.class}`} />
+                  <div className='flex items-center gap-2'>
+                    <Dot color='slate' size={12} />
                     <Trans
                       i18nKey='statistics.attendance.notStatus'
                       values={{ count: i18n.format(data[2].value, 'number', i18n.resolvedLanguage) }}
@@ -118,8 +117,8 @@ export function ApposAttendance() {
           </HoverCard>
         </div>
         <div className='flex flex-col'>
-          <section className='flex items-center gap-1'>
-            <ChevronUp size={17} strokeWidth={3} className={`${colors.find((item) => item.attendance === EStatus.ATTENDED)?.class}`} />
+          <section className='flex items-center gap-2'>
+            <Dot color='green' size={12} />
             <Trans
               i18nKey='statistics.attendance.attendance'
               values={{ count: i18n.format(data[0].value, 'number', i18n.resolvedLanguage) }}
@@ -130,8 +129,8 @@ export function ApposAttendance() {
             ></Trans>
           </section>
           <section className='flex flex-col'>
-            <div className='flex items-center gap-1'>
-              <ChevronDown size={17} strokeWidth={3} className={`${colors.find((item) => item.attendance === EStatus.NOT_ATTENDED)?.class}`} />
+            <div className='flex items-center gap-2'>
+              <Dot color='red' size={12} />
               <Trans
                 i18nKey='statistics.attendance.nonAttendance'
                 values={{ count: i18n.format(data[1].value, 'number', i18n.resolvedLanguage) }}
