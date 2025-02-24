@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronRight, ChevronUp, X } from 'lucide-react';
 // External components
 import { ChartContainer } from '@core/components/ui/chart';
 import { Pie, PieChart } from 'recharts';
@@ -14,25 +14,29 @@ import { useQuery } from '@tanstack/react-query';
 import type { IAppoAttendance } from '@appointments/interfaces/appos-attendance.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
+import { EStatus } from '@appointments/enums/status.enum';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export function ApposAttendance() {
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const { i18n, t } = useTranslation();
 
-  const colors = {
-    positive: { class: 'text-emerald-400', hsl: 'hsl(158.1 64.4% 51.6%)' },
-    negative: { class: 'text-rose-400', hsl: 'hsl(351.3 94.5% 71.4%)' },
-  };
+  const colors = [
+    { attendance: EStatus.ATTENDED, class: 'text-emerald-400', hsl: 'oklch(0.765 0.177 163.223)' },
+    { attendance: EStatus.NOT_ATTENDED, class: 'text-rose-400', hsl: 'oklch(0.712 0.194 13.428)' },
+    { attendance: EStatus.NOT_STATUS, class: 'text-slate-400', hsl: 'oklch(0.704 0.04 256.788)' },
+    { attendance: EStatus.WAITING, class: 'text-amber-400', hsl: 'oklch(0.828 0.189 84.429)' },
+  ];
 
   const { data, error, isError, isLoading } = useQuery<IResponse<IAppoAttendance[]>, Error>({
     queryKey: ['appointments', 'attendance'],
     queryFn: async () => await AppointmentApiService.getAttendance(),
-    select: (chart: IResponse) =>
-      chart.data.map((item: IAppoAttendance, index: number) => ({
+    select: (chart: IResponse) => {
+      return chart.data.map((item: IAppoAttendance) => ({
         ...item,
-        fill: index === 0 ? colors.positive.hsl : colors.negative.hsl,
-      })),
+        fill: colors.find((color) => color.attendance === item.attendance)?.hsl,
+      }));
+    },
   });
 
   useEffect(() => {
@@ -55,7 +59,7 @@ export function ApposAttendance() {
         </div>
         <div className='flex flex-col'>
           <section className='flex items-center gap-1'>
-            <ChevronUp size={17} strokeWidth={3} className={`${colors.positive.class}`} />
+            <ChevronUp size={17} strokeWidth={3} className={`${colors.find((item) => item.attendance === EStatus.ATTENDED)?.class}`} />
             <Trans
               i18nKey='statistics.attendance.attendance'
               values={{ count: i18n.format(data[0].value, 'number', i18n.resolvedLanguage) }}
@@ -67,10 +71,36 @@ export function ApposAttendance() {
           </section>
           <section className='flex flex-col'>
             <div className='flex items-center gap-1'>
-              <ChevronDown size={17} strokeWidth={3} className={`${colors.negative.class}`} />
+              <ChevronDown size={17} strokeWidth={3} className={`${colors.find((item) => item.attendance === EStatus.NOT_ATTENDED)?.class}`} />
               <Trans
                 i18nKey='statistics.attendance.nonAttendance'
                 values={{ count: i18n.format(data[1].value, 'number', i18n.resolvedLanguage) }}
+                components={{
+                  small: <small />,
+                }}
+                parent={'span'}
+              ></Trans>
+            </div>
+          </section>
+          <section className='flex flex-col'>
+            <div className='flex items-center gap-1'>
+              <ChevronRight size={17} strokeWidth={3} className={`${colors.find((item) => item.attendance === EStatus.WAITING)?.class}`} />
+              <Trans
+                i18nKey='statistics.attendance.waiting'
+                values={{ count: i18n.format(data[3].value, 'number', i18n.resolvedLanguage) }}
+                components={{
+                  small: <small />,
+                }}
+                parent={'span'}
+              ></Trans>
+            </div>
+          </section>
+          <section className='flex flex-col'>
+            <div className='flex items-center gap-1'>
+              <X size={17} strokeWidth={3} className={`${colors.find((item) => item.attendance === EStatus.NOT_STATUS)?.class}`} />
+              <Trans
+                i18nKey='statistics.attendance.notStatus'
+                values={{ count: i18n.format(data[2].value, 'number', i18n.resolvedLanguage) }}
                 components={{
                   small: <small />,
                 }}
