@@ -13,8 +13,10 @@ import { useQuery } from '@tanstack/react-query';
 import type { IAppoAttendance } from '@appointments/interfaces/appos-attendance.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
+import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export function ApposAttendance() {
+  const addNotification = useNotificationsStore((state) => state.addNotification);
   const { i18n } = useTranslation();
 
   const colors = {
@@ -33,14 +35,14 @@ export function ApposAttendance() {
   });
 
   useEffect(() => {
-    console.log(error);
-  }, [error]);
+    addNotification({ type: 'error', message: error?.message });
+  }, [addNotification, error?.message, isError]);
 
   if (isError) return <InfoCard className='justify-start p-0' type='error' text={error.message} />;
 
   if (Array.isArray(data))
     return (
-      <main className='flex flex-row items-center gap-2 text-sm font-normal text-foreground'>
+      <main className='flex flex-row items-center gap-1 text-xsm font-normal text-foreground'>
         <div className='my-auto flex flex-col' style={{ height: 45, width: 45 }}>
           <ChartContainer config={{}} className='aspect-square max-h-[250px]'>
             <PieChart>
