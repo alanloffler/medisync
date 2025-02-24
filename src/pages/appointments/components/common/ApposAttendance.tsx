@@ -5,6 +5,7 @@ import { ChartContainer } from '@core/components/ui/chart';
 import { Pie, PieChart } from 'recharts';
 // Components
 import { InfoCard } from '@core/components/common/InfoCard';
+import { LoadingText } from '@core/components/common/LoadingText';
 // External imports
 import { Trans, useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
@@ -17,14 +18,14 @@ import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export function ApposAttendance() {
   const addNotification = useNotificationsStore((state) => state.addNotification);
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
 
   const colors = {
     positive: { class: 'text-emerald-400', hsl: 'hsl(158.1 64.4% 51.6%)' },
     negative: { class: 'text-rose-400', hsl: 'hsl(351.3 94.5% 71.4%)' },
   };
 
-  const { data, error, isError } = useQuery<IResponse<IAppoAttendance[]>, Error>({
+  const { data, error, isError, isLoading } = useQuery<IResponse<IAppoAttendance[]>, Error>({
     queryKey: ['appointments', 'attendance'],
     queryFn: async () => await AppointmentApiService.getAttendance(),
     select: (chart: IResponse) =>
@@ -37,6 +38,8 @@ export function ApposAttendance() {
   useEffect(() => {
     addNotification({ type: 'error', message: error?.message });
   }, [addNotification, error?.message, isError]);
+
+  if (isLoading) return <LoadingText text={t('loading.default')} suffix='...' className='text-xsm' />;
 
   if (isError) return <InfoCard className='justify-start p-0' type='error' text={error.message} />;
 
