@@ -16,7 +16,7 @@ export function InfoCard({ iconSize, text, type, className }: IInfoCard) {
         {type === 'warning' && <CircleAlert className={strokeColor} size={iconSize ?? defaultIconSize} strokeWidth={2} />}
       </div>
       <div className='flex flex-col'>
-        <span>{text}</span>
+        <span className='text-red-400'>{text}</span>
       </div>
     </div>
   );
