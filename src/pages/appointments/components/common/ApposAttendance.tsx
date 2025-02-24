@@ -141,32 +141,6 @@ export function ApposAttendance() {
               ></Trans>
             </div>
           </section>
-          {/* <section className='flex flex-col'>
-            <div className='flex items-center gap-1'>
-              <ChevronRight size={17} strokeWidth={3} className={`${colors.find((item) => item.attendance === EStatus.WAITING)?.class}`} />
-              <Trans
-                i18nKey='statistics.attendance.waiting'
-                values={{ count: i18n.format(data[3].value, 'number', i18n.resolvedLanguage) }}
-                components={{
-                  small: <small />,
-                }}
-                parent={'span'}
-              ></Trans>
-            </div>
-          </section>
-          <section className='flex flex-col'>
-            <div className='flex items-center gap-1'>
-              <X size={17} strokeWidth={3} className={`${colors.find((item) => item.attendance === EStatus.NOT_STATUS)?.class}`} />
-              <Trans
-                i18nKey='statistics.attendance.notStatus'
-                values={{ count: i18n.format(data[2].value, 'number', i18n.resolvedLanguage) }}
-                components={{
-                  small: <small />,
-                }}
-                parent={'span'}
-              ></Trans>
-            </div>
-          </section> */}
         </div>
       </main>
     );
