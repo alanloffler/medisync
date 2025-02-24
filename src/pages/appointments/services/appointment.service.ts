@@ -1,3 +1,4 @@
+import type { IAppoAttendance } from '@appointments/interfaces/appos-attendance.interface';
 import type { IAppointment, IAppointmentForm, IAppointmentView } from '@appointments/interfaces/appointment.interface';
 import type { IAppointmentSearch } from '@appointments/interfaces/appointment-search.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
@@ -106,7 +107,7 @@ export class AppointmentApiService {
       return await UtilsUrl.fetch(url, EMethods.GET);
     } else {
       throw new Error('Dev Error: UserId is required');
-    }``
+    }
   }
 
   // CHECKED: used on DialogReserve.tsx
@@ -183,5 +184,13 @@ export class AppointmentApiService {
     } catch (error) {
       return error;
     }
+  }
+
+  // CHECKED: used on ApposAttendance.tsx
+  public static async getAttendance(): Promise<IResponse<IAppoAttendance[]>> {
+    const path: string = `${this.API_URL}/appointments/attendance`;
+    const url: URL = new URL(path);
+
+    return await UtilsUrl.fetch(url, EMethods.GET);
   }
 }
