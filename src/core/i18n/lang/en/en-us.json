@@ -310,7 +310,9 @@
     },
     "attendance": {
       "attendance": "{{count}}<small>%</small> attendance",
-      "nonAttendance": "{{count}}<small>%</small> non-attendance"
+      "nonAttendance": "{{count}}<small>%</small> non-attendance",
+      "notStatus": "{{count}}<small>%</small> stateless",
+      "waiting": "{{count}}<small>%</small> waiting"
     }
   },
   "status": {
