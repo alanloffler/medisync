@@ -96,7 +96,7 @@ export default function Appointments() {
             </Button>
           </div>
           <AppoFlowCard className='w-full md:max-w-[300px]' />
-          <ApposAttendance data={{ positive: 81.62, negative: 18.38 }} />
+          <ApposAttendance />
         </section>
         <Card className='col-span-1 h-fit space-y-4 overflow-y-auto p-0 md:col-span-4 lg:col-span-3 xl:col-span-3'>
           <CardHeaderSecondary title={t('cardTitle.appointmentsList')} icon={<List size={18} strokeWidth={2} />} />
