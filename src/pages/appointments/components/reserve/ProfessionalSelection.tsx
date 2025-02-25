@@ -6,7 +6,7 @@ import { Button } from '@core/components/ui/button';
 import { ProfessionalsCombobox } from '@professionals/components/common/ProfessionalsCombobox';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
-import { Dispatch, SetStateAction, useMemo } from 'react';
+import { type Dispatch, type SetStateAction, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
