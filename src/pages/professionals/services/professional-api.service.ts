@@ -3,7 +3,6 @@ import type { IProfessional, IProfessionalForm } from '@professionals/interfaces
 import type { IProfessionalSearch } from '@professionals/interfaces/professional-search.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { ITableManager } from '@core/interfaces/table.interface';
-import { APP_CONFIG } from '@config/app.config';
 import { EMethods } from '@core/enums/methods.enum';
 import { EProfessionalSearch } from '@professionals/enums/professional-search.enum';
 import { ProfessionalUtils } from '@professionals/services/professional.utils';
@@ -66,30 +65,14 @@ export class ProfessionalApiService {
     return await UtilsUrl.fetch(url, EMethods.PATCH, data);
   }
 
-  // TanStack query response format
-  public static async updateAvailability(id: string, availability: string) {
-    const url: string = `${this.API_URL}/professionals/${id}/availability`;
+  // CHECKED: used on AvailableProfessional.tsx
+  // TODO: see type of response, create one in backend
+  public static async updateAvailability(id: string, availability: string): Promise<IResponse<any>> {
+    const path: string = `${this.API_URL}/professionals/${id}/availability`;
+    const url: URL = new URL(path);
+    const body: { available: boolean } = { available: availability === 'true' ? true : false };
 
-    try {
-      const query: Response = await fetch(url, {
-        method: 'PATCH',
-        headers: {
-          'content-type': 'application/json;charset=UTF-8',
-        },
-        body: JSON.stringify({ available: availability === 'true' ? true : false }),
-      });
-
-      const response: IResponse = await query.json();
-      if (!query.ok) throw new Error(response.message);
-
-      return response;
-    } catch (error) {
-      if (error instanceof TypeError) {
-        throw new Error(APP_CONFIG.error.server);
-      }
-
-      throw error;
-    }
+    return await UtilsUrl.fetch(url, EMethods.PATCH, body);
   }
 
   // TanStack query response format
