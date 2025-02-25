@@ -39,7 +39,7 @@ export function Statistic({ children, content, error, isLoading, path, title, va
         ) : (
           <>
             <section className='flex flex-row items-center justify-between p-4 pb-2'>
-              <span className='text-xsm font-semibold uppercase leading-none text-slate-700'>{t(title)}</span>
+              <span className='text-xs font-semibold uppercase leading-none text-slate-400'>{t(title)}</span>
               <div>{children}</div>
             </section>
             <CardContent className='space-y-2 p-4 pt-0'>
