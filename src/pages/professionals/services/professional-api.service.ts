@@ -23,8 +23,8 @@ export class ProfessionalApiService {
     return await UtilsUrl.fetch(url, EMethods.POST, transformedData);
   }
 
-  // CHECKED: TRQ used on
-  // - ProfessionalsDataTable.tsx
+  // CHECKED:
+  // Used on component ProfessionalsDataTable.tsx
   // Find all professionals by name or specialization (many professionals with partial search)
   public static async searchProfessionalsBy(search: IProfessionalSearch, tableManager: ITableManager, skip: number) {
     const { type, value } = search;
