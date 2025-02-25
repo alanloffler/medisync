@@ -20,7 +20,7 @@ i18n
           case 'number':
             return new Intl.NumberFormat(lng, {
               style: 'decimal',
-              minimumFractionDigits: 0,
+              minimumFractionDigits: 1,
               maximumFractionDigits: 1,
               useGrouping: true
             }).format(value);
