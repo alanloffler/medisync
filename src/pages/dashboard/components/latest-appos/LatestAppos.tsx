@@ -1,7 +1,8 @@
 // Icons: https://lucide.dev/icons/
 import { Clock, CalendarPlus } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
-import { Card, CardContent } from '@core/components/ui/card';
+import { Button } from '@core/components/ui/button';
+import { Card, CardContent, CardFooter } from '@core/components/ui/card';
 // Components
 import { DashboardTitle } from '@dashboard/components/common/DashboardTitle';
 import { InfoCard } from '@core/components/common/InfoCard';
@@ -100,6 +101,11 @@ export function LatestAppos() {
               </motion.button>
             ))}
         </CardContent>
+        <CardFooter className='flex justify-end'>
+          <Button className='p-0 text-sm text-foreground' size='sm' variant='link' onClick={() => navigate('/appointments')}>
+            {t('button.seeMore')}
+          </Button>
+        </CardFooter>
       </Card>
     </main>
   );
