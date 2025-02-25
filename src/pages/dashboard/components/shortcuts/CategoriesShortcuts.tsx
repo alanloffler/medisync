@@ -139,7 +139,7 @@ export function CategoriesShortcuts({ className }: { className?: string }) {
   return (
     <main className='space-y-2'>
       <DashboardTitle title={t('cardTitle.dashboard.categoriesShortcuts')} />
-      <Card className={cn('relative flex items-center bg-slate-300 p-4', className)}>
+      <Card className={cn('relative flex items-center bg-card p-4', className)}>
         {/* Section: Specializations shortcuts */}
         <section className='mx-auto flex flex-row justify-start space-x-4 overflow-x-hidden' ref={scrollRef}>
           {isLoading && <LoadingDB text={t('loading.categories')} variant='default' spinnerColor='fill-slate-700' className='text-slate-700' />}
@@ -148,7 +148,7 @@ export function CategoriesShortcuts({ className }: { className?: string }) {
             !error &&
             specializations?.data.map((specialization: ISpecialization) => (
               <IconShortcut
-                className='border-none bg-card shadow-none'
+                className='border-none bg-slate-50 shadow-none'
                 icon={specialization.icon}
                 iconSize={28}
                 itemHeight={80}
@@ -163,7 +163,7 @@ export function CategoriesShortcuts({ className }: { className?: string }) {
               variants={animation.chevron}
               animate='animate'
               initial='initial'
-              className='absolute -right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 transform items-center justify-center rounded-full bg-background p-1 text-foreground shadow-sm'
+              className='absolute -right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 transform items-center justify-center rounded-full bg-primary p-1 text-background shadow-sm'
             >
               <ChevronRight size={20} strokeWidth={2} />
             </motion.div>
@@ -173,7 +173,7 @@ export function CategoriesShortcuts({ className }: { className?: string }) {
               variants={animation.chevron}
               animate='animate'
               initial='initial'
-              className='absolute -left-7 top-1/2 flex h-6 w-6 -translate-y-1/2 transform items-center justify-center rounded-full bg-background p-1 text-foreground shadow-sm'
+              className='absolute -left-7 top-1/2 flex h-6 w-6 -translate-y-1/2 transform items-center justify-center rounded-full bg-primary p-1 text-background shadow-sm'
             >
               <ChevronLeft size={20} strokeWidth={2} />
             </motion.div>
@@ -184,7 +184,7 @@ export function CategoriesShortcuts({ className }: { className?: string }) {
                 variants={animation.chevron}
                 animate='animate'
                 initial='initial'
-                className='absolute -left-7 top-1/2 flex h-6 w-6 -translate-y-1/2 transform items-center justify-center rounded-full bg-background p-1 text-foreground shadow-sm'
+                className='absolute -left-7 top-1/2 flex h-6 w-6 -translate-y-1/2 transform items-center justify-center rounded-full bg-primary p-1 text-background shadow-sm'
               >
                 <ChevronLeft size={20} strokeWidth={2} />
               </motion.div>
@@ -192,7 +192,7 @@ export function CategoriesShortcuts({ className }: { className?: string }) {
                 variants={animation.chevron}
                 animate='animate'
                 initial='initial'
-                className='absolute -right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 transform items-center justify-center rounded-full bg-background p-1 text-foreground shadow-sm'
+                className='absolute -right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 transform items-center justify-center rounded-full bg-primary p-1 text-background shadow-sm'
               >
                 <ChevronRight size={20} strokeWidth={2} />
               </motion.div>
