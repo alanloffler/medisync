@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { ArrowDownUp, FileText, Trash2 } from 'lucide-react';
+import { ArrowDownUp, FileText, Replace, Trash2 } from 'lucide-react';
 // External components:
 // https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
@@ -41,6 +41,7 @@ import { AppointmentApiService } from '@appointments/services/appointment.servic
 import { UtilsString } from '@core/services/utils/string.service';
 import { useMediaQuery } from '@core/hooks/useMediaQuery';
 import { useNotificationsStore } from '@core/stores/notifications.store';
+import { ProfessionalsSelect } from '@professionals/components/common/ProfessionalsSelect';
 // Interface
 interface IVariables {
   itemsPerPage: number;
@@ -59,6 +60,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
   const [errorRemoving, setErrorRemoving] = useState<boolean>(false);
   const [isRemoving, setIsRemoving] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const [openProfessionalDialog, setOpenProfessionalDialog] = useState<boolean>(false);
   const [pagination, setPagination] = useState<PaginationState>(defaultPagination);
   const [sorting, setSorting] = useState<SortingState>(defaultSorting);
   const [tableManager, setTableManager] = useState<ITableManager>({ sorting, pagination });
@@ -254,6 +256,9 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
             <TableButton callback={() => navigate(`/appointments/${row.original._id}`)} className='hover:text-sky-500' tooltip={t('tooltip.details')}>
               <FileText size={16} strokeWidth={1.5} />
             </TableButton>
+            <TableButton callback={() => handleChangeProfessionalDialog(row.original)} className='hover:text-sky-500' tooltip={t('tooltip.details')}>
+              <Replace size={16} strokeWidth={1.5} />
+            </TableButton>
             <TableButton callback={() => handleRemoveAppointmentDialog(row.original)} className='hover:text-rose-500' tooltip={t('tooltip.delete')}>
               <Trash2 size={16} strokeWidth={1.5} />
             </TableButton>
@@ -274,6 +279,11 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
     console.log('Appointment to remove: ', id);
     setIsRemoving(true);
     setErrorRemoving(false);
+  }
+
+  function handleChangeProfessionalDialog(appointment: IAppointment): void {
+    setOpenProfessionalDialog(true);
+    setAppointmentSelected(appointment);
   }
 
   // Render
@@ -325,7 +335,19 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
       ) : (
         <InfoCard type='warning' text={response?.message} />
       )}
-      {/* Section: Dialog */}
+      {/* Section: Change professional */}
+      <Dialog open={openProfessionalDialog} onOpenChange={setOpenProfessionalDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className='text-xl'>Cambiar de profesional</DialogTitle>
+            <DialogDescription></DialogDescription>
+          </DialogHeader>
+          <section>
+            <ProfessionalsSelect service='active' defaultValue='' />
+          </section>
+        </DialogContent>
+      </Dialog>
+      {/* Section: Delete dialog */}
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent>
           <DialogHeader>
