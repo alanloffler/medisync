@@ -24,8 +24,8 @@ export function DBCountProfessionals() {
   const available: number = dbCount?.data.available;
   const notAvailable: number = dbCount?.data.notAvailable;
 
-  if (isLoading) return <LoadingDB variant='default' empty />;
-  if (isError) return <main className='py-2'></main>;
+  if (isLoading) return <LoadingDB variant='default' empty className='py-2' />;
+  if (isError) return <main className='py-3'></main>;
 
   return (
     <main className='flex flex-row justify-end gap-2 py-3 text-xsm font-normal text-slate-400'>
