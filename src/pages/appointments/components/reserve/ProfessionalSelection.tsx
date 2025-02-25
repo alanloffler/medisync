@@ -6,7 +6,7 @@ import { Button } from '@core/components/ui/button';
 import { ProfessionalsCombobox } from '@professionals/components/common/ProfessionalsCombobox';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
+import { Dispatch, SetStateAction, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
@@ -20,27 +20,12 @@ interface IProps {
 }
 // React component
 export function ProfessionalSelection({ clearFilters, professional, setSelected }: IProps) {
-  const [legibleSchedule, setLegibleSchedule] = useState<string>('');
   const { i18n, t } = useTranslation();
   const locale: string = i18n.resolvedLanguage || i18n.language;
 
   const legibleWorkingDays: string = useMemo(() => {
     return CalendarService.getLegibleWorkingDays(professional?.configuration.workingDays ?? [], true, locale);
   }, [professional?.configuration.workingDays, locale]);
-
-  useEffect(() => {
-    if (professional) {
-      const legibleSchedule: string = CalendarService.getLegibleSchedule(
-        professional.configuration.scheduleTimeInit,
-        professional.configuration.scheduleTimeEnd,
-        professional.configuration.unavailableTimeSlot?.timeSlotUnavailableInit || undefined,
-        professional.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd || undefined,
-      );
-      setLegibleSchedule(legibleSchedule);
-      // TODO: replace this with translation cardContent.scheduleHour, then remove this class method
-      console.log(legibleSchedule);
-    }
-  }, [professional]);
 
   return (
     <section className='flex w-full flex-col space-y-4'>
@@ -75,7 +60,20 @@ export function ProfessionalSelection({ clearFilters, professional, setSelected 
           </div>
           <div className='flex flex-row items-center space-x-2'>
             <CalendarClock size={18} strokeWidth={2} />
-            <span>{legibleSchedule}</span>
+            <span>
+              {professional.configuration.unavailableTimeSlot?.timeSlotUnavailableInit &&
+              professional.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd
+                ? t('cardContent.scheduleHour.interval', {
+                    timeInit: professional.configuration.scheduleTimeInit,
+                    timeEnd: professional.configuration.scheduleTimeEnd,
+                    intervalInit: professional.configuration.unavailableTimeSlot?.timeSlotUnavailableInit,
+                    intervalEnd: professional.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd,
+                  })
+                : t('cardContent.scheduleHour.default', {
+                    timeInit: professional.configuration.scheduleTimeInit,
+                    timeEnd: professional.configuration.scheduleTimeEnd,
+                  })}
+            </span>
           </div>
         </section>
       )}
