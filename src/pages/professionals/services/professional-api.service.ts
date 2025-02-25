@@ -10,8 +10,18 @@ import { UtilsUrl } from '@core/services/utils/url.service';
 
 export class ProfessionalApiService {
   private static readonly API_URL: string = import.meta.env.VITE_API_URL;
-
   // TODO: replace area codes from config file to service where the area codes return fake promise
+
+  public static async create(data: IProfessionalForm): Promise<IResponse<IProfessional>> {
+    // throw new Error('not implemented');
+    // This transformation must be done in the backend, same as in update
+    const transformedData = ProfessionalUtils.lowercaseFormItems(data);
+
+    const path: string = `${this.API_URL}/professionals`;
+    const url: URL = UtilsUrl.create(path);
+
+    return await UtilsUrl.fetch(url, EMethods.POST, transformedData);
+  }
 
   // CHECKED: TRQ used on
   // - ProfessionalsDataTable.tsx
@@ -35,18 +45,6 @@ export class ProfessionalApiService {
     url.searchParams.append('sv', sorting[0].desc ? 'desc' : 'asc');
 
     return await UtilsUrl.fetch(url, EMethods.GET);
-  }
-
-  public static async create(data: IProfessionalForm): Promise<IResponse<IProfessional>> {
-    // throw new Error('not implemented');
-
-    // This transformation must be done in the backend, same as in update
-    const transformedData = ProfessionalUtils.lowercaseFormItems(data);
-
-    const path: string = `${this.API_URL}/professionals`;
-    const url: URL = UtilsUrl.create(path);
-
-    return await UtilsUrl.fetch(url, EMethods.POST, transformedData);
   }
 
   // CHECKED: used on ViewProfessional.tsx
