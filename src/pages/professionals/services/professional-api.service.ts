@@ -67,6 +67,7 @@ export class ProfessionalApiService {
 
   // CHECKED: used on AvailableProfessional.tsx
   // TODO: see type of response, create one in backend
+  // TODO: type method on useQuery/useMutation
   public static async updateAvailability(id: string, availability: string): Promise<IResponse<any>> {
     const path: string = `${this.API_URL}/professionals/${id}/availability`;
     const url: URL = new URL(path);
@@ -75,10 +76,13 @@ export class ProfessionalApiService {
     return await UtilsUrl.fetch(url, EMethods.PATCH, body);
   }
 
-  // TanStack query response format
-  public static async countAll() {
-    const url: string = `${this.API_URL}/professionals/databaseCount`;
-    return await this.fetch(url, EMethods.GET);
+  // TODO: type response with interface
+  // TODO: type method on useQuery/useMutation
+  public static async countAll(): Promise<IResponse<any>> {
+    const path: string = `${this.API_URL}/professionals/databaseCount`;
+    const url: URL = new URL(path);
+
+    return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
   public static async findAllActive(): Promise<IResponse<IProfessional[]>> {
