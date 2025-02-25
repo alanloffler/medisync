@@ -68,9 +68,9 @@ export function ProfessionalSelection({ clearFilters, professional, setSelected 
         )}
       </div>
       {professional && (
-        <section className='flex w-full flex-col space-y-1 text-sm font-normal text-slate-500'>
+        <section className='flex w-full flex-col space-y-1 text-sm font-normal text-slate-500 md:max-w-[300px]'>
           <div className='flex flex-row items-center space-x-2'>
-            <CalendarDays size={18} strokeWidth={2} />
+            <CalendarDays size={18} strokeWidth={2} className='min-w-[18px]' />
             <span>{legibleWorkingDays}</span>
           </div>
           <div className='flex flex-row items-center space-x-2'>
