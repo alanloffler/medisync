@@ -53,19 +53,6 @@ export class CalendarService {
       .map((day) => daysOfWeek[day.day])
       .filter((day) => typeof day === 'string');
   }
-  // Used on appointments professional selected
-  public static getLegibleSchedule(
-    slotTimeInit: string,
-    slotTimeEnd: string,
-    slotUnavailableTimeInit?: string,
-    slotUnavailableTimeEnd?: string,
-  ): string {
-    if (slotUnavailableTimeInit && slotUnavailableTimeEnd) {
-      return `${slotTimeInit} ${i18next.t('words.hoursSeparator')} ${slotUnavailableTimeInit} ${i18next.t('words.slotsSeparator')} ${slotUnavailableTimeEnd} ${i18next.t('words.hoursSeparator')} ${slotTimeEnd}`;
-    } else {
-      return `${slotTimeInit} ${i18next.t('words.hoursSeparator')} ${slotTimeEnd}`;
-    }
-  }
   // Used on appointments
   public static generateYearsRange(rangeLimit: number): string[] {
     const yearsRange: number[] = [];
