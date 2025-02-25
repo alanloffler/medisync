@@ -27,7 +27,7 @@ export function LatestAppos() {
     error,
     isLoading,
   } = useQuery<IResponse>({
-    queryKey: ['latestAppos'],
+    queryKey: ['latest-appos'],
     queryFn: async () => {
       return await DashboardApiService.latestAppointments(5);
     },
