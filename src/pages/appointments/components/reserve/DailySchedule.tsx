@@ -150,7 +150,7 @@ export const DailySchedule = memo(({ handleDialog, professional, refreshAppos, s
         <CardTitle className='bg-card-header! rounded-b-none border-b text-sm md:text-lg'>
           <section className='flex flex-row justify-between p-2'>
             <div className='flex flex-row items-center gap-3.5'>
-              <CalendarDays size={16} strokeWidth={2} />
+              <CalendarDays size={18} strokeWidth={2} />
               <span>{t('cardTitle.appointmentsReserve')}</span>
             </div>
             {professional._id && (
