@@ -260,7 +260,11 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
             <TableButton callback={() => navigate(`/appointments/${row.original._id}`)} className='hover:text-sky-500' tooltip={t('tooltip.details')}>
               <FileText size={16} strokeWidth={1.5} />
             </TableButton>
-            <TableButton callback={() => handleChangeProfessionalDialog(row.original)} className='hover:text-lime-600' tooltip={t('tooltip.replaceProfessional')}>
+            <TableButton
+              callback={() => handleChangeProfessionalDialog(row.original)}
+              className='hover:text-lime-600'
+              tooltip={t('tooltip.replaceProfessional')}
+            >
               <Replace size={16} strokeWidth={1.5} />
             </TableButton>
             <TableButton callback={() => handleRemoveAppointmentDialog(row.original)} className='hover:text-rose-500' tooltip={t('tooltip.delete')}>
@@ -399,8 +403,8 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
             )}
             <ProfessionalsSelect
               className='w-fit'
-              day={'2025-02-26'}
-              hour={'16:00'}
+              day={appointmentSelected.day}
+              hour={appointmentSelected.hour}
               label={t('dialog.changeProfessional.selectLabel')}
               onValueChange={setProfessionalSelected}
               placeholder={t('placeholder.select')}
