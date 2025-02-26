@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next';
 // Imports
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
-import { PROFESSIONALS_SELECT_CONFIG as PS_CONFIG } from '@config/professionals/professional-select.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
 import { cn } from '@lib/utils';
@@ -17,11 +16,17 @@ import { cn } from '@lib/utils';
 export function ProfessionalsSelect({
   className,
   defaultValue,
+  label,
   onValueChange,
+  placeholder,
+  service,
 }: {
   className?: string;
   defaultValue?: string;
+  label?: string;
   onValueChange?: (e: string) => void;
+  placeholder?: string;
+  service: 'active' | 'replace';
 }) {
   const { t } = useTranslation();
 
@@ -30,21 +35,28 @@ export function ProfessionalsSelect({
     isError,
     isPending,
   } = useQuery<IResponse<IProfessional[]>, Error>({
-    queryKey: ['professionals', ['input-select']],
-    queryFn: async () => await ProfessionalApiService.findAllActive(),
+    queryKey: ['professionals', 'input-select', service],
+    queryFn: async () => {
+      if (service === 'active') {
+        console.log('return active');
+        return await ProfessionalApiService.findAllActive();
+      }
+      if (service === 'replace') return await ProfessionalApiService.findAllActive();
+      return await ProfessionalApiService.findAllActive();
+    },
   });
 
   return (
     <main className='flex flex-row items-center space-x-2'>
-      <span className='text-xsm font-medium text-slate-500'>{t(PS_CONFIG.label)}</span>
+      {label && <span className='text-xsm font-medium text-muted-foreground'>{label}</span>}
       <Select defaultValue={defaultValue} onValueChange={onValueChange} disabled={isError}>
-        <SelectTrigger className={cn('h-8 w-full space-x-2 border bg-white text-xsm shadow-sm', className)}>
+        <SelectTrigger className={cn('h-7 w-full space-x-3 bg-input text-xsm', className)}>
           {isError ? (
             <InfoCard type='error' text={t('error.default')} className='mx-auto' />
           ) : isPending ? (
             <LoadingDB size='xs' text={t('loading.default')} />
           ) : (
-            <SelectValue placeholder={t(PS_CONFIG.placeholder)} />
+            placeholder && <SelectValue placeholder={placeholder} />
           )}
         </SelectTrigger>
         <SelectContent>
