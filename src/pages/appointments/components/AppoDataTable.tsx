@@ -292,6 +292,8 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
 
   const {
     data: professional,
+    error: professionalError,
+    isError: professionalIsError,
     isPending: professionalIsLoading,
     isSuccess: professionalIsSuccess,
     mutate: professionalMutate,
@@ -303,6 +305,10 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
   useEffect(() => {
     if (professionalSelected) professionalMutate();
   }, [professionalMutate, professionalSelected]);
+
+  useEffect(() => {
+    if (professionalIsError) addNotification({ type: 'error', message: professionalError.message });
+  }, [addNotification, professionalError?.message, professionalIsError]);
 
   useEffect(() => {
     if (openProfessionalDialog === false) setProfessionalSelected(null);
@@ -397,6 +403,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
             {professionalSelected && (
               <section className='rounded-lg bg-amber-100 p-3 text-sm text-amber-600'>
                 {professionalIsLoading && <LoadingDB text={t('loading.professional')} className='text-current [&_svg]:fill-current' />}
+                {professionalIsError && <InfoCard type='error' text={professionalError.message} />}
                 {professionalIsSuccess && (
                   <Trans
                     components={{ span: <span className='font-semibold italic' /> }}
