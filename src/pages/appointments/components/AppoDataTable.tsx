@@ -3,7 +3,7 @@ import { ArrowDownUp, FileText, Replace, Trash2 } from 'lucide-react';
 // External components:
 // https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@core/components/ui/table';
 // Tanstack Data Table: https://tanstack.com/table/latest
 import {
@@ -360,10 +360,10 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
             <DialogTitle className='text-xl'>Cambiar de profesional</DialogTitle>
             <DialogDescription></DialogDescription>
           </DialogHeader>
-          <section className='space-y-3'>
+          <section className='space-y-6'>
             {appointmentSelected && (
               <section className='flex flex-col text-sm'>
-                <h5 className='font-semibold'>Datos del turno</h5>
+                <h5 className='font-semibold text-base'>Datos del turno</h5>
                 <div className='gap-1'>
                   Turno de{' '}
                   <span className='font-medium italic'>
@@ -382,18 +382,40 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
             )}
             <ProfessionalsSelect
               className='w-fit'
-              label={t('label.professional')}
+              label={`${t('placeholder.select')} ${t('label.professional')}`}
               onValueChange={setProfessionalSelected}
               placeholder={t('placeholder.select')}
               service='active'
             />
             {professionalSelected && (
-              <section className='bg-amber-100 text-amber-600 p-3 text-sm rounded-lg'>
-                Vas a cambiar al profesional <span className='font-semibold italic'>{UtilsString.upperCase(`${appointmentSelected.professional?.title.abbreviation} ${appointmentSelected.professional?.lastName} ${appointmentSelected.professional?.firstName}`, 'each')}</span>,
-                 por el profesional {professional?.data.title.abbreviation} {professional?.data.lastName}
+              <section className='rounded-lg bg-amber-100 p-3 text-sm text-amber-600'>
+                <div>
+                  Vas a cambiar al profesional{' '}
+                  <span className='font-semibold italic'>
+                    {UtilsString.upperCase(
+                      `${appointmentSelected.professional?.title.abbreviation} ${appointmentSelected.professional?.lastName}, ${appointmentSelected.professional?.firstName}`,
+                      'each',
+                    )}
+                  </span>
+                  , por el profesional{' '}
+                  <span className='font-semibold italic'>
+                    {UtilsString.upperCase(
+                      `${professional?.data.title.abbreviation} ${professional?.data.lastName}, ${professional?.data.firstName}`,
+                      'each',
+                    )}
+                  </span>
+                </div>
               </section>
             )}
           </section>
+          {professionalSelected && <DialogFooter className='mt-3 flex justify-end gap-4'>
+            <Button variant='ghost' size='sm'>
+              Cancelar
+            </Button>
+            <Button variant='default' size='sm'>
+              Cambiar profesional
+            </Button>
+          </DialogFooter>}
         </DialogContent>
       </Dialog>
       {/* Section: Delete dialog */}
