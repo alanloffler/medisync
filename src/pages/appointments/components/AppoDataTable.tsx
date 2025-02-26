@@ -363,7 +363,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
           <section className='space-y-6'>
             {appointmentSelected && (
               <section className='flex flex-col text-sm'>
-                <h5 className='font-semibold text-base'>Datos del turno</h5>
+                <h5 className='text-base font-semibold'>Datos del turno</h5>
                 <div className='gap-1'>
                   Turno de{' '}
                   <span className='font-medium italic'>
@@ -408,14 +408,16 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
               </section>
             )}
           </section>
-          {professionalSelected && <DialogFooter className='mt-3 flex justify-end gap-4'>
-            <Button variant='ghost' size='sm'>
-              Cancelar
-            </Button>
-            <Button variant='default' size='sm'>
-              Cambiar profesional
-            </Button>
-          </DialogFooter>}
+          {professionalSelected && (
+            <DialogFooter className='mt-3 flex justify-end gap-4'>
+              <Button variant='ghost' size='sm'>
+                {t('button.cancel')}
+              </Button>
+              <Button variant='default' size='sm'>
+                {t('button.changeProfessional')}
+              </Button>
+            </DialogFooter>
+          )}
         </DialogContent>
       </Dialog>
       {/* Section: Delete dialog */}
