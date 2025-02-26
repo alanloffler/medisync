@@ -290,15 +290,19 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
     setAppointmentSelected(appointment);
   }
 
-  const { data: professional, mutate } = useMutation<IResponse<IProfessional>, Error>({
+  const {
+    data: professional,
+    isPending: professionalIsLoading,
+    isSuccess: professionalIsSuccess,
+    mutate: professionalMutate,
+  } = useMutation<IResponse<IProfessional>, Error>({
     mutationKey: ['professional', 'find-one', professionalSelected],
     mutationFn: async () => await ProfessionalApiService.findOne(professionalSelected),
-    onSuccess: (response) => console.log(response.data),
   });
 
   useEffect(() => {
-    if (professionalSelected) mutate();
-  }, [mutate, professionalSelected]);
+    if (professionalSelected) professionalMutate();
+  }, [professionalMutate, professionalSelected]);
 
   useEffect(() => {
     if (openProfessionalDialog === false) setProfessionalSelected(null);
@@ -371,10 +375,10 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
                     }}
                     i18nKey='dialog.changeProfessional.appoDetails.content'
                     values={{
-                      day: format(appointmentSelected.day, 'full'),
+                      day: format(appointmentSelected.day, 'full', i18n.resolvedLanguage),
                       hour: appointmentSelected.hour,
                       professionalName: UtilsString.upperCase(
-                        `${appointmentSelected.professional?.title.abbreviation} ${appointmentSelected.professional?.lastName} ${appointmentSelected.professional?.firstName}`,
+                        `${appointmentSelected.professional?.title.abbreviation} ${appointmentSelected.professional?.lastName}, ${appointmentSelected.professional?.firstName}`,
                         'each',
                       ),
                       userName: UtilsString.upperCase(`${appointmentSelected.user?.firstName} ${appointmentSelected.user?.lastName}`, 'each'),
@@ -391,22 +395,26 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
               service='active'
             />
             {professionalSelected && (
-              <Trans
-                className='rounded-lg bg-amber-100 p-3 text-sm text-amber-600'
-                components={{ span: <span className='font-semibold italic' /> }}
-                i18nKey='dialog.changeProfessional.content'
-                parent={'div'}
-                values={{
-                  professional: UtilsString.upperCase(
-                    `${appointmentSelected.professional?.title.abbreviation} ${appointmentSelected.professional?.lastName}, ${appointmentSelected.professional?.firstName}`,
-                    'each',
-                  ),
-                  newProfessional: UtilsString.upperCase(
-                    `${professional?.data.title.abbreviation} ${professional?.data.lastName}, ${professional?.data.firstName}`,
-                    'each',
-                  ),
-                }}
-              />
+              <section className='rounded-lg bg-amber-100 p-3 text-sm text-amber-600'>
+                {professionalIsLoading && <LoadingDB text={t('loading.professional')} className='text-current [&_svg]:fill-current' />}
+                {professionalIsSuccess && (
+                  <Trans
+                    components={{ span: <span className='font-semibold italic' /> }}
+                    i18nKey='dialog.changeProfessional.content'
+                    parent={'div'}
+                    values={{
+                      professional: UtilsString.upperCase(
+                        `${appointmentSelected.professional?.title.abbreviation} ${appointmentSelected.professional?.lastName}, ${appointmentSelected.professional?.firstName}`,
+                        'each',
+                      ),
+                      newProfessional: UtilsString.upperCase(
+                        `${professional?.data.title.abbreviation} ${professional?.data.lastName}, ${professional?.data.firstName}`,
+                        'each',
+                      ),
+                    }}
+                  />
+                )}
+              </section>
             )}
           </section>
           {professionalSelected && (
