@@ -29,6 +29,7 @@ import { StatusSelect } from '@appointments/components/common/StatusSelect';
 import { TableButton } from '@core/components/common/TableButton';
 // External imports
 import { Trans, useTranslation } from 'react-i18next';
+import { format } from '@formkit/tempo';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
@@ -40,11 +41,10 @@ import type { IProfessional } from '@professionals/interfaces/professional.inter
 import type { IResponse } from '@core/interfaces/response.interface';
 import { APPO_CONFIG } from '@config/appointments/appointments.config';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
+import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
 import { useMediaQuery } from '@core/hooks/useMediaQuery';
 import { useNotificationsStore } from '@core/stores/notifications.store';
-import { ProfessionalApiService } from '@professionals/services/professional-api.service';
-import { format } from '@formkit/tempo';
 // Interface
 interface IVariables {
   itemsPerPage: number;
@@ -357,55 +357,56 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
       <Dialog open={openProfessionalDialog} onOpenChange={setOpenProfessionalDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className='text-xl'>Cambiar de profesional</DialogTitle>
+            <DialogTitle className='text-xl'>{t('dialog.changeProfessional.title')}</DialogTitle>
             <DialogDescription></DialogDescription>
           </DialogHeader>
           <section className='space-y-6'>
             {appointmentSelected && (
               <section className='flex flex-col text-sm'>
-                <h5 className='text-base font-semibold'>Datos del turno</h5>
-                <div className='gap-1'>
-                  Turno de{' '}
-                  <span className='font-medium italic'>
-                    {UtilsString.upperCase(`${appointmentSelected.user?.firstName} ${appointmentSelected.user?.lastName}`, 'each')}
-                  </span>{' '}
-                  con el profesional{' '}
-                  <span className='font-medium italic'>
-                    {UtilsString.upperCase(
-                      `${appointmentSelected.professional?.title.abbreviation} ${appointmentSelected.professional?.lastName} ${appointmentSelected.professional?.firstName}`,
-                      'each',
-                    )}
-                  </span>{' '}
-                  para el día {format(appointmentSelected.day, 'full')} a las {appointmentSelected.hour} horas
+                <h5 className='text-base font-semibold'>{t('dialog.changeProfessional.appoDetails.title')}</h5>
+                <div>
+                  <Trans
+                    components={{
+                      span: <span className='font-medium' />,
+                    }}
+                    i18nKey='dialog.changeProfessional.appoDetails.content'
+                    values={{
+                      day: format(appointmentSelected.day, 'full'),
+                      hour: appointmentSelected.hour,
+                      professionalName: UtilsString.upperCase(
+                        `${appointmentSelected.professional?.title.abbreviation} ${appointmentSelected.professional?.lastName} ${appointmentSelected.professional?.firstName}`,
+                        'each',
+                      ),
+                      userName: UtilsString.upperCase(`${appointmentSelected.user?.firstName} ${appointmentSelected.user?.lastName}`, 'each'),
+                    }}
+                  />
                 </div>
               </section>
             )}
             <ProfessionalsSelect
               className='w-fit'
-              label={`${t('placeholder.select')} ${t('label.professional')}`}
+              label={t('dialog.changeProfessional.selectLabel')}
               onValueChange={setProfessionalSelected}
               placeholder={t('placeholder.select')}
               service='active'
             />
             {professionalSelected && (
-              <section className='rounded-lg bg-amber-100 p-3 text-sm text-amber-600'>
-                <div>
-                  Vas a cambiar al profesional{' '}
-                  <span className='font-semibold italic'>
-                    {UtilsString.upperCase(
-                      `${appointmentSelected.professional?.title.abbreviation} ${appointmentSelected.professional?.lastName}, ${appointmentSelected.professional?.firstName}`,
-                      'each',
-                    )}
-                  </span>
-                  , por el profesional{' '}
-                  <span className='font-semibold italic'>
-                    {UtilsString.upperCase(
-                      `${professional?.data.title.abbreviation} ${professional?.data.lastName}, ${professional?.data.firstName}`,
-                      'each',
-                    )}
-                  </span>
-                </div>
-              </section>
+              <Trans
+                className='rounded-lg bg-amber-100 p-3 text-sm text-amber-600'
+                components={{ span: <span className='font-semibold italic' /> }}
+                i18nKey='dialog.changeProfessional.content'
+                parent={'div'}
+                values={{
+                  professional: UtilsString.upperCase(
+                    `${appointmentSelected.professional?.title.abbreviation} ${appointmentSelected.professional?.lastName}, ${appointmentSelected.professional?.firstName}`,
+                    'each',
+                  ),
+                  newProfessional: UtilsString.upperCase(
+                    `${professional?.data.title.abbreviation} ${professional?.data.lastName}, ${professional?.data.firstName}`,
+                    'each',
+                  ),
+                }}
+              />
             )}
           </section>
           {professionalSelected && (
