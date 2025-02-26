@@ -4,6 +4,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
+import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
@@ -12,6 +13,7 @@ import type { IResponse } from '@core/interfaces/response.interface';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
 import { cn } from '@lib/utils';
+import { useNotificationsStore } from '@core/stores/notifications.store';
 // Interface and type
 interface IProps {
   className?: string;
@@ -28,9 +30,11 @@ type TService = 'active' | 'replace';
 // React component
 export function ProfessionalsSelect({ className, day, hour, defaultValue, label, onValueChange, placeholder, service }: IProps) {
   const { t } = useTranslation();
+  const addNotification = useNotificationsStore((state) => state.addNotification);
 
   const {
     data: professionals,
+    error,
     isError,
     isPending,
   } = useQuery<IResponse<IProfessional[]>, Error>({
@@ -41,6 +45,10 @@ export function ProfessionalsSelect({ className, day, hour, defaultValue, label,
       return await ProfessionalApiService.findAllActive();
     },
   });
+
+  useEffect(() => {
+    if (isError) addNotification({ type: 'error', message: error?.message });
+  }, [addNotification, error?.message, isError]);
 
   return (
     <main className='flex flex-row items-center space-x-3'>
