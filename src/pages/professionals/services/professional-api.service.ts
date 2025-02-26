@@ -88,6 +88,17 @@ export class ProfessionalApiService {
     return await this.fetch(url, EMethods.GET);
   }
 
+  // CHECKED:
+  // Used on component ProfessionalsSelect.tsx on replace service
+  public static async findAllAvailableForChange(day: string, hour: string): Promise<IResponse<IProfessional[]>> {
+    const path: string = `${this.API_URL}/professionals/availableForChange`;
+    const url: URL = new URL(path);
+    url.searchParams.append('day', day);
+    url.searchParams.append('hour', hour);
+
+    return await UtilsUrl.fetch(url, EMethods.GET);
+  }
+
   private static async fetch(url: string, method: EMethods, body?: any): Promise<IResponse<any>> {
     try {
       const query: Response = await fetch(url, {
