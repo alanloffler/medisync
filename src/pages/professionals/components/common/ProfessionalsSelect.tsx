@@ -47,7 +47,7 @@ export function ProfessionalsSelect({
   });
 
   return (
-    <main className='flex flex-row items-center space-x-2'>
+    <main className='flex flex-row items-center space-x-3'>
       {label && <span className='text-xsm font-medium text-muted-foreground'>{label}</span>}
       <Select defaultValue={defaultValue} onValueChange={onValueChange} disabled={isError}>
         <SelectTrigger className={cn('h-7 w-full space-x-3 bg-input text-xsm', className)}>
