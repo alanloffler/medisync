@@ -260,7 +260,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
             <TableButton callback={() => navigate(`/appointments/${row.original._id}`)} className='hover:text-sky-500' tooltip={t('tooltip.details')}>
               <FileText size={16} strokeWidth={1.5} />
             </TableButton>
-            <TableButton callback={() => handleChangeProfessionalDialog(row.original)} className='hover:text-sky-500' tooltip={t('tooltip.details')}>
+            <TableButton callback={() => handleChangeProfessionalDialog(row.original)} className='hover:text-lime-600' tooltip={t('tooltip.replaceProfessional')}>
               <Replace size={16} strokeWidth={1.5} />
             </TableButton>
             <TableButton callback={() => handleRemoveAppointmentDialog(row.original)} className='hover:text-rose-500' tooltip={t('tooltip.delete')}>
@@ -313,6 +313,10 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
   useEffect(() => {
     if (openProfessionalDialog === false) setProfessionalSelected(null);
   }, [openProfessionalDialog]);
+
+  function handleChangeProfessional(): void {
+    console.log('Implement professional change on appointment\nUpdate the professional _id on appointment');
+  }
 
   // Render
   if (isError) {
@@ -431,7 +435,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
               <Button size='sm' variant='ghost' onClick={() => setOpenProfessionalDialog(false)}>
                 {t('button.cancel')}
               </Button>
-              <Button disabled={professionalIsError || professionalIsLoading} size='sm' variant='default'>
+              <Button disabled={professionalIsError || professionalIsLoading} size='sm' variant='default' onClick={() => handleChangeProfessional()}>
                 {t('button.changeProfessional')}
               </Button>
             </DialogFooter>
