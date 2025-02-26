@@ -15,6 +15,8 @@ import { cn } from '@lib/utils';
 // React component
 export function ProfessionalsSelect({
   className,
+  day,
+  hour,
   defaultValue,
   label,
   onValueChange,
@@ -22,6 +24,8 @@ export function ProfessionalsSelect({
   service,
 }: {
   className?: string;
+  day?: string;
+  hour?: string;
   defaultValue?: string;
   label?: string;
   onValueChange?: (e: string) => void;
@@ -35,13 +39,16 @@ export function ProfessionalsSelect({
     isError,
     isPending,
   } = useQuery<IResponse<IProfessional[]>, Error>({
-    queryKey: ['professionals', 'input-select', service],
+    queryKey: ['professionals', 'input-select', service, day, hour],
     queryFn: async () => {
       if (service === 'active') {
         console.log('return active');
         return await ProfessionalApiService.findAllActive();
       }
-      if (service === 'replace') return await ProfessionalApiService.findAllActive();
+      if (service === 'replace' && day && hour) {
+        console.log('return replace');
+        return await ProfessionalApiService.findAllAvailableForChange(day, hour);
+      }
       return await ProfessionalApiService.findAllActive();
     },
   });
