@@ -12,17 +12,8 @@ import type { IResponse } from '@core/interfaces/response.interface';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
 import { cn } from '@lib/utils';
-// React component
-export function ProfessionalsSelect({
-  className,
-  day,
-  hour,
-  defaultValue,
-  label,
-  onValueChange,
-  placeholder,
-  service,
-}: {
+// Interface and type
+interface IProps {
   className?: string;
   day?: string;
   hour?: string;
@@ -30,8 +21,12 @@ export function ProfessionalsSelect({
   label?: string;
   onValueChange?: (e: string) => void;
   placeholder?: string;
-  service: 'active' | 'replace';
-}) {
+  service: TService;
+}
+
+type TService = 'active' | 'replace';
+// React component
+export function ProfessionalsSelect({ className, day, hour, defaultValue, label, onValueChange, placeholder, service }: IProps) {
   const { t } = useTranslation();
 
   const {
@@ -41,14 +36,8 @@ export function ProfessionalsSelect({
   } = useQuery<IResponse<IProfessional[]>, Error>({
     queryKey: ['professionals', 'input-select', service, day, hour],
     queryFn: async () => {
-      if (service === 'active') {
-        console.log('return active');
-        return await ProfessionalApiService.findAllActive();
-      }
-      if (service === 'replace' && day && hour) {
-        console.log('return replace');
-        return await ProfessionalApiService.findAllAvailableForChange(day, hour);
-      }
+      if (service === 'active') return await ProfessionalApiService.findAllActive();
+      if (service === 'replace' && day && hour) return await ProfessionalApiService.findAllAvailableForChange(day, hour);
       return await ProfessionalApiService.findAllActive();
     },
   });
