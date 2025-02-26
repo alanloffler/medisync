@@ -24,6 +24,7 @@ import { Id } from '@core/components/common/ui/Id';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { Pagination } from '@core/components/common/Pagination';
+import { ProfessionalsSelect } from '@professionals/components/common/ProfessionalsSelect';
 import { StatusSelect } from '@appointments/components/common/StatusSelect';
 import { TableButton } from '@core/components/common/TableButton';
 // External imports
@@ -35,13 +36,15 @@ import { useNavigate } from 'react-router-dom';
 import type { IAppointment } from '@appointments/interfaces/appointment.interface';
 import type { IAppointmentSearch } from '@appointments/interfaces/appointment-search.interface';
 import type { IDataTableAppointments, ITableManager } from '@core/interfaces/table.interface';
+import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import { APPO_CONFIG } from '@config/appointments/appointments.config';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { UtilsString } from '@core/services/utils/string.service';
 import { useMediaQuery } from '@core/hooks/useMediaQuery';
 import { useNotificationsStore } from '@core/stores/notifications.store';
-import { ProfessionalsSelect } from '@professionals/components/common/ProfessionalsSelect';
+import { ProfessionalApiService } from '@professionals/services/professional-api.service';
+import { format } from '@formkit/tempo';
 // Interface
 interface IVariables {
   itemsPerPage: number;
@@ -62,6 +65,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [openProfessionalDialog, setOpenProfessionalDialog] = useState<boolean>(false);
   const [pagination, setPagination] = useState<PaginationState>(defaultPagination);
+  const [professionalSelected, setProfessionalSelected] = useState<any>();
   const [sorting, setSorting] = useState<SortingState>(defaultSorting);
   const [tableManager, setTableManager] = useState<ITableManager>({ sorting, pagination });
   const [totalItems, setTotalItems] = useState<number>(0);
@@ -286,6 +290,20 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
     setAppointmentSelected(appointment);
   }
 
+  const { data: professional, mutate } = useMutation<IResponse<IProfessional>, Error>({
+    mutationKey: ['professional', 'find-one', professionalSelected],
+    mutationFn: async () => await ProfessionalApiService.findOne(professionalSelected),
+    onSuccess: (response) => console.log(response.data),
+  });
+
+  useEffect(() => {
+    if (professionalSelected) mutate();
+  }, [mutate, professionalSelected]);
+
+  useEffect(() => {
+    if (openProfessionalDialog === false) setProfessionalSelected(null);
+  }, [openProfessionalDialog]);
+
   // Render
   if (isError) {
     return <InfoCard type='error' text={t(error.message)} className='mt-6' />;
@@ -342,8 +360,39 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
             <DialogTitle className='text-xl'>Cambiar de profesional</DialogTitle>
             <DialogDescription></DialogDescription>
           </DialogHeader>
-          <section>
-            <ProfessionalsSelect service='active' defaultValue='' />
+          <section className='space-y-3'>
+            {appointmentSelected && (
+              <section className='flex flex-col text-sm'>
+                <h5 className='font-semibold'>Datos del turno</h5>
+                <div className='gap-1'>
+                  Turno de{' '}
+                  <span className='font-medium italic'>
+                    {UtilsString.upperCase(`${appointmentSelected.user?.firstName} ${appointmentSelected.user?.lastName}`, 'each')}
+                  </span>{' '}
+                  con el profesional{' '}
+                  <span className='font-medium italic'>
+                    {UtilsString.upperCase(
+                      `${appointmentSelected.professional?.title.abbreviation} ${appointmentSelected.professional?.lastName} ${appointmentSelected.professional?.firstName}`,
+                      'each',
+                    )}
+                  </span>{' '}
+                  para el día {format(appointmentSelected.day, 'full')} a las {appointmentSelected.hour} horas
+                </div>
+              </section>
+            )}
+            <ProfessionalsSelect
+              className='w-fit'
+              label={t('label.professional')}
+              onValueChange={setProfessionalSelected}
+              placeholder={t('placeholder.select')}
+              service='active'
+            />
+            {professionalSelected && (
+              <section className='bg-amber-100 text-amber-600 p-3 text-sm rounded-lg'>
+                Vas a cambiar al profesional <span className='font-semibold italic'>{UtilsString.upperCase(`${appointmentSelected.professional?.title.abbreviation} ${appointmentSelected.professional?.lastName} ${appointmentSelected.professional?.firstName}`, 'each')}</span>,
+                 por el profesional {professional?.data.title.abbreviation} {professional?.data.lastName}
+              </section>
+            )}
           </section>
         </DialogContent>
       </Dialog>
