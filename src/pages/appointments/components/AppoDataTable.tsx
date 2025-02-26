@@ -395,10 +395,12 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
             )}
             <ProfessionalsSelect
               className='w-fit'
+              day={'2025-02-26'}
+              hour={'16:00'}
               label={t('dialog.changeProfessional.selectLabel')}
               onValueChange={setProfessionalSelected}
               placeholder={t('placeholder.select')}
-              service='active'
+              service='replace'
             />
             {professionalSelected && (
               <section className='rounded-lg bg-amber-100 p-3 text-sm text-amber-600'>
