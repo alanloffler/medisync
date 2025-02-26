@@ -105,6 +105,15 @@
     "appointment": "Deleting appointment"
   },
   "dialog": {
+    "changeProfessional": {
+      "title": "Change professional",
+      "content": "You are going to change the professional <span>{{professional}}</span> to the professional <span>{{newProfessional}}</span>.",
+      "selectLabel": "Select professional",
+      "appoDetails": {
+        "title": "Appointment details",
+        "content": "Appointment of <span>{{userName}}</span> with professional <span>{{professionalName}}</span> for day {{day}} at {{hour}} hours."
+      }
+    },
     "reserveAppointment": {
       "title": "Appointment reservation",
       "description": "By confirming, you will make a reservation",

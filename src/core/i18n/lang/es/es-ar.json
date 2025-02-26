@@ -105,6 +105,15 @@
     "appointment": "Eliminando turno"
   },
   "dialog": {
+    "changeProfessional": {
+      "title": "Cambiar de profesional",
+      "content": "Vas a cambiar al profesional <span>{{professional}}</span>, por el profesional <span>{{newProfessional}}</span>.",
+      "selectLabel": "Seleccionar profesional",
+      "appoDetails": {
+        "title": "Detalles del turno",
+        "content": "Turno de <span>{{userName}}</span> con el profesional <span>{{professionalName}}</span> para el día {{day}} a las {{hour}} horas."
+      }
+    },
     "reserveAppointment": {
       "title": "Reserva de turno",
       "description": "Al confirmar, vas a realizar una reserva de turno",
