@@ -52,12 +52,13 @@ export class AppointmentApiService {
 
     return await UtilsUrl.fetch(url, EMethods.POST, body);
   }
-  // CHECKED: used on StatusSelect.tsx
-  public static async update(id: string, status: string): Promise<IResponse<IAppointment>> {
+  // CHECKED:
+  // Used on StatusSelect.tsx and AppoDataTable.tsx (change professional)
+  public static async update(id: string, professional?: string, status?: string): Promise<IResponse<IAppointment>> {
     const path: string = `${this.API_URL}/appointments/${id}`;
     const url = UtilsUrl.create(path);
 
-    return await UtilsUrl.fetch(url, EMethods.PATCH, { status });
+    return await UtilsUrl.fetch(url, EMethods.PATCH, { professional, status });
   }
   // CHECKED: used on AppoFlowCard.tsx
   public static async getStatistics() {
