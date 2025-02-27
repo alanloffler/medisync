@@ -65,7 +65,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [openProfessionalDialog, setOpenProfessionalDialog] = useState<boolean>(false);
   const [pagination, setPagination] = useState<PaginationState>(defaultPagination);
-  const [professionalSelected, setProfessionalSelected] = useState<any>();
+  const [professionalSelected, setProfessionalSelected] = useState<string | undefined>(undefined);
   const [sorting, setSorting] = useState<SortingState>(defaultSorting);
   const [tableManager, setTableManager] = useState<ITableManager>({ sorting, pagination });
   const [totalItems, setTotalItems] = useState<number>(0);
@@ -303,7 +303,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
     mutate: professionalMutate,
   } = useMutation<IResponse<IProfessional>, Error>({
     mutationKey: ['professional', 'find-one', professionalSelected],
-    mutationFn: async () => await ProfessionalApiService.findOne(professionalSelected),
+    mutationFn: async () => await ProfessionalApiService.findOne(professionalSelected!),
   });
 
   useEffect(() => {
@@ -315,11 +315,22 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
   }, [addNotification, professionalError?.message, professionalIsError]);
 
   useEffect(() => {
-    if (openProfessionalDialog === false) setProfessionalSelected(null);
+    if (openProfessionalDialog === false) setProfessionalSelected(undefined);
   }, [openProfessionalDialog]);
 
-  function handleChangeProfessional(): void {
-    console.log('Implement professional change on appointment\nUpdate the professional _id on appointment');
+  const { mutate: changeProfessional } = useMutation<IResponse<IAppointment>, Error, { appoId: string; profId: string }>({
+    mutationKey: ['appointment', 'change-professional'],
+    mutationFn: async ({ appoId, profId }) => await AppointmentApiService.update(appoId, profId, appointmentSelected!.status),
+  });
+
+  function handleChangeProfessional(appoId: string, profId: string): void {
+    if (appointmentSelected && professionalSelected) {
+      console.log('Professional change data');
+      console.log('Appointment', appoId);
+      console.log('Professional', profId);
+      console.log('Appointment selected', appointmentSelected);
+      changeProfessional({ appoId, profId });
+    }
   }
 
   // Render
@@ -439,7 +450,12 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
               <Button size='sm' variant='ghost' onClick={() => setOpenProfessionalDialog(false)}>
                 {t('button.cancel')}
               </Button>
-              <Button disabled={professionalIsError || professionalIsLoading} size='sm' variant='default' onClick={() => handleChangeProfessional()}>
+              <Button
+                disabled={professionalIsError || professionalIsLoading}
+                size='sm'
+                variant='default'
+                onClick={() => handleChangeProfessional(appointmentSelected._id, professionalSelected)}
+              >
                 {t('button.changeProfessional')}
               </Button>
             </DialogFooter>
