@@ -58,10 +58,10 @@ export function StatusSelect({ appointment, className, mode, showLabel = false }
     futureDate ? setItemSelected(EStatus.WAITING) : setItemSelected(status);
   }, [day, hour, status]);
 
-  const { mutate } = useMutation<IResponse, Error, { status: string }>({
+  const { mutate } = useMutation<IResponse, Error, { professional: string; status: string }>({
     mutationKey: ['appointment', 'update', _id, status],
-    mutationFn: async () => {
-      return await AppointmentApiService.update(_id, itemSelected);
+    mutationFn: async ({ professional, status }) => {
+      return await AppointmentApiService.update(_id, professional, status);
     },
     onSuccess: (success, vars) => {
       setItemSelected(vars.status);
@@ -75,7 +75,7 @@ export function StatusSelect({ appointment, className, mode, showLabel = false }
   function handleStatusChange(status: string): void {
     if (mode === 'update') {
       setItemSelected(status);
-      mutate({ status });
+      mutate({ professional: appointment.professional._id, status });
     }
   }
 
