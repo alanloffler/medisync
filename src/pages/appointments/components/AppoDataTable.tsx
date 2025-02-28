@@ -12,8 +12,10 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  type Cell,
   type ColumnDef,
   type PaginationState,
+  type Row,
   type SortingState,
   type Table as ITable,
   useReactTable,
@@ -30,7 +32,7 @@ import { TableButton } from '@core/components/common/TableButton';
 // External imports
 import { Trans, useTranslation } from 'react-i18next';
 import { format } from '@formkit/tempo';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 // Imports
@@ -221,11 +223,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
             </button>
           </div>
         ),
-        cell: ({ row }) => (
-          <Button variant='link-table' size='xs' className='!text-xsm' onClick={() => navigate(`/users/${row.original.user._id}`)}>
-            {UtilsString.upperCase(`${row.original.user.firstName} ${row.original.user.lastName}`, 'each')}
-          </Button>
-        ),
+        cell: ({ row }) => <div>{UtilsString.upperCase(`${row.original.user.firstName} ${row.original.user.lastName}`, 'each')}</div>,
       },
       {
         accessorKey: 'identityCard',
@@ -315,6 +313,13 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
     setAppointmentSelected(appointment);
   }
 
+  const handleRowClick = useCallback(
+    (row: Row<IAppointment>, cell: Cell<IAppointment, unknown>): void => {
+      if (cell.column.getIndex() < row.getAllCells().length - 1) navigate(`/appointments/${row.original._id}`);
+    },
+    [navigate],
+  );
+
   const {
     data: professional,
     error: professionalError,
@@ -394,9 +399,16 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
             </TableHeader>
             <TableBody className='text-xsm'>
               {table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'} className='hover:bg-slate-50/70'>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell className='p-1' key={cell.id} style={{ width: `${cell.column.getSize()}px` }}>
+                    <TableCell
+                      className={`p-1 ${cell.column.id !== 'actions' && cell.column.id !== 'status' && 'hover:cursor-pointer'}`}
+                      key={cell.id}
+                      onClick={() => {
+                        if (cell.column.id !== 'actions' && cell.column.id !== 'status') handleRowClick(row, cell);
+                      }}
+                      style={{ width: `${cell.column.getSize()}px` }}
+                    >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
