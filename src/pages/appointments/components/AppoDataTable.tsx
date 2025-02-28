@@ -314,14 +314,13 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
     if (professionalIsError) addNotification({ type: 'error', message: professionalError.message });
   }, [addNotification, professionalError?.message, professionalIsError]);
 
-  useEffect(() => {
-    if (openProfessionalDialog === false) setProfessionalSelected(undefined);
-  }, [openProfessionalDialog]);
-
   const {
+    error: changeProfessionalError,
+    isError: changeProfessionalIsError,
     isPending: changeProfessionalIsUpdating,
     isSuccess: changeProfessionalIsSuccess,
     mutate: changeProfessional,
+    reset: changeProfessionalReset,
   } = useMutation<IResponse<IAppointment>, Error, { appoId: string; profId: string }>({
     mutationKey: ['appointment', 'change-professional'],
     mutationFn: async ({ appoId, profId }) => await AppointmentApiService.update(appoId, profId, appointmentSelected!.status),
@@ -338,6 +337,13 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [changeProfessionalIsSuccess]);
+
+  useEffect(() => {
+    if (openProfessionalDialog === false) {
+      setProfessionalSelected(undefined);
+      if (changeProfessionalIsError) changeProfessionalReset();
+    }
+  }, [changeProfessionalIsError, changeProfessionalReset, openProfessionalDialog]);
 
   // Render
   if (isError) {
@@ -390,10 +396,10 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
       )}
       {/* Section: Change professional */}
       <Dialog open={openProfessionalDialog} onOpenChange={setOpenProfessionalDialog}>
-        <DialogContent>
+        <DialogContent className='space-y-2'>
           <DialogHeader>
             <DialogTitle className='text-xl'>{t('dialog.changeProfessional.title')}</DialogTitle>
-            <DialogDescription></DialogDescription>
+            <DialogDescription className='sr-only'></DialogDescription>
           </DialogHeader>
           <section className='space-y-6'>
             {appointmentSelected && (
@@ -451,8 +457,9 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
               </section>
             )}
           </section>
+          {changeProfessionalIsError && <InfoCard className='!m-0' type='error' text={changeProfessionalError.message} />}
           {professionalSelected && (
-            <DialogFooter className='mt-3 grid grid-cols-1 gap-2 md:flex md:justify-end md:gap-4'>
+            <DialogFooter className='grid grid-cols-1 gap-2 md:flex md:justify-end md:gap-4'>
               <Button className='order-2 md:order-1' size='sm' variant='ghost' onClick={() => setOpenProfessionalDialog(false)}>
                 {t('button.cancel')}
               </Button>
