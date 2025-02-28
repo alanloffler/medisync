@@ -33,7 +33,7 @@ export function TableButtonGroup({ buttons }: IProps) {
     <DropdownMenu>
       <TooltipWrapper tooltip={t('tooltip.moreOptions')}>
         <DropdownMenuTrigger
-          className='flex h-7 w-7 items-center justify-center rounded-md bg-slate-100 hover:bg-slate-100 hover:text-slate-500'
+          className='flex h-7 w-7 items-center justify-center rounded-md bg-slate-100 hover:bg-indigo-200 hover:text-indigo-500'
           onMouseOver={animateOver}
           onMouseOut={animateOut}
         >
