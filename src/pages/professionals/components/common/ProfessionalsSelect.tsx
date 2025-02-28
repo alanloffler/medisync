@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
@@ -18,19 +18,19 @@ import { useNotificationsStore } from '@core/stores/notifications.store';
 interface IProps {
   className?: string;
   day?: string;
-  hour?: string;
   defaultValue?: string;
+  hour?: string;
   label?: string;
-  onValueChange?: (e: string) => void;
+  onValueChange?: (professional: IProfessional) => void;
   placeholder?: string;
   service: TService;
 }
-
 type TService = 'active' | 'replace';
 // React component
 export function ProfessionalsSelect({ className, day, hour, defaultValue, label, onValueChange, placeholder, service }: IProps) {
-  const { t } = useTranslation();
+  const [selectedProfessionalId, setSelectedProfessionalId] = useState<string | undefined>(defaultValue);
   const addNotification = useNotificationsStore((state) => state.addNotification);
+  const { t } = useTranslation();
 
   const {
     data: professionals,
@@ -46,14 +46,31 @@ export function ProfessionalsSelect({ className, day, hour, defaultValue, label,
     },
   });
 
+  function handleProfessionalChange(id: string): void {
+    setSelectedProfessionalId(id);
+    if (onValueChange && professionals?.data) {
+      const selectedProfessional = professionals.data.find((prof) => prof._id === id);
+      if (selectedProfessional) onValueChange(selectedProfessional);
+    }
+  }
+
   useEffect(() => {
     if (isError) addNotification({ type: 'error', message: error?.message });
   }, [addNotification, error?.message, isError]);
 
+  useEffect(() => {
+    if (defaultValue && professionals?.data && onValueChange) {
+      const defaultProfessional = professionals.data.find((prof) => prof._id === defaultValue);
+      if (defaultProfessional) {
+        onValueChange(defaultProfessional);
+      }
+    }
+  }, [defaultValue, professionals?.data, onValueChange]);
+
   return (
     <main className='flex flex-row items-center space-x-3'>
       {label && <span className='text-xsm font-medium text-muted-foreground'>{label}</span>}
-      <Select defaultValue={defaultValue} onValueChange={onValueChange} disabled={isError}>
+      <Select defaultValue={defaultValue} value={selectedProfessionalId} onValueChange={handleProfessionalChange} disabled={isError}>
         <SelectTrigger className={cn('h-7 w-full space-x-3 bg-input text-xsm', className)}>
           {isError ? (
             <InfoCard type='error' text={t('error.default')} className='mx-auto' />
@@ -67,7 +84,7 @@ export function ProfessionalsSelect({ className, day, hour, defaultValue, label,
           <SelectGroup>
             {professionals?.data &&
               professionals?.data.map((professional) => (
-                <SelectItem key={crypto.randomUUID()} value={professional._id} className='text-xsm'>
+                <SelectItem key={professional._id} value={professional._id} className='text-xsm'>
                   {UtilsString.upperCase(`${professional.title.abbreviation} ${professional.firstName} ${professional.lastName}`, 'each')}
                 </SelectItem>
               ))}
