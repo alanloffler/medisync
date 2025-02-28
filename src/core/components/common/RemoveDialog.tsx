@@ -70,7 +70,7 @@ export function RemoveDialog({ action, callback, className, dialogContent, dialo
     <>
       <TooltipWrapper tooltip={tooltip}>
         <button
-          className={cn('flex h-8 w-8 items-center justify-center rounded-md bg-transparent hover:bg-red-100/75 hover:text-red-400', className)}
+          className={cn('flex h-7 w-7 items-center justify-center rounded-md bg-transparent hover:bg-red-100/75 hover:text-red-400', className)}
           onClick={() => setOpenDialog(true)}
           onMouseOut={animateOut}
           onMouseOver={animateOver}
