@@ -318,11 +318,11 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
     if (openProfessionalDialog === false) setProfessionalSelected(undefined);
   }, [openProfessionalDialog]);
 
-  const { mutate: changeProfessional, isSuccess: changeProfessionalIsSuccess } = useMutation<
-    IResponse<IAppointment>,
-    Error,
-    { appoId: string; profId: string }
-  >({
+  const {
+    isPending: changeProfessionalIsUpdating,
+    isSuccess: changeProfessionalIsSuccess,
+    mutate: changeProfessional,
+  } = useMutation<IResponse<IAppointment>, Error, { appoId: string; profId: string }>({
     mutationKey: ['appointment', 'change-professional'],
     mutationFn: async ({ appoId, profId }) => await AppointmentApiService.update(appoId, profId, appointmentSelected!.status),
   });
@@ -463,7 +463,11 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
                 variant='default'
                 onClick={() => handleChangeProfessional(appointmentSelected._id, professionalSelected)}
               >
-                {t('button.changeProfessional')}
+                {changeProfessionalIsUpdating ? (
+                  <LoadingDB text={t('loading.updatingProfessional')} variant='button' />
+                ) : (
+                  t('button.changeProfessional')
+                )}
               </Button>
             </DialogFooter>
           )}
