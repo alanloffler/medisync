@@ -65,7 +65,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [openProfessionalDialog, setOpenProfessionalDialog] = useState<boolean>(false);
   const [pagination, setPagination] = useState<PaginationState>(defaultPagination);
-  const [professionalSelected, setProfessionalSelected] = useState<string | undefined>(undefined);
+  const [professionalSelected, setProfessionalSelected] = useState<IProfessional | undefined>(undefined);
   const [sorting, setSorting] = useState<SortingState>(defaultSorting);
   const [tableManager, setTableManager] = useState<ITableManager>({ sorting, pagination });
   const [totalItems, setTotalItems] = useState<number>(0);
@@ -84,7 +84,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
     isPending: isLoading,
     mutate: fetchData,
   } = useMutation<IResponse<IAppointment[]>, Error, IVariables>({
-    mutationKey: ['appointments', search, tableManager],
+    mutationKey: ['appointments', 'search', search, tableManager],
     mutationFn: async ({ search, sorting, skipItems, itemsPerPage }: IVariables) => {
       return await AppointmentApiService.findSearch(search, sorting, skipItems, itemsPerPage);
     },
@@ -303,7 +303,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
     mutate: professionalMutate,
   } = useMutation<IResponse<IProfessional>, Error>({
     mutationKey: ['professional', 'find-one', professionalSelected],
-    mutationFn: async () => await ProfessionalApiService.findOne(professionalSelected!),
+    mutationFn: async () => await ProfessionalApiService.findOne(professionalSelected!._id),
   });
 
   useEffect(() => {
@@ -318,20 +318,26 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
     if (openProfessionalDialog === false) setProfessionalSelected(undefined);
   }, [openProfessionalDialog]);
 
-  const { mutate: changeProfessional } = useMutation<IResponse<IAppointment>, Error, { appoId: string; profId: string }>({
+  const { mutate: changeProfessional, isSuccess: changeProfessionalIsSuccess } = useMutation<
+    IResponse<IAppointment>,
+    Error,
+    { appoId: string; profId: string }
+  >({
     mutationKey: ['appointment', 'change-professional'],
     mutationFn: async ({ appoId, profId }) => await AppointmentApiService.update(appoId, profId, appointmentSelected!.status),
   });
 
-  function handleChangeProfessional(appoId: string, profId: string): void {
-    if (appointmentSelected && professionalSelected) {
-      console.log('Professional change data');
-      console.log('Appointment', appoId);
-      console.log('Professional', profId);
-      console.log('Appointment selected', appointmentSelected);
-      changeProfessional({ appoId, profId });
-    }
+  function handleChangeProfessional(appoId: string, professional: IProfessional): void {
+    if (appointmentSelected && professionalSelected) changeProfessional({ appoId, profId: professional._id });
   }
+
+  useEffect(() => {
+    if (changeProfessionalIsSuccess && professionalSelected) {
+      setOpenProfessionalDialog(false);
+      appointmentSelected.professional = professionalSelected;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [changeProfessionalIsSuccess]);
 
   // Render
   if (isError) {
