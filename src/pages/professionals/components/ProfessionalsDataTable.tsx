@@ -1,10 +1,9 @@
 // Icons: https://lucide.dev/icons/
-import { ArrowDownUp, FileText, Mail, MailX, MessageCircle, PencilLine, Trash2 } from 'lucide-react';
+import { ArrowDownUp, Mail, MailX, MessageCircle, PencilLine, Trash2 } from 'lucide-react';
 // External components:
 // https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
-import { Separator } from '@core/components/ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@core/components/ui/table';
 // Tanstack Data Table: https://tanstack.com/table/latest
 import {
@@ -29,6 +28,7 @@ import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { Pagination } from '@core/components/common/Pagination';
 import { TableButton } from '@core/components/common/TableButton';
+import { TableButtonGroup } from '@core/components/common/TableButtonGroup';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
 import { Trans, useTranslation } from 'react-i18next';
@@ -254,13 +254,6 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
         cell: ({ row }) => (
           <div className='mx-auto flex w-fit flex-row items-center justify-center space-x-0.5 md:space-x-2'>
             <TableButton
-              callback={() => navigate(`/professionals/${row.original._id}`)}
-              className='hidden hover:bg-sky-100/75 hover:text-sky-400 sm:flex'
-              tooltip={t('tooltip.details')}
-            >
-              <FileText size={17} strokeWidth={1.5} />
-            </TableButton>
-            <TableButton
               callback={() => navigate(`/professionals/update/${row.original._id}`)}
               className='hover:bg-amber-100/75 hover:text-amber-400'
               tooltip={t('tooltip.edit')}
@@ -274,26 +267,29 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
             >
               <Trash2 size={17} strokeWidth={1.5} />
             </TableButton>
-            <div className='px-1'>
-              <Separator orientation='vertical' className='h-5 w-[1px]' />
-            </div>
-            <TableButton
-              callback={() => navigate(`/email/professional/${row.original._id}`)}
-              className='hover:bg-purple-100/75 hover:text-purple-400'
-              disabled={!row.original.email}
-              tooltip={t('tooltip.sendEmail')}
-            >
-              {!row.original.email ? <MailX size={17} strokeWidth={1.5} /> : <Mail size={17} strokeWidth={1.5} />}
-            </TableButton>
-            <TableButton
-              callback={() =>
-                navigate(`/whatsapp/${row.original._id}`, { state: { type: EUserType.PROFESSIONAL, template: EWhatsappTemplate.EMPTY } })
+            <TableButtonGroup
+              buttons={
+                <>
+                  <TableButton
+                    callback={() => navigate(`/email/professional/${row.original._id}`)}
+                    className='hover:bg-purple-100/75 hover:text-purple-400'
+                    disabled={!row.original.email}
+                    tooltip={t('tooltip.sendEmail')}
+                  >
+                    {!row.original.email ? <MailX size={17} strokeWidth={1.5} /> : <Mail size={17} strokeWidth={1.5} />}
+                  </TableButton>
+                  <TableButton
+                    callback={() =>
+                      navigate(`/whatsapp/${row.original._id}`, { state: { type: EUserType.PROFESSIONAL, template: EWhatsappTemplate.EMPTY } })
+                    }
+                    className='hover:bg-emerald-100/75 hover:text-emerald-400'
+                    tooltip={t('tooltip.sendMessage')}
+                  >
+                    <MessageCircle size={17} strokeWidth={1.5} />
+                  </TableButton>
+                </>
               }
-              className='hover:bg-emerald-100/75 hover:text-emerald-400'
-              tooltip={t('tooltip.sendMessage')}
-            >
-              <MessageCircle size={17} strokeWidth={1.5} />
-            </TableButton>
+            />
           </div>
         ),
       },
