@@ -452,11 +452,12 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
             )}
           </section>
           {professionalSelected && (
-            <DialogFooter className='mt-3 flex justify-end gap-4'>
-              <Button size='sm' variant='ghost' onClick={() => setOpenProfessionalDialog(false)}>
+            <DialogFooter className='mt-3 grid grid-cols-1 gap-2 md:flex md:justify-end md:gap-4'>
+              <Button className='order-2 md:order-1' size='sm' variant='ghost' onClick={() => setOpenProfessionalDialog(false)}>
                 {t('button.cancel')}
               </Button>
               <Button
+                className='order-1 md:order-2'
                 disabled={professionalIsError || professionalIsLoading}
                 size='sm'
                 variant='default'
