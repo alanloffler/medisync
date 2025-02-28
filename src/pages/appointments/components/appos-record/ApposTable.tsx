@@ -86,7 +86,7 @@ export function ApposTable({
                 'each',
               )}
             </div>
-            <div className='text-xsm text-slate-500'>{UtilsString.upperCase(row.original.professional.specialization.name, 'each')}</div>
+            <div className='text-xs text-muted-foreground'>{UtilsString.upperCase(row.original.professional.specialization.name, 'each')}</div>
           </div>
         ),
         header: () => <div className='text-left'>{t(UV_CONFIG.table.appointments.header[1])}</div>,
@@ -196,7 +196,7 @@ export function ApposTable({
             </TableRow>
           ))}
         </TableHeader>
-        <TableBody className='text-sm'>
+        <TableBody className='text-xsm'>
           {table.getRowModel().rows.map((row) => (
             <TableRow key={row.id} className='hover:bg-slate-50/70'>
               {row.getVisibleCells().map((cell) => (
