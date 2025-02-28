@@ -353,8 +353,10 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
                     {row.getVisibleCells().map((cell) => (
                       <TableCell
                         className={`px-0 py-1 ${cell.column.id !== 'actions' && 'hover:cursor-pointer'}`}
-                        onClick={() => handleRowClick(row, cell)}
                         key={cell.id}
+                        onClick={() => {
+                          if (cell.column.id !== 'actions') handleRowClick(row, cell);
+                        }}
                         style={{ width: `${cell.column.getSize()}px` }}
                       >
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
