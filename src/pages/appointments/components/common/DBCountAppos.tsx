@@ -29,7 +29,7 @@ export function DBCountAppos({ className }: { className?: string }) {
     <main className={cn('flex flex-row gap-2 text-xsm font-normal text-slate-400', className)}>
       {count?.data && (
         <section className='flex items-center space-x-1'>
-          <Database size={16} strokeWidth={2} className='text-blue-400' />
+          <Database size={16} strokeWidth={2} className='text-orange-400' />
           <span>{t('table.totalItems.appointments', { count: count.data })}</span>
         </section>
       )}
