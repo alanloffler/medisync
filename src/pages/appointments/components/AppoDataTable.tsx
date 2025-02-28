@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { ArrowDownUp, FileText, Replace, Trash2 } from 'lucide-react';
+import { ArrowDownUp, Replace, Trash2 } from 'lucide-react';
 // External components:
 // https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
@@ -275,13 +275,10 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
         size: 100,
         header: () => <div className='text-center uppercase'>{t(APPO_CONFIG.table.header[6])}</div>,
         cell: ({ row }) => (
-          <div className='mx-auto flex w-fit flex-row items-center justify-center space-x-2'>
-            <TableButton callback={() => navigate(`/appointments/${row.original._id}`)} className='hover:text-sky-500' tooltip={t('tooltip.details')}>
-              <FileText size={16} strokeWidth={1.5} />
-            </TableButton>
+          <div className='mx-auto flex w-fit flex-row items-center justify-center space-x-0.5'>
             <TableButton
               callback={() => handleChangeProfessionalDialog(row.original)}
-              className='hover:text-lime-600'
+              className='hover:text-sky-500'
               tooltip={t('tooltip.replaceProfessional')}
             >
               <Replace size={16} strokeWidth={1.5} />
@@ -293,7 +290,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
         ),
       },
     ],
-    [i18n, navigate, t],
+    [i18n, t],
   );
 
   // Actions
