@@ -243,6 +243,7 @@
     "serverConnecting": "Conectando con el servidor",
     "session": "Aguarde un momento. Iniciando sesión",
     "updating": "Actualizando",
+    "updatingProfessional": "Actualizando profesional",
     "userDetails": "Cargando información del paciente",
     "users": "Cargando pacientes"
   },
