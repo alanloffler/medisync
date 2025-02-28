@@ -368,8 +368,10 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
                     {row.getVisibleCells().map((cell) => (
                       <TableCell
                         className={`px-0 py-1 ${cell.column.id !== 'actions' && cell.column.id !== 'available' && 'hover:cursor-pointer'}`}
-                        onClick={() => handleRowClick(row, cell)}
                         key={cell.id}
+                        onClick={() => {
+                          if (cell.column.id !== 'actions' && cell.column.id !== 'available') handleRowClick(row, cell);
+                        }}
                         style={{ width: `${cell.column.getSize()}px` }}
                       >
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
