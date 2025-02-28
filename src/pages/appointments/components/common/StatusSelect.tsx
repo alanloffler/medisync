@@ -66,6 +66,7 @@ export function StatusSelect({ appointment, className, mode, showLabel = false }
     onSuccess: (success, vars) => {
       setItemSelected(vars.status);
       addNotification({ type: 'success', message: success.message });
+      appointment.status = itemSelected;
     },
     onError: (error) => {
       addNotification({ type: 'error', message: error?.message });
