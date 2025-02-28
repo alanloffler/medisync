@@ -129,7 +129,6 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
           skipItems: tableManager.pagination.pageIndex * tableManager.pagination.pageSize,
           itemsPerPage: tableManager.pagination.pageSize,
         });
-        console.log('Tab focused again', search, tableManager);
       }
     }
 
