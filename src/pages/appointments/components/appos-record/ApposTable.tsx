@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { Calendar, Clock, FileText, Mail, MailX, MessageCircle, Trash2 } from 'lucide-react';
+import { Calendar, Clock, Mail, MailX, MessageCircle, Trash2 } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Separator } from '@core/components/ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@core/components/ui/table';
@@ -95,14 +95,7 @@ export function ApposTable({
         accessorKey: 'actions',
         size: 90,
         cell: ({ row }) => (
-          <div className='flex items-center justify-center space-x-0.5 md:space-x-2'>
-            <TableButton
-              callback={() => navigate(`/appointments/${row.original._id}`)}
-              tooltip={t('tooltip.details')}
-              className='hover:bg-sky-100/75 hover:text-sky-400'
-            >
-              <FileText size={17} strokeWidth={1.5} />
-            </TableButton>
+          <div className='flex items-center justify-center space-x-0.5'>
             <RemoveDialog
               action={() => AppointmentApiService.remove(row.original._id)}
               callback={handleRefresh}
@@ -171,7 +164,7 @@ export function ApposTable({
         header: () => <div className='text-center'>{t(UV_CONFIG.table.appointments.header[2])}</div>,
       },
     ],
-    [handleRefresh, handleSendAppoByMessage, i18n.language, navigate, t],
+    [handleRefresh, handleSendAppoByMessage, i18n.language, t],
   );
 
   const table = useReactTable<IAppointmentView>({
