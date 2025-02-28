@@ -347,7 +347,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
                   </TableRow>
                 ))}
               </TableHeader>
-              <TableBody>
+              <TableBody className='text-xsm'>
                 {table.getRowModel().rows.map((row) => (
                   <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'} className='hover:bg-slate-50/70'>
                     {row.getVisibleCells().map((cell) => (
