@@ -120,6 +120,28 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
     }
   }, [search, tableManager, fetchData]);
 
+  useEffect(() => {
+    function handleFocus() {
+      if (!document.hidden) {
+        fetchData({
+          search,
+          sorting: tableManager.sorting,
+          skipItems: tableManager.pagination.pageIndex * tableManager.pagination.pageSize,
+          itemsPerPage: tableManager.pagination.pageSize,
+        });
+        console.log('Tab focused again', search, tableManager);
+      }
+    }
+
+    window.addEventListener('focus', handleFocus);
+    window.addEventListener('visibilitychange', handleFocus);
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+      window.removeEventListener('visibilitychange', handleFocus);
+    };
+  }, [fetchData, search, tableManager]);
+
   // Table column visibility
   const isSmallDevice = useMediaQuery('only screen and (max-width : 639px)');
   const isMediumDevice = useMediaQuery('only screen and (max-width : 767px)');
