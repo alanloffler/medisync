@@ -84,7 +84,8 @@ export class AppointmentApiService {
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
-  // CHECKED: used on ApposRecord.tsx
+  // CHECKED:
+  // Used on ApposRecord.tsx and DBCountApposByUser.tsx
   public static async findApposRecordWithFilters(
     userId: string,
     limit?: number,
