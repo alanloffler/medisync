@@ -408,7 +408,7 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
                       titleAbbreviation: UtilsString.upperCase(professionalSelected?.title?.abbreviation),
                       firstName: UtilsString.upperCase(professionalSelected?.firstName, 'each'),
                       lastName: UtilsString.upperCase(professionalSelected?.lastName, 'each'),
-                      identityCard: i18n.format(professionalSelected?.dni, 'number', i18n.resolvedLanguage),
+                      identityCard: i18n.format(professionalSelected?.dni, 'integer', i18n.resolvedLanguage),
                     }}
                     components={{
                       span: <span className='font-semibold' />,
