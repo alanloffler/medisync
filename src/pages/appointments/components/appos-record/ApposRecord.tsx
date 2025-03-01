@@ -39,7 +39,7 @@ export function ApposRecord({ userId }: { userId: string }) {
     isLoading: isLoadingAppos,
     isSuccess: isSuccessAppos,
   } = useQuery<IResponse<IAppointmentView[]>, Error>({
-    queryKey: ['appointments', userId, professional, year, pagination.pageIndex, pagination.pageSize, refresh],
+    queryKey: ['appointments', 'by-user', userId, professional, year, pagination.pageIndex, pagination.pageSize, refresh],
     queryFn: async () =>
       await AppointmentApiService.findApposRecordWithFilters(userId, pagination.pageSize, pagination.pageIndex, professional, year),
   });
