@@ -77,7 +77,7 @@ export function LatestAppos() {
                   </motion.div>
                   <motion.div variants={animation.user} className='flex flex-col text-left'>
                     <p className='font-bold text-dark-default'>{UtilsString.upperCase(`${appo.user.firstName} ${appo.user.lastName}`, 'each')}</p>
-                    <p className='text-xs font-light text-muted-foreground'>{`${t('label.identityCard')} ${i18n.format(appo.user.dni, 'number', i18n.resolvedLanguage)}`}</p>
+                    <p className='text-xs font-light text-muted-foreground'>{`${t('label.identityCard')} ${i18n.format(appo.user.dni, 'integer', i18n.resolvedLanguage)}`}</p>
                   </motion.div>
                 </div>
                 <div className='mr-2 flex w-1/2 flex-row items-center justify-end space-x-3 text-xs'>
