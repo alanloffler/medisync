@@ -11,7 +11,7 @@ interface IProps {
   value?: number;
 }
 // React component
-export function DBCount({ className, text, value }: IProps) {
+export function DBCountApposByUser({ className, text, value }: IProps) {
   const { t } = useTranslation();
 
   return (
