@@ -6,7 +6,7 @@ import { Card, CardContent } from '@core/components/ui/card';
 import { ApposFilters } from '@appointments/components/appos-record/ApposFilters';
 import { ApposTable } from '@appointments/components/appos-record/ApposTable';
 import { CardHeaderSecondary } from '@core/components/common/header/CardHeaderSecondary';
-import { DBCount } from '@core/components/common/DBCount';
+import { DBCountApposByUser } from '@appointments/components/common/DBCountApposByUser';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
@@ -63,7 +63,7 @@ export function ApposRecord({ userId }: { userId: string }) {
           {isErrorAppos && <InfoCard type={'error'} text={errorAppos.message} className='pt-4' />}
           {isSuccessAppos && appointments.data.length > 0 ? (
             <>
-              <DBCount text={'table.totalItems.appointments'} value={appointments.pagination?.totalItems} className='justify-end' />
+              <DBCountApposByUser text={'table.totalItems.appointments'} value={appointments.pagination?.totalItems} className='justify-end' />
               <ApposTable
                 appointments={appointments.data}
                 pagination={pagination}
