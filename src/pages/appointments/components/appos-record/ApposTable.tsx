@@ -1,6 +1,7 @@
 // Icons: https://lucide.dev/icons/
 import { Calendar, Clock, Mail, MailX, MessageCircle, Trash2 } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
+import { Badge } from '@core/components/ui/badge';
 import { Separator } from '@core/components/ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@core/components/ui/table';
 // Components
@@ -21,7 +22,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { Trans, useTranslation } from 'react-i18next';
-import { format } from '@formkit/tempo';
+import { format, isAfter, parse } from '@formkit/tempo';
 import { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 // Imports
@@ -92,10 +93,22 @@ export function ApposTable({
         header: () => <div className='text-left'>{t(UV_CONFIG.table.appointments.header[1])}</div>,
       },
       {
+        accessorKey: 'attendance',
+        size: 80,
+        cell: ({ row }) => (
+          <div className='text-center'>
+            <Badge variant={row.original.status === 'attended' ? 'attended' : row.original.status === 'not_attended' ? 'not_attended' : row.original.status === 'not_status' && isAfter(parse(`${row.original.day}T${row.original.hour}`, 'YYYY-MM-DDTHH:mm'), new Date()) ? 'waiting' : 'not_status'}>
+              {isAfter(parse(`${row.original.day}T${row.original.hour}`, 'YYYY-MM-DDTHH:mm'), new Date()) ? t(`status.waiting`) : t(`status.${row.original.status}`)}
+            </Badge>
+          </div>
+        ),
+        header: () => <div></div>,
+      },
+      {
         accessorKey: 'actions',
         size: 90,
         cell: ({ row }) => (
-          <div className='flex items-center justify-center space-x-0.5'>
+          <div className='flex items-center justify-center space-x-2'>
             <RemoveDialog
               action={() => AppointmentApiService.remove(row.original._id)}
               callback={handleRefresh}
@@ -141,7 +154,7 @@ export function ApposTable({
               tooltip={t('tooltip.delete')}
               triggerButton={<Trash2 size={17} strokeWidth={1.5} />}
             />
-            <div className='px-1'>
+            <div className='px-0.5'>
               <Separator orientation='vertical' className='h-5 w-[1px]' />
             </div>
             <TableButton
