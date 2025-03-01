@@ -61,7 +61,7 @@ export default function ViewUser() {
     isLoading,
     isSuccess,
   } = useQuery<IResponse<IUser>, Error>({
-    queryKey: ['users', 'findOne', id],
+    queryKey: ['users', 'find-one', id],
     queryFn: async () => await UserApiService.findOne(id!),
   });
 
