@@ -21,7 +21,7 @@ export const useHelpStore = create<States & Actions>()(
     }),
     {
       name: 'help',
-      storage: createJSONStorage(() => sessionStorage),
+      storage: createJSONStorage(() => localStorage),
     },
   ),
 );
