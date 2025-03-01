@@ -334,6 +334,12 @@
     "waiting": "Waiting"
   },
   "table": {
+    "attendance": {
+      "attended_one": "{{count}} attended",
+      "attended_other": "{{count}} attended",
+      "notAttended_one": "{{count}} not attended",
+      "notAttended_other": "{{count}} not attended"
+    },
     "header": {
       "actions": "Actions",
       "area": "Area",
@@ -352,8 +358,8 @@
       "yesterday": "than yesterday"
     },
     "totalItems": {
-      "appointments_one": "{{count}} appointment in total",
-      "appointments_other": "{{count}} appointments in total",
+      "appointments_one": "{{count}} appointment",
+      "appointments_other": "{{count}} appointments",
       "professionals_one": "{{count}} professional",
       "professionals_other": "{{count}} professionals",
       "users_one": "{{count}} patient",

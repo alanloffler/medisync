@@ -334,6 +334,12 @@
     "waiting": "Aguardando"
   },
   "table": {
+    "attendance": {
+      "attended_one": "{{count}} asistido",
+      "attended_other": "{{count}} asistidos",
+      "notAttended_one": "{{count}} no asistido",
+      "notAttended_other": "{{count}} no asistidos"
+    },
     "header": {
       "actions": "Acciones",
       "area": "Area",
@@ -352,8 +358,8 @@
       "yesterday": "que ayer"
     },
     "totalItems": {
-      "appointments_one": "{{count}} turno en total",
-      "appointments_other": "{{count}} turnos en total",
+      "appointments_one": "{{count}} turno",
+      "appointments_other": "{{count}} turnos",
       "professionals_one": "{{count}} profesional",
       "professionals_other": "{{count}} profesionales",
       "users_one": "{{count}} paciente",
