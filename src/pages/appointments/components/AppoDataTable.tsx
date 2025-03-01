@@ -239,7 +239,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
           </div>
         ),
         cell: ({ row }) => (
-          <div className='text-left text-muted-foreground'>{i18n.format(row.original.user.dni, 'number', i18n.resolvedLanguage)}</div>
+          <div className='text-left text-muted-foreground'>{i18n.format(row.original.user.dni, 'integer', i18n.resolvedLanguage)}</div>
         ),
       },
       {
