@@ -63,7 +63,7 @@ export function ApposRecord({ userId }: { userId: string }) {
           {isErrorAppos && <InfoCard type={'error'} text={errorAppos.message} className='pt-4' />}
           {isSuccessAppos && appointments.data.length > 0 ? (
             <>
-              <DBCountApposByUser text={'table.totalItems.appointments'} value={appointments.pagination?.totalItems} className='justify-end' />
+              <DBCountApposByUser stats={appointments.stats} className='justify-center md:justify-end' />
               <ApposTable
                 appointments={appointments.data}
                 pagination={pagination}
