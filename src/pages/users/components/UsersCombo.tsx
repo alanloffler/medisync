@@ -100,7 +100,7 @@ export function UsersCombo({
       className='w-full space-x-2 rounded-sm px-1.5 py-0.5 text-left hover:bg-slate-100 hover:transition-all'
     >
       <span>{UtilsString.upperCase(`${user.firstName} ${user.lastName}`, 'each')}</span>
-      <span className='italic text-slate-500'>{`${t('label.identityCard')} ${i18n.format(user.dni, 'number', i18n.resolvedLanguage)}`}</span>
+      <span className='italic text-slate-500'>{`${t('label.identityCard')} ${i18n.format(user.dni, 'integer', i18n.resolvedLanguage)}`}</span>
     </button>
   ));
 
