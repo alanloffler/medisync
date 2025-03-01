@@ -95,7 +95,7 @@ export default function ViewUser() {
             values={{
               firstName: UtilsString.upperCase(user?.data.firstName, 'each'),
               lastName: UtilsString.upperCase(user?.data.lastName, 'each'),
-              identityCard: i18n.format(user?.data.dni, 'number', i18n.resolvedLanguage),
+              identityCard: i18n.format(user?.data.dni, 'integer', i18n.resolvedLanguage),
             }}
             components={{
               span: <span className='font-semibold' />,
@@ -170,7 +170,7 @@ export default function ViewUser() {
                 <CardHeaderPrimary className='justify-center' title={UtilsString.upperCase(`${user.data.firstName} ${user.data.lastName}`, 'each')} />
                 <CardContent className='mt-6 space-y-3 overflow-auto'>
                   <ElementInfo
-                    content={i18n.format(user.data.dni, 'number', i18n.resolvedLanguage)}
+                    content={i18n.format(user.data.dni, 'integer', i18n.resolvedLanguage)}
                     icon={<CreditCard size={17} strokeWidth={2} />}
                     title={t('label.identityCardFull')}
                   />
