@@ -206,7 +206,7 @@ export const DailySchedule = memo(({ handleDialog, professional, refreshAppos, s
                         </span>
                         <div className='hidden items-center space-x-2 text-muted-foreground lg:flex'>
                           <IdCard size={18} strokeWidth={1.5} />
-                          <span>{i18n.format(slot.appointment.user.dni, 'number', i18n.resolvedLanguage)}</span>
+                          <span>{i18n.format(slot.appointment.user.dni, 'integer', i18n.resolvedLanguage)}</span>
                         </div>
                       </button>
                       <div className=''>
