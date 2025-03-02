@@ -338,7 +338,9 @@
       "attended_one": "{{count}} asistido",
       "attended_other": "{{count}} asistidos",
       "notAttended_one": "{{count}} no asistido",
-      "notAttended_other": "{{count}} no asistidos"
+      "notAttended_other": "{{count}} no asistidos",
+      "notStatus": "{{count}} sin estado",
+      "waiting": "{{count}} aguardando"
     },
     "header": {
       "actions": "Acciones",
