@@ -51,7 +51,7 @@ export function ApposRecord({ userId }: { userId: string }) {
 
   useEffect(() => {
     setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-  }, [professional]);
+  }, [professional, year]);
 
   return (
     <main>
