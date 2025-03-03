@@ -10,7 +10,9 @@ const infoCardVariants = cva('flex flex-row items-center justify-center space-x-
   variants: {
     variant: {
       default: 'font-normal text-sm',
-      warning: 'bg-amber-100 !p-3 text-sm w-fit rounded-lg !text-amber-600',
+      error: 'bg-rose-100 !p-3 !pr-3.5 !pr-3.5 text-sm w-fit rounded-lg !text-rose-600',
+      success: 'bg-emerald-100 !p-3 !pr-3.5 text-sm w-fit rounded-lg !text-emerald-600',
+      warning: 'bg-amber-100 !p-3 !pr-3.5 text-sm w-fit rounded-lg !text-amber-600',
     },
     size: {
       default: 'p-0',
@@ -23,16 +25,18 @@ const infoCardVariants = cva('flex flex-row items-center justify-center space-x-
 });
 // React component
 export function InfoCard({ className, iconSize, size, text, type, variant }: IInfoCard) {
-  const strokeColor: string = type === 'error' ? 'stroke-rose-400' : type === 'success' ? 'stroke-green-400' : 'stroke-yellow-400';
+  // const strokeColor: string = type === 'error' ? 'stroke-rose-400' : type === 'success' ? 'stroke-green-400' : 'stroke-yellow-400';
   const defaultIconSize: number = 20;
 
   return (
     <div className={cn(infoCardVariants({ className, size, variant }))}>
       <div className='flex h-full flex-col justify-center'>
-        {type === 'error' && <CircleX className={strokeColor} size={iconSize ?? defaultIconSize} strokeWidth={2} />}
-        {type === 'success' && <CircleCheck className={strokeColor} size={iconSize ?? defaultIconSize} strokeWidth={2} />}
+        {/* {type === 'error' && <CircleX className={strokeColor} size={iconSize ?? defaultIconSize} strokeWidth={2} />} */}
+        {type === 'error' || (variant === 'error' && <CircleX size={iconSize ?? defaultIconSize} strokeWidth={2} />)}
+        {/* {type === 'success' && <CircleCheck className={strokeColor} size={iconSize ?? defaultIconSize} strokeWidth={2} />} */}
+        {type === 'success' || (variant === 'success' && <CircleCheck size={iconSize ?? defaultIconSize} strokeWidth={2} />)}
         {/* {type === 'warning' && <CircleAlert className={strokeColor} size={iconSize ?? defaultIconSize} strokeWidth={2} />} */}
-        {type === 'warning' && <CircleAlert size={iconSize ?? defaultIconSize} strokeWidth={2} />}
+        {type === 'warning' || (variant === 'warning' && <CircleAlert size={iconSize ?? defaultIconSize} strokeWidth={2} />)}
       </div>
       <div className='flex flex-col'>
         {/* <span className={type === 'error' ? 'text-red-400' : 'text-foreground'}>{text}</span> */}
