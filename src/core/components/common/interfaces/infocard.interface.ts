@@ -4,5 +4,5 @@ export interface IInfoCard {
   size?: 'default';
   text?: string;
   type?: 'error' | 'success' | 'warning';
-  variant?: 'default' | 'warning';
+  variant?: 'default' | 'error' | 'success' | 'warning';
 }
