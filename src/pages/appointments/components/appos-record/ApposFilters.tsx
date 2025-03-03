@@ -31,8 +31,8 @@ export function ApposFilters({ userId, disabled }: { userId: string; disabled: b
   const [years, setYears] = useState<string[]>([]);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const isSmallDevice = useMediaQuery('only screen and (max-width : 639px)');
-  const { i18n, t } = useTranslation();
   const { professional, year, setFilters, clearFilters } = useApposFilters();
+  const { t } = useTranslation();
 
   useEffect(() => {
     setLoadingProfessionals(true);
@@ -47,7 +47,7 @@ export function ApposFilters({ userId, disabled }: { userId: string; disabled: b
         }
         if (response instanceof Error) {
           setProfessionalError(true);
-          addNotification({ type: 'error', message: i18n.t('error.internalServer') });
+          addNotification({ type: 'error', message: t('error.internalServer') });
         }
       })
       .finally(() => setLoadingProfessionals(false));
@@ -62,7 +62,7 @@ export function ApposFilters({ userId, disabled }: { userId: string; disabled: b
         }
         if (response instanceof Error) {
           setYearError(true);
-          addNotification({ type: 'error', message: i18n.t('error.internalServer') });
+          addNotification({ type: 'error', message: t('error.internalServer') });
         }
       })
       .finally(() => setLoadingYears(false));
@@ -82,7 +82,7 @@ export function ApposFilters({ userId, disabled }: { userId: string; disabled: b
   return (
     <main className='flex w-full items-center justify-between rounded-md bg-slate-100 p-2'>
       <section className='flex items-center justify-start space-x-4'>
-        <section className='flex items-center pl-1.5 space-x-2'>
+        <section className='flex items-center space-x-2 pl-1.5'>
           <Filter size={17} strokeWidth={1.5} />
           {!isSmallDevice && <div className='text-xsm font-medium'>{t('search.filter.appointments')}</div>}
         </section>
