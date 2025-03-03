@@ -61,7 +61,7 @@ export function ApposRecord({ userId }: { userId: string }) {
           <ApposFilters userId={userId} disabled={disabledFilters} />
           {isLoadingAppos && <LoadingDB variant='default' text={t('loading.appointments')} className='mt-4' />}
           {isErrorAppos && <InfoCard type={'error'} text={errorAppos.message} className='pt-4' />}
-          {isSuccessAppos && appointments.data.length > 0 ? (
+          {isSuccessAppos && appointments.data?.length > 0 ? (
             <>
               <DBCountApposByUser stats={appointments.stats} className='justify-center md:justify-end' />
               <ApposTable
@@ -73,7 +73,8 @@ export function ApposRecord({ userId }: { userId: string }) {
               />
             </>
           ) : (
-            !isLoadingAppos && !isErrorAppos && <InfoCard type='warning' text={appointments?.message} className='mt-4' />
+            !isLoadingAppos &&
+            !isErrorAppos && <InfoCard className='mt-3 mx-auto' text={appointments?.message} type='warning' variant='warning' />
           )}
         </CardContent>
       </Card>
