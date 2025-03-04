@@ -80,7 +80,7 @@ export function ApposFilters({ userId, disabled }: { userId: string; disabled: b
   }
 
   return (
-    <main className='flex w-full items-center justify-between rounded-md bg-slate-100 p-2'>
+    <main className='flex w-full items-center justify-between rounded-md bg-slate-100 p-2 md:justify-normal md:space-x-4'>
       <section className='flex items-center justify-start space-x-4'>
         <section className='flex items-center space-x-2 pl-1.5'>
           <Filter size={17} strokeWidth={1.5} />
