@@ -370,7 +370,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
 
   // Render
   if (isError) {
-    return <InfoCard type='error' text={t(error.message)} className='mt-6' />;
+    return <InfoCard className='mx-auto mt-6' text={t(error.message)} variant='error' />;
   }
 
   if (isLoading) {
@@ -422,7 +422,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
           />
         </>
       ) : (
-        <InfoCard type='warning' text={response?.message} />
+        <InfoCard className='mx-auto mt-6' text={response?.message} variant='warning' />
       )}
       {/* Section: Change professional */}
       <Dialog open={openProfessionalDialog} onOpenChange={setOpenProfessionalDialog}>
@@ -464,30 +464,34 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
               service='replace'
             />
             {professionalSelected && (
-              <section className='rounded-lg bg-amber-100 p-3 text-sm text-amber-600'>
-                {professionalIsLoading && <LoadingDB text={t('loading.professional')} className='text-current [&_svg]:fill-current' />}
-                {professionalIsError && <InfoCard type='error' text={professionalError.message} />}
-                {professionalIsSuccess && (
-                  <Trans
-                    components={{ span: <span className='font-semibold italic' /> }}
-                    i18nKey='dialog.changeProfessional.content'
-                    parent={'div'}
-                    values={{
-                      professional: UtilsString.upperCase(
-                        `${appointmentSelected.professional?.title.abbreviation} ${appointmentSelected.professional?.lastName}, ${appointmentSelected.professional?.firstName}`,
-                        'each',
-                      ),
-                      newProfessional: UtilsString.upperCase(
-                        `${professional?.data.title.abbreviation} ${professional?.data.lastName}, ${professional?.data.firstName}`,
-                        'each',
-                      ),
-                    }}
-                  />
+              <>
+                {professionalIsError && <InfoCard className='mx-auto' text={professionalError.message} variant='error' />}
+                {!professionalIsError && (
+                  <section className='rounded-lg bg-amber-100 p-3 text-sm text-amber-600'>
+                    {professionalIsLoading && <LoadingDB text={t('loading.professional')} className='text-current [&_svg]:fill-current' />}
+                    {professionalIsSuccess && (
+                      <Trans
+                        components={{ span: <span className='font-semibold italic' /> }}
+                        i18nKey='dialog.changeProfessional.content'
+                        parent={'div'}
+                        values={{
+                          professional: UtilsString.upperCase(
+                            `${appointmentSelected.professional?.title.abbreviation} ${appointmentSelected.professional?.lastName}, ${appointmentSelected.professional?.firstName}`,
+                            'each',
+                          ),
+                          newProfessional: UtilsString.upperCase(
+                            `${professional?.data.title.abbreviation} ${professional?.data.lastName}, ${professional?.data.firstName}`,
+                            'each',
+                          ),
+                        }}
+                      />
+                    )}
+                  </section>
                 )}
-              </section>
+              </>
             )}
           </section>
-          {changeProfessionalIsError && <InfoCard className='!m-0' type='error' text={changeProfessionalError.message} />}
+          {changeProfessionalIsError && <InfoCard className='mx-auto my-0' text={changeProfessionalError.message} variant='error' />}
           {professionalSelected && (
             <DialogFooter className='grid grid-cols-1 gap-2 md:flex md:justify-end md:gap-4'>
               <Button className='order-2 md:order-1' size='sm' variant='ghost' onClick={() => setOpenProfessionalDialog(false)}>
