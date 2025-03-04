@@ -60,7 +60,7 @@ export function ApposRecord({ userId }: { userId: string }) {
         <CardContent className='flex flex-col gap-3'>
           <ApposFilters userId={userId} disabled={disabledFilters} />
           {isLoadingAppos && <LoadingDB variant='default' text={t('loading.appointments')} className='mt-4' />}
-          {isErrorAppos && <InfoCard className='mx-auto mt-3' size='xsm' text={errorAppos.message} variant='error' />}
+          {isErrorAppos && <InfoCard className='mt-3' size='xsm' text={errorAppos.message} variant='error' />}
           {isSuccessAppos && appointments.data?.length > 0 ? (
             <>
               <DBCountApposByUser stats={appointments.stats} className='justify-center md:justify-end' />
@@ -73,7 +73,7 @@ export function ApposRecord({ userId }: { userId: string }) {
               />
             </>
           ) : (
-            !isLoadingAppos && !isErrorAppos && <InfoCard className='mx-auto mt-3' size='xsm' text={appointments?.message} variant='warning' />
+            !isLoadingAppos && !isErrorAppos && <InfoCard className='mt-3' size='xsm' text={appointments?.message} variant='warning' />
           )}
         </CardContent>
       </Card>
