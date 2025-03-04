@@ -152,7 +152,7 @@ export default function ViewUser() {
           <BackButton label={t('button.back')} />
         </header>
         {isLoading && <LoadingDB size='md' text={t('loading.userDetails')} variant='card' />}
-        {isError && <InfoCard className='mx-auto' text={error.message} variant='error' />}
+        {isError && <InfoCard text={error.message} variant='error' />}
         {isSuccess && (
           <section className='grid w-full gap-4 md:grid-cols-5 md:gap-8 lg:grid-cols-5 lg:gap-8 xl:grid-cols-6 xl:gap-8'>
             <section className='col-span-1 mx-auto h-fit w-full md:col-span-3 lg:col-span-2 xl:col-span-2'>
