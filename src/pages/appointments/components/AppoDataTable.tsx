@@ -370,7 +370,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
 
   // Render
   if (isError) {
-    return <InfoCard className='mx-auto mt-6' text={t(error.message)} variant='error' />;
+    return <InfoCard className='mt-6' text={t(error.message)} variant='error' />;
   }
 
   if (isLoading) {
@@ -422,7 +422,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
           />
         </>
       ) : (
-        <InfoCard className='mx-auto mt-6' text={response?.message} variant='warning' />
+        <InfoCard className='mt-6' text={response?.message} variant='warning' />
       )}
       {/* Section: Change professional */}
       <Dialog open={openProfessionalDialog} onOpenChange={setOpenProfessionalDialog}>
@@ -465,7 +465,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
             />
             {professionalSelected && (
               <>
-                {professionalIsError && <InfoCard className='mx-auto' text={professionalError.message} variant='error' />}
+                {professionalIsError && <InfoCard text={professionalError.message} variant='error' />}
                 {!professionalIsError && (
                   <section className='rounded-lg bg-amber-100 p-3 text-sm text-amber-600'>
                     {professionalIsLoading && <LoadingDB text={t('loading.professional')} className='text-current [&_svg]:fill-current' />}
@@ -491,7 +491,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
               </>
             )}
           </section>
-          {changeProfessionalIsError && <InfoCard className='mx-auto my-0' text={changeProfessionalError.message} variant='error' />}
+          {changeProfessionalIsError && <InfoCard className='my-0' text={changeProfessionalError.message} variant='error' />}
           {professionalSelected && (
             <DialogFooter className='grid grid-cols-1 gap-2 md:flex md:justify-end md:gap-4'>
               <Button className='order-2 md:order-1' size='sm' variant='ghost' onClick={() => setOpenProfessionalDialog(false)}>
