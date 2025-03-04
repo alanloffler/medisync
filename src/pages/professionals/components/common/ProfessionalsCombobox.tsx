@@ -11,7 +11,6 @@ import { LoadingText } from '@core/components/common/LoadingText';
 import { SetStateAction, useCallback, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 // Imports
-import type { IInfoCard } from '@core/components/common/interfaces/infocard.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
@@ -32,7 +31,6 @@ interface IProfessionalsCombobox {
 }
 // React component
 export function ProfessionalsCombobox({ className, onSelectProfessional, options }: IProfessionalsCombobox) {
-  const [infoCard, setInfoCard] = useState<IInfoCard>({} as IInfoCard);
   const [openCombobox, setOpenCombobox] = useState<boolean>(false);
   const [value, setValue] = useState<string | undefined>(undefined);
   const addNotification = useNotificationsStore((state) => state.addNotification);
@@ -50,9 +48,8 @@ export function ProfessionalsCombobox({ className, onSelectProfessional, options
   });
 
   useEffect(() => {
-    setInfoCard({ type: 'error', text: error?.message });
-    if (error?.message !== undefined) addNotification({ type: 'error', message: error?.message });
-  }, [error?.message, addNotification]);
+    if (isError) addNotification({ type: 'error', message: error?.message });
+  }, [addNotification, error?.message, isError]);
 
   const handleSelectProfessional = useCallback(
     (currentValue: SetStateAction<string | undefined>, professional: IProfessional): void => {
@@ -87,15 +84,19 @@ export function ProfessionalsCombobox({ className, onSelectProfessional, options
           <ChevronsUpDown size={14} strokeWidth={2} className='ml-3 shrink-0 text-primary opacity-100' />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className='mt-2 w-full border p-0 shadow-sm' align='start'>
+      <PopoverContent className='mt-1 w-full border p-0 shadow-sm' align='start'>
         <Command>
           {!isError && <CommandInput placeholder={searchText} className='h-8 text-xsm' />}
           <CommandList>
-            {!isError && <CommandEmpty>{notFoundText}</CommandEmpty>}
+            {!isError && (
+              <CommandEmpty className='py-2'>
+                <InfoCard text={notFoundText} type='flat' variant='warning' />
+              </CommandEmpty>
+            )}
             <CommandGroup>
               {isError ? (
                 <div className='relative left-0 max-w-[300px]'>
-                  <InfoCard type={infoCard.type} text={infoCard.text} />
+                  <InfoCard className='p-2 pr-2.5' text={error.message} type='flat' variant='error' />
                 </div>
               ) : (
                 <>
