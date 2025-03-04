@@ -6,7 +6,7 @@ import { cva } from 'class-variance-authority';
 import type { IInfoCard } from '@core/components/common/interfaces/infocard.interface';
 import { cn } from '@lib/utils';
 // Variants
-const infoCardVariants = cva('flex flex-row items-center justify-center space-x-2 font-normal', {
+const infoCardVariants = cva('flex flex-row items-center mx-auto justify-center space-x-2 font-normal', {
   variants: {
     variant: {
       default: 'w-fit',
