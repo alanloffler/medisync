@@ -151,20 +151,10 @@ export default function ViewUser() {
           <PageHeader title={t('pageTitle.viewUser')} breadcrumb={UV_CONFIG.breadcrumb} />
           <BackButton label={t('button.back')} />
         </header>
-        <section className='grid w-full gap-4 md:grid-cols-5 md:gap-8 lg:grid-cols-5 lg:gap-8 xl:grid-cols-6 xl:gap-8'>
-          {isLoading && (
-            <LoadingDB
-              text={t('loading.userDetails')}
-              variant='card'
-              className='col-span-1 mx-auto h-fit w-full py-3 md:col-span-2 lg:col-span-2 xl:col-span-2'
-            />
-          )}
-          {isError && (
-            <Card className='col-span-1 mx-auto h-fit w-full py-3 md:col-span-2 lg:col-span-2 xl:col-span-2'>
-              <InfoCard type='error' text={error.message} />
-            </Card>
-          )}
-          {isSuccess && (
+        {isLoading && <LoadingDB size='md' text={t('loading.userDetails')} variant='card' />}
+        {isError && <InfoCard className='mx-auto' text={error.message} variant='error' />}
+        {isSuccess && (
+          <section className='grid w-full gap-4 md:grid-cols-5 md:gap-8 lg:grid-cols-5 lg:gap-8 xl:grid-cols-6 xl:gap-8'>
             <section className='col-span-1 mx-auto h-fit w-full md:col-span-3 lg:col-span-2 xl:col-span-2'>
               <Card>
                 <CardHeaderPrimary className='justify-center' title={UtilsString.upperCase(`${user.data.firstName} ${user.data.lastName}`, 'each')} />
@@ -246,13 +236,11 @@ export default function ViewUser() {
               </Card>
               {/* <MessageStatus className='mt-3 py-1' /> */}
             </section>
-          )}
-          {isSuccess && (
             <section className='col-span-1 overflow-y-auto md:col-span-5 lg:col-span-3 xl:col-span-4'>
               <ApposRecord userId={user.data._id} />
             </section>
-          )}
-        </section>
+          </section>
+        )}
         <footer className='mx-auto'>
           <Button
             className='flex items-center gap-3'
