@@ -269,7 +269,7 @@ export class AppoSchedule {
 //         {isLoading ? (
 //           <LoadingDB size='box' iconSize={32} empty className='relative top-1/2 -translate-y-1/2 p-6 py-6' />
 //         ) : error ? (
-//           <InfoCard text={error.message} type='error' className='relative top-1/2 -translate-y-1/2 p-6 text-xsm font-light text-dark-default' />
+//           <InfoCard size='xsm' text={error.message} variant='error' className='relative top-1/2 -translate-y-1/2 p-6 text-xsm font-light text-dark-default' />
 //         ) : (
 //           <>
 //             <section className='flex flex-row items-center justify-between p-4 pb-2'>
