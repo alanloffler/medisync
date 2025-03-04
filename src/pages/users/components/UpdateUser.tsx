@@ -137,8 +137,8 @@ export default function UpdateUser() {
         <Card className='w-full md:grid-cols-2'>
           <CardHeaderPrimary title={t('cardTitle.updateUser')} icon={<FilePen size={18} strokeWidth={2} />} />
           <CardContent className='pt-6'>
-            {isError && <InfoCard type='error' text={error?.message} className='mx-auto mt-3' />}
-            {isLoading && <LoadingDB text={t('loading.userDetails')} className='mt-3' />}
+            {isError && <InfoCard text={error?.message} variant='error' />}
+            {isLoading && <LoadingDB text={t('loading.userDetails')} />}
             {isSuccess && (
               <Form {...updateForm}>
                 <form onSubmit={updateForm.handleSubmit(handleUpdateUser)} className='space-y-4'>
