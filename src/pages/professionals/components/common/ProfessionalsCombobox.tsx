@@ -84,20 +84,18 @@ export function ProfessionalsCombobox({ className, onSelectProfessional, options
           <ChevronsUpDown size={14} strokeWidth={2} className='ml-3 shrink-0' />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className='mt-1 w-full border p-0 shadow-sm' align='start'>
-        <Command>
-          {!isError && <CommandInput placeholder={searchText} className='h-8 text-xsm' />}
+      <PopoverContent className='mt-1 w-full p-0 !shadow-md' align='start'>
+        <Command className='bg-slate-50/90'>
+          {!isError && <CommandInput placeholder={searchText} />}
           <CommandList>
             {!isError && (
-              <CommandEmpty className='py-2'>
+              <CommandEmpty className='pb-2'>
                 <InfoCard text={notFoundText} type='flat' variant='warning' />
               </CommandEmpty>
             )}
             <CommandGroup>
               {isError ? (
-                <div className='relative left-0 max-w-[300px]'>
-                  <InfoCard className='p-2 pr-2.5' text={error.message} type='flat' variant='error' />
-                </div>
+                <InfoCard className='p-2 pr-2.5' text={error.message} type='flat' variant='error' />
               ) : (
                 <>
                   {professionals?.data &&
