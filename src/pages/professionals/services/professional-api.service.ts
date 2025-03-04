@@ -1,4 +1,3 @@
-import i18next from 'i18next';
 import type { IProfessional, IProfessionalForm } from '@professionals/interfaces/professional.interface';
 import type { IProfessionalSearch } from '@professionals/interfaces/professional-search.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
@@ -83,9 +82,13 @@ export class ProfessionalApiService {
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
+  // CHECKED:
+  // Used on ProfessionalsCombobox.tsx
   public static async findAllActive(): Promise<IResponse<IProfessional[]>> {
-    const url: string = `${this.API_URL}/professionals/active`;
-    return await this.fetch(url, EMethods.GET);
+    const path: string = `${this.API_URL}/professionals/active`;
+    const url: URL = new URL(path);
+
+    return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
   // CHECKED:
@@ -97,28 +100,6 @@ export class ProfessionalApiService {
     url.searchParams.append('hour', hour);
 
     return await UtilsUrl.fetch(url, EMethods.GET);
-  }
-
-  private static async fetch(url: string, method: EMethods, body?: any): Promise<IResponse<any>> {
-    try {
-      const query: Response = await fetch(url, {
-        method: method,
-        headers: {
-          'content-type': 'application/json;charset=UTF-8',
-        },
-        body: JSON.stringify(body),
-      });
-
-      const response: IResponse<any> = await query.json();
-      if (!query.ok) throw new Error(response.message);
-
-      return response;
-    } catch (error) {
-      if (error instanceof TypeError) {
-        throw new Error(i18next.t('error.internalServer'));
-      }
-      throw error;
-    }
   }
 
   // CHECKED: used on ProfessionalsDataTable.tsx
