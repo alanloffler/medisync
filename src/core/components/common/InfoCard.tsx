@@ -9,7 +9,7 @@ import { cn } from '@lib/utils';
 const infoCardVariants = cva('flex flex-row items-center justify-center space-x-2 font-normal', {
   variants: {
     variant: {
-      default: 'w-fit p-0',
+      default: 'w-fit',
       error: 'w-fit rounded-lg bg-rose-100 p-3 pr-3.5 text-rose-500 [&_svg]:text-rose-500',
       success: 'w-fit rounded-lg bg-emerald-100 p-3 pr-3.5 text-emerald-500 [&_svg]:text-emerald-500',
       warning: 'w-fit rounded-lg bg-amber-100 p-3 pr-3.5 text-amber-500 [&_svg]:text-amber-500',
