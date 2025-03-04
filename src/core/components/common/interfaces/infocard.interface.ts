@@ -1,8 +1,8 @@
 export interface IInfoCard {
   className?: string;
   iconSize?: number;
-  size?: 'default';
+  size?: 'default' | 'sm' | 'xsm' | 'xs';
   text?: string;
-  type?: 'error' | 'success' | 'warning';
+  type?: 'flat';
   variant?: 'default' | 'error' | 'success' | 'warning';
 }
