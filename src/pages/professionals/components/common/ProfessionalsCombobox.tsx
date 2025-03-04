@@ -78,10 +78,10 @@ export function ProfessionalsCombobox({ className, onSelectProfessional, options
         <Button
           role='combobox'
           aria-expanded={openCombobox}
-          className={cn('h-9 w-full justify-between !bg-slate-100/70 px-3 !text-sm font-normal text-foreground hover:!bg-slate-100', className)}
+          className={cn('h-9 w-full justify-between bg-input px-3 !text-xsm font-normal text-foreground hover:bg-input-hover', className)}
         >
           {isLoading ? <LoadingText text={loadingText} suffix='...' /> : value ? UtilsString.upperCase(value, 'each') : placeholder}
-          <ChevronsUpDown size={14} strokeWidth={2} className='ml-3 shrink-0 text-primary opacity-100' />
+          <ChevronsUpDown size={14} strokeWidth={2} className='ml-3 shrink-0' />
         </Button>
       </PopoverTrigger>
       <PopoverContent className='mt-1 w-full border p-0 shadow-sm' align='start'>
