@@ -200,13 +200,7 @@ export default function ViewAppointment() {
         <BackButton label={t('button.back')} />
       </section>
       {isLoading && <LoadingDB variant='card' text={t('loading.appointmentDetails')} absolute />}
-      {isError && (
-        <InfoCard
-          type='error'
-          text={error.message}
-          className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white px-3 py-2 shadow-sm'
-        />
-      )}
+      {isError && <InfoCard className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 shadow-sm' text={error.message} variant='error' />}
       {isSuccess && (
         <>
           <div ref={pdfRef} className='mt-6 py-4'>
@@ -278,14 +272,11 @@ export default function ViewAppointment() {
                   {pdfIsGenerating && (
                     <LoadingDB iconSize={17} variant='default' text={t('loading.generatingPDF')} className='!p-0 !text-xsm text-foreground' />
                   )}
-                  {isSendingEmail && (
-                    <LoadingDB iconSize={17} variant='default' text={t('loading.sendingEmail')} className='!p-0 !text-xsm text-foreground' />
-                  )}
-                  {isSendingEmailError && (
-                    <InfoCard type='error' text={t(emailError.message)} iconSize={17} className='!p-0 !text-xsm text-foreground' />
-                  )}
+                  {/* {isSendingEmail && ( */}
+                  {false && <LoadingDB iconSize={17} variant='default' text={t('loading.sendingEmail')} className='!p-0 !text-xsm text-foreground' />}
+                  {isSendingEmailError && <InfoCard text={t(emailError.message)} type='flat' variant='error' />}
                   {isSendingEmailSuccess && !isSendingEmailError && !pdfIsGenerating && !isSendingEmail && (
-                    <InfoCard type='success' text={emailResponse.message} iconSize={17} className='!p-0 !text-xsm text-foreground' />
+                    <InfoCard text={emailResponse.message} type='flat' variant='success' />
                   )}
                 </Card>
               )}
@@ -294,11 +285,9 @@ export default function ViewAppointment() {
                   {isSendingWhatsapp && (
                     <LoadingDB iconSize={17} variant='default' text={t('loading.sendingPhoneMessage')} className='!p-0 !text-xsm text-foreground' />
                   )}
-                  {isSendingWhatsappError && (
-                    <InfoCard type='error' text={t(whatsappError.message)} iconSize={17} className='!p-0 !text-xsm text-foreground' />
-                  )}
+                  {isSendingWhatsappError && <InfoCard text={t(whatsappError.message)} type='flat' variant='error' />}
                   {isSendingWhatsappSuccess && !isSendingWhatsappError && !isSendingWhatsapp && (
-                    <InfoCard type='success' text={whatsappResponse.message} iconSize={17} className='!p-0 !text-xsm text-foreground' />
+                    <InfoCard text={whatsappResponse.message} type='flat' variant='success' />
                   )}
                 </Card>
               )}
