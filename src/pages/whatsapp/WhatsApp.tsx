@@ -232,7 +232,7 @@ export default function WhatsApp(): JSX.Element {
             <CardContent className='space-y-4 pt-6'>
               {serverError && (
                 <div className='flex flex-col items-center space-y-6'>
-                  <InfoCard type='error' text={t('error.serverConnection')} className='w-full justify-start p-0 text-xsm' />
+                  <InfoCard className='w-full justify-start' text={t('error.serverConnection')} type='flat' variant='error' />
                   <Button variant='secondary' size='sm' className='text-xsm'>
                     {t('button.technicalService')}
                   </Button>
@@ -288,130 +288,129 @@ export default function WhatsApp(): JSX.Element {
               {isLoading ? (
                 <LoadingDB text={t(type === 'user' ? 'loading.userDetails' : 'loading.professionalDetails')} />
               ) : isSuccessMessage ? (
-                <InfoCard type='success' text={t('whatsapp.status.messageSent')} />
+                <InfoCard className='mt-1' text={t('whatsapp.status.messageSent')} variant='success' />
               ) : serverError ? (
-                <InfoCard type='error' text={t('error.serverConnection')} className='w-full justify-start p-0 text-xsm' />
+                <InfoCard className='mt-1' text={t('error.serverConnection')} variant='error' />
               ) : (
-                <>
-                  <section className='text-sm'>
-                    {type === 'user' && (
-                      <Trans
-                        i18nKey='cardContent.phoneMessage.user'
-                        values={{
-                          patient: UtilsString.upperCase(`${user?.data.firstName} ${user?.data.lastName}`, 'each'),
-                        }}
-                        components={{
-                          span: <span className='font-semibold' />,
-                        }}
-                      />
-                    )}
-                    {type === 'professional' && (
-                      <Trans
-                        i18nKey='cardContent.phoneMessage.professional'
-                        values={{
-                          professional: UtilsString.upperCase(`${user?.data.firstName} ${user?.data.lastName}`, 'each'),
-                        }}
-                        components={{
-                          span: <span className='font-semibold' />,
-                        }}
-                      />
-                    )}
-                  </section>
-                  {/* Section: Form */}
-                  <Form {...whatsappForm}>
-                    <form onSubmit={whatsappForm.handleSubmit(handleSendMessage)} className='mt-6 flex flex-col gap-4'>
-                      <section className='flex items-center space-x-3'>
-                        <FormLabel>{t('label.from')}</FormLabel>
-                        <div className='flex items-center space-x-2 rounded-full bg-fuchsia-200 px-2 py-1 text-xsm font-light text-fuchsia-700'>
-                          <Smartphone size={15} strokeWidth={2} className='stroke-fuchsia-700' />
-                          {/* TODO: must be dynamic, take name from logged administrator */}
-                          <span>Admin</span>
-                        </div>
-                        {whatsappConnected ? (
-                          <span className='text-xs font-light text-muted-foreground'>{`(+${whatsappNumber?.slice(0, -10)}) ${whatsappNumber && delimiter(whatsappNumber?.slice(-10), '-', 6)}`}</span>
-                        ) : (
-                          <span className='text-xs text-rose-400'>{t('error.notWhatsappSession')}</span>
-                        )}
-                      </section>
-                      <FormField
-                        control={whatsappForm.control}
-                        name='phone'
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormControl>
-                              <section className='flex items-center space-x-3'>
-                                <FormLabel>{t('label.to')}</FormLabel>
-                                <div className='flex items-center space-x-2 rounded-full bg-fuchsia-200 px-2 py-1 text-xsm font-light text-fuchsia-700'>
-                                  <Smartphone size={15} strokeWidth={2} className='stroke-fuchsia-700' />
-                                  <span>
-                                    {UtilsString.upperCase(user?.data.firstName, 'each')} {UtilsString.upperCase(user?.data.lastName, 'each')}
-                                  </span>
-                                </div>
-                                <span className='text-xs font-light text-muted-foreground'>{`(+${user?.data.areaCode}) ${user?.data.phone && delimiter(user?.data.phone, '-', 6)}`}</span>
-                                <Input className='sr-only pointer-events-none w-0' {...field} />
-                              </section>
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={whatsappForm.control}
-                        name='message'
-                        render={({ field }) => (
-                          <FormItem>
-                            <div className='flex justify-between pb-1'>
-                              <FormLabel>{t('label.message')}</FormLabel>
-                              {template === EWhatsappTemplate.EMPTY && (
-                                <Popover>
-                                  <PopoverTrigger>
-                                    <Info size={15} strokeWidth={2} className='text-muted-foreground' />
-                                  </PopoverTrigger>
-                                  <PopoverContent className='w-fit'>
-                                    <section className='flex flex-col gap-1 text-xsm text-muted-foreground'>
-                                      <div className='pb-1 font-semibold'>{t('cardContent.formatText.title')}</div>
-                                      <div>
-                                        <Trans i18nKey={'cardContent.formatText.bold'} components={{ b: <b /> }} />
-                                      </div>
-                                      <div>
-                                        <Trans i18nKey={'cardContent.formatText.italic'} components={{ i: <i /> }} />
-                                      </div>
-                                    </section>
-                                  </PopoverContent>
-                                </Popover>
+              <>
+                <section className='text-sm'>
+                  {type === 'user' && (
+                    <Trans
+                      i18nKey='cardContent.phoneMessage.user'
+                      values={{
+                        patient: UtilsString.upperCase(`${user?.data.firstName} ${user?.data.lastName}`, 'each'),
+                      }}
+                      components={{
+                        span: <span className='font-semibold' />,
+                      }}
+                    />
+                  )}
+                  {type === 'professional' && (
+                    <Trans
+                      i18nKey='cardContent.phoneMessage.professional'
+                      values={{
+                        professional: UtilsString.upperCase(`${user?.data.firstName} ${user?.data.lastName}`, 'each'),
+                      }}
+                      components={{
+                        span: <span className='font-semibold' />,
+                      }}
+                    />
+                  )}
+                </section>
+                {/* Section: Form */}
+                <Form {...whatsappForm}>
+                  <form onSubmit={whatsappForm.handleSubmit(handleSendMessage)} className='mt-6 flex flex-col gap-4'>
+                    <section className='flex items-center space-x-3'>
+                      <FormLabel>{t('label.from')}</FormLabel>
+                      <div className='flex items-center space-x-2 rounded-full bg-fuchsia-200 px-2 py-1 text-xsm font-light text-fuchsia-700'>
+                        <Smartphone size={15} strokeWidth={2} className='stroke-fuchsia-700' />
+                        {/* TODO: must be dynamic, take name from logged administrator */}
+                        <span>Admin</span>
+                      </div>
+                      {whatsappConnected ? (
+                        <span className='text-xs font-light text-muted-foreground'>{`(+${whatsappNumber?.slice(0, -10)}) ${whatsappNumber && delimiter(whatsappNumber?.slice(-10), '-', 6)}`}</span>
+                      ) : (
+                        <span className='text-xs text-rose-400'>{t('error.notWhatsappSession')}</span>
+                      )}
+                    </section>
+                    <FormField
+                      control={whatsappForm.control}
+                      name='phone'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <section className='flex items-center space-x-3'>
+                              <FormLabel>{t('label.to')}</FormLabel>
+                              <div className='flex items-center space-x-2 rounded-full bg-fuchsia-200 px-2 py-1 text-xsm font-light text-fuchsia-700'>
+                                <Smartphone size={15} strokeWidth={2} className='stroke-fuchsia-700' />
+                                <span>
+                                  {UtilsString.upperCase(user?.data.firstName, 'each')} {UtilsString.upperCase(user?.data.lastName, 'each')}
+                                </span>
+                              </div>
+                              <span className='text-xs font-light text-muted-foreground'>{`(+${user?.data.areaCode}) ${user?.data.phone && delimiter(user?.data.phone, '-', 6)}`}</span>
+                              <Input className='sr-only pointer-events-none w-0' {...field} />
+                            </section>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={whatsappForm.control}
+                      name='message'
+                      render={({ field }) => (
+                        <FormItem>
+                          <div className='flex justify-between pb-1'>
+                            <FormLabel>{t('label.message')}</FormLabel>
+                            {template === EWhatsappTemplate.EMPTY && (
+                              <Popover>
+                                <PopoverTrigger>
+                                  <Info size={15} strokeWidth={2} className='text-muted-foreground' />
+                                </PopoverTrigger>
+                                <PopoverContent className='w-fit'>
+                                  <section className='flex flex-col gap-1 text-xsm text-muted-foreground'>
+                                    <div className='pb-1 font-semibold'>{t('cardContent.formatText.title')}</div>
+                                    <div>
+                                      <Trans i18nKey={'cardContent.formatText.bold'} components={{ b: <b /> }} />
+                                    </div>
+                                    <div>
+                                      <Trans i18nKey={'cardContent.formatText.italic'} components={{ i: <i /> }} />
+                                    </div>
+                                  </section>
+                                </PopoverContent>
+                              </Popover>
+                            )}
+                          </div>
+                          <FormControl>
+                            <>
+                              {template === EWhatsappTemplate.APPOINTMENT && (
+                                <FakeTextarea {...field} text={UtilsString.convertText(field.value, 'toHtml')} />
                               )}
-                            </div>
-                            <FormControl>
-                              <>
-                                {template === EWhatsappTemplate.APPOINTMENT && (
-                                  <FakeTextarea {...field} text={UtilsString.convertText(field.value, 'toHtml')} />
-                                )}
-                                {template === EWhatsappTemplate.EMPTY && <Textarea {...field} />}
-                              </>
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      {JSON.stringify(errorMessage?.message)}
-                      {isPendingMessage && <LoadingDB text={t('loading.sendingPhoneMessage')} className='w-full justify-start p-0' />}
-                      {isErrorMessage && <InfoCard type='error' text={errorMessage.message} className='justify-start p-0 text-rose-400' />}
-                      <footer className='mt-2 grid grid-cols-1 space-y-2 md:flex md:justify-end md:gap-6 md:space-y-0'>
-                        <Button
-                          type='submit'
-                          disabled={whatsappForm.watch('message') === '' || !user?.data.phone || !whatsappConnected}
-                          variant='default'
-                          className='order-1 md:order-2 lg:order-2'
-                        >
-                          {t('button.sendPhoneMessage')}
-                        </Button>
-                        <Button variant='ghost' onClick={handleCancel} className='order-2 md:order-1 lg:order-1'>
-                          {t('button.cancel')}
-                        </Button>
-                      </footer>
-                    </form>
-                  </Form>
-                </>
+                              {template === EWhatsappTemplate.EMPTY && <Textarea {...field} />}
+                            </>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    {isPendingMessage && <LoadingDB text={t('loading.sendingPhoneMessage')} className='w-full justify-start' />}
+                    {isErrorMessage && <InfoCard className='my-2' text={errorMessage.message} variant='error' />}
+                    <footer className='grid grid-cols-1 space-y-2 md:flex md:justify-end md:gap-6 md:space-y-0'>
+                      <Button
+                        type='submit'
+                        disabled={whatsappForm.watch('message') === '' || !user?.data.phone || !whatsappConnected}
+                        variant='default'
+                        className='order-1 md:order-2 lg:order-2'
+                      >
+                        {t('button.sendPhoneMessage')}
+                      </Button>
+                      <Button variant='ghost' onClick={handleCancel} className='order-2 md:order-1 lg:order-1'>
+                        {t('button.cancel')}
+                      </Button>
+                    </footer>
+                  </form>
+                </Form>
+              </>
               )}
             </CardContent>
           </Card>
