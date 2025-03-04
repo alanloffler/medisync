@@ -15,10 +15,10 @@ const infoCardVariants = cva('flex flex-row items-center justify-center space-x-
       warning: 'w-fit rounded-lg bg-amber-100 p-3 pr-3.5 text-amber-500 [&_svg]:text-amber-500',
     },
     size: {
-      default: 'text-base',
-      sm: 'text-sm',
-      xsm: '!text-xsm',
-      xs: 'text-xs',
+      default: 'text-base [&_svg]:h-[20px] [&_svg]:w-[20px]',
+      sm: 'text-sm [&_svg]:h-[18px] [&_svg]:w-[18px]',
+      xsm: '!text-xsm [&_svg]:h-[16px] [&_svg]:w-[16px]',
+      xs: 'text-xs [&_svg]:h-[14px] [&_svg]:w-[14px]',
     },
     type: {
       flat: 'p-0 bg-transparent text-foreground',
@@ -26,22 +26,17 @@ const infoCardVariants = cva('flex flex-row items-center justify-center space-x-
   },
   defaultVariants: {
     variant: 'default',
-    size: 'default',
+    size: 'xsm',
   },
 });
 // React component
 export function InfoCard({ className, size, text, type, variant }: IInfoCard) {
-  let iconSize: number = 20;
-  if (size === 'sm') iconSize = 18;
-  if (size === 'xsm') iconSize = 16;
-  if (size === 'xs') iconSize = 14;
-
   return (
     <div className={cn(infoCardVariants({ className, size, type, variant }))}>
       <div className='flex h-full flex-col justify-center'>
-        {variant === 'error' && <CircleX size={iconSize} strokeWidth={2} />}
-        {variant === 'success' && <CircleCheck size={iconSize} strokeWidth={2} />}
-        {variant === 'warning' && <CircleAlert size={iconSize} strokeWidth={2} />}
+        {variant === 'error' && <CircleX strokeWidth={2} />}
+        {variant === 'success' && <CircleCheck strokeWidth={2} />}
+        {variant === 'warning' && <CircleAlert strokeWidth={2} />}
       </div>
       <div className='flex flex-col'>
         <span>{text}</span>
