@@ -6,16 +6,22 @@ import { cva } from 'class-variance-authority';
 import type { IInfoCard } from '@core/components/common/interfaces/infocard.interface';
 import { cn } from '@lib/utils';
 // Variants
-const infoCardVariants = cva('flex flex-row items-center justify-center space-x-2', {
+const infoCardVariants = cva('flex flex-row items-center justify-center space-x-2 font-normal', {
   variants: {
     variant: {
-      default: 'font-normal text-sm',
-      error: 'bg-rose-100 !p-3 !pr-3.5 !pr-3.5 text-sm w-fit rounded-lg !text-rose-600',
-      success: 'bg-emerald-100 !p-3 !pr-3.5 text-sm w-fit rounded-lg !text-emerald-600',
-      warning: 'bg-amber-100 !p-3 !pr-3.5 text-sm w-fit rounded-lg !text-amber-600',
+      default: 'w-fit p-0',
+      error: 'w-fit rounded-lg bg-rose-100 p-3 pr-3.5 text-rose-500 [&_svg]:text-rose-500',
+      success: 'w-fit rounded-lg bg-emerald-100 p-3 pr-3.5 text-emerald-500 [&_svg]:text-emerald-500',
+      warning: 'w-fit rounded-lg bg-amber-100 p-3 pr-3.5 text-amber-500 [&_svg]:text-amber-500',
     },
     size: {
-      default: 'p-0',
+      default: 'text-base',
+      sm: 'text-sm',
+      xsm: '!text-xsm',
+      xs: 'text-xs',
+    },
+    type: {
+      flat: 'p-0 bg-transparent text-foreground',
     },
   },
   defaultVariants: {
@@ -24,22 +30,20 @@ const infoCardVariants = cva('flex flex-row items-center justify-center space-x-
   },
 });
 // React component
-export function InfoCard({ className, iconSize, size, text, type, variant }: IInfoCard) {
-  // const strokeColor: string = type === 'error' ? 'stroke-rose-400' : type === 'success' ? 'stroke-green-400' : 'stroke-yellow-400';
-  const defaultIconSize: number = 20;
+export function InfoCard({ className, size, text, type, variant }: IInfoCard) {
+  let iconSize: number = 20;
+  if (size === 'sm') iconSize = 18;
+  if (size === 'xsm') iconSize = 16;
+  if (size === 'xs') iconSize = 14;
 
   return (
-    <div className={cn(infoCardVariants({ className, size, variant }))}>
+    <div className={cn(infoCardVariants({ className, size, type, variant }))}>
       <div className='flex h-full flex-col justify-center'>
-        {/* {type === 'error' && <CircleX className={strokeColor} size={iconSize ?? defaultIconSize} strokeWidth={2} />} */}
-        {type === 'error' || (variant === 'error' && <CircleX size={iconSize ?? defaultIconSize} strokeWidth={2} />)}
-        {/* {type === 'success' && <CircleCheck className={strokeColor} size={iconSize ?? defaultIconSize} strokeWidth={2} />} */}
-        {type === 'success' || (variant === 'success' && <CircleCheck size={iconSize ?? defaultIconSize} strokeWidth={2} />)}
-        {/* {type === 'warning' && <CircleAlert className={strokeColor} size={iconSize ?? defaultIconSize} strokeWidth={2} />} */}
-        {type === 'warning' || (variant === 'warning' && <CircleAlert size={iconSize ?? defaultIconSize} strokeWidth={2} />)}
+        {variant === 'error' && <CircleX size={iconSize} strokeWidth={2} />}
+        {variant === 'success' && <CircleCheck size={iconSize} strokeWidth={2} />}
+        {variant === 'warning' && <CircleAlert size={iconSize} strokeWidth={2} />}
       </div>
       <div className='flex flex-col'>
-        {/* <span className={type === 'error' ? 'text-red-400' : 'text-foreground'}>{text}</span> */}
         <span>{text}</span>
       </div>
     </div>
