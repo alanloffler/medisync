@@ -1,6 +1,7 @@
 // Icons: https://lucide.dev/
 import { X } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
+import { Button } from '@core/components/ui/button';
 import { Input } from '@core/components/ui/input';
 import { ScrollArea } from '@core/components/ui/scroll-area';
 // Components
@@ -19,6 +20,7 @@ import { APP_CONFIG } from '@config/app.config';
 import { EUserSearch, ESortingKeys } from '@users/enums/user-search.enum';
 import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
+import { cn } from '@lib/utils';
 import { useDebounce } from '@core/hooks/useDebounce';
 // Interface
 interface IUsersComboData {
@@ -27,23 +29,21 @@ interface IUsersComboData {
   total: number;
 }
 
+interface IProps {
+  className?: string;
+  placeholder: string;
+  searchBy: EUserSearch;
+  searchResult: (user: IUser) => void;
+  sortingKey: ESortingKeys;
+}
+
 interface IVars {
   search: IUserSearch;
   skipItems: number;
   tableManager: ITableManager;
 }
 // React component
-export function UsersCombo({
-  searchBy,
-  searchResult,
-  sortingKey,
-  placeholder,
-}: {
-  searchBy: EUserSearch;
-  searchResult: (user: IUser) => void;
-  sortingKey: ESortingKeys;
-  placeholder: string;
-}) {
+export function UsersCombo({ className, placeholder, searchBy, searchResult, sortingKey }: IProps) {
   const DEBOUNCE_TIME: number = APP_CONFIG.debounceTime ?? 500;
   const [openCombobox, setOpenCombobox] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
@@ -97,34 +97,34 @@ export function UsersCombo({
     <button
       type='button'
       onClick={() => onSelect(user)}
-      className='w-full space-x-2 rounded-sm px-1.5 py-0.5 text-left hover:bg-slate-100 hover:transition-all'
+      className='w-full space-x-2 rounded-sm px-2 py-1.5 text-left hover:bg-slate-100 hover:transition-all'
     >
       <span>{UtilsString.upperCase(`${user.firstName} ${user.lastName}`, 'each')}</span>
-      <span className='italic text-slate-500'>{`${t('label.identityCard')} ${i18n.format(user.dni, 'integer', i18n.resolvedLanguage)}`}</span>
+      <span className='italic text-muted-foreground'>{`${t('label.identityCard')} ${i18n.format(user.dni, 'integer', i18n.resolvedLanguage)}`}</span>
     </button>
   ));
 
   return (
-    <main className='flex flex-col'>
+    <main className={cn('flex flex-col', className)}>
       <section className='flex flex-row items-center space-x-3'>
         <Input
           type={searchBy === EUserSearch.NAME ? 'text' : 'number'}
           value={search}
           onChange={handleSearch}
           placeholder={placeholder}
-          className='h-9 w-full'
+          className='h-9 flex-1 bg-input text-xsm'
         />
         {openCombobox && (
-          <button onClick={handleCloseCombobox} className='rounded-full bg-slate-200 p-2'>
-            <X size={16} strokeWidth={2} />
-          </button>
+          <Button size='icon5' variant='clear' onClick={handleCloseCombobox}>
+            <X size={14} strokeWidth={2} />
+          </Button>
         )}
       </section>
       {openCombobox && (
-        <section className='absolute mt-9 flex min-w-[50%] flex-row text-sm font-normal'>
+        <section className='absolute mt-9 flex min-w-[50%] flex-row text-xsm font-normal'>
           <ScrollArea className='mt-1 max-h-40 w-full overflow-auto rounded-md border bg-popover p-2 shadow-md'>
             {isPending && <LoadingText text={t('search.searching.users')} suffix='...' className='text-left' />}
-            {isError && <InfoCard type='error' text={error.message} className='justify-start' />}
+            {isError && <InfoCard className='mx-0' text={error.message} type='flat' variant='error' />}
             {isSuccess &&
               users.data.data.length > 0 &&
               users.data.data.map((user) => (
