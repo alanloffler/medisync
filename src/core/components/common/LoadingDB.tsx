@@ -18,7 +18,7 @@ const loadingDBVariants = cva('flex items-center justify-center gap-2 text-sm fo
       box: 'w-fit px-4 py-4',
       default: 'w-fit p-2 pr-2.5',
       md: 'w-fit px-4 py-2',
-      xs: 'w-fit px-2 py-1',
+      xs: 'w-fit px-2 py-1 text-xs',
     },
   },
   defaultVariants: {
