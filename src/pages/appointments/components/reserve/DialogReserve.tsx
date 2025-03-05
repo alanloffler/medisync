@@ -160,7 +160,7 @@ export function DialogReserve({ content, date, openState, professional, setHandl
   function handleReserveAppointment(): void {
     if (professional && user) {
       const formattedDate: string = format(date ?? new Date(), 'YYYY-MM-DD');
-      
+
       reserveAppointment({
         day: formattedDate,
         hour: selectedSlot.begin,
@@ -194,8 +194,8 @@ export function DialogReserve({ content, date, openState, professional, setHandl
           </DialogTitle>
           <DialogDescription>{!isErrorReserve && !isErrorRemove && dialogContent.description}</DialogDescription>
           <section className='z-50 pt-4'>
-            {isErrorReserve && <InfoCard type='error' text={reserveError.message} />}
-            {isErrorRemove && <InfoCard type='error' text={removeError.message} />}
+            {isErrorReserve && <InfoCard text={reserveError.message} variant='error' />}
+            {isErrorRemove && <InfoCard text={removeError.message} variant='error' />}
             {!isErrorReserve && !isErrorRemove && (
               <>
                 {dialogContent.action === EDialogAction.RESERVE && !user._id && dialogContent.content}
