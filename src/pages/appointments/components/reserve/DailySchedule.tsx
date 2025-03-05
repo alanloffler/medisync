@@ -136,8 +136,8 @@ export const DailySchedule = memo(({ handleDialog, professional, refreshAppos, s
 
   if (isErrorAppos) {
     return (
-      <Card className='w-full p-6'>
-        <InfoCard type='error' text={errorAppos.message} className='w-full text-base'></InfoCard>
+      <Card className='mx-auto w-full p-6'>
+        <InfoCard size='sm' text={errorAppos.message} type='flat' variant='error' />
       </Card>
     );
   }
@@ -158,10 +158,7 @@ export const DailySchedule = memo(({ handleDialog, professional, refreshAppos, s
             )}
           </section>
         </CardTitle>
-        <>
-          <section className='py-2 text-center text-base font-semibold text-primary'>{UtilsString.upperCase(selectedLegibleDate)}</section>
-          {!professional && <InfoCard text={'Debés elegir un professional antes de generar un turno'} type='warning' />}
-        </>
+        <section className='py-2 text-center text-base font-semibold text-primary'>{UtilsString.upperCase(selectedLegibleDate)}</section>
         {derivedState.timeSlots && (
           <section className='flex flex-col justify-start gap-3 px-3 pb-2 text-xsm font-normal md:flex-row'>
             <div className='flex w-fit flex-row items-center space-x-1.5 rounded-md bg-emerald-100 px-2 py-1'>
@@ -267,7 +264,7 @@ export const DailySchedule = memo(({ handleDialog, professional, refreshAppos, s
   ) : (
     <Card>
       <CardContent className='pt-6'>
-        <InfoCard type='warning' text={t(!professional ? 'warning.selectProfessional' : 'warning.selectWorkingDay')} />
+        <InfoCard size='sm' text={t(!professional ? 'warning.selectProfessional' : 'warning.selectWorkingDay')} type='flat' variant='warning' />
       </CardContent>
     </Card>
   );
