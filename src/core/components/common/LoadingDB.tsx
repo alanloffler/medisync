@@ -16,7 +16,7 @@ const loadingDBVariants = cva('flex items-center justify-center gap-2 text-sm fo
     size: {
       big: 'px-6 py-6 [&_svg]:w-6 [&_svg]:h-6',
       box: 'w-fit px-4 py-4',
-      default: 'w-fit',
+      default: 'w-fit p-2 pr-2.5',
       md: 'w-fit px-4 py-2',
       xs: 'w-fit px-2 py-1',
     },
