@@ -51,7 +51,7 @@ export function DialogReserve({ content, date, openState, professional, setHandl
     return (
       <div className='space-y-2'>
         <div className='flex items-center space-x-2'>
-          <ClipboardCheck className='h-5 w-5' strokeWidth={2} />
+          <ClipboardCheck size={20} strokeWidth={2} />
           <div className='flex flex-row items-center gap-1'>
             <Trans
               i18nKey='dialog.reserveAppointment.content.reservedTo'
@@ -66,7 +66,7 @@ export function DialogReserve({ content, date, openState, professional, setHandl
           </div>
         </div>
         <div className='flex items-center space-x-2'>
-          <CalendarCheck className='h-5 w-5' strokeWidth={2} />
+          <CalendarCheck size={20} strokeWidth={2} />
           <div className='flex flex-row items-center gap-1'>
             <Trans
               i18nKey='dialog.reserveAppointment.content.date'
@@ -78,7 +78,7 @@ export function DialogReserve({ content, date, openState, professional, setHandl
           </div>
         </div>
         <div className='flex items-center space-x-2'>
-          <Clock className='h-5 w-5' strokeWidth={2} />
+          <Clock size={20} strokeWidth={2} />
           <div className='flex flex-row items-center gap-1'>
             <Trans
               i18nKey='dialog.reserveAppointment.content.hour'
@@ -90,7 +90,7 @@ export function DialogReserve({ content, date, openState, professional, setHandl
           </div>
         </div>
         <div className='flex items-center space-x-2'>
-          <BriefcaseMedical className='h-5 w-5' strokeWidth={2} />
+          <BriefcaseMedical size={20} strokeWidth={2} />
           <span className='font-semibold'>
             {UtilsString.upperCase(`${professional?.title.abbreviation} ${professional?.firstName} ${professional?.lastName}`, 'each')}
           </span>
