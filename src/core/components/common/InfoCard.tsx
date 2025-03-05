@@ -21,7 +21,8 @@ const infoCardVariants = cva('flex flex-row items-center mx-auto justify-center 
       xs: 'text-xs [&_svg]:h-[14px] [&_svg]:w-[14px]',
     },
     type: {
-      flat: 'p-0 bg-transparent text-foreground',
+      flat: 'p-0 bg-transparent !text-foreground',
+      'flat-colored': 'p-0 bg-transparent',
     },
   },
   defaultVariants: {
