@@ -83,7 +83,7 @@ export class ProfessionalApiService {
   }
 
   // CHECKED:
-  // Used on ProfessionalsCombobox.tsx
+  // Used on ProfessionalsCombobox.tsx and ProfessionalsSelect.tsx
   public static async findAllActive(): Promise<IResponse<IProfessional[]>> {
     const path: string = `${this.API_URL}/professionals/active`;
     const url: URL = new URL(path);
