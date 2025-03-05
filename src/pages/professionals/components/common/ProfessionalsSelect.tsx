@@ -73,9 +73,9 @@ export function ProfessionalsSelect({ className, day, hour, defaultValue, label,
       <Select defaultValue={defaultValue} value={selectedProfessionalId} onValueChange={handleProfessionalChange} disabled={isError}>
         <SelectTrigger className={cn('h-7 w-full space-x-3 bg-input text-xsm', className)}>
           {isError ? (
-            <InfoCard type='error' text={t('error.default')} className='mx-auto' />
+            <InfoCard size='xs' text={t('error.default')} type='flat-colored' variant='error' />
           ) : isPending ? (
-            <LoadingDB size='xs' text={t('loading.default')} />
+            <LoadingDB className='!mx-0 !justify-start' iconSize={14} size='xs' text={t('loading.default')} />
           ) : (
             placeholder && <SelectValue placeholder={placeholder} />
           )}
