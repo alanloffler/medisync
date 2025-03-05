@@ -102,9 +102,11 @@ export class ProfessionalApiService {
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
-  // CHECKED: used on ProfessionalsDataTable.tsx
+  // CHECKED:
+  // Used on ProfessionalsDataTable.tsx
   public static async remove(id: string) {
-    const url: URL = new URL(`${this.API_URL}/professionals/${id}`);
+    const path: string = `${this.API_URL}/professionals/${id}`;
+    const url: URL = new URL(path);
 
     return await UtilsUrl.fetch(url, EMethods.DELETE);
   }
