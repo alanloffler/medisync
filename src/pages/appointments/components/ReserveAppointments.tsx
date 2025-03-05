@@ -119,6 +119,7 @@ export default function ReserveAppointments() {
           action: EDialogAction.RESERVE,
           content: (
             <UsersCombo
+              className='w-1/2'
               placeholder={t('placeholder.userCombobox')}
               searchBy={EUserSearch.IDENTITY}
               searchResult={(e) => setUserSelected(e)}
