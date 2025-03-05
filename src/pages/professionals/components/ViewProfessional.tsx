@@ -101,157 +101,155 @@ export default function ViewProfessional() {
         <BackButton label={t('button.back')} />
       </header>
       {/* Section: Page content */}
-      <Card className='mx-auto w-full md:max-w-[550px]'>
-        {isLoading && <LoadingDB text={t('loading.professional')} className='py-6' />}
-        {isError && <InfoCard type='error' text={t(professionalError.message)} className='py-6' />}
-        {professional && (
-          <>
-            <CardHeaderPrimary
-              className='justify-center'
-              title={UtilsString.upperCase(
-                `${professional.data.title.abbreviation} ${professional.data.firstName} ${professional.data.lastName}`,
-                'each',
-              )}
-            />
-            <CardContent className='mt-6 space-y-6'>
-              {professional.data.description && (
-                <section className='flex space-x-4 text-ellipsis rounded-md bg-purple-50 px-4 py-3 italic text-purple-800'>
-                  <span>{UtilsString.upperCase(professional.data.description)}</span>
-                </section>
-              )}
-              <section className='space-y-3'>
-                <h2 className='pt-2 text-xs font-medium uppercase leading-none text-slate-500'>{t('label.scheduleTitle')}</h2>
-                {professional.data.configuration.workingDays && (
-                  <ElementInfo content={legibleWorkingDays} icon={<CalendarDays size={17} strokeWidth={2} />} />
-                )}
-                {professional.data.configuration.scheduleTimeInit && professional.data.configuration.scheduleTimeEnd && (
-                  <ElementInfo
-                    content={
-                      <span>
-                        {professional.data.configuration.unavailableTimeSlot?.timeSlotUnavailableInit &&
-                        professional.data.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd
-                          ? t('cardContent.scheduleHour.interval', {
-                              timeInit: professional.data.configuration.scheduleTimeInit,
-                              timeEnd: professional.data.configuration.scheduleTimeEnd,
-                              intervalInit: professional.data.configuration.unavailableTimeSlot?.timeSlotUnavailableInit,
-                              intervalEnd: professional.data.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd,
-                            })
-                          : t('cardContent.scheduleHour.default', {
-                              timeInit: professional.data.configuration.scheduleTimeInit,
-                              timeEnd: professional.data.configuration.scheduleTimeEnd,
-                            })}
-                      </span>
-                    }
-                    icon={<CalendarClock size={17} strokeWidth={2} />}
-                  />
-                )}
+      {isError && <InfoCard text={t(professionalError.message)} variant='error' />}
+      {isLoading && <LoadingDB text={t('loading.professional')} variant='card' />}
+      {professional && (
+        <Card className='mx-auto w-full md:max-w-[550px]'>
+          <CardHeaderPrimary
+            className='justify-center'
+            title={UtilsString.upperCase(
+              `${professional.data.title.abbreviation} ${professional.data.firstName} ${professional.data.lastName}`,
+              'each',
+            )}
+          />
+          <CardContent className='mt-6 space-y-6'>
+            {professional.data.description && (
+              <section className='flex space-x-4 text-ellipsis rounded-md bg-purple-50 px-4 py-3 italic text-purple-800'>
+                <span>{UtilsString.upperCase(professional.data.description)}</span>
               </section>
-              <section className='space-y-3'>
-                <h2 className='pt-2 text-xs font-medium uppercase leading-none text-slate-500'>{t('label.contact')}</h2>
-                {professional.data.areaCode && professional.data.phone && (
-                  <ElementInfo
-                    content={
-                      <>
-                        {areaCodeIsLoading && <LoadingText text={t('loading.default')} suffix='...' />}
-                        {!areaCodeIsLoading && (
-                          <div className='flex items-center space-x-2'>
-                            {areaCode?.data && (
-                              <img
-                                height={18}
-                                width={18}
-                                src={
-                                  new URL(
-                                    `../../../assets/icons/i18n/${areaCode.data.find((areaCode) => areaCode.code === String(professional.data.areaCode))?.icon}.svg`,
-                                    import.meta.url,
-                                  ).href
-                                }
-                              />
-                            )}
-                            <span>{`(${professional.data.areaCode}) ${delimiter(professional.data.phone, '-', 6)}`}</span>
-                          </div>
-                        )}
-                      </>
-                    }
-                    icon={<Smartphone size={17} strokeWidth={2} />}
-                  />
-                )}
-                {professional.data.email && <ElementInfo content={professional.data.email} icon={<Mail size={17} strokeWidth={2} />} />}
-                {professional.data.area && professional.data.specialization && (
-                  <div className='flex justify-end space-x-4 pt-3'>
-                    <Badge variant='default'>
-                      <Tag size={13} strokeWidth={2} className='stroke-amber-700' />
-                      <span>{UtilsString.upperCase(professional.data.area.name)}</span>
-                    </Badge>
-                    <Badge variant='default'>
-                      <Tag size={13} strokeWidth={2} className='stroke-amber-700' />
-                      <span>{UtilsString.upperCase(professional.data.specialization.name)}</span>
-                    </Badge>
-                  </div>
-                )}
-              </section>
-            </CardContent>
-            <CardFooter className='justify-between border-t p-2'>
-              <AvailableProfessional items={PV_CONFIG.select} data={{ _id: professional.data._id, available: professional.data.available }} />
-              <section className='flex items-center justify-end space-x-2'>
-                <TableButton
-                  callback={() => navigate(`/professionals/update/${professional.data._id}`)}
-                  className='h-8 w-8 hover:bg-amber-100/75 hover:text-amber-400'
-                  tooltip={t('tooltip.edit')}
-                >
-                  <PencilLine size={17} strokeWidth={1.5} />
-                </TableButton>
-                <RemoveDialog
-                  action={() => Promise.resolve({} as IResponse)}
-                  dialogContent={
-                    <Trans
-                      i18nKey={'dialog.deleteProfessional.content'}
-                      values={{
-                        titleAbbreviation: UtilsString.upperCase(professional.data.title.abbreviation),
-                        firstName: UtilsString.upperCase(professional.data.firstName, 'each'),
-                        lastName: UtilsString.upperCase(professional.data.lastName, 'each'),
-                        identityCard: i18n.format(professional.data.dni, 'number', i18n.resolvedLanguage),
-                      }}
-                      components={{
-                        span: <span className='font-semibold' />,
-                        i: <i />,
-                      }}
-                    />
+            )}
+            <section className='space-y-3'>
+              <h2 className='pt-2 text-xs font-medium uppercase leading-none text-slate-500'>{t('label.scheduleTitle')}</h2>
+              {professional.data.configuration.workingDays && (
+                <ElementInfo content={legibleWorkingDays} icon={<CalendarDays size={17} strokeWidth={2} />} />
+              )}
+              {professional.data.configuration.scheduleTimeInit && professional.data.configuration.scheduleTimeEnd && (
+                <ElementInfo
+                  content={
+                    <span>
+                      {professional.data.configuration.unavailableTimeSlot?.timeSlotUnavailableInit &&
+                      professional.data.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd
+                        ? t('cardContent.scheduleHour.interval', {
+                            timeInit: professional.data.configuration.scheduleTimeInit,
+                            timeEnd: professional.data.configuration.scheduleTimeEnd,
+                            intervalInit: professional.data.configuration.unavailableTimeSlot?.timeSlotUnavailableInit,
+                            intervalEnd: professional.data.configuration.unavailableTimeSlot?.timeSlotUnavailableEnd,
+                          })
+                        : t('cardContent.scheduleHour.default', {
+                            timeInit: professional.data.configuration.scheduleTimeInit,
+                            timeEnd: professional.data.configuration.scheduleTimeEnd,
+                          })}
+                    </span>
                   }
-                  dialogTexts={{
-                    title: t('dialog.deleteProfessional.title'),
-                    description: t('dialog.deleteProfessional.description'),
-                    cancelButton: t('button.cancel'),
-                    removeButton: t('button.deleteProfessional'),
-                  }}
-                  tooltip={t('tooltip.delete')}
-                  triggerButton={<Trash2 size={17} strokeWidth={1.5} />}
+                  icon={<CalendarClock size={17} strokeWidth={2} />}
                 />
-                <div className='px-1'>
-                  <Separator orientation='vertical' className='h-5' />
-                </div>
-                <TableButton
-                  callback={() => navigate(`/email/professional/${professional.data._id}`)}
-                  className='h-8 w-8 hover:bg-purple-100/75 hover:text-purple-400'
-                  tooltip={t('tooltip.sendEmail')}
-                >
-                  <Mail size={17} strokeWidth={1.5} />
-                </TableButton>
-                <TableButton
-                  callback={() =>
-                    navigate(`/whatsapp/${professional.data._id}`, {
-                      state: { type: EUserType.PROFESSIONAL, template: EWhatsappTemplate.EMPTY },
-                    })
+              )}
+            </section>
+            <section className='space-y-3'>
+              <h2 className='pt-2 text-xs font-medium uppercase leading-none text-slate-500'>{t('label.contact')}</h2>
+              {professional.data.areaCode && professional.data.phone && (
+                <ElementInfo
+                  content={
+                    <>
+                      {areaCodeIsLoading && <LoadingText text={t('loading.default')} suffix='...' />}
+                      {!areaCodeIsLoading && (
+                        <div className='flex items-center space-x-2'>
+                          {areaCode?.data && (
+                            <img
+                              height={18}
+                              width={18}
+                              src={
+                                new URL(
+                                  `../../../assets/icons/i18n/${areaCode.data.find((areaCode) => areaCode.code === String(professional.data.areaCode))?.icon}.svg`,
+                                  import.meta.url,
+                                ).href
+                              }
+                            />
+                          )}
+                          <span>{`(${professional.data.areaCode}) ${delimiter(professional.data.phone, '-', 6)}`}</span>
+                        </div>
+                      )}
+                    </>
                   }
-                  className='h-8 w-8 hover:bg-emerald-100/75 hover:text-emerald-400'
-                  tooltip={t('tooltip.sendMessage')}
-                >
-                  <MessageCircle size={17} strokeWidth={1.5} />
-                </TableButton>
-              </section>
-            </CardFooter>
-          </>
-        )}
-      </Card>
+                  icon={<Smartphone size={17} strokeWidth={2} />}
+                />
+              )}
+              {professional.data.email && <ElementInfo content={professional.data.email} icon={<Mail size={17} strokeWidth={2} />} />}
+              {professional.data.area && professional.data.specialization && (
+                <div className='flex justify-end space-x-4 pt-3'>
+                  <Badge variant='default'>
+                    <Tag size={13} strokeWidth={2} className='stroke-amber-700' />
+                    <span>{UtilsString.upperCase(professional.data.area.name)}</span>
+                  </Badge>
+                  <Badge variant='default'>
+                    <Tag size={13} strokeWidth={2} className='stroke-amber-700' />
+                    <span>{UtilsString.upperCase(professional.data.specialization.name)}</span>
+                  </Badge>
+                </div>
+              )}
+            </section>
+          </CardContent>
+          <CardFooter className='justify-between border-t p-2'>
+            <AvailableProfessional items={PV_CONFIG.select} data={{ _id: professional.data._id, available: professional.data.available }} />
+            <section className='flex items-center justify-end space-x-2'>
+              <TableButton
+                callback={() => navigate(`/professionals/update/${professional.data._id}`)}
+                className='h-8 w-8 hover:bg-amber-100/75 hover:text-amber-400'
+                tooltip={t('tooltip.edit')}
+              >
+                <PencilLine size={17} strokeWidth={1.5} />
+              </TableButton>
+              <RemoveDialog
+                action={() => Promise.resolve({} as IResponse)}
+                dialogContent={
+                  <Trans
+                    i18nKey={'dialog.deleteProfessional.content'}
+                    values={{
+                      titleAbbreviation: UtilsString.upperCase(professional.data.title.abbreviation),
+                      firstName: UtilsString.upperCase(professional.data.firstName, 'each'),
+                      lastName: UtilsString.upperCase(professional.data.lastName, 'each'),
+                      identityCard: i18n.format(professional.data.dni, 'number', i18n.resolvedLanguage),
+                    }}
+                    components={{
+                      span: <span className='font-semibold' />,
+                      i: <i />,
+                    }}
+                  />
+                }
+                dialogTexts={{
+                  title: t('dialog.deleteProfessional.title'),
+                  description: t('dialog.deleteProfessional.description'),
+                  cancelButton: t('button.cancel'),
+                  removeButton: t('button.deleteProfessional'),
+                }}
+                tooltip={t('tooltip.delete')}
+                triggerButton={<Trash2 size={17} strokeWidth={1.5} />}
+              />
+              <div className='px-1'>
+                <Separator orientation='vertical' className='h-5' />
+              </div>
+              <TableButton
+                callback={() => navigate(`/email/professional/${professional.data._id}`)}
+                className='h-8 w-8 hover:bg-purple-100/75 hover:text-purple-400'
+                tooltip={t('tooltip.sendEmail')}
+              >
+                <Mail size={17} strokeWidth={1.5} />
+              </TableButton>
+              <TableButton
+                callback={() =>
+                  navigate(`/whatsapp/${professional.data._id}`, {
+                    state: { type: EUserType.PROFESSIONAL, template: EWhatsappTemplate.EMPTY },
+                  })
+                }
+                className='h-8 w-8 hover:bg-emerald-100/75 hover:text-emerald-400'
+                tooltip={t('tooltip.sendMessage')}
+              >
+                <MessageCircle size={17} strokeWidth={1.5} />
+              </TableButton>
+            </section>
+          </CardFooter>
+        </Card>
+      )}
       {/* Section: Page footer */}
       <footer className='mx-auto'>
         <Button
