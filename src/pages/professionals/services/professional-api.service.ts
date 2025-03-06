@@ -105,7 +105,6 @@ export class ProfessionalApiService {
   // CHECKED:
   // Used on ProfessionalsDataTable.tsx
   public static async remove(id: string) {
-    throw new Error('Error removing professional');
     const path: string = `${this.API_URL}/professionals/${id}`;
     const url: URL = new URL(path);
 
