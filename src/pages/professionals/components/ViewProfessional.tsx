@@ -208,7 +208,7 @@ export default function ViewProfessional() {
                       titleAbbreviation: UtilsString.upperCase(professional.data.title.abbreviation),
                       firstName: UtilsString.upperCase(professional.data.firstName, 'each'),
                       lastName: UtilsString.upperCase(professional.data.lastName, 'each'),
-                      identityCard: i18n.format(professional.data.dni, 'number', i18n.resolvedLanguage),
+                      identityCard: i18n.format(professional.data.dni, 'integer', i18n.resolvedLanguage),
                     }}
                     components={{
                       span: <span className='font-semibold' />,
