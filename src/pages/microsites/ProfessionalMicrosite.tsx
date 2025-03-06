@@ -30,7 +30,7 @@ export default function ProfessionalMicrosite() {
     isLoading: profIsLoading,
     isSuccess: profIsSuccess,
   } = useQuery<IResponse<IProfessional>, Error>({
-    queryKey: ['professional', id],
+    queryKey: ['professional', 'find-one', id],
     queryFn: async () => {
       if (!id) throw new Error('Dev Error: No ID provided');
       return await ProfessionalApiService.findOne(id);
@@ -71,7 +71,7 @@ export default function ProfessionalMicrosite() {
               title={`Turnos del ${format(today, 'long')}`}
             />
             <CardContent className='pt-3'>
-              <MicrositeSchedule professional={professional?.data} day={today} />
+              <MicrositeSchedule day={today} professional={professional?.data} />
             </CardContent>
           </Card>
         </section>
