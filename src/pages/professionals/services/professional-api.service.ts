@@ -46,7 +46,8 @@ export class ProfessionalApiService {
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
-  // CHECKED: used on ViewProfessional.tsx
+  // CHECKED:
+  // Used on ViewProfessional.tsx and ProfessionalMicrosite.tsx
   public static async findOne(id: string): Promise<IResponse<IProfessional>> {
     const path: string = `${this.API_URL}/professionals/${id}`;
     const url: URL = new URL(path);
