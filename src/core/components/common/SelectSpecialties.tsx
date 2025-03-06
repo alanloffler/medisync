@@ -72,10 +72,10 @@ export function SelectSpecialties({ callback, clear, dropdownPlaceholder, setDro
         <span>{t('search.filter.by')}</span>
       </div>
       <DropdownMenu>
-        <div className='flex flex-row items-center space-x-2'>
+        <section className='flex flex-row items-center space-x-3'>
           <DropdownMenuTrigger
             disabled={!areas?.data.length}
-            className='flex min-h-8 w-fit items-center space-x-2 rounded-md bg-white px-2.5 py-1 text-sm shadow-sm'
+            className='flex min-h-8 w-fit items-center space-x-2 rounded-md bg-white px-2.5 py-1 text-xsm font-medium shadow-sm'
           >
             {isLoading && <LoadingText suffix='...' text={t('loading.default')} />}
             {isError && <span className='text-rose-400'>{dropdownPlaceholder}</span>}
@@ -86,8 +86,8 @@ export function SelectSpecialties({ callback, clear, dropdownPlaceholder, setDro
           {specSelected !== undefined && (
             <Button
               ref={specializationsScope}
-              variant='default'
-              size='icon7'
+              size='icon5'
+              variant='clear'
               onClick={clear}
               onMouseOver={() =>
                 specializationsAnimation(specializationsScope.current, { scale: 1.1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
@@ -95,12 +95,11 @@ export function SelectSpecialties({ callback, clear, dropdownPlaceholder, setDro
               onMouseOut={() =>
                 specializationsAnimation(specializationsScope.current, { scale: 1 }, { duration: 0.7, ease: 'linear', type: spring, bounce: 0.7 })
               }
-              className='h-5 w-5 rounded-full bg-black p-0 text-xs font-medium text-white hover:bg-black/70'
             >
               <X size={14} strokeWidth={2} />
             </Button>
           )}
-        </div>
+        </section>
         <DropdownMenuContent className='w-fit [&_svg]:h-3 [&_svg]:w-3' align='center' onCloseAutoFocus={(e) => e.preventDefault()}>
           {areas &&
             areas?.data.length > 0 &&
