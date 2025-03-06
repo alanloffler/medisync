@@ -1,10 +1,14 @@
 // Icons: https://lucide.dev/icons
-import { Package2 } from 'lucide-react';
+import { CalendarClock, Package2 } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
-import { Card } from '@core/components/ui/card';
+import { Card, CardContent } from '@core/components/ui/card';
 // Components
+import { CardHeaderSecondary } from '@core/components/common/header/CardHeaderSecondary';
 import { InfoCard } from '@core/components/common/InfoCard';
+import { LoadingDB } from '@core/components/common/LoadingDB';
+import { MicrositeSchedule } from '@microsites/MicrositeSchedule';
 // External imports
+import { format } from '@formkit/tempo';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
@@ -13,9 +17,9 @@ import type { IProfessional } from '@professionals/interfaces/professional.inter
 import type { IResponse } from '@core/interfaces/response.interface';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
-import { LoadingDB } from '@core/components/common/LoadingDB';
 // React component
 export default function ProfessionalMicrosite() {
+  const today: string = format(new Date(), 'YYYY-MM-DD');
   const { id } = useParams();
   const { t } = useTranslation();
 
@@ -49,7 +53,7 @@ export default function ProfessionalMicrosite() {
 
   if (profIsSuccess)
     return (
-      <main className='flex h-screen flex-col bg-muted/70'>
+      <main className='flex flex-col bg-muted/70'>
         <header className='sticky top-0 z-50 flex h-16 items-center justify-between gap-4 bg-background px-4 shadow-sm md:justify-normal md:gap-8 md:px-8'>
           <div className='flex items-center gap-2 font-semibold md:text-base'>
             <Package2 size={24} strokeWidth={2} />
@@ -60,7 +64,16 @@ export default function ProfessionalMicrosite() {
           </h1>
         </header>
         <section className='flex flex-col gap-6 p-6 md:gap-8 md:p-8'>
-          <Card className='p-4'>Statistics here</Card>
+          <Card>
+            <CardHeaderSecondary
+              className='p-4 text-base'
+              icon={<CalendarClock size={18} strokeWidth={2} />}
+              title={`Turnos del ${format(today, 'long')}`}
+            />
+            <CardContent className='pt-3'>
+              <MicrositeSchedule professional={professional?.data} day={today} />
+            </CardContent>
+          </Card>
         </section>
       </main>
     );
