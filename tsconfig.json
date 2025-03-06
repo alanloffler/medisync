@@ -30,6 +30,7 @@
       "@email/*": ["./src/pages/email/*"],
       "@layout/*": ["./src/layout/*"],
       "@lib/*": ["./src/lib/*"],
+      "@microsites/*": ["./src/pages/microsites/*"],
       "@professionals/*": ["./src/pages/professionals/*"],
       "@settings/*": ["./src/pages/settings/*"],
       "@users/*": ["./src/pages/users/*"],
