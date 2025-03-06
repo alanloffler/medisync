@@ -10,6 +10,8 @@ const ReserveAppointments = lazy(() => import('./pages/appointments/components/R
 const ViewAppointment = lazy(() => import('./pages/appointments/components/ViewAppointment'));
 const Dashboard = lazy(() => import('./pages/dashboard/Dashboard'));
 
+const ProfessionalMicrosite = lazy(() => import('./pages/microsites/ProfessionalMicrosite'));
+
 const Professionals = lazy(() => import('./pages/professionals/Professionals'));
 const CreateProfessional = lazy(() => import('./pages/professionals/components/CreateProfessional'));
 const UpdateProfessional = lazy(() => import('./pages/professionals/components/UpdateProfessional'));
@@ -49,6 +51,7 @@ export default function App() {
         { path: '*', element: <>Not found 404</> },
       ],
     },
+    { path: '/microsite/professional/:id', element: (<Suspense fallback={<Loading />}><ProfessionalMicrosite /></Suspense>) },
   ]);
 
   return <RouterProvider router={router} />;
