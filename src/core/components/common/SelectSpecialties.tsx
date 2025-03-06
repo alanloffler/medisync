@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from '@core/components/ui/dropdown-menu';
 // Components
+import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingText } from '@core/components/common/LoadingText';
 // External imports
 import { spring, useAnimate } from 'motion/react';
@@ -78,7 +79,7 @@ export function SelectSpecialties({ callback, clear, dropdownPlaceholder, setDro
             className='flex min-h-8 w-fit items-center space-x-2 rounded-md bg-white px-2.5 py-1 text-xsm font-medium shadow-sm'
           >
             {isLoading && <LoadingText suffix='...' text={t('loading.default')} />}
-            {isError && <span className='text-rose-400'>{dropdownPlaceholder}</span>}
+            {isError && <InfoCard size='xsm' text={dropdownPlaceholder} type='flat-colored' variant='error' />}
             {isSuccess && !specSelected && <span>{dropdownPlaceholder}</span>}
             {isSuccess && specSelected && <span>{UtilsString.upperCase(specSelected)}</span>}
             <ChevronDown size={16} strokeWidth={2} />
