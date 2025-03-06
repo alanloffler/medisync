@@ -16,6 +16,7 @@ export default defineConfig({
       '@email': path.resolve(__dirname, './src/pages/email'),
       '@layout': path.resolve(__dirname, './src/layout'),
       '@lib': path.resolve(__dirname, './src/lib'),
+      '@microsites': path.resolve(__dirname, './src/pages/microsites'),
       '@professionals': path.resolve(__dirname, './src/pages/professionals'),
       '@settings': path.resolve(__dirname, './src/pages/settings'),
       '@users': path.resolve(__dirname, './src/pages/users'),
