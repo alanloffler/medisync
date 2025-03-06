@@ -4,6 +4,7 @@ import { ArrowRight, CalendarClock, CalendarDays, Mail, MessageCircle, PencilLin
 import { Badge } from '@core/components/ui/badge';
 import { Button } from '@core/components/ui/button';
 import { Card, CardContent, CardFooter } from '@core/components/ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
 import { Separator } from '@core/components/ui/separator';
 // Components
 import { AvailableProfessional } from '@professionals/components/common/AvailableProfessional';
@@ -14,14 +15,13 @@ import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { LoadingText } from '@core/components/common/LoadingText';
 import { PageHeader } from '@core/components/common/PageHeader';
-import { RemoveDialog } from '@core/components/common/RemoveDialog';
 import { TableButton } from '@core/components/common/TableButton';
 // External imports
 import { Trans, useTranslation } from 'react-i18next';
 import { useAnimate } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 // Imports
 import type { IAreaCode } from '@core/interfaces/area-code.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
@@ -39,6 +39,7 @@ import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export default function ViewProfessional() {
   const [legibleWorkingDays, setLegibleWorkingDays] = useState<string>('');
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [gotoScope, gotoAnimation] = useAnimate();
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const delimiter = useDelimiter();
@@ -82,6 +83,32 @@ export default function ViewProfessional() {
   useEffect(() => {
     if (areaCodeIsError) addNotification({ type: 'error', message: areaCodeError.message });
   }, [addNotification, areaCodeError?.message, areaCodeIsError]);
+
+  const {
+    error: errorDeleting,
+    mutate: deleteProfessional,
+    isError: isErrorDeleting,
+    isPending: isPendingDelete,
+  } = useMutation<IResponse<IProfessional>, Error, { id: string }>({
+    mutationKey: ['professional', 'delete', id],
+    mutationFn: async ({ id }) => await ProfessionalApiService.remove(id),
+    onSuccess: (response) => {
+      setOpenDialog(false);
+      addNotification({ type: 'success', message: response.message });
+      navigate('/professionals');
+    },
+    onError: (error) => {
+      addNotification({ type: 'error', message: t(error.message) });
+    },
+  });
+
+  function handleRemoveProfessionalDatabase(id?: string): void {
+    id && deleteProfessional({ id });
+  }
+
+  // useEffect(() => {
+  //   !openDialog && setProfessionalSelected(null);
+  // }, [openDialog]);
 
   function gotoAnimateOver(): void {
     const { keyframes, options } = motion.x(3).type('bounce').animate();
@@ -199,7 +226,10 @@ export default function ViewProfessional() {
               >
                 <PencilLine size={17} strokeWidth={1.5} />
               </TableButton>
-              <RemoveDialog
+              <TableButton callback={() => setOpenDialog(true)} className='hover:bg-red-100/75 hover:text-red-400' tooltip={t('tooltip.delete')}>
+                <Trash2 size={17} strokeWidth={1.5} />
+              </TableButton>
+              {/* <RemoveDialog
                 action={() => Promise.resolve({} as IResponse)}
                 dialogContent={
                   <Trans
@@ -224,7 +254,7 @@ export default function ViewProfessional() {
                 }}
                 tooltip={t('tooltip.delete')}
                 triggerButton={<Trash2 size={17} strokeWidth={1.5} />}
-              />
+              /> */}
               <div className='px-1'>
                 <Separator orientation='vertical' className='h-5' />
               </div>
@@ -264,6 +294,56 @@ export default function ViewProfessional() {
           <ArrowRight ref={gotoScope} size={16} strokeWidth={2} />
         </Button>
       </footer>
+      {/* Section: Dialog */}
+      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className='text-xl'>{t('dialog.deleteProfessional.title')}</DialogTitle>
+            {isErrorDeleting ? (
+              <DialogDescription></DialogDescription>
+            ) : (
+              <DialogDescription>{t('dialog.deleteProfessional.description')}</DialogDescription>
+            )}
+          </DialogHeader>
+          <section className='flex flex-col'>
+            {isErrorDeleting ? (
+              <InfoCard text={errorDeleting.message} variant='error' />
+            ) : (
+              <div className='text-sm'>
+                <Trans
+                  i18nKey='dialog.deleteProfessional.content'
+                  values={{
+                    titleAbbreviation: UtilsString.upperCase(professional?.data.title.abbreviation),
+                    firstName: UtilsString.upperCase(professional?.data.firstName, 'each'),
+                    lastName: UtilsString.upperCase(professional?.data.lastName, 'each'),
+                    identityCard: i18n.format(professional?.data.dni, 'integer', i18n.resolvedLanguage),
+                  }}
+                  components={{
+                    span: <span className='font-semibold' />,
+                    i: <i />,
+                  }}
+                />
+              </div>
+            )}
+          </section>
+          <DialogFooter className='flex justify-end'>
+            {isErrorDeleting ? (
+              <Button variant='default' size='sm' onClick={() => setOpenDialog(false)}>
+                {t('button.close')}
+              </Button>
+            ) : (
+              <div className='flex space-x-4'>
+                <Button variant='ghost' size='sm' onClick={() => setOpenDialog(false)}>
+                  {t('button.cancel')}
+                </Button>
+                <Button variant='remove' size='sm' onClick={() => handleRemoveProfessionalDatabase(id)}>
+                  {isPendingDelete ? <LoadingDB variant='button' text={t('loading.deleting')} /> : t('button.deleteProfessional')}
+                </Button>
+              </div>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }
