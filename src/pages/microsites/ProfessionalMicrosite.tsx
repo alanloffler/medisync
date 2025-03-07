@@ -1,6 +1,7 @@
 // Icons: https://lucide.dev/icons
-import { CalendarClock, Package2 } from 'lucide-react';
+import { CalendarClock, Package2, X } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
+import { Button } from '@core/components/ui/button';
 import { Card, CardContent } from '@core/components/ui/card';
 // Components
 import { CardHeaderSecondary } from '@core/components/common/header/CardHeaderSecondary';
@@ -12,6 +13,7 @@ import { MicrositeSchedule } from '@microsites/MicrositeSchedule';
 import { format } from '@formkit/tempo';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
@@ -20,7 +22,7 @@ import { ProfessionalApiService } from '@professionals/services/professional-api
 import { UtilsString } from '@core/services/utils/string.service';
 // React component
 export default function ProfessionalMicrosite() {
-  const today: string = format(new Date(), 'YYYY-MM-DD');
+  const [date, setDate] = useState<Date | undefined>(new Date());
   const { id } = useParams();
   const { t } = useTranslation();
 
@@ -37,6 +39,11 @@ export default function ProfessionalMicrosite() {
       return await ProfessionalApiService.findOne(id);
     },
   });
+
+  function formatDate(date: Date | undefined) {
+    if (!date) return '';
+    return format(date, 'YYYY-MM-DD');
+  }
 
   if (profIsLoading)
     return (
@@ -67,14 +74,27 @@ export default function ProfessionalMicrosite() {
         <section className='flex flex-col gap-6 p-6 md:gap-8 md:p-8'>
           <Card>
             <CardHeaderSecondary
-              className='p-4 text-base'
+              className='p-4 text-base md:flex-row md:items-center'
               icon={<CalendarClock size={18} strokeWidth={2} />}
-              title={`Turnos del ${format(today, 'long')}`}
+              title={t('pageTitle.appointments')}
+              // title={date ? `Turnos del ${format(date, 'short')}` : ''}
             >
-              <DatePicker onDateChange={(e) => console.log(e)} />
+              <section className='flex items-center space-x-4'>
+                {formatDate(date) !== formatDate(new Date()) && (
+                  <Button className='h-[35px]' size='sm' variant='default' onClick={() => setDate(new Date())}>
+                    {t('button.today')}
+                  </Button>
+                )}
+                <DatePicker className='w-fit' defaultDate={date} onDateChange={(e) => setDate(e)} />
+              </section>
             </CardHeaderSecondary>
-            <CardContent className='pt-3'>
-              <MicrositeSchedule day={today} professional={professional?.data} />
+            <CardContent>
+              {date && (
+                <h2 className='mb-4 mt-6 flex flex-col items-center rounded-lg bg-slate-100 py-1 text-base font-medium'>
+                  {UtilsString.upperCase(`${format(date, 'full')}`, 'first')}
+                </h2>
+              )}
+              <MicrositeSchedule day={formatDate(date)} professional={professional?.data} />
             </CardContent>
           </Card>
         </section>
