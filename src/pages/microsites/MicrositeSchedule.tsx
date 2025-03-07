@@ -64,12 +64,12 @@ export function MicrositeSchedule({ day, professional }: { day: string; professi
           <section
             key={crypto.randomUUID()}
             className={cn(
-              'flex flex-row items-center gap-3 md:gap-4',
+              'flex flex-row items-center gap-3',
               index === timeSlots.length - 1 || isLastAvailableBeforeUnavailable ? 'border-b-0' : 'border-b',
             )}
           >
             {/* Slot info */}
-            <div className='flex w-fit flex-col py-2 text-xs font-medium leading-3 md:flex-row md:items-center md:justify-between md:gap-2'>
+            <div className='flex w-fit flex-col py-2 text-xs font-medium leading-3'>
               <div className='flex flex-row rounded-t-md bg-purple-500 p-1.5 text-purple-100'>{`${t('Turno ')}${slot.id < 10 ? `0${slot.id}` : slot.id}`}</div>
               <div className='flex flex-row items-center space-x-2 rounded-b-md bg-purple-100 p-1.5 text-purple-500'>
                 <Clock size={13} strokeWidth={3} />
