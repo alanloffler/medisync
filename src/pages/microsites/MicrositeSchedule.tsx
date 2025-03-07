@@ -71,7 +71,6 @@ export function MicrositeSchedule({ day, professional }: { day: string; professi
               'flex flex-row items-center gap-3 md:gap-4',
               index === timeSlots.length - 1 || isLastAvailableBeforeUnavailable ? 'border-b-0' : 'border-b',
             )}
-            // className={`flex flex-row items-center gap-3 border-b last:border-none md:gap-4 ${slot.available ? 'text-foreground' : 'bg-slate-100 !text-purple-400'}`}
           >
             {/* Slot info */}
             <div className='flex w-fit flex-col py-2 text-xs font-medium leading-3 md:flex-row md:items-center md:justify-between md:gap-2'>
