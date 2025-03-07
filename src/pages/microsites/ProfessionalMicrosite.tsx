@@ -61,7 +61,7 @@ export default function ProfessionalMicrosite() {
 
   if (profIsSuccess)
     return (
-      <main className='flex flex-col bg-muted/70'>
+      <main className='flex h-full flex-col bg-muted/70'>
         <header className='sticky top-0 z-50 flex h-16 items-center justify-between gap-4 bg-background px-4 shadow-sm md:justify-normal md:gap-8 md:px-8'>
           <div className='flex items-center gap-2 font-semibold md:text-base'>
             <Package2 size={24} strokeWidth={2} />
@@ -71,7 +71,7 @@ export default function ProfessionalMicrosite() {
             {UtilsString.upperCase(`${professional?.data.title.abbreviation} ${professional?.data.firstName} ${professional?.data.lastName}`, 'each')}
           </h1>
         </header>
-        <section className='flex flex-col gap-6 p-6 md:gap-8 md:p-8'>
+        <section className='grid grid-cols-1 gap-6 p-6 md:grid-cols-2 md:gap-8 md:p-8'>
           <Card>
             <CardHeaderSecondary
               className='p-4 text-base md:flex-row md:items-center'
