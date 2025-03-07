@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons
-import { CalendarClock, Package2, X } from 'lucide-react';
+import { CalendarClock, Package2 } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
 import { Card, CardContent } from '@core/components/ui/card';
