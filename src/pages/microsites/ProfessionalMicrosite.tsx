@@ -4,6 +4,7 @@ import { CalendarClock, Package2 } from 'lucide-react';
 import { Card, CardContent } from '@core/components/ui/card';
 // Components
 import { CardHeaderSecondary } from '@core/components/common/header/CardHeaderSecondary';
+import { DatePicker } from '@microsites/common/DatePicker';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { MicrositeSchedule } from '@microsites/MicrositeSchedule';
@@ -69,7 +70,9 @@ export default function ProfessionalMicrosite() {
               className='p-4 text-base'
               icon={<CalendarClock size={18} strokeWidth={2} />}
               title={`Turnos del ${format(today, 'long')}`}
-            />
+            >
+              <DatePicker onDateChange={(e) => console.log(e)} />
+            </CardHeaderSecondary>
             <CardContent className='pt-3'>
               <MicrositeSchedule day={today} professional={professional?.data} />
             </CardContent>
