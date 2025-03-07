@@ -427,7 +427,7 @@
   },
   "warning": {
     "emptyAppointments": "There are no appointments for the patient",
-    "hourRangeNotAvailable": "Not available from {{begin}} to {{end}}",
+    "hourRangeNotAvailable": "Not available from {{begin}} to {{end}} hours",
     "selectProfessional": "Select a professional",
     "selectWorkingDay": "Select a business day"
   },
