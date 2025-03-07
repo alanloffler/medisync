@@ -6,7 +6,7 @@ import { StatusSelect } from '@appointments/components/common/StatusSelect';
 // External imports
 import { format, isAfter, parse } from '@formkit/tempo';
 import { useEffect, useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { IAppointmentView, ITimeSlot } from '@appointments/interfaces/appointment.interface';
@@ -18,23 +18,20 @@ import { UtilsString } from '@core/services/utils/string.service';
 import { cn } from '@lib/utils';
 // React component
 export function MicrositeSchedule({ day, professional }: { day: string; professional: IProfessional }) {
-  const [schedule, setSchedule] = useState<AppoSchedule | null>(null);
   const [timeSlots, setTimeSlots] = useState<ITimeSlot[]>([] as ITimeSlot[]);
   const { i18n, t } = useTranslation();
 
   const {
-    mutate: fetchAppos,
+    data: appointments,
     error: apposError,
     isError: apposIsError,
-  } = useMutation<IResponse<IAppointmentView[]>, Error>({
-    mutationKey: ['appointments', 'by-professional', professional?._id, day],
-    mutationFn: async () => {
+  } = useQuery<IResponse<IAppointmentView[]>, Error>({
+    queryKey: ['appointments', 'by-professional', professional._id, day],
+    queryFn: async () => {
       if (!professional._id || !day) throw new Error('Dev Error: No ID or day provided');
       return await AppointmentApiService.findAllByProfessional(professional._id, day);
     },
-    onSuccess: (response) => {
-      schedule?.insertAppointments(response.data);
-    },
+    refetchOnWindowFocus: true,
   });
 
   useEffect(() => {
@@ -51,10 +48,9 @@ export function MicrositeSchedule({ day, professional }: { day: string; professi
       ],
     );
 
-    setSchedule(schedule);
     setTimeSlots(schedule.timeSlots);
-    fetchAppos();
-  }, [day, fetchAppos, professional.configuration]);
+    appointments && schedule.insertAppointments(appointments.data);
+  }, [appointments, day, professional.configuration]);
 
   if (apposIsError) return <InfoCard text={apposError.message} variant='error' />;
 
