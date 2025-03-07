@@ -4,7 +4,7 @@ import { Clock, ClockAlert, IdCard } from 'lucide-react';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { StatusSelect } from '@appointments/components/common/StatusSelect';
 // External imports
-import { isAfter, parse } from '@formkit/tempo';
+import { format, isAfter, parse } from '@formkit/tempo';
 import { useEffect, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
@@ -98,10 +98,10 @@ export function MicrositeSchedule({ day, professional }: { day: string; professi
               </section>
             ) : (
               <div className='flex flex-1 flex-row justify-center text-xsm'>
-                {isAfter(new Date(), parse(slot.begin, 'HH:mm')) ? (
-                  <span className='rounded-md bg-amber-200 px-2 py-1 text-amber-700'>Turno sin reserva</span>
-                ) : (
+                {day >= format(new Date(), 'YYYY-MM-DD') && isAfter(parse(slot.begin, 'HH:mm'), new Date()) ? (
                   <span className='rounded-md bg-green-200 px-2 py-1 text-green-700'>Turno disponible</span>
+                ) : (
+                  <span className='rounded-md bg-amber-200 px-2 py-1 text-amber-700'>Turno sin reserva</span>
                 )}
               </div>
             )}
