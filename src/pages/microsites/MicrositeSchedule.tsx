@@ -4,9 +4,10 @@ import { Clock, ClockAlert, IdCard } from 'lucide-react';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { StatusSelect } from '@appointments/components/common/StatusSelect';
 // External imports
+import { isAfter, parse } from '@formkit/tempo';
 import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useMutation } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 // Imports
 import type { IAppointmentView, ITimeSlot } from '@appointments/interfaces/appointment.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
@@ -14,6 +15,7 @@ import type { IResponse } from '@core/interfaces/response.interface';
 import { AppoSchedule } from '@appointments/services/schedule.service';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { UtilsString } from '@core/services/utils/string.service';
+import { cn } from '@lib/utils';
 // React component
 export function MicrositeSchedule({ day, professional }: { day: string; professional: IProfessional }) {
   const [schedule, setSchedule] = useState<AppoSchedule | null>(null);
@@ -58,52 +60,63 @@ export function MicrositeSchedule({ day, professional }: { day: string; professi
 
   return (
     <section>
-      {timeSlots.map((slot) =>
-        slot.available ? (
+      {timeSlots.map((slot, index) => {
+        const nextSlot = timeSlots[index + 1];
+        const isLastAvailableBeforeUnavailable = !nextSlot?.available;
+
+        return slot.available ? (
           <section
             key={crypto.randomUUID()}
-            className={`flex h-10 flex-row items-center space-x-4 text-xsm ${slot.available ? 'text-foreground' : 'bg-slate-100 text-slate-400'}`}
+            className={cn(
+              'flex flex-row items-center gap-3 md:gap-4',
+              index === timeSlots.length - 1 || isLastAvailableBeforeUnavailable ? 'border-b-0' : 'border-b',
+            )}
+            // className={`flex flex-row items-center gap-3 border-b last:border-none md:gap-4 ${slot.available ? 'text-foreground' : 'bg-slate-100 !text-purple-400'}`}
           >
             {/* Slot info */}
-            <div className='flex w-[100px] flex-row items-center justify-between space-x-2'>
-              <div className='h-fit w-fit rounded-sm bg-slate-200 px-1.5 py-1 text-xs leading-3 text-slate-600'>
-                {`${t('words.appointmentPrefix')}${slot.id < 10 ? `0${slot.id}` : slot.id}`}
-              </div>
-              <div className='flex h-fit w-fit flex-row items-center space-x-1 rounded-sm bg-purple-100 p-1 pr-1.5 text-purple-600'>
-                <Clock size={13} strokeWidth={2} />
-                <span className='text-xs leading-3'>{slot.begin}</span>
+            <div className='flex w-fit flex-col py-2 text-xs font-medium leading-3 md:flex-row md:items-center md:justify-between md:gap-2'>
+              <div className='flex flex-row rounded-t-md bg-purple-500 p-1.5 text-purple-100'>{`${t('Turno ')}${slot.id < 10 ? `0${slot.id}` : slot.id}`}</div>
+              <div className='flex flex-row items-center space-x-2 rounded-b-md bg-purple-100 p-1.5 text-purple-500'>
+                <Clock size={13} strokeWidth={3} />
+                <span>{slot.begin}</span>
               </div>
             </div>
             {/* Appointment Section */}
             {slot.appointment?.user ? (
-              <section className='flex flex-1 flex-row items-center rounded-md px-2 py-1'>
-                <div className='flex h-fit w-3/4 flex-row items-center space-x-4 text-xsm leading-none text-slate-600'>
-                  <span className='text-sm font-medium'>
+              <section className='flex flex-1 flex-row items-center justify-between pl-2'>
+                <div className='flex flex-col gap-1 leading-none'>
+                  <span className='text-sm text-foreground'>
                     {UtilsString.upperCase(`${slot.appointment.user.firstName} ${slot.appointment.user.lastName}`, 'each')}
                   </span>
-                  <div className='hidden items-center space-x-2 text-muted-foreground lg:flex'>
+                  <div className='flex items-center space-x-2 text-xs text-muted-foreground'>
                     <IdCard size={18} strokeWidth={1.5} />
                     <span>{i18n.format(slot.appointment.user.dni, 'integer', i18n.resolvedLanguage)}</span>
                   </div>
                 </div>
-                <div className='flex w-1/4'>
-                  <StatusSelect appointment={slot.appointment} mode='update' showLabel className='justify-start text-xs text-muted-foreground' />
+                <div>
+                  <StatusSelect appointment={slot.appointment} mode='update' showLabel={false} />
                 </div>
               </section>
             ) : (
-              <div className='relative flex h-px flex-1 flex-row items-center justify-end bg-slate-200'></div>
+              <div className='flex flex-1 flex-row justify-center text-xsm'>
+                {isAfter(new Date(), parse(slot.begin, 'HH:mm')) ? (
+                  <span className='rounded-md bg-amber-200 px-2 py-1 text-amber-700'>Turno sin reserva</span>
+                ) : (
+                  <span className='rounded-md bg-green-200 px-2 py-1 text-green-700'>Turno disponible</span>
+                )}
+              </div>
             )}
           </section>
         ) : (
           <section
             key={crypto.randomUUID()}
-            className='mx-auto flex w-fit items-center space-x-2 rounded-md bg-slate-100 px-2 py-1 text-center text-xsm text-slate-500'
+            className='flex w-full items-center justify-center space-x-2 border-y border-rose-200 bg-rose-50 py-3 text-center text-xsm text-rose-400'
           >
             <ClockAlert size={16} strokeWidth={2} className='text-rose-400' />
             <div>{slot.available ? slot.begin : t('warning.hourRangeNotAvailable', { begin: slot.begin, end: slot.end })}</div>
           </section>
-        ),
-      )}
+        );
+      })}
     </section>
   );
 }
