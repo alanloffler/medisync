@@ -20,6 +20,7 @@ interface IStatusSelect {
   appointment: IAppointment;
   className?: string;
   mode: 'update' | 'view';
+  onStatusChange?: any;
   showLabel?: boolean;
 }
 
@@ -47,7 +48,7 @@ const statusOptions: IStatusOption[] = [
   },
 ];
 // React component
-export function StatusSelect({ appointment, className, mode, showLabel = false }: IStatusSelect) {
+export function StatusSelect({ appointment, className, mode, onStatusChange, showLabel = false }: IStatusSelect) {
   const [itemSelected, setItemSelected] = useState<string>(appointment.status);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const { day, hour, _id, status } = appointment;
@@ -77,6 +78,7 @@ export function StatusSelect({ appointment, className, mode, showLabel = false }
     if (mode === 'update') {
       setItemSelected(status);
       mutate({ professional: appointment.professional._id, status });
+      onStatusChange(appointment._id, status);
     }
   }
 
