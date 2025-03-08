@@ -22,9 +22,11 @@ import type { IResponse } from '@core/interfaces/response.interface';
 import { CalendarService } from '@appointments/services/calendar.service';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
+import { IStats } from './interfaces/statistics.interface';
 // React component
 export default function ProfessionalMicrosite() {
   const [date, setDate] = useState<Date | undefined>(new Date());
+  const [todayStats, setTodayStats] = useState<IStats | undefined>(undefined);
   const { id } = useParams();
   const { t } = useTranslation();
 
@@ -75,7 +77,7 @@ export default function ProfessionalMicrosite() {
         </header>
         <section className='grid grid-cols-1 gap-6 p-6 md:grid-cols-5 md:gap-8 md:p-8'>
           <Card className='col-span-1 h-fit p-6 md:col-span-2'>
-            <MicrositeStats professionalId={id} />
+            <MicrositeStats professionalId={id} todayStats={todayStats} />
           </Card>
           <Card className='col-span-1 md:col-span-3'>
             <CardHeaderSecondary
@@ -103,7 +105,7 @@ export default function ProfessionalMicrosite() {
                   {UtilsString.upperCase(`${format(date, 'full')}`, 'first')}
                 </h2>
               )}
-              <MicrositeSchedule day={formatDate(date)} professional={professional?.data} />
+              <MicrositeSchedule day={formatDate(date)} professional={professional?.data} setTodayStats={setTodayStats} />
             </CardContent>
           </Card>
         </section>
