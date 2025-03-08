@@ -7,7 +7,7 @@ import { StatusSelect } from '@appointments/components/common/StatusSelect';
 // External imports
 import { format, isAfter, parse } from '@formkit/tempo';
 import { type Dispatch, type SetStateAction, useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { IAppointmentView, ITimeSlot } from '@appointments/interfaces/appointment.interface';
@@ -18,6 +18,7 @@ import { AppoSchedule } from '@appointments/services/schedule.service';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { UtilsString } from '@core/services/utils/string.service';
 import { cn } from '@lib/utils';
+import { EStatus } from '@appointments/enums/status.enum';
 // Interface
 interface IProps {
   day: string;
@@ -27,6 +28,7 @@ interface IProps {
 // React component
 export function MicrositeSchedule({ day, professional, setTodayStats }: IProps) {
   const [timeSlots, setTimeSlots] = useState<ITimeSlot[]>([] as ITimeSlot[]);
+  const queryClient = useQueryClient();
   const { i18n, t } = useTranslation();
 
   const {
@@ -44,21 +46,32 @@ export function MicrositeSchedule({ day, professional, setTodayStats }: IProps) 
     refetchOnWindowFocus: true,
   });
 
+  function updateAppointmentStatus(id: string, status: string): void {
+    queryClient.setQueryData(['appointments', 'by-professional', professional._id, day], (oldData: IResponse<IAppointmentView[]>) => {
+      const appointments: IResponse<IAppointmentView[]> = JSON.parse(JSON.stringify(oldData));
+      const appointment: IAppointmentView | undefined = appointments.data.find((app: IAppointmentView) => app._id === id);
+      if (appointment) appointment.status = status;
+
+      return appointments;
+    });
+  }
+
   useEffect(() => {
     if (apposIsSuccess && appointments) {
       const data: IStats = appointments.data.reduce<IStats>(
         (counts, appointment) => {
           switch (appointment.status) {
-            case 'attended':
+            case EStatus.ATTENDED:
               counts.attended += 1;
               break;
-            case 'not_attended':
+            case EStatus.NOT_ATTENDED:
               counts.notAttended += 1;
               break;
-            case 'not_status':
+            case EStatus.NOT_STATUS:
               counts.notStatus += 1;
               break;
-            case 'waiting':
+            // TODO: get value inside NOT_STATUS case by date and hour
+            case EStatus.WAITING:
               counts.waiting += 1;
               break;
           }
@@ -127,7 +140,7 @@ export function MicrositeSchedule({ day, professional, setTodayStats }: IProps) 
                     </div>
                   </div>
                   <div>
-                    <StatusSelect appointment={slot.appointment} mode='update' showLabel={false} />
+                    <StatusSelect appointment={slot.appointment} mode='update' onStatusChange={updateAppointmentStatus} showLabel={false} />
                   </div>
                 </section>
               ) : (
