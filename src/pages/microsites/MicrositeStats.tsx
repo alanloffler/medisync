@@ -60,7 +60,7 @@ export function MicrositeStats({ professionalId, todayStats }: IProps) {
         </section>
       </section>
       <section className='flex flex-col gap-2 text-sm'>
-        <h1 className='text-xs font-semibold uppercase text-muted-foreground'>Estadísticas del historial</h1>
+        <h1 className='text-xs font-semibold uppercase text-muted-foreground'>Historial</h1>
         <section className='flex flex-col'>
           <div className='flex items-center gap-1'>
             <span className='text-lg font-semibold'>{historicalAppos?.data.total}</span>
@@ -75,14 +75,18 @@ export function MicrositeStats({ professionalId, todayStats }: IProps) {
               <span>{historicalAppos?.data.notAttended}</span>
               <ArrowDown size={15} strokeWidth={2} className='text-rose-400' />
             </div>
-            <div className='flex items-center gap-0.5 text-sm'>
-              <span>{historicalAppos?.data.waiting}</span>
-              <ArrowRight size={15} strokeWidth={2} className='text-amber-400' />
-            </div>
-            <div className='flex items-center gap-0.5 text-sm'>
-              <span>{historicalAppos?.data.notStatus}</span>
-              <ArrowDownRight size={15} strokeWidth={2} className='text-slate-400' />
-            </div>
+            {historicalAppos && historicalAppos.data.waiting > 0 && (
+              <div className='flex items-center gap-0.5 text-sm'>
+                <span>{historicalAppos?.data.waiting}</span>
+                <ArrowRight size={15} strokeWidth={2} className='text-amber-400' />
+              </div>
+            )}
+            {historicalAppos && historicalAppos.data.notStatus > 0 && (
+              <div className='flex items-center gap-0.5 text-sm'>
+                <span>{historicalAppos?.data.notStatus}</span>
+                <ArrowDownRight size={15} strokeWidth={2} className='text-slate-400' />
+              </div>
+            )}
           </div>
         </section>
       </section>
