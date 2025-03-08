@@ -1,7 +1,8 @@
 // Icons: https://lucide.dev/icons/
-import { Clock, ClockAlert, IdCard } from 'lucide-react';
+import { CalendarCheck, CalendarX, Clock, ClockAlert, IdCard } from 'lucide-react';
 // Components
 import { InfoCard } from '@core/components/common/InfoCard';
+import { LoadingDB } from '@core/components/common/LoadingDB';
 import { StatusSelect } from '@appointments/components/common/StatusSelect';
 // External imports
 import { format, isAfter, parse } from '@formkit/tempo';
@@ -16,7 +17,6 @@ import { AppoSchedule } from '@appointments/services/schedule.service';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { UtilsString } from '@core/services/utils/string.service';
 import { cn } from '@lib/utils';
-import { LoadingDB } from '@core/components/common/LoadingDB';
 // React component
 export function MicrositeSchedule({ day, professional }: { day: string; professional: IProfessional }) {
   const [timeSlots, setTimeSlots] = useState<ITimeSlot[]>([] as ITimeSlot[]);
@@ -74,11 +74,11 @@ export function MicrositeSchedule({ day, professional }: { day: string; professi
               )}
             >
               {/* Slot info */}
-              <div className='flex w-fit flex-col py-2 text-xs font-medium leading-3'>
-                <div className='flex flex-row rounded-t-md bg-purple-500 p-1.5 text-purple-100'>{`${t('Turno ')}${slot.id < 10 ? `0${slot.id}` : slot.id}`}</div>
-                <div className='flex flex-row items-center space-x-2 rounded-b-md bg-purple-100 p-1.5 text-purple-500'>
-                  <Clock size={13} strokeWidth={3} />
-                  <span>{slot.begin}</span>
+              <div className='flex w-fit flex-col py-2 text-xs font-semibold leading-3'>
+                <div className='flex flex-row rounded-t-md bg-slate-300 p-1.5 text-slate-700'>{`${t('Turno ')}${slot.id < 10 ? `0${slot.id}` : slot.id}`}</div>
+                <div className='flex flex-row items-center space-x-2 rounded-b-md bg-slate-100 p-1.5 text-slate-500'>
+                  <Clock size={14} strokeWidth={2} />
+                  <span className='font-normal'>{slot.begin}</span>
                 </div>
               </div>
               {/* Appointment Section */}
@@ -98,15 +98,25 @@ export function MicrositeSchedule({ day, professional }: { day: string; professi
                   </div>
                 </section>
               ) : (
+                // TODO: translate slot status content
                 <div className='flex flex-1 flex-row justify-center text-xsm'>
                   {day >= format(new Date(), 'YYYY-MM-DD') ? (
                     day === format(new Date(), 'YYYY-MM-DD') && isAfter(new Date(), parse(slot.begin, 'HH:mm')) ? (
-                      <span className='rounded-md bg-amber-200 px-2 py-1 text-amber-700'>Turno sin reserva</span>
+                      <div className='flex flex-row items-center space-x-3'>
+                        <CalendarX size={18} strokeWidth={2} className='text-amber-500' />
+                        <span className='text-amber-500'>Turno sin reserva</span>
+                      </div>
                     ) : (
-                      <span className='rounded-md bg-green-200 px-2 py-1 text-green-700'>Turno disponible</span>
+                      <div className='flex flex-row items-center space-x-3'>
+                        <CalendarCheck size={18} strokeWidth={2} className='text-emerald-500' />
+                        <span className='text-emerald-500'>Turno disponible</span>
+                      </div>
                     )
                   ) : (
-                    <span className='rounded-md bg-amber-200 px-2 py-1 text-amber-700'>Turno sin reserva</span>
+                    <div className='flex flex-row items-center space-x-3'>
+                      <CalendarX size={18} strokeWidth={2} className='text-amber-500' />
+                      <span className='text-amber-500'>Turno sin reserva</span>
+                    </div>
                   )}
                 </div>
               )}
