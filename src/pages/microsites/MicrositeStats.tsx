@@ -2,6 +2,7 @@
 import { useQuery } from '@tanstack/react-query';
 // Imports
 import type { IResponse } from '@core/interfaces/response.interface';
+import { StatisticsService } from './services/statistics.service';
 // Interface
 interface IProps {
   professionalId?: string;
@@ -14,7 +15,7 @@ export function MicrositeStats({ professionalId }: IProps) {
     queryKey: ['micrositeStats', professionalId],
     queryFn: async () => {
       if (!professionalId) throw new Error('Professional ID is required');
-      return { data: 10, message: 'Success', statusCode: 200 };
+      return await StatisticsService.countApposByProfessional(professionalId);
     },
   });
 
