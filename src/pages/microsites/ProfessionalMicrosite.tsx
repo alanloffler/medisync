@@ -9,6 +9,7 @@ import { DatePicker } from '@microsites/common/DatePicker';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { MicrositeSchedule } from '@microsites/MicrositeSchedule';
+import { MicrositeStats } from '@microsites/MicrositeStats';
 // External imports
 import { format } from '@formkit/tempo';
 import { useParams } from 'react-router-dom';
@@ -18,9 +19,9 @@ import { useTranslation } from 'react-i18next';
 // Imports
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
+import { CalendarService } from '@appointments/services/calendar.service';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
-import { CalendarService } from '@appointments/services/calendar.service';
 // React component
 export default function ProfessionalMicrosite() {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -62,7 +63,7 @@ export default function ProfessionalMicrosite() {
 
   if (profIsSuccess)
     return (
-      <main className='flex h-full flex-col bg-muted/70'>
+      <main className='flex h-full min-h-dvh flex-col bg-muted/70'>
         <header className='sticky top-0 z-50 flex h-16 items-center justify-between gap-4 bg-background px-4 shadow-sm md:justify-normal md:gap-8 md:px-8'>
           <div className='flex items-center gap-2 font-semibold md:text-base'>
             <Package2 size={24} strokeWidth={2} />
@@ -72,8 +73,11 @@ export default function ProfessionalMicrosite() {
             {UtilsString.upperCase(`${professional?.data.title.abbreviation} ${professional?.data.firstName} ${professional?.data.lastName}`, 'each')}
           </h1>
         </header>
-        <section className='grid grid-cols-1 gap-6 p-6 md:grid-cols-2 md:gap-8 md:p-8'>
-          <Card>
+        <section className='grid grid-cols-1 gap-6 p-6 md:grid-cols-5 md:gap-8 md:p-8'>
+          <Card className='col-span-1 h-fit p-6 md:col-span-2'>
+            <MicrositeStats professionalId={id} />
+          </Card>
+          <Card className='col-span-1 md:col-span-3'>
             <CardHeaderSecondary
               className='ml-2 p-4 text-base md:flex-row md:items-center'
               icon={<CalendarClock size={18} strokeWidth={2} />}
