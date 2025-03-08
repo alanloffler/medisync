@@ -14,10 +14,11 @@ import { cn } from '@lib/utils';
 interface IProps {
   className?: string;
   defaultDate?: Date | undefined;
+  disabledDays?: number[];
   onDateChange?: (date: Date | undefined) => void;
 }
 // React component
-export function DatePicker({ className, defaultDate, onDateChange }: IProps) {
+export function DatePicker({ className, defaultDate, disabledDays, onDateChange }: IProps) {
   const [date, setDate] = useState<Date | undefined>(defaultDate);
   const [open, setOpen] = useState<boolean>(false);
   const { t } = useTranslation();
@@ -52,7 +53,14 @@ export function DatePicker({ className, defaultDate, onDateChange }: IProps) {
         </Button>
       </PopoverTrigger>
       <PopoverContent className='w-auto p-0' align='start'>
-        <Calendar disabled={{ dayOfWeek: [0] }} mode='single' showOutsideDays={false} selected={date} onSelect={handleDateSelect} initialFocus />
+        <Calendar
+          disabled={[{ dayOfWeek: disabledDays ?? [] }]}
+          mode='single'
+          showOutsideDays={false}
+          selected={date}
+          onSelect={handleDateSelect}
+          initialFocus
+        />
       </PopoverContent>
     </Popover>
   );
