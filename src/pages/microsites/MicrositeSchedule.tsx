@@ -6,19 +6,26 @@ import { LoadingDB } from '@core/components/common/LoadingDB';
 import { StatusSelect } from '@appointments/components/common/StatusSelect';
 // External imports
 import { format, isAfter, parse } from '@formkit/tempo';
-import { useEffect, useState } from 'react';
+import { type Dispatch, type SetStateAction, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { IAppointmentView, ITimeSlot } from '@appointments/interfaces/appointment.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
+import type { IStats } from './interfaces/statistics.interface';
 import { AppoSchedule } from '@appointments/services/schedule.service';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { UtilsString } from '@core/services/utils/string.service';
 import { cn } from '@lib/utils';
+// Interface
+interface IProps {
+  day: string;
+  professional: IProfessional;
+  setTodayStats: Dispatch<SetStateAction<IStats | undefined>>;
+}
 // React component
-export function MicrositeSchedule({ day, professional }: { day: string; professional: IProfessional }) {
+export function MicrositeSchedule({ day, professional, setTodayStats }: IProps) {
   const [timeSlots, setTimeSlots] = useState<ITimeSlot[]>([] as ITimeSlot[]);
   const { i18n, t } = useTranslation();
 
@@ -36,6 +43,32 @@ export function MicrositeSchedule({ day, professional }: { day: string; professi
     },
     refetchOnWindowFocus: true,
   });
+
+  useEffect(() => {
+    if (apposIsSuccess && appointments) {
+      const data: IStats = appointments.data.reduce<IStats>(
+        (counts, appointment) => {
+          switch (appointment.status) {
+            case 'attended':
+              counts.attended += 1;
+              break;
+            case 'not_attended':
+              counts.notAttended += 1;
+              break;
+            case 'not_status':
+              counts.notStatus += 1;
+              break;
+            case 'waiting':
+              counts.waiting += 1;
+              break;
+          }
+          return counts;
+        },
+        { total: appointments.data.length, attended: 0, notAttended: 0, notStatus: 0, waiting: 0 },
+      );
+      setTodayStats(data);
+    }
+  }, [appointments, apposIsSuccess, setTodayStats]);
 
   useEffect(() => {
     const schedule: AppoSchedule = new AppoSchedule(
