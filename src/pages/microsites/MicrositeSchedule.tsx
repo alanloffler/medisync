@@ -99,8 +99,12 @@ export function MicrositeSchedule({ day, professional }: { day: string; professi
                 </section>
               ) : (
                 <div className='flex flex-1 flex-row justify-center text-xsm'>
-                  {day >= format(new Date(), 'YYYY-MM-DD') && isAfter(parse(slot.begin, 'HH:mm'), new Date()) ? (
-                    <span className='rounded-md bg-green-200 px-2 py-1 text-green-700'>Turno disponible</span>
+                  {day >= format(new Date(), 'YYYY-MM-DD') ? (
+                    day === format(new Date(), 'YYYY-MM-DD') && isAfter(new Date(), parse(slot.begin, 'HH:mm')) ? (
+                      <span className='rounded-md bg-amber-200 px-2 py-1 text-amber-700'>Turno sin reserva</span>
+                    ) : (
+                      <span className='rounded-md bg-green-200 px-2 py-1 text-green-700'>Turno disponible</span>
+                    )
                   ) : (
                     <span className='rounded-md bg-amber-200 px-2 py-1 text-amber-700'>Turno sin reserva</span>
                   )}
