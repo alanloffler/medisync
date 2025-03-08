@@ -20,6 +20,7 @@ import type { IProfessional } from '@professionals/interfaces/professional.inter
 import type { IResponse } from '@core/interfaces/response.interface';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
+import { CalendarService } from '@appointments/services/calendar.service';
 // React component
 export default function ProfessionalMicrosite() {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -84,7 +85,12 @@ export default function ProfessionalMicrosite() {
                     {t('button.today')}
                   </Button>
                 )}
-                <DatePicker className='w-fit' defaultDate={date} onDateChange={(e) => setDate(e)} />
+                <DatePicker
+                  className='w-fit'
+                  defaultDate={date}
+                  disabledDays={CalendarService.getDisabledDays(professional.data.configuration.workingDays)}
+                  onDateChange={(e) => setDate(e)}
+                />
               </section>
             </CardHeaderSecondary>
             <CardContent>
