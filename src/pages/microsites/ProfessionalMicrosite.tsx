@@ -74,10 +74,9 @@ export default function ProfessionalMicrosite() {
         <section className='grid grid-cols-1 gap-6 p-6 md:grid-cols-2 md:gap-8 md:p-8'>
           <Card>
             <CardHeaderSecondary
-              className='p-4 text-base md:flex-row md:items-center'
+              className='ml-2 p-4 text-base md:flex-row md:items-center'
               icon={<CalendarClock size={18} strokeWidth={2} />}
               title={t('pageTitle.appointments')}
-              // title={date ? `Turnos del ${format(date, 'short')}` : ''}
             >
               <section className='flex items-center space-x-4'>
                 {formatDate(date) !== formatDate(new Date()) && (
