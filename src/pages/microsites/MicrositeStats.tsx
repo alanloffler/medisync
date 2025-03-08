@@ -9,16 +9,11 @@ import { StatisticsService } from '@microsites/services/statistics.service';
 // Interface
 interface IProps {
   professionalId?: string;
+  todayStats?: IStats;
 }
 // React component
-export function MicrositeStats({ professionalId }: IProps) {
-  const { data: todayAppos } = useQuery<IResponse<IStats>, Error>({
-    queryKey: ['microsite-stats', 'today', professionalId],
-    queryFn: async () => {
-      if (!professionalId) throw new Error('Professional ID is required');
-      return await StatisticsService.countTodayApposByProfessional(professionalId);
-    },
-  });
+export function MicrositeStats({ professionalId, todayStats }: IProps) {
+  console.log('today stats inside microsite stats component', todayStats);
 
   const { data: countAppos } = useQuery<IResponse<IStats>, Error>({
     queryKey: ['microsite-stats', 'historical', professionalId],
@@ -34,27 +29,31 @@ export function MicrositeStats({ professionalId }: IProps) {
         <h1 className='text-xs font-semibold uppercase text-muted-foreground'>Hoy</h1>
         <section className='flex flex-col'>
           <div className='flex items-center gap-1'>
-            <span className='text-lg font-semibold'>{todayAppos?.data.total}</span>
+            <span className='text-lg font-semibold'>{todayStats?.total}</span>
             <span className='text-sm'>turnos en total</span>
           </div>
-          {/* <div className='flex items-center gap-3 text-xsm'>
+          <div className='flex items-center gap-3 text-xsm'>
             <div className='flex items-center gap-0.5 text-sm'>
-              <span>{todayAppos?.data.attended}</span>
+              <span>{todayStats?.attended}</span>
               <ArrowUp size={15} strokeWidth={2} className='text-emerald-400' />
             </div>
             <div className='flex items-center gap-0.5 text-sm'>
-              <span>{todayAppos?.data.notAttended}</span>
+              <span>{todayStats?.notAttended}</span>
               <ArrowDown size={15} strokeWidth={2} className='text-rose-400' />
             </div>
-            <div className='flex items-center gap-0.5 text-sm'>
-              <span>{todayAppos?.data.waiting}</span>
-              <ArrowRight size={15} strokeWidth={2} className='text-amber-400' />
-            </div>
-            <div className='flex items-center gap-0.5 text-sm'>
-              <span>{todayAppos?.data.notStatus}</span>
-              <ArrowDownRight size={15} strokeWidth={2} className='text-slate-400' />
-            </div>
-          </div> */}
+            {todayStats && todayStats.waiting > 0 && (
+              <div className='flex items-center gap-0.5 text-sm'>
+                <span>{todayStats?.waiting}</span>
+                <ArrowRight size={15} strokeWidth={2} className='text-amber-400' />
+              </div>
+            )}
+            {todayStats && todayStats.notStatus > 0 && (
+              <div className='flex items-center gap-0.5 text-sm'>
+                <span>{todayStats?.notStatus}</span>
+                <ArrowDownRight size={15} strokeWidth={2} className='text-slate-400' />
+              </div>
+            )}
+          </div>
         </section>
       </section>
       <section className='flex flex-col gap-2 text-sm'>
