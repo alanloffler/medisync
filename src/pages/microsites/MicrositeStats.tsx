@@ -47,23 +47,21 @@ export function MicrositeStats({ professionalId, todayStats }: IProps) {
     <main className='flex flex-col gap-6 overflow-auto'>
       <section className='flex flex-col gap-2 text-sm'>
         <h1 className='text-xs font-semibold uppercase text-muted-foreground'>Hoy</h1>
-        <section className='flex flex-row items-center gap-3' key={animationKey}>
+        <section className='flex flex-row items-center gap-3'>
           {todayStats && todayStats.total > 0 && (
-            <div>
-              <ChartContainer config={{}} className='aspect-square h-[50px] w-[50px]'>
-                <PieChart>
-                  <Pie
-                    isAnimationActive={true}
-                    animationDuration={1000}
-                    data={chartData}
-                    dataKey='value'
-                    nameKey='status'
-                    innerRadius={12.5}
-                    outerRadius={25}
-                  />
-                </PieChart>
-              </ChartContainer>
-            </div>
+            <ChartContainer className='aspect-square h-[50px] w-[50px]' config={{}} key={animationKey}>
+              <PieChart>
+                <Pie
+                  isAnimationActive={true}
+                  animationDuration={1000}
+                  data={chartData}
+                  dataKey='value'
+                  nameKey='status'
+                  innerRadius={12.5}
+                  outerRadius={25}
+                />
+              </PieChart>
+            </ChartContainer>
           )}
           <div className='flex flex-col'>
             <div className='flex items-center gap-1'>
