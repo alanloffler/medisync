@@ -7,6 +7,7 @@ import { Progress } from '@core/components/ui/progress';
 // https://recharts.org
 import { Pie, PieChart } from 'recharts';
 // External imports
+import { motion } from 'motion/react';
 import { useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
@@ -15,8 +16,6 @@ import type { IResponse } from '@core/interfaces/response.interface';
 import type { IStats } from '@microsites/interfaces/statistics.interface';
 import { EStatus } from '@appointments/enums/status.enum';
 import { StatisticsService } from '@microsites/services/statistics.service';
-import { motion } from 'motion/react';
-
 // Interface
 interface IProps {
   professionalId?: string;
@@ -48,7 +47,7 @@ export function MicrositeStats({ professionalId, todayStats }: IProps) {
 
   useEffect(() => {
     if (todayStats && chartData) setAnimationKey(JSON.stringify(chartData));
-    refetchHistoricalAppos();
+    if (todayStats) refetchHistoricalAppos();
   }, [chartData, refetchHistoricalAppos, todayStats]);
 
   useEffect(() => {
