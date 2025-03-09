@@ -104,8 +104,8 @@ export function MicrositeSchedule({ day, professional, setTodayStats }: IProps) 
   if (apposIsError) return <InfoCard text={apposError.message} variant='error' />;
 
   return (
-    <section>
-      {apposIsLoading && <LoadingDB className='pt-4' size='default' text={t('loading.appointments')} />}
+    <section className='flex w-full flex-col'>
+      {apposIsLoading && <LoadingDB className='mt-2 w-full p-0' size='default' text={t('loading.appointments')} />}
       {apposIsSuccess &&
         timeSlots.map((slot, index) => {
           const nextSlot = timeSlots[index + 1];
