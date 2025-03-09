@@ -1,11 +1,15 @@
 // Icons: https://lucide.dev/icons
 import { ArrowDown, ArrowDownRight, ArrowRight, ArrowUp } from 'lucide-react';
 // External components
+// https://ui.shadcn.com/docs/components
 import { ChartContainer } from '@core/components/ui/chart';
+import { Progress } from '@core/components/ui/progress';
+// https://recharts.org
 import { Pie, PieChart } from 'recharts';
 // External imports
 import { useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 // Imports
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IStats } from '@microsites/interfaces/statistics.interface';
@@ -19,6 +23,8 @@ interface IProps {
 // React component
 export function MicrositeStats({ professionalId, todayStats }: IProps) {
   const [animationKey, setAnimationKey] = useState<string>('');
+  const [progress, setProgress] = useState<number>(0);
+  const { i18n } = useTranslation();
 
   const { data: historicalAppos, refetch: refetchHistoricalAppos } = useQuery<IResponse<IStats>, Error>({
     queryKey: ['microsite-stats', 'historical', professionalId],
@@ -42,6 +48,14 @@ export function MicrositeStats({ professionalId, todayStats }: IProps) {
     if (todayStats && chartData) setAnimationKey(JSON.stringify(chartData));
     refetchHistoricalAppos();
   }, [chartData, refetchHistoricalAppos, todayStats]);
+
+  useEffect(() => {
+    if (!historicalAppos?.data.total) return;
+    const total: number = historicalAppos.data.total;
+    const notStatus: number = historicalAppos.data.notStatus;
+    const percentage: number = 100 - (notStatus / total) * 100;
+    setProgress(percentage);
+  }, [historicalAppos?.data.notStatus, historicalAppos?.data.total]);
 
   return (
     <main className='flex flex-col gap-6 overflow-auto'>
@@ -122,6 +136,16 @@ export function MicrositeStats({ professionalId, todayStats }: IProps) {
               </div>
             )}
           </div>
+        </section>
+      </section>
+      <section className='flex flex-col gap-2 text-sm'>
+        <h1 className='text-xs font-semibold uppercase text-muted-foreground'>Progreso de edición</h1>
+        <section className='flex items-center gap-3 py-1 text-xsm'>
+          <Progress value={progress} className='h-3 w-full bg-slate-200 [&_div]:bg-sky-400' />
+          <span className='font-medium text-sky-500'>
+            {i18n.format(progress, 'number', 'es')}
+            <small>%</small>
+          </span>
         </section>
       </section>
     </main>
