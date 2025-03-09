@@ -19,10 +19,10 @@ import { useTranslation } from 'react-i18next';
 // Imports
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
+import type { IStats } from '@microsites/interfaces/statistics.interface';
 import { CalendarService } from '@appointments/services/calendar.service';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
-import { IStats } from './interfaces/statistics.interface';
 // React component
 export default function ProfessionalMicrosite() {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -79,7 +79,7 @@ export default function ProfessionalMicrosite() {
           <Card className='col-span-1 h-fit p-6 md:col-span-2'>
             <MicrositeStats professionalId={id} todayStats={todayStats} />
           </Card>
-          <Card className='col-span-1 md:col-span-3'>
+          <Card className='col-span-1 h-fit md:col-span-3'>
             <CardHeaderSecondary
               className='ml-2 p-4 text-base md:flex-row md:items-center'
               icon={<CalendarClock size={18} strokeWidth={2} />}
