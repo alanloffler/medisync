@@ -15,6 +15,8 @@ import type { IResponse } from '@core/interfaces/response.interface';
 import type { IStats } from '@microsites/interfaces/statistics.interface';
 import { EStatus } from '@appointments/enums/status.enum';
 import { StatisticsService } from '@microsites/services/statistics.service';
+import { motion } from 'motion/react';
+
 // Interface
 interface IProps {
   professionalId?: string;
@@ -62,7 +64,7 @@ export function MicrositeStats({ professionalId, todayStats }: IProps) {
       <section className='flex flex-col gap-2 text-sm'>
         <h1 className='text-xs font-semibold uppercase text-muted-foreground'>Hoy</h1>
         <section className='flex flex-row items-center gap-3'>
-          {todayStats && todayStats.total > 0 && (
+          {todayStats && todayStats.total !== undefined && todayStats.total > 0 && (
             <ChartContainer className='aspect-square h-[50px] w-[50px]' config={{}} key={animationKey}>
               <PieChart>
                 <Pie
@@ -77,34 +79,42 @@ export function MicrositeStats({ professionalId, todayStats }: IProps) {
               </PieChart>
             </ChartContainer>
           )}
-          <div className='flex flex-col'>
-            <div className='flex items-center gap-1'>
-              <span className='text-lg font-semibold'>{todayStats?.total}</span>
-              <span className='text-sm'>turnos en total</span>
-            </div>
-            <div className='flex items-center gap-3 text-xsm'>
-              <div className='flex items-center gap-0.5 text-sm'>
-                <span>{todayStats?.attended}</span>
-                <ArrowUp size={15} strokeWidth={2} className='text-emerald-400' />
+          {todayStats && (
+            <motion.div
+              className='flex flex-col'
+              key={`${JSON.stringify(todayStats)}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 2, delay: todayStats?.total && todayStats.total > 0 ? 1 : 0 }}
+            >
+              <div className='flex items-center gap-1'>
+                <span className='text-lg font-semibold'>{todayStats?.total}</span>
+                <span className='text-sm'>turnos en total</span>
               </div>
-              <div className='flex items-center gap-0.5 text-sm'>
-                <span>{todayStats?.notAttended}</span>
-                <ArrowDown size={15} strokeWidth={2} className='text-rose-400' />
+              <div className='flex items-center gap-3 text-xsm'>
+                <div className='flex items-center gap-0.5 text-sm'>
+                  <span>{todayStats?.attended}</span>
+                  <ArrowUp size={15} strokeWidth={2} className='text-emerald-400' />
+                </div>
+                <div className='flex items-center gap-0.5 text-sm'>
+                  <span>{todayStats?.notAttended}</span>
+                  <ArrowDown size={15} strokeWidth={2} className='text-rose-400' />
+                </div>
+                {todayStats && todayStats.waiting !== undefined && todayStats.waiting > 0 && (
+                  <div className='flex items-center gap-0.5 text-sm'>
+                    <span>{todayStats.waiting}</span>
+                    <ArrowRight size={15} strokeWidth={2} className='text-amber-400' />
+                  </div>
+                )}
+                {todayStats && todayStats.notStatus !== undefined && todayStats.notStatus > 0 && (
+                  <div className='flex items-center gap-0.5 text-sm'>
+                    <span>{todayStats.notStatus}</span>
+                    <ArrowDownRight size={15} strokeWidth={2} className='text-slate-400' />
+                  </div>
+                )}
               </div>
-              {todayStats && todayStats.waiting > 0 && (
-                <div className='flex items-center gap-0.5 text-sm'>
-                  <span>{todayStats?.waiting}</span>
-                  <ArrowRight size={15} strokeWidth={2} className='text-amber-400' />
-                </div>
-              )}
-              {todayStats && todayStats.notStatus > 0 && (
-                <div className='flex items-center gap-0.5 text-sm'>
-                  <span>{todayStats?.notStatus}</span>
-                  <ArrowDownRight size={15} strokeWidth={2} className='text-slate-400' />
-                </div>
-              )}
-            </div>
-          </div>
+            </motion.div>
+          )}
         </section>
       </section>
       <section className='flex flex-col gap-2 text-sm'>
