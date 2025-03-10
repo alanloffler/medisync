@@ -17,7 +17,7 @@ const infoCardVariants = cva('flex flex-row items-center mx-auto justify-center 
     size: {
       default: 'text-base [&_svg]:h-[20px] [&_svg]:w-[20px]',
       sm: 'text-sm [&_svg]:h-[18px] [&_svg]:w-[18px]',
-      xsm: '!text-xsm [&_svg]:h-[16px] [&_svg]:w-[16px]',
+      xsm: 'text-xsm [&_svg]:h-[16px] [&_svg]:w-[16px]',
       xs: 'text-xs [&_svg]:h-[14px] [&_svg]:w-[14px]',
     },
     type: {
