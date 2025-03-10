@@ -67,7 +67,6 @@ export function MicrositeStats({ apposIsLoading, professionalId, showToday, toda
     const total: number | undefined = todayStats?.total;
     if (!total) return;
     if (todayStats?.timeSlots) {
-      console.log(total, todayStats?.timeSlots);
       const percentage: number = (total / todayStats?.timeSlots) * 100;
       setProgress(percentage);
     } else {
