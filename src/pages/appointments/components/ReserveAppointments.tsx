@@ -167,8 +167,8 @@ export default function ReserveAppointments() {
   );
 
   return (
-    <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6'>
-      <section className='flex flex-col gap-6 overflow-x-auto md:flex-row lg:flex-row'>
+    <main className='flex flex-1 flex-col gap-6 p-6 md:gap-8 md:p-8'>
+      <section className='flex flex-col gap-6 overflow-x-auto md:flex-row md:gap-8 lg:flex-row'>
         <section className='mx-auto flex h-fit w-full min-w-fit flex-col gap-4 rounded-lg bg-background p-4 md:w-fit md:gap-6 lg:w-1/3 lg:gap-6'>
           <ProfessionalSelection
             key={professionalKey}
