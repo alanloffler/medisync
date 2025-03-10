@@ -177,7 +177,7 @@ export const DailySchedule = memo(({ handleDialog, professional, refreshAppos, s
               slot.available ? (
                 <section
                   key={crypto.randomUUID()}
-                  className={`flex h-10 flex-row items-center space-x-4 text-xsm ${
+                  className={`flex h-fit flex-row items-center space-x-4 py-3 text-xsm ${
                     slot.available ? 'text-foreground' : 'bg-slate-100 text-slate-400'
                   }`}
                 >
@@ -193,7 +193,7 @@ export const DailySchedule = memo(({ handleDialog, professional, refreshAppos, s
                   </div>
                   {/* Appointment Section */}
                   {slot.appointment?.user ? (
-                    <section className='flex flex-1 flex-row items-center justify-between rounded-md px-2 py-1 hover:bg-slate-100'>
+                    <section className='flex flex-1 flex-row items-center justify-between rounded-md px-2 hover:bg-slate-100'>
                       <button
                         className='flex h-fit flex-1 flex-row items-center space-x-4 text-xsm leading-none text-slate-600'
                         onClick={() => navigate(`/appointments/${slot.appointment?._id}`)}
@@ -206,8 +206,8 @@ export const DailySchedule = memo(({ handleDialog, professional, refreshAppos, s
                           <span>{i18n.format(slot.appointment.user.dni, 'integer', i18n.resolvedLanguage)}</span>
                         </div>
                       </button>
-                      <div className=''>
-                        <StatusSelect appointment={slot.appointment} mode='update' showLabel className='text-xs text-muted-foreground' />
+                      <div>
+                        <StatusSelect appointment={slot.appointment} mode='update' showLabel className='h-8 text-xs text-muted-foreground' />
                       </div>
                     </section>
                   ) : (
@@ -218,8 +218,8 @@ export const DailySchedule = memo(({ handleDialog, professional, refreshAppos, s
                     {!slot.appointment?.user && AppoSchedule.isDatetimeInFuture(selectedDate, slot.begin) && (
                       <div className='flex w-full justify-center'>
                         <Button
-                          className='w-full space-x-1.5 bg-emerald-400 px-1.5 py-1.5 text-emerald-50 hover:bg-emerald-500 hover:text-emerald-50 md:pr-2.5'
-                          size='xs'
+                          className='h-8 w-full space-x-2 bg-emerald-400 text-emerald-50 hover:bg-emerald-500 hover:text-emerald-50'
+                          size='sm'
                           variant='ghost'
                           onClick={() => handleReserve(slot)}
                         >
@@ -231,8 +231,8 @@ export const DailySchedule = memo(({ handleDialog, professional, refreshAppos, s
                     {slot.appointment?.user && AppoSchedule.isDatetimeInFuture(selectedDate, slot.begin) && (
                       <div className='flex w-full justify-center'>
                         <Button
-                          className='w-full space-x-1.5 bg-rose-400 px-1.5 py-1.5 text-rose-100 hover:bg-rose-500 hover:text-rose-100'
-                          size='xs'
+                          className='h-8 w-full space-x-2 bg-rose-400 text-rose-100 hover:bg-rose-500 hover:text-rose-100'
+                          size='sm'
                           variant='ghost'
                           onClick={() => handleCancel(slot, !!(appointments?.data && appointments.data.length <= 1))}
                         >
@@ -242,19 +242,18 @@ export const DailySchedule = memo(({ handleDialog, professional, refreshAppos, s
                       </div>
                     )}
                     {(slot.appointment?.user || !slot.appointment?.user) && !AppoSchedule.isDatetimeInFuture(selectedDate, slot.begin) && (
-                      <div className='flex flex-1 items-center justify-center rounded-md bg-slate-100 px-1.5 py-1.5 text-slate-400'>
+                      <div className='flex h-8 w-full flex-1 items-center justify-center rounded-md bg-slate-100 text-slate-400'>
                         <CircleSlash2 size={16} strokeWidth={2} />
                       </div>
                     )}
                   </div>
                 </section>
               ) : (
-                <section
-                  key={crypto.randomUUID()}
-                  className='mx-auto flex w-fit items-center space-x-2 rounded-md bg-slate-100 px-2 py-1 text-center text-xsm text-slate-500'
-                >
-                  <ClockAlert size={16} strokeWidth={2} className='text-rose-400' />
-                  <div>{slot.available ? slot.begin : t('warning.hourRangeNotAvailable', { begin: slot.begin, end: slot.end })}</div>
+                <section key={crypto.randomUUID()} className='py-3'>
+                  <div className='flex w-full items-center justify-center space-x-2 rounded-md bg-slate-100 px-3 py-2 text-center text-xsm text-slate-500'>
+                    <ClockAlert size={16} strokeWidth={2} className='text-rose-400' />
+                    <div>{slot.available ? slot.begin : t('warning.hourRangeNotAvailable', { begin: slot.begin, end: slot.end })}</div>
+                  </div>
                 </section>
               ),
             )}
