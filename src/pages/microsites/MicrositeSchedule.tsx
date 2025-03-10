@@ -73,11 +73,9 @@ export function MicrositeSchedule({ day, professional, setApposIsLoading, setTod
               counts.notAttended += 1;
               break;
             case EStatus.NOT_STATUS:
-              counts.notStatus += 1;
-              break;
-            // TODO: get value inside NOT_STATUS case by date and hour
-            case EStatus.WAITING:
-              counts.waiting += 1;
+              if (isAfter(parse(`${appointment.day}T${appointment.hour}`, 'YYYY-MM-DDTHH:mm'), new Date())) {
+                counts.waiting += 1;
+              } else counts.notStatus += 1;
               break;
           }
           return counts;
@@ -93,7 +91,7 @@ export function MicrositeSchedule({ day, professional, setApposIsLoading, setTod
       );
       setTodayStats(data);
     }
-  }, [appointments, apposIsSuccess, setTodayStats, timeSlots.length]);
+  }, [appointments, apposIsSuccess, setTodayStats, timeSlots]);
 
   useEffect(() => {
     const schedule: AppoSchedule = new AppoSchedule(
