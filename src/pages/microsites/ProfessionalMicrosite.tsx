@@ -11,7 +11,7 @@ import { LoadingDB } from '@core/components/common/LoadingDB';
 import { MicrositeSchedule } from '@microsites/MicrositeSchedule';
 import { MicrositeStats } from '@microsites/MicrositeStats';
 // External imports
-import { format } from '@formkit/tempo';
+import { format, sameDay } from '@formkit/tempo';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
@@ -86,7 +86,7 @@ export default function ProfessionalMicrosite() {
         </header>
         <section className='grid grid-cols-1 gap-6 p-6 md:grid-cols-5 md:gap-8 md:p-8'>
           <Card className='col-span-1 h-fit p-6 md:col-span-2'>
-            <MicrositeStats apposIsLoading={apposIsLoading} showToday={isTodayWorkingDay} professionalId={id} todayStats={todayStats} />
+            <MicrositeStats apposIsLoading={apposIsLoading} date={date} showToday={isTodayWorkingDay} professionalId={id} todayStats={todayStats} />
           </Card>
           <Card className='col-span-1 h-fit md:col-span-3'>
             <CardHeaderSecondary
@@ -97,7 +97,7 @@ export default function ProfessionalMicrosite() {
               <section className='flex items-center space-x-4'>
                 {formatDate(date) !== formatDate(new Date()) && (
                   <Button className='h-[35px]' size='sm' variant='default' onClick={() => setDate(new Date())}>
-                    {t('button.today')}
+                    Ir a hoy
                   </Button>
                 )}
                 <DatePicker
@@ -110,9 +110,10 @@ export default function ProfessionalMicrosite() {
             </CardHeaderSecondary>
             <CardContent>
               {date && (
-                <h2 className='mb-4 mt-6 flex flex-col items-center rounded-lg bg-slate-100 py-1 text-base font-medium'>
-                  {UtilsString.upperCase(`${format(date, 'full')}`, 'first')}
-                </h2>
+                <div className='mb-4 mt-6 flex flex-row items-center justify-center space-x-3 rounded-lg bg-slate-100 py-2 text-base font-medium'>
+                  <h2>{UtilsString.upperCase(`${format(date, 'full')}`, 'first')}</h2>
+                  {sameDay(date, new Date()) && <div className='rounded-md bg-purple-400 px-1.5 py-1 text-xs font-semibold text-purple-50'>Hoy</div>}
+                </div>
               )}
               {isTodayWorkingDay ? (
                 <MicrositeSchedule
