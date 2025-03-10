@@ -16,17 +16,18 @@ import type { IResponse } from '@core/interfaces/response.interface';
 import type { IStats } from './interfaces/statistics.interface';
 import { AppoSchedule } from '@appointments/services/schedule.service';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
+import { EStatus } from '@appointments/enums/status.enum';
 import { UtilsString } from '@core/services/utils/string.service';
 import { cn } from '@lib/utils';
-import { EStatus } from '@appointments/enums/status.enum';
 // Interface
 interface IProps {
   day: string;
   professional: IProfessional;
+  setApposIsLoading: Dispatch<SetStateAction<boolean>>;
   setTodayStats: Dispatch<SetStateAction<IStats | undefined>>;
 }
 // React component
-export function MicrositeSchedule({ day, professional, setTodayStats }: IProps) {
+export function MicrositeSchedule({ day, professional, setApposIsLoading, setTodayStats }: IProps) {
   const [timeSlots, setTimeSlots] = useState<ITimeSlot[]>([] as ITimeSlot[]);
   const queryClient = useQueryClient();
   const { i18n, t } = useTranslation();
@@ -45,6 +46,10 @@ export function MicrositeSchedule({ day, professional, setTodayStats }: IProps) 
     },
     refetchOnWindowFocus: true,
   });
+
+  useEffect(() => {
+    setApposIsLoading(apposIsLoading);
+  }, [apposIsLoading, setApposIsLoading]);
 
   function updateAppointmentStatus(id: string, status: string): void {
     queryClient.setQueryData(['appointments', 'by-professional', professional._id, day], (oldData: IResponse<IAppointmentView[]>) => {
