@@ -168,10 +168,16 @@ export function DateSelection({ disabledDays, professional, handleDaysWithAppos,
           className='h-7 w-fit px-2 text-xs disabled:pointer-events-auto disabled:cursor-not-allowed'
           disabled={!professional}
           onClick={() => {
-            setSelectedYear(new Date().getFullYear());
-            setSelectedMonth(new Date().getMonth());
-            setSelectedDate(new Date());
-            setCalendarKey(crypto.randomUUID());
+            const today = new Date();
+            setSelectedYear(today.getFullYear());
+            setSelectedMonth(today.getMonth());
+            setSelectedDate(today);
+            // setCalendarKey(crypto.randomUUID());
+
+            // setSelectedYear(new Date().getFullYear());
+            // setSelectedMonth(new Date().getMonth());
+            // setSelectedDate(new Date());
+            // setCalendarKey(crypto.randomUUID());
           }}
         >
           {t('button.today')}
