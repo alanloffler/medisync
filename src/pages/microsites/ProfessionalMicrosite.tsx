@@ -25,6 +25,7 @@ import { ProfessionalApiService } from '@professionals/services/professional-api
 import { UtilsString } from '@core/services/utils/string.service';
 // React component
 export default function ProfessionalMicrosite() {
+  const [apposIsLoading, setApposIsLoading] = useState<boolean>(false);
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [todayStats, setTodayStats] = useState<IStats | undefined>(undefined);
   const { id } = useParams();
@@ -77,7 +78,7 @@ export default function ProfessionalMicrosite() {
         </header>
         <section className='grid grid-cols-1 gap-6 p-6 md:grid-cols-5 md:gap-8 md:p-8'>
           <Card className='col-span-1 h-fit p-6 md:col-span-2'>
-            <MicrositeStats professionalId={id} todayStats={todayStats} />
+            <MicrositeStats apposIsLoading={apposIsLoading} professionalId={id} todayStats={todayStats} />
           </Card>
           <Card className='col-span-1 h-fit md:col-span-3'>
             <CardHeaderSecondary
@@ -105,7 +106,12 @@ export default function ProfessionalMicrosite() {
                   {UtilsString.upperCase(`${format(date, 'full')}`, 'first')}
                 </h2>
               )}
-              <MicrositeSchedule day={formatDate(date)} professional={professional?.data} setTodayStats={setTodayStats} />
+              <MicrositeSchedule
+                day={formatDate(date)}
+                professional={professional?.data}
+                setApposIsLoading={setApposIsLoading}
+                setTodayStats={setTodayStats}
+              />
             </CardContent>
           </Card>
         </section>
