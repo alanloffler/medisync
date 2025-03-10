@@ -8,6 +8,7 @@ import { Progress } from '@core/components/ui/progress';
 import { Pie, PieChart } from 'recharts';
 // Components
 import { SkeletonDonutStat } from '@microsites/common/SkeletonDonutStat';
+import { SkeletonProgress } from '@microsites/common/SkeletonProgress';
 import { SkeletonStat } from '@microsites/common/SkeletonStat';
 // External imports
 import { motion } from 'motion/react';
@@ -128,7 +129,12 @@ export function MicrositeStats({ apposIsLoading, professionalId, todayStats }: I
           </section>
         </section>
       )}
-      {historicalIsLoading && <SkeletonStat />}
+      {historicalIsLoading && (
+        <section className='flex flex-col gap-6'>
+          <SkeletonStat />
+          <SkeletonProgress />
+        </section>
+      )}
       {historicalIsSuccess && (
         <>
           <section className='flex flex-col gap-2 text-sm'>
@@ -162,11 +168,10 @@ export function MicrositeStats({ apposIsLoading, professionalId, todayStats }: I
               </div>
             </section>
           </section>
-
           <section className='flex flex-col gap-2 text-sm'>
-            <h1 className='text-xs font-semibold uppercase text-muted-foreground'>Progreso de edición</h1>
-            <section className='flex items-center gap-3 py-1 text-xsm'>
-              <Progress value={progress} className='h-3 w-full bg-slate-200 [&_div]:bg-sky-400' />
+            <h1 className='w-fit text-xs font-semibold uppercase text-muted-foreground'>Progreso de edición</h1>
+            <section className='flex w-full items-center gap-3 py-1 text-xsm lg:w-1/2'>
+              <Progress value={progress} className='h-3 bg-slate-200 [&_div]:bg-sky-400' />
               <span className='font-medium text-sky-500'>
                 {i18n.format(progress, 'number', 'es')}
                 <small>%</small>
