@@ -12,6 +12,7 @@ import { SkeletonDonutStat } from '@microsites/common/SkeletonDonutStat';
 import { SkeletonProgress } from '@microsites/common/SkeletonProgress';
 import { SkeletonStat } from '@microsites/common/SkeletonStat';
 // External imports
+import { format, sameDay } from '@formkit/tempo';
 import { motion } from 'motion/react';
 import { useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -24,12 +25,13 @@ import { StatisticsService } from '@microsites/services/statistics.service';
 // Interface
 interface IProps {
   apposIsLoading: boolean;
+  date?: Date;
   professionalId?: string;
   showToday: boolean;
   todayStats?: IStats;
 }
 // React component
-export function MicrositeStats({ apposIsLoading, professionalId, showToday, todayStats }: IProps) {
+export function MicrositeStats({ apposIsLoading, date, professionalId, showToday, todayStats }: IProps) {
   const [animationKey, setAnimationKey] = useState<string>('');
   const [progress, setProgress] = useState<number>(0);
   const { i18n } = useTranslation();
@@ -88,7 +90,17 @@ export function MicrositeStats({ apposIsLoading, professionalId, showToday, toda
         {!apposIsLoading && !historicalIsLoading && showToday && (
           <>
             <section className='flex flex-col gap-2 text-sm'>
-              <h1 className='text-xs font-semibold uppercase text-muted-foreground'>Hoy</h1>
+              <h1 className='text-xs font-semibold uppercase text-muted-foreground'>
+                {date &&
+                  (sameDay(date, new Date()) ? (
+                    <section className='flex flex-row items-center gap-2'>
+                      <span>{format(new Date(), 'full')}</span>
+                      <span className='rounded-md bg-purple-400 px-1 py-0.5 text-xxs text-purple-50'>Hoy</span>
+                    </section>
+                  ) : (
+                    format(date, 'full')
+                  ))}
+              </h1>
               <section className='flex flex-row items-center gap-3'>
                 {todayStats && todayStats.total !== undefined && todayStats.total > 0 && (
                   <ChartContainer className='aspect-square h-[50px] w-[50px]' config={{}} key={animationKey}>
