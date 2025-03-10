@@ -5,6 +5,7 @@ import { Button } from '@core/components/ui/button';
 import { Calendar } from '@core/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@core/components/ui/popover';
 // External imports
+import type { Locale } from 'date-fns/locale';
 import { format } from '@formkit/tempo';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,10 +16,11 @@ interface IProps {
   className?: string;
   defaultDate?: Date | undefined;
   disabledDays?: number[];
+  locale?: Locale;
   onDateChange?: (date: Date | undefined) => void;
 }
 // React component
-export function DatePicker({ className, defaultDate, disabledDays, onDateChange }: IProps) {
+export function DatePicker({ className, defaultDate, disabledDays, locale, onDateChange }: IProps) {
   const [date, setDate] = useState<Date | undefined>(defaultDate);
   const [open, setOpen] = useState<boolean>(false);
   const { t } = useTranslation();
@@ -55,6 +57,7 @@ export function DatePicker({ className, defaultDate, disabledDays, onDateChange 
       <PopoverContent className='w-auto p-0' align='start'>
         <Calendar
           disabled={[{ dayOfWeek: disabledDays ?? [] }]}
+          locale={locale}
           mode='single'
           showOutsideDays={false}
           selected={date}
