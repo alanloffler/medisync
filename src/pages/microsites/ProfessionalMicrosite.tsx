@@ -47,11 +47,11 @@ export default function ProfessionalMicrosite() {
   });
 
   useEffect(() => {
-    if (professional) {
-      const isWorkingDay: boolean = CalendarService.checkTodayIsWorkingDay(professional?.data.configuration.workingDays, new Date().getDay());
+    if (professional && date) {
+      const isWorkingDay: boolean = CalendarService.checkTodayIsWorkingDay(professional?.data.configuration.workingDays, date.getDay());
       setIsTodayWorkingDay(isWorkingDay);
     }
-  }, [professional]);
+  }, [date, professional]);
 
   function formatDate(date: Date | undefined) {
     if (!date) return '';
@@ -72,7 +72,7 @@ export default function ProfessionalMicrosite() {
       </main>
     );
 
-  if (profIsSuccess && isTodayWorkingDay)
+  if (profIsSuccess)
     return (
       <main className='flex h-full min-h-dvh flex-col bg-muted/70'>
         <header className='sticky top-0 z-50 flex h-16 items-center justify-between gap-4 bg-background px-4 shadow-sm md:justify-normal md:gap-8 md:px-8'>
@@ -114,28 +114,24 @@ export default function ProfessionalMicrosite() {
                   {UtilsString.upperCase(`${format(date, 'full')}`, 'first')}
                 </h2>
               )}
-              <MicrositeSchedule
-                day={formatDate(date)}
-                professional={professional?.data}
-                setApposIsLoading={setApposIsLoading}
-                setTodayStats={setTodayStats}
-              />
+              {isTodayWorkingDay ? (
+                <MicrositeSchedule
+                  day={formatDate(date)}
+                  professional={professional?.data}
+                  setApposIsLoading={setApposIsLoading}
+                  setTodayStats={setTodayStats}
+                />
+              ) : (
+                <main className='mx-auto w-fit pt-2'>
+                  <section className='flex flex-col space-y-3 text-pretty rounded-lg bg-amber-100 p-6 text-base text-amber-600'>
+                    <span>Hoy no es un día laboral segun la configuración de tu agenda. </span>
+                    <span>Por favor, selecciona otro día para ver tus turnos.</span>
+                  </section>
+                </main>
+              )}
             </CardContent>
           </Card>
         </section>
-      </main>
-    );
-
-  if (profIsSuccess && !isTodayWorkingDay)
-    return (
-      <main className='flex h-screen flex-col bg-muted/70'>
-        <Card className='absolute left-1/2 top-1/2 w-1/2 -translate-x-1/2 -translate-y-1/2 space-y-3 p-6'>
-          <header className='text-base font-semibold'>
-            {`Hola ${UtilsString.upperCase(`${professional.data.title.abbreviation} ${professional.data.firstName} ${professional.data.lastName}`, 'each')}`}
-          </header>
-          <section className='text-pretty text-sm'>Hoy no es un día laboral segun la configuración de tu agenda. </section>
-          <section className='text-pretty text-sm'>Por favor, selecciona otro día para ver la agenda.</section>
-        </Card>
       </main>
     );
 }
