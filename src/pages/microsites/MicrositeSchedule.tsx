@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import type { IAppointmentView, ITimeSlot } from '@appointments/interfaces/appointment.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
-import type { IStats } from './interfaces/statistics.interface';
+import type { IStats } from '@microsites/interfaces/statistics.interface';
 import { AppoSchedule } from '@appointments/services/schedule.service';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { EStatus } from '@appointments/enums/status.enum';
@@ -63,7 +63,7 @@ export function MicrositeSchedule({ day, professional, setApposIsLoading, setTod
 
   useEffect(() => {
     if (apposIsSuccess && appointments) {
-      const data: IStats = appointments.data.reduce<IStats>(
+      const data = appointments.data.reduce<IStats>(
         (counts, appointment) => {
           switch (appointment.status) {
             case EStatus.ATTENDED:
@@ -82,11 +82,18 @@ export function MicrositeSchedule({ day, professional, setApposIsLoading, setTod
           }
           return counts;
         },
-        { total: appointments.data.length, attended: 0, notAttended: 0, notStatus: 0, waiting: 0 },
+        {
+          timeSlots: timeSlots.filter((slot) => slot.available).length,
+          total: appointments.data.length,
+          attended: 0,
+          notAttended: 0,
+          notStatus: 0,
+          waiting: 0,
+        },
       );
       setTodayStats(data);
     }
-  }, [appointments, apposIsSuccess, setTodayStats]);
+  }, [appointments, apposIsSuccess, setTodayStats, timeSlots.length]);
 
   useEffect(() => {
     const schedule: AppoSchedule = new AppoSchedule(
