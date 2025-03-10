@@ -11,10 +11,11 @@ import { LoadingDB } from '@core/components/common/LoadingDB';
 import { MicrositeSchedule } from '@microsites/MicrositeSchedule';
 import { MicrositeStats } from '@microsites/MicrositeStats';
 // External imports
+import { es } from 'date-fns/locale';
 import { format, sameDay } from '@formkit/tempo';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
@@ -104,6 +105,7 @@ export default function ProfessionalMicrosite() {
                   className='w-fit'
                   defaultDate={date}
                   disabledDays={CalendarService.getDisabledDays(professional.data.configuration.workingDays)}
+                  locale={es}
                   onDateChange={(e) => setDate(e)}
                 />
               </section>
