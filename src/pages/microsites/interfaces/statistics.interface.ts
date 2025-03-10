@@ -1,4 +1,5 @@
 export interface IStats {
+  timeSlots: number;
   total: number;
   attended: number;
   notAttended: number;
