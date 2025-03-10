@@ -112,7 +112,7 @@ export function MicrositeStats({ apposIsLoading, professionalId, showToday, toda
                     key={`${JSON.stringify(todayStats)}`}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ duration: 2, delay: todayStats?.total && todayStats.total > 0 ? 1 : 0 }}
+                    transition={{ duration: 1, delay: todayStats?.total && todayStats.total > 0 ? 0.5 : 0 }}
                   >
                     <div className='flex items-center gap-1'>
                       <span className='text-lg font-semibold'>{todayStats?.total}</span>
