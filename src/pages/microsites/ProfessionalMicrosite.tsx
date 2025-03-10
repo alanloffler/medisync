@@ -90,7 +90,7 @@ export default function ProfessionalMicrosite() {
           </Card>
           <Card className='col-span-1 h-fit md:col-span-3'>
             <CardHeaderSecondary
-              className='ml-2 p-4 text-base md:flex-row md:items-center'
+              className='p-4 pl-6 text-base md:flex-row md:items-center'
               icon={<CalendarClock size={18} strokeWidth={2} />}
               title={t('pageTitle.appointments')}
             >
