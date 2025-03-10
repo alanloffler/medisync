@@ -86,7 +86,7 @@ export default function ProfessionalMicrosite() {
         </header>
         <section className='grid grid-cols-1 gap-6 p-6 md:grid-cols-5 md:gap-8 md:p-8'>
           <Card className='col-span-1 h-fit p-6 md:col-span-2'>
-            <MicrositeStats apposIsLoading={apposIsLoading} professionalId={id} todayStats={todayStats} />
+            <MicrositeStats apposIsLoading={apposIsLoading} showToday={isTodayWorkingDay} professionalId={id} todayStats={todayStats} />
           </Card>
           <Card className='col-span-1 h-fit md:col-span-3'>
             <CardHeaderSecondary
