@@ -79,13 +79,12 @@ export function MicrositeStats({ apposIsLoading, professionalId, showToday, toda
   if (!historicalIsError)
     return (
       <main className='flex flex-col gap-6 overflow-auto'>
-        {apposIsLoading ||
-          (historicalIsLoading && (
-            <section className='flex flex-col gap-6'>
-              <SkeletonDonutStat />
-              <SkeletonProgress />
-            </section>
-          ))}
+        {(apposIsLoading || historicalIsLoading) && (
+          <section className='flex flex-col gap-6'>
+            <SkeletonDonutStat />
+            <SkeletonProgress />
+          </section>
+        )}
         {!apposIsLoading && !historicalIsLoading && showToday && (
           <>
             <section className='flex flex-col gap-2 text-sm'>
