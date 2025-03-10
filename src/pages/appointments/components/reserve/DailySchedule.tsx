@@ -158,7 +158,7 @@ export const DailySchedule = memo(({ handleDialog, professional, refreshAppos, s
             )}
           </section>
         </CardTitle>
-        <section className='py-2 text-center text-base font-semibold text-primary'>{UtilsString.upperCase(selectedLegibleDate)}</section>
+        <section className='py-6 text-center text-base font-semibold text-primary'>{UtilsString.upperCase(selectedLegibleDate)}</section>
         {derivedState.timeSlots && (
           <section className='flex flex-col justify-start gap-3 px-3 pb-2 text-xsm font-normal md:flex-row'>
             <div className='flex w-fit flex-row items-center space-x-1.5 rounded-md bg-emerald-100 px-2 py-1'>
