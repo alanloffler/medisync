@@ -47,6 +47,7 @@ import { PROFESSIONALS_CONFIG as PROF_CONFIG } from '@config/professionals/profe
 import { PROFESSIONAL_VIEW_CONFIG as PV_CONFIG } from '@config/professionals/professional-view.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
+import { useMediaQuery } from '@core/hooks/useMediaQuery';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // Default values for pagination and sorting
 const defaultSorting: SortingState = [{ id: PROF_CONFIG.table.defaultSortingId, desc: PROF_CONFIG.table.defaultSortingType }];
@@ -66,6 +67,23 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
   const navigate = useNavigate();
   const prevDeps = useRef<IPaginatedProfessionalsVars>({ search, skipItems, tableManager });
   const { i18n, t } = useTranslation();
+
+  // Table column visibility
+  const isSmallDevice = useMediaQuery('only screen and (max-width : 639px)');
+  const isMediumDevice = useMediaQuery('only screen and (max-width : 767px)');
+  const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>({
+    area: !isMediumDevice,
+    available: !isMediumDevice,
+    specialization: !isSmallDevice,
+  });
+
+  useEffect(() => {
+    setColumnVisibility({
+      area: !isMediumDevice,
+      available: !isMediumDevice,
+      specialization: !isSmallDevice,
+    });
+  }, [isMediumDevice, isSmallDevice]);
 
   // Fetch professionals
   const {
@@ -113,10 +131,12 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
     getSortedRowModel: getSortedRowModel(),
     manualPagination: true,
     manualSorting: true,
+    onColumnVisibilityChange: setColumnVisibility,
     onPaginationChange: setPagination,
     onSortingChange: setSorting,
     rowCount: totalItems,
     state: {
+      columnVisibility,
       sorting,
       pagination,
     },
