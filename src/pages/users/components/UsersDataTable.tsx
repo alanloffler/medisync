@@ -321,7 +321,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
   }, [openDialog]);
 
   if (isPending) return <LoadingDB text={t('loading.users')} className='mt-6 p-0' />;
-  if (isError) return <InfoCard text={error.message} type='error' className='mt-6' />;
+  if (isError) return <InfoCard className='mt-6' text={error.message} variant='error' />;
 
   if (isSuccess) {
     return (
@@ -383,7 +383,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
             </DialogHeader>
             <section className='flex flex-col'>
               {isErrorDeleting ? (
-                <InfoCard text={errorDeleting.message} type='error' />
+                <InfoCard text={errorDeleting.message} variant='error' />
               ) : (
                 <div className='text-sm'>
                   <Trans
