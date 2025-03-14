@@ -10,9 +10,9 @@ const infoCardVariants = cva('flex flex-row items-center mx-auto justify-center 
   variants: {
     variant: {
       default: 'w-fit',
-      error: 'w-fit rounded-lg bg-rose-100 p-3 pr-3.5 text-rose-500 [&_svg]:text-rose-500',
-      success: 'w-fit rounded-lg bg-emerald-100 p-3 pr-3.5 text-emerald-500 [&_svg]:text-emerald-500',
-      warning: 'w-fit rounded-lg bg-amber-100 p-3 pr-3.5 text-amber-500 [&_svg]:text-amber-500',
+      error: 'w-fit rounded-lg bg-rose-100 p-3 pr-3.5 !text-rose-500 [&_svg]:text-rose-500',
+      success: 'w-fit rounded-lg bg-emerald-100 p-3 pr-3.5 !text-emerald-500 [&_svg]:text-emerald-500',
+      warning: 'w-fit rounded-lg bg-amber-100 p-3 pr-3.5 !text-amber-500 [&_svg]:text-amber-500',
     },
     size: {
       default: 'text-base [&_svg]:h-[20px] [&_svg]:w-[20px]',
