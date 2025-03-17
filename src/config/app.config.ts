@@ -1,4 +1,6 @@
 export const APP_CONFIG = {
+  appName: 'MediSync',
+  appPrefix: '/app',
   debounceTime: 500,
   redirectTime: 5000,
   i18n: {
