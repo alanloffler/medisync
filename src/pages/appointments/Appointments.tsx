@@ -87,7 +87,7 @@ export default function Appointments() {
               variant='default'
               size='sm'
               className='w-fit space-x-2'
-              onClick={() => navigate('/reserve')}
+              onClick={() => navigate(`${APP_CONFIG.appPrefix}/reserve`)}
               onMouseOver={animateOver}
               onMouseOut={animateOut}
             >
