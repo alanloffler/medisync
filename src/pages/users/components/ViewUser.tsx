@@ -27,6 +27,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import type { IDialog } from '@core/interfaces/dialog.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
+import { APP_CONFIG } from '@config/app.config';
 import { AreaCodeService } from '@core/services/area-code.service';
 import { EUserType } from '@core/enums/user-type.enum';
 import { EWhatsappTemplate } from '@whatsapp/enums/template.enum';
@@ -124,7 +125,7 @@ export default function ViewUser() {
     },
     onSuccess: (response) => {
       addNotification({ type: 'success', message: response.message });
-      navigate('/users');
+      navigate(`${APP_CONFIG.appPrefix}/users`);
     },
   });
 
@@ -244,7 +245,7 @@ export default function ViewUser() {
         <footer className='mx-auto'>
           <Button
             className='flex items-center gap-3'
-            onClick={() => navigate('/users')}
+            onClick={() => navigate(`${APP_CONFIG.appPrefix}/users`)}
             onMouseOut={gotoAnimationOut}
             onMouseOver={gotoAnimationOver}
             size='default'
