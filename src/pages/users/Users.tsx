@@ -169,7 +169,7 @@ export default function Users() {
                   ref={addUserIconScope}
                   size='icon7'
                   variant='tableHeaderPrimary'
-                  onClick={() => navigate('/users/create')}
+                  onClick={() => navigate(`${APP_CONFIG.appPrefix}/users/create`)}
                   onMouseOut={addUserIconAnimationOut}
                   onMouseOver={addUserIconAnimationOver}
                 >
