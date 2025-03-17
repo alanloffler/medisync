@@ -103,7 +103,7 @@ export function LatestAppos() {
             ))}
         </CardContent>
         <CardFooter className='flex justify-end'>
-          <Button className='p-0 text-sm text-foreground' size='sm' variant='link' onClick={() => navigate('/appointments')}>
+          <Button className='p-0 text-sm text-foreground' size='sm' variant='link' onClick={() => navigate(`${APP_CONFIG.appPrefix}/appointments`)}>
             {t('button.seeMore')}
           </Button>
         </CardFooter>
