@@ -1,6 +1,8 @@
+import { APP_CONFIG } from '@config/app.config';
+
 export const APPO_CONFIG = {
   breadcrumb: [
-    { id: 1, name: 'breadcrumb.home', path: '/' },
+    { id: 1, name: 'breadcrumb.home', path: APP_CONFIG.appPrefix },
     { id: 2, name: 'breadcrumb.appointments', path: '' },
   ],
   table: {
