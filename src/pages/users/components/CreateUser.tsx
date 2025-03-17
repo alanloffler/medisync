@@ -23,6 +23,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 // Imports
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
+import { APP_CONFIG } from '@config/app.config';
 import { USER_CREATE_CONFIG as UC_CONFIG } from '@config/users/user-create.config';
 import { USER_SCHEMA } from '@config/schemas/user.schema';
 import { UserApiService } from '@users/services/user-api.service';
@@ -63,7 +64,7 @@ export default function CreateUser() {
       addNotification({ type: 'error', message: error.message });
     },
     onSuccess: (response) => {
-      navigate(`/users/${response.data._id}`);
+      navigate(`${APP_CONFIG.appPrefix}/users/${response.data._id}`);
       addNotification({
         type: 'success',
         message: `${response.message} - ${UtilsString.upperCase(response.data.firstName, 'each')} ${UtilsString.upperCase(response.data.lastName, 'each')}`,
