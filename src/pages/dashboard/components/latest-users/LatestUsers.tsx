@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 // Imports
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
+import { APP_CONFIG } from '@config/app.config';
 import { DashboardApiService } from '@dashboard/services/dashboard-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
 // React component
@@ -57,7 +58,7 @@ export function LatestUsers() {
       <DashboardTitle title={t('cardTitle.dashboard.latestUsers')} />
       <Card>
         <CardContent className='flex flex-col space-y-1 pt-6'>
-          {error && <InfoCard text={error.message} type='error' />}
+          {error && <InfoCard text={error.message} variant='error' />}
           {isLoading && <LoadingDB text={t('loading.users')} variant='default' />}
           {!error &&
             !isLoading &&
@@ -65,7 +66,7 @@ export function LatestUsers() {
               <motion.button
                 className='-ml-6 flex flex-row items-center space-x-3 p-1 text-sm'
                 key={crypto.randomUUID()}
-                onClick={() => navigate(`/users/${user._id}`)}
+                onClick={() => navigate(`${APP_CONFIG.appPrefix}/users/${user._id}`)}
                 animate='initial'
                 initial='initial'
                 whileHover='animate'
