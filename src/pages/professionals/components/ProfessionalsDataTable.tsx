@@ -40,6 +40,7 @@ import type { IDataTableProfessionals, ITableManager } from '@core/interfaces/ta
 import type { IPaginatedProfessionalsVars } from '@professionals/interfaces/mutation-vars.interface';
 import type { IProfessional, IProfessionalsData } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
+import { APP_CONFIG } from '@config/app.config';
 import { EProfessionalSearch } from '@professionals/enums/professional-search.enum';
 import { EUserType } from '@core/enums/user-type.enum';
 import { EWhatsappTemplate } from '@whatsapp/enums/template.enum';
@@ -274,7 +275,7 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
         cell: ({ row }) => (
           <div className='mx-auto flex w-fit flex-row items-center justify-center space-x-0.5 md:space-x-2'>
             <TableButton
-              callback={() => navigate(`/professionals/update/${row.original._id}`)}
+              callback={() => navigate(`${APP_CONFIG.appPrefix}/professionals/update/${row.original._id}`)}
               className='hover:bg-amber-100/75 hover:text-amber-400'
               tooltip={t('tooltip.edit')}
             >
@@ -291,7 +292,7 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
               buttons={
                 <>
                   <TableButton
-                    callback={() => navigate(`/email/professional/${row.original._id}`)}
+                    callback={() => navigate(`${APP_CONFIG.appPrefix}/email/professional/${row.original._id}`)}
                     className='hover:bg-purple-100/75 hover:text-purple-400'
                     disabled={!row.original.email}
                     tooltip={t('tooltip.sendEmail')}
@@ -300,7 +301,9 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
                   </TableButton>
                   <TableButton
                     callback={() =>
-                      navigate(`/whatsapp/${row.original._id}`, { state: { type: EUserType.PROFESSIONAL, template: EWhatsappTemplate.EMPTY } })
+                      navigate(`${APP_CONFIG.appPrefix}/whatsapp/${row.original._id}`, {
+                        state: { type: EUserType.PROFESSIONAL, template: EWhatsappTemplate.EMPTY },
+                      })
                     }
                     className='hover:bg-emerald-100/75 hover:text-emerald-400'
                     tooltip={t('tooltip.sendMessage')}
@@ -343,7 +346,7 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
 
   const handleRowClick = useCallback(
     (row: Row<IProfessional>, cell: Cell<IProfessional, unknown>): void => {
-      if (cell.column.getIndex() < row.getAllCells().length - 1) navigate(`/professionals/${row.original._id}`);
+      if (cell.column.getIndex() < row.getAllCells().length - 1) navigate(`${APP_CONFIG.appPrefix}/professionals/${row.original._id}`);
     },
     [navigate],
   );
