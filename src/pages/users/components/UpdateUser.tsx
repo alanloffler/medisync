@@ -25,6 +25,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUpdateUserVars } from '@users/interfaces/mutation-vars.interface';
 import type { IUser } from '@users/interfaces/user.interface';
+import { APP_CONFIG } from '@config/app.config';
 import { USER_SCHEMA } from '@config/schemas/user.schema';
 import { USER_UPDATE_CONFIG as UU_CONFIG } from '@config/users/user-update.config';
 import { UserApiService } from '@users/services/user-api.service';
@@ -95,7 +96,7 @@ export default function UpdateUser() {
       addNotification({ type: 'error', message: error.message });
     },
     onSuccess: (response) => {
-      navigate('/users');
+      navigate(`${APP_CONFIG.appPrefix}/users`);
       addNotification({ type: 'success', message: response.message });
     },
   });
@@ -117,7 +118,7 @@ export default function UpdateUser() {
       updateForm.setValue('firstName', UtilsString.upperCase(user?.data.firstName, 'each'));
       updateForm.setValue('lastName', UtilsString.upperCase(user?.data.lastName, 'each'));
       updateForm.setValue('phone', user?.data.phone);
-      navigate('/users');
+      navigate(`${APP_CONFIG.appPrefix}/users`);
     }
   }
 
