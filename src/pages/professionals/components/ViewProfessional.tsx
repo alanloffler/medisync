@@ -26,6 +26,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import type { IAreaCode } from '@core/interfaces/area-code.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
+import { APP_CONFIG } from '@config/app.config';
 import { AreaCodeService } from '@core/services/area-code.service';
 import { CalendarService } from '@appointments/services/calendar.service';
 import { EUserType } from '@core/enums/user-type.enum';
@@ -95,7 +96,7 @@ export default function ViewProfessional() {
     onSuccess: (response) => {
       setOpenDialog(false);
       addNotification({ type: 'success', message: response.message });
-      navigate('/professionals');
+      navigate(`${APP_CONFIG.appPrefix}/professionals`);
     },
     onError: (error) => {
       addNotification({ type: 'error', message: t(error.message) });
@@ -286,7 +287,7 @@ export default function ViewProfessional() {
           variant='default'
           size='default'
           className='flex items-center gap-3'
-          onClick={() => navigate('/professionals')}
+          onClick={() => navigate(`${APP_CONFIG.appPrefix}/professionals`)}
           onMouseOver={gotoAnimateOver}
           onMouseOut={gotoAnimateOut}
         >
