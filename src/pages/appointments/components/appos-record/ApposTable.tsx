@@ -27,6 +27,7 @@ import { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 // Imports
 import type { IAppointmentView } from '@appointments/interfaces/appointment.interface';
+import { APP_CONFIG } from '@config/app.config';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { EUserType } from '@core/enums/user-type.enum';
 import { EWhatsappTemplate } from '@whatsapp/enums/template.enum';
@@ -52,7 +53,7 @@ export function ApposTable({
   // Actions
   const handleRowClick = useCallback(
     (row: Row<IAppointmentView>, cell: Cell<IAppointmentView, unknown>): void => {
-      if (cell.column.getIndex() < row.getAllCells().length - 1) navigate(`/appointments/${row.original._id}`);
+      if (cell.column.getIndex() < row.getAllCells().length - 1) navigate(`${APP_CONFIG.appPrefix}/appointments/${row.original._id}`);
     },
     [navigate],
   );
@@ -97,8 +98,21 @@ export function ApposTable({
         size: 80,
         cell: ({ row }) => (
           <div className='text-center'>
-            <Badge variant={row.original.status === 'attended' ? 'attended' : row.original.status === 'not_attended' ? 'not_attended' : row.original.status === 'not_status' && isAfter(parse(`${row.original.day}T${row.original.hour}`, 'YYYY-MM-DDTHH:mm'), new Date()) ? 'waiting' : 'not_status'}>
-              {isAfter(parse(`${row.original.day}T${row.original.hour}`, 'YYYY-MM-DDTHH:mm'), new Date()) ? t(`status.waiting`) : t(`status.${row.original.status}`)}
+            <Badge
+              variant={
+                row.original.status === 'attended'
+                  ? 'attended'
+                  : row.original.status === 'not_attended'
+                    ? 'not_attended'
+                    : row.original.status === 'not_status' &&
+                        isAfter(parse(`${row.original.day}T${row.original.hour}`, 'YYYY-MM-DDTHH:mm'), new Date())
+                      ? 'waiting'
+                      : 'not_status'
+              }
+            >
+              {isAfter(parse(`${row.original.day}T${row.original.hour}`, 'YYYY-MM-DDTHH:mm'), new Date())
+                ? t(`status.waiting`)
+                : t(`status.${row.original.status}`)}
             </Badge>
           </div>
         ),
