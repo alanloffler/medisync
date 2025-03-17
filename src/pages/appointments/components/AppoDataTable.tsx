@@ -42,6 +42,7 @@ import type { IDataTableAppointments, ITableManager } from '@core/interfaces/tab
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import { APPO_CONFIG } from '@config/appointments/appointments.config';
+import { APP_CONFIG } from '@config/app.config';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
@@ -312,7 +313,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
 
   const handleRowClick = useCallback(
     (row: Row<IAppointment>, cell: Cell<IAppointment, unknown>): void => {
-      if (cell.column.getIndex() < row.getAllCells().length - 1) navigate(`/appointments/${row.original._id}`);
+      if (cell.column.getIndex() < row.getAllCells().length - 1) navigate(`${APP_CONFIG.appPrefix}/appointments/${row.original._id}`);
     },
     [navigate],
   );
