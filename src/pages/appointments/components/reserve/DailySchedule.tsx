@@ -18,6 +18,7 @@ import type { IAppointment, ITimeSlot } from '@appointments/interfaces/appointme
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IWorkingDay } from '@professionals/interfaces/working-days.interface';
+import { APP_CONFIG } from '@config/app.config';
 import { AppoSchedule } from '@appointments/services/schedule.service';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { CalendarService } from '@appointments/services/calendar.service';
@@ -196,7 +197,7 @@ export const DailySchedule = memo(({ handleDialog, professional, refreshAppos, s
                     <section className='flex flex-1 flex-row items-center justify-between rounded-md px-2 hover:bg-slate-100'>
                       <button
                         className='flex h-fit flex-1 flex-row items-center space-x-4 text-xsm leading-none text-slate-600'
-                        onClick={() => navigate(`/appointments/${slot.appointment?._id}`)}
+                        onClick={() => navigate(`${APP_CONFIG.appPrefix}/appointments/${slot.appointment?._id}`)}
                       >
                         <span className='text-sm font-medium'>
                           {UtilsString.upperCase(`${slot.appointment.user.firstName} ${slot.appointment.user.lastName}`, 'each')}
