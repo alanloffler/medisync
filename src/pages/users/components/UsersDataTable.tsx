@@ -39,6 +39,7 @@ import type { IDataTableUsers, ITableManager } from '@core/interfaces/table.inte
 import type { IPaginatedUsersVars } from '@users/interfaces/mutation-vars.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser, IUsersData } from '@users/interfaces/user.interface';
+import { APP_CONFIG } from '@config/app.config';
 import { AreaCodeService } from '@core/services/area-code.service';
 import { EUserSearch } from '@users/enums/user-search.enum';
 import { EUserType } from '@core/enums/user-type.enum';
@@ -242,7 +243,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
       cell: ({ row }) => (
         <div className='mx-auto flex w-fit flex-row items-center justify-center space-x-0.5 md:space-x-2'>
           <TableButton
-            callback={() => navigate(`/users/update/${row.original._id}`)}
+            callback={() => navigate(`${APP_CONFIG.appPrefix}/users/update/${row.original._id}`)}
             className='hover:bg-amber-100/75 hover:text-amber-400'
             tooltip={t('tooltip.edit')}
           >
@@ -259,7 +260,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
             buttons={
               <>
                 <TableButton
-                  callback={() => navigate(`/email/user/${row.original._id}`)}
+                  callback={() => navigate(`${APP_CONFIG.appPrefix}/email/user/${row.original._id}`)}
                   className='hover:bg-purple-100/75 hover:text-purple-400'
                   disabled={!row.original.email}
                   tooltip={t('tooltip.sendEmail')}
@@ -267,7 +268,11 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
                   {!row.original.email ? <MailX size={17} strokeWidth={1.5} /> : <Mail size={17} strokeWidth={1.5} />}
                 </TableButton>
                 <TableButton
-                  callback={() => navigate(`/whatsapp/${row.original._id}`, { state: { type: EUserType.USER, template: EWhatsappTemplate.EMPTY } })}
+                  callback={() =>
+                    navigate(`${APP_CONFIG.appPrefix}/whatsapp/${row.original._id}`, {
+                      state: { type: EUserType.USER, template: EWhatsappTemplate.EMPTY },
+                    })
+                  }
                   className='hover:bg-emerald-100/75 hover:text-emerald-400'
                   tooltip={t('tooltip.sendMessage')}
                 >
