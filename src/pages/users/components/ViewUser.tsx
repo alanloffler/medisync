@@ -202,7 +202,7 @@ export default function ViewUser() {
                 </CardContent>
                 <section className='flex items-center justify-end space-x-2 border-t p-2'>
                   <TableButton
-                    callback={() => navigate(`/users/update/${user.data._id}`)}
+                    callback={() => navigate(`${APP_CONFIG.appPrefix}/users/update/${user.data._id}`)}
                     className='h-8 w-8 hover:bg-amber-100/75 hover:text-amber-400'
                     tooltip={t('tooltip.edit')}
                   >
@@ -219,7 +219,7 @@ export default function ViewUser() {
                     <Separator orientation='vertical' className='h-5 w-[1px]' />
                   </div>
                   <TableButton
-                    callback={() => navigate(`/email/user/${user.data._id}`)}
+                    callback={() => navigate(`${APP_CONFIG.appPrefix}/email/user/${user.data._id}`)}
                     className='h-8 w-8 hover:bg-purple-100/75 hover:text-purple-400'
                     disabled={!user.data.email}
                     tooltip={t('tooltip.sendEmail')}
@@ -227,7 +227,11 @@ export default function ViewUser() {
                     {!user.data.email ? <MailX size={17} strokeWidth={1.5} className='stroke-red-400' /> : <Mail size={17} strokeWidth={1.5} />}
                   </TableButton>
                   <TableButton
-                    callback={() => navigate(`/whatsapp/${user.data._id}`, { state: { type: EUserType.USER, template: EWhatsappTemplate.EMPTY } })}
+                    callback={() =>
+                      navigate(`${APP_CONFIG.appPrefix}/whatsapp/${user.data._id}`, {
+                        state: { type: EUserType.USER, template: EWhatsappTemplate.EMPTY },
+                      })
+                    }
                     className='h-8 w-8 hover:bg-emerald-100/75 hover:text-emerald-400'
                     tooltip={t('tooltip.sendMessage')}
                   >
