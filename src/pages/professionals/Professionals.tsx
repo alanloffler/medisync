@@ -119,7 +119,7 @@ export default function Professionals() {
                 variant='default'
                 size='sm'
                 className='w-fit space-x-2'
-                onClick={() => navigate('/professionals/create')}
+                onClick={() => navigate(`${APP_CONFIG.appPrefix}/professionals/create`)}
                 onMouseOver={addProfessionalAnimationOver}
                 onMouseOut={addProfessionalAnimationOut}
               >
@@ -180,7 +180,7 @@ export default function Professionals() {
                     ref={addProfIconScope}
                     size='icon7'
                     variant='tableHeaderPrimary'
-                    onClick={() => navigate('/professionals/create')}
+                    onClick={() => navigate(`${APP_CONFIG.appPrefix}/professionals/create`)}
                     onMouseOver={addProfessionalIconAnimationOver}
                     onMouseOut={addProfessionalIconAnimationOut}
                   >
