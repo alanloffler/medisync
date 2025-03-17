@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAnimate } from 'motion/react';
 // Imports
+import { APP_CONFIG } from '@config/app.config';
 import { motion } from '@core/services/motion.service';
 // React component
 export function Settings() {
@@ -29,7 +30,7 @@ export function Settings() {
       <button
         className='flex items-center'
         ref={scope}
-        onClick={() => navigate('/settings')}
+        onClick={() => navigate(`${APP_CONFIG.appPrefix}/settings`)}
         onMouseOver={handleAnimationOver}
         onMouseOut={handleAnimationOut}
       >
