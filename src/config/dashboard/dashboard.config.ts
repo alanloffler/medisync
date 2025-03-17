@@ -1,3 +1,5 @@
+import { APP_CONFIG } from '@config/app.config';
+
 export const DASHBOARD_CONFIG = {
   statisticGroup: {
     charts: [
@@ -14,24 +16,24 @@ export const DASHBOARD_CONFIG = {
         },
         margin: { top: 30, right: 20, bottom: 10, left: 20 },
         options: { axisX: false, axisY: false },
-        path: '/appointments',
+        path: `${APP_CONFIG.appPrefix}/appointments`,
         title: 'chart.dailyAppointments.title',
       },
     ],
     items: [
       {
         content: 'dashboard.lastMonth',
-        path: '/appointments',
+        path: `${APP_CONFIG.appPrefix}/appointments`,
         title: 'headerMenu.appointments',
       },
       {
         content: 'dashboard.newThisMonth',
-        path: '/professionals',
+        path: `${APP_CONFIG.appPrefix}/professionals`,
         title: 'headerMenu.professionals',
       },
       {
         content: 'dashboard.newThisMonth',
-        path: '/users',
+        path: `${APP_CONFIG.appPrefix}/users`,
         title: 'headerMenu.users',
       },
     ],
