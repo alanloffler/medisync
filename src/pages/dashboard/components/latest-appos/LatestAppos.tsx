@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 // Imports
 import type { IAppointmentView } from '@appointments/interfaces/appointment.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
+import { APP_CONFIG } from '@config/app.config';
 import { DashboardApiService } from '@dashboard/services/dashboard-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
 // React component
@@ -55,14 +56,14 @@ export function LatestAppos() {
       <Card>
         <CardContent className='grid gap-2 pt-6'>
           {isLoading && <LoadingDB text={t('loading.appointments')} variant='default' />}
-          {error && <InfoCard text={error.message} type='error' />}
+          {error && <InfoCard text={error.message} variant='error' />}
           {!isLoading &&
             !error &&
             latestAppos?.data.map((appo: IAppointmentView) => (
               <motion.button
                 className='flex flex-row items-center justify-between gap-4 rounded-md border border-slate-200 p-3 text-sm'
                 key={crypto.randomUUID()}
-                onClick={() => navigate(`/appointments/${appo._id}`)}
+                onClick={() => navigate(`${APP_CONFIG.appPrefix}/appointments/${appo._id}`)}
                 initial='initial'
                 animate='initial'
                 whileHover='animate'
