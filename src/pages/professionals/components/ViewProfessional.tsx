@@ -221,7 +221,7 @@ export default function ViewProfessional() {
             <AvailableProfessional items={PV_CONFIG.select} data={{ _id: professional.data._id, available: professional.data.available }} />
             <section className='flex items-center justify-end space-x-2'>
               <TableButton
-                callback={() => navigate(`/professionals/update/${professional.data._id}`)}
+                callback={() => navigate(`${APP_CONFIG.appPrefix}/professionals/update/${professional.data._id}`)}
                 className='h-8 w-8 hover:bg-amber-100/75 hover:text-amber-400'
                 tooltip={t('tooltip.edit')}
               >
@@ -260,7 +260,7 @@ export default function ViewProfessional() {
                 <Separator orientation='vertical' className='h-5' />
               </div>
               <TableButton
-                callback={() => navigate(`/email/professional/${professional.data._id}`)}
+                callback={() => navigate(`${APP_CONFIG.appPrefix}/email/professional/${professional.data._id}`)}
                 className='h-8 w-8 hover:bg-purple-100/75 hover:text-purple-400'
                 tooltip={t('tooltip.sendEmail')}
               >
@@ -268,7 +268,7 @@ export default function ViewProfessional() {
               </TableButton>
               <TableButton
                 callback={() =>
-                  navigate(`/whatsapp/${professional.data._id}`, {
+                  navigate(`${APP_CONFIG.appPrefix}/whatsapp/${professional.data._id}`, {
                     state: { type: EUserType.PROFESSIONAL, template: EWhatsappTemplate.EMPTY },
                   })
                 }
