@@ -1,4 +1,6 @@
+import type { AxiosResponse } from 'axios';
 import type { IResponse } from '@core/interfaces/response.interface';
+import { api } from '@auth/services/axios.service';
 
 interface ILogin {
   email: string;
@@ -6,10 +8,20 @@ interface ILogin {
 }
 
 export class AuthService {
-  private static readonly API_URL: string = import.meta.env.VITE_API_URL;
-
-  public static async login({ email, password }: ILogin): Promise<IResponse<any>> {
+  public static async login({ email, password }: ILogin): Promise<AxiosResponse<IResponse>> {
     console.log('Logging in...', email, password);
-    return await { data: null, message: 'Login successful' };
+    try {
+      const response = await api({
+        method: 'POST',
+        url: '/auth/login',
+        data: { email, password },
+      });
+
+      console.log('Login successful', response);
+      return response;
+    } catch (error) {
+      console.error('Login failed:', error);
+      throw error;
+    }
   }
 }
