@@ -24,6 +24,7 @@
     "paths": {
       "@appointments/*": ["./src/pages/appointments/*"],
       "@assets/*": ["./src/assets/*"],
+      "@auth/*": ["./src/pages/auth/*"],
       "@config/*": ["./src/config/*"],
       "@core/*": ["./src/core/*"],
       "@dashboard/*": ["./src/pages/dashboard/*"],
