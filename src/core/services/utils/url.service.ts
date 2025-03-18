@@ -3,8 +3,6 @@ import { EMethods } from '@core/enums/methods.enum';
 
 export class UtilsUrl {
   // TODO: get token from http-only cookie
-  private static readonly token: string = '';
-
   public static create(path: string, params?: Record<string, string | undefined>): URL {
     const url = new URL(path);
     if (params) Object.entries(params).forEach(([key, value]) => value && url.searchParams.set(key, value));
@@ -13,12 +11,14 @@ export class UtilsUrl {
   }
 
   public static async fetch(url: string | URL, method: EMethods, body?: any): Promise<IResponse> {
+    const accessToken: string | undefined = localStorage.getItem('accessToken') ?? undefined;
+
     try {
       const query: Response = await fetch(url, {
         method: method,
         headers: {
           'content-type': 'application/json;charset=UTF-8',
-          Authorization: `Bearer ${this.token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify(body),
       });
