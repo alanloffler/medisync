@@ -64,7 +64,9 @@ export function ApposTable({
 
   const handleSendAppoByMessage = useCallback(
     (appointment: IAppointmentView): void => {
-      navigate(`/whatsapp/${appointment.user._id}`, { state: { appointment, type: EUserType.USER, template: EWhatsappTemplate.APPOINTMENT } });
+      navigate(`${APP_CONFIG.appPrefix}/whatsapp/${appointment.user._id}`, {
+        state: { appointment, type: EUserType.USER, template: EWhatsappTemplate.APPOINTMENT },
+      });
     },
     [navigate],
   );
@@ -172,7 +174,7 @@ export function ApposTable({
               <Separator orientation='vertical' className='h-5 w-[1px]' />
             </div>
             <TableButton
-              callback={() => console.log(`/email/user/${row.original._id}`)}
+              callback={() => console.log(`${APP_CONFIG.appPrefix}/email/user/${row.original._id}`)}
               className='hover:bg-purple-100/75 hover:text-purple-400'
               disabled={!row.original.user.email}
               tooltip={t('tooltip.sendAppoByEmail')}
