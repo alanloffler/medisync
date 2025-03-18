@@ -39,6 +39,7 @@ import type { IResponse } from '@core/interfaces/response.interface';
 import type { ISpecialization } from '@core/interfaces/specialization.interface';
 import type { ITitle } from '@core/interfaces/title.interface';
 import type { IWorkingDay } from '@professionals/interfaces/working-days.interface';
+import { APP_CONFIG } from '@config/app.config';
 import { AreaService } from '@core/services/area.service';
 import { PROFESSIONAL_CREATE_CONFIG as PC_CONFIG } from '@config/professionals/professional-create.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
@@ -170,7 +171,7 @@ export default function CreateProfessional() {
       setDisabledSpec(true);
       addNotification({ type: 'success', message: response.message });
       createForm.reset(defaultValues);
-      navigate(`/professionals/${response.data._id}`);
+      navigate(`${APP_CONFIG.appPrefix}/professionals/${response.data._id}`);
     },
     onError: (response) => {
       setOpenDialog(true);
