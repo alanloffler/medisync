@@ -27,7 +27,6 @@ export default function Login() {
                 <Input className='w-full px-3 py-1.5 text-base sm:text-sm/6' />
               </div>
             </div>
-
             <div>
               <div className='flex items-center justify-between gap-6'>
                 <Label htmlFor='password'>Contraseña</Label>
@@ -38,11 +37,11 @@ export default function Login() {
                 </div>
               </div>
               <div className='mt-2'>
-                <Input className='w-full px-3 py-1.5 text-base sm:text-sm/6' />
+                <Input type='password' className='w-full px-3 py-1.5 text-base sm:text-sm/6' />
               </div>
             </div>
             <div>
-              <Button type='submit' className='w-full' variant='default'>
+              <Button type='submit' className='w-full' size='default' variant='default'>
                 Iniciar sesión
               </Button>
             </div>
