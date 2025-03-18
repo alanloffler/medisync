@@ -41,6 +41,7 @@ import type { IResponse } from '@core/interfaces/response.interface';
 import type { ISpecialization } from '@core/interfaces/specialization.interface';
 import type { ITitle } from '@core/interfaces/title.interface';
 import type { IWorkingDay } from '@professionals/interfaces/working-days.interface';
+import { APP_CONFIG } from '@config/app.config';
 import { AreaService } from '@core/services/area.service';
 import { PROF_UPDATE_CONFIG as PU_CONFIG } from '@config/professionals.config';
 import { ProfessionalApiService } from '@professionals/services/professional-api.service';
@@ -54,7 +55,8 @@ import { useNotificationsStore } from '@core/stores/notifications.store';
 export default function UpdateProfessional() {
   const [_area, setArea] = useState<number | undefined>();
   const [disabledSpec, setDisabledSpec] = useState<boolean>(true);
-  const [infoCardContent, setInfoCardContent] = useState<IInfoCard>({ type: 'success', text: '' });
+  // TODO: fix this implementation
+  const [infoCardContent, setInfoCardContent] = useState<IInfoCard>({ variant: 'success', text: '' });
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [specKey, setSpecKey] = useState<string>('');
   const [specializations, setSpecializations] = useState<ISpecialization[]>([]);
@@ -161,7 +163,7 @@ export default function UpdateProfessional() {
 
   useEffect(() => {
     if (professionalIsError) {
-      setInfoCardContent({ type: 'error', text: professionalError.message });
+      setInfoCardContent({ variant: 'error', text: professionalError.message });
       addNotification({ type: 'error', message: professionalError.message });
     }
   }, [addNotification, professionalError?.message, professionalIsError]);
@@ -218,7 +220,7 @@ export default function UpdateProfessional() {
     mutationKey: ['professional', 'update', id],
     mutationFn: async ({ id, data }) => await ProfessionalApiService.update(id, data),
     onSuccess: (response) => {
-      navigate(`/professionals/${id}`);
+      navigate(`${APP_CONFIG.appPrefix}/professionals/${id}`);
       addNotification({ type: 'success', message: response.message });
     },
     onError: (response) => {
