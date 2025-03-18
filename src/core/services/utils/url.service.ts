@@ -1,5 +1,7 @@
 import type { IResponse } from '@core/interfaces/response.interface';
 import { EMethods } from '@core/enums/methods.enum';
+import { api } from '@auth/services/axios.service';
+import { AxiosError } from 'axios';
 
 export class UtilsUrl {
   // TODO: get token from http-only cookie
@@ -30,6 +32,27 @@ export class UtilsUrl {
     } catch (error) {
       if (error instanceof TypeError) throw new Error('error.internalServer');
       throw error;
+    }
+  }
+
+  public static async axiosFetch(url: string | URL, method: EMethods, body?: any): Promise<IResponse<any>> {
+    const accessToken: string | undefined = localStorage.getItem('accessToken') ?? undefined;
+
+    try {
+      const query = await api({
+        method,
+        url: url.toString(),
+        data: body,
+        headers: {
+          'content-type': 'application/json;charset=UTF-8',
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      return query.data;
+    } catch (error: any) {
+      console.log(error);
+      throw new Error(error.response.data.message);
     }
   }
 }
