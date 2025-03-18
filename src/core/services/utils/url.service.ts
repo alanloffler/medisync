@@ -1,7 +1,6 @@
 import type { IResponse } from '@core/interfaces/response.interface';
 import { EMethods } from '@core/enums/methods.enum';
 import { api } from '@auth/services/axios.service';
-import { AxiosError } from 'axios';
 
 export class UtilsUrl {
   // TODO: get token from http-only cookie
