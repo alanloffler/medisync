@@ -7,6 +7,10 @@ export interface IResponse<T = any> {
   };
   stats?: IStats;
   statusCode: number;
+  tokens?: {
+    accessToken: string;
+    refreshToken: string;
+  };
 }
 
 export interface IStats {
