@@ -312,7 +312,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
 
   const handleRowClick = useCallback(
     (row: Row<IUser>, cell: Cell<IUser, unknown>): void => {
-      if (cell.column.getIndex() < row.getAllCells().length - 1) navigate(`/users/${row.original._id}`);
+      if (cell.column.getIndex() < row.getAllCells().length - 1) navigate(`${APP_CONFIG.appPrefix}/users/${row.original._id}`);
     },
     [navigate],
   );
