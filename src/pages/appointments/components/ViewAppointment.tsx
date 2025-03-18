@@ -20,6 +20,7 @@ import type { IAppointment } from '@appointments/interfaces/appointment.interfac
 import type { IEmailAttachment, IEmailData } from '@email/interfaces/email.interface';
 import type { IMessage } from '@whatsapp/interfaces/message.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
+import { APP_CONFIG } from '@config/app.config';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { EmailApiService } from '@email/services/email.service';
 import { HEADER_CONFIG } from '@config/layout/header.config';
@@ -220,7 +221,7 @@ export default function ViewAppointment() {
                 </header>
               </CardTitle>
               <CardContent className='space-y-3 p-6'>
-                <Link to={`/users/${appointment?.data.user._id}`}>
+                <Link to={`${APP_CONFIG.appPrefix}/users/${appointment?.data.user._id}`}>
                   <span className='flex justify-center text-xl font-semibold underline-offset-2 hover:underline'>
                     {UtilsString.upperCase(`${appointment?.data.user.firstName} ${appointment?.data.user.lastName}`, 'each')}
                   </span>
