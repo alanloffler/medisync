@@ -94,7 +94,7 @@ export default function Users() {
         <Card className='col-span-1 border-none bg-slate-200 bg-transparent shadow-none md:col-span-4 lg:col-span-1 xl:col-span-1'>
           <CardContent className='p-0'>
             <div className='flex flex-col gap-6 md:w-full'>
-              <Link to={`/users/create`} className='w-fit'>
+              <Link to={`${APP_CONFIG.appPrefix}/users/create`} className='w-fit'>
                 <Button variant='default' size='sm' className='gap-2' onMouseOver={addUserAnimationOver} onMouseOut={addUserAnimationOut}>
                   <PlusCircle ref={addUserScope} size={16} strokeWidth={2} />
                   {t('button.addUser')}
