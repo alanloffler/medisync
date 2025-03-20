@@ -11,32 +11,30 @@ export class UtilsUrl {
     return url;
   }
 
-  public static async fetch(url: string | URL, method: EMethods, body?: any): Promise<IResponse> {
-    const accessToken: string | undefined = localStorage.getItem('accessToken') ?? undefined;
+  // public static async _deprecated_fetch(url: string | URL, method: EMethods, body?: any): Promise<IResponse> {
+  //   const accessToken: string | undefined = localStorage.getItem('accessToken') ?? undefined;
 
-    try {
-      const query: Response = await fetch(url, {
-        method: method,
-        headers: {
-          'content-type': 'application/json;charset=UTF-8',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify(body),
-      });
+  //   try {
+  //     const query: Response = await fetch(url, {
+  //       method: method,
+  //       headers: {
+  //         'content-type': 'application/json;charset=UTF-8',
+  //         Authorization: `Bearer ${accessToken}`,
+  //       },
+  //       body: JSON.stringify(body),
+  //     });
 
-      const response: IResponse = await query.json();
-      if (!query.ok) throw new Error(response.message);
+  //     const response: IResponse = await query.json();
+  //     if (!query.ok) throw new Error(response.message);
 
-      return response;
-    } catch (error) {
-      if (error instanceof TypeError) throw new Error('error.internalServer');
-      throw error;
-    }
-  }
+  //     return response;
+  //   } catch (error) {
+  //     if (error instanceof TypeError) throw new Error('error.internalServer');
+  //     throw error;
+  //   }
+  // }
 
-  public static async axiosFetch(url: string | URL, method: EMethods, body?: any): Promise<IResponse<any>> {
-    const accessToken: string | undefined = localStorage.getItem('accessToken') ?? undefined;
-
+  public static async fetch(url: string | URL, method: EMethods, body?: any): Promise<IResponse<any>> {
     try {
       const query = await api({
         method,
@@ -44,9 +42,10 @@ export class UtilsUrl {
         data: body,
         headers: {
           'content-type': 'application/json;charset=UTF-8',
-          Authorization: `Bearer ${accessToken}`,
         },
+        withCredentials: true,
       });
+      console.log(query.headers);
 
       return query.data;
     } catch (error: any) {
