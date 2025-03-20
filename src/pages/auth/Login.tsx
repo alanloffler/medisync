@@ -39,10 +39,7 @@ export default function Login() {
       return await AuthService.login(formData);
     },
     onSuccess: (response) => {
-      if (response.data.tokens) {
-        localStorage.setItem('accessToken', response.data.tokens?.accessToken);
-        localStorage.setItem('refreshToken', response.data.tokens?.refreshToken);
-      }
+      console.log('useQuery success: ', response);
     },
     onError: (error: AxiosError<ErrorResponse>) => {
       console.error('TRQ Error logging in:', error.response?.data?.message);
