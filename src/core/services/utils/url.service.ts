@@ -3,7 +3,6 @@ import { EMethods } from '@core/enums/methods.enum';
 import { api } from '@auth/services/axios.service';
 
 export class UtilsUrl {
-  // TODO: get token from http-only cookie
   public static create(path: string, params?: Record<string, string | undefined>): URL {
     const url = new URL(path);
     if (params) Object.entries(params).forEach(([key, value]) => value && url.searchParams.set(key, value));
@@ -45,7 +44,6 @@ export class UtilsUrl {
         },
         withCredentials: true,
       });
-      console.log(query.headers);
 
       return query.data;
     } catch (error: any) {
