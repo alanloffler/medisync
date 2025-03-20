@@ -41,8 +41,8 @@ export class UserApiService {
     url.searchParams.append('sk', sorting[0].id);
     url.searchParams.append('sv', sorting[0].desc ? 'desc' : 'asc');
 
-    // return await UtilsUrl.fetch(url, EMethods.GET);
-    return await UtilsUrl.axiosFetch(url, EMethods.GET);
+    return await UtilsUrl.fetch(url, EMethods.GET);
+    // return await UtilsUrl.axiosFetch(url, EMethods.GET);
   }
 
   public static async findOne(id: string): Promise<IResponse<IUser>> {
