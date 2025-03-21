@@ -7,8 +7,14 @@ interface ILogin {
   password: string;
 }
 
+export interface IPayload {
+  _id: string;
+  email: string;
+  role: string;
+}
+
 export class AuthService {
-  public static async login({ email, password }: ILogin): Promise<AxiosResponse<IResponse>> {
+  public static async login({ email, password }: ILogin): Promise<AxiosResponse<IResponse<IPayload>>> {
     console.log('Logging in...', email, password);
     try {
       const response = await api({
@@ -37,6 +43,22 @@ export class AuthService {
       window.location.href = '/login';
     } catch (error) {
       console.error('Logout failed:', error);
+      throw error;
+    }
+  }
+
+  public static async getUser(): Promise<AxiosResponse<IResponse<IPayload>>> {
+    try {
+      const response = await api({
+        method: 'GET',
+        url: '/auth/user',
+        withCredentials: true,
+      });
+
+      console.log('User fetched', response);
+      return response;
+    } catch (error) {
+      console.error('User fetch failed:', error);
       throw error;
     }
   }
