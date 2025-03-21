@@ -4,6 +4,7 @@ import { lazy, Suspense } from 'react';
 // Imports
 import Layout from '@layout/Layout';
 import { APP_CONFIG } from '@config/app.config';
+import { AuthProvider } from '@core/auth/AuthContext';
 import { Loading } from '@core/components/common/Loading';
 // Lazy loaded components
 const Login = lazy(() => import('./pages/auth/Login'));
@@ -59,5 +60,9 @@ export default function App() {
     { path: '/microsite/professional/:id', element: (<Suspense fallback={<Loading />}><ProfessionalMicrosite /></Suspense>) },
   ]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
+  );
 }
