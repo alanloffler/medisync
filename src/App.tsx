@@ -6,6 +6,7 @@ import Layout from '@layout/Layout';
 import { APP_CONFIG } from '@config/app.config';
 import { AuthProvider } from '@core/auth/AuthContext';
 import { Loading } from '@core/components/common/Loading';
+import { PrivateRoute } from '@core/auth/PrivateRoute';
 // Lazy loaded components
 const Login = lazy(() => import('./pages/auth/Login'));
 
@@ -36,7 +37,7 @@ export default function App() {
   const router = createBrowserRouter([
     { index: true, element: (<Suspense fallback={<Loading />}><Login /></Suspense>) },
     { path: '/login', element: (<Suspense fallback={<Loading />}><Login /></Suspense>) },
-    { path: APP_CONFIG.appPrefix, element: <Layout />, children:
+    { path: APP_CONFIG.appPrefix, element: <PrivateRoute roles={['admin', 'super']}><Layout /></PrivateRoute>, children:
       [
         { index: true, element: (<Suspense fallback={<Loading />}><Dashboard /></Suspense>) },
         { path: 'dashboard', element: (<Suspense fallback={<Loading />}><Dashboard /></Suspense>) },
