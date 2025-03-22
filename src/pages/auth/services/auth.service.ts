@@ -1,17 +1,8 @@
 import type { AxiosResponse } from 'axios';
+import type { ILogin } from '@core/auth/interfaces/login.interface';
+import type { IPayload } from '@core/auth/interfaces/payload.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
-import { api, refreshTokens } from '@auth/services/axios.service';
-
-interface ILogin {
-  email: string;
-  password: string;
-}
-
-export interface IPayload {
-  _id: string;
-  email: string;
-  role: string;
-}
+import { api } from '@auth/services/axios.service';
 
 export class AuthService {
   public static async login({ email, password }: ILogin): Promise<AxiosResponse<IResponse<IPayload>>> {
@@ -47,11 +38,11 @@ export class AuthService {
     }
   }
 
-  public static async getUser(): Promise<AxiosResponse<IResponse<IPayload>>> {
+  public static async getAdmin(): Promise<AxiosResponse<IResponse<IPayload>>> {
     try {
       const response = await api({
         method: 'GET',
-        url: '/auth/user',
+        url: '/auth/admin',
         withCredentials: true,
       });
 
@@ -61,9 +52,5 @@ export class AuthService {
       console.error('User fetch failed:', error);
       throw error;
     }
-  }
-
-  public static async refreshTokens(): Promise<boolean> {
-    return await refreshTokens();
   }
 }
