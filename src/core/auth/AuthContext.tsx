@@ -1,15 +1,18 @@
+// External imports
 import { createContext, useState, useEffect } from 'react';
-import { AuthService, type IPayload } from '@auth/services/auth.service';
-
+// Imports
+import type { IPayload } from '@core/auth/interfaces/payload.interface';
+import { AuthService } from '@auth/services/auth.service';
+// Interface
 interface IAuthContext {
-  user: IPayload | null;
+  loading: boolean;
   login(email: string, password: string): Promise<IPayload>;
   logout(): Promise<void>;
-  loading: boolean;
+  user: IPayload | null;
 }
-
+// Context
 export const AuthContext = createContext<IAuthContext | null>(null);
-
+// React provider component
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<IPayload | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -17,7 +20,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     async function loadUser(): Promise<void> {
       try {
-        const userData = await AuthService.getUser();
+        const userData = await AuthService.getAdmin();
         const user: IPayload = userData.data.data;
 
         setUser({ _id: user._id, email: user.email, role: user.role });
@@ -31,7 +34,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     loadUser();
   }, []);
 
-  async function login(email: string, password: string) {
+  async function login(email: string, password: string): Promise<IPayload> {
     const userData = await AuthService.login({ email, password });
     const user: IPayload = userData.data.data;
 
@@ -40,7 +43,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return userData.data.data;
   }
 
-  async function logout() {
+  async function logout(): Promise<void> {
     await AuthService.logout();
     setUser(null);
   }
