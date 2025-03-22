@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import { MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 // Imports
+import { APP_CONFIG } from '@config/app.config';
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 // React component
@@ -23,7 +24,7 @@ export function HeaderMenu() {
   return (
     <>
       <nav className='hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6'>
-        <Link to='/' className='flex items-center gap-2 font-semibold md:text-base'>
+        <Link to={`${APP_CONFIG.appPrefix}`} className='flex items-center gap-2 font-semibold md:text-base'>
           <Package2 className='h-6 w-6' />
           <span>{t('appName')}</span>
         </Link>
