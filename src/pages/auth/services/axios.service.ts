@@ -90,22 +90,3 @@ api.interceptors.response.use(
     return Promise.reject(error);
   },
 );
-
-export async function refreshTokens(): Promise<boolean> {
-  try {
-    console.log('Manual token refresh initiated');
-    const response = await api({
-      method: 'POST',
-      url: '/auth/refresh',
-      withCredentials: true,
-    });
-
-    console.log('Manual token refresh successful:', response.status);
-    return true;
-  } catch (error) {
-    console.error('Manual token refresh failed:', error);
-    // Redirect to login on manual refresh failure
-    //window.location.href = '/login';
-    return false;
-  }
-}
