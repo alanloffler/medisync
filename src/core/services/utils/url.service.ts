@@ -39,9 +39,6 @@ export class UtilsUrl {
         method,
         url: url.toString(),
         data: body,
-        headers: {
-          'content-type': 'application/json;charset=UTF-8',
-        },
         withCredentials: true,
       });
 
