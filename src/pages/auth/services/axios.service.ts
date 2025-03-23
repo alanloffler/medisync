@@ -1,13 +1,20 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig, type AxiosInstance, type AxiosResponse } from 'axios';
+import i18n from '@core/i18n/i18n';
+import { APP_CONFIG } from '@config/app.config';
 
 export const api: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true,
+  headers: {
+    'content-type': 'application/json;charset=UTF-8',
+    'x-lang': i18n.resolvedLanguage || APP_CONFIG.i18n.locale || 'es',
+  },
 });
 
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     config.withCredentials = true;
+
     return config;
   },
   (error: any) => {
