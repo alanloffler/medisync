@@ -17,13 +17,14 @@ import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 // Imports
+import type { IPayload } from '@core/auth/interfaces/payload.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
-import { APP_CONFIG } from '@config/app.config';
-import { AuthService } from '@auth/services/auth.service';
 import { loginSchema } from '@auth/schemas/login.schema';
+import { useAuth } from '@core/auth/useAuth';
 // React component
 export default function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const { t } = useTranslation();
 
   const defaultValues = {
@@ -41,13 +42,11 @@ export default function Login() {
     isError,
     isPending: isLoggingIn,
     mutate: handleLogin,
-  } = useMutation<AxiosResponse<IResponse>, AxiosError<IResponse>, z.infer<typeof loginSchema>>({
+  } = useMutation<AxiosResponse<IResponse<IPayload>> & { redirectPath?: string }, AxiosError<IResponse>, z.infer<typeof loginSchema>>({
     mutationKey: ['login'],
-    mutationFn: async (formData) => {
-      return await AuthService.login(formData);
-    },
-    onSuccess: (response) => {
-      if (response.status === 201) navigate(`${APP_CONFIG.appPrefix}/dashboard`);
+    mutationFn: async (formData) => await login(formData.email, formData.password),
+    onSuccess: (data) => {
+      if (data.redirectPath) navigate(data.redirectPath);
     },
   });
 
@@ -90,7 +89,7 @@ export default function Login() {
               />
               <div>
                 <Button type='submit' className='w-full disabled:opacity-100' disabled={isLoggingIn} size='default' variant='default'>
-                  {isLoggingIn && !isError ? <LoadingDB spinnerColor='fill-white' text={t('loading.authenticating')} /> : t('button.login')}
+                  {isLoggingIn ? <LoadingDB spinnerColor='fill-white' text={t('loading.authenticating')} /> : t('button.login')}
                 </Button>
               </div>
             </form>
