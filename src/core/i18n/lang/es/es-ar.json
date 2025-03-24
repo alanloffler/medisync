@@ -31,6 +31,8 @@
     "generateAppointment": "Generar turno",
     "goToProfessionals": "Ir a profesionales",
     "goToUsers": "Ir a pacientes",
+    "login": "Iniciar sesión",
+    "requestAccess": "Solicitar acceso",
     "reserve": "Reservar",
     "reserveAppointment": "Reservar turno",
     "seeMore": "Ver más",
@@ -55,6 +57,7 @@
       "statistics": "Estadísticas"
     },
     "email": "Enviar email a {{username}}",
+    "login": "Inicia sesión en tu cuenta",
     "phoneMessage": "Enviar mensaje de WhatsApp",
     "professionalData": "Datos del profesional",
     "professionalsList": "Lista de profesionales",
