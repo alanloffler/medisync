@@ -232,6 +232,7 @@
   "loading": {
     "appointmentDetails": "Cargando detalles del turno",
     "appointments": "Cargando turnos",
+    "authenticating": "Autenticando usuario",
     "categories": "Cargando especialidades",
     "creating": "Creando",
     "default": "Cargando",

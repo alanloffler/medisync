@@ -232,6 +232,7 @@
   "loading": {
     "appointmentDetails": "Loading appointment details",
     "appointments": "Loading appointments",
+    "authenticating": "Authenticating user",
     "categories": "Loading specialties",
     "creating": "Creating",
     "default": "Loading",
