@@ -9,15 +9,18 @@ import { Input } from '@core/components/ui/input';
 import type { AxiosError, AxiosResponse } from 'axios';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 // Imports
 import type { IResponse } from '@core/interfaces/response.interface';
-import { AuthService } from './services/auth.service';
+import { AuthService } from '@auth/services/auth.service';
 import { loginSchema } from '@auth/schemas/login.schema';
+import { APP_CONFIG } from '@config/app.config';
 // React component
 export default function Login() {
+  const navigate = useNavigate();
   const { t } = useTranslation();
 
   const defaultValues = {
@@ -39,7 +42,7 @@ export default function Login() {
       return await AuthService.login(formData);
     },
     onSuccess: (response) => {
-      console.log('useQuery success: ', response);
+      if (response.status === 201) navigate(`${APP_CONFIG.appPrefix}/dashboard`);
     },
     onError: (error: AxiosError<ErrorResponse>) => {
       console.error('TRQ Error logging in:', error.response?.data?.message);
@@ -53,7 +56,7 @@ export default function Login() {
           <Package2 size={32} />
           <span>{t('appName')}</span>
         </section>
-        <h2 className='mt-10 text-center text-xl/9 font-semibold tracking-tight'>Inicia sesión en tu cuenta</h2>
+        <h2 className='mt-10 text-center text-xl/9 font-semibold tracking-tight'>{t('cardTitle.login')}</h2>
         <div className='mt-10 sm:mx-auto sm:w-full sm:max-w-sm'>
           <Form {...loginForm}>
             <form onSubmit={loginForm.handleSubmit((data) => handleLogin(data))} className='space-y-6'>
@@ -85,7 +88,7 @@ export default function Login() {
               />
               <div>
                 <Button className='w-full' size='default' variant='default'>
-                  Iniciar sesión
+                  {t('button.login')}
                 </Button>
               </div>
             </form>
@@ -99,7 +102,7 @@ export default function Login() {
               }}
             >
               <KeyRound size={14} strokeWidth={2} />
-              <span>Solicitar acceso</span>
+              <span>{t('button.requestAccess')}</span>
             </button>
           </section>
         </div>
