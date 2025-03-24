@@ -18,7 +18,6 @@ export const HEADER_CONFIG = {
     menuItems: [
       { id: 1, key: 'user.menuItems.profile', path: `${APP_CONFIG.appPrefix}/profile` },
       { id: 2, key: 'user.menuItems.settings', path: `${APP_CONFIG.appPrefix}/settings` },
-      { id: 3, key: 'user.menuItems.logout', path: `${APP_CONFIG.appPrefix}/logout` },
     ],
   },
 };
