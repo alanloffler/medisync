@@ -23,15 +23,15 @@ export class AuthService {
     }
   }
 
-  public static async logout(): Promise<void> {
+  public static async logout(): Promise<AxiosResponse<IResponse<null>>> {
     try {
-      await api({
-        method: 'POST',
+      const response = await api({
+        method: 'GET',
         url: '/auth/logout',
         withCredentials: true,
       });
 
-      window.location.href = '/login';
+      return response;
     } catch (error) {
       console.error('Logout failed:', error);
       throw error;
