@@ -13,8 +13,6 @@ export const api: AxiosInstance = axios.create({
 
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    config.withCredentials = true;
-
     return config;
   },
   (error: any) => {
@@ -46,6 +44,10 @@ api.interceptors.response.use(
   },
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+
+    if (error.response?.config.url === '/auth/login') {
+      return Promise.reject(error);
+    }
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       console.log('Unauthorized at response interceptor');
