@@ -6,7 +6,6 @@ import { api } from '@auth/services/axios.service';
 
 export class AuthService {
   public static async login({ email, password }: ILogin): Promise<AxiosResponse<IResponse<IPayload>>> {
-    console.log('Logging in...', email, password);
     try {
       const response = await api({
         method: 'POST',
@@ -15,7 +14,6 @@ export class AuthService {
         withCredentials: true,
       });
 
-      console.log('Login successful', response);
       return response;
     } catch (error) {
       console.error('Login failed:', error);
@@ -46,7 +44,6 @@ export class AuthService {
         withCredentials: true,
       });
 
-      console.log('User fetched', response);
       return response;
     } catch (error) {
       console.error('User fetch failed:', error);
