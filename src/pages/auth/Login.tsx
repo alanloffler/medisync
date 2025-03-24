@@ -89,7 +89,7 @@ export default function Login() {
                 )}
               />
               <div>
-                <Button className='w-full disabled:opacity-100' disabled={isLoggingIn} size='default' variant='default'>
+                <Button type='submit' className='w-full disabled:opacity-100' disabled={isLoggingIn} size='default' variant='default'>
                   {isLoggingIn && !isError ? <LoadingDB spinnerColor='fill-white' text={t('loading.authenticating')} /> : t('button.login')}
                 </Button>
               </div>
