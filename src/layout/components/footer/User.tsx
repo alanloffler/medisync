@@ -23,8 +23,12 @@ import { useAuth } from '@core/auth/useAuth';
 export function User() {
   const [scope, animation] = useAnimate();
   const navigate = useNavigate();
+  const { logout, user } = useAuth();
   const { t } = useTranslation();
-  const { user } = useAuth();
+
+  async function handleLogout(): Promise<void> {
+    await logout();
+  }
 
   function handleAnimationOver(): void {
     const { keyframes, options } = motion.scale(1.1).type('bounce').animate();
@@ -52,14 +56,13 @@ export function User() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         {HEADER_CONFIG.user.menuItems.map((item) => (
-          <DropdownMenuItem
-            key={item.id}
-            onClick={() => navigate(item.path)}
-            className='text-xsm last:bg-primary/10 last:font-semibold last:text-primary last:hover:bg-primary last:hover:text-white'
-          >
+          <DropdownMenuItem key={item.id} onClick={() => navigate(item.path)} className='text-xsm'>
             {t(item.key)}
           </DropdownMenuItem>
         ))}
+        <DropdownMenuItem className='bg-primary/10 !text-xsm font-semibold text-primary hover:bg-primary hover:text-white' onClick={handleLogout}>
+          {t('user.menuItems.logout')}
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
