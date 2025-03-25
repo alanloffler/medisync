@@ -10,8 +10,10 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { IStatistic } from '@dashboard/interfaces/statistic.interface';
+import { useMediaQuery } from '@core/hooks/useMediaQuery';
 // React component
 export function Statistic({ children, content, error, isLoading, path, title, value1, value2 }: IStatistic) {
+  const isSmallDevice = useMediaQuery('only screen and (max-width : 767px)');
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -28,14 +30,14 @@ export function Statistic({ children, content, error, isLoading, path, title, va
       onClick={() => path && navigate(path)}
       initial='initial'
       animate='initial'
-      whileHover='animate'
+      whileHover={isSmallDevice ? '' : 'animate'}
       variants={animation.item}
     >
       <Card className='h-full'>
         {isLoading ? (
           <LoadingDB size='box' iconSize={32} empty className='relative top-1/2 -translate-y-1/2 p-6 py-6' />
         ) : error ? (
-          <InfoCard text={error.message} type='error' className='relative top-1/2 -translate-y-1/2 p-6 text-xsm font-light text-dark-default' />
+          <InfoCard className='relative top-1/2 -translate-y-1/2 p-6 text-xsm font-light text-dark-default' text={error.message} variant='error' />
         ) : (
           <>
             <section className='flex flex-row items-center justify-between p-4 pb-2'>
