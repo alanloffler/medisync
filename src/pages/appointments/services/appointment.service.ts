@@ -8,7 +8,7 @@ import { UtilsUrl } from '@core/services/utils/url.service';
 
 export class AppointmentApiService {
   private static readonly API_URL: string = import.meta.env.VITE_API_URL;
-  // CHECKED: used on ReserveAppointments.tsx
+  // CHECKED: used on DailySchedule.tsx and MicrositeSchedule.tsx
   public static async findAllByProfessional(id: string, day: string) {
     const path: string = `${this.API_URL}/appointments/byProfessional`;
     const url: URL = UtilsUrl.create(path, { id, day });
@@ -16,23 +16,23 @@ export class AppointmentApiService {
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
-  public static async findAllByUser(id: string) {
-    const url: string = `${this.API_URL}/appointments/byUser?id=${id}`;
+  // public static async findAllByUser(id: string) {
+  //   const url: string = `${this.API_URL}/appointments/byUser?id=${id}`;
 
-    try {
-      const query: Response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json;charset=UTF-8',
-        },
-      });
+  //   try {
+  //     const query: Response = await fetch(url, {
+  //       method: 'GET',
+  //       headers: {
+  //         'content-type': 'application/json;charset=UTF-8',
+  //       },
+  //     });
 
-      return await query.json();
-    } catch (error) {
-      return error;
-    }
-  }
-  // CHECKED: used on appointments.tsx
+  //     return await query.json();
+  //   } catch (error) {
+  //     return error;
+  //   }
+  // }
+  // CHECKED: used on AppoDataTable.tsx
   public static async findSearch(
     search: IAppointmentSearch[],
     sorting: SortingState,
@@ -52,8 +52,7 @@ export class AppointmentApiService {
 
     return await UtilsUrl.fetch(url, EMethods.POST, body);
   }
-  // CHECKED:
-  // Used on StatusSelect.tsx and AppoDataTable.tsx (change professional)
+  // CHECKED: used on AppoDataTable.tsx and StatusSelect.tsx
   public static async update(id: string, professional?: string, status?: string): Promise<IResponse<IAppointment>> {
     const path: string = `${this.API_URL}/appointments/${id}`;
     const url = UtilsUrl.create(path);
@@ -79,13 +78,13 @@ export class AppointmentApiService {
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
+  // CHECKED: used on DBCountAppos.tsx
   public static async countTotalAppointments() {
     const url: string = `${this.API_URL}/appointments/count`;
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
-  // CHECKED:
-  // Used on ApposRecord.tsx and DBCountApposByUser.tsx
+  // CHECKED: used on ApposRecord.tsx
   public static async findApposRecordWithFilters(
     userId: string,
     limit?: number,
@@ -128,7 +127,7 @@ export class AppointmentApiService {
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
-  // CHECKED: used on DialogReserve.tsx
+  // CHECKED: used on ApposTable.tsx and DialogReserve.tsx
   public static async remove(id: string): Promise<IResponse<IAppointment>> {
     const path: string = `${this.API_URL}/appointments/${id}`;
     const url: URL = UtilsUrl.create(path);
@@ -136,7 +135,7 @@ export class AppointmentApiService {
     return await UtilsUrl.fetch(url, EMethods.DELETE);
   }
 
-  // ApposRecord component methods
+  // CHECKED: used on ApposFilters.tsx
   public static async findUniqueProfessionalsByUser(userId: string) {
     const url: string = `${this.API_URL}/appointments/uniqueProfessionalsByUser?u=${userId}`;
 
@@ -154,6 +153,7 @@ export class AppointmentApiService {
     }
   }
 
+  // CHECKED: used on ApposFilters.tsx
   public static async findApposYearsByUser(userId: string) {
     const url: string = `${this.API_URL}/appointments/yearsByUser?u=${userId}`;
 
@@ -171,22 +171,22 @@ export class AppointmentApiService {
     }
   }
 
-  public static async findApposMonthsByUser(userId: string, year: string) {
-    const url: string = `${this.API_URL}/appointments/monthsByUser?u=${userId}&y=${year}`;
+  // public static async findApposMonthsByUser(userId: string, year: string) {
+  //   const url: string = `${this.API_URL}/appointments/monthsByUser?u=${userId}&y=${year}`;
 
-    try {
-      const query: Response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json;charset=UTF-8',
-        },
-      });
+  //   try {
+  //     const query: Response = await fetch(url, {
+  //       method: 'GET',
+  //       headers: {
+  //         'content-type': 'application/json;charset=UTF-8',
+  //       },
+  //     });
 
-      return await query.json();
-    } catch (error) {
-      return error;
-    }
-  }
+  //     return await query.json();
+  //   } catch (error) {
+  //     return error;
+  //   }
+  // }
 
   // CHECKED: used on ApposAttendance.tsx
   public static async getAttendance(): Promise<IResponse<IAppoAttendance[]>> {
