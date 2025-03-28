@@ -127,38 +127,20 @@ export class AppointmentApiService {
 
   // CHECKED: used on ApposFilters.tsx
   public static async findUniqueProfessionalsByUser(userId: string) {
-    const url: string = `${this.API_URL}/appointments/uniqueProfessionalsByUser?u=${userId}`;
+    const path: string = `${this.API_URL}/appointments/uniqueProfessionalsByUser`;
+    const params = { u: userId };
+    const url: URL = UtilsUrl.create(path, params);
 
-    try {
-      const query: Response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json;charset=UTF-8',
-        },
-      });
-
-      return await query.json();
-    } catch (error) {
-      return error;
-    }
+    return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
   // CHECKED: used on ApposFilters.tsx
   public static async findApposYearsByUser(userId: string) {
-    const url: string = `${this.API_URL}/appointments/yearsByUser?u=${userId}`;
+    const path: string = `${this.API_URL}/appointments/yearsByUser`;
+    const params = { u: userId };
+    const url: URL = UtilsUrl.create(path, params);
 
-    try {
-      const query: Response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json;charset=UTF-8',
-        },
-      });
-
-      return await query.json();
-    } catch (error) {
-      return error;
-    }
+    return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
   // CHECKED: used on ApposAttendance.tsx
