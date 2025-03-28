@@ -8,6 +8,7 @@ import { UtilsUrl } from '@core/services/utils/url.service';
 
 export class AppointmentApiService {
   private static readonly API_URL: string = import.meta.env.VITE_API_URL;
+
   // CHECKED: used on DailySchedule.tsx and MicrositeSchedule.tsx
   public static async findAllByProfessional(id: string, day: string) {
     const path: string = `${this.API_URL}/appointments/byProfessional`;
@@ -16,22 +17,6 @@ export class AppointmentApiService {
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
-  // public static async findAllByUser(id: string) {
-  //   const url: string = `${this.API_URL}/appointments/byUser?id=${id}`;
-
-  //   try {
-  //     const query: Response = await fetch(url, {
-  //       method: 'GET',
-  //       headers: {
-  //         'content-type': 'application/json;charset=UTF-8',
-  //       },
-  //     });
-
-  //     return await query.json();
-  //   } catch (error) {
-  //     return error;
-  //   }
-  // }
   // CHECKED: used on AppoDataTable.tsx
   public static async findSearch(
     search: IAppointmentSearch[],
@@ -52,20 +37,23 @@ export class AppointmentApiService {
 
     return await UtilsUrl.fetch(url, EMethods.POST, body);
   }
+
   // CHECKED: used on AppoDataTable.tsx and StatusSelect.tsx
   public static async update(id: string, professional?: string, status?: string): Promise<IResponse<IAppointment>> {
     const path: string = `${this.API_URL}/appointments/${id}`;
-    const url = UtilsUrl.create(path);
+    const url: URL = UtilsUrl.create(path);
 
     return await UtilsUrl.fetch(url, EMethods.PATCH, { professional, status });
   }
+
   // CHECKED: used on AppoFlowCard.tsx
   public static async getStatistics() {
     const path: string = `${this.API_URL}/appointments/statistics`;
-    const url = UtilsUrl.create(path);
+    const url: URL = UtilsUrl.create(path);
 
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
+
   // CHECKED: used on DateSelection.tsx
   public static async daysWithAppos(professionalId: string, year: number, month: number) {
     let transformedMonth: string, transformedYear: string;
@@ -73,14 +61,16 @@ export class AppointmentApiService {
     year < 10 ? (transformedYear = `0${year}`) : (transformedYear = `${year}`);
 
     const path: string = `${this.API_URL}/appointments/daysWithAppos`;
-    const url = UtilsUrl.create(path, { professionalId, year: transformedYear, month: transformedMonth });
+    const url: URL = UtilsUrl.create(path, { professionalId, year: transformedYear, month: transformedMonth });
 
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
   // CHECKED: used on DBCountAppos.tsx
   public static async countTotalAppointments() {
-    const url: string = `${this.API_URL}/appointments/count`;
+    const path: string = `${this.API_URL}/appointments/count`;
+    const url: URL = UtilsUrl.create(path);
+
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
@@ -170,23 +160,6 @@ export class AppointmentApiService {
       return error;
     }
   }
-
-  // public static async findApposMonthsByUser(userId: string, year: string) {
-  //   const url: string = `${this.API_URL}/appointments/monthsByUser?u=${userId}&y=${year}`;
-
-  //   try {
-  //     const query: Response = await fetch(url, {
-  //       method: 'GET',
-  //       headers: {
-  //         'content-type': 'application/json;charset=UTF-8',
-  //       },
-  //     });
-
-  //     return await query.json();
-  //   } catch (error) {
-  //     return error;
-  //   }
-  // }
 
   // CHECKED: used on ApposAttendance.tsx
   public static async getAttendance(): Promise<IResponse<IAppoAttendance[]>> {
