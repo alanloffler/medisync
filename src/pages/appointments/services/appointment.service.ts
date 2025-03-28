@@ -112,7 +112,7 @@ export class AppointmentApiService {
   // CHECKED: used on ViewAppointment.tsx
   public static async findOne(id: string): Promise<IResponse<IAppointment>> {
     const path: string = `${this.API_URL}/appointments/${id}`;
-    const url: URL = new URL(path);
+    const url: URL = UtilsUrl.create(path);
 
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
@@ -146,7 +146,7 @@ export class AppointmentApiService {
   // CHECKED: used on ApposAttendance.tsx
   public static async getAttendance(): Promise<IResponse<IAppoAttendance[]>> {
     const path: string = `${this.API_URL}/appointments/attendance`;
-    const url: URL = new URL(path);
+    const url: URL = UtilsUrl.create(path);
 
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
