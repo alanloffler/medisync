@@ -13,22 +13,12 @@ import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { IResponse } from '@core/interfaces/response.interface';
+import type { IStatistic } from '@appointments/interfaces/statistic.interface';
 import { AppointmentApiService } from '@appointments/services/appointment.service';
 import { cn } from '@lib/utils';
 // Interfaces
 interface IProps {
   className?: string;
-}
-
-interface IStatistic {
-  count: IStatisticElement;
-  diff?: number;
-  last: IStatisticElement;
-}
-
-interface IStatisticElement {
-  label: string;
-  value: number;
 }
 // Constants
 const intervalTime: number = 5000;
