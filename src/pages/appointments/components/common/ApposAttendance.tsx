@@ -44,9 +44,19 @@ export function ApposAttendance() {
     addNotification({ type: 'error', message: error?.message });
   }, [addNotification, error?.message, isError]);
 
-  if (isLoading) return <LoadingText text={t('loading.default')} suffix='...' className='text-xsm' />;
+  if (isLoading)
+    return (
+      <section className='flex w-fit flex-row items-center justify-start'>
+        <LoadingText className='text-xsm' suffix='...' text={t('loading.default')} />
+      </section>
+    );
 
-  if (isError) return <InfoCard className='justify-start p-0' type='error' text={error.message} />;
+  if (isError)
+    return (
+      <section className='flex w-fit flex-row items-center justify-start'>
+        <InfoCard size='xsm' text={error.message} variant='error' />
+      </section>
+    );
 
   if (Array.isArray(data))
     return (
