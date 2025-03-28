@@ -1,7 +1,7 @@
+import i18n from '@core/i18n/i18n';
 import type { IResponse } from '@core/interfaces/response.interface';
 import { EMethods } from '@core/enums/methods.enum';
 import { api } from '@auth/services/axios.service';
-import i18n from '@core/i18n/i18n';
 
 export class UtilsUrl {
   public static create(path: string, params?: Record<string, string | undefined>): URL {
