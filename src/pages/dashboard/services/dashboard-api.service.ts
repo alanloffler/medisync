@@ -9,6 +9,36 @@ export class DashboardApiService {
   private static readonly API_URL: string = import.meta.env.VITE_API_URL;
 
   // * CHECKED: used on StatisticGroup.tsx
+  public static async countAppointments(): Promise<IResponse<{ value1: string; value2: string } | undefined>> {
+    const path1: string = `${this.API_URL}/dashboard/countAppointments`;
+    const path2: string = `${this.API_URL}/dashboard/countAppointmentsLastMonth`;
+    const url1: URL = UtilsUrl.create(path1);
+    const url2: URL = UtilsUrl.create(path2);
+
+    const value1: IResponse = await UtilsUrl.fetch(url1, EMethods.GET);
+    const value2: IResponse = await UtilsUrl.fetch(url2, EMethods.GET);
+
+    if (value1 instanceof Error || value2 instanceof Error)
+      return {
+        data: undefined,
+        message: APP_CONFIG.error.server,
+        statusCode: 500,
+      };
+    if (value1.statusCode > 399 || value2.statusCode > 399)
+      return {
+        data: undefined,
+        message: value1.message,
+        statusCode: value1.statusCode,
+      };
+
+    return {
+      data: { value1: value1.data, value2: value2.data },
+      message: 'Appointments count found',
+      statusCode: 200,
+    };
+  }
+
+  // * CHECKED: used on StatisticGroup.tsx
   public static async countProfessionals(): Promise<IResponse<{ value1: string; value2: string } | undefined>> {
     const path1: string = `${this.API_URL}/dashboard/countProfessionals`;
     const path2: string = `${this.API_URL}/dashboard/countProfessionalsLastMonth`;
@@ -39,9 +69,9 @@ export class DashboardApiService {
   }
 
   // * CHECKED: used on StatisticGroup.tsx
-  public static async countAppointments(): Promise<IResponse<{ value1: string; value2: string } | undefined>> {
-    const path1: string = `${this.API_URL}/dashboard/countAppointments`;
-    const path2: string = `${this.API_URL}/dashboard/countAppointmentsLastMonth`;
+  public static async countUsers(): Promise<IResponse<{ value1: string; value2: string } | undefined>> {
+    const path1: string = `${this.API_URL}/dashboard/countUsers`;
+    const path2: string = `${this.API_URL}/dashboard/countUsersLastMonth`;
     const url1: URL = UtilsUrl.create(path1);
     const url2: URL = UtilsUrl.create(path2);
 
@@ -54,7 +84,7 @@ export class DashboardApiService {
         message: APP_CONFIG.error.server,
         statusCode: 500,
       };
-    if (value1.statusCode > 399 || value2.statusCode > 399)
+    if (value1.statusCode > 399)
       return {
         data: undefined,
         message: value1.message,
@@ -63,7 +93,7 @@ export class DashboardApiService {
 
     return {
       data: { value1: value1.data, value2: value2.data },
-      message: 'Appointments count found',
+      message: 'Users count found',
       statusCode: 200,
     };
   }
@@ -84,21 +114,6 @@ export class DashboardApiService {
     const url: URL = UtilsUrl.create(path, params);
 
     return await UtilsUrl.fetch(url, EMethods.GET);
-  }
-
-  // CHECKED: used on StatisticGroup.tsx
-  public static async countUsers() {
-    const url1: string = `${this.API_URL}/dashboard/countUsers`;
-    const url2: string = `${this.API_URL}/dashboard/countUsersLastMonth`;
-
-    const value1: IResponse = await this.fetch(url1, 'GET');
-    const value2: IResponse = await this.fetch(url2, 'GET');
-
-    if (value1 instanceof Error || value2 instanceof Error) return { statusCode: 500, message: APP_CONFIG.error.server, data: undefined };
-    if (value1.statusCode > 399) return { statusCode: value1.statusCode, message: value1.message, data: undefined };
-    if (value2.statusCode > 399) return { statusCode: value2.statusCode, message: value2.message, data: undefined };
-
-    return { statusCode: 200, message: 'Users count found', data: { value1: value1.data, value2: value2.data } };
   }
 
   // CHECKED: used on StatisticGroup.tsx
