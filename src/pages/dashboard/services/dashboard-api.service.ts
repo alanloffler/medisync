@@ -3,6 +3,7 @@ import type { IUser } from '@users/interfaces/user.interface';
 import { APP_CONFIG } from '@config/app.config';
 import { EMethods } from '@core/enums/methods.enum';
 import { UtilsUrl } from '@core/services/utils/url.service';
+import { IAppointment } from '@appointments/interfaces/appointment.interface';
 
 export class DashboardApiService {
   private static readonly API_URL: string = import.meta.env.VITE_API_URL;
@@ -21,10 +22,22 @@ export class DashboardApiService {
     return { statusCode: 200, message: 'Appointments count found', data: { value1: value1.data, value2: value2.data } };
   }
 
-  // CHECKED: used on LatestAppos.tsx
-  public static async latestAppointments(limit: number) {
-    const url: string = `${this.API_URL}/dashboard/latestAppointments?l=${limit}`;
-    return await this.fetch(url, 'GET');
+  // * CHECKED: used on LatestAppos.tsx
+  public static async latestAppointments(limit: number): Promise<IResponse<IAppointment[]>> {
+    const path: string = `${this.API_URL}/dashboard/latestAppointments`;
+    const params = { l: String(limit) };
+    const url: URL = UtilsUrl.create(path, params);
+
+    return await UtilsUrl.fetch(url, EMethods.GET);
+  }
+
+  // * CHECKED: used on LatestUsers.tsx
+  public static async latestUsers(limit: number): Promise<IResponse<IUser[]>> {
+    const path: string = `${this.API_URL}/dashboard/latestUsers`;
+    const params = { l: String(limit) };
+    const url: URL = UtilsUrl.create(path, params);
+
+    return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
   // CHECKED: used on StatisticGroup.tsx
@@ -40,15 +53,6 @@ export class DashboardApiService {
     if (value2.statusCode > 399) return { statusCode: value2.statusCode, message: value2.message, data: undefined };
 
     return { statusCode: 200, message: 'Users count found', data: { value1: value1.data, value2: value2.data } };
-  }
-
-  // * CHECKED: used on LatestUsers.tsx
-  public static async latestUsers(limit: number): Promise<IResponse<IUser[]>> {
-    const path: string = `${this.API_URL}/dashboard/latestUsers`;
-    const params = { l: String(limit) };
-    const url: URL = UtilsUrl.create(path, params);
-
-    return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
   // CHECKED: used on StatisticGroup.tsx
