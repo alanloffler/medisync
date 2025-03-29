@@ -1,12 +1,21 @@
+import type { IAppointment } from '@appointments/interfaces/appointment.interface';
+import type { IChartData } from '@dashboard/interfaces/statistic.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
-import { APP_CONFIG } from '@config/app.config';
 import { EMethods } from '@core/enums/methods.enum';
 import { UtilsUrl } from '@core/services/utils/url.service';
-import { IAppointment } from '@appointments/interfaces/appointment.interface';
 
 export class DashboardApiService {
   private static readonly API_URL: string = import.meta.env.VITE_API_URL;
+
+  // * CHECKED: used on StatisticGroup.tsx
+  public static async apposDaysCount(days: number): Promise<IResponse<IChartData>> {
+    const path: string = `${this.API_URL}/dashboard/apposDaysCount`;
+    const params = { d: String(days) };
+    const url: URL = UtilsUrl.create(path, params);
+
+    return await UtilsUrl.fetch(url, EMethods.GET);
+  }
 
   // * CHECKED: used on StatisticGroup.tsx
   public static async countAppointments(): Promise<IResponse<{ value1: string; value2: string } | undefined>> {
@@ -21,7 +30,7 @@ export class DashboardApiService {
     if (value1 instanceof Error || value2 instanceof Error)
       return {
         data: undefined,
-        message: APP_CONFIG.error.server,
+        message: 'APP_CONFIG.error.server',
         statusCode: 500,
       };
     if (value1.statusCode > 399 || value2.statusCode > 399)
@@ -51,7 +60,7 @@ export class DashboardApiService {
     if (value1 instanceof Error || value2 instanceof Error)
       return {
         data: undefined,
-        message: APP_CONFIG.error.server,
+        message: 'APP_CONFIG.error.server',
         statusCode: 500,
       };
     if (value1.statusCode > 399 || value2.statusCode > 399)
@@ -81,7 +90,7 @@ export class DashboardApiService {
     if (value1 instanceof Error || value2 instanceof Error)
       return {
         data: undefined,
-        message: APP_CONFIG.error.server,
+        message: 'APP_CONFIG.error.server',
         statusCode: 500,
       };
     if (value1.statusCode > 399)
@@ -115,32 +124,4 @@ export class DashboardApiService {
 
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
-
-  // CHECKED: used on StatisticGroup.tsx
-  public static async apposDaysCount(days: number) {
-    const url: string = `${this.API_URL}/dashboard/apposDaysCount?d=${days}`;
-    return await this.fetch(url, 'GET');
-  }
-
-  // private static async fetch(url: string, method: string) {
-  //   try {
-  //     const query: Response = await fetch(url, {
-  //       method: method,
-  //       headers: {
-  //         'content-type': 'application/json;charset=UTF-8',
-  //       },
-  //     });
-
-  //     const response: IResponse = await query.json();
-
-  //     if (!query.ok) throw new Error(response.message);
-
-  //     return response;
-  //   } catch (error) {
-  //     if (error instanceof TypeError) {
-  //       throw new Error(t('error.internalServer'));
-  //     }
-  //     throw error;
-  //   }
-  // }
 }
