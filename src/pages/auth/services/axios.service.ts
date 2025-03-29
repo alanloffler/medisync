@@ -88,7 +88,7 @@ api.interceptors.response.use(
         processQueue(refreshError as AxiosError);
 
         // Handle authentication failure by redirecting to login
-        //window.location.href = '/login';
+        window.location.href = '/login';
 
         return Promise.reject(refreshError);
       } finally {
