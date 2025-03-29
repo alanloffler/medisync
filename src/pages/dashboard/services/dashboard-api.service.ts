@@ -1,10 +1,13 @@
 import type { IResponse } from '@core/interfaces/response.interface';
+import type { IUser } from '@users/interfaces/user.interface';
 import { APP_CONFIG } from '@config/app.config';
-import { t } from 'i18next';
+import { EMethods } from '@core/enums/methods.enum';
+import { UtilsUrl } from '@core/services/utils/url.service';
 
 export class DashboardApiService {
   private static readonly API_URL: string = import.meta.env.VITE_API_URL;
 
+  // CHECKED: used on StatisticGroup.tsx
   public static async countAppointments() {
     const url1: string = `${this.API_URL}/dashboard/countAppointments`;
     const url2: string = `${this.API_URL}/dashboard/countAppointmentsLastMonth`;
@@ -18,11 +21,13 @@ export class DashboardApiService {
     return { statusCode: 200, message: 'Appointments count found', data: { value1: value1.data, value2: value2.data } };
   }
 
+  // CHECKED: used on LatestAppos.tsx
   public static async latestAppointments(limit: number) {
     const url: string = `${this.API_URL}/dashboard/latestAppointments?l=${limit}`;
     return await this.fetch(url, 'GET');
   }
 
+  // CHECKED: used on StatisticGroup.tsx
   public static async countUsers() {
     const url1: string = `${this.API_URL}/dashboard/countUsers`;
     const url2: string = `${this.API_URL}/dashboard/countUsersLastMonth`;
@@ -37,11 +42,16 @@ export class DashboardApiService {
     return { statusCode: 200, message: 'Users count found', data: { value1: value1.data, value2: value2.data } };
   }
 
-  public static async latestUsers(limit: number) {
-    const url: string = `${this.API_URL}/dashboard/latestUsers?l=${limit}`;
-    return await this.fetch(url, 'GET');
+  // * CHECKED: used on LatestUsers.tsx
+  public static async latestUsers(limit: number): Promise<IResponse<IUser[]>> {
+    const path: string = `${this.API_URL}/dashboard/latestUsers`;
+    const params = { l: String(limit) };
+    const url: URL = UtilsUrl.create(path, params);
+
+    return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
+  // CHECKED: used on StatisticGroup.tsx
   public static async countProfessionals() {
     const url1: string = `${this.API_URL}/dashboard/countProfessionals`;
     const url2: string = `${this.API_URL}/dashboard/countProfessionalsLastMonth`;
@@ -56,30 +66,31 @@ export class DashboardApiService {
     return { statusCode: 200, message: 'Professionals count found', data: { value1: value1.data, value2: value2.data } };
   }
 
+  // CHECKED: used on StatisticGroup.tsx
   public static async apposDaysCount(days: number) {
     const url: string = `${this.API_URL}/dashboard/apposDaysCount?d=${days}`;
     return await this.fetch(url, 'GET');
   }
 
-  private static async fetch(url: string, method: string) {
-    try {
-      const query: Response = await fetch(url, {
-        method: method,
-        headers: {
-          'content-type': 'application/json;charset=UTF-8',
-        },
-      });
+  // private static async fetch(url: string, method: string) {
+  //   try {
+  //     const query: Response = await fetch(url, {
+  //       method: method,
+  //       headers: {
+  //         'content-type': 'application/json;charset=UTF-8',
+  //       },
+  //     });
 
-      const response: IResponse = await query.json();
+  //     const response: IResponse = await query.json();
 
-      if (!query.ok) throw new Error(response.message);
+  //     if (!query.ok) throw new Error(response.message);
 
-      return response;
-    } catch (error) {
-      if (error instanceof TypeError) {
-        throw new Error(t('error.internalServer'));
-      }
-      throw error;
-    }
-  }
+  //     return response;
+  //   } catch (error) {
+  //     if (error instanceof TypeError) {
+  //       throw new Error(t('error.internalServer'));
+  //     }
+  //     throw error;
+  //   }
+  // }
 }
