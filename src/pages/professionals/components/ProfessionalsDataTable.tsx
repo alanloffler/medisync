@@ -31,6 +31,7 @@ import { TableButton } from '@core/components/common/TableButton';
 import { TableButtonGroup } from '@core/components/common/TableButtonGroup';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
+import { AxiosError } from 'axios';
 import { Trans, useTranslation } from 'react-i18next';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
@@ -94,15 +95,15 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
     isError,
     isPending,
     isSuccess,
-  } = useMutation<IResponse<IProfessionalsData>, Error, IPaginatedProfessionalsVars>({
+  } = useMutation<IResponse<IProfessionalsData>, AxiosError<IResponse>, IPaginatedProfessionalsVars>({
     mutationKey: ['searchProfessionalsBy', search, tableManager, skipItems],
     mutationFn: async ({ search, skipItems, tableManager }) => await ProfessionalApiService.searchProfessionalsBy(search, tableManager, skipItems),
     onSuccess: (response) => {
       setColumns(tableColumns);
       setTotalItems(response.data.count);
     },
-    onError: (error) => {
-      addNotification({ type: 'error', message: error.message });
+    onError: (error: AxiosError<IResponse>) => {
+      addNotification({ type: 'error', message: error.response?.data.message });
     },
   });
 
@@ -331,7 +332,7 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
     mutate: deleteProfessional,
     isError: isErrorDeleting,
     isPending: isPendingDelete,
-  } = useMutation<IResponse<IProfessional>, Error, { id: string }>({
+  } = useMutation<IResponse<IProfessional>, AxiosError<IResponse>, { id: string }>({
     mutationKey: ['deleteProfessional', professionalSelected?._id],
     mutationFn: async ({ id }) => await ProfessionalApiService.remove(id),
     onSuccess: (response) => {
@@ -339,8 +340,8 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
       addNotification({ type: 'success', message: response.message });
       searchProfessionalsBy({ search, skipItems, tableManager });
     },
-    onError: (error) => {
-      addNotification({ type: 'error', message: t(error.message) });
+    onError: (error: AxiosError<IResponse>) => {
+      addNotification({ type: 'error', message: error.response?.data.message });
     },
   });
 
@@ -360,7 +361,8 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
   }, [openDialog]);
 
   if (isPending) return <LoadingDB text={t('loading.professionals')} className='mt-6 p-0' />;
-  if (isError) return <InfoCard className='mt-6' text={error.message} variant='error' />;
+  if (isError)
+    return <InfoCard className='mt-6' text={error.response?.data.message} variant={error.response?.status === 404 ? 'warning' : 'error'} />;
 
   if (isSuccess) {
     return (
