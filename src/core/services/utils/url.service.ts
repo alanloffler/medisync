@@ -47,7 +47,7 @@ export class UtilsUrl {
       return query.data;
     } catch (error: any) {
       console.log(error);
-      throw new Error(error.response.data.message);
+      throw error;
     }
   }
 }
