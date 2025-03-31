@@ -29,6 +29,7 @@ import { Pagination } from '@core/components/common/Pagination';
 import { TableButton } from '@core/components/common/TableButton';
 import { TableButtonGroup } from '@core/components/common/TableButtonGroup';
 // External imports
+import { AxiosError } from 'axios';
 import { Trans, useTranslation } from 'react-i18next';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -93,15 +94,15 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
     isError,
     isPending,
     isSuccess,
-  } = useMutation<IResponse<IUsersData>, Error, IPaginatedUsersVars>({
+  } = useMutation<IResponse<IUsersData>, AxiosError<IResponse>, IPaginatedUsersVars>({
     mutationKey: ['searchUsersBy', search, tableManager, skipItems],
     mutationFn: async ({ search, skipItems, tableManager }) => await UserApiService.searchUsersBy(search, tableManager, skipItems),
     onSuccess: (response) => {
       setColumns(tableColumns);
       setTotalItems(response.data.count);
     },
-    onError: (error) => {
-      addNotification({ type: 'error', message: t(error.message) });
+    onError: (error: AxiosError<IResponse>) => {
+      addNotification({ type: 'error', message: error.response?.data.message });
     },
   });
 
@@ -326,7 +327,8 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
   }, [openDialog]);
 
   if (isPending) return <LoadingDB text={t('loading.users')} className='mt-6 p-0' />;
-  if (isError) return <InfoCard className='mt-6' text={error.message} variant='error' />;
+  // TODO: conditional variant if search is empty (check backend)
+  if (isError) return <InfoCard className='mt-6' text={error.response?.data.message} variant='error' />;
 
   if (isSuccess) {
     return (
