@@ -20,6 +20,44 @@ api.interceptors.request.use(
   },
 );
 
+// api.interceptors.response.use(
+//   (response: AxiosResponse) => {
+//     return response;
+//   },
+//   async (error: AxiosError) => {
+//     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+
+//     if (error.response?.status === 401 && !originalRequest._retry && originalRequest.url !== '/auth/refresh') {
+//       originalRequest._retry = true;
+
+//       try {
+//         await axios({
+//           method: 'POST',
+//           url: '/auth/refresh',
+//           withCredentials: true,
+//         });
+
+//         return api(originalRequest);
+//       } catch (err) {
+//         await axios({
+//           method: 'GET',
+//           url: 'auth/logout',
+//           withCredentials: true,
+//           headers: {
+//             'Content-Type': 'application/json;charset=UTF-8',
+//             'x-lang': i18n.resolvedLanguage || APP_CONFIG.i18n.locale || 'es',
+//           },
+//         });
+
+//         // window.location.href = '/login';
+
+//         return Promise.reject(err);
+//       }
+//     }
+//     return Promise.reject(error);
+//   },
+// );
+
 let isRefreshing: boolean = false;
 let failedQueue: Array<{
   resolve: (value?: unknown) => void;
@@ -49,8 +87,9 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      console.log('Unauthorized at response interceptor');
+    // Check just the path part of the URL
+    if (error.response?.status === 401 && !originalRequest._retry && originalRequest.url !== '/auth/refresh') {
+      console.log('Unauthorized at response interceptor', error.response?.status);
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
@@ -71,9 +110,10 @@ api.interceptors.response.use(
       try {
         console.log('Attempting to refresh token');
 
-        const refreshResponse = await api({
+        // Create a vanilla axios instance for this request to avoid interceptor loop
+        const refreshResponse = await axios({
           method: 'POST',
-          url: '/auth/refresh',
+          url: `${import.meta.env.VITE_API_URL}/auth/refresh`,
           withCredentials: true,
         });
 
@@ -85,10 +125,15 @@ api.interceptors.response.use(
       } catch (refreshError) {
         console.error('Token refresh failed:', refreshError);
 
-        processQueue(refreshError as AxiosError);
+        // Log out the user on failure
+        await axios({
+          method: 'GET',
+          url: `${import.meta.env.VITE_API_URL}/auth/logout`,
+          withCredentials: true,
+        });
 
-        // Handle authentication failure by redirecting to login
-        window.location.href = '/login';
+        processQueue(refreshError as AxiosError);
+        // window.location.replace('/login');
 
         return Promise.reject(refreshError);
       } finally {
