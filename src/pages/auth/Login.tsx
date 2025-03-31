@@ -20,11 +20,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import type { IPayload } from '@core/auth/interfaces/payload.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import { loginSchema } from '@auth/schemas/login.schema';
-import { useAuth } from '@core/auth/useAuth';
+// import { useAuth } from '@core/auth/useAuth';
+import { AuthService } from './services/auth.service';
+import { APP_CONFIG } from '@config/app.config';
 // React component
 export default function Login() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  // const { login } = useAuth();
   const { t } = useTranslation();
 
   const defaultValues = {
@@ -44,9 +46,9 @@ export default function Login() {
     mutate: handleLogin,
   } = useMutation<AxiosResponse<IResponse<IPayload>> & { redirectPath?: string }, AxiosError<IResponse>, z.infer<typeof loginSchema>>({
     mutationKey: ['login'],
-    mutationFn: async (formData) => await login(formData.email, formData.password),
-    onSuccess: (data) => {
-      if (data.redirectPath) navigate(data.redirectPath);
+    mutationFn: async (formData) => await AuthService.login({ email: formData.email, password: formData.password }),
+    onSuccess: () => {
+      navigate(APP_CONFIG.appPrefix);
     },
   });
 
