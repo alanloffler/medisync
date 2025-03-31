@@ -30,6 +30,7 @@ import { ProfessionalsSelect } from '@professionals/components/common/Profession
 import { StatusSelect } from '@appointments/components/common/StatusSelect';
 import { TableButton } from '@core/components/common/TableButton';
 // External imports
+import { AxiosError } from 'axios';
 import { Trans, useTranslation } from 'react-i18next';
 import { format } from '@formkit/tempo';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -86,7 +87,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
     isError,
     isPending: isLoading,
     mutate: fetchData,
-  } = useMutation<IResponse<IAppointment[]>, Error, IVariables>({
+  } = useMutation<IResponse<IAppointment[]>, AxiosError<IResponse>, IVariables>({
     mutationKey: ['appointments', 'search', search, tableManager],
     mutationFn: async ({ search, sorting, skipItems, itemsPerPage }: IVariables) => {
       return await AppointmentApiService.findSearch(search, sorting, skipItems, itemsPerPage);
@@ -99,8 +100,9 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
         setTotalItems(response.data.count);
       }
     },
-    onError: (error: Error) => {
-      addNotification({ type: 'error', message: error.message });
+    onError: (error: AxiosError<IResponse>) => {
+      console.log('This is the error', error);
+      addNotification({ type: 'error', message: error.response?.data.message });
     },
   });
 
@@ -371,7 +373,7 @@ export function ApposDataTable({ search }: IDataTableAppointments) {
 
   // Render
   if (isError) {
-    return <InfoCard className='mt-6' text={t(error.message)} variant='error' />;
+    return <InfoCard className='mt-6' text={error.response?.data.message} variant={error.response?.status === 404 ? 'warning' : 'error'} />;
   }
 
   if (isLoading) {
