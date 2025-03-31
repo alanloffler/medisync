@@ -1,5 +1,5 @@
 // External imports
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 // Imports
 import AuthProvider from '@core/auth/AuthProvider';
@@ -33,37 +33,37 @@ const SendEmail = lazy(() => import('./pages/email/SendEmail'));
 const WhatsApp = lazy(() => import('./pages/whatsapp/WhatsApp'));
 // React component
 export default function App() {
-  // prettier-ignore
-  const router = createBrowserRouter([
-    { index: true, element: (<Suspense fallback={<Loading />}><Login /></Suspense>) },
-    { path: '/login', element: (<Suspense fallback={<Loading />}><Login /></Suspense>) },
-    { path: APP_CONFIG.appPrefix, element: <PrivateRoute roles={['admin', 'super']}><Layout /></PrivateRoute>, children:
-      [
-        { index: true, element: (<Suspense fallback={<Loading />}><Dashboard /></Suspense>) },
-        { path: 'dashboard', element: (<Suspense fallback={<Loading />}><Dashboard /></Suspense>) },
-        { path: 'appointments', element: (<Suspense fallback={<Loading />}><Appointments /></Suspense>) },
-        { path: 'reserve', element: (<Suspense fallback={<Loading />}><ReserveAppointments /></Suspense>) },
-        { path: 'appointments/:id', element: (<Suspense fallback={<Loading />}><ViewAppointment /></Suspense>) },
-        { path: 'professionals', element: (<Suspense fallback={<Loading />}><Professionals /></Suspense>) },
-        { path: 'professionals/:id', element: (<Suspense fallback={<Loading />}><ViewProfessional /></Suspense>) },
-        { path: 'professionals/create', element: (<Suspense fallback={<Loading />}><CreateProfessional /></Suspense>) },
-        { path: 'professionals/update/:id', element: (<Suspense fallback={<Loading />}><UpdateProfessional /></Suspense>) },
-        { path: 'settings', element: (<Suspense fallback={<Loading />}><Settings /></Suspense>) },
-        { path: 'users', element: (<Suspense fallback={<Loading />}><Users /></Suspense>) },
-        { path: 'users/:id', element: (<Suspense fallback={<Loading />}><ViewUser /></Suspense>) },
-        { path: 'users/create', element: (<Suspense fallback={<Loading />}><CreateUser /></Suspense>) },
-        { path: 'users/update/:id', element: (<Suspense fallback={<Loading />}><UpdateUser /></Suspense>) },
-        { path: 'email/:type/:id',  element: (<Suspense fallback={<Loading />}><SendEmail /></Suspense>) },
-        { path: 'whatsapp/:id',  element: (<Suspense fallback={<Loading />}><WhatsApp /></Suspense>) },
-        { path: '*', element: <>Not found 404</> },
-      ],
-    },
-    { path: '/microsite/professional/:id', element: (<Suspense fallback={<Loading />}><ProfessionalMicrosite /></Suspense>) },
-  ]);
-
   return (
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
+    // prettier-ignore
+    <BrowserRouter>
+      <Routes>
+        <Route path={APP_CONFIG.appPrefix} element={
+          <AuthProvider>
+            <PrivateRoute roles={['admin', 'super']}><Layout /></PrivateRoute>
+          </AuthProvider>
+        }>
+          <Route index element={<Suspense fallback={<Loading />}><Dashboard /></Suspense>}/>
+          <Route path="dashboard" element={<Suspense fallback={<Loading />}><Dashboard /></Suspense>}/>
+          <Route path="appointments" element={<Suspense fallback={<Loading />}><Appointments /></Suspense>}/>
+          <Route path="reserve" element={<Suspense fallback={<Loading />}><ReserveAppointments /></Suspense>}/>
+          <Route path="appointments/:id" element={<Suspense fallback={<Loading />}><ViewAppointment /></Suspense>}/>
+          <Route path='professionals' element={(<Suspense fallback={<Loading />}><Professionals /></Suspense>)}/>
+          <Route path='professionals/:id' element={(<Suspense fallback={<Loading />}><ViewProfessional /></Suspense>)}/>
+          <Route path='professionals/create' element={(<Suspense fallback={<Loading />}><CreateProfessional /></Suspense>)}/>
+          <Route path='professionals/update/:id' element={(<Suspense fallback={<Loading />}><UpdateProfessional /></Suspense>)}/>
+          <Route path='settings' element={(<Suspense fallback={<Loading />}><Settings /></Suspense>)}/>
+          <Route path='users' element={(<Suspense fallback={<Loading />}><Users /></Suspense>)}/>
+          <Route path='users/:id' element={(<Suspense fallback={<Loading />}><ViewUser /></Suspense>) } />
+          <Route path='users/create' element={(<Suspense fallback={<Loading />}><CreateUser /></Suspense>)}/>
+          <Route path='users/update/:id' element={(<Suspense fallback={<Loading />}><UpdateUser /></Suspense>)}/>
+          <Route path='email/:type/:id'  element={(<Suspense fallback={<Loading />}><SendEmail /></Suspense>)}/>
+          <Route path='whatsapp/:id'  element={(<Suspense fallback={<Loading />}><WhatsApp /></Suspense>)}/>
+        </Route>
+        <Route path="/login" element={<Suspense fallback={<Loading />}><Login /></Suspense>}/>
+        <Route path="/microsite/professional/:id" element={<Suspense fallback={<Loading />}><ProfessionalMicrosite /></Suspense>}/>
+        <Route path="/" element={<Suspense fallback={<Loading />}><Login /></Suspense>}/>
+        <Route path="*" element={<>Not found 404</>} />
+      </Routes>
+    </BrowserRouter>
   );
 }
