@@ -59,7 +59,6 @@ export default function App() {
           <Route path='email/:type/:id'  element={(<Suspense fallback={<Loading />}><SendEmail /></Suspense>)}/>
           <Route path='whatsapp/:id'  element={(<Suspense fallback={<Loading />}><WhatsApp /></Suspense>)}/>
         </Route>
-        <Route path="/login" element={<Suspense fallback={<Loading />}><Login /></Suspense>}/>
         <Route path="/microsite/professional/:id" element={<Suspense fallback={<Loading />}><ProfessionalMicrosite /></Suspense>}/>
         <Route path="/" element={<Suspense fallback={<Loading />}><Login /></Suspense>}/>
         <Route path="*" element={<>Not found 404</>} />
