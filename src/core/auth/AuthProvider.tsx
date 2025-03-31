@@ -44,7 +44,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     setUser(null);
     setLoading(false);
 
-    return { ...response, redirectPath: '/caca' };
+    return { ...response, redirectPath: '/' };
   }
 
   const value = {
