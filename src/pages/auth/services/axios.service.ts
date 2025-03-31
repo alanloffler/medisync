@@ -93,7 +93,7 @@ api.interceptors.response.use(
         processQueue(refreshErrorTyped);
 
         if (refreshErrorTyped.response?.status === 401) {
-          setTimeout(() => window.location.replace('/login'), 3000);
+          setTimeout(() => window.location.replace('/'), 3000);
         }
 
         return Promise.reject(refreshError);
