@@ -2,9 +2,9 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 // Imports
+import AuthProvider from '@core/auth/AuthProvider';
 import Layout from '@layout/Layout';
 import { APP_CONFIG } from '@config/app.config';
-import { AuthProvider } from '@core/auth/AuthContext';
 import { Loading } from '@core/components/common/Loading';
 import { PrivateRoute } from '@core/auth/PrivateRoute';
 // Lazy loaded components
