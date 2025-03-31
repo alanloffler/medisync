@@ -87,7 +87,7 @@ export function RemoveDialog({ action, callback, className, dialogContent, dialo
             </DialogDescription>
             <section className='flex flex-col py-4'>
               <section className='space-y-2 text-sm'>{dialogContent}</section>
-              {isError && <InfoCard text={error.message} type='error' />}
+              {isError && <InfoCard text={error.message} variant='error' />}
               {isPending && <LoadingDB size='xs' variant='default' text={dialogTexts.deleting || REMOVE_DIALOG_CONFIG.default.deleting} />}
             </section>
             <footer className='flex justify-end space-x-4'>
