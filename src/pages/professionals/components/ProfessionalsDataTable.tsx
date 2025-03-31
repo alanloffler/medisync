@@ -424,7 +424,7 @@ export function ProfessionalsDataTable({ clearDropdown, reload, search }: IDataT
             </DialogHeader>
             <section className='flex flex-col'>
               {isErrorDeleting ? (
-                <InfoCard text={errorDeleting.message} variant='error' />
+                <InfoCard text={errorDeleting.response?.data.message} variant='error' />
               ) : (
                 <div className='text-sm'>
                   <Trans
