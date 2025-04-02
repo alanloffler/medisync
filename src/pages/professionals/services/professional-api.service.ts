@@ -74,6 +74,7 @@ export class ProfessionalApiService {
     return await UtilsUrl.fetch(url, EMethods.PATCH, body);
   }
 
+  // CHECKED: used on DBCountProfessionals.tsx
   // TODO: type response with interface
   // TODO: type method on useQuery/useMutation
   public static async countAll(): Promise<IResponse<any>> {
@@ -97,8 +98,8 @@ export class ProfessionalApiService {
   public static async findAllAvailableForChange(day: string, hour: string): Promise<IResponse<IProfessional[]>> {
     const path: string = `${this.API_URL}/professionals/availableForChange`;
     const url: URL = new URL(path);
-    url.searchParams.append('day', day);
-    url.searchParams.append('hour', hour);
+    url.searchParams.append('d', day);
+    url.searchParams.append('h', hour);
 
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
