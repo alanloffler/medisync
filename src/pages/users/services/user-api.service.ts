@@ -61,10 +61,10 @@ export class UserApiService {
   }
 
   public static async remove(id: string): Promise<IResponse<IUser>> {
-    const path: string = `${this.API_URL}/users/${id}`;
+    const path: string = `${this.API_URL}/users/remove/${id}`;
     const url: URL = new URL(path);
 
-    return await UtilsUrl.fetch(url, EMethods.DELETE);
+    return await UtilsUrl.fetch(url, EMethods.PATCH);
   }
 
   public static async newUsersToday(): Promise<IResponse<IUserStats>> {
