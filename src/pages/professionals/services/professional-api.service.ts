@@ -7,6 +7,8 @@ import { EProfessionalSearch } from '@professionals/enums/professional-search.en
 import { ProfessionalUtils } from '@professionals/services/professional.utils';
 import { UtilsUrl } from '@core/services/utils/url.service';
 
+// TODO: type methods, checked, correct creation of URL
+
 export class ProfessionalApiService {
   private static readonly API_URL: string = import.meta.env.VITE_API_URL;
   // TODO: replace area codes from config file to service where the area codes return fake promise
