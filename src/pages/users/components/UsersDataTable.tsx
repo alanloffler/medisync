@@ -53,6 +53,7 @@ import { useAuth } from '@core/auth/useAuth';
 import { useDelimiter } from '@core/hooks/useDelimiter';
 import { useMediaQuery } from '@core/hooks/useMediaQuery';
 import { useNotificationsStore } from '@core/stores/notifications.store';
+import { DialogDelete } from './common/DialogDelete';
 // Default values for pagination and sorting
 const defaultSorting: SortingState = [{ id: USER_CONFIG.table.defaultSortingId, desc: USER_CONFIG.table.defaultSortingType }];
 const defaultPagination: PaginationState = { pageIndex: 0, pageSize: USER_CONFIG.table.defaultPageSize };
@@ -65,6 +66,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
   const [sorting, setSorting] = useState<SortingState>(defaultSorting);
   const [tableManager, setTableManager] = useState<ITableManager>({ sorting, pagination });
   const [totalItems, setTotalItems] = useState<number>(0);
+  const [openDialogDelete, setOpenDialogDelete] = useState<boolean>(false);
   const [userSelected, setUserSelected] = useState<IUser | undefined>(undefined);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const delimiter = useDelimiter();
@@ -98,7 +100,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
     isPending,
     isSuccess,
   } = useMutation<IResponse<IUsersData>, AxiosError<IResponse>, IPaginatedUsersVars>({
-    mutationKey: ['searchUsersBy', search, tableManager, skipItems],
+    mutationKey: ['users', 'search-users-by', search, tableManager, skipItems],
     mutationFn: async ({ search, skipItems, tableManager }) => await UserApiService.searchUsersBy(search, tableManager, skipItems),
     onSuccess: (response) => {
       setColumns(tableColumns);
@@ -260,11 +262,11 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
           >
             <Trash2 size={17} strokeWidth={1.5} />
           </TableButton>
-          {/* TODO: add action to remove heavy */}
           {user?.role === ERole.Super && (
             <TableButton
               callback={() => {
-                console.log('add action and tooltip');
+                setUserSelected(row.original);
+                setOpenDialogDelete(true);
               }}
               className='hover:bg-red-100/75 hover:text-red-400 [&_svg]:fill-red-100/75 [&_svg]:stroke-red-400'
               tooltip='Caution deletion'
@@ -391,6 +393,21 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
               table={table}
             />
           </>
+        )}
+        {/* Section: Dialog */}
+        {userSelected && (
+          <DialogDelete
+            onDeleteSuccess={() => {
+              searchUsersBy({
+                search: search.value !== '' ? search : { value: '', type: EUserSearch.NAME },
+                skipItems,
+                tableManager,
+              });
+            }}
+            open={openDialogDelete}
+            setOpen={setOpenDialogDelete}
+            user={userSelected}
+          />
         )}
         {/* Section: Dialog */}
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
