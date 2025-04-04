@@ -19,7 +19,7 @@ import { SpecializationService } from '@core/services/specialization.service';
 import { cn } from '@lib/utils';
 // React component
 export function CategoriesShortcuts({ className }: { className?: string }) {
-  const [areaSelected, setAreaSelected] = useState<string>('');
+  const [_areaSelected, setAreaSelected] = useState<string>('');
   const [isOverflowing, setIsOverflowing] = useState<boolean>(false);
   const [reachedLeftEdge, setReachedLeftEdge] = useState<boolean>(true);
   const [reachedRightEdge, setReachedRightEdge] = useState<boolean>(false);
@@ -132,10 +132,6 @@ export function CategoriesShortcuts({ className }: { className?: string }) {
     return () => window.removeEventListener('resize', checkOverflow);
   }, [specializations]);
 
-  useEffect(() => {
-    console.log('Area selected: ', areaSelected);
-  }, [areaSelected]);
-
   return (
     <main className='space-y-2'>
       <DashboardTitle title={t('cardTitle.dashboard.categoriesShortcuts')} />
@@ -143,7 +139,7 @@ export function CategoriesShortcuts({ className }: { className?: string }) {
         {/* Section: Specializations shortcuts */}
         <section className='mx-auto flex flex-row justify-start space-x-4 overflow-x-hidden' ref={scrollRef}>
           {isLoading && <LoadingDB text={t('loading.categories')} variant='default' spinnerColor='fill-slate-700' className='text-slate-700' />}
-          {error && <InfoCard text={error.message} type='error' />}
+          {error && <InfoCard text={error.message} variant='error' />}
           {!isLoading &&
             !error &&
             specializations?.data.map((specialization: ISpecialization) => (
