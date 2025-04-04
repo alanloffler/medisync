@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { ArrowDownUp, Mail, MailX, MessageCircle, PencilLine, Trash2 } from 'lucide-react';
+import { ArrowDownUp, CircleX, Mail, MailX, MessageCircle, PencilLine, Trash2 } from 'lucide-react';
 // External components:
 // https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
@@ -42,12 +42,14 @@ import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser, IUsersData } from '@users/interfaces/user.interface';
 import { APP_CONFIG } from '@config/app.config';
 import { AreaCodeService } from '@core/services/area-code.service';
+import { ERole } from '@core/auth/enums/role.enum';
 import { EUserSearch } from '@users/enums/user-search.enum';
 import { EUserType } from '@core/enums/user-type.enum';
 import { EWhatsappTemplate } from '@whatsapp/enums/template.enum';
 import { USER_CONFIG } from '@config/users/users.config';
 import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
+import { useAuth } from '@core/auth/useAuth';
 import { useDelimiter } from '@core/hooks/useDelimiter';
 import { useMediaQuery } from '@core/hooks/useMediaQuery';
 import { useNotificationsStore } from '@core/stores/notifications.store';
@@ -70,6 +72,7 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
   const navigate = useNavigate();
   const prevDeps = useRef<IPaginatedUsersVars>({ search, skipItems, tableManager });
   const { i18n, t } = useTranslation();
+  const { user } = useAuth();
 
   // Table column visibility
   const isSmallDevice = useMediaQuery('only screen and (max-width : 639px)');
@@ -257,6 +260,18 @@ export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
           >
             <Trash2 size={17} strokeWidth={1.5} />
           </TableButton>
+          {/* TODO: add action to remove heavy */}
+          {user?.role === ERole.Super && (
+            <TableButton
+              callback={() => {
+                console.log('add action and tooltip');
+              }}
+              className='hover:bg-red-100/75 hover:text-red-400 [&_svg]:fill-red-100/75 [&_svg]:stroke-red-400'
+              tooltip='Caution deletion'
+            >
+              <CircleX size={17} strokeWidth={1.5} />
+            </TableButton>
+          )}
           <TableButtonGroup
             buttons={
               <>
