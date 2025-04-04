@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { CirclePlus, List, ListRestart, PlusCircle, Search, X } from 'lucide-react';
+import { CirclePlus, List, ListRestart, OctagonX, PlusCircle, Search, X } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
 import { Card, CardContent } from '@core/components/ui/card';
@@ -17,10 +17,12 @@ import { useTranslation } from 'react-i18next';
 // Imports
 import type { IUserSearch } from '@users/interfaces/user-search.interface';
 import { APP_CONFIG } from '@config/app.config';
+import { ERole } from '@core/auth/enums/role.enum';
 import { EUserSearch } from '@users/enums/user-search.enum';
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { USER_CONFIG } from '@config/users/users.config';
 import { motion } from '@core/services/motion.service';
+import { useAuth } from '@core/auth/useAuth';
 import { useDebounce } from '@core/hooks/useDebounce';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 // React component
@@ -35,6 +37,7 @@ export default function Users() {
   const navigate = useNavigate();
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
   const { t } = useTranslation();
+  const { user } = useAuth();
 
   useEffect(() => {
     setItemSelected(HEADER_CONFIG.headerMenu[3].id);
@@ -187,18 +190,21 @@ export default function Users() {
                   <CirclePlus size={17} strokeWidth={1.5} />
                 </Button>
               </TooltipWrapper>
-              <TooltipWrapper tooltip={t('ver eliminados')}>
-                <Button
-                  ref={removedUsersScope}
-                  size='icon7'
-                  variant='tableHeaderPrimary'
-                  onClick={() => console.log(`open dialog for removed users`)}
-                  onMouseOut={removedUsersAnimationOut}
-                  onMouseOver={removedUsersAnimationOver}
-                >
-                  <CirclePlus size={17} strokeWidth={1.5} />
-                </Button>
-              </TooltipWrapper>
+              {user?.role === ERole.Super && (
+                <TooltipWrapper tooltip={t('tooltip.removedUsers')}>
+                  <Button
+                    className='text-red-400 hover:bg-red-400 hover:text-white'
+                    ref={removedUsersScope}
+                    size='icon7'
+                    variant='tableHeader'
+                    onClick={() => console.log(`open dialog for removed users`)}
+                    onMouseOut={removedUsersAnimationOut}
+                    onMouseOver={removedUsersAnimationOver}
+                  >
+                    <OctagonX size={17} strokeWidth={1.5} />
+                  </Button>
+                </TooltipWrapper>
+              )}
             </section>
           </CardHeaderSecondary>
           {/* Table */}
