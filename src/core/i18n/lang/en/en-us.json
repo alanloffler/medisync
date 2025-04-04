@@ -409,6 +409,7 @@
     },
     "reconnect": "Reconnect",
     "reload": "Reload",
+    "removedUsers": "Removed patients",
     "replaceProfessional": "Replace professional",
     "selectProfessional": "Select professional",
     "selectYear": "Select year",
