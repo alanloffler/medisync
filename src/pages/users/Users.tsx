@@ -30,6 +30,7 @@ export default function Users() {
   const [addUserIconScope, addUserIconAnimation] = useAnimate();
   const [addUserScope, addUserAnimation] = useAnimate();
   const [reloadScope, reloadAnimation] = useAnimate();
+  const [removedUsersScope, removedUsersAnimation] = useAnimate();
   const debouncedSearch = useDebounce<IUserSearch>(search, APP_CONFIG.debounceTime);
   const navigate = useNavigate();
   const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
@@ -80,6 +81,16 @@ export default function Users() {
   function addUserIconAnimationOut(): AnimationPlaybackControls {
     const { keyframes, options } = motion.scale(1).type('bounce').animate();
     return addUserIconAnimation(addUserIconScope.current, keyframes, options);
+  }
+
+  function removedUsersAnimationOver(): AnimationPlaybackControls {
+    const { keyframes, options } = motion.scale(1.1).type('bounce').animate();
+    return removedUsersAnimation(removedUsersScope.current, keyframes, options);
+  }
+
+  function removedUsersAnimationOut(): AnimationPlaybackControls {
+    const { keyframes, options } = motion.scale(1).type('bounce').animate();
+    return removedUsersAnimation(removedUsersScope.current, keyframes, options);
   }
 
   return (
@@ -172,6 +183,18 @@ export default function Users() {
                   onClick={() => navigate(`${APP_CONFIG.appPrefix}/users/create`)}
                   onMouseOut={addUserIconAnimationOut}
                   onMouseOver={addUserIconAnimationOver}
+                >
+                  <CirclePlus size={17} strokeWidth={1.5} />
+                </Button>
+              </TooltipWrapper>
+              <TooltipWrapper tooltip={t('ver eliminados')}>
+                <Button
+                  ref={removedUsersScope}
+                  size='icon7'
+                  variant='tableHeaderPrimary'
+                  onClick={() => console.log(`open dialog for removed users`)}
+                  onMouseOut={removedUsersAnimationOut}
+                  onMouseOver={removedUsersAnimationOver}
                 >
                   <CirclePlus size={17} strokeWidth={1.5} />
                 </Button>
