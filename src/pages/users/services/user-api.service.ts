@@ -82,4 +82,11 @@ export class UserApiService {
 
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
+  // CHECKED: used on DialogRemovedUsers.tsx
+  public static async restore(id: string): Promise<IResponse<IUser>> {
+    const path: string = `${this.API_URL}/users/restore/${id}`;
+    const url: URL = UtilsUrl.create(path);
+
+    return await UtilsUrl.fetch(url, EMethods.PATCH);
+  }
 }
