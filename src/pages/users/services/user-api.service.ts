@@ -73,4 +73,13 @@ export class UserApiService {
 
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
+
+  // New methods admin readonly
+  // CHECKED: used on DialogRemovedUsers.tsx
+  public static async findRemovedUsers(): Promise<IResponse<IUser[]>> {
+    const path: string = `${this.API_URL}/users/removedUsers`;
+    const url: URL = UtilsUrl.create(path);
+
+    return await UtilsUrl.fetch(url, EMethods.GET);
+  }
 }
