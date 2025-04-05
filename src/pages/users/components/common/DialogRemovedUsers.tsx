@@ -74,8 +74,11 @@ export function DialogRemovedUsers({ onRestoreSuccess, open, setOpen }: IProps) 
               <ScrollArea className='h-full max-h-[205px] w-full'>
                 <div className='flex flex-col space-y-1'>
                   {users.data.map((user, index) => (
-                    <div key={index} className='flex items-center justify-between bg-slate-50 px-3 py-2'>
-                      <div>{UtilsString.upperCase(`${user.lastName}, ${user.firstName}`, 'each')}</div>
+                    <section key={index} className='flex items-center justify-between bg-slate-50 px-3.5 py-2'>
+                      <section>
+                        <div>{UtilsString.upperCase(`${user.lastName}, ${user.firstName}`, 'each')}</div>
+                        <span className='text-xs text-muted-foreground'>{`${t('label.identityCard')} ${i18n.format(user.dni, 'integer', i18n.resolvedLanguage)}`}</span>
+                      </section>
                       <div className='flex space-x-3'>
                         <div className='flex items-center space-x-1'>
                           <Trash2 size={13} strokeWidth={2} className='text-red-400' />
@@ -93,7 +96,7 @@ export function DialogRemovedUsers({ onRestoreSuccess, open, setOpen }: IProps) 
                           {t('button.restore')}
                         </Button>
                       </div>
-                    </div>
+                    </section>
                   ))}
                 </div>
               </ScrollArea>
