@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 // External imports
 import { AxiosError } from 'axios';
 import { Dispatch, SetStateAction } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 // Imports
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
@@ -13,15 +13,34 @@ import { ScrollArea } from '@core/components/ui/scroll-area';
 import { UtilsString } from '@core/services/utils/string.service';
 // Interface
 interface IProps {
+  onRestoreSuccess: () => void;
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
 // React component
-export function DialogRemovedUsers({ open, setOpen }: IProps) {
+export function DialogRemovedUsers({ onRestoreSuccess, open, setOpen }: IProps) {
+  const queryClient = useQueryClient();
+
   const { data: users } = useQuery<IResponse<IUser[]>, AxiosError>({
     queryKey: ['users', 'removed-users'],
     queryFn: () => UserApiService.findRemovedUsers(),
   });
+
+  const { mutate: restore } = useMutation<IResponse<IUser>, AxiosError, { userId: string }>({
+    mutationKey: ['users', 'restore'],
+    mutationFn: ({ userId }) => UserApiService.restore(userId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['users', 'removed-users'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['users', 'search-users-by'],
+      });
+      onRestoreSuccess();
+      setOpen(false);
+    },
+  });
+
   const fakeData = [
     { firstName: 'User 01' },
     { firstName: 'User 02' },
@@ -46,7 +65,7 @@ export function DialogRemovedUsers({ open, setOpen }: IProps) {
                   <div key={index} className='flex justify-between bg-slate-100 p-2'>
                     <div>{UtilsString.upperCase(`${user.lastName}, ${user.firstName}`, 'all')}</div>
                     <div className='pr-1'>
-                      <Button size='xs' className='text-xs font-normal'>
+                      <Button className='text-xs font-normal' size='xs' onClick={() => restore({ userId: user._id })}>
                         Restore user
                       </Button>
                     </div>
