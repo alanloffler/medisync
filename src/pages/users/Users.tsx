@@ -6,6 +6,7 @@ import { Card, CardContent } from '@core/components/ui/card';
 import { Input } from '@core/components/ui/input';
 // Components
 import { CardHeaderSecondary } from '@core/components/common/header/CardHeaderSecondary';
+import { DialogRemovedUsers } from '@users/components/common/DialogRemovedUsers';
 import { PageHeader } from '@core/components/common/PageHeader';
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 import { UsersDataTable } from '@users/components/UsersDataTable';
@@ -27,6 +28,7 @@ import { useDebounce } from '@core/hooks/useDebounce';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 // React component
 export default function Users() {
+  const [openDialogRemovedUsers, setOpenDialogRemovedUsers] = useState<boolean>(false);
   const [reload, setReload] = useState<string>('');
   const [search, setSearch] = useState<IUserSearch>({ value: '', type: EUserSearch.NAME });
   const [addUserIconScope, addUserIconAnimation] = useAnimate();
@@ -197,7 +199,7 @@ export default function Users() {
                     ref={removedUsersScope}
                     size='icon7'
                     variant='tableHeader'
-                    onClick={() => console.log(`open dialog for removed users`)}
+                    onClick={() => setOpenDialogRemovedUsers(true)}
                     onMouseOut={removedUsersAnimationOut}
                     onMouseOver={removedUsersAnimationOver}
                   >
@@ -213,6 +215,8 @@ export default function Users() {
           </CardContent>
         </Card>
       </section>
+      {/* Dialog: Removed users */}
+      <DialogRemovedUsers open={openDialogRemovedUsers} setOpen={setOpenDialogRemovedUsers} />
     </main>
   );
 }
