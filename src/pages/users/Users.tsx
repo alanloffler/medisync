@@ -216,7 +216,7 @@ export default function Users() {
         </Card>
       </section>
       {/* Dialog: Removed users */}
-      <DialogRemovedUsers open={openDialogRemovedUsers} setOpen={setOpenDialogRemovedUsers} />
+      <DialogRemovedUsers onRestoreSuccess={handleReload} open={openDialogRemovedUsers} setOpen={setOpenDialogRemovedUsers} />
     </main>
   );
 }
