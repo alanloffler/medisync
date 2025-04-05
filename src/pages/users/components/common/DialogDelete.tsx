@@ -2,13 +2,15 @@
 import { Button } from '@core/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
 // External imports
+import type { Dispatch, SetStateAction } from 'react';
 import { AxiosError } from 'axios';
-import { Dispatch, SetStateAction } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 // Imports
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
 import { UserApiService } from '@users/services/user-api.service';
+import { UtilsString } from '@core/services/utils/string.service';
 // Interface
 interface IProps {
   onDeleteSuccess: () => void;
@@ -23,6 +25,7 @@ interface IVars {
 // React component
 export function DialogDelete({ onDeleteSuccess, open, setOpen, user }: IProps) {
   const queryClient = useQueryClient();
+  const { i18n, t } = useTranslation();
 
   const { mutate: remove } = useMutation<IResponse<IUser>, AxiosError, IVars>({
     mutationKey: ['users', 'remove', user._id],
@@ -43,16 +46,26 @@ export function DialogDelete({ onDeleteSuccess, open, setOpen, user }: IProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Remove patient</DialogTitle>
-          <DialogDescription>This is an irreversible action</DialogDescription>
+          <DialogTitle>{t('dialog.deleteUser.title')}</DialogTitle>
+          <DialogDescription>{t('dialog.deleteUser.description')}</DialogDescription>
         </DialogHeader>
-        <section>
-          <span>This is the dialog content with full user delete information.</span>
-          {user && <p>User: {user.firstName}</p>}
+        <section className='text-sm'>
+          <Trans
+            components={{
+              span: <span className='font-semibold' />,
+              i: <i className='font-semibold' />,
+            }}
+            i18nKey={'dialog.deleteUser.content'}
+            values={{
+              firstName: UtilsString.upperCase(user.firstName, 'each'),
+              lastName: UtilsString.upperCase(user.lastName, 'each'),
+              identityCard: i18n.format(user.dni, 'integer', i18n.resolvedLanguage),
+            }}
+          />
         </section>
         <DialogFooter>
           <Button size='sm' variant='remove' onClick={() => remove({ userId: user._id })}>
-            Eliminar usuario
+            {t('button.deleteUser')}
           </Button>
         </DialogFooter>
       </DialogContent>
