@@ -2,6 +2,7 @@
 import { Button } from '@core/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
 // Components
+import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
 import type { Dispatch, SetStateAction } from 'react';
@@ -13,7 +14,7 @@ import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
 import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
-import { InfoCard } from '@core/components/common/InfoCard';
+import { AuthBadge } from '@core/auth/components/AuthBadge';
 // Interface
 interface IProps {
   onDeleteSuccess: () => void;
@@ -55,7 +56,10 @@ export function DialogDelete({ onDeleteSuccess, open, setOpen, user }: IProps) {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{t('dialog.deleteUser.title')}</DialogTitle>
-          <DialogDescription>{t('dialog.deleteUser.description')}</DialogDescription>
+          <DialogDescription className='flex items-center justify-between'>
+            <div>{t('dialog.deleteUser.description')}</div>
+            <AuthBadge />
+          </DialogDescription>
         </DialogHeader>
         <section className='flex flex-col gap-2 text-sm'>
           <div>
