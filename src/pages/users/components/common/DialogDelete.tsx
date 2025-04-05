@@ -27,11 +27,12 @@ export function DialogDelete({ onDeleteSuccess, open, setOpen, user }: IProps) {
   const { mutate: remove } = useMutation<IResponse<IUser>, AxiosError, IVars>({
     mutationKey: ['users', 'remove', user._id],
     mutationFn: ({ userId }) => UserApiService.remove(userId),
-    onSuccess: (response) => {
-      console.log(response.message);
-      // HERE invalidate the parent mutation with keys ['users', 'search-users-by]
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['users', 'search-users-by'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['users', 'removed-users'],
       });
       onDeleteSuccess();
       setOpen(false);
