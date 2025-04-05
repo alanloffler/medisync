@@ -50,9 +50,6 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
         value: d.value,
       }))
     : [];
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
 
   const _margin: IChartMargin = margin || { top: 20, right: 20, bottom: 20, left: 20 };
   const _height: number = (height ? height : 130) - _margin.top - _margin.bottom;
