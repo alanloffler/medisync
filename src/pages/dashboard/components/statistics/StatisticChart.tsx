@@ -50,6 +50,9 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
         value: d.value,
       }))
     : [];
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   const _margin: IChartMargin = margin || { top: 20, right: 20, bottom: 20, left: 20 };
   const _height: number = (height ? height : 130) - _margin.top - _margin.bottom;
@@ -135,7 +138,7 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
       }
     }
 
-    drawChart();
+    if (data?.data.length > 0) drawChart();
 
     addEventListener('resize', drawChart);
 
@@ -161,51 +164,50 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
   if (isError) {
     return (
       <Card className='flex flex-col items-center justify-center p-3'>
-        <InfoCard text={error.name} type='error' className='font-light' />
+        <InfoCard className='font-light' text={error.name} variant='error' />
       </Card>
     );
   }
 
   return (
-    data &&
-    data?.data?.length > 0 && (
-      <motion.section
-        className='rounded-lg border border-transparent'
-        initial='initial'
-        animate='initial'
-        variants={animation.item}
-        whileHover='animate'
-      >
-        <Card className={cn('h-full', bgColor)}>
-          {title && (
-            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className={cn('flex px-2 py-1 text-primary-foreground', darkColor, titleColor)}>
-                <span className='text-xsm font-medium'>{t(title)}</span>
-              </CardTitle>
-              <section className={cn('flex flex-row space-x-1 text-[11px] font-normal', darkTextColor)}>
-                {days.length > 0 &&
-                  days.map((day) => (
-                    <button
-                      className={`rounded-sm p-1 leading-none ${daysAgo === day.value && `${darkColor} ${lightTextColor}`}`}
-                      key={crypto.randomUUID()}
-                      onClick={() => setDaysAgo(day.value)}
-                    >
-                      {t(day.text, {
-                        count: day.text.split('.')[3] === 'month' ? day.value / 30 : day.text.split('.')[3] === 'year' ? day.value / 365 : day.value,
-                      })}
-                    </button>
-                  ))}
-              </section>
-            </CardHeader>
-          )}
+    <motion.section
+      className='rounded-lg border border-transparent'
+      initial='initial'
+      animate='initial'
+      variants={animation.item}
+      whileHover='animate'
+    >
+      <Card className={cn('h-full', bgColor)}>
+        {title && (
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+            <CardTitle className={cn('flex px-2 py-1 text-primary-foreground', darkColor, titleColor)}>
+              <span className='text-xsm font-medium'>{t(title)}</span>
+            </CardTitle>
+            <section className={cn('flex flex-row space-x-1 text-[11px] font-normal', darkTextColor)}>
+              {days.length > 0 &&
+                days.map((day) => (
+                  <button
+                    className={`rounded-sm p-1 leading-none ${daysAgo === day.value && `${darkColor} ${lightTextColor}`}`}
+                    key={crypto.randomUUID()}
+                    onClick={() => setDaysAgo(day.value)}
+                  >
+                    {t(day.text, {
+                      count: day.text.split('.')[3] === 'month' ? day.value / 30 : day.text.split('.')[3] === 'year' ? day.value / 365 : day.value,
+                    })}
+                  </button>
+                ))}
+            </section>
+          </CardHeader>
+        )}
+        {data && data?.data?.length > 0 && (
           <motion.section
             className='cursor-pointer'
             id='line-chart'
             ref={lineChartRef}
             onClick={() => path && path !== '' && navigate(path)}
           ></motion.section>
-        </Card>
-      </motion.section>
-    )
+        )}
+      </Card>
+    </motion.section>
   );
 }
