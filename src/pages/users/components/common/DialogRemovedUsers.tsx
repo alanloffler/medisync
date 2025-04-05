@@ -1,10 +1,13 @@
+// Icons: https://lucide.dev/icons/
+import { Trash2 } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
 import { ScrollArea } from '@core/components/ui/scroll-area';
 // External imports
-import type { Dispatch, SetStateAction } from 'react';
+import { useState, type Dispatch, type SetStateAction } from 'react';
 import { AxiosError } from 'axios';
+import { format } from '@formkit/tempo';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
@@ -12,8 +15,7 @@ import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
 import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
-import { format } from '@formkit/tempo';
-import { Trash2 } from 'lucide-react';
+import { useNotificationsStore } from '@core/stores/notifications.store';
 // Interface
 interface IProps {
   onRestoreSuccess: () => void;
@@ -22,6 +24,8 @@ interface IProps {
 }
 // React component
 export function DialogRemovedUsers({ onRestoreSuccess, open, setOpen }: IProps) {
+  const [restoredUser, setRestoredUser] = useState<IUser | undefined>(undefined);
+  const addNotification = useNotificationsStore((state) => state.addNotification);
   const queryClient = useQueryClient();
   const { i18n, t } = useTranslation();
 
@@ -33,7 +37,7 @@ export function DialogRemovedUsers({ onRestoreSuccess, open, setOpen }: IProps) 
   const { mutate: restore } = useMutation<IResponse<IUser>, AxiosError, { userId: string }>({
     mutationKey: ['users', 'restore'],
     mutationFn: ({ userId }) => UserApiService.restore(userId),
-    onSuccess: () => {
+    onSuccess: (response) => {
       queryClient.invalidateQueries({
         queryKey: ['users', 'removed-users'],
       });
@@ -42,6 +46,11 @@ export function DialogRemovedUsers({ onRestoreSuccess, open, setOpen }: IProps) 
       });
       onRestoreSuccess();
       setOpen(false);
+      restoredUser &&
+        addNotification({
+          message: `${response.message} (${UtilsString.upperCase(`${restoredUser.lastName}, ${restoredUser.firstName}`, 'each')})`,
+          type: 'success',
+        });
     },
   });
 
@@ -67,7 +76,7 @@ export function DialogRemovedUsers({ onRestoreSuccess, open, setOpen }: IProps) 
               <div className='flex flex-col space-y-1'>
                 {users.data.map((user, index) => (
                   <div key={index} className='flex items-center justify-between bg-slate-50 px-3 py-2'>
-                    <div>{UtilsString.upperCase(`${user.lastName}, ${user.firstName}`, 'all')}</div>
+                    <div>{UtilsString.upperCase(`${user.lastName}, ${user.firstName}`, 'each')}</div>
                     <div className='flex space-x-3'>
                       <div className='flex items-center space-x-1'>
                         <Trash2 size={12} strokeWidth={2} className='text-red-400' />
@@ -76,7 +85,10 @@ export function DialogRemovedUsers({ onRestoreSuccess, open, setOpen }: IProps) 
                       <Button
                         className='bg-amber-200 text-xs font-normal text-amber-600 hover:bg-amber-300/70 hover:text-amber-700/70'
                         size='xs'
-                        onClick={() => restore({ userId: user._id })}
+                        onClick={() => {
+                          restore({ userId: user._id });
+                          setRestoredUser(user);
+                        }}
                       >
                         {t('button.restore')}
                       </Button>
