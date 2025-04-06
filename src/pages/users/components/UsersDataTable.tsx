@@ -56,7 +56,7 @@ import { DialogRemove } from './common/DialogRemove';
 const defaultSorting: SortingState = [{ id: USER_CONFIG.table.defaultSortingId, desc: USER_CONFIG.table.defaultSortingType }];
 const defaultPagination: PaginationState = { pageIndex: 0, pageSize: USER_CONFIG.table.defaultPageSize };
 // React component
-export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
+export function UsersDataTable({ reload, search }: IDataTableUsers) {
   const [columns, setColumns] = useState<ColumnDef<IUser>[]>([]);
   const [openDialogRemove, setOpenDialogRemove] = useState<boolean>(false);
   const [pagination, setPagination] = useState<PaginationState>(defaultPagination);
