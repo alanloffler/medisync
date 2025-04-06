@@ -5,6 +5,8 @@ import { Button } from '@core/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
 import { ScrollArea } from '@core/components/ui/scroll-area';
 // Components
+import { AuthBadge } from '@core/auth/components/AuthBadge';
+import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
 import { useState, type Dispatch, type SetStateAction } from 'react';
@@ -15,7 +17,6 @@ import { useTranslation } from 'react-i18next';
 // Imports
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
-import { AuthBadge } from '@core/auth/components/AuthBadge';
 import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
@@ -32,28 +33,43 @@ export function DialogRemovedUsers({ onRestoreSuccess, open, setOpen }: IProps) 
   const queryClient = useQueryClient();
   const { i18n, t } = useTranslation();
 
-  const { data: users, isLoading: isLoadingUsers } = useQuery<IResponse<IUser[]>, AxiosError>({
+  const {
+    error: errorUsers,
+    data: users,
+    isError: isErrorUsers,
+    isLoading: isLoadingUsers,
+  } = useQuery<IResponse<IUser[]>, AxiosError<IResponse>>({
     queryKey: ['users', 'removed-users'],
     queryFn: () => UserApiService.findRemovedUsers(),
   });
 
-  const { mutate: restore } = useMutation<IResponse<IUser>, AxiosError, { userId: string }>({
+  const { isPending: isPendingRestore, mutate: restore } = useMutation<IResponse<IUser>, AxiosError, { userId: string }>({
     mutationKey: ['users', 'restore'],
     mutationFn: ({ userId }) => UserApiService.restore(userId),
     onSuccess: (response) => {
-      queryClient.invalidateQueries({
-        queryKey: ['users', 'removed-users'],
-      });
+      const userToNotify = restoredUser;
+
       queryClient.invalidateQueries({
         queryKey: ['users', 'search-users-by'],
+        refetchType: 'all',
+        exact: true,
       });
-      onRestoreSuccess();
-      setOpen(false);
-      restoredUser &&
+
+      queryClient.invalidateQueries({
+        queryKey: ['users', 'removed-users'],
+        exact: true,
+        refetchType: 'all',
+      });
+
+      userToNotify &&
         addNotification({
-          message: `${response.message} (${UtilsString.upperCase(`${restoredUser.lastName}, ${restoredUser.firstName}`, 'each')})`,
+          message: `${response.message} (${UtilsString.upperCase(`${userToNotify.lastName}, ${userToNotify.firstName}`, 'each')})`,
           type: 'success',
         });
+
+      onRestoreSuccess();
+      setRestoredUser(undefined);
+      setOpen(false);
     },
   });
 
@@ -63,13 +79,16 @@ export function DialogRemovedUsers({ onRestoreSuccess, open, setOpen }: IProps) 
         <DialogHeader>
           <DialogTitle>{t('dialog.restoreUser.title')}</DialogTitle>
           <DialogDescription className='flex items-center justify-between'>
-            <div>{t('dialog.restoreUser.description')}</div>
+            <span>{t('dialog.restoreUser.description')}</span>
             <AuthBadge />
           </DialogDescription>
         </DialogHeader>
         <section className='flex flex-col items-center'>
+          {isErrorUsers && <InfoCard text={errorUsers.response?.data.message} variant='error' />}
           {isLoadingUsers && <LoadingDB text={t('loading.users')} variant='default' />}
-          {users?.data && (
+          {isPendingRestore && <LoadingDB text={t('loading.restoring')} />}
+          {users && users.data.length === 0 && <InfoCard text={users.message} variant='warning' />}
+          {users && users.data.length > 0 && (
             <div className='w-full space-y-3 text-sm'>
               <ScrollArea className='h-full max-h-[205px] w-full'>
                 <div className='flex flex-col space-y-1'>
@@ -104,7 +123,7 @@ export function DialogRemovedUsers({ onRestoreSuccess, open, setOpen }: IProps) 
           )}
         </section>
         <DialogFooter>
-          <Button size='sm' variant='default' onClick={() => setOpen(false)}>
+          <Button className='disabled:opacity-100' disabled={isPendingRestore} size='sm' variant='default' onClick={() => setOpen(false)}>
             {t('button.close')}
           </Button>
         </DialogFooter>
