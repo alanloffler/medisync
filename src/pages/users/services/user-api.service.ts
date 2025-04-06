@@ -88,4 +88,11 @@ export class UserApiService {
 
     return await UtilsUrl.fetch(url, EMethods.PATCH);
   }
+  // CHECKED: used on DialogDelete.tsx
+  public static async delete(id: string): Promise<IResponse<IUser>> {
+    const path: string = `${this.API_URL}/users/${id}`;
+    const url: URL = UtilsUrl.create(path);
+
+    return await UtilsUrl.fetch(url, EMethods.DELETE);
+  }
 }
