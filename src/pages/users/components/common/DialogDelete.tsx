@@ -2,6 +2,7 @@
 import { Button } from '@core/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
 // Components
+import { AuthBadge } from '@core/auth/components/AuthBadge';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
@@ -14,7 +15,6 @@ import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
 import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
-import { AuthBadge } from '@core/auth/components/AuthBadge';
 // Interface
 interface IProps {
   onDeleteSuccess: () => void;
