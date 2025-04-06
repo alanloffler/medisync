@@ -57,7 +57,7 @@ export function DialogDelete({ onDeleteSuccess, open, setOpen, user }: IProps) {
         <DialogHeader>
           <DialogTitle>{t('dialog.deleteUser.title')}</DialogTitle>
           <DialogDescription className='flex items-center justify-between'>
-            <div>{t('dialog.deleteUser.description')}</div>
+            <span>{t('dialog.deleteUser.description')}</span>
             <AuthBadge />
           </DialogDescription>
         </DialogHeader>
@@ -82,7 +82,7 @@ export function DialogDelete({ onDeleteSuccess, open, setOpen, user }: IProps) {
           <Button variant='ghost' size='sm' onClick={() => setOpen(false)}>
             {t('button.cancel')}
           </Button>
-          <Button size='sm' variant='remove' onClick={() => remove({ userId: user._id })}>
+          <Button className='disabled:opacity-100' disabled={isPending} size='sm' variant='remove' onClick={() => remove({ userId: user._id })}>
             {isPending ? <LoadingDB text={t('loading.deleting')} variant='button' /> : t('button.deleteUser')}
           </Button>
         </DialogFooter>
