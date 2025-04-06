@@ -1,4 +1,3 @@
-import type { Dispatch, SetStateAction } from 'react';
 import type { IAppointmentSearch } from '@appointments/interfaces/appointment-search.interface';
 import type { IProfessionalSearch } from '@professionals/interfaces/professional-search.interface';
 import type { IUserSearch } from '@users/interfaces/user-search.interface';
@@ -20,7 +19,6 @@ export interface IDataTableProfessionals extends IDataTable {
 
 export interface IDataTableUsers extends IDataTable {
   search: IUserSearch;
-  setSearch: Dispatch<SetStateAction<IUserSearch>>;
 }
 
 export interface ITableManager {
