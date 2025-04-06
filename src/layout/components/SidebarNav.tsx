@@ -1,58 +1,25 @@
-import type React from 'react';
-import { ReactNode, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Home, Settings, FileText, Users, BarChart, HelpCircle, Menu, Package2 } from 'lucide-react';
-import { cn } from '@lib/utils';
+// Icons: https://lucide.dev/icons/
+import { ChevronLeft, ChevronRight, Menu, Package2 } from 'lucide-react';
+// External components
 import { Button } from '@core/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@core/components/ui/tooltip';
-import { HEADER_CONFIG } from '@config/layout/header.config';
-import { useTranslation } from 'react-i18next';
-
+// External imports
 import { DynamicIcon } from 'lucide-react/dynamic';
+import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+// Imports
 import { APP_CONFIG } from '@config/app.config';
-
-interface NavItem {
-  title: string;
-  href: string;
-  icon: React.ReactNode;
-}
-
+import { cn } from '@lib/utils';
+import { HEADER_CONFIG } from '@config/layout/header.config';
+import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
+// React component
 export function SidebarNav() {
   const [expanded, setExpanded] = useState<boolean>(true);
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
+  const itemSelected = useHeaderMenuStore((state) => state.headerMenuSelected);
+  const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
   const { t } = useTranslation();
-  // const navItems: NavItem[] = [
-  //   {
-  //     title: 'Tablero',
-  //     href: '/dashboard',
-  //     icon: <Home className='h-5 w-5' />,
-  //   },
-  //   {
-  //     title: 'Projects',
-  //     href: '/projects',
-  //     icon: <FileText className='h-5 w-5' />,
-  //   },
-  //   {
-  //     title: 'Team',
-  //     href: '/team',
-  //     icon: <Users className='h-5 w-5' />,
-  //   },
-  //   {
-  //     title: 'Analytics',
-  //     href: '/analytics',
-  //     icon: <BarChart className='h-5 w-5' />,
-  //   },
-  //   {
-  //     title: 'Settings',
-  //     href: '/settings',
-  //     icon: <Settings className='h-5 w-5' />,
-  //   },
-  //   {
-  //     title: 'Help',
-  //     href: '/help',
-  //     icon: <HelpCircle className='h-5 w-5' />,
-  //   },
-  // ];
 
   return (
     <>
@@ -91,7 +58,9 @@ export function SidebarNav() {
                     className={cn(
                       'flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground',
                       expanded ? '' : 'justify-center',
+                      itemSelected === item.id && 'bg-accent',
                     )}
+                    onClick={(e) => setItemSelected(parseInt(e.currentTarget.id))}
                   >
                     <DynamicIcon name={`${item?.icon}` as 'home'} size={20} />
                     {expanded && <span className='ml-3'>{t(item.key)}</span>}
