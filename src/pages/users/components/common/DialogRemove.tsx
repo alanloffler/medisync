@@ -2,6 +2,7 @@
 import { Button } from '@core/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
 // Components
+import { AuthBadge } from '@core/auth/components/AuthBadge';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
@@ -49,7 +50,14 @@ export function DialogRemove({ onRemoveSuccess, open, setOpen, userSelected }: I
       <DialogContent>
         <DialogHeader>
           <DialogTitle className='text-xl'>{t('dialog.deleteUser.title')}</DialogTitle>
-          {isErrorDeleting ? <DialogDescription></DialogDescription> : <DialogDescription>{t('dialog.deleteUser.description')}</DialogDescription>}
+          {isErrorDeleting ? (
+            <DialogDescription></DialogDescription>
+          ) : (
+            <DialogDescription className='flex items-center justify-between'>
+              <span>{t('dialog.deleteUser.description')}</span>
+              <AuthBadge />
+            </DialogDescription>
+          )}
         </DialogHeader>
         <section className='flex flex-col'>
           {isErrorDeleting ? (
