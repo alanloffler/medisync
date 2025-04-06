@@ -18,7 +18,7 @@ export class UserApiService {
   public static async create(data: IUserForm): Promise<IResponse<IUser>> {
     const transformedData: IUserForm = UserUtils.lowercaseFormItems(data);
     const path: string = `${this.API_URL}/users`;
-    const url: URL = new URL(path);
+    const url: URL = UtilsUrl.create(path);
 
     return await UtilsUrl.fetch(url, EMethods.POST, transformedData);
   }
@@ -33,7 +33,7 @@ export class UserApiService {
     if (type === EUserSearch.IDENTITY) path = `${this.API_URL}/users/byIdentityNumber`;
     if (!type) throw new Error('Dev Error: searchBy is required and must be a valid enum of EUserSearch');
 
-    const url: URL = new URL(path);
+    const url: URL = UtilsUrl.create(path);
 
     url.searchParams.append('search', value);
     url.searchParams.append('skip', skip.toString());
@@ -42,12 +42,11 @@ export class UserApiService {
     url.searchParams.append('sv', sorting[0].desc ? 'desc' : 'asc');
 
     return await UtilsUrl.fetch(url, EMethods.GET);
-    // return await UtilsUrl.axiosFetch(url, EMethods.GET);
   }
 
   public static async findOne(id: string): Promise<IResponse<IUser>> {
     const path: string = `${this.API_URL}/users/${id}`;
-    const url: URL = new URL(path);
+    const url: URL = UtilsUrl.create(path);
 
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
@@ -55,21 +54,21 @@ export class UserApiService {
   public static async update(id: string, data: IUserForm): Promise<IResponse<IUser>> {
     const transformedData: IUserForm = UserUtils.lowercaseFormItems(data);
     const path: string = `${this.API_URL}/users/${id}`;
-    const url: URL = new URL(path);
+    const url: URL = UtilsUrl.create(path);
 
     return await UtilsUrl.fetch(url, EMethods.PATCH, transformedData);
   }
 
   public static async remove(id: string): Promise<IResponse<IUser>> {
     const path: string = `${this.API_URL}/users/remove/${id}`;
-    const url: URL = new URL(path);
+    const url: URL = UtilsUrl.create(path);
 
     return await UtilsUrl.fetch(url, EMethods.PATCH);
   }
 
   public static async newUsersToday(): Promise<IResponse<IUserStats>> {
     const path: string = `${this.API_URL}/users/newUsersToday`;
-    const url: URL = new URL(path);
+    const url: URL = UtilsUrl.create(path);
 
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
