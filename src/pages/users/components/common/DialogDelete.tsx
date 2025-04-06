@@ -2,7 +2,6 @@
 import { Button } from '@core/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@core/components/ui/dialog';
 // Components
-import { AuthBadge } from '@core/auth/components/AuthBadge';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
@@ -56,10 +55,7 @@ export function DialogDelete({ onDeleteSuccess, open, setOpen, user }: IProps) {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{t('dialog.deleteUser.title')}</DialogTitle>
-          <DialogDescription className='flex items-center justify-between'>
-            <span>{t('dialog.deleteUser.description')}</span>
-            <AuthBadge />
-          </DialogDescription>
+          <DialogDescription>{t('dialog.deleteUser.description')}</DialogDescription>
         </DialogHeader>
         <section className='flex flex-col gap-2 text-sm'>
           <div>
