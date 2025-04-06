@@ -211,7 +211,7 @@ export default function Users() {
           </CardHeaderSecondary>
           {/* Table */}
           <CardContent>
-            <UsersDataTable reload={reload} search={debouncedSearch} setSearch={setSearch} setReload={setReload} />
+            <UsersDataTable reload={reload} search={debouncedSearch} setReload={setReload} />
           </CardContent>
         </Card>
       </section>
