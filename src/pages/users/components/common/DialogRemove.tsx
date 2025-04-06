@@ -33,7 +33,7 @@ export function DialogRemove({ onRemoveSuccess, open, setOpen, userSelected }: I
     isPending: isPendingDelete,
   } = useMutation<IResponse<IUser>, Error, { id: string }>({
     mutationKey: ['users', 'remove-user', userSelected?._id],
-    mutationFn: async ({ id }) => await UserApiService.remove(id),
+    mutationFn: async ({ id }) => await UserApiService.delete(id),
     onSuccess: (response) => {
       onRemoveSuccess();
       setOpen(false);
