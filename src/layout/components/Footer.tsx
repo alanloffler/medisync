@@ -1,5 +1,5 @@
 // Components
-import { Help } from '@layout/components/footer/Help';
+import { Help } from '@layout/components/Help';
 import { Notifications } from '@layout/components/footer/Notifications';
 import { Settings } from '@layout/components/footer/Settings';
 import { User } from '@layout/components/footer/User';
