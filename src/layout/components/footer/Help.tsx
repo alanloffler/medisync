@@ -1,7 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { Check, CircleHelp } from 'lucide-react';
-// Components
-import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
+import { CircleCheck, CircleHelp } from 'lucide-react';
 // External imports
 import { useAnimate } from 'motion/react';
 import { useTranslation } from 'react-i18next';
@@ -29,21 +27,25 @@ export function Help() {
   }
 
   return (
-    <TooltipWrapper tooltip={t('tooltip.help')}>
+    <main className='flex items-center gap-3 text-muted-foreground'>
       <button
-        className='relative flex h-5 w-5 items-center justify-center'
+        className='relative left-0 flex items-center text-xs'
         onClick={handleHelp}
         onMouseOver={handleAnimateOver}
         onMouseOut={handleAnimateOut}
-        ref={scope}
       >
-        <CircleHelp size={20} strokeWidth={2} />
-        {help && (
-          <span className='absolute -bottom-1 -right-1 rounded-full bg-emerald-400 p-0.5'>
-            <Check size={10} strokeWidth={3} className='stroke-emerald-50' />
-          </span>
+        {help ? (
+          <div className='flex items-center gap-2'>
+            <CircleCheck ref={scope} size={20} strokeWidth={2} className='stroke-emerald-400' />
+            <span>{t('button.disableHelp')}</span>
+          </div>
+        ) : (
+          <div className='flex items-center gap-2'>
+            <CircleHelp ref={scope} size={20} strokeWidth={2} />
+            <span>{t('button.activateHelp')}</span>
+          </div>
         )}
       </button>
-    </TooltipWrapper>
+    </main>
   );
 }
