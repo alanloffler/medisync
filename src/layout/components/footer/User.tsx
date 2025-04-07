@@ -1,5 +1,6 @@
 // Icons: https://lucide.dev/icons/
-import { ShieldUser } from 'lucide-react';
+import { DynamicIcon } from 'lucide-react/dynamic';
+import { LogOut, ShieldUser } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@core/components/ui/dropdown-menu';
 // Components
@@ -40,19 +41,24 @@ export function User() {
             </div>
             <div className='flex flex-col text-left'>
               <div className='text-xs font-semibold'>{UtilsString.upperCase(`${user?.firstName} ${user?.lastName}`, 'each')}</div>
-              <div className='text-xxs'>{user?.role === ERole.Super ? 'Super Admin' : 'Admin'}</div>
+              <div className='text-xxs'>{user?.role === ERole.Super ? t('auth.role.super') : t('auth.role.admin')}</div>
             </div>
           </section>
         </DropdownMenuTrigger>
       </TooltipWrapper>
-      <DropdownMenuContent align='start' className='min-w-44' onCloseAutoFocus={(e) => e.preventDefault()}>
+      <DropdownMenuContent align='start' className='min-w-44 space-y-1' onCloseAutoFocus={(e) => e.preventDefault()}>
         {HEADER_CONFIG.user.menuItems.map((item) => (
-          <DropdownMenuItem key={item.id} onClick={() => navigate(item.path)} className='text-xsm'>
-            {t(item.key)}
+          <DropdownMenuItem key={item.id} onClick={() => navigate(item.path)} className='flex space-x-3 text-xsm'>
+            <DynamicIcon name={item.icon as 'ban'} size={15} strokeWidth={2} />
+            <span>{t(item.key)}</span>
           </DropdownMenuItem>
         ))}
-        <DropdownMenuItem className='bg-primary/10 !text-xsm font-semibold text-primary hover:bg-primary hover:text-white' onClick={handleLogout}>
-          {t('user.menuItems.logout')}
+        <DropdownMenuItem
+          className='flex space-x-3 bg-primary/10 !text-xsm font-semibold text-primary hover:bg-primary hover:text-white'
+          onClick={handleLogout}
+        >
+          <LogOut size={15} strokeWidth={2} />
+          <span>{t('user.menuItems.logout')}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
