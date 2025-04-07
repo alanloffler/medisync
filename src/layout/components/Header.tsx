@@ -22,7 +22,7 @@ export function Header() {
   }
 
   return (
-    <main className='flex h-16 w-full items-center justify-end gap-4 border-b bg-background px-4'>
+    <main className='fixed flex h-16 w-full items-center justify-end gap-4 border-b bg-background px-4'>
       <ActionsButton links={links} />
       <Select value={selectedLanguage?.code} onValueChange={(e) => onChangeLang(e)}>
         <SelectTrigger className='h-8 w-[55px] bg-input p-2 text-xs hover:bg-input-hover'>
