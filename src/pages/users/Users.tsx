@@ -13,19 +13,17 @@ import { UsersDataTable } from '@users/components/UsersDataTable';
 // External imports
 import { Link, useNavigate } from 'react-router-dom';
 import { type AnimationPlaybackControls, useAnimate } from 'motion/react';
-import { type ChangeEvent, useEffect, useState } from 'react';
+import { type ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { IUserSearch } from '@users/interfaces/user-search.interface';
 import { APP_CONFIG } from '@config/app.config';
 import { ERole } from '@core/auth/enums/role.enum';
 import { EUserSearch } from '@users/enums/user-search.enum';
-import { HEADER_CONFIG } from '@config/layout/header.config';
 import { USER_CONFIG } from '@config/users/users.config';
 import { motion } from '@core/services/motion.service';
 import { useAuth } from '@core/auth/useAuth';
 import { useDebounce } from '@core/hooks/useDebounce';
-import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 // React component
 export default function Users() {
   const [openDialogRemovedUsers, setOpenDialogRemovedUsers] = useState<boolean>(false);
@@ -37,13 +35,8 @@ export default function Users() {
   const [removedUsersScope, removedUsersAnimation] = useAnimate();
   const debouncedSearch = useDebounce<IUserSearch>(search, APP_CONFIG.debounceTime);
   const navigate = useNavigate();
-  const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
   const { t } = useTranslation();
   const { user } = useAuth();
-
-  useEffect(() => {
-    setItemSelected(HEADER_CONFIG.headerMenu[3].id);
-  }, [setItemSelected]);
 
   function handleSearchByName(event: ChangeEvent<HTMLInputElement>): void {
     setSearch({ value: event.target.value, type: EUserSearch.NAME });
