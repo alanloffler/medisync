@@ -3,19 +3,8 @@ import { CategoriesShortcuts } from '@dashboard/components/shortcuts/CategoriesS
 import { LatestAppos } from '@dashboard/components/latest-appos/LatestAppos';
 import { LatestUsers } from '@dashboard/components/latest-users/LatestUsers';
 import { StatisticGroup } from '@dashboard/components/statistics/StatisticGroup';
-// External imports
-import { useEffect } from 'react';
-// Imports
-import { HEADER_CONFIG } from '@config/layout/header.config';
-import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 // React component
 export default function Dashboard() {
-  const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
-
-  useEffect(() => {
-    setItemSelected(HEADER_CONFIG.headerMenu[0].id);
-  }, [setItemSelected]);
-
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8'>
       {/* Section: Statistic Group */}
