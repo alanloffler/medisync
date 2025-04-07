@@ -6,6 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 // Components
 import { TooltipWrapper } from '@core/components/common/TooltipWrapper';
 // External imports
+import { motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 // Imports
@@ -14,8 +15,10 @@ import { HEADER_CONFIG } from '@config/layout/header.config';
 import { UtilsString } from '@core/services/utils/string.service';
 import { cn } from '@lib/utils';
 import { useAuth } from '@core/auth/useAuth';
+import { useNavMenuStore } from '@layout/stores/nav-menu.service';
 // React component
 export function User() {
+  const menuExpanded = useNavMenuStore((state) => state.navMenuExpanded);
   const navigate = useNavigate();
   const { logout, user } = useAuth();
   const { t } = useTranslation();
@@ -27,23 +30,29 @@ export function User() {
   return (
     <DropdownMenu>
       <TooltipWrapper tooltip={t('tooltip.account')}>
-        <DropdownMenuTrigger>
-          <section className='flex w-full items-center gap-3'>
-            <div
-              className={cn(
-                'flex h-8 w-8 items-center justify-center rounded-full text-white',
-                user?.role === ERole.Super ? 'bg-purple-500' : 'bg-sky-500',
-              )}
+        <DropdownMenuTrigger className={cn('flex h-8 w-full items-center', menuExpanded ? 'justify-start' : 'justify-center')}>
+          <div
+            className={cn(
+              'flex h-8 w-8 min-w-8 flex-shrink-0 items-center justify-center rounded-full text-white',
+              user?.role === ERole.Super ? 'bg-purple-500' : 'bg-sky-500',
+            )}
+          >
+            <span className='text-xs font-medium'>
+              <ShieldUser size={20} strokeWidth={1.5} />
+            </span>
+          </div>
+          {menuExpanded && <div className='w-3 flex-shrink-0' />}
+          {menuExpanded && (
+            <motion.div
+              className='flex flex-grow flex-col text-left'
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.1, delay: 0.2 }}
             >
-              <span className='text-xs font-medium'>
-                <ShieldUser size={20} strokeWidth={1.5} />
-              </span>
-            </div>
-            <div className='flex flex-col text-left'>
               <div className='text-xs font-semibold'>{UtilsString.upperCase(`${user?.firstName} ${user?.lastName}`, 'each')}</div>
               <div className='text-xxs'>{user?.role === ERole.Super ? t('auth.role.super') : t('auth.role.admin')}</div>
-            </div>
-          </section>
+            </motion.div>
+          )}
         </DropdownMenuTrigger>
       </TooltipWrapper>
       <DropdownMenuContent align='start' className='min-w-44 space-y-1' onCloseAutoFocus={(e) => e.preventDefault()}>
