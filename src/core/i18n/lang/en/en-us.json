@@ -1,5 +1,11 @@
 {
   "appName": "MediSync",
+  "auth": {
+    "role": {
+      "admin": "Administrator",
+      "super": "Super admin"
+    }
+  },
   "breadcrumb": {
     "appointmentDetails": "Details",
     "appointments": "Appointments",
