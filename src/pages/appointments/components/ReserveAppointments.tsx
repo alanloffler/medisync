@@ -16,10 +16,8 @@ import type { IUser } from '@users/interfaces/user.interface';
 import { CalendarService } from '@appointments/services/calendar.service';
 import { EDialogAction } from '@appointments/enums/dialog.enum';
 import { EUserSearch, ESortingKeys } from '@users/enums/user-search.enum';
-import { HEADER_CONFIG } from '@config/layout/header.config';
 import { RESERVE_APPOINTMENT_CONFIG as RA_CONFIG } from '@config/appointments/reserve-appointments.config';
 import { UtilsString } from '@core/services/utils/string.service';
-import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 import { useReserveFilters } from '@appointments/hooks/useReserveFilters';
 // Constants
 const DISABLED_DAYS: number[] = RA_CONFIG.calendar.disabledDays;
@@ -36,15 +34,9 @@ export default function ReserveAppointments() {
   const [selectedLegibleDate, setSelectedLegibleDate] = useState<string>('');
   const [selectedSlot, setSelectedSlot] = useState<ITimeSlot>({} as ITimeSlot);
   const [userSelected, setUserSelected] = useState<IUser>({} as IUser);
-  const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
   const { dateParam, professionalParam, clearFilters, setFilters } = useReserveFilters();
   const { i18n, t } = useTranslation();
   const selectedLocale: string = i18n.resolvedLanguage || i18n.language;
-
-  // Set header menu item selected
-  useEffect(() => {
-    setItemSelected(HEADER_CONFIG.headerMenu[1].id);
-  }, [setItemSelected]);
 
   // Initialize from URL parameters
   useEffect(() => {
