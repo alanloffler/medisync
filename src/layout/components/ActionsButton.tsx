@@ -10,14 +10,14 @@ import { useTranslation } from 'react-i18next';
 // Imports
 import type { ILinks } from '@layout/interfaces/links.interface';
 import { motion } from '@core/services/motion.service';
-import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
+import { useNavMenuStore } from '@layout/stores/nav-menu.service';
 // React component
 export function ActionsButton({ links }: { links: ILinks[] }) {
   const [chevronScope, chevronAnimation] = useAnimate();
   const [open, setOpen] = useState<boolean>(false);
   const [plusScope, plusAnimation] = useAnimate();
   const navigate = useNavigate();
-  const setMenuItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
+  const setMenuItemSelected = useNavMenuStore((state) => state.setNavMenuSelected);
   const { t } = useTranslation();
 
   function handleClick(link: ILinks): void {
