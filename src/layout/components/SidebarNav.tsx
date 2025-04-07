@@ -88,14 +88,11 @@ export function SidebarNav() {
             </TooltipProvider>
           ))}
         </nav>
-        <section className='p-5'>
-          <Help />
-        </section>
+        <Help />
         <div className='border-t p-2'>
           <User />
         </div>
       </div>
-
       {/* Backdrop for mobile */}
       {mobileOpen && <div className='fixed inset-0 z-30 bg-background/80 backdrop-blur-sm md:hidden' onClick={() => setMobileOpen(false)} />}
     </>
