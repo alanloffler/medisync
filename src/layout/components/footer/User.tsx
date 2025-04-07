@@ -49,15 +49,15 @@ export function User() {
       <DropdownMenuContent align='start' className='min-w-44 space-y-1' onCloseAutoFocus={(e) => e.preventDefault()}>
         {HEADER_CONFIG.user.menuItems.map((item) => (
           <DropdownMenuItem key={item.id} onClick={() => navigate(item.path)} className='flex space-x-3 text-xsm'>
-            <DynamicIcon name={item.icon as 'ban'} size={15} strokeWidth={2} />
-            <span>{t(item.key)}</span>
+            <DynamicIcon name={item.icon as 'ban'} size={17} strokeWidth={2} />
+            {<span>{t(item.key)}</span>}
           </DropdownMenuItem>
         ))}
         <DropdownMenuItem
           className='flex space-x-3 bg-primary/10 !text-xsm font-semibold text-primary hover:bg-primary hover:text-white'
           onClick={handleLogout}
         >
-          <LogOut size={15} strokeWidth={2} />
+          <LogOut size={17} strokeWidth={2} />
           <span>{t('user.menuItems.logout')}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
