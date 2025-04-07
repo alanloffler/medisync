@@ -6,12 +6,13 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@core/
 // External imports
 import { DynamicIcon } from 'lucide-react/dynamic';
 import { Link } from 'react-router-dom';
+import { motion } from 'motion/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 // Imports
 import { APP_CONFIG } from '@config/app.config';
-import { cn } from '@lib/utils';
 import { HEADER_CONFIG } from '@config/layout/header.config';
+import { cn } from '@lib/utils';
 import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 // React component
 export function SidebarNav() {
@@ -24,11 +25,18 @@ export function SidebarNav() {
   return (
     <>
       {/* Mobile menu button */}
-      <Button variant='ghost' size='icon' className='fixed left-4 top-4 z-50 md:hidden' onClick={() => setMobileOpen(!mobileOpen)}>
+      <Button
+        variant='ghost'
+        size='icon'
+        className='fixed left-3 top-3 z-50 md:hidden'
+        onClick={() => {
+          setMobileOpen(!mobileOpen);
+          setExpanded(true);
+        }}
+      >
         <Menu className='h-5 w-5' />
         <span className='sr-only'>Toggle menu</span>
       </Button>
-
       {/* Sidebar navigation */}
       <div
         className={cn(
@@ -37,7 +45,7 @@ export function SidebarNav() {
           mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0',
         )}
       >
-        <div className='flex h-16 items-center justify-between border-b px-4'>
+        <div className='hidden h-16 items-center justify-between border-b px-4 sm:flex'>
           <Link to={`${APP_CONFIG.appPrefix}`} className='flex items-center gap-2 font-semibold md:text-base'>
             <Package2 className='h-6 w-6' />
             {expanded && <span>{t('appName')}</span>}
@@ -47,10 +55,9 @@ export function SidebarNav() {
             <span className='sr-only'>{expanded ? 'Collapse sidebar' : 'Expand sidebar'}</span>
           </Button>
         </div>
-
-        <nav className='flex-1 space-y-1 p-2'>
-          <TooltipProvider delayDuration={0}>
-            {HEADER_CONFIG.headerMenu.map((item) => (
+        <nav className='mt-16 flex-1 space-y-1 border-t p-2 sm:mt-0 sm:border-t-0'>
+          {HEADER_CONFIG.headerMenu.map((item) => (
+            <TooltipProvider delayDuration={0.3}>
               <Tooltip key={item.path}>
                 <TooltipTrigger asChild>
                   <Link
@@ -63,15 +70,20 @@ export function SidebarNav() {
                     onClick={(e) => setItemSelected(parseInt(e.currentTarget.id))}
                   >
                     <DynamicIcon name={`${item?.icon}` as 'home'} size={20} />
-                    {expanded && <span className='ml-3'>{t(item.key)}</span>}
+                    {expanded && (
+                      <motion.span className='ml-3' initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.1, delay: 0.2 }}>
+                        {t(item.key)}
+                      </motion.span>
+                    )}
                   </Link>
                 </TooltipTrigger>
-                {!expanded && <TooltipContent side='right'>{item.path}</TooltipContent>}
+                <TooltipContent hidden={expanded} side='right'>
+                  {t(item.key)}
+                </TooltipContent>
               </Tooltip>
-            ))}
-          </TooltipProvider>
+            </TooltipProvider>
+          ))}
         </nav>
-
         <div className='border-t p-2'>
           <TooltipProvider delayDuration={0}>
             <Tooltip>
