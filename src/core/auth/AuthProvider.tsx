@@ -2,7 +2,7 @@
 import type { AxiosResponse } from 'axios';
 import { useState, useEffect, useCallback } from 'react';
 // Imports
-import type { IPayload } from '@core/auth/interfaces/payload.interface';
+import type { IPayloadPlus } from '@core/auth/interfaces/payload.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import { APP_CONFIG } from '@config/app.config';
 import { AuthContext } from '@core/auth/AuthContext';
@@ -10,14 +10,20 @@ import { AuthService } from '@auth/services/auth.service';
 // React provider component
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState<boolean>(true);
-  const [user, setUser] = useState<IPayload | null>(null);
+  const [user, setUser] = useState<IPayloadPlus | null>(null);
 
   const loadUser = useCallback(async (): Promise<void> => {
     try {
       const userData = await AuthService.getAdmin();
-      const user: IPayload = userData.data.data;
+      const user: IPayloadPlus = userData.data.data;
 
-      setUser({ _id: user._id, email: user.email, role: user.role });
+      setUser({
+        _id: user._id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role,
+      });
     } catch (error) {
       setUser(null);
     } finally {
@@ -29,11 +35,17 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     loadUser();
   }, [loadUser]);
 
-  async function login(email: string, password: string): Promise<AxiosResponse<IResponse<IPayload>> & { redirectPath?: string }> {
+  async function login(email: string, password: string): Promise<AxiosResponse<IResponse<IPayloadPlus>> & { redirectPath?: string }> {
     const userData = await AuthService.login({ email, password });
-    const user: IPayload = userData.data.data;
+    const user: IPayloadPlus = userData.data.data;
 
-    setUser({ _id: user._id, email: user.email, role: user.role });
+    setUser({
+      _id: user._id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      role: user.role,
+    });
     setLoading(false);
 
     return { ...userData, redirectPath: `${APP_CONFIG.appPrefix}${APP_CONFIG.appIndexPage}` };
