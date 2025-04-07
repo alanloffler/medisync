@@ -4,13 +4,17 @@ import { Header } from '@layout/components/Header';
 import { Outlet } from 'react-router-dom';
 // Imports
 import { SidebarNav } from '@layout/components/SidebarNav';
+import { cn } from '@lib/utils';
+import { useNavMenuStore } from '@layout/stores/nav-menu.service';
 // React component
 export default function Layout() {
+  const menuExpanded = useNavMenuStore((state) => state.navMenuExpanded);
+
   return (
     <div className='flex min-h-screen w-full'>
       <SidebarNav />
       <Header />
-      <div className='flex w-full flex-col pt-16 md:pl-52'>
+      <div className={cn('flex w-full flex-col pt-16', menuExpanded ? 'pl-0 md:pl-52' : 'pl-0 md:pl-16')}>
         <Outlet />
       </div>
       {/* <Footer /> */}
