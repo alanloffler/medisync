@@ -24,11 +24,9 @@ import { useTranslation } from 'react-i18next';
 import { APPO_CONFIG } from '@config/appointments/appointments.config';
 import { APP_CONFIG } from '@config/app.config';
 import { EAppointmentSearch, type IAppointmentSearch } from '@appointments/interfaces/appointment-search.interface';
-import { HEADER_CONFIG } from '@config/layout/header.config';
 import { cn } from '@lib/utils';
 import { motion } from '@core/services/motion.service';
 import { useDebounce } from '@core/hooks/useDebounce';
-import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 // Constants
 const defaultAppoSearch: IAppointmentSearch[] = [
   { type: EAppointmentSearch.NAME, value: '' },
@@ -44,12 +42,7 @@ export default function Appointments() {
   const [search, setSearch] = useState<IAppointmentSearch[]>(defaultAppoSearch);
   const debouncedSearch = useDebounce<IAppointmentSearch[]>(search, APP_CONFIG.debounceTime);
   const navigate = useNavigate();
-  const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
   const { i18n, t } = useTranslation();
-
-  useEffect(() => {
-    setItemSelected(HEADER_CONFIG.headerMenu[1].id);
-  }, [setItemSelected]);
 
   useEffect(() => {
     const search: IAppointmentSearch[] = [
