@@ -69,7 +69,7 @@ export function SidebarNav() {
                       expanded ? '' : 'justify-center',
                       itemSelected === item.id && 'bg-accent',
                     )}
-                    onClick={(e) => setItemSelected(parseInt(e.currentTarget.id))}
+                    onClick={() => setItemSelected(item.id)}
                   >
                     <DynamicIcon name={`${item?.icon}` as 'home'} size={20} />
                     {expanded && (
