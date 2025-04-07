@@ -3,6 +3,8 @@ import { ChevronLeft, ChevronRight, Menu, Package2 } from 'lucide-react';
 // External components
 import { Button } from '@core/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@core/components/ui/tooltip';
+// Components
+import { User } from '@layout/components/footer/User';
 // External imports
 import { DynamicIcon } from 'lucide-react/dynamic';
 import { Link } from 'react-router-dom';
@@ -41,7 +43,7 @@ export function SidebarNav() {
       <div
         className={cn(
           'fixed inset-y-0 left-0 z-40 flex flex-col border-r bg-background transition-all duration-300',
-          expanded ? 'w-48' : 'w-16',
+          expanded ? 'w-52' : 'w-16',
           mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0',
         )}
       >
@@ -57,7 +59,7 @@ export function SidebarNav() {
         </div>
         <nav className='mt-16 flex-1 space-y-1 border-t p-2 sm:mt-0 sm:border-t-0'>
           {HEADER_CONFIG.headerMenu.map((item) => (
-            <TooltipProvider delayDuration={0.3}>
+            <TooltipProvider delayDuration={0.3} key={item.id}>
               <Tooltip key={item.path}>
                 <TooltipTrigger asChild>
                   <Link
@@ -85,30 +87,7 @@ export function SidebarNav() {
           ))}
         </nav>
         <div className='border-t p-2'>
-          <TooltipProvider delayDuration={0}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  to='/profile'
-                  className={cn(
-                    'flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground',
-                    expanded ? '' : 'justify-center',
-                  )}
-                >
-                  <div className='flex h-8 w-8 items-center justify-center rounded-full bg-muted'>
-                    <span className='text-xs font-medium'>US</span>
-                  </div>
-                  {expanded && (
-                    <div className='ml-3 flex flex-col'>
-                      <span className='text-sm font-medium'>User Name</span>
-                      <span className='text-xs text-muted-foreground'>user@example.com</span>
-                    </div>
-                  )}
-                </Link>
-              </TooltipTrigger>
-              {!expanded && <TooltipContent side='right'>User Profile</TooltipContent>}
-            </Tooltip>
-          </TooltipProvider>
+          <User />
         </div>
       </div>
 
