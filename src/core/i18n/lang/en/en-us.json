@@ -21,6 +21,7 @@
     "users": "Patients"
   },
   "button": {
+    "activateHelp": "Activate help",
     "addArea": "Add area",
     "addProfessional": "Add professional",
     "addSpecialty": "Add specialty",
@@ -33,6 +34,7 @@
     "deleteAppointment": "Delete appointment",
     "deleteProfessional": "Delete professional",
     "deleteUser": "Delete patient",
+    "disableHelp": "Help activated",
     "email": "Email",
     "generateAppointment": "Generate appointment",
     "goToProfessionals": "Go to professionals",

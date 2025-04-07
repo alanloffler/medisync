@@ -21,6 +21,7 @@
     "users": "Pacientes"
   },
   "button": {
+    "activateHelp": "Activar ayuda",
     "addArea": "Agregar área",
     "addProfessional": "Agregar profesional",
     "addSpecialty": "Agregar especialidad",
@@ -33,6 +34,7 @@
     "deleteAppointment": "Eliminar turno",
     "deleteProfessional": "Eliminar profesional",
     "deleteUser": "Eliminar paciente",
+    "disableHelp": "Ayuda activada",
     "email": "Email",
     "generateAppointment": "Generar turno",
     "goToProfessionals": "Ir a profesionales",
