@@ -10,11 +10,11 @@ import { useTranslation } from 'react-i18next';
 // Imports
 import { APP_CONFIG } from '@config/app.config';
 import { HEADER_CONFIG } from '@config/layout/header.config';
-import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
+import { useNavMenuStore } from '@layout/stores/nav-menu.service';
 // React component
 export function HeaderMenu() {
-  const itemSelected = useHeaderMenuStore((state) => state.headerMenuSelected);
-  const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
+  const itemSelected = useNavMenuStore((state) => state.navMenuSelected);
+  const setItemSelected = useNavMenuStore((state) => state.setNavMenuSelected);
   const { t } = useTranslation();
 
   function handleMenuItem(e: MouseEvent<HTMLElement>): void {
