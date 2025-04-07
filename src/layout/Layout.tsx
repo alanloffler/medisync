@@ -10,7 +10,7 @@ export default function Layout() {
     <div className='flex min-h-screen w-full'>
       <SidebarNav />
       <Header />
-      <div className='flex w-full flex-col pt-16 md:pl-48'>
+      <div className='flex w-full flex-col pt-16 md:pl-52'>
         <Outlet />
       </div>
       {/* <Footer /> */}
