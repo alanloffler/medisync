@@ -3,3 +3,8 @@ export interface IPayload {
   email: string;
   role: string;
 }
+
+export interface IPayloadPlus extends IPayload {
+  firstName: string;
+  lastName: string;
+}
