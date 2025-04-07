@@ -20,12 +20,10 @@ import type { IProfessionalSearch } from '@professionals/interfaces/professional
 import type { ISpecialization } from '@core/interfaces/specialization.interface';
 import { APP_CONFIG } from '@config/app.config';
 import { EProfessionalSearch } from '@professionals/enums/professional-search.enum';
-import { HEADER_CONFIG } from '@config/layout/header.config';
 import { PROFESSIONALS_CONFIG as PROF_CONFIG } from '@config/professionals/professionals.config';
 import { UtilsString } from '@core/services/utils/string.service';
 import { motion } from '@core/services/motion.service';
 import { useDebounce } from '@core/hooks/useDebounce';
-import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 // React component
 export default function Professionals() {
   const [debounceTime, setDebounceTime] = useState<number>(APP_CONFIG.debounceTime);
@@ -38,7 +36,6 @@ export default function Professionals() {
   const [reloadScope, reloadAnimation] = useAnimate();
   const debouncedSearch = useDebounce<IProfessionalSearch>(search, debounceTime);
   const navigate = useNavigate();
-  const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
   const { t } = useTranslation();
 
   const handleSearchByProfessional = useCallback(
@@ -69,10 +66,6 @@ export default function Professionals() {
     setSearch({ value: '', type: EProfessionalSearch.INPUT });
     setReload(crypto.randomUUID());
   }, [setSearch, setReload]);
-
-  useEffect(() => {
-    setItemSelected(HEADER_CONFIG.headerMenu[2].id);
-  }, [setItemSelected]);
 
   function addProfessionalAnimationOver(): AnimationPlaybackControls {
     const { keyframes, options } = motion.scale(1.2).type('bounce').animate();
