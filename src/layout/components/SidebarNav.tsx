@@ -15,13 +15,14 @@ import { useTranslation } from 'react-i18next';
 import { APP_CONFIG } from '@config/app.config';
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { cn } from '@lib/utils';
-import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
+import { useNavMenuStore } from '@layout/stores/nav-menu.service';
 // React component
 export function SidebarNav() {
-  const [expanded, setExpanded] = useState<boolean>(true);
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
-  const itemSelected = useHeaderMenuStore((state) => state.headerMenuSelected);
-  const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
+  const itemSelected = useNavMenuStore((state) => state.navMenuSelected);
+  const setItemSelected = useNavMenuStore((state) => state.setNavMenuSelected);
+  const menuExpanded = useNavMenuStore((state) => state.navMenuExpanded);
+  const setMenuExpanded = useNavMenuStore((state) => state.setNavMenuExpanded);
   const { t } = useTranslation();
 
   return (
@@ -33,7 +34,7 @@ export function SidebarNav() {
         className='fixed left-3 top-3 z-50 md:hidden'
         onClick={() => {
           setMobileOpen(!mobileOpen);
-          setExpanded(true);
+          setMenuExpanded(true);
         }}
       >
         <Menu className='h-5 w-5' />
@@ -43,18 +44,18 @@ export function SidebarNav() {
       <div
         className={cn(
           'fixed inset-y-0 left-0 z-40 flex flex-col border-r bg-background transition-all duration-300',
-          expanded ? 'w-52' : 'w-16',
+          menuExpanded ? 'w-52' : 'w-16',
           mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0',
         )}
       >
         <div className='hidden h-16 items-center justify-between border-b px-4 sm:flex'>
           <Link to={`${APP_CONFIG.appPrefix}`} className='flex items-center gap-2 font-semibold md:text-base'>
             <Package2 className='h-6 w-6' />
-            {expanded && <span>{t('appName')}</span>}
+            {menuExpanded && <span>{t('appName')}</span>}
           </Link>
-          <Button variant='ghost' size='icon' className={cn('ml-auto', expanded ? '' : 'mx-auto')} onClick={() => setExpanded(!expanded)}>
-            {expanded ? <ChevronLeft className='h-5 w-5' /> : <ChevronRight className='h-5 w-5' />}
-            <span className='sr-only'>{expanded ? 'Collapse sidebar' : 'Expand sidebar'}</span>
+          <Button variant='ghost' size='icon' className={cn('ml-auto', menuExpanded ? '' : 'mx-auto')} onClick={() => setMenuExpanded(!menuExpanded)}>
+            {menuExpanded ? <ChevronLeft className='h-5 w-5' /> : <ChevronRight className='h-5 w-5' />}
+            <span className='sr-only'>{menuExpanded ? 'Collapse sidebar' : 'Expand sidebar'}</span>
           </Button>
         </div>
         <nav className='mt-16 flex-1 space-y-1 border-t p-2 sm:mt-0 sm:border-t-0'>
@@ -66,20 +67,20 @@ export function SidebarNav() {
                     to={item.path}
                     className={cn(
                       'flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground',
-                      expanded ? '' : 'justify-center',
+                      menuExpanded ? '' : 'justify-center',
                       itemSelected === item.id && 'bg-accent',
                     )}
                     onClick={() => setItemSelected(item.id)}
                   >
                     <DynamicIcon name={`${item?.icon}` as 'home'} size={20} />
-                    {expanded && (
+                    {menuExpanded && (
                       <motion.span className='ml-3' initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.1, delay: 0.2 }}>
                         {t(item.key)}
                       </motion.span>
                     )}
                   </Link>
                 </TooltipTrigger>
-                <TooltipContent hidden={expanded} side='right'>
+                <TooltipContent hidden={menuExpanded} side='right'>
                   {t(item.key)}
                 </TooltipContent>
               </Tooltip>
