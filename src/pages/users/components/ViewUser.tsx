@@ -31,13 +31,11 @@ import { APP_CONFIG } from '@config/app.config';
 import { AreaCodeService } from '@core/services/area-code.service';
 import { EUserType } from '@core/enums/user-type.enum';
 import { EWhatsappTemplate } from '@whatsapp/enums/template.enum';
-import { HEADER_CONFIG } from '@config/layout/header.config';
 import { USER_VIEW_CONFIG as UV_CONFIG } from '@config/users/user-view.config';
 import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
 import { motion } from '@core/services/motion.service';
 import { useDelimiter } from '@core/hooks/useDelimiter';
-import { useHeaderMenuStore } from '@layout/stores/header-menu.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export default function ViewUser() {
@@ -47,13 +45,8 @@ export default function ViewUser() {
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const delimiter = useDelimiter();
   const navigate = useNavigate();
-  const setItemSelected = useHeaderMenuStore((state) => state.setHeaderMenuSelected);
   const { i18n, t } = useTranslation();
   const { id } = useParams();
-
-  useEffect(() => {
-    setItemSelected(HEADER_CONFIG.headerMenu[3].id);
-  }, [setItemSelected]);
 
   const {
     data: user,
