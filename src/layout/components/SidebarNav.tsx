@@ -5,6 +5,7 @@ import { Button } from '@core/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@core/components/ui/tooltip';
 // Components
 import { User } from '@layout/components/footer/User';
+import { Help } from '@layout/components/Help';
 // External imports
 import { DynamicIcon } from 'lucide-react/dynamic';
 import { Link } from 'react-router-dom';
@@ -20,8 +21,8 @@ import { useNavMenuStore } from '@layout/stores/nav-menu.service';
 export function SidebarNav() {
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
   const itemSelected = useNavMenuStore((state) => state.navMenuSelected);
-  const setItemSelected = useNavMenuStore((state) => state.setNavMenuSelected);
   const menuExpanded = useNavMenuStore((state) => state.navMenuExpanded);
+  const setItemSelected = useNavMenuStore((state) => state.setNavMenuSelected);
   const setMenuExpanded = useNavMenuStore((state) => state.setNavMenuExpanded);
   const { t } = useTranslation();
 
@@ -87,6 +88,9 @@ export function SidebarNav() {
             </TooltipProvider>
           ))}
         </nav>
+        <section className='p-5'>
+          <Help />
+        </section>
         <div className='border-t p-2'>
           <User />
         </div>
