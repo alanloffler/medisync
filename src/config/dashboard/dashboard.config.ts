@@ -22,16 +22,19 @@ export const DASHBOARD_CONFIG = {
     ],
     items: [
       {
+        _id: 2,
         content: 'dashboard.lastMonth',
         path: `${APP_CONFIG.appPrefix}/appointments`,
         title: 'headerMenu.appointments',
       },
       {
+        _id: 3,
         content: 'dashboard.newThisMonth',
         path: `${APP_CONFIG.appPrefix}/professionals`,
         title: 'headerMenu.professionals',
       },
       {
+        _id: 4,
         content: 'dashboard.newThisMonth',
         path: `${APP_CONFIG.appPrefix}/users`,
         title: 'headerMenu.users',
