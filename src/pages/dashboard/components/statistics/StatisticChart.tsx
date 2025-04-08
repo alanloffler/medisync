@@ -14,10 +14,12 @@ import { useTranslation } from 'react-i18next';
 import type { IStatisticChart, IChartDataProcessed, IChartMargin, IChartData, IChartDays } from '@dashboard/interfaces/statistic.interface';
 import { DASHBOARD_CONFIG } from '@config/dashboard/dashboard.config';
 import { cn } from '@lib/utils';
+import { useMediaQuery } from '@core/hooks/useMediaQuery';
 // Constants
 const days: IChartDays[] = DASHBOARD_CONFIG.statisticGroup.charts[0].days;
 const axisColor: string = '#f0f9ff';
-const bgColor: string = 'bg-sky-200';
+// const bgColor: string = 'bg-sky-200';
+const bgColor: string = 'bg-white';
 const darkColor: string = 'bg-sky-500';
 const darkTextColor: string = 'text-sky-500';
 const lightTextColor: string = 'text-sky-100';
@@ -27,8 +29,9 @@ const titleColor: string = 'text-white';
 // React component
 export function StatisticChart({ fetchChartData, height, labels, margin, options, path, title }: IStatisticChart) {
   const [daysAgo, setDaysAgo] = useState<number>(handleDaysAgo());
-  const navigate = useNavigate();
+  const isSmallDevice = useMediaQuery('only screen and (max-width : 767px)');
   const lineChartRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
   const { t } = useTranslation();
 
   function handleDaysAgo(): number {
@@ -168,11 +171,11 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
 
   return (
     <motion.section
-      className='rounded-lg border border-transparent'
+      className='h-full rounded-lg border border-transparent'
       initial='initial'
       animate='initial'
       variants={animation.item}
-      whileHover='animate'
+      whileHover={isSmallDevice ? '' : 'animate'}
     >
       <Card className={cn('h-full', bgColor)}>
         {title && (
@@ -196,13 +199,15 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
             </section>
           </CardHeader>
         )}
-        {data && data?.data?.length > 0 && (
+        {data && data?.data?.length > 0 ? (
           <motion.section
             className='cursor-pointer'
             id='line-chart'
             ref={lineChartRef}
             onClick={() => path && path !== '' && navigate(path)}
           ></motion.section>
+        ) : (
+          <InfoCard className='my-6' text={t('chart.dailyAppointments.warning')} variant='warning' />
         )}
       </Card>
     </motion.section>
