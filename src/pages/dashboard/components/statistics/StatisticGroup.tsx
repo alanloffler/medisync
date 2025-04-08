@@ -52,11 +52,9 @@ export function StatisticGroup() {
       <section className='grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4 lg:gap-8'>
         {/* <AppoFlowCard /> */}
         <Statistic
-          content={DASHBOARD_CONFIG.statisticGroup.items[0].content}
           error={apposError}
           isLoading={apposDataIsLoading}
-          path={DASHBOARD_CONFIG.statisticGroup.items[0].path}
-          title={DASHBOARD_CONFIG.statisticGroup.items[0].title}
+          item={DASHBOARD_CONFIG.statisticGroup.items[0]}
           value1={apposData?.data?.value1}
           value2={apposData?.data?.value2}
         >
@@ -65,11 +63,9 @@ export function StatisticGroup() {
           </div>
         </Statistic>
         <Statistic
-          content={DASHBOARD_CONFIG.statisticGroup.items[2].content}
           error={usersError}
           isLoading={usersDataIsLoading}
-          path={DASHBOARD_CONFIG.statisticGroup.items[2].path}
-          title={DASHBOARD_CONFIG.statisticGroup.items[2].title}
+          item={DASHBOARD_CONFIG.statisticGroup.items[2]}
           value1={usersData?.data?.value1}
           value2={usersData?.data?.value2}
         >
@@ -78,11 +74,9 @@ export function StatisticGroup() {
           </div>
         </Statistic>
         <Statistic
-          content={DASHBOARD_CONFIG.statisticGroup.items[1].content}
           error={professionalsError}
           isLoading={professionalsDataIsLoading}
-          path={DASHBOARD_CONFIG.statisticGroup.items[1].path}
-          title={DASHBOARD_CONFIG.statisticGroup.items[1].title}
+          item={DASHBOARD_CONFIG.statisticGroup.items[1]}
           value1={professionalsData?.data?.value1}
           value2={professionalsData?.data?.value2}
         >
