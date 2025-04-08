@@ -1,11 +1,20 @@
 // Imports
 import { APP_CONFIG } from '@config/app.config';
 import { cn } from '@lib/utils';
+// Interface
+interface IProps {
+  absolute?: boolean;
+  className?: string;
+}
 // React component
-export function Loading({ className }: { className?: string }) {
+export function Loading({ absolute, className }: IProps) {
   return (
     <div
-      className={cn('relative left-1/2 top-1/2 h-[100px] w-[100px] -translate-x-1/2 -translate-y-1/2 rounded-md bg-background shadow-sm', className)}
+      className={cn(
+        'left-1/2 top-1/2 h-[100px] w-[100px] -translate-x-1/2 -translate-y-1/2 rounded-md bg-background shadow-sm',
+        className,
+        absolute ? 'absolute' : 'relative',
+      )}
     >
       <div className='flex h-full w-full flex-col items-center justify-center gap-2'>
         <svg width={APP_CONFIG.loading.size} height={APP_CONFIG.loading.size} viewBox='0 0 24 24' className='fill-primary'>
