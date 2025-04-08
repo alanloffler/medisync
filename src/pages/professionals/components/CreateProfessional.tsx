@@ -24,6 +24,7 @@ import { PageHeader } from '@core/components/common/PageHeader';
 import { SelectPhoneArea } from '@core/components/common/SelectPhoneArea';
 import { WorkingDays } from '@professionals/components/common/WorkingDays';
 // External imports
+import { AxiosError } from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { spring, useAnimate } from 'motion/react';
 import { useEffect, useState, MouseEvent } from 'react';
@@ -74,7 +75,7 @@ export default function CreateProfessional() {
     isError: areasIsError,
     isLoading: areasIsLoading,
     isSuccess: areasIsSuccess,
-  } = useQuery<IResponse<IArea[]>, Error>({
+  } = useQuery<IResponse<IArea[]>, AxiosError<IResponse>>({
     queryKey: ['areas', 'find-all'],
     queryFn: async () => await AreaService.findAll(),
   });
@@ -86,9 +87,9 @@ export default function CreateProfessional() {
   useEffect(() => {
     if (areasIsError) {
       setDisabledSpec(true);
-      addNotification({ type: 'error', message: areasError.message });
+      addNotification({ type: 'error', message: areasError.response?.data.message });
     }
-  }, [addNotification, areasIsError, areasError?.message]);
+  }, [addNotification, areasError, areasIsError]);
 
   const {
     data: titles,
