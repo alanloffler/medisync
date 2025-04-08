@@ -105,7 +105,8 @@
         "day": "{{count}}d",
         "month": "{{count}}m",
         "year": "{{count}}a"
-      }
+      },
+      "warning": "Sin datos para el gráfico"
     }
   },
   "dashboard": {
