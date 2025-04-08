@@ -67,7 +67,7 @@ export function SelectSpecialties({ callback, clear, dropdownPlaceholder, setDro
   }, [addNotification, error?.message, isError, setDropdownPlaceholder, t]);
 
   return (
-    <section className='flex flex-row items-center justify-start space-x-3 py-3'>
+    <section className='flex flex-row items-center justify-start space-x-3 pb-3'>
       <div className='flex items-center space-x-2 text-sm font-medium text-slate-500'>
         <Filter size={17} strokeWidth={1.5} />
         <span>{t('search.filter.by')}</span>
@@ -76,7 +76,7 @@ export function SelectSpecialties({ callback, clear, dropdownPlaceholder, setDro
         <section className='flex flex-row items-center space-x-3'>
           <DropdownMenuTrigger
             disabled={!areas?.data.length}
-            className='flex min-h-8 w-fit items-center space-x-2 rounded-md bg-white px-2.5 py-1 text-xsm font-medium shadow-sm'
+            className='flex min-h-8 w-fit items-center space-x-2 rounded-md bg-white px-2.5 py-1 text-xsm shadow-sm'
           >
             {isLoading && <LoadingText suffix='...' text={t('loading.default')} />}
             {isError && <InfoCard size='xsm' text={dropdownPlaceholder} type='flat-colored' variant='error' />}
