@@ -24,6 +24,7 @@ import { PROFESSIONALS_CONFIG as PROF_CONFIG } from '@config/professionals/profe
 import { UtilsString } from '@core/services/utils/string.service';
 import { motion } from '@core/services/motion.service';
 import { useDebounce } from '@core/hooks/useDebounce';
+import { useNavMenuStore } from '@layout/stores/nav-menu.service';
 // React component
 export default function Professionals() {
   const [debounceTime, setDebounceTime] = useState<number>(APP_CONFIG.debounceTime);
@@ -36,7 +37,12 @@ export default function Professionals() {
   const [reloadScope, reloadAnimation] = useAnimate();
   const debouncedSearch = useDebounce<IProfessionalSearch>(search, debounceTime);
   const navigate = useNavigate();
+  const setItemSelected = useNavMenuStore((state) => state.setNavMenuSelected);
   const { t } = useTranslation();
+
+  useEffect(() => {
+    setItemSelected(3);
+  }, [setItemSelected]);
 
   const handleSearchByProfessional = useCallback(
     (event: ChangeEvent<HTMLInputElement>): void => {
