@@ -51,6 +51,7 @@ import { generateWeekOfWorkingDays } from '@professionals/utils/week-working-day
 import { professionalSchema } from '@professionals/schemas/professional.schema';
 import { useNavMenuStore } from '@layout/stores/nav-menu.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
+import { IError } from '@core/interfaces/error.interface';
 // React component
 export default function CreateProfessional() {
   const [disabledSpec, setDisabledSpec] = useState<boolean>(true);
@@ -96,14 +97,14 @@ export default function CreateProfessional() {
     error: titlesError,
     isError: titlesIsError,
     isLoading: titlesIsLoading,
-  } = useQuery<IResponse<ITitle[]>, Error>({
+  } = useQuery<IResponse<ITitle[]>, AxiosError<IError>>({
     queryKey: ['titles', 'find-all'],
     queryFn: async () => await TitleService.findAll(),
   });
 
   useEffect(() => {
-    if (titlesIsError) addNotification({ type: 'error', message: titlesError.message });
-  }, [addNotification, titlesIsError, titlesError?.message]);
+    if (titlesIsError) addNotification({ message: titlesError.response?.data.message, type: 'error' });
+  }, [addNotification, titlesError, titlesIsError]);
 
   useEffect(() => {
     const daysOfWeek: IWorkingDay[] = generateWeekOfWorkingDays();
@@ -393,7 +394,7 @@ export default function CreateProfessional() {
                                     <SelectValue placeholder={t('placeholder.title')} />
                                   )}
                                 </SelectTrigger>
-                                {titlesIsError && <FormError message={titlesError.message} />}
+                                {titlesIsError && <FormError message={titlesError.response?.data.message} />}
                               </div>
                             </FormControl>
                             <FormMessage />
