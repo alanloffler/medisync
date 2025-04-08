@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import type { IStatistic } from '@dashboard/interfaces/statistic.interface';
 import { useMediaQuery } from '@core/hooks/useMediaQuery';
 // React component
-export function Statistic({ children, content, error, isLoading, path, title, value1, value2 }: IStatistic) {
+export function Statistic({ children, error, isLoading, item, value1, value2 }: IStatistic) {
   const isSmallDevice = useMediaQuery('only screen and (max-width : 767px)');
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -27,7 +27,9 @@ export function Statistic({ children, content, error, isLoading, path, title, va
   return (
     <motion.button
       className='rounded-lg'
-      onClick={() => path && navigate(path)}
+      onClick={() => {
+        item.path && navigate(item.path);
+      }}
       initial='initial'
       animate='initial'
       whileHover={isSmallDevice ? '' : 'animate'}
@@ -41,12 +43,12 @@ export function Statistic({ children, content, error, isLoading, path, title, va
         ) : (
           <>
             <section className='flex flex-row items-center justify-between p-4 pb-2'>
-              <span className='text-xs font-semibold uppercase leading-none text-slate-400'>{t(title)}</span>
+              <span className='text-xs font-semibold uppercase leading-none text-slate-400'>{t(item.title)}</span>
               <div>{children}</div>
             </section>
             <CardContent className='space-y-2 p-4 pt-0'>
               <CountUp from={0} to={Number(value1)} className='flex flex-row items-center text-3xl font-bold text-dark-default' />
-              <p className='text-left text-xs text-dark-default'>{t(content, { count: Number(value2) })}</p>
+              <p className='text-left text-xs text-dark-default'>{t(item.content, { count: Number(value2) })}</p>
             </CardContent>
           </>
         )}
