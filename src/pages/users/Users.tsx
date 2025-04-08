@@ -13,7 +13,7 @@ import { UsersDataTable } from '@users/components/UsersDataTable';
 // External imports
 import { Link, useNavigate } from 'react-router-dom';
 import { type AnimationPlaybackControls, useAnimate } from 'motion/react';
-import { type ChangeEvent, useState } from 'react';
+import { type ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { IUserSearch } from '@users/interfaces/user-search.interface';
@@ -24,6 +24,7 @@ import { USER_CONFIG } from '@config/users/users.config';
 import { motion } from '@core/services/motion.service';
 import { useAuth } from '@core/auth/useAuth';
 import { useDebounce } from '@core/hooks/useDebounce';
+import { useNavMenuStore } from '@layout/stores/nav-menu.service';
 // React component
 export default function Users() {
   const [openDialogRemovedUsers, setOpenDialogRemovedUsers] = useState<boolean>(false);
@@ -35,8 +36,13 @@ export default function Users() {
   const [removedUsersScope, removedUsersAnimation] = useAnimate();
   const debouncedSearch = useDebounce<IUserSearch>(search, APP_CONFIG.debounceTime);
   const navigate = useNavigate();
+  const setItemSelected = useNavMenuStore((state) => state.setNavMenuSelected);
   const { t } = useTranslation();
   const { user } = useAuth();
+
+  useEffect(() => {
+    setItemSelected(4);
+  }, [setItemSelected]);
 
   function handleSearchByName(event: ChangeEvent<HTMLInputElement>): void {
     setSearch({ value: event.target.value, type: EUserSearch.NAME });
