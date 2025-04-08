@@ -27,6 +27,7 @@ import { EAppointmentSearch, type IAppointmentSearch } from '@appointments/inter
 import { cn } from '@lib/utils';
 import { motion } from '@core/services/motion.service';
 import { useDebounce } from '@core/hooks/useDebounce';
+import { useNavMenuStore } from '@layout/stores/nav-menu.service';
 // Constants
 const defaultAppoSearch: IAppointmentSearch[] = [
   { type: EAppointmentSearch.NAME, value: '' },
@@ -42,7 +43,12 @@ export default function Appointments() {
   const [search, setSearch] = useState<IAppointmentSearch[]>(defaultAppoSearch);
   const debouncedSearch = useDebounce<IAppointmentSearch[]>(search, APP_CONFIG.debounceTime);
   const navigate = useNavigate();
+  const setItemSelected = useNavMenuStore((state) => state.setNavMenuSelected);
   const { i18n, t } = useTranslation();
+
+  useEffect(() => {
+    setItemSelected(2);
+  }, [setItemSelected]);
 
   useEffect(() => {
     const search: IAppointmentSearch[] = [
