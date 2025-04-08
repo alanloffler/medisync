@@ -21,7 +21,6 @@ export function SidebarNav() {
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
   const itemSelected = useNavMenuStore((state) => state.navMenuSelected);
   const menuExpanded = useNavMenuStore((state) => state.navMenuExpanded);
-  const setItemSelected = useNavMenuStore((state) => state.setNavMenuSelected);
   const setMenuExpanded = useNavMenuStore((state) => state.setNavMenuExpanded);
   const { t } = useTranslation();
 
@@ -86,7 +85,6 @@ export function SidebarNav() {
                       menuExpanded ? '' : 'justify-center',
                       itemSelected === item.id && 'bg-accent',
                     )}
-                    onClick={() => setItemSelected(item.id)}
                   >
                     <DynamicIcon name={`${item?.icon}` as 'home'} size={20} />
                     {menuExpanded && (
