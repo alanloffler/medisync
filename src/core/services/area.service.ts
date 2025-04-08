@@ -8,7 +8,7 @@ export class AreaService {
 
   public static async findAll(): Promise<IResponse<IArea[]>> {
     const path: string = `${this.API_URL}/areas`;
-    const url: URL = new URL(path);
+    const url: URL = UtilsUrl.create(path);
 
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
