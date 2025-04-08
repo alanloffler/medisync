@@ -51,6 +51,7 @@ import { UtilsString } from '@core/services/utils/string.service';
 import { motion } from '@core/services/motion.service';
 import { professionalSchema } from '@professionals/schemas/professional.schema';
 import { useNotificationsStore } from '@core/stores/notifications.store';
+import { AxiosError } from 'axios';
 // React component
 export default function UpdateProfessional() {
   const [_area, setArea] = useState<number | undefined>();
@@ -102,7 +103,7 @@ export default function UpdateProfessional() {
     isError: areasIsError,
     isLoading: areasIsLoading,
     isSuccess: areasIsSuccess,
-  } = useQuery<IResponse<IArea[]>, Error>({
+  } = useQuery<IResponse<IArea[]>, AxiosError<IResponse>>({
     queryKey: ['areas', 'find-all'],
     queryFn: async () => await AreaService.findAll(),
   });
@@ -114,9 +115,9 @@ export default function UpdateProfessional() {
   useEffect(() => {
     if (areasIsError) {
       setDisabledSpec(true);
-      addNotification({ type: 'error', message: areasError.message });
+      addNotification({ message: areasError.response?.data.message, type: 'error' });
     }
-  }, [addNotification, areasIsError, areasError?.message]);
+  }, [addNotification, areasError, areasIsError]);
 
   const {
     data: titles,
@@ -322,7 +323,7 @@ export default function UpdateProfessional() {
                                       <SelectValue placeholder={t('placeholder.area')} />
                                     )}
                                   </SelectTrigger>
-                                  {areasIsError && <FormError message={areasError.message} />}
+                                  {areasIsError && <FormError message={areasError.response?.data.message} />}
                                 </div>
                               </FormControl>
                               <FormMessage />
