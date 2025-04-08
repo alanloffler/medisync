@@ -22,6 +22,7 @@ const CreateProfessional = lazy(() => import('./pages/professionals/components/C
 const UpdateProfessional = lazy(() => import('./pages/professionals/components/UpdateProfessional'));
 const ViewProfessional = lazy(() => import('./pages/professionals/components/ViewProfessional'));
 
+const NotFound = lazy(() => import('./layout/components/NotFound'));
 const Settings = lazy(() => import('./pages/settings/Settings'));
 
 const Users = lazy(() => import('./pages/users/Users'));
@@ -61,7 +62,7 @@ export default function App() {
         </Route>
         <Route path="/microsite/professional/:id" element={<Suspense fallback={<Loading />}><ProfessionalMicrosite /></Suspense>}/>
         <Route path="/" element={<Suspense fallback={<Loading />}><Login /></Suspense>}/>
-        <Route path="*" element={<>Not found 404</>} />
+        <Route path="*" element={<Suspense fallback={<Loading />}><NotFound /></Suspense>} />
       </Routes>
     </BrowserRouter>
   );
