@@ -18,6 +18,7 @@ import { EDialogAction } from '@appointments/enums/dialog.enum';
 import { EUserSearch, ESortingKeys } from '@users/enums/user-search.enum';
 import { RESERVE_APPOINTMENT_CONFIG as RA_CONFIG } from '@config/appointments/reserve-appointments.config';
 import { UtilsString } from '@core/services/utils/string.service';
+import { useNavMenuStore } from '@layout/stores/nav-menu.service';
 import { useReserveFilters } from '@appointments/hooks/useReserveFilters';
 // Constants
 const DISABLED_DAYS: number[] = RA_CONFIG.calendar.disabledDays;
@@ -37,6 +38,11 @@ export default function ReserveAppointments() {
   const { dateParam, professionalParam, clearFilters, setFilters } = useReserveFilters();
   const { i18n, t } = useTranslation();
   const selectedLocale: string = i18n.resolvedLanguage || i18n.language;
+  const setItemSelected = useNavMenuStore((state) => state.setNavMenuSelected);
+
+  useEffect(() => {
+    setItemSelected(2);
+  }, [setItemSelected]);
 
   // Initialize from URL parameters
   useEffect(() => {
