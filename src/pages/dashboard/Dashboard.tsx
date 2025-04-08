@@ -3,8 +3,18 @@ import { CategoriesShortcuts } from '@dashboard/components/shortcuts/CategoriesS
 import { LatestAppos } from '@dashboard/components/latest-appos/LatestAppos';
 import { LatestUsers } from '@dashboard/components/latest-users/LatestUsers';
 import { StatisticGroup } from '@dashboard/components/statistics/StatisticGroup';
+// External imports
+import { useEffect } from 'react';
+// Imports
+import { useNavMenuStore } from '@layout/stores/nav-menu.service';
 // React component
 export default function Dashboard() {
+  const setItemSelected = useNavMenuStore((state) => state.setNavMenuSelected);
+
+  useEffect(() => {
+    setItemSelected(1);
+  }, [setItemSelected]);
+
   return (
     <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8'>
       {/* Section: Statistic Group */}
