@@ -5,7 +5,7 @@ import { cn } from '@lib/utils';
 export function Loading({ className }: { className?: string }) {
   return (
     <div
-      className={cn('absolute left-1/2 top-1/2 h-[100px] w-[100px] -translate-x-1/2 -translate-y-1/2 rounded-md bg-background shadow-sm', className)}
+      className={cn('relative left-1/2 top-1/2 h-[100px] w-[100px] -translate-x-1/2 -translate-y-1/2 rounded-md bg-background shadow-sm', className)}
     >
       <div className='flex h-full w-full flex-col items-center justify-center gap-2'>
         <svg width={APP_CONFIG.loading.size} height={APP_CONFIG.loading.size} viewBox='0 0 24 24' className='fill-primary'>
