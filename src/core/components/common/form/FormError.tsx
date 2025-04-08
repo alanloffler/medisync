@@ -5,7 +5,7 @@ import { useAnimate } from 'motion/react';
 import { useEffect } from 'react';
 // Interface
 interface IProps {
-  message: string;
+  message?: string;
 }
 // React component
 export function FormError({ message }: IProps) {
