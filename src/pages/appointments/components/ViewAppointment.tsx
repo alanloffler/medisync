@@ -26,6 +26,7 @@ import { EmailApiService } from '@email/services/email.service';
 import { UtilsString } from '@core/services/utils/string.service';
 import { VIEW_APPOINTMENT_CONFIG as VA_CONFIG } from '@config/appointments/view-appointment.config';
 import { WhatsappApiService } from '@whatsapp/services/whatsapp-api.service';
+import { useNavMenuStore } from '@layout/stores/nav-menu.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export default function ViewAppointment() {
@@ -33,8 +34,13 @@ export default function ViewAppointment() {
   const [pdfIsGenerating, setPdfIsGenerating] = useState<boolean>(false);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const pdfRef = useRef<HTMLDivElement>(null);
+  const setItemSelected = useNavMenuStore((state) => state.setNavMenuSelected);
   const { i18n, t } = useTranslation();
   const { id } = useParams();
+
+  useEffect(() => {
+    setItemSelected(2);
+  }, [setItemSelected]);
 
   const {
     data: appointment,
