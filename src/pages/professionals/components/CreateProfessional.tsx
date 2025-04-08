@@ -87,7 +87,7 @@ export default function CreateProfessional() {
   useEffect(() => {
     if (areasIsError) {
       setDisabledSpec(true);
-      addNotification({ type: 'error', message: areasError.response?.data.message });
+      addNotification({ message: areasError.response?.data.message, type: 'error' });
     }
   }, [addNotification, areasError, areasIsError]);
 
@@ -317,7 +317,7 @@ export default function CreateProfessional() {
                                     <SelectValue placeholder={t('placeholder.area')} />
                                   )}
                                 </SelectTrigger>
-                                {areasIsError && <FormError message={areasError.message} />}
+                                {areasIsError && <FormError message={areasError.response?.data.message} />}
                               </div>
                             </FormControl>
                             <FormMessage />
