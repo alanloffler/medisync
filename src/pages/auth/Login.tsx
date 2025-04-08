@@ -23,9 +23,11 @@ import { loginSchema } from '@auth/schemas/login.schema';
 // import { useAuth } from '@core/auth/useAuth';
 import { AuthService } from './services/auth.service';
 import { APP_CONFIG } from '@config/app.config';
+import { useNavMenuStore } from '@layout/stores/nav-menu.service';
 // React component
 export default function Login() {
   const navigate = useNavigate();
+  const setItemSelected = useNavMenuStore((state) => state.setNavMenuSelected);
   // const { login } = useAuth();
   const { t } = useTranslation();
 
@@ -49,6 +51,7 @@ export default function Login() {
     mutationFn: async (formData) => await AuthService.login({ email: formData.email, password: formData.password }),
     onSuccess: () => {
       navigate(APP_CONFIG.appPrefix);
+      setItemSelected(1);
     },
   });
 
