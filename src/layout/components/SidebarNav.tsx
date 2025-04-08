@@ -29,18 +29,19 @@ export function SidebarNav() {
   return (
     <>
       {/* Mobile menu button */}
-      <Button
-        variant='ghost'
-        size='icon'
-        className='fixed left-3 top-3 z-50 md:hidden'
-        onClick={() => {
-          setMobileOpen(!mobileOpen);
-          setMenuExpanded(true);
-        }}
-      >
-        <Menu className='h-5 w-5' />
-        <span className='sr-only'>Toggle menu</span>
-      </Button>
+      <div className='fixed left-0 top-0 z-50 flex h-16 w-52 border-b md:hidden'>
+        <Button
+          variant='ghost'
+          className='relative left-3 top-3.5 h-9 w-9 p-0'
+          onClick={() => {
+            setMobileOpen(!mobileOpen);
+            setMenuExpanded(true);
+          }}
+        >
+          <Menu className='h-5 w-5' />
+          <span className='sr-only'>Toggle menu</span>
+        </Button>
+      </div>
       {/* Sidebar navigation */}
       <div
         className={cn(
@@ -49,7 +50,7 @@ export function SidebarNav() {
           mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0',
         )}
       >
-        <div className='hidden h-16 items-center justify-between border-b px-4 sm:flex'>
+        <div className='hidden h-16 items-center justify-between border-b px-4 md:flex'>
           <Link to={`${APP_CONFIG.appPrefix}`} className='flex items-center gap-2 font-semibold md:text-base'>
             <Package2 className='h-6 w-6' />
             {menuExpanded && <span>{t('appName')}</span>}
@@ -59,7 +60,7 @@ export function SidebarNav() {
             <span className='sr-only'>{menuExpanded ? 'Collapse sidebar' : 'Expand sidebar'}</span>
           </Button>
         </div>
-        <nav className='mt-16 flex-1 space-y-1 border-t p-2 sm:mt-0 sm:border-t-0'>
+        <nav className={cn('mt-16 flex-1 space-y-1 p-2 md:mt-0 md:border-t-0')}>
           {HEADER_CONFIG.headerMenu.map((item) => (
             <TooltipProvider delayDuration={0.3} key={item.id}>
               <Tooltip key={item.path}>
