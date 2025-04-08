@@ -8,7 +8,7 @@ export class TitleService {
 
   public static async findAll(): Promise<IResponse<ITitle[]>> {
     const path: string = `${this.API_URL}/titles`;
-    const url: URL = new URL(path);
+    const url: URL = UtilsUrl.create(path);
 
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
