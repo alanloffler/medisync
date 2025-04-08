@@ -16,6 +16,7 @@ import {
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingText } from '@core/components/common/LoadingText';
 // External imports
+import { AxiosError } from 'axios';
 import { spring, useAnimate } from 'motion/react';
 import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -28,15 +29,15 @@ import { AreaService } from '@core/services/area.service';
 import { UtilsString } from '@core/services/utils/string.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // Interface
-interface ISelectSpecialties {
+interface IProps {
   callback: (value: ISpecialization) => void;
   clear: () => void;
-  dropdownPlaceholder: string;
-  setDropdownPlaceholder: (placeholder: string) => void;
+  dropdownPlaceholder?: string;
+  setDropdownPlaceholder: (placeholder?: string) => void;
   specSelected: string | undefined;
 }
 // React component
-export function SelectSpecialties({ callback, clear, dropdownPlaceholder, setDropdownPlaceholder, specSelected }: ISelectSpecialties) {
+export function SelectSpecialties({ callback, clear, dropdownPlaceholder, setDropdownPlaceholder, specSelected }: IProps) {
   const [specializationsScope, specializationsAnimation] = useAnimate();
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const { t } = useTranslation();
@@ -47,7 +48,7 @@ export function SelectSpecialties({ callback, clear, dropdownPlaceholder, setDro
     isError,
     isLoading,
     isSuccess,
-  } = useQuery<IResponse<IArea[]>>({
+  } = useQuery<IResponse<IArea[]>, AxiosError<IResponse>>({
     queryKey: ['areas', 'findAll'],
     queryFn: async () => await AreaService.findAll(),
   });
@@ -62,9 +63,9 @@ export function SelectSpecialties({ callback, clear, dropdownPlaceholder, setDro
   useEffect(() => {
     if (isError) {
       setDropdownPlaceholder(t('error.default'));
-      addNotification({ type: 'error', message: error?.message });
+      addNotification({ type: 'error', message: error?.response?.data.message });
     }
-  }, [addNotification, error?.message, isError, setDropdownPlaceholder, t]);
+  }, [addNotification, error, isError, setDropdownPlaceholder, t]);
 
   return (
     <section className='flex flex-row items-center justify-start space-x-3 pb-3'>
