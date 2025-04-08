@@ -13,7 +13,7 @@ import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
 import { SelectPhoneArea } from '@core/components/common/SelectPhoneArea';
 // External imports
-import { type MouseEvent, useState } from 'react';
+import { type MouseEvent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
@@ -30,12 +30,18 @@ import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 import { userSchema } from '@users/schemas/user.schema';
+import { useNavMenuStore } from '@layout/stores/nav-menu.service';
 // React component
 export default function CreateUser() {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const navigate = useNavigate();
+  const setItemSelected = useNavMenuStore((state) => state.setNavMenuSelected);
   const { t } = useTranslation();
+
+  useEffect(() => {
+    setItemSelected(4);
+  }, [setItemSelected]);
 
   const defaultValues = {
     areaCode: undefined,
