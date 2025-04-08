@@ -292,7 +292,6 @@ export default function CreateProfessional() {
                   <FormHeader step={1} title={t('cardTitle.professionalData')} />
                   {/* Form fields: area and specialization */}
                   <section className='grid grid-cols-1 gap-6 md:grid-cols-2'>
-                    {/* <SelectSpecialtiesForm formControl={createForm.control} callback={handleChangeArea} /> */}
                     <FormField
                       control={createForm.control}
                       name='area'
