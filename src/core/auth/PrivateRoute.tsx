@@ -14,7 +14,7 @@ interface IProps {
 export function PrivateRoute({ children, roles }: IProps) {
   const { user, loading } = useAuth();
 
-  if (loading) return <Loading />;
+  if (loading) return <Loading absolute />;
 
   if (!user) return <Navigate to='/' />;
 
