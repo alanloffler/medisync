@@ -48,6 +48,7 @@ import { TitleService } from '@core/services/title.service';
 import { UtilsString } from '@core/services/utils/string.service';
 import { generateWeekOfWorkingDays } from '@professionals/utils/week-working-days.util';
 import { professionalSchema } from '@professionals/schemas/professional.schema';
+import { useNavMenuStore } from '@layout/stores/nav-menu.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export default function CreateProfessional() {
@@ -60,7 +61,12 @@ export default function CreateProfessional() {
   const [dropdownScope, dropdownAnimation] = useAnimate();
   const addNotification = useNotificationsStore((state) => state.addNotification);
   const navigate = useNavigate();
+  const setItemSelected = useNavMenuStore((state) => state.setNavMenuSelected);
   const { t } = useTranslation();
+
+  useEffect(() => {
+    setItemSelected(3);
+  }, [setItemSelected]);
 
   const {
     data: areas,
