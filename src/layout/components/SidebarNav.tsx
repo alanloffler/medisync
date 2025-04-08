@@ -13,7 +13,6 @@ import { motion } from 'motion/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 // Imports
-import { APP_CONFIG } from '@config/app.config';
 import { HEADER_CONFIG } from '@config/layout/header.config';
 import { cn } from '@lib/utils';
 import { useNavMenuStore } from '@layout/stores/nav-menu.service';
@@ -50,15 +49,30 @@ export function SidebarNav() {
           mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0',
         )}
       >
-        <div className='hidden h-16 items-center justify-between border-b px-4 md:flex'>
-          <Link to={`${APP_CONFIG.appPrefix}`} className='flex items-center gap-2 font-semibold md:text-base'>
-            <Package2 className='h-6 w-6' />
-            {menuExpanded && <span>{t('appName')}</span>}
-          </Link>
-          <Button variant='ghost' size='icon' className={cn('ml-auto', menuExpanded ? '' : 'mx-auto')} onClick={() => setMenuExpanded(!menuExpanded)}>
-            {menuExpanded ? <ChevronLeft className='h-5 w-5' /> : <ChevronRight className='h-5 w-5' />}
-            <span className='sr-only'>{menuExpanded ? 'Collapse sidebar' : 'Expand sidebar'}</span>
-          </Button>
+        <div className={cn('hidden h-16 items-center border-b md:flex', menuExpanded ? 'px-4' : 'pl-[8px]')}>
+          <button
+            onClick={() => setMenuExpanded(!menuExpanded)}
+            className={cn(
+              'flex w-full items-center font-semibold md:text-base',
+              menuExpanded ? 'justify-between' : 'justify-center hover:text-primary',
+            )}
+          >
+            <div className='item-center flex gap-2'>
+              <Package2 className='h-6 w-6' />
+              {menuExpanded && (
+                <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.1, delay: 0.2 }}>
+                  {t('appName')}
+                </motion.span>
+              )}
+            </div>
+            {menuExpanded ? (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.1, delay: 0.3 }}>
+                <ChevronLeft className='h-5 w-5' />
+              </motion.div>
+            ) : (
+              <ChevronRight className='h-5 w-5' />
+            )}
+          </button>
         </div>
         <nav className={cn('mt-16 flex-1 space-y-1 p-2 md:mt-0 md:border-t-0')}>
           {HEADER_CONFIG.headerMenu.map((item) => (
@@ -95,7 +109,7 @@ export function SidebarNav() {
         </div>
       </div>
       {/* Backdrop for mobile */}
-      {mobileOpen && <div className='fixed inset-0 z-30 bg-background/80 backdrop-blur-sm md:hidden' onClick={() => setMobileOpen(false)} />}
+      {mobileOpen && <div className='fixed inset-0 z-30 bg-slate-50/80 backdrop-blur-[2px] md:hidden' onClick={() => setMobileOpen(false)} />}
     </>
   );
 }
