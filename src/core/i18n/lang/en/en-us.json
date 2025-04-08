@@ -415,6 +415,7 @@
     "clearFilters": "Clear filters",
     "console": "Console",
     "delete": "Delete",
+    "deleteIrreversible": "Irreversible delete",
     "deleteUser": "Delete patient",
     "details": "See details",
     "edit": "Edit",
