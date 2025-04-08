@@ -78,7 +78,7 @@ export function StatusSelect({ appointment, className, mode, onStatusChange, sho
     if (mode === 'update') {
       setItemSelected(status);
       mutate({ professional: appointment.professional._id, status });
-      onStatusChange(appointment._id, status);
+      if (onStatusChange) onStatusChange(appointment._id, status);
     }
   }
 
