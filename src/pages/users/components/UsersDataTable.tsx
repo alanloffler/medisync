@@ -19,6 +19,8 @@ import {
 } from '@tanstack/react-table';
 // Components
 import { DBCountUsers } from '@users/components/common/DBCountUsers';
+import { DialogDelete } from '@users/components/common/DialogDelete';
+import { DialogRemove } from '@users/components/common/DialogRemove';
 import { Id } from '@core/components/common/ui/Id';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
@@ -50,8 +52,6 @@ import { useAuth } from '@core/auth/useAuth';
 import { useDelimiter } from '@core/hooks/useDelimiter';
 import { useMediaQuery } from '@core/hooks/useMediaQuery';
 import { useNotificationsStore } from '@core/stores/notifications.store';
-import { DialogDelete } from './common/DialogDelete';
-import { DialogRemove } from './common/DialogRemove';
 // Default values for pagination and sorting
 const defaultSorting: SortingState = [{ id: USER_CONFIG.table.defaultSortingId, desc: USER_CONFIG.table.defaultSortingType }];
 const defaultPagination: PaginationState = { pageIndex: 0, pageSize: USER_CONFIG.table.defaultPageSize };
@@ -270,7 +270,7 @@ export function UsersDataTable({ reload, search }: IDataTableUsers) {
                 setOpenDialogRemove(true);
               }}
               className='hover:bg-red-100/75 hover:text-red-400 [&_svg]:fill-red-100/75 [&_svg]:stroke-red-400'
-              tooltip='Caution deletion'
+              tooltip={t('tooltip.deleteIrreversible')}
             >
               <CircleX size={17} strokeWidth={1.5} />
             </TableButton>
