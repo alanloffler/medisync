@@ -328,6 +328,11 @@
           "title3": "Select appointment"
         }
       }
+    },
+    "notFound": {
+      "title": "Page not found",
+      "description": "Sorry, we couldn’t find the page you’re looking for",
+      "button": "Go back app"
     }
   },
   "statistics": {

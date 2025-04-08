@@ -328,6 +328,11 @@
           "title3": "Seleccione turno"
         }
       }
+    },
+    "notFound": {
+      "title": "Página no encontrada",
+      "description": "Lo sentimos, no pudimos encontrar la página que buscas",
+      "button": "Volver a la aplicación"
     }
   },
   "statistics": {
