@@ -1,4 +1,5 @@
 // Icons: https://lucide.dev/icons/
+import { DynamicIcon } from 'lucide-react/dynamic';
 import { ChevronLeft, ChevronRight, Menu, Package2 } from 'lucide-react';
 // External components
 import { Button } from '@core/components/ui/button';
@@ -7,7 +8,6 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@core/
 import { User } from '@layout/components/footer/User';
 import { Help } from '@layout/components/Help';
 // External imports
-import { DynamicIcon } from 'lucide-react/dynamic';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { useState } from 'react';
@@ -21,6 +21,7 @@ export function SidebarNav() {
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
   const itemSelected = useNavMenuStore((state) => state.navMenuSelected);
   const menuExpanded = useNavMenuStore((state) => state.navMenuExpanded);
+  const setItemSelected = useNavMenuStore((state) => state.setNavMenuSelected);
   const setMenuExpanded = useNavMenuStore((state) => state.setNavMenuExpanded);
   const { t } = useTranslation();
 
@@ -85,6 +86,7 @@ export function SidebarNav() {
                       menuExpanded ? '' : 'justify-center',
                       itemSelected === item.id && 'bg-accent',
                     )}
+                    onClick={() => setItemSelected(item.id)}
                   >
                     <DynamicIcon name={`${item?.icon}` as 'home'} size={20} />
                     {menuExpanded && (
