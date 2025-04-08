@@ -3,13 +3,18 @@ import type { ReactNode } from 'react';
 
 export interface IStatistic {
   children: ReactNode;
-  content: string;
   error?: Error | null;
   isLoading?: boolean;
-  path?: string;
-  title: string;
+  item: IStatisticItem;
   value1?: string;
   value2?: string;
+}
+
+export interface IStatisticItem {
+  _id: number;
+  content: string;
+  path: string;
+  title: string;
 }
 
 export interface IStatisticChart {
