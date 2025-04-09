@@ -8,10 +8,12 @@ import { ScrollArea } from '@core/components/ui/scroll-area';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingText } from '@core/components/common/LoadingText';
 // External imports
+import { AxiosError } from 'axios';
 import { ChangeEvent, memo, useCallback, useEffect, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
+import type { IError } from '@core/interfaces/error.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { ITableManager } from '@core/interfaces/table.interface';
 import type { IUser } from '@users/interfaces/user.interface';
@@ -22,6 +24,7 @@ import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
 import { cn } from '@lib/utils';
 import { useDebounce } from '@core/hooks/useDebounce';
+import { useNotificationsStore } from '@core/stores/notifications.store';
 // Interface
 interface IUsersComboData {
   count: number;
@@ -47,6 +50,7 @@ export function UsersCombo({ className, placeholder, searchBy, searchResult, sor
   const DEBOUNCE_TIME: number = APP_CONFIG.debounceTime ?? 500;
   const [openCombobox, setOpenCombobox] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
+  const addNotification = useNotificationsStore((state) => state.addNotification);
   const debouncedSearch: string = useDebounce<string>(search, DEBOUNCE_TIME);
   const { i18n, t } = useTranslation();
 
@@ -75,9 +79,14 @@ export function UsersCombo({ className, placeholder, searchBy, searchResult, sor
     isError,
     isPending,
     isSuccess,
-  } = useMutation<IResponse<IUsersComboData>, Error, IVars>({
+  } = useMutation<IResponse<IUsersComboData>, AxiosError<IError>, IVars>({
     mutationKey: ['searchUsersBy', debouncedSearch],
     mutationFn: async (vars) => await UserApiService.searchUsersBy(vars.search, vars.tableManager, vars.skipItems),
+    onError: (error) =>
+      addNotification({
+        message: error.response?.data.message,
+        type: error.response?.data.statusCode === 404 ? 'warning' : 'error',
+      }),
   });
 
   useEffect(() => {
@@ -124,7 +133,14 @@ export function UsersCombo({ className, placeholder, searchBy, searchResult, sor
         <section className='absolute mt-9 flex min-w-[50%] flex-row text-xsm font-normal'>
           <ScrollArea className='mt-1 max-h-40 w-full overflow-auto rounded-md border bg-popover p-2 shadow-md'>
             {isPending && <LoadingText text={t('search.searching.users')} suffix='...' className='text-left' />}
-            {isError && <InfoCard className='mx-0' text={error.message} type='flat' variant='error' />}
+            {isError && (
+              <InfoCard
+                className='mx-0'
+                text={error.response?.data.message}
+                type='flat'
+                variant={error.response?.data.statusCode === 404 ? 'warning' : 'error'}
+              />
+            )}
             {isSuccess &&
               users.data.data.length > 0 &&
               users.data.data.map((user) => (
