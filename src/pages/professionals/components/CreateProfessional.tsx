@@ -35,6 +35,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 // Imports
 import type { IArea } from '@core/interfaces/area.interface';
+import type { IError } from '@core/interfaces/error.interface';
 import type { IProfessional } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { ISpecialization } from '@core/interfaces/specialization.interface';
@@ -51,7 +52,6 @@ import { generateWeekOfWorkingDays } from '@professionals/utils/week-working-day
 import { professionalSchema } from '@professionals/schemas/professional.schema';
 import { useNavMenuStore } from '@layout/stores/nav-menu.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
-import { IError } from '@core/interfaces/error.interface';
 // React component
 export default function CreateProfessional() {
   const [disabledSpec, setDisabledSpec] = useState<boolean>(true);
@@ -76,7 +76,7 @@ export default function CreateProfessional() {
     isError: areasIsError,
     isLoading: areasIsLoading,
     isSuccess: areasIsSuccess,
-  } = useQuery<IResponse<IArea[]>, AxiosError<IResponse>>({
+  } = useQuery<IResponse<IArea[]>, AxiosError<IError>>({
     queryKey: ['areas', 'find-all'],
     queryFn: async () => await AreaService.findAll(),
   });
