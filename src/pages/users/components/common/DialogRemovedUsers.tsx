@@ -9,10 +9,10 @@ import { AuthBadge } from '@core/auth/components/AuthBadge';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
-import { useState, type Dispatch, type SetStateAction } from 'react';
 import { AxiosError } from 'axios';
 import { format } from '@formkit/tempo';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState, type Dispatch, type SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
 // Imports
 import type { IResponse } from '@core/interfaces/response.interface';
@@ -99,7 +99,7 @@ export function DialogRemovedUsers({ onRestoreSuccess, open, setOpen }: IProps) 
                         <span className='text-xs text-muted-foreground'>{`${t('label.identityCard')} ${i18n.format(user.dni, 'integer', i18n.resolvedLanguage)}`}</span>
                       </section>
                       <div className='flex space-x-3'>
-                        <div className='flex items-center space-x-1'>
+                        <div className='hidden items-center space-x-1 md:flex'>
                           <Trash2 size={13} strokeWidth={2} className='text-red-400' />
                           <span className='text-xxs text-muted-foreground'>{format(user.updatedAt, 'medium', i18n.resolvedLanguage)}</span>
                         </div>
@@ -111,8 +111,16 @@ export function DialogRemovedUsers({ onRestoreSuccess, open, setOpen }: IProps) 
                             setRestoredUser(user);
                           }}
                         >
-                          <Undo size={13} strokeWidth={2} />
+                          <Undo size={13} strokeWidth={2} className='hidden md:inline-block' />
                           {t('button.restore')}
+                        </Button>
+                        <Button
+                          className='gap-1 bg-rose-200 text-xs font-normal text-rose-600 hover:bg-rose-300/70 hover:text-rose-700/70'
+                          size='xs'
+                          onClick={() => console.log('Delete irreversible user')}
+                        >
+                          <Trash2 size={13} strokeWidth={2} className='hidden md:inline-block' />
+                          {t('button.delete')}
                         </Button>
                       </div>
                     </section>
