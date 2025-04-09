@@ -3,25 +3,34 @@ import { Database, MoveRight, TrendingDown, TrendingUp } from 'lucide-react';
 // Components
 import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
-import i18n from '@core/i18n/i18n';
+import { AxiosError } from 'axios';
+import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
+import type { IError } from '@core/interfaces/error.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUserStats } from '@users/interfaces/user-stats.interface';
 import { UserApiService } from '@users/services/user-api.service';
+import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export function DBCountUsers() {
-  const { t } = useTranslation();
+  const addNotification = useNotificationsStore((state) => state.addNotification);
+  const { i18n, t } = useTranslation();
 
-  const { data, error, isError, isLoading } = useQuery<IResponse<IUserStats>>({
-    queryKey: ['users', 'DBCountUsers'],
+  const { data, error, isError, isLoading } = useQuery<IResponse<IUserStats>, AxiosError<IError>>({
+    queryKey: ['users', 'db-count-users'],
     queryFn: async () => await UserApiService.newUsersToday(),
     refetchOnWindowFocus: 'always',
   });
 
+  useEffect(() => {
+    if (isError) addNotification({ message: error.response?.data.message, type: 'error' });
+  }, [addNotification, error, isError]);
+
   if (isLoading) return <LoadingDB variant='default' empty className='py-3' />;
-  if (isError) return <main className='flex justify-end py-3 text-xsm font-normal text-rose-400'>{error.message}</main>;
+
+  if (isError) return <main className='flex justify-end py-3 text-xsm font-normal text-rose-400'>{error.response?.data.message}</main>;
 
   return (
     data?.data && (
