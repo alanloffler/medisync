@@ -13,27 +13,39 @@ import { useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
+import type { IError } from '@core/interfaces/error.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { ISpecialization } from '@core/interfaces/specialization.interface';
+import { AxiosError } from 'axios';
 import { SpecializationService } from '@core/services/specialization.service';
 import { cn } from '@lib/utils';
+import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export function CategoriesShortcuts({ className }: { className?: string }) {
   const [_areaSelected, setAreaSelected] = useState<string>('');
   const [isOverflowing, setIsOverflowing] = useState<boolean>(false);
   const [reachedLeftEdge, setReachedLeftEdge] = useState<boolean>(true);
   const [reachedRightEdge, setReachedRightEdge] = useState<boolean>(false);
+  const addNotification = useNotificationsStore((state) => state.addNotification);
   const scrollRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
 
   const {
     data: specializations,
     error,
+    isError,
     isLoading,
-  } = useQuery<IResponse>({
+  } = useQuery<IResponse<ISpecialization[]>, AxiosError<IError>>({
     queryKey: ['specializations'],
     queryFn: async () => await SpecializationService.findAll(),
   });
+
+  useEffect(() => {
+    if (isError) {
+      const statusCode = error.response?.data.statusCode === 404 ? ('warning' as const) : ('error' as const);
+      addNotification({ message: error.response?.data.message, type: statusCode });
+    }
+  }, [addNotification, error, isError]);
 
   const animation = {
     chevron: {
@@ -138,8 +150,16 @@ export function CategoriesShortcuts({ className }: { className?: string }) {
       <Card className={cn('relative flex items-center bg-card p-4', className)}>
         {/* Section: Specializations shortcuts */}
         <section className='mx-auto flex flex-row justify-start space-x-4 overflow-x-hidden' ref={scrollRef}>
-          {isLoading && <LoadingDB text={t('loading.categories')} variant='default' spinnerColor='fill-slate-700' className='text-slate-700' />}
-          {error && <InfoCard text={error.message} variant='error' />}
+          {isLoading && <LoadingDB text={t('loading.categories')} variant='default' />}
+          {isError && (
+            <InfoCard
+              className='py-3'
+              text={error.response?.data.message}
+              size='xsm'
+              type='flat-colored'
+              variant={error.response?.data.statusCode === 404 ? 'warning' : 'error'}
+            />
+          )}
           {!isLoading &&
             !error &&
             specializations?.data.map((specialization: ISpecialization) => (
