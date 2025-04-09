@@ -39,7 +39,7 @@ export function InfoCard({ className, size, text, type, variant }: IInfoCard) {
         {variant === 'success' && <CircleCheck strokeWidth={2} />}
         {variant === 'warning' && <CircleAlert strokeWidth={2} />}
       </div>
-      <div className='flex flex-col'>
+      <div className='flex flex-col text-balance text-left'>
         <span>{text}</span>
       </div>
     </div>
