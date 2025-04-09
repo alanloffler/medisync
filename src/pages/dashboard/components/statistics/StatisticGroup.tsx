@@ -7,9 +7,12 @@ import { DashboardTitle } from '@dashboard/components/common/DashboardTitle';
 import { Statistic } from '@dashboard/components/statistics/Statistic';
 import { StatisticChart } from '@dashboard/components/statistics/StatisticChart';
 // External imports
+import { AxiosError } from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
+import type { IError } from '@core/interfaces/error.interface';
+import type { IResponse } from '@core/interfaces/response.interface';
 import { DASHBOARD_CONFIG } from '@config/dashboard/dashboard.config';
 import { DashboardApiService } from '@dashboard/services/dashboard-api.service';
 // React component
@@ -20,7 +23,7 @@ export function StatisticGroup() {
     data: apposData,
     error: apposError,
     isLoading: apposDataIsLoading,
-  } = useQuery({
+  } = useQuery<IResponse<{ value1: string; value2: string } | undefined>, AxiosError<IError>>({
     queryKey: ['dashboard', 'appos'],
     queryFn: async () => await DashboardApiService.countAppointments(),
     staleTime: 0,
