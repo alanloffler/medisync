@@ -8,7 +8,6 @@ import { UtilsUrl } from '@core/services/utils/url.service';
 export class DashboardApiService {
   private static readonly API_URL: string = import.meta.env.VITE_API_URL;
 
-  // * CHECKED: used on StatisticGroup.tsx
   public static async apposDaysCount(days: number): Promise<IResponse<IChartData[]>> {
     const path: string = `${this.API_URL}/dashboard/apposDaysCount`;
     const params = { d: String(days) };
@@ -17,7 +16,6 @@ export class DashboardApiService {
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
-  // * CHECKED: used on StatisticGroup.tsx
   public static async countAppointments(): Promise<IResponse<{ value1: string; value2: string } | undefined>> {
     const path1: string = `${this.API_URL}/dashboard/countAppointments`;
     const path2: string = `${this.API_URL}/dashboard/countAppointmentsLastMonth`;
@@ -47,7 +45,6 @@ export class DashboardApiService {
     };
   }
 
-  // * CHECKED: used on StatisticGroup.tsx
   public static async countProfessionals(): Promise<IResponse<{ value1: string; value2: string } | undefined>> {
     const path1: string = `${this.API_URL}/dashboard/countProfessionals`;
     const path2: string = `${this.API_URL}/dashboard/countProfessionalsLastMonth`;
@@ -77,7 +74,7 @@ export class DashboardApiService {
     };
   }
 
-  // * CHECKED: used on StatisticGroup.tsx
+  // TODO: translate frontend errors
   public static async countUsers(): Promise<IResponse<{ value1: string; value2: string } | undefined>> {
     const path1: string = `${this.API_URL}/dashboard/countUsers`;
     const path2: string = `${this.API_URL}/dashboard/countUsersLastMonth`;
@@ -107,7 +104,6 @@ export class DashboardApiService {
     };
   }
 
-  // * CHECKED: used on LatestAppos.tsx
   public static async latestAppointments(limit: number): Promise<IResponse<IAppointment[]>> {
     const path: string = `${this.API_URL}/dashboard/latestAppointments`;
     const params = { l: String(limit) };
@@ -116,7 +112,6 @@ export class DashboardApiService {
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
-  // * CHECKED: used on LatestUsers.tsx
   public static async latestUsers(limit: number): Promise<IResponse<IUser[]>> {
     const path: string = `${this.API_URL}/dashboard/latestUsers`;
     const params = { l: String(limit) };
