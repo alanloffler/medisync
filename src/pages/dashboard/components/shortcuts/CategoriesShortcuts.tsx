@@ -8,6 +8,7 @@ import { IconShortcut } from '@dashboard/components/shortcuts/IconShortcut';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
+import { AxiosError } from 'axios';
 import { motion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -16,7 +17,6 @@ import { useTranslation } from 'react-i18next';
 import type { IError } from '@core/interfaces/error.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { ISpecialization } from '@core/interfaces/specialization.interface';
-import { AxiosError } from 'axios';
 import { SpecializationService } from '@core/services/specialization.service';
 import { cn } from '@lib/utils';
 import { useNotificationsStore } from '@core/stores/notifications.store';
