@@ -39,7 +39,13 @@ export function Statistic({ children, error, isLoading, item, value1, value2 }: 
         {isLoading ? (
           <LoadingDB size='box' iconSize={32} empty className='relative top-1/2 -translate-y-1/2 p-6 py-6' />
         ) : error ? (
-          <InfoCard className='relative top-1/2 -translate-y-1/2 p-6 text-xsm font-light text-dark-default' text={error.message} variant='error' />
+          <InfoCard
+            className='relative top-1/2 -translate-y-1/2'
+            size='xsm'
+            text={error.response?.data.message}
+            type='flat-colored'
+            variant='error'
+          />
         ) : (
           <>
             <section className='flex flex-row items-center justify-between p-4 pb-2'>
