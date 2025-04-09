@@ -149,6 +149,7 @@
     "deleteUser": {
       "title": "Eliminar paciente",
       "description": "Al confirmar, vas a eliminar un paciente",
+      "descriptionIrreversible": "Al confirmar, vas a eliminar un paciente de manera irreversible",
       "content": "Vas a eliminar de la base de datos al paciente <span>{{firstName}} {{lastName}}</span> con DNI <i>{{identityCard}}</i>"
     },
     "error": {

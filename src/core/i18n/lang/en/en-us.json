@@ -149,6 +149,7 @@
     "deleteUser": {
       "title": "Delete patient",
       "description": "By confirming, you will delete the patient",
+      "descriptionIrreversible": "By confirming, you will delete the patient irreversibly",
       "content": "You are going to delete from the database the patient <span>{{firstName}} {{lastName}}</span> with IC <i>{{identityCard}}</i>"
     },
     "error": {
