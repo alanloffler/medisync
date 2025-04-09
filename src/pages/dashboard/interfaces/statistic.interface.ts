@@ -1,9 +1,11 @@
-import type { IResponse } from '@core/interfaces/response.interface';
 import type { ReactNode } from 'react';
+import { AxiosError } from 'axios';
+import type { IError } from '@core/interfaces/error.interface';
+import type { IResponse } from '@core/interfaces/response.interface';
 
 export interface IStatistic {
   children: ReactNode;
-  error?: Error | null;
+  error?: AxiosError<IError> | null;
   isLoading?: boolean;
   item: IStatisticItem;
   value1?: string;
