@@ -8,13 +8,15 @@ import { DashboardTitle } from '@dashboard/components/common/DashboardTitle';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
+import { AxiosError } from 'axios';
 import { format } from '@formkit/tempo';
 import { motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
-import type { IAppointmentView } from '@appointments/interfaces/appointment.interface';
+import type { IAppointment, IAppointmentView } from '@appointments/interfaces/appointment.interface';
+import type { IError } from '@core/interfaces/error.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import { APP_CONFIG } from '@config/app.config';
 import { DashboardApiService } from '@dashboard/services/dashboard-api.service';
@@ -27,12 +29,11 @@ export function LatestAppos() {
   const {
     data: latestAppos,
     error,
+    isError,
     isLoading,
-  } = useQuery<IResponse>({
-    queryKey: ['latest-appos'],
-    queryFn: async () => {
-      return await DashboardApiService.latestAppointments(5);
-    },
+  } = useQuery<IResponse<IAppointment[]>, AxiosError<IError>>({
+    queryKey: ['dashboard', 'latest-appos'],
+    queryFn: async () => await DashboardApiService.latestAppointments(5),
   });
 
   const animation = {
@@ -56,7 +57,7 @@ export function LatestAppos() {
       <Card>
         <CardContent className='grid gap-2 pt-6'>
           {isLoading && <LoadingDB text={t('loading.appointments')} variant='default' />}
-          {error && <InfoCard text={error.message} variant='error' />}
+          {isError && <InfoCard text={error.response?.data.message} variant={error.response?.data.statusCode === 404 ? 'warning' : 'error'} />}
           {!isLoading &&
             !error &&
             latestAppos?.data.map((appo: IAppointmentView) => (
