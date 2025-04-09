@@ -14,6 +14,7 @@ import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
 import { SelectPhoneArea } from '@core/components/common/SelectPhoneArea';
 // External imports
+import { AxiosError } from 'axios';
 import { type MouseEvent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -22,6 +23,7 @@ import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 // Imports
+import type { IError } from '@core/interfaces/error.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUpdateUserVars } from '@users/interfaces/mutation-vars.interface';
 import type { IUser } from '@users/interfaces/user.interface';
@@ -60,8 +62,8 @@ export default function UpdateUser() {
     isError,
     isLoading,
     isSuccess,
-  } = useQuery<IResponse<IUser>, Error>({
-    queryKey: ['users', 'findOne', id],
+  } = useQuery<IResponse<IUser>, AxiosError<IError>>({
+    queryKey: ['users', 'find-one', id],
     queryFn: async () => await UserApiService.findOne(id!),
   });
 
@@ -80,20 +82,27 @@ export default function UpdateUser() {
   }, [user, updateForm]);
 
   useEffect(() => {
-    isError && addNotification({ type: 'error', message: error?.message });
-  }, [addNotification, error?.message, isError]);
+    if (isError)
+      addNotification({
+        message: error.response?.data.message,
+        type: 'error',
+      });
+  }, [addNotification, error, isError]);
 
   const {
     error: errorUpdating,
     mutate: updateUser,
     isError: isErrorUpdating,
     isPending: isUpdating,
-  } = useMutation<IResponse<IUser>, Error, IUpdateUserVars>({
+  } = useMutation<IResponse<IUser>, AxiosError<IError>, IUpdateUserVars>({
     mutationKey: ['users', 'update', id],
     mutationFn: async ({ id, data }) => await UserApiService.update(id, data),
     onError: (error) => {
       setOpenDialog(true);
-      addNotification({ type: 'error', message: error.message });
+      addNotification({
+        message: error.response?.data.message,
+        type: 'error',
+      });
     },
     onSuccess: (response) => {
       navigate(`${APP_CONFIG.appPrefix}/users`);
@@ -138,7 +147,7 @@ export default function UpdateUser() {
         <Card className='w-full md:grid-cols-2'>
           <CardHeaderPrimary title={t('cardTitle.updateUser')} icon={<FilePen size={18} strokeWidth={2} />} />
           <CardContent className='pt-6'>
-            {isError && <InfoCard text={error?.message} variant='error' />}
+            {isError && <InfoCard text={error.response?.data.message} variant='error' />}
             {isLoading && <LoadingDB text={t('loading.userDetails')} />}
             {isSuccess && (
               <Form {...updateForm}>
@@ -255,7 +264,7 @@ export default function UpdateUser() {
             <DialogTitle className='text-lg'>{t('error.updateUser')}</DialogTitle>
             <DialogDescription className='sr-only'></DialogDescription>
           </DialogHeader>
-          {isErrorUpdating && <section className='flex flex-col text-sm'>{errorUpdating.message}</section>}
+          {isErrorUpdating && <InfoCard className='my-3' text={errorUpdating.response?.data.message} variant='error' />}
           <footer className='flex justify-end space-x-4'>
             <Button variant='destructive' size='sm' onClick={() => setOpenDialog(false)}>
               {t('button.close')}
