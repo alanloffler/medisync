@@ -7,32 +7,44 @@ import { DashboardTitle } from '@dashboard/components/common/DashboardTitle';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
+import { AxiosError } from 'axios';
 import { format } from '@formkit/tempo';
 import { motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
+import type { IError } from '@core/interfaces/error.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
 import { APP_CONFIG } from '@config/app.config';
 import { DashboardApiService } from '@dashboard/services/dashboard-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
+import { useEffect } from 'react';
+import { useNotificationsStore } from '@core/stores/notifications.store';
 // React component
 export function LatestUsers() {
+  const addNotification = useNotificationsStore((state) => state.addNotification);
   const navigate = useNavigate();
   const { i18n, t } = useTranslation();
 
   const {
     data: latestUsers,
     error,
+    isError,
     isLoading,
-  } = useQuery<IResponse>({
+  } = useQuery<IResponse<IUser[]>, AxiosError<IError>>({
     queryKey: ['dashboard', 'latestUsers'],
-    queryFn: async () => {
-      return await DashboardApiService.latestUsers(5);
-    },
+    queryFn: async () => await DashboardApiService.latestUsers(5),
   });
+
+  useEffect(() => {
+    if (isError)
+      addNotification({
+        message: error.response?.data.message,
+        type: error.response?.data.statusCode === 404 ? 'warning' : 'error',
+      });
+  }, [addNotification, error, isError]);
 
   const animation = {
     arrow: {
@@ -58,7 +70,7 @@ export function LatestUsers() {
       <DashboardTitle title={t('cardTitle.dashboard.latestUsers')} />
       <Card>
         <CardContent className='flex flex-col space-y-1 pt-6'>
-          {error && <InfoCard text={error.message} variant='error' />}
+          {isError && <InfoCard text={error.response?.data.message} variant={error.response?.data.statusCode === 404 ? 'warning' : 'error'} />}
           {isLoading && <LoadingDB text={t('loading.users')} variant='default' />}
           {!error &&
             !isLoading &&
