@@ -19,6 +19,7 @@ export interface IDataTableProfessionals extends IDataTable {
 
 export interface IDataTableUsers extends IDataTable {
   search: IUserSearch;
+  setSearch: React.Dispatch<React.SetStateAction<IUserSearch>>;
 }
 
 export interface ITableManager {
