@@ -25,6 +25,7 @@ import { PageHeader } from '@core/components/common/PageHeader';
 import { SelectPhoneArea } from '@core/components/common/SelectPhoneArea';
 import { WorkingDays } from '@professionals/components/common/WorkingDays';
 // External imports
+import { AxiosError } from 'axios';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { type AnimationPlaybackControls, useAnimate } from 'motion/react';
 import { type MouseEvent, useEffect, useState, useRef, useCallback } from 'react';
@@ -35,6 +36,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 // Imports
 import type { IArea } from '@core/interfaces/area.interface';
+import type { IError } from '@core/interfaces/error.interface';
 import type { IInfoCard } from '@core/components/common/interfaces/infocard.interface';
 import type { IProfessional, IProfessionalForm } from '@professionals/interfaces/professional.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
@@ -51,7 +53,6 @@ import { UtilsString } from '@core/services/utils/string.service';
 import { motion } from '@core/services/motion.service';
 import { professionalSchema } from '@professionals/schemas/professional.schema';
 import { useNotificationsStore } from '@core/stores/notifications.store';
-import { AxiosError } from 'axios';
 // React component
 export default function UpdateProfessional() {
   const [_area, setArea] = useState<number | undefined>();
@@ -124,14 +125,14 @@ export default function UpdateProfessional() {
     error: titlesError,
     isError: titlesIsError,
     isLoading: titlesIsLoading,
-  } = useQuery<IResponse<ITitle[]>, Error>({
+  } = useQuery<IResponse<ITitle[]>, AxiosError<IError>>({
     queryKey: ['titles', 'find-all'],
     queryFn: async () => await TitleService.findAll(),
   });
 
   useEffect(() => {
-    if (titlesIsError) addNotification({ type: 'error', message: titlesError.message });
-  }, [addNotification, titlesIsError, titlesError?.message]);
+    if (titlesIsError) addNotification({ message: titlesError.response?.data.message, type: 'error' });
+  }, [addNotification, titlesError, titlesIsError]);
 
   const {
     data: slotDuration,
@@ -400,7 +401,7 @@ export default function UpdateProfessional() {
                                       <SelectValue placeholder={t('placeholder.title')} />
                                     )}
                                   </SelectTrigger>
-                                  {titlesIsError && <FormError message={titlesError.message} />}
+                                  {titlesIsError && <FormError message={titlesError.response?.data.message} />}
                                 </div>
                               </FormControl>
                               <FormMessage />
