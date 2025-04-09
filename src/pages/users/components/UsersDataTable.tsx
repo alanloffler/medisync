@@ -57,7 +57,7 @@ import { useNotificationsStore } from '@core/stores/notifications.store';
 const defaultSorting: SortingState = [{ id: USER_CONFIG.table.defaultSortingId, desc: USER_CONFIG.table.defaultSortingType }];
 const defaultPagination: PaginationState = { pageIndex: 0, pageSize: USER_CONFIG.table.defaultPageSize };
 // React component
-export function UsersDataTable({ reload, search }: IDataTableUsers) {
+export function UsersDataTable({ reload, search, setSearch }: IDataTableUsers) {
   const [columns, setColumns] = useState<ColumnDef<IUser>[]>([]);
   const [openDialogRemove, setOpenDialogRemove] = useState<boolean>(false);
   const [pagination, setPagination] = useState<PaginationState>(defaultPagination);
@@ -376,13 +376,7 @@ export function UsersDataTable({ reload, search }: IDataTableUsers) {
         {/* Section: Dialog Delete (soft remove) */}
         {userSelected && (
           <DialogDelete
-            onDeleteSuccess={() => {
-              searchUsersBy({
-                search: search.value !== '' ? search : { value: '', type: EUserSearch.NAME },
-                skipItems,
-                tableManager,
-              });
-            }}
+            onDeleteSuccess={() => setSearch({ value: '', type: EUserSearch.NAME })}
             open={openDialogDelete}
             setOpen={setOpenDialogDelete}
             user={userSelected}
