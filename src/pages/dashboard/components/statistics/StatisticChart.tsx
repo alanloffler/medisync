@@ -5,12 +5,15 @@ import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
 import * as d3 from 'd3';
+import { AxiosError } from 'axios';
 import { motion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 // Imports
+import type { IError } from '@core/interfaces/error.interface';
+import type { IResponse } from '@core/interfaces/response.interface';
 import type { IStatisticChart, IChartDataProcessed, IChartMargin, IChartData, IChartDays } from '@dashboard/interfaces/statistic.interface';
 import { DASHBOARD_CONFIG } from '@config/dashboard/dashboard.config';
 import { cn } from '@lib/utils';
@@ -42,7 +45,7 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
     }
   }
 
-  const { data, isError, isLoading, isSuccess, error } = useQuery({
+  const { data, isError, isLoading, isSuccess, error } = useQuery<IResponse<IChartData[]>, AxiosError<IError>>({
     queryKey: ['dashboard', 'appos-chart', daysAgo],
     queryFn: () => fetchChartData(daysAgo),
   });
@@ -138,7 +141,7 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
       }
     }
 
-    if (data?.data.length > 0) drawChart();
+    if (data && data?.data.length > 0) drawChart();
 
     addEventListener('resize', drawChart);
 
@@ -163,8 +166,8 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
 
   if (isError) {
     return (
-      <Card className='flex flex-col items-center justify-center p-3'>
-        <InfoCard className='font-light' text={error.name} variant='error' />
+      <Card className='flex flex-col items-center justify-center p-4'>
+        <InfoCard text={error.response?.data.message} size='xsm' type='flat-colored' variant='error' />
       </Card>
     );
   }
