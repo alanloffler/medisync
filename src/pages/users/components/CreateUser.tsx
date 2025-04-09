@@ -9,10 +9,12 @@ import { Input } from '@core/components/ui/input';
 // Components
 import { BackButton } from '@core/components/common/BackButton';
 import { CardHeaderPrimary } from '@core/components/common/header/CardHeaderPrimary';
+import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 import { PageHeader } from '@core/components/common/PageHeader';
 import { SelectPhoneArea } from '@core/components/common/SelectPhoneArea';
 // External imports
+import { AxiosError } from 'axios';
 import { type MouseEvent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
@@ -21,6 +23,7 @@ import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 // Imports
+import type { IError } from '@core/interfaces/error.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
 import { APP_CONFIG } from '@config/app.config';
@@ -28,9 +31,9 @@ import { USER_CREATE_CONFIG as UC_CONFIG } from '@config/users/user-create.confi
 import { USER_SCHEMA } from '@config/schemas/user.schema';
 import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
+import { useNavMenuStore } from '@layout/stores/nav-menu.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
 import { userSchema } from '@users/schemas/user.schema';
-import { useNavMenuStore } from '@layout/stores/nav-menu.service';
 // React component
 export default function CreateUser() {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
@@ -62,18 +65,18 @@ export default function CreateUser() {
     mutate: handleCreateUser,
     isError,
     isPending,
-  } = useMutation<IResponse<IUser>, Error, z.infer<typeof userSchema>>({
+  } = useMutation<IResponse<IUser>, AxiosError<IError>, z.infer<typeof userSchema>>({
     mutationKey: ['users', 'create'],
     mutationFn: async (data: z.infer<typeof userSchema>) => await UserApiService.create(data),
     onError: (error) => {
       setOpenDialog(true);
-      addNotification({ type: 'error', message: error.message });
+      addNotification({ message: error.response?.data.message, type: 'error' });
     },
     onSuccess: (response) => {
       navigate(`${APP_CONFIG.appPrefix}/users/${response.data._id}`);
       addNotification({
-        type: 'success',
         message: `${response.message} - ${UtilsString.upperCase(response.data.firstName, 'each')} ${UtilsString.upperCase(response.data.lastName, 'each')}`,
+        type: 'success',
       });
     },
   });
@@ -207,7 +210,9 @@ export default function CreateUser() {
             <DialogTitle className='text-lg'>{t('error.createUser')}</DialogTitle>
             <DialogDescription className='sr-only'></DialogDescription>
           </DialogHeader>
-          {isError && <section className='flex flex-col text-sm'>{error.message}</section>}
+          {isError && (
+            <InfoCard className='my-3' text={error.response?.data.message} variant={error.response?.data.statusCode === 404 ? 'warning' : 'error'} />
+          )}
           <footer className='flex justify-end space-x-4'>
             <Button variant='destructive' size='sm' onClick={() => setOpenDialog(false)}>
               {t('button.close')}
