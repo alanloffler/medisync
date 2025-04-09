@@ -40,7 +40,7 @@ export function Statistic({ children, error, isLoading, item, value1, value2 }: 
           <LoadingDB size='box' iconSize={32} empty className='relative top-1/2 -translate-y-1/2 p-6 py-6' />
         ) : error ? (
           <InfoCard
-            className='relative top-1/2 -translate-y-1/2'
+            className='relative top-1/2 -translate-y-1/2 p-6 py-6'
             size='xsm'
             text={error.response?.data.message}
             type='flat-colored'
