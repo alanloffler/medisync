@@ -36,6 +36,7 @@ import { useNavigate } from 'react-router-dom';
 // Imports
 import type { IAreaCode } from '@core/interfaces/area-code.interface';
 import type { IDataTableUsers, ITableManager } from '@core/interfaces/table.interface';
+import type { IError } from '@core/interfaces/error.interface';
 import type { IPaginatedUsersVars } from '@users/interfaces/mutation-vars.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser, IUsersData } from '@users/interfaces/user.interface';
@@ -97,15 +98,18 @@ export function UsersDataTable({ reload, search }: IDataTableUsers) {
     isError,
     isPending,
     isSuccess,
-  } = useMutation<IResponse<IUsersData>, AxiosError<IResponse>, IPaginatedUsersVars>({
+  } = useMutation<IResponse<IUsersData>, AxiosError<IError>, IPaginatedUsersVars>({
     mutationKey: ['users', 'search-users-by', search, tableManager, skipItems],
     mutationFn: async ({ search, skipItems, tableManager }) => await UserApiService.searchUsersBy(search, tableManager, skipItems),
     onSuccess: (response) => {
       setColumns(tableColumns);
       setTotalItems(response.data.count);
     },
-    onError: (error: AxiosError<IResponse>) => {
-      addNotification({ type: 'error', message: error.response?.data.message });
+    onError: (error: AxiosError<IError>) => {
+      addNotification({
+        message: error.response?.data.message,
+        type: error.response?.data.statusCode === 404 ? 'warning' : 'error',
+      });
     },
   });
 
@@ -125,7 +129,7 @@ export function UsersDataTable({ reload, search }: IDataTableUsers) {
     }
   }, [search, searchUsersBy, skipItems, tableManager]);
 
-  const { data: areaCode, isSuccess: areaCodeIsSuccess } = useQuery<IResponse<IAreaCode[]>, Error>({
+  const { data: areaCode, isSuccess: areaCodeIsSuccess } = useQuery<IResponse<IAreaCode[]>, AxiosError<IError>>({
     queryKey: ['area-code', 'find-all'],
     queryFn: async () => await AreaCodeService.findAll(),
   });
@@ -318,8 +322,9 @@ export function UsersDataTable({ reload, search }: IDataTableUsers) {
   }, [openDialogRemove]);
 
   if (isPending) return <LoadingDB text={t('loading.users')} className='mt-6 p-0' />;
-  // TODO: conditional variant if search is empty (check backend)
-  if (isError) return <InfoCard className='mt-6' text={error.response?.data.message} variant='error' />;
+
+  if (isError)
+    return <InfoCard className='mt-6' text={error.response?.data.message} variant={error.response?.data.statusCode === 404 ? 'warning' : 'error'} />;
 
   if (isSuccess) {
     return (
