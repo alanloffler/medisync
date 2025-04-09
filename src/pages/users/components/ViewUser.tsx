@@ -120,13 +120,14 @@ export default function ViewUser() {
     isError: isErrorDeleting,
     isPending: isDeleting,
     reset: resetDeleting,
-  } = useMutation<IResponse<IUser>, Error, { id: string }>({
+  } = useMutation<IResponse<IUser>, AxiosError<IError>, { id: string }>({
     mutationKey: ['users', 'remove', id],
     mutationFn: async ({ id }) => await UserApiService.remove(id),
     onError: (error) => {
+      addNotification({ message: error.response?.data.message, type: 'error' });
       setDialogData({
         title: t('dialog.error.deleteUser'),
-        content: error.message,
+        content: <InfoCard className='my-3' text={error.response?.data.message} variant='error' />,
       });
     },
     onSuccess: (response) => {
