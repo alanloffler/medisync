@@ -104,7 +104,7 @@ export default function UpdateProfessional() {
     isError: areasIsError,
     isLoading: areasIsLoading,
     isSuccess: areasIsSuccess,
-  } = useQuery<IResponse<IArea[]>, AxiosError<IResponse>>({
+  } = useQuery<IResponse<IArea[]>, AxiosError<IError>>({
     queryKey: ['areas', 'find-all'],
     queryFn: async () => await AreaService.findAll(),
   });
