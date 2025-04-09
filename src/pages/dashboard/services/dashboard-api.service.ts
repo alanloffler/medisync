@@ -9,7 +9,7 @@ export class DashboardApiService {
   private static readonly API_URL: string = import.meta.env.VITE_API_URL;
 
   // * CHECKED: used on StatisticGroup.tsx
-  public static async apposDaysCount(days: number): Promise<IResponse<IChartData>> {
+  public static async apposDaysCount(days: number): Promise<IResponse<IChartData[]>> {
     const path: string = `${this.API_URL}/dashboard/apposDaysCount`;
     const params = { d: String(days) };
     const url: URL = UtilsUrl.create(path, params);
