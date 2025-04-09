@@ -1,5 +1,5 @@
 // Icons: https://lucide.dev/icons/
-import { ArrowRight, CreditCard, Mail, MailX, MessageCircle, PencilLine, Smartphone, Trash2 } from 'lucide-react';
+import { ArrowRight, CircleX, CreditCard, Mail, MailX, MessageCircle, PencilLine, Smartphone, Trash2 } from 'lucide-react';
 // External components: https://ui.shadcn.com/docs/components
 import { Button } from '@core/components/ui/button';
 import { Card, CardContent } from '@core/components/ui/card';
@@ -17,6 +17,7 @@ import { LoadingText } from '@core/components/common/LoadingText';
 import { PageHeader } from '@core/components/common/PageHeader';
 import { TableButton } from '@core/components/common/TableButton';
 // External imports
+import { AxiosError } from 'axios';
 import { Trans, useTranslation } from 'react-i18next';
 import { format } from '@formkit/tempo';
 import { useAnimate } from 'motion/react';
@@ -24,7 +25,9 @@ import { useEffect, useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 // Imports
+import type { IAreaCode } from '@core/interfaces/area-code.interface';
 import type { IDialog } from '@core/interfaces/dialog.interface';
+import type { IError } from '@core/interfaces/error.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
 import { APP_CONFIG } from '@config/app.config';
@@ -60,28 +63,32 @@ export default function ViewUser() {
     isError,
     isLoading,
     isSuccess,
-  } = useQuery<IResponse<IUser>, Error>({
+  } = useQuery<IResponse<IUser>, AxiosError<IError>>({
     queryKey: ['users', 'find-one', id],
     queryFn: async () => await UserApiService.findOne(id!),
   });
 
   useEffect(() => {
-    if (isError) addNotification({ type: 'error', message: error.message });
-  }, [addNotification, error?.message, isError]);
+    if (isError) addNotification({ message: error.response?.data.message, type: 'error' });
+  }, [addNotification, error, isError]);
 
   const {
     data: areaCode,
     error: areaCodeError,
     isError: areaCodeIsError,
     isLoading: areaCodeIsLoading,
-  } = useQuery({
+  } = useQuery<IResponse<IAreaCode[]>, IError>({
     queryKey: ['area-code', 'find-all'],
     queryFn: async () => await AreaCodeService.findAll(),
   });
 
   useEffect(() => {
-    if (areaCodeIsError) addNotification({ type: 'error', message: areaCodeError.message });
-  }, [addNotification, areaCodeError?.message, areaCodeIsError]);
+    if (areaCodeIsError)
+      addNotification({
+        message: areaCodeError.message,
+        type: 'error',
+      });
+  }, [addNotification, areaCodeError, areaCodeIsError]);
 
   function handleRemoveUserDialog(): void {
     setOpenDialog(true);
@@ -152,7 +159,7 @@ export default function ViewUser() {
           <BackButton label={t('button.back')} />
         </header>
         {isLoading && <LoadingDB size='md' text={t('loading.userDetails')} variant='card' />}
-        {isError && <InfoCard text={error.message} variant='error' />}
+        {isError && <InfoCard text={error.response?.data.message} variant='error' />}
         {isSuccess && (
           <section className='grid w-full gap-4 md:grid-cols-5 md:gap-8 lg:grid-cols-5 lg:gap-8 xl:grid-cols-6 xl:gap-8'>
             <section className='col-span-1 mx-auto h-fit w-full md:col-span-3 lg:col-span-2 xl:col-span-2'>
@@ -170,6 +177,7 @@ export default function ViewUser() {
                         {areaCodeIsLoading && <LoadingText text={t('loading.default')} suffix='...' />}
                         {!areaCodeIsLoading && (
                           <div className='flex items-center space-x-2'>
+                            {areaCodeError && <CircleX size={14} strokeWidth={2} className='stroke-rose-500' />}
                             {areaCode?.data && (
                               <img
                                 height={18}
