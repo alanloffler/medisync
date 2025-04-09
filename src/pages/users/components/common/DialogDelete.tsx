@@ -5,15 +5,17 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
-import type { Dispatch, SetStateAction } from 'react';
 import { AxiosError } from 'axios';
 import { Trans, useTranslation } from 'react-i18next';
+import { useEffect, type Dispatch, type SetStateAction } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 // Imports
+import type { IError } from '@core/interfaces/error.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
 import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
+import { useNotificationsStore } from '@core/stores/notifications.store';
 // Interface
 interface IProps {
   onDeleteSuccess: () => void;
@@ -27,6 +29,7 @@ interface IVars {
 }
 // React component
 export function DialogDelete({ onDeleteSuccess, open, setOpen, user }: IProps) {
+  const addNotification = useNotificationsStore((state) => state.addNotification);
   const queryClient = useQueryClient();
   const { i18n, t } = useTranslation();
 
@@ -35,20 +38,35 @@ export function DialogDelete({ onDeleteSuccess, open, setOpen, user }: IProps) {
     isError,
     isPending,
     mutate: remove,
-  } = useMutation<IResponse<IUser>, AxiosError<IResponse>, IVars>({
-    mutationKey: ['users', 'remove', user._id],
-    mutationFn: ({ userId }) => UserApiService.remove(userId),
-    onSuccess: () => {
+    reset,
+  } = useMutation<IResponse<IUser>, AxiosError<IError>, IVars>({
+    mutationKey: ['users', 'delete', user._id],
+    mutationFn: ({ userId }) => UserApiService.delete(userId),
+    onSuccess: (success) => {
       queryClient.invalidateQueries({
         queryKey: ['users', 'search-users-by'],
+        refetchType: 'all',
       });
+
       queryClient.invalidateQueries({
         queryKey: ['users', 'removed-users'],
+        refetchType: 'all',
       });
+
       onDeleteSuccess();
       setOpen(false);
+      addNotification({ message: success.message, type: 'success' });
     },
   });
+
+  useEffect(() => {
+    if (!open) {
+      queryClient.invalidateQueries({
+        queryKey: ['users', 'delete'],
+      });
+      reset();
+    }
+  }, [open, queryClient, reset]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -72,7 +90,7 @@ export function DialogDelete({ onDeleteSuccess, open, setOpen, user }: IProps) {
               }}
             />
           </div>
-          {isError && <InfoCard text={error.response?.data.message} variant='error' />}
+          {isError && <InfoCard className='my-3' text={error.response?.data.message} variant='error' />}
         </section>
         <DialogFooter className='gap-4 !space-x-0'>
           <Button variant='ghost' size='sm' onClick={() => setOpen(false)}>
