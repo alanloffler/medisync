@@ -87,7 +87,7 @@ export function DialogRemovedUsers({ onRestoreSuccess, open, setOpen }: IProps) 
   const {
     error: errorRemove,
     isError: isErrorRemove,
-    isPending: isPendingRemove,
+    isPending: isPendingRemove, // TODO: pending restore and remove
     mutate: remove,
     reset: resetRemove,
   } = useMutation<IResponse<IUser>, AxiosError<IError>, { userId: string }>({
