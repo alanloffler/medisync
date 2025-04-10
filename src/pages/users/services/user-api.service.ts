@@ -8,10 +8,6 @@ import { EUserSearch } from '@users/enums/user-search.enum';
 import { UserUtils } from '@users/services/user.utils';
 import { UtilsUrl } from '@core/services/utils/url.service';
 
-// Checked: all
-// TRQ fetch: all
-// Typed response: all but searchUsersBy
-
 export class UserApiService {
   private static readonly API_URL: string = import.meta.env.VITE_API_URL;
 
@@ -23,7 +19,7 @@ export class UserApiService {
     return await UtilsUrl.fetch(url, EMethods.POST, transformedData);
   }
 
-  // Find all users by identity number or name (many users with partial search)
+  // TODO: translate frontend errors
   public static async searchUsersBy(search: IUserSearch, tableManager: ITableManager, skip: number) {
     const { type, value } = search;
     const { pagination, sorting } = tableManager;
@@ -60,7 +56,21 @@ export class UserApiService {
   }
 
   public static async remove(id: string): Promise<IResponse<IUser>> {
-    const path: string = `${this.API_URL}/users/remove/${id}`;
+    const path: string = `${this.API_URL}/users/${id}`;
+    const url: URL = UtilsUrl.create(path);
+
+    return await UtilsUrl.fetch(url, EMethods.DELETE);
+  }
+
+  public static async delete(id: string): Promise<IResponse<IUser>> {
+    const path: string = `${this.API_URL}/users/delete/${id}`;
+    const url: URL = UtilsUrl.create(path);
+
+    return await UtilsUrl.fetch(url, EMethods.PATCH);
+  }
+
+  public static async restore(id: string): Promise<IResponse<IUser>> {
+    const path: string = `${this.API_URL}/users/restore/${id}`;
     const url: URL = UtilsUrl.create(path);
 
     return await UtilsUrl.fetch(url, EMethods.PATCH);
@@ -73,26 +83,10 @@ export class UserApiService {
     return await UtilsUrl.fetch(url, EMethods.GET);
   }
 
-  // New methods admin readonly
-  // CHECKED: used on DialogRemovedUsers.tsx
   public static async findRemovedUsers(): Promise<IResponse<IUser[]>> {
     const path: string = `${this.API_URL}/users/removedUsers`;
     const url: URL = UtilsUrl.create(path);
 
     return await UtilsUrl.fetch(url, EMethods.GET);
-  }
-  // CHECKED: used on DialogRemovedUsers.tsx
-  public static async restore(id: string): Promise<IResponse<IUser>> {
-    const path: string = `${this.API_URL}/users/restore/${id}`;
-    const url: URL = UtilsUrl.create(path);
-
-    return await UtilsUrl.fetch(url, EMethods.PATCH);
-  }
-  // CHECKED: used on DialogDelete.tsx
-  public static async delete(id: string): Promise<IResponse<IUser>> {
-    const path: string = `${this.API_URL}/users/${id}`;
-    const url: URL = UtilsUrl.create(path);
-
-    return await UtilsUrl.fetch(url, EMethods.DELETE);
   }
 }
