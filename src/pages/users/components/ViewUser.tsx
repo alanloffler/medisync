@@ -122,7 +122,7 @@ export default function ViewUser() {
     reset: resetDeleting,
   } = useMutation<IResponse<IUser>, AxiosError<IError>, { id: string }>({
     mutationKey: ['users', 'remove', id],
-    mutationFn: async ({ id }) => await UserApiService.remove(id),
+    mutationFn: async ({ id }) => await UserApiService.delete(id),
     onError: (error) => {
       addNotification({ message: error.response?.data.message, type: 'error' });
       setDialogData({
