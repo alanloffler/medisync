@@ -11,20 +11,25 @@ import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
 import { AxiosError } from 'axios';
 import { format } from '@formkit/tempo';
+import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useState, type Dispatch, type SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
 // Imports
+import type { IError } from '@core/interfaces/error.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
 import { UserApiService } from '@users/services/user-api.service';
 import { UtilsString } from '@core/services/utils/string.service';
 import { useNotificationsStore } from '@core/stores/notifications.store';
-// Interface
+// Interfaces
 interface IProps {
   onRestoreSuccess: () => void;
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
+}
+
+interface IVars {
+  userId: string;
 }
 // React component
 export function DialogRemovedUsers({ onRestoreSuccess, open, setOpen }: IProps) {
@@ -38,14 +43,20 @@ export function DialogRemovedUsers({ onRestoreSuccess, open, setOpen }: IProps) 
     data: users,
     isError: isErrorUsers,
     isLoading: isLoadingUsers,
-  } = useQuery<IResponse<IUser[]>, AxiosError<IResponse>>({
+  } = useQuery<IResponse<IUser[]>, AxiosError<IError>>({
     queryKey: ['users', 'removed-users'],
-    queryFn: () => UserApiService.findRemovedUsers(),
+    queryFn: async () => await UserApiService.findRemovedUsers(),
   });
 
-  const { isPending: isPendingRestore, mutate: restore } = useMutation<IResponse<IUser>, AxiosError, { userId: string }>({
+  const {
+    error: errorRestore,
+    isError: isErrorRestore,
+    isPending: isPendingRestore,
+    mutate: restore,
+    reset: resetRestore,
+  } = useMutation<IResponse<IUser>, AxiosError<IError>, IVars>({
     mutationKey: ['users', 'restore'],
-    mutationFn: ({ userId }) => UserApiService.restore(userId),
+    mutationFn: async ({ userId }) => await UserApiService.restore(userId),
     onSuccess: (response) => {
       const userToNotify = restoredUser;
 
@@ -72,6 +83,27 @@ export function DialogRemovedUsers({ onRestoreSuccess, open, setOpen }: IProps) 
       setOpen(false);
     },
   });
+
+  const {
+    error: errorRemove,
+    isError: isErrorRemove,
+    isPending: isPendingRemove,
+    mutate: remove,
+    reset: resetRemove,
+  } = useMutation<IResponse<IUser>, AxiosError<IError>, { userId: string }>({
+    mutationKey: ['users', 'remove'],
+    mutationFn: async ({ userId }) => await UserApiService.remove(userId),
+    onError: (error) => {
+      console.log(error.response?.data.message);
+    },
+  });
+
+  useEffect(() => {
+    if (!open) {
+      resetRemove();
+      resetRestore();
+    }
+  }, [open, resetRemove, resetRestore]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -117,7 +149,7 @@ export function DialogRemovedUsers({ onRestoreSuccess, open, setOpen }: IProps) 
                         <Button
                           className='gap-1 bg-rose-200 text-xs font-normal text-rose-600 hover:bg-rose-300/70 hover:text-rose-700/70'
                           size='xs'
-                          onClick={() => console.log('Delete irreversible user')}
+                          onClick={() => remove({ userId: user._id })}
                         >
                           <Trash2 size={13} strokeWidth={2} className='hidden md:inline-block' />
                           {t('button.delete')}
@@ -128,6 +160,16 @@ export function DialogRemovedUsers({ onRestoreSuccess, open, setOpen }: IProps) 
                 </div>
               </ScrollArea>
             </div>
+          )}
+          {isErrorRemove && (
+            <section className='mt-4 flex w-full flex-row'>
+              <InfoCard text={errorRemove?.response?.data.message} type='flat-colored' variant='error' />
+            </section>
+          )}
+          {isErrorRestore && (
+            <section className='mt-4 flex w-full flex-row'>
+              <InfoCard text={errorRestore?.response?.data.message} type='flat-colored' variant='error' />
+            </section>
           )}
         </section>
         <DialogFooter>
