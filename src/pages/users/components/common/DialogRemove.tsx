@@ -6,10 +6,12 @@ import { AuthBadge } from '@core/auth/components/AuthBadge';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
 // External imports
-import type { Dispatch, SetStateAction } from 'react';
+import { AxiosError } from 'axios';
 import { Trans, useTranslation } from 'react-i18next';
+import { type Dispatch, type SetStateAction } from 'react';
 import { useMutation } from '@tanstack/react-query';
 // Imports
+import type { IError } from '@core/interfaces/error.interface';
 import type { IResponse } from '@core/interfaces/response.interface';
 import type { IUser } from '@users/interfaces/user.interface';
 import { UserApiService } from '@users/services/user-api.service';
@@ -32,16 +34,16 @@ export function DialogRemove({ onRemoveSuccess, open, setOpen, userSelected }: I
     mutate: deleteUser,
     isError: isErrorDeleting,
     isPending: isPendingDelete,
-  } = useMutation<IResponse<IUser>, Error, { id: string }>({
-    mutationKey: ['users', 'remove-user', userSelected?._id],
-    mutationFn: async ({ id }) => await UserApiService.delete(id),
+  } = useMutation<IResponse<IUser>, AxiosError<IError>, { id: string }>({
+    mutationKey: ['users', 'remove', userSelected?._id],
+    mutationFn: async ({ id }) => await UserApiService.remove(id),
     onSuccess: (response) => {
       onRemoveSuccess();
       setOpen(false);
       addNotification({ message: response.message, type: 'success' });
     },
     onError: (error) => {
-      addNotification({ message: error.message, type: 'error' });
+      addNotification({ message: error.response?.data.message, type: 'error' });
     },
   });
 
@@ -54,14 +56,14 @@ export function DialogRemove({ onRemoveSuccess, open, setOpen, userSelected }: I
             <DialogDescription></DialogDescription>
           ) : (
             <DialogDescription className='flex items-center justify-between'>
-              <span>{t('dialog.deleteUser.description')}</span>
+              <span>{t('dialog.deleteUser.descriptionIrreversible')}</span>
               <AuthBadge />
             </DialogDescription>
           )}
         </DialogHeader>
         <section className='flex flex-col'>
           {isErrorDeleting ? (
-            <InfoCard text={errorDeleting.message} variant='error' />
+            <InfoCard className='my-3' text={errorDeleting.response?.data.message} variant='error' />
           ) : (
             <div className='text-sm'>
               <Trans
