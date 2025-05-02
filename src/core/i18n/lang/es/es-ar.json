@@ -253,6 +253,7 @@
     "creating": "Creando",
     "default": "Cargando",
     "deleting": "Eliminando",
+    "deletingUser": "Eliminando usuario",
     "generatingPDF": "Generando PDF",
     "professional": "Cargando profesional",
     "professionalDetails": "Cargando información del profesional",
