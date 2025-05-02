@@ -8,6 +8,7 @@ import { ScrollArea } from '@core/components/ui/scroll-area';
 import { AuthBadge } from '@core/auth/components/AuthBadge';
 import { InfoCard } from '@core/components/common/InfoCard';
 import { LoadingDB } from '@core/components/common/LoadingDB';
+import { LoadingText } from '@core/components/common/LoadingText';
 // External imports
 import { AxiosError } from 'axios';
 import { format } from '@formkit/tempo';
@@ -169,6 +170,11 @@ export function DialogRemovedUsers({ onRestoreSuccess, open, setOpen }: IProps) 
           {isErrorRestore && (
             <section className='mt-4 flex w-full flex-row'>
               <InfoCard text={errorRestore?.response?.data.message} type='flat-colored' variant='error' />
+            </section>
+          )}
+          {isPendingRemove && (
+            <section className='mt-4 flex w-full flex-row'>
+              <LoadingText text={t('loading.deletingUser')} suffix='...' />
             </section>
           )}
         </section>
