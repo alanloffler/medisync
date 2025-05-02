@@ -210,7 +210,7 @@ export function StatisticChart({ fetchChartData, height, labels, margin, options
             onClick={() => path && path !== '' && navigate(path)}
           ></motion.section>
         ) : (
-          <InfoCard className='my-6' text={t('chart.dailyAppointments.warning')} variant='warning' />
+          <InfoCard className='my-6' text={t('chart.dailyAppointments.warning')} type='flat-colored' variant='warning' />
         )}
       </Card>
     </motion.section>
