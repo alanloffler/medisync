@@ -1,19 +1,21 @@
 // External components: https://ui.shadcn.com/docs/components
 import { Checkbox } from '@core/components/ui/checkbox';
-// Imports
-import { SETTINGS_CONFIG } from '@config/settings.config';
-import { useHelpStore } from '@settings/stores/help.store';
+// External imports
 import { useEffect, useState } from 'react';
+import { useHelpStore } from '@settings/stores/help.store';
+// Imports
+import type { IUser } from '@users/interfaces/user.interface';
+import { SETTINGS_CONFIG } from '@config/settings.config';
 import { UserApiService } from '@users/services/user-api.service';
-import { IUser } from '@users/interfaces/user.interface';
 // React component
 export default function Settings() {
+  const [user, setUser] = useState<IUser | null>(null);
   const { help, setHelp } = useHelpStore();
 
   function handleHelpChecked(checked: boolean): void {
     setHelp(checked);
   }
-  const [user, setUser] = useState<IUser | null>(null);
+
   useEffect(() => {
     UserApiService.findOne('677873665568db74bbce9144').then((user) => {
       setUser(user.data);
@@ -21,8 +23,8 @@ export default function Settings() {
   }, []);
 
   return (
-    <main className='flex w-full flex-col space-y-6 p-6'>
-      <h1 className='text-2xl font-bold tracking-tight'>{SETTINGS_CONFIG.page.title}</h1>
+    <main className='flex w-full flex-col space-y-5 p-6'>
+      <h1 className='hidden text-2xl font-bold tracking-tight'>{SETTINGS_CONFIG.page.title}</h1>
       <section>
         <section>{JSON.stringify(user)}</section>
         <section className='flex flex-col space-y-3'>
